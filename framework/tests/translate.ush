@@ -1,0 +1,25 @@
+
+#!+/200
+#!ALL
+
+# Translate into your mother tongue:
+$ echo $LANG
+pl_PL.UTF-8
+$ echo 'a lot of money' | psi-translate -z 
+dużo pieniędzy
+
+# or more explicitly:
+$ echo 'a lot of money' | psi-split | psi-tokenize | psi-lemmatize | psi-parse | psi-translate | psi-generate | psi-untokenize -z
+dużo pieniędzy
+
+# or even more explicitly:
+$ echo 'a lot of money' | psi-split --lang en | psi-tokenize | psi-lemmatize | psi-parse | psi-translate --target-lang pl | psi-generate | psi-untokenize -z
+
+# or using psi internal pipeline (faster because one data structure is
+# used all the way):
+$ echo 'a lot of money' | psi-pipe split --lang en ! tokenize ! lemmatize ! parse ! translate --target-lang pl ! generate ! untokenize -z
+
+# (Why `-z` option? It means "zapping" to the final, human-readable
+# plain text. Without it, the total lattice representing the whole
+# input text would be outputted.)
+

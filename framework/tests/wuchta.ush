@@ -1,0 +1,7 @@
+
+#!ALL
+
+# More fun, translate into the Poznań dialect of Polish:
+$ echo 'a lot of money' | psi-translate -z --target-lang pl-poznan
+wuchta bejmów
+
