@@ -1,6 +1,14 @@
 #ifndef LATTICE_HDR
 #define LATTICE_HDR
 
+
+#include <string>
+#include <list>
+#include <pair>
+
+#include "layer_tag_collection.hpp"
+#include "annotation_item.hpp"
+
 /*!
   Lattice is used to keep all the information extracted by annotators
   (processors). Language units (tokens, words, phrases etc.)
@@ -23,19 +31,56 @@
 */
 
 
-class lattice {
+class Lattice {
 
-    lattice(UnicodeString text);
-    ~lattice();
+    typedef .... VertexDescriptor;
+    typedef .... EdgeDescriptor;
+    typedef .... OutEdgeIterator;
+    typedef .... InEdgeIterator;
 
-    vertex_descriptor first_vertex();
-    vertex_descriptor last_vertex();
+public:
+    /**
+     * starts with text, for each character of `text` edge of layer tag `raw` and
+     * category `'c` (where c is a characted should be added
+     */
+    Lattice(std::string text);
+    ~Lattice();
 
-    add_edge(vertex_descriptor from,
-             vertex_descriptor to,
-             avm,
-             tags);
+    /**
+     * get vertex for ix-th character of text
+     */
+    VertexDescriptor getVertexForRawCharIndex(int ix);
+
+    // the same as getVertexForRawCharIndex(0)
+    VertexDescriptor getFirstVertex();
+
+    VertexDescriptor getLastVertex();
+
+    EdgeDescriptor addEdge(VertexDescriptor from,
+                           VertexDescriptor to,
+                           const AnnotationItem& annotation_item,
+                           LayerTagCollection tags,
+                           List<EdgeDescriptor> partition);
+
+    // return outgoing edges which has at least one layer tag from `mask`
+    std::pair<OutEdgeIterator, OutEdgeIterator> outEdges(VertexDescriptor vertex, LayerTagCollection mask) const;
+
+    std::pair<InEdgeIterator, InEdgeIterator> inEdges(VertexDescriptor vertex, LayerTagCollecion mask) const;
+
+    EdgeDescriptor firstOutEdge(VertexDescriptor vertex, LayerTagCollecion mask) const;
+    EdgeDescriptor firstInEdge(VertexDescriptor vertex, LayerTagCollecion mask) const;
+
+
+    // returns the list of edges which have at least one layer tag from `mask` sorted topologically
+    std::list<EdgeDescriptor> edgesSortedTopologically(LayerTagCollection mask);
+
+    LayerTagManager& getLayerTagManager();
+
+    const AnnotationItem& getEdgeAnnotationItem(EdgeDescriptor edge);
+    const LayerTagCollection& getEdgeLayerTags(EdgeDescriptor edge);
+
 }
+
 
 #endif
 
