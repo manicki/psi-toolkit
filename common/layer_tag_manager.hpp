@@ -4,6 +4,8 @@
 #include <list>
 #include <string>
 
+#include <boost/bimap.hpp>
+
 #include "layer_tag_collection.hpp"
 
 /*!
@@ -18,15 +20,19 @@ public:
 
     LayerTagCollection createSingletonTagCollection(std::string tag_name);
 
-    LayerTagCollection createTagCollection(std::list<std::string> tag_names) { /*TODO*/ };
+    LayerTagCollection createTagCollection(std::list<std::string> tag_names);
 
     /**
      * returns tags sorted alphabetically
      */
-    std::list<std::string> getTagNames(const LayerTagCollection& tag_collection) { /*TODO*/ };
+    std::list<std::string> getTagNames(const LayerTagCollection& tag_collection);
 
 private:
-    LayerTagCollection singletonTagCollection_;
+    typedef boost::bimap<std::string,int> bimap_type;
+    typedef bimap_type::value_type mapitem_type;
+    bimap_type m_;
+    
+    int size_;
 
 };
 

@@ -1,6 +1,8 @@
 #ifndef LAYER_TAG_COLLECTION_HDR
 #define LAYER_TAG_COLLECTION_HDR
 
+#include <boost/dynamic_bitset.hpp>
+
 /*!
   A large number of various annotations originated from various
   annotators (eg. tokeniser, parser, translator etc.) will be kept. In
@@ -20,12 +22,12 @@
 class LayerTagCollection {
 
 public:
-    bool isEmpty() { /*TODO*/ };
+    bool isEmpty();
 
     /**
      * created union of two layertaglists
      */
-    friend LayerTagCollection createUnion(LayerTagCollection tag_list_a, LayerTagCollection tag_list_b) { /*TODO*/ };
+    friend LayerTagCollection createUnion(LayerTagCollection tag_list_a, LayerTagCollection tag_list_b);
 
     /**
      * created intersection of two layertaglists
@@ -38,7 +40,9 @@ private:
     /**
      * private constructor! only LayerTagManager can be used to create layer tag collecions
      */
-    LayerTagCollection();
+    LayerTagCollection() {};
+    
+    boost::dynamic_bitset<> v_;
 
 };
 

@@ -7,7 +7,9 @@ tests/runner.cpp: ../common/t/layer_tags_tests.cpp
 	perl cxxtestgen.pl --have-eh --runner=ErrorPrinter -o runner.cpp ../../common/t/layer_tags_tests.cpp
 
 runner_SOURCES = \
-	tests/runner.cpp
+	tests/runner.cpp \
+	../common/layer_tag_collection.cpp \
+	../common/layer_tag_manager.cpp
 
 runner_CPPFLAGS = ${compiler_flags} \
     -Itests \
