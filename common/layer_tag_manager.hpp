@@ -14,9 +14,9 @@
 class LayerTagManager {
 
 public:
-    LayerTagManager() { /*TODO*/ };
+    LayerTagManager();
 
-    LayerTagCollection createSingletonTagCollection(std::string tag_name) { /*TODO*/ };
+    LayerTagCollection createSingletonTagCollection(std::string tag_name);
 
     LayerTagCollection createTagCollection(std::list<std::string> tag_names) { /*TODO*/ };
 
@@ -24,6 +24,9 @@ public:
      * returns tags sorted alphabetically
      */
     std::list<std::string> getTagNames(const LayerTagCollection& tag_collection) { /*TODO*/ };
+
+private:
+    LayerTagCollection singletonTagCollection_;
 
 };
 
