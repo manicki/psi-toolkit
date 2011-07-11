@@ -11,9 +11,11 @@
   * create layer tags
   * keep mapping to string so that LayerTagCollection is just a bit vector
   */
-class LayerTagCollection {
+class LayerTagManager {
 
 public:
+    LayerTagManager();
+
     LayerTagCollection createSingletonTagCollection(std::string tag_name);
 
     LayerTagCollection createTagCollection(std::list<std::string> tag_names);
