@@ -1,0 +1,6 @@
+You need to do the following things to install the toolkit:
+
+$ autoreconf
+$ ./configure --prefix=PATH_TO_INSTALLATION_DIRECTORY
+$ make
+$ make install
