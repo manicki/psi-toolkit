@@ -1,0 +1,12 @@
+aclocal.m4
+autom4te.cache
+configure
+config.*
+Makefile
+runner
+stamp-h1
+*.in
+*.log
+*.o
+*~
+.deps
