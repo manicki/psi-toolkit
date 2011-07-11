@@ -1,5 +1,5 @@
-#ifndef LAYER_TAG_COLLECTION_HDR
-#define LAYER_TAG_COLLECTION_HDR
+#ifndef LAYER_TAG_MANAGER_HDR
+#define LAYER_TAG_MANAGER_HDR
 
 #include <list>
 #include <string>
@@ -14,16 +14,16 @@
 class LayerTagManager {
 
 public:
-    LayerTagManager();
+    LayerTagManager() { /*TODO*/ };
 
-    LayerTagCollection createSingletonTagCollection(std::string tag_name);
+    LayerTagCollection createSingletonTagCollection(std::string tag_name) { /*TODO*/ };
 
-    LayerTagCollection createTagCollection(std::list<std::string> tag_names);
+    LayerTagCollection createTagCollection(std::list<std::string> tag_names) { /*TODO*/ };
 
     /**
      * returns tags sorted alphabetically
      */
-    std::list<std::string> getTagNames(const LayerTagCollection& tag_collection);
+    std::list<std::string> getTagNames(const LayerTagCollection& tag_collection) { /*TODO*/ };
 
 };
 

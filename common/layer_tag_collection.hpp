@@ -20,12 +20,12 @@
 class LayerTagCollection {
 
 public:
-    bool isEmpty();
+    bool isEmpty() { /*TODO*/ };
 
     /**
      * created union of two layertaglists
      */
-    friend LayerTagCollection createUnion(LayerTagCollection tag_list_a, LayerTagCollection tag_list_b);
+    friend LayerTagCollection createUnion(LayerTagCollection tag_list_a, LayerTagCollection tag_list_b) { /*TODO*/ };
 
     /**
      * created intersection of two layertaglists
