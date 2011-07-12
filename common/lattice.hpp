@@ -14,10 +14,10 @@
 /*!
   Lattice is used to keep all the information extracted by annotators
   (processors). Language units (tokens, words, phrases etc.)
-  recognised by annotators are represented by edges (vertices
-  represent points between characters). Each edge has a category and
-  a attribute-value matrix (AVM). Each edge has tags which can
-  be used to distinguish various levels, annotators etc.
+  recognised by annotators are represented by edges (whereas vertices
+  represent points between characters). Each edge is assigned an annotation
+  item which is composed of a category and a attribute-value matrix (AVM).
+  Each edge has tags which can be used to distinguish various levels, annotators etc.
 
   Lattice lifecycle:
   - construction, edge is created for each character (optimised!) [tag: raw]
@@ -64,23 +64,41 @@ public:
     typedef Graph::out_edge_iterator OutEdgeIterator;
     typedef Graph::in_edge_iterator InEdgeIterator;
 
+public:
+
     /**
-     * starts with text, for each character of `text` edge of layer tag `raw` and
-     * category `c` (where c is a characted) should be added
+     * Creates a lattice from `text`. Initially each character of text will be
+     * represented as an edge labeled with layer tag `raw` and category `c`
+     * (where c is the given character)
      */
     Lattice(std::string text);
+
     ~Lattice();
 
     /**
-     * get vertex for ix-th character of text
+     * Gets the vertex for ix-th character of text
      */
     VertexDescriptor getVertexForRawCharIndex(int ix);
 
-    // the same as getVertexForRawCharIndex(0)
+    /**
+     * Gets the first vertex (the same as getVertexForRawCharIndex(0))
+     */
     VertexDescriptor getFirstVertex();
 
+     /**
+     * Gets the last vertex
+     */
     VertexDescriptor getLastVertex();
 
+    /**
+     * Adds an edge from vertex `from` to vertex `to` with `annonation_item`
+     * and `tags` as layer tags. The partition of the edge into subedges 
+     * is given with `partition` argument.
+     *
+     * A new will not be added if there is already an edge from vertex `from`
+     * to vertex `to` of annotation `annotation_item` (tags and partitions will
+     * be updated in such a case).
+     */
     EdgeDescriptor addEdge(VertexDescriptor from,
                            VertexDescriptor to,
                            const AnnotationItem& annotationItem,
