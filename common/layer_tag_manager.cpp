@@ -17,7 +17,7 @@ LayerTagCollection LayerTagManager::createTagCollection(std::list<std::string> t
     ) {
         m_.insert(mapitem_type(*tni,m_.size()));
         if (m_.left.at(*tni) >= result.v_.size()) {
-            result.v_.resize(m_.left.at(*tni) + 1);
+            result.resize_(m_.left.at(*tni) + 1);
         }
         result.v_.set(m_.left.at(*tni), true);
     }
@@ -33,5 +33,6 @@ std::list<std::string> LayerTagManager::getTagNames(const LayerTagCollection& ta
     ) {
         result.push_back(m_.right.at(i));
     }
+    result.sort();
     return result;
 }

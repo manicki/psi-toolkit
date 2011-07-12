@@ -40,9 +40,24 @@ private:
     /**
      * private constructor! only LayerTagManager can be used to create layer tag collecions
      */
-    LayerTagCollection() {};
+    LayerTagCollection() : v_(32) {};
+    
+    /**
+     * private constructor! only LayerTagManager can be used to create layer tag collecions
+     */
+    LayerTagCollection(int size) : v_(size) {};
     
     boost::dynamic_bitset<> v_;
+    
+    /**
+     * resizes to the nearest power of two
+     */
+    int resize_(int newSize);
+    
+    /**
+     * equalizes lengths of two LayerTagCollection vectors
+     */
+    int resize_(LayerTagCollection other);
 
 };
 
