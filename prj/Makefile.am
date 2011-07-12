@@ -2,9 +2,9 @@ bin_PROGRAMS = runner
 
 CLEANFILES=tests/runner.cpp
 
-tests/runner.cpp: ../common/t/layer_tags_tests.cpp
+tests/runner.cpp: ../common/t/lattice_tests.hpp ../common/t/layer_tags_tests.hpp
 	cd tests; \
-	perl cxxtestgen.pl --have-eh --runner=ErrorPrinter -o runner.cpp ../../common/t/layer_tags_tests.cpp
+	perl cxxtestgen.pl --have-eh --runner=ErrorPrinter -o runner.cpp ../../common/t/lattice_tests.hpp ../../common/t/layer_tags_tests.hpp
 
 runner_SOURCES = \
 	tests/runner.cpp \
