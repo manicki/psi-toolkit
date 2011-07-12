@@ -29,27 +29,27 @@ public:
         lattice.addEdge(pre_ala, post_ala, word_token, token_tag, ala_partition);
 
         std::list<Lattice::EdgeDescriptor> first_blank_partition;
-        ala_partition.push_back(lattice.firstOutEdge(lattice.getVertexForRawCharIndex(3), raw_tag));
+        first_blank_partition.push_back(lattice.firstOutEdge(lattice.getVertexForRawCharIndex(3), raw_tag));
         lattice.addEdge(post_ala, pre_ma, blank_token, token_tag, first_blank_partition);
 
         std::list<Lattice::EdgeDescriptor> ma_partition;
-        ala_partition.push_back(lattice.firstOutEdge(lattice.getVertexForRawCharIndex(4), raw_tag));
-        ala_partition.push_back(lattice.firstOutEdge(lattice.getVertexForRawCharIndex(5), raw_tag));
+        ma_partition.push_back(lattice.firstOutEdge(lattice.getVertexForRawCharIndex(4), raw_tag));
+        ma_partition.push_back(lattice.firstOutEdge(lattice.getVertexForRawCharIndex(5), raw_tag));
         lattice.addEdge(pre_ma, post_ma, word_token, token_tag, ma_partition);
 
         std::list<Lattice::EdgeDescriptor> second_blank_partition;
-        ala_partition.push_back(lattice.firstOutEdge(lattice.getVertexForRawCharIndex(6), raw_tag));
+        second_blank_partition.push_back(lattice.firstOutEdge(lattice.getVertexForRawCharIndex(6), raw_tag));
         lattice.addEdge(post_ma, pre_kota, blank_token, token_tag, second_blank_partition);
 
         std::list<Lattice::EdgeDescriptor> kota_partition;
-        ala_partition.push_back(lattice.firstOutEdge(lattice.getVertexForRawCharIndex(7), raw_tag));
-        ala_partition.push_back(lattice.firstOutEdge(lattice.getVertexForRawCharIndex(8), raw_tag));
-        ala_partition.push_back(lattice.firstOutEdge(lattice.getVertexForRawCharIndex(9), raw_tag));
-        ala_partition.push_back(lattice.firstOutEdge(lattice.getVertexForRawCharIndex(10), raw_tag));
+        kota_partition.push_back(lattice.firstOutEdge(lattice.getVertexForRawCharIndex(7), raw_tag));
+        kota_partition.push_back(lattice.firstOutEdge(lattice.getVertexForRawCharIndex(8), raw_tag));
+        kota_partition.push_back(lattice.firstOutEdge(lattice.getVertexForRawCharIndex(9), raw_tag));
+        kota_partition.push_back(lattice.firstOutEdge(lattice.getVertexForRawCharIndex(10), raw_tag));
         lattice.addEdge(pre_kota, post_kota, word_token, token_tag, kota_partition);
 
         std::list<Lattice::EdgeDescriptor> third_blank_partition;
-        ala_partition.push_back(lattice.firstOutEdge(lattice.getVertexForRawCharIndex(11), raw_tag));
+        third_blank_partition.push_back(lattice.firstOutEdge(lattice.getVertexForRawCharIndex(11), raw_tag));
         lattice.addEdge(post_ma, pre_kota, blank_token, token_tag, third_blank_partition);
 
         // tests
