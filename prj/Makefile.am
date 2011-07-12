@@ -8,6 +8,8 @@ tests/runner.cpp: ../common/t/lattice_tests.hpp ../common/t/layer_tags_tests.hpp
 
 runner_SOURCES = \
 	tests/runner.cpp \
+	../common/annotation_item.cpp \
+	../common/lattice.cpp \
 	../common/layer_tag_collection.cpp \
 	../common/layer_tag_manager.cpp
 
