@@ -6,9 +6,11 @@
 class AnnotationItem {
 
 public:
+
     AnnotationItem(const std::string& category);
 
-    std::string getCategory();
-}
+    std::string getCategory() const;
+
+};
 
 #endif

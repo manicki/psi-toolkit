@@ -4,9 +4,10 @@
 
 #include <string>
 #include <list>
-#include <pair>
 
-#include "layer_tag_collection.hpp"
+#include <boost/graph/adjacency_list.hpp>
+
+#include "layer_tag_manager.hpp"
 #include "annotation_item.hpp"
 
 /*!
@@ -32,13 +33,50 @@
 
 
 class Lattice {
-
-    typedef .... VertexDescriptor;
-    typedef .... EdgeDescriptor;
-    typedef .... OutEdgeIterator;
-    typedef .... InEdgeIterator;
-
+    
 public:
+
+    struct VertexEntry {
+        //TODO
+    };
+    
+    struct EdgeEntry {
+        AnnotationItem category;
+        LayerTagCollection tagList;
+    };
+
+    typedef boost::adjacency_list<
+        boost::vecS, 
+        boost::vecS, 
+        boost::bidirectionalS,
+        VertexEntry, 
+        EdgeEntry
+    >::vertex_descriptor VertexDescriptor;
+    
+    typedef boost::adjacency_list<
+        boost::vecS, 
+        boost::vecS, 
+        boost::bidirectionalS,
+        VertexEntry, 
+        EdgeEntry
+    >::edge_descriptor EdgeDescriptor;
+    
+    typedef boost::adjacency_list<
+        boost::vecS, 
+        boost::vecS, 
+        boost::bidirectionalS,
+        VertexEntry, 
+        EdgeEntry
+    >::out_edge_iterator OutEdgeIterator;
+    
+    typedef boost::adjacency_list<
+        boost::vecS, 
+        boost::vecS, 
+        boost::bidirectionalS,
+        VertexEntry, 
+        EdgeEntry
+    >::in_edge_iterator InEdgeIterator;
+
     /**
      * starts with text, for each character of `text` edge of layer tag `raw` and
      * category `'c` (where c is a characted should be added
@@ -60,15 +98,15 @@ public:
                            VertexDescriptor to,
                            const AnnotationItem& annotation_item,
                            LayerTagCollection tags,
-                           List<EdgeDescriptor> partition);
+                           std::list<EdgeDescriptor> partition);
 
     // return outgoing edges which has at least one layer tag from `mask`
     std::pair<OutEdgeIterator, OutEdgeIterator> outEdges(VertexDescriptor vertex, LayerTagCollection mask) const;
 
-    std::pair<InEdgeIterator, InEdgeIterator> inEdges(VertexDescriptor vertex, LayerTagCollecion mask) const;
+    std::pair<InEdgeIterator, InEdgeIterator> inEdges(VertexDescriptor vertex, LayerTagCollection mask) const;
 
-    EdgeDescriptor firstOutEdge(VertexDescriptor vertex, LayerTagCollecion mask) const;
-    EdgeDescriptor firstInEdge(VertexDescriptor vertex, LayerTagCollecion mask) const;
+    EdgeDescriptor firstOutEdge(VertexDescriptor vertex, LayerTagCollection mask) const;
+    EdgeDescriptor firstInEdge(VertexDescriptor vertex, LayerTagCollection mask) const;
 
 
     // returns the list of edges which have at least one layer tag from `mask` sorted topologically
@@ -79,7 +117,7 @@ public:
     const AnnotationItem& getEdgeAnnotationItem(EdgeDescriptor edge);
     const LayerTagCollection& getEdgeLayerTags(EdgeDescriptor edge);
 
-}
+};
 
 
 #endif
