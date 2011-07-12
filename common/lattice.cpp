@@ -1,7 +1,9 @@
 #include "lattice.hpp"
 
-Lattice::Lattice(std::string text) {
-    //TODO
+Lattice::Lattice(std::string text) : layerTagManager_() {
+    for (int i = 0; i < text.length(); ++i) {
+        vertices_.push_back(boost::add_vertex(graph_));
+    }
 }
 
 Lattice::~Lattice() {
@@ -9,15 +11,15 @@ Lattice::~Lattice() {
 }
 
 Lattice::VertexDescriptor Lattice::getVertexForRawCharIndex(int ix) {
-    //TODO
+    return vertices_[ix];
 }
 
 Lattice::VertexDescriptor Lattice::getFirstVertex() {
-    //TODO
+    return vertices_.front();
 }
 
 Lattice::VertexDescriptor Lattice::getLastVertex() {
-    //TODO
+    return vertices_.back();
 }
 
 Lattice::EdgeDescriptor Lattice::addEdge(
@@ -27,7 +29,7 @@ Lattice::EdgeDescriptor Lattice::addEdge(
     LayerTagCollection tags,
     std::list<EdgeDescriptor> partition
 ) {
-    std::pair<EdgeDescriptor, bool> result = boost::add_edge(from, to, EdgeEntry(annotationItem, tags), g_);
+    std::pair<EdgeDescriptor, bool> result = boost::add_edge(from, to, EdgeEntry(annotationItem, tags), graph_);
     return result.first;
 }
 
@@ -52,7 +54,7 @@ std::list<Lattice::EdgeDescriptor> Lattice::edgesSortedTopologically(LayerTagCol
 }
 
 LayerTagManager& Lattice::getLayerTagManager() {
-    //TODO
+    return layerTagManager_;
 }
 
 const AnnotationItem& Lattice::getEdgeAnnotationItem(Lattice::EdgeDescriptor edge) {

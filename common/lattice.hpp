@@ -4,6 +4,7 @@
 
 #include <string>
 #include <list>
+#include <vector>
 
 #include <boost/graph/adjacency_list.hpp>
 
@@ -105,7 +106,11 @@ public:
 
 private:
     
-    Graph g_;
+    Graph graph_;
+    
+    LayerTagManager layerTagManager_;
+    
+    std::vector<VertexDescriptor> vertices_;
 
 };
 
