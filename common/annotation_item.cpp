@@ -1,9 +1,7 @@
 #include "annotation_item.hpp"
 
-AnnotationItem::AnnotationItem(const std::string& category) {
-    //TODO
-}
+AnnotationItem::AnnotationItem(const std::string& category) : category_(category) { }
 
 std::string AnnotationItem::getCategory() const {
-    //TODO
+    return category_;
 }

@@ -23,11 +23,12 @@ Lattice::VertexDescriptor Lattice::getLastVertex() {
 Lattice::EdgeDescriptor Lattice::addEdge(
     VertexDescriptor from,
     VertexDescriptor to,
-    const AnnotationItem& annotation_item,
+    const AnnotationItem& annotationItem,
     LayerTagCollection tags,
     std::list<EdgeDescriptor> partition
 ) {
-    //TODO
+    std::pair<EdgeDescriptor, bool> result = boost::add_edge(from, to, EdgeEntry(annotationItem, tags), g_);
+    return result.first;
 }
 
 std::pair<Lattice::OutEdgeIterator, Lattice::OutEdgeIterator> Lattice::outEdges(Lattice::VertexDescriptor vertex, LayerTagCollection mask) const {

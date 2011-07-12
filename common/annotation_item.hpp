@@ -11,6 +11,10 @@ public:
 
     std::string getCategory() const;
 
+private:
+
+    std::string category_;
+
 };
 
 #endif

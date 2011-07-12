@@ -43,6 +43,11 @@ public:
     struct EdgeEntry {
         AnnotationItem category;
         LayerTagCollection tagList;
+        
+        EdgeEntry(
+            AnnotationItem aCategory, 
+            LayerTagCollection aTagList
+        ): category(aCategory), tagList(aTagList) { }
     };
 
     typedef boost::adjacency_list<
@@ -51,35 +56,16 @@ public:
         boost::bidirectionalS,
         VertexEntry, 
         EdgeEntry
-    >::vertex_descriptor VertexDescriptor;
-    
-    typedef boost::adjacency_list<
-        boost::vecS, 
-        boost::vecS, 
-        boost::bidirectionalS,
-        VertexEntry, 
-        EdgeEntry
-    >::edge_descriptor EdgeDescriptor;
-    
-    typedef boost::adjacency_list<
-        boost::vecS, 
-        boost::vecS, 
-        boost::bidirectionalS,
-        VertexEntry, 
-        EdgeEntry
-    >::out_edge_iterator OutEdgeIterator;
-    
-    typedef boost::adjacency_list<
-        boost::vecS, 
-        boost::vecS, 
-        boost::bidirectionalS,
-        VertexEntry, 
-        EdgeEntry
-    >::in_edge_iterator InEdgeIterator;
+    > Graph;
+
+    typedef Graph::vertex_descriptor VertexDescriptor;
+    typedef Graph::edge_descriptor EdgeDescriptor;
+    typedef Graph::out_edge_iterator OutEdgeIterator;
+    typedef Graph::in_edge_iterator InEdgeIterator;
 
     /**
      * starts with text, for each character of `text` edge of layer tag `raw` and
-     * category `'c` (where c is a characted should be added
+     * category `c` (where c is a characted) should be added
      */
     Lattice(std::string text);
     ~Lattice();
@@ -96,7 +82,7 @@ public:
 
     EdgeDescriptor addEdge(VertexDescriptor from,
                            VertexDescriptor to,
-                           const AnnotationItem& annotation_item,
+                           const AnnotationItem& annotationItem,
                            LayerTagCollection tags,
                            std::list<EdgeDescriptor> partition);
 
@@ -116,6 +102,10 @@ public:
 
     const AnnotationItem& getEdgeAnnotationItem(EdgeDescriptor edge);
     const LayerTagCollection& getEdgeLayerTags(EdgeDescriptor edge);
+
+private:
+    
+    Graph g_;
 
 };
 
