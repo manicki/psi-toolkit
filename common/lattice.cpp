@@ -2,7 +2,19 @@
 
 Lattice::Lattice(std::string text) : layerTagManager_() {
     for (int i = 0; i < text.length(); ++i) {
-        vertices_.push_back(boost::add_vertex(graph_));
+        Lattice::VertexDescriptor vertex = boost::add_vertex(graph_);
+        if (!vertices_.empty()) {
+            boost::add_edge(
+                vertices_.back(), 
+                vertex, 
+                EdgeEntry(
+                    AnnotationItem(text[i]), 
+                    LayerTagManager.createSingletonTagCollection("raw")
+                ), 
+                graph_
+            );
+        }
+        vertices_.push_back(vertex);
     }
 }
 
