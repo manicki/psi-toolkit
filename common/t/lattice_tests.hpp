@@ -54,7 +54,7 @@ public:
 
         // tests
 
-        std::list<Lattice::EdgeDescriptor> tokens = lattice.edgesSortedTopologically(token_tag);
+        std::list<Lattice::EdgeDescriptor> tokens = lattice.edgesSorted(token_tag);
         std::list<Lattice::EdgeDescriptor>::iterator token_iter = tokens.begin();
         TS_ASSERT_EQUALS(lattice.getEdgeAnnotationItem(*token_iter).getCategory(), word_token.getCategory());
 

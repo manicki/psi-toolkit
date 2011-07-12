@@ -10,6 +10,7 @@
 
 #include "layer_tag_manager.hpp"
 #include "annotation_item.hpp"
+#include "exceptions.hpp"
 
 /*!
   Lattice is used to keep all the information extracted by annotators
@@ -114,8 +115,8 @@ public:
     EdgeDescriptor firstInEdge(VertexDescriptor vertex, LayerTagCollection mask) const;
 
 
-    // returns the list of edges which have at least one layer tag from `mask` sorted topologically
-    std::list<EdgeDescriptor> edgesSortedTopologically(LayerTagCollection mask);
+    // returns the list of edges which have at least one layer tag from `mask` sorted
+    std::list<EdgeDescriptor> edgesSorted(LayerTagCollection mask);
 
     LayerTagManager& getLayerTagManager();
 
@@ -128,6 +129,9 @@ private:
     
     LayerTagManager layerTagManager_;
     
+    /**
+     * Maintains the topologically ordered vertices.
+     */
     std::vector<VertexDescriptor> vertices_;
 
 };
