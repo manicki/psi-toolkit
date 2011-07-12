@@ -3,7 +3,7 @@
 
 namespace psi;
 
-typedef String category;
-typedef String value;
+typedef String Category;
+typedef String Value;
 
 #endif
