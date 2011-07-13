@@ -56,6 +56,8 @@ public:
     typedef Graph::in_edge_iterator InEdgeIterator;
     
     typedef std::list<EdgeDescriptor>::const_iterator EdgeDescriptorIterator;
+    
+    typedef double Score;
 
     struct VertexEntry {
         std::vector< std::list<EdgeDescriptor> > outEdgesIndex;
@@ -65,13 +67,15 @@ public:
     struct EdgeEntry {
         AnnotationItem category;
         LayerTagCollection tagList;
+        Score score;
         std::list<EdgeDescriptor> partition;
         
         EdgeEntry(
             AnnotationItem aCategory, 
             LayerTagCollection aTagList,
+            Score aScore,
             std::list<EdgeDescriptor> aPartition = std::list<EdgeDescriptor>()
-        ): category(aCategory), tagList(aTagList), partition(aPartition) { }
+        ): category(aCategory), tagList(aTagList), score(aScore), partition(aPartition) { }
     };
 
     /**
@@ -111,6 +115,7 @@ public:
                            VertexDescriptor to,
                            const AnnotationItem& annotationItem,
                            LayerTagCollection tags,
+                           Score score,
                            std::list<EdgeDescriptor> partition);
 
     // return outgoing edges which has at least one layer tag from `mask`
