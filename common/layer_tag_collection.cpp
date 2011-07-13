@@ -4,6 +4,10 @@ bool LayerTagCollection::isEmpty() {
     return false;
 }
 
+bool LayerTagCollection::operator<(LayerTagCollection other) const {
+    return v_ < other.v_;
+}
+
 int LayerTagCollection::resize_(int newSize) {
     int size = v_.size();
     if (newSize > size) {

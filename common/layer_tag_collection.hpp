@@ -23,6 +23,8 @@ class LayerTagCollection {
 
 public:
     bool isEmpty();
+    
+    bool operator<(LayerTagCollection other) const;
 
     /**
      * created union of two layertaglists
