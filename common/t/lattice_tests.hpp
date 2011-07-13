@@ -8,11 +8,29 @@ public:
     void test_simple() {
         Lattice lattice("Ala ma kota");
 
-        LayerTagManager ltm = lattice.getLayerTagManager();
-        LayerTagCollection allTags = ltm.getAllTags();
-        std::list<Lattice::EdgeDescriptor> allEdges = lattice.edgesSorted(allTags);
+        std::list<Lattice::EdgeDescriptor> allEdges = lattice.edgesSorted(lattice.getLayerTagManager().getAllTags());
         std::list<Lattice::EdgeDescriptor>::iterator ei = allEdges.begin();
         TS_ASSERT_EQUALS(lattice.getEdgeAnnotationItem(*ei).getCategory(), "A");
+        ++ei;
+        TS_ASSERT_EQUALS(lattice.getEdgeAnnotationItem(*ei).getCategory(), "l");
+        ++ei;
+        TS_ASSERT_EQUALS(lattice.getEdgeAnnotationItem(*ei).getCategory(), "a");
+        ++ei;
+        TS_ASSERT_EQUALS(lattice.getEdgeAnnotationItem(*ei).getCategory(), " ");
+        ++ei;
+        TS_ASSERT_EQUALS(lattice.getEdgeAnnotationItem(*ei).getCategory(), "m");
+        ++ei;
+        TS_ASSERT_EQUALS(lattice.getEdgeAnnotationItem(*ei).getCategory(), "a");
+        ++ei;
+        TS_ASSERT_EQUALS(lattice.getEdgeAnnotationItem(*ei).getCategory(), " ");
+        ++ei;
+        TS_ASSERT_EQUALS(lattice.getEdgeAnnotationItem(*ei).getCategory(), "k");
+        ++ei;
+        TS_ASSERT_EQUALS(lattice.getEdgeAnnotationItem(*ei).getCategory(), "o");
+        ++ei;
+        TS_ASSERT_EQUALS(lattice.getEdgeAnnotationItem(*ei).getCategory(), "t");
+        ++ei;
+        TS_ASSERT_EQUALS(lattice.getEdgeAnnotationItem(*ei).getCategory(), "a");
 
         Lattice::VertexDescriptor pre_ala = lattice.getFirstVertex();
         Lattice::VertexDescriptor post_ala = lattice.getVertexForRawCharIndex(3);
