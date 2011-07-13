@@ -4,6 +4,8 @@
 #include <iostream>
 #include <string>
 
+#include "lattice.hpp"
+
 
 class LatticeReader {
 
