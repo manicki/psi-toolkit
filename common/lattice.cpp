@@ -10,7 +10,8 @@ Lattice::Lattice(std::string text) : layerTagManager_() {
             vertex, 
             EdgeEntry(
                 AnnotationItem(text.substr(i,1)), 
-                layerTagManager_.createSingletonTagCollection("raw")
+                layerTagManager_.createSingletonTagCollection("raw"),
+                0.0
             ), 
             graph_
         );
@@ -39,12 +40,13 @@ Lattice::EdgeDescriptor Lattice::addEdge(
     VertexDescriptor to,
     const AnnotationItem& annotationItem,
     LayerTagCollection tags,
+    Score score,
     std::list<EdgeDescriptor> partition
 ) {
     std::pair<EdgeDescriptor, bool> result = boost::add_edge(
         from, 
         to, 
-        EdgeEntry(annotationItem, tags, partition), 
+        EdgeEntry(annotationItem, tags, score, partition), 
         graph_
     );
     if (result.second) {
