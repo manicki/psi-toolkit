@@ -28,9 +28,9 @@ public:
     std::list<std::string> getTagNames(const LayerTagCollection& tag_collection);
 
 private:
-    typedef boost::bimap<std::string,int> bimap_type;
-    typedef bimap_type::value_type mapitem_type;
-    bimap_type m_;
+    typedef boost::bimap<std::string,int> StringBimap;
+    typedef StringBimap::value_type StringBimapItem;
+    StringBimap m_;
     
     int size_;
 
