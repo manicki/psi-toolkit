@@ -7,10 +7,30 @@ class LatticeTests : public CxxTest::TestSuite
 public:
     void test_simple() {
         Lattice lattice("Ala ma kota");
-        
+
         std::list<Lattice::EdgeDescriptor> allEdges = lattice.edgesSorted(lattice.getLayerTagManager().getAllTags());
         std::list<Lattice::EdgeDescriptor>::iterator ei = allEdges.begin();
         TS_ASSERT_EQUALS(lattice.getEdgeAnnotationItem(*ei).getCategory(), "A");
+        ++ei;
+        TS_ASSERT_EQUALS(lattice.getEdgeAnnotationItem(*ei).getCategory(), "l");
+        ++ei;
+        TS_ASSERT_EQUALS(lattice.getEdgeAnnotationItem(*ei).getCategory(), "a");
+        ++ei;
+        TS_ASSERT_EQUALS(lattice.getEdgeAnnotationItem(*ei).getCategory(), " ");
+        ++ei;
+        TS_ASSERT_EQUALS(lattice.getEdgeAnnotationItem(*ei).getCategory(), "m");
+        ++ei;
+        TS_ASSERT_EQUALS(lattice.getEdgeAnnotationItem(*ei).getCategory(), "a");
+        ++ei;
+        TS_ASSERT_EQUALS(lattice.getEdgeAnnotationItem(*ei).getCategory(), " ");
+        ++ei;
+        TS_ASSERT_EQUALS(lattice.getEdgeAnnotationItem(*ei).getCategory(), "k");
+        ++ei;
+        TS_ASSERT_EQUALS(lattice.getEdgeAnnotationItem(*ei).getCategory(), "o");
+        ++ei;
+        TS_ASSERT_EQUALS(lattice.getEdgeAnnotationItem(*ei).getCategory(), "t");
+        ++ei;
+        TS_ASSERT_EQUALS(lattice.getEdgeAnnotationItem(*ei).getCategory(), "a");
 
         Lattice::VertexDescriptor pre_ala = lattice.getFirstVertex();
         Lattice::VertexDescriptor post_ala = lattice.getVertexForRawCharIndex(3);
@@ -51,10 +71,6 @@ public:
         kota_partition.push_back(lattice.firstOutEdge(lattice.getVertexForRawCharIndex(9), raw_tag));
         kota_partition.push_back(lattice.firstOutEdge(lattice.getVertexForRawCharIndex(10), raw_tag));
         lattice.addEdge(pre_kota, post_kota, word_token, token_tag, kota_partition);
-
-        std::list<Lattice::EdgeDescriptor> third_blank_partition;
-        third_blank_partition.push_back(lattice.firstOutEdge(lattice.getVertexForRawCharIndex(11), raw_tag));
-        lattice.addEdge(post_ma, pre_kota, blank_token, token_tag, third_blank_partition);
 
         // tests
 

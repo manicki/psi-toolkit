@@ -1,7 +1,11 @@
 #include "layer_tag_collection.hpp"
 
 bool LayerTagCollection::isEmpty() {
-    return false;
+    return v_.none();
+}
+
+bool LayerTagCollection::isNonempty() {
+    return v_.any();
 }
 
 bool LayerTagCollection::operator<(LayerTagCollection other) const {

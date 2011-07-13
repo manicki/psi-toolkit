@@ -1,19 +1,19 @@
 #include "lattice.hpp"
 
 Lattice::Lattice(std::string text) : layerTagManager_() {
+    Lattice::VertexDescriptor vertex = boost::add_vertex(graph_);
+    vertices_.push_back(vertex);
     for (int i = 0; i < text.length(); ++i) {
         Lattice::VertexDescriptor vertex = boost::add_vertex(graph_);
-        if (!vertices_.empty()) {
-            boost::add_edge(
-                vertices_.back(), 
-                vertex, 
-                EdgeEntry(
-                    AnnotationItem(text.substr(i,i+1)), 
-                    layerTagManager_.createSingletonTagCollection("raw")
-                ), 
-                graph_
-            );
-        }
+        boost::add_edge(
+            vertices_.back(), 
+            vertex, 
+            EdgeEntry(
+                AnnotationItem(text.substr(i,1)), 
+                layerTagManager_.createSingletonTagCollection("raw")
+            ), 
+            graph_
+        );
         vertices_.push_back(vertex);
     }
 }
@@ -49,7 +49,7 @@ Lattice::EdgeDescriptor Lattice::addEdge(
     );
     if (result.second) {
         for (int i = 0; i < indexedTagCollections_.size(); ++i) {
-            if (!createIntersection(tags, indexedTagCollections_.right.at(i)).isEmpty()) {
+            if (createIntersection(tags, indexedTagCollections_.right.at(i)).isNonempty()) {
                 graph_[from].outEdgesIndex[i].push_back(result.first);
                 graph_[to].inEdgesIndex[i].push_back(result.first);
             }
@@ -83,7 +83,7 @@ Lattice::EdgeDescriptor Lattice::firstOutEdge(Lattice::VertexDescriptor vertex, 
         oei != allOutEdges.second;
         ++oei
     ) {
-        if (!createIntersection(graph_[*oei].tagList, mask).isEmpty()) {
+        if (createIntersection(graph_[*oei].tagList, mask).isNonempty()) {
             return *oei;
         }
     }
@@ -98,7 +98,7 @@ Lattice::EdgeDescriptor Lattice::firstInEdge(Lattice::VertexDescriptor vertex, L
         iei != allInEdges.second;
         ++iei
     ) {
-        if (!createIntersection(graph_[*iei].tagList, mask).isEmpty()) {
+        if (createIntersection(graph_[*iei].tagList, mask).isNonempty()) {
             return *iei;
         }
     }
@@ -141,15 +141,17 @@ int Lattice::addTagCollectionIndex_(LayerTagCollection tags) {
             vi != vertices_.end();
             ++vi
         ) {
+            graph_[*vi].outEdgesIndex.push_back(std::list<EdgeDescriptor>());
             std::pair<Lattice::OutEdgeIterator, Lattice::OutEdgeIterator> oeir = boost::out_edges(*vi, graph_);
             for (Lattice::OutEdgeIterator oei = oeir.first; oei != oeir.second; ++oei) {
-                if (!createIntersection(graph_[*oei].tagList, tags).isEmpty()) {
+                if (createIntersection(graph_[*oei].tagList, tags).isNonempty()) {
                     graph_[*vi].outEdgesIndex[ix].push_back(*oei);
                 }
             }
+            graph_[*vi].inEdgesIndex.push_back(std::list<EdgeDescriptor>());
             std::pair<Lattice::InEdgeIterator, Lattice::InEdgeIterator> ieir = boost::in_edges(*vi, graph_);
             for (Lattice::InEdgeIterator iei = ieir.first; iei != ieir.second; ++iei) {
-                if (!createIntersection(graph_[*iei].tagList, tags).isEmpty()) {
+                if (createIntersection(graph_[*iei].tagList, tags).isNonempty()) {
                     graph_[*vi].inEdgesIndex[ix].push_back(*iei);
                 }
             }

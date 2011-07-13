@@ -24,6 +24,8 @@ class LayerTagCollection {
 public:
     bool isEmpty();
     
+    bool isNonempty();
+    
     bool operator<(LayerTagCollection other) const;
 
     /**
