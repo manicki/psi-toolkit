@@ -114,9 +114,15 @@ public:
                            std::list<EdgeDescriptor> partition);
 
     // return outgoing edges which has at least one layer tag from `mask`
-    std::pair<EdgeDescriptorIterator, EdgeDescriptorIterator> outEdges(VertexDescriptor vertex, LayerTagCollection mask);
+    std::pair<EdgeDescriptorIterator, EdgeDescriptorIterator> outEdges(
+        VertexDescriptor vertex, 
+        LayerTagCollection mask
+    );
 
-    std::pair<EdgeDescriptorIterator, EdgeDescriptorIterator> inEdges(VertexDescriptor vertex, LayerTagCollection mask);
+    std::pair<EdgeDescriptorIterator, EdgeDescriptorIterator> inEdges(
+        VertexDescriptor vertex, 
+        LayerTagCollection mask
+    );
 
     EdgeDescriptor firstOutEdge(VertexDescriptor vertex, LayerTagCollection mask);
     EdgeDescriptor firstInEdge(VertexDescriptor vertex, LayerTagCollection mask);

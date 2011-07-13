@@ -23,14 +23,20 @@ int LayerTagCollection::resize_(LayerTagCollection& other) {
     return resize_(other.resize_(v_.size()));
 }
 
-LayerTagCollection createUnion(LayerTagCollection tag_list_a, LayerTagCollection tag_list_b) {
+LayerTagCollection createUnion(
+    LayerTagCollection tag_list_a, 
+    LayerTagCollection tag_list_b
+) {
     LayerTagCollection result(tag_list_a.resize_(tag_list_b));
     result.v_ |= tag_list_a.v_;
     result.v_ |= tag_list_b.v_;
     return result;
 }
 
-LayerTagCollection createIntersection(LayerTagCollection tag_list_a, LayerTagCollection tag_list_b) {
+LayerTagCollection createIntersection(
+    LayerTagCollection tag_list_a, 
+    LayerTagCollection tag_list_b
+) {
     LayerTagCollection result(tag_list_a.resize_(tag_list_b));
     result.v_ |= tag_list_a.v_;
     result.v_ &= tag_list_b.v_;

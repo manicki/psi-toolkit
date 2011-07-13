@@ -34,12 +34,18 @@ public:
     /**
      * created union of two layertaglists
      */
-    friend LayerTagCollection createUnion(LayerTagCollection tag_list_a, LayerTagCollection tag_list_b);
+    friend LayerTagCollection createUnion(
+        LayerTagCollection tag_list_a, 
+        LayerTagCollection tag_list_b
+    );
 
     /**
      * created intersection of two layertaglists
      */
-    friend LayerTagCollection createIntersection(LayerTagCollection tag_list_a, LayerTagCollection tag_list_b);
+    friend LayerTagCollection createIntersection(
+        LayerTagCollection tag_list_a, 
+        LayerTagCollection tag_list_b
+    );
 
     friend class LayerTagManager;
 
