@@ -26,6 +26,9 @@ public:
     
     bool isNonempty();
     
+    /**
+     * method for compatibility with boost::bimap
+     */
     bool operator<(LayerTagCollection other) const;
 
     /**
