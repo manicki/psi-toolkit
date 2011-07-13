@@ -16,10 +16,10 @@ int LayerTagCollection::resize_(int size) {
     if (size > v_.size()) {
         v_.resize(size % 32 == 0 ? size : size + 32 - size % 32);
     }
-    return size;
+    return v_.size();
 }
 
-int LayerTagCollection::resize_(LayerTagCollection other) {
+int LayerTagCollection::resize_(LayerTagCollection& other) {
     return resize_(other.resize_(v_.size()));
 }
 

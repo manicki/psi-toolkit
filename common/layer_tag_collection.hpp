@@ -64,7 +64,7 @@ private:
     /**
      * equalizes lengths of two LayerTagCollection vectors
      */
-    int resize_(LayerTagCollection other);
+    int resize_(LayerTagCollection& other);
 
 };
 
