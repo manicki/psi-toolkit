@@ -45,36 +45,34 @@ Lattice::EdgeDescriptor Lattice::addEdge(
     return result.first;
 }
 
-std::pair<Lattice::OutEdgeIterator, Lattice::OutEdgeIterator> Lattice::outEdges(Lattice::VertexDescriptor vertex, LayerTagCollection mask) const {
-    return boost::out_edges(vertex, graph_); //TODO
-    // std::vector<EdgeDescriptor> edgeVec;
-    // std::pair<Lattice::OutEdgeIterator, Lattice::OutEdgeIterator> allOutEdges = boost::out_edges(vertex, graph_);
-    // for (
-        // Lattice::OutEdgeIterator oei = allOutEdges.first;
-        // oei != allOutEdges.second;
-        // ++oei
-    // ) {
-        // if (!createIntersection(graph_[*oei].tagList, mask).isEmpty()) {
-            // edgeVec.push_back(*oei);
-        // }
-    // }
-    // return std::pair<Lattice::OutEdgeIterator, Lattice::OutEdgeIterator>(edgeVec.begin(), edgeVec.end());
+std::pair<Lattice::EdgeDescriptorIterator, Lattice::EdgeDescriptorIterator> Lattice::outEdges(Lattice::VertexDescriptor vertex, LayerTagCollection mask) const {
+    std::list<EdgeDescriptor> edgeList;
+    std::pair<Lattice::OutEdgeIterator, Lattice::OutEdgeIterator> allOutEdges = boost::out_edges(vertex, graph_);
+    for (
+        Lattice::OutEdgeIterator oei = allOutEdges.first;
+        oei != allOutEdges.second;
+        ++oei
+    ) {
+        if (!createIntersection(graph_[*oei].tagList, mask).isEmpty()) {
+            edgeList.push_back(*oei);
+        }
+    }
+    return std::pair<Lattice::EdgeDescriptorIterator, Lattice::EdgeDescriptorIterator>(edgeList.begin(), edgeList.end());
 }
 
-std::pair<Lattice::InEdgeIterator, Lattice::InEdgeIterator> Lattice::inEdges(Lattice::VertexDescriptor vertex, LayerTagCollection mask) const {
-    return boost::in_edges(vertex, graph_); //TODO
-    // std::vector<EdgeDescriptor> edgeVec;
-    // std::pair<Lattice::InEdgeIterator, Lattice::InEdgeIterator> allInEdges = boost::in_edges(vertex, graph_);
-    // for (
-        // Lattice::InEdgeIterator iei = allInEdges.first;
-        // iei != allInEdges.second;
-        // ++iei
-    // ) {
-        // if (!createIntersection(graph_[*iei].tagList, mask).isEmpty()) {
-            // edgeVec.push_back(*iei);
-        // }
-    // }
-    // return std::pair<Lattice::InEdgeIterator, Lattice::InEdgeIterator>(edgeVec.begin(), edgeVec.end());
+std::pair<Lattice::EdgeDescriptorIterator, Lattice::EdgeDescriptorIterator> Lattice::inEdges(Lattice::VertexDescriptor vertex, LayerTagCollection mask) const {
+    std::list<EdgeDescriptor> edgeList;
+    std::pair<Lattice::InEdgeIterator, Lattice::InEdgeIterator> allInEdges = boost::in_edges(vertex, graph_);
+    for (
+        Lattice::InEdgeIterator iei = allInEdges.first;
+        iei != allInEdges.second;
+        ++iei
+    ) {
+        if (!createIntersection(graph_[*iei].tagList, mask).isEmpty()) {
+            edgeList.push_back(*iei);
+        }
+    }
+    return std::pair<Lattice::EdgeDescriptorIterator, Lattice::EdgeDescriptorIterator>(edgeList.begin(), edgeList.end());
 }
 
 Lattice::EdgeDescriptor Lattice::firstOutEdge(Lattice::VertexDescriptor vertex, LayerTagCollection mask) const {
@@ -112,7 +110,7 @@ std::list<Lattice::EdgeDescriptor> Lattice::edgesSorted(LayerTagCollection mask)
         vi != vertices_.end();
         ++vi
     ) {
-        std::pair<Lattice::OutEdgeIterator, Lattice::OutEdgeIterator> outEdgesIters = outEdges(*vi, mask);
+        std::pair<Lattice::EdgeDescriptorIterator, Lattice::EdgeDescriptorIterator> outEdgesIters = outEdges(*vi, mask);
         result.insert(result.end(), outEdgesIters.first, outEdgesIters.second);
     }
     return result;

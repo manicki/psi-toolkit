@@ -64,6 +64,8 @@ public:
     typedef Graph::edge_descriptor EdgeDescriptor;
     typedef Graph::out_edge_iterator OutEdgeIterator;
     typedef Graph::in_edge_iterator InEdgeIterator;
+    
+    typedef std::list<EdgeDescriptor>::iterator EdgeDescriptorIterator;
 
 public:
 
@@ -107,9 +109,9 @@ public:
                            std::list<EdgeDescriptor> partition);
 
     // return outgoing edges which has at least one layer tag from `mask`
-    std::pair<OutEdgeIterator, OutEdgeIterator> outEdges(VertexDescriptor vertex, LayerTagCollection mask) const;
+    std::pair<EdgeDescriptorIterator, EdgeDescriptorIterator> outEdges(VertexDescriptor vertex, LayerTagCollection mask) const;
 
-    std::pair<InEdgeIterator, InEdgeIterator> inEdges(VertexDescriptor vertex, LayerTagCollection mask) const;
+    std::pair<EdgeDescriptorIterator, EdgeDescriptorIterator> inEdges(VertexDescriptor vertex, LayerTagCollection mask) const;
 
     EdgeDescriptor firstOutEdge(VertexDescriptor vertex, LayerTagCollection mask) const;
     EdgeDescriptor firstInEdge(VertexDescriptor vertex, LayerTagCollection mask) const;
@@ -133,6 +135,10 @@ private:
      * Maintains the topologically ordered vertices.
      */
     std::vector<VertexDescriptor> vertices_;
+    
+    typedef boost::bimap<LayerTagCollection,int> TagCollectionsBimap;
+    typedef TagCollectionsBimap::value_type TagCollectionsIndex;
+    TagCollectionsBimap indexedTagCollections_;
 
 };
 
