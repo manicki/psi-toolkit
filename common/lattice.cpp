@@ -1,19 +1,19 @@
 #include "lattice.hpp"
 
 Lattice::Lattice(std::string text) : layerTagManager_() {
+    Lattice::VertexDescriptor vertex = boost::add_vertex(graph_);
+    vertices_.push_back(vertex);
     for (int i = 0; i < text.length(); ++i) {
         Lattice::VertexDescriptor vertex = boost::add_vertex(graph_);
-        if (!vertices_.empty()) {
-            boost::add_edge(
-                vertices_.back(), 
-                vertex, 
-                EdgeEntry(
-                    AnnotationItem(text.substr(i,i)), 
-                    layerTagManager_.createSingletonTagCollection("raw")
-                ), 
-                graph_
-            );
-        }
+        boost::add_edge(
+            vertices_.back(), 
+            vertex, 
+            EdgeEntry(
+                AnnotationItem(text.substr(i,1)), 
+                layerTagManager_.createSingletonTagCollection("raw")
+            ), 
+            graph_
+        );
         vertices_.push_back(vertex);
     }
 }
