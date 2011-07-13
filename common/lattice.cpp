@@ -76,33 +76,11 @@ std::pair<Lattice::EdgeDescriptorIterator, Lattice::EdgeDescriptorIterator> Latt
 }
 
 Lattice::EdgeDescriptor Lattice::firstOutEdge(Lattice::VertexDescriptor vertex, LayerTagCollection mask) {
-    //TODO
-    std::pair<Lattice::OutEdgeIterator, Lattice::OutEdgeIterator> allOutEdges = boost::out_edges(vertex, graph_);
-    for (
-        Lattice::OutEdgeIterator oei = allOutEdges.first;
-        oei != allOutEdges.second;
-        ++oei
-    ) {
-        if (createIntersection(graph_[*oei].tagList, mask).isNonempty()) {
-            return *oei;
-        }
-    }
-    throw NoEdgeException("No out-edges found.");
+    return *(outEdges(vertex, mask).first);
 }
 
 Lattice::EdgeDescriptor Lattice::firstInEdge(Lattice::VertexDescriptor vertex, LayerTagCollection mask) {
-    //TODO
-    std::pair<Lattice::InEdgeIterator, Lattice::InEdgeIterator> allInEdges = boost::in_edges(vertex, graph_);
-    for (
-        Lattice::InEdgeIterator iei = allInEdges.first;
-        iei != allInEdges.second;
-        ++iei
-    ) {
-        if (createIntersection(graph_[*iei].tagList, mask).isNonempty()) {
-            return *iei;
-        }
-    }
-    throw NoEdgeException("No in-edges found.");
+    return *(inEdges(vertex, mask).first);
 }
 
 std::list<Lattice::EdgeDescriptor> Lattice::edgesSorted(LayerTagCollection mask) {
