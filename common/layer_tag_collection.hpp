@@ -47,7 +47,7 @@ private:
     /**
      * private constructor! only LayerTagManager can be used to create layer tag collecions
      */
-    LayerTagCollection(int size) : v_(size) {};
+    LayerTagCollection(int size) : v_(size % 32 == 0 ? size : size + 32 - size % 32) { };
     
     boost::dynamic_bitset<> v_;
     

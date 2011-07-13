@@ -21,6 +21,11 @@ public:
     LayerTagCollection createSingletonTagCollection(std::string tag_name);
 
     LayerTagCollection createTagCollection(std::list<std::string> tag_names);
+    
+    /**
+     * returns a layer tag collection of all tags
+     */
+    LayerTagCollection getAllTags();
 
     /**
      * returns tags sorted alphabetically

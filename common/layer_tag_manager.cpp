@@ -24,6 +24,15 @@ LayerTagCollection LayerTagManager::createTagCollection(std::list<std::string> t
     return result;
 }
 
+LayerTagCollection LayerTagManager::getAllTags() {
+    LayerTagCollection result = LayerTagCollection();
+    result.resize_(m_.size());
+    for (int i = 0; i < m_.size(); ++i) {
+        result.v_.set(i, true);
+    }
+    return result;
+}
+
 std::list<std::string> LayerTagManager::getTagNames(const LayerTagCollection& tag_collection) {
     std::list<std::string> result;
     for (
