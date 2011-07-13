@@ -15,11 +15,20 @@ LayerTagCollection LayerTagManager::createTagCollection(std::list<std::string> t
         tni != tag_names.end();
         ++tni
     ) {
-        m_.insert(mapitem_type(*tni,m_.size()));
+        m_.insert(StringBimapItem(*tni,m_.size()));
         if (m_.left.at(*tni) >= result.v_.size()) {
             result.resize_(m_.left.at(*tni) + 1);
         }
         result.v_.set(m_.left.at(*tni), true);
+    }
+    return result;
+}
+
+LayerTagCollection LayerTagManager::getAllTags() {
+    LayerTagCollection result = LayerTagCollection();
+    result.resize_(m_.size());
+    for (int i = 0; i < m_.size(); ++i) {
+        result.v_.set(i, true);
     }
     return result;
 }

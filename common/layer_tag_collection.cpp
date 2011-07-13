@@ -1,27 +1,26 @@
 #include "layer_tag_collection.hpp"
 
 bool LayerTagCollection::isEmpty() {
-    return false;
+    return v_.none();
 }
 
-int LayerTagCollection::resize_(int newSize) {
-    int size = v_.size();
-    if (newSize > size) {
-        do {
-            size *= 2;
-        } while (newSize > size);
-        v_.resize(size);
-    }
-    return size;
+bool LayerTagCollection::isNonempty() {
+    return v_.any();
 }
 
-int LayerTagCollection::resize_(LayerTagCollection other) {
-    if (v_.size() < other.v_.size()) {
-        return resize_(other.v_.size());
-    } else if (v_.size() > other.v_.size()) {
-        return other.resize_(v_.size());
+bool LayerTagCollection::operator<(LayerTagCollection other) const {
+    return v_ < other.v_;
+}
+
+int LayerTagCollection::resize_(int size) {
+    if (size > v_.size()) {
+        v_.resize(size % 32 == 0 ? size : size + 32 - size % 32);
     }
     return v_.size();
+}
+
+int LayerTagCollection::resize_(LayerTagCollection& other) {
+    return resize_(other.resize_(v_.size()));
 }
 
 LayerTagCollection createUnion(LayerTagCollection tag_list_a, LayerTagCollection tag_list_b) {

@@ -23,6 +23,13 @@ class LayerTagCollection {
 
 public:
     bool isEmpty();
+    
+    bool isNonempty();
+    
+    /**
+     * method for compatibility with boost::bimap
+     */
+    bool operator<(LayerTagCollection other) const;
 
     /**
      * created union of two layertaglists
@@ -45,7 +52,7 @@ private:
     /**
      * private constructor! only LayerTagManager can be used to create layer tag collecions
      */
-    LayerTagCollection(int size) : v_(size) {};
+    LayerTagCollection(int size) : v_(size % 32 == 0 ? size : size + 32 - size % 32) { };
     
     boost::dynamic_bitset<> v_;
     
@@ -57,7 +64,7 @@ private:
     /**
      * equalizes lengths of two LayerTagCollection vectors
      */
-    int resize_(LayerTagCollection other);
+    int resize_(LayerTagCollection& other);
 
 };
 
