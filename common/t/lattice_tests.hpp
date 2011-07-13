@@ -8,6 +8,12 @@ public:
     void test_simple() {
         Lattice lattice("Ala ma kota");
 
+        LayerTagManager ltm = lattice.getLayerTagManager();
+        LayerTagCollection allTags = ltm.getAllTags();
+        std::list<Lattice::EdgeDescriptor> allEdges = lattice.edgesSorted(allTags);
+        std::list<Lattice::EdgeDescriptor>::iterator ei = allEdges.begin();
+        TS_ASSERT_EQUALS(lattice.getEdgeAnnotationItem(*ei).getCategory(), "A");
+
         Lattice::VertexDescriptor pre_ala = lattice.getFirstVertex();
         Lattice::VertexDescriptor post_ala = lattice.getVertexForRawCharIndex(3);
         Lattice::VertexDescriptor pre_ma = lattice.getVertexForRawCharIndex(4);

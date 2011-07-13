@@ -23,6 +23,11 @@ public:
     LayerTagCollection createTagCollection(std::list<std::string> tag_names);
 
     /**
+     * returns a layer tag collection of all tags
+     */
+    LayerTagCollection getAllTags();
+
+    /**
      * returns tags sorted alphabetically
      */
     std::list<std::string> getTagNames(const LayerTagCollection& tag_collection);

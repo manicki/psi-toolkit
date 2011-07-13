@@ -8,7 +8,7 @@ Lattice::Lattice(std::string text) : layerTagManager_() {
                 vertices_.back(), 
                 vertex, 
                 EdgeEntry(
-                    AnnotationItem(text.substr(i,i+1)), 
+                    AnnotationItem(text.substr(i,i)), 
                     layerTagManager_.createSingletonTagCollection("raw")
                 ), 
                 graph_
@@ -141,12 +141,14 @@ int Lattice::addTagCollectionIndex_(LayerTagCollection tags) {
             vi != vertices_.end();
             ++vi
         ) {
+            graph_[*vi].outEdgesIndex.push_back(std::list<EdgeDescriptor>());
             std::pair<Lattice::OutEdgeIterator, Lattice::OutEdgeIterator> oeir = boost::out_edges(*vi, graph_);
             for (Lattice::OutEdgeIterator oei = oeir.first; oei != oeir.second; ++oei) {
                 if (!createIntersection(graph_[*oei].tagList, tags).isEmpty()) {
                     graph_[*vi].outEdgesIndex[ix].push_back(*oei);
                 }
             }
+            graph_[*vi].inEdgesIndex.push_back(std::list<EdgeDescriptor>());
             std::pair<Lattice::InEdgeIterator, Lattice::InEdgeIterator> ieir = boost::in_edges(*vi, graph_);
             for (Lattice::InEdgeIterator iei = ieir.first; iei != ieir.second; ++iei) {
                 if (!createIntersection(graph_[*iei].tagList, tags).isEmpty()) {
