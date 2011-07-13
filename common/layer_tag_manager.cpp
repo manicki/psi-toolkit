@@ -15,7 +15,7 @@ LayerTagCollection LayerTagManager::createTagCollection(std::list<std::string> t
         tni != tag_names.end();
         ++tni
     ) {
-        m_.insert(mapitem_type(*tni,m_.size()));
+        m_.insert(StringBimapItem(*tni,m_.size()));
         if (m_.left.at(*tni) >= result.v_.size()) {
             result.resize_(m_.left.at(*tni) + 1);
         }
