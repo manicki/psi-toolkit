@@ -54,10 +54,6 @@ public:
         kota_partition.push_back(lattice.firstOutEdge(lattice.getVertexForRawCharIndex(10), raw_tag));
         lattice.addEdge(pre_kota, post_kota, word_token, token_tag, kota_partition);
 
-        std::list<Lattice::EdgeDescriptor> third_blank_partition;
-        third_blank_partition.push_back(lattice.firstOutEdge(lattice.getVertexForRawCharIndex(11), raw_tag));
-        lattice.addEdge(post_ma, pre_kota, blank_token, token_tag, third_blank_partition);
-
         // tests
 
         std::list<Lattice::EdgeDescriptor> tokens = lattice.edgesSorted(token_tag);
