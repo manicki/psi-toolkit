@@ -49,7 +49,7 @@ Lattice::EdgeDescriptor Lattice::addEdge(
     );
     if (result.second) {
         for (int i = 0; i < indexedTagCollections_.size(); ++i) {
-            if (!createIntersection(tags, indexedTagCollections_.right.at(i)).isEmpty()) {
+            if (createIntersection(tags, indexedTagCollections_.right.at(i)).isNonempty()) {
                 graph_[from].outEdgesIndex[i].push_back(result.first);
                 graph_[to].inEdgesIndex[i].push_back(result.first);
             }
@@ -83,7 +83,7 @@ Lattice::EdgeDescriptor Lattice::firstOutEdge(Lattice::VertexDescriptor vertex, 
         oei != allOutEdges.second;
         ++oei
     ) {
-        if (!createIntersection(graph_[*oei].tagList, mask).isEmpty()) {
+        if (createIntersection(graph_[*oei].tagList, mask).isNonempty()) {
             return *oei;
         }
     }
@@ -98,7 +98,7 @@ Lattice::EdgeDescriptor Lattice::firstInEdge(Lattice::VertexDescriptor vertex, L
         iei != allInEdges.second;
         ++iei
     ) {
-        if (!createIntersection(graph_[*iei].tagList, mask).isEmpty()) {
+        if (createIntersection(graph_[*iei].tagList, mask).isNonempty()) {
             return *iei;
         }
     }
@@ -144,14 +144,14 @@ int Lattice::addTagCollectionIndex_(LayerTagCollection tags) {
             graph_[*vi].outEdgesIndex.push_back(std::list<EdgeDescriptor>());
             std::pair<Lattice::OutEdgeIterator, Lattice::OutEdgeIterator> oeir = boost::out_edges(*vi, graph_);
             for (Lattice::OutEdgeIterator oei = oeir.first; oei != oeir.second; ++oei) {
-                if (!createIntersection(graph_[*oei].tagList, tags).isEmpty()) {
+                if (createIntersection(graph_[*oei].tagList, tags).isNonempty()) {
                     graph_[*vi].outEdgesIndex[ix].push_back(*oei);
                 }
             }
             graph_[*vi].inEdgesIndex.push_back(std::list<EdgeDescriptor>());
             std::pair<Lattice::InEdgeIterator, Lattice::InEdgeIterator> ieir = boost::in_edges(*vi, graph_);
             for (Lattice::InEdgeIterator iei = ieir.first; iei != ieir.second; ++iei) {
-                if (!createIntersection(graph_[*iei].tagList, tags).isEmpty()) {
+                if (createIntersection(graph_[*iei].tagList, tags).isNonempty()) {
                     graph_[*vi].inEdgesIndex[ix].push_back(*iei);
                 }
             }
