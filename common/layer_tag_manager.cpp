@@ -3,9 +3,13 @@
 LayerTagManager::LayerTagManager() : size_(0) { }
 
 LayerTagCollection LayerTagManager::createSingletonTagCollection(std::string tag_name) {
-    std::list<std::string> tag_names;
-    tag_names.push_back(tag_name);
-    return createTagCollection(tag_names);
+    LayerTagCollection result = LayerTagCollection();
+    m_.insert(StringBimapItem(tag_name,m_.size()));
+    if (m_.left.at(tag_name) >= result.v_.size()) {
+        result.resize_(m_.left.at(tag_name) + 1);
+    }
+    result.v_.set(m_.left.at(tag_name), true);
+    return result;
 }
 
 LayerTagCollection LayerTagManager::createTagCollection(std::list<std::string> tag_names) {
