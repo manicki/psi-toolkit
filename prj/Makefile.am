@@ -11,7 +11,8 @@ runner_SOURCES = \
 	../common/annotation_item.cpp \
 	../common/lattice.cpp \
 	../common/layer_tag_collection.cpp \
-	../common/layer_tag_manager.cpp
+	../common/layer_tag_manager.cpp \
+	../common/utt_reader.cpp
 
 runner_CPPFLAGS = ${compiler_flags} \
     -Itests \

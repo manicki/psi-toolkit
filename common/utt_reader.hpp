@@ -14,7 +14,7 @@ public:
     void readIntoLattice(std::istream& inputStream, Lattice& lattice);
 
     /**
-     * Gets format name (eg. "UTT", "BIN" etc.)
+     * Gets format name (here: "UTT").
      */
     std::string getFormatName();
 };

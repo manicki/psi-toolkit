@@ -6,5 +6,5 @@ void UTTReader::readIntoLattice(std::istream& inputStream, Lattice& lattice) {
 }
 
 std::string UTTReader::getFormatName() {
-    //TODO
+    return "UTT";
 }
