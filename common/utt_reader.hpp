@@ -45,7 +45,7 @@ struct UTTReaderGrammar : public qi::grammar<std::string::const_iterator, UTTRea
             >> +(qi::char_ - ' ')
             >> ' ' 
             >> +(qi::char_ - ' ')
-            >> qi::lexeme[' ' >> +(qi::char_)]
+            >> -(qi::lexeme[' ' >> +(qi::char_)])
             ;
             
     }
