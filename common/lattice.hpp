@@ -74,7 +74,7 @@ public:
             AnnotationItem aCategory, 
             LayerTagCollection aTagList,
             Score aScore,
-            std::list<EdgeDescriptor> aPartition = std::list<EdgeDescriptor>()
+            std::list<EdgeDescriptor> aPartition
         ): category(aCategory), tagList(aTagList), score(aScore), partition(aPartition) { }
     };
 
@@ -86,6 +86,8 @@ public:
     Lattice(std::string text);
 
     ~Lattice();
+    
+    void appendString(std::string text);
 
     /**
      * Gets the vertex for ix-th character of text
@@ -116,7 +118,7 @@ public:
                            const AnnotationItem& annotationItem,
                            LayerTagCollection tags,
                            Score score,
-                           std::list<EdgeDescriptor> partition);
+                           std::list<EdgeDescriptor> partition = std::list<EdgeDescriptor>());
 
     // return outgoing edges which has at least one layer tag from `mask`
     std::pair<EdgeDescriptorIterator, EdgeDescriptorIterator> outEdges(

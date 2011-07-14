@@ -20,4 +20,10 @@ public:
 };
 
 
+class FileFormatException : public Exception { 
+public:
+    FileFormatException(std::string message) : Exception(message) { }
+};
+
+
 #endif
