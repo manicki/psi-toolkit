@@ -3,6 +3,14 @@
 Lattice::Lattice(std::string text) : layerTagManager_() {
     Lattice::VertexDescriptor vertex = boost::add_vertex(graph_);
     vertices_.push_back(vertex);
+    appendString(text);
+}
+
+Lattice::~Lattice() {
+    //TODO
+}
+
+void Lattice::appendString(std::string text) {
     for (int i = 0; i < text.length(); ++i) {
         Lattice::VertexDescriptor vertex = boost::add_vertex(graph_);
         boost::add_edge(
@@ -17,10 +25,6 @@ Lattice::Lattice(std::string text) : layerTagManager_() {
         );
         vertices_.push_back(vertex);
     }
-}
-
-Lattice::~Lattice() {
-    //TODO
 }
 
 Lattice::VertexDescriptor Lattice::getVertexForRawCharIndex(int ix) {

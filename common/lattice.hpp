@@ -86,6 +86,8 @@ public:
     Lattice(std::string text);
 
     ~Lattice();
+    
+    void appendString(std::string text);
 
     /**
      * Gets the vertex for ix-th character of text
