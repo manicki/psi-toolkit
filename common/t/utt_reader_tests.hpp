@@ -10,7 +10,7 @@ public:
         Lattice lattice("");
         LatticeReader * reader = new UTTReader();
         
-        reader->readIntoLattice("../../formats/utt/t/files/fr_simple_puddle_input.txt", lattice);
+        reader->readIntoLattice("../test/files/fr_simple_puddle_input.txt", lattice);
         
         LayerTagCollection tokenTag 
             = lattice.getLayerTagManager().createSingletonTagCollection("token");

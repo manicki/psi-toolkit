@@ -34,20 +34,24 @@ BOOST_FUSION_ADAPT_STRUCT(
 
 
 struct UTTReaderGrammar : public qi::grammar<std::string::const_iterator, UTTReaderItem()> {
+    
     UTTReaderGrammar() : UTTReaderGrammar::base_type(start) {
+        
         start 
             %= qi::int_ 
-            >> ' ' 
+            >> ' '
             >> qi::int_ 
+            >> ' '
+            >> +(qi::char_ - ' ')
             >> ' ' 
             >> +(qi::char_ - ' ')
-            >> ' '
-            >> +(qi::char_ - ' ')
-            >> ' '
-            >> +(qi::char_)
+            >> qi::lexeme[' ' >> +(qi::char_)]
             ;
+            
     }
+    
     qi::rule<std::string::const_iterator, UTTReaderItem()> start;
+    
 };
 
 

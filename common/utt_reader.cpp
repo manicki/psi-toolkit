@@ -2,11 +2,11 @@
 
 
 void UTTReader::readIntoLattice(std::istream& inputStream, Lattice& lattice) {
-    UTTReaderItem item;
     UTTReaderGrammar grammar;
     std::string line;
     int beginningOfSentencePosition = -1;
     while (std::getline(inputStream, line)) {
+        UTTReaderItem item;
         std::string::const_iterator begin = line.begin();
         std::string::const_iterator end = line.end();
         if (parse(begin, end, grammar, item)) {
