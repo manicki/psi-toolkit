@@ -2,6 +2,8 @@
 # PSI is inspired by UTT (but not compatible with UTT)
 # '#' is used to denote remark, empty lines are discarded as well.
 
+# UTF-8 is used as the encoding.
+
 # This file represents a lattice for a sentence "Ala ma&nbsp;kota"
 # ("&nbsp;" is an HTML entity for a non-breaking space, the sentence
 # will be treated as a fragment of an HTML file).
@@ -27,7 +29,8 @@
 # square brackets (as is the case for the above edge) then it is
 # assumed that the edge is composed of N sub-edges of layer tag `raw`
 # (N is the length of the edge in characters), the category of each
-# is 'c where c is the given character.
+# is 'c where c is the given character (note that one quote is used
+# for `raw` edges whereas two quotes for tokens).
 
 # In other words, if these sub-edges were specified explicitly, the
 # file would start in the following way:
@@ -63,34 +66,34 @@
 
 # Here comes the tricky stuff - the entity &nbsp;, now `raw` edge is
 # given explicitly:
-12 0006 05 &nbsp;      raw                  '_
+12 0006 06 &nbsp;      raw                  '_
 
 # ... and constituent must be given explicitly for the token:
-13 0006 05 &nbsp;      token                '_,type=blank[12]
+13 0006 06 &nbsp;      token                '_,type=blank[12]
 
-14 0011 04 kota        token                type=word
-15 0011 04 kota        lemma,poleng-tagset  kot,pos=R:2,morpho=MżDP[14]
-16 0011 04 kota        lemma,poleng-tagset  kot,pos=R:2,morpho=MżBP[14]
-17 0011 04 kota        parse,gobio          rzeczownik,R=2,L=1,P=dop[15]
-18 0011 04 kota        parse,gobio          fraza\_rzeczownikowa,R=2,L=1,P=dop[15]
+14 0012 04 kota        token                type=word
+15 0012 04 kota        lemma,poleng-tagset  kot,pos=R:2,morpho=MżDP[14]
+16 0012 04 kota        lemma,poleng-tagset  kot,pos=R:2,morpho=MżBP[14]
+17 0012 04 kota        parse,gobio          rzeczownik,R=2,L=1,P=dop[15]
+18 0012 04 kota        parse,gobio          fraza\_rzeczownikowa,R=2,L=1,P=dop[15]
 
 # ... and a larger phrase composed of two subphrases (and a blank in between):
-19 0004 11 ma&nbsp;kota     parse,gobio     fraza\_czasownikowa,C=teraźniejszy,O=3,L=1[11-13-18]
+19 0004 12 ma&nbsp;kota     parse,gobio     fraza\_czasownikowa,C=teraźniejszy,O=3,L=1[11-13-18]
 
 # ... the whole structure
-20 0000 15 Ala ...;kota  parse,gobio     pełna\_fraza\_czasownikowa,C=teraźniejszy[6-7-19]
+20 0000 16 Ala ...;kota  parse,gobio     pełna\_fraza\_czasownikowa,C=teraźniejszy[6-7-19]
 
 # ... the fourth field is for humans (except for edges with implicit raw subedges!!), so
 # it can be truncated.
 
-22 0011 01 .           token                '.',type=punct
+21 0016 01 .           token                '.',type=punct
 
 # sentence as given by splitter:
-23 0016 12 Ala ...kota. splitter             sentence
+22 0000 16 Ala ...kota. splitter            sentence
 # note that it is composed of 12 sub-edges (edge 12 and 11 implicit ones)
 
 # and (syntactical) sentence, given by the parser:
-24 0016 12 Ala ...kota. parse,gobio         zdanie[21-22]
+23 0000 16 Ala ...kota. parse,gobio         zdanie[20-21]
 
 
 
