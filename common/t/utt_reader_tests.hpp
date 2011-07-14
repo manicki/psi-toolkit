@@ -17,27 +17,27 @@ public:
         std::list<Lattice::EdgeDescriptor> edges = lattice.edgesSorted(tokenTag);
         std::list<Lattice::EdgeDescriptor>::iterator ei = edges.begin();
         
-        TS_ASSERT_EQUALS(lattice.getEdgeAnnotationItem(*ei).getCategory(), "A");
+        TS_ASSERT_EQUALS(lattice.getEdgeAnnotationItem(*ei).getCategory(), "Amelie");
         ++ei;
-        TS_ASSERT_EQUALS(lattice.getEdgeAnnotationItem(*ei).getCategory(), "l");
+        TS_ASSERT_EQUALS(lattice.getEdgeAnnotationItem(*ei).getCategory(), " ");
         ++ei;
         TS_ASSERT_EQUALS(lattice.getEdgeAnnotationItem(*ei).getCategory(), "a");
         ++ei;
         TS_ASSERT_EQUALS(lattice.getEdgeAnnotationItem(*ei).getCategory(), " ");
         ++ei;
-        TS_ASSERT_EQUALS(lattice.getEdgeAnnotationItem(*ei).getCategory(), "m");
-        ++ei;
-        TS_ASSERT_EQUALS(lattice.getEdgeAnnotationItem(*ei).getCategory(), "a");
+        TS_ASSERT_EQUALS(lattice.getEdgeAnnotationItem(*ei).getCategory(), "un");
         ++ei;
         TS_ASSERT_EQUALS(lattice.getEdgeAnnotationItem(*ei).getCategory(), " ");
         ++ei;
-        TS_ASSERT_EQUALS(lattice.getEdgeAnnotationItem(*ei).getCategory(), "k");
+        TS_ASSERT_EQUALS(lattice.getEdgeAnnotationItem(*ei).getCategory(), "chat");
         ++ei;
-        TS_ASSERT_EQUALS(lattice.getEdgeAnnotationItem(*ei).getCategory(), "o");
+        TS_ASSERT_EQUALS(lattice.getEdgeAnnotationItem(*ei).getCategory(), ".");
         ++ei;
-        TS_ASSERT_EQUALS(lattice.getEdgeAnnotationItem(*ei).getCategory(), "t");
+        TS_ASSERT_EQUALS(lattice.getEdgeAnnotationItem(*ei).getCategory(), "Quelle");
         ++ei;
-        TS_ASSERT_EQUALS(lattice.getEdgeAnnotationItem(*ei).getCategory(), "a");
+        TS_ASSERT_EQUALS(lattice.getEdgeAnnotationItem(*ei).getCategory(), " ");
+        ++ei;
+        TS_ASSERT_EQUALS(lattice.getEdgeAnnotationItem(*ei).getCategory(), "âge");
         
         delete reader;
         

@@ -12,18 +12,23 @@ Lattice::~Lattice() {
 
 void Lattice::appendString(std::string text) {
     for (int i = 0; i < text.length(); ++i) {
+        
         Lattice::VertexDescriptor vertex = boost::add_vertex(graph_);
-        boost::add_edge(
-            vertices_.back(), 
-            vertex, 
-            EdgeEntry(
-                AnnotationItem(text.substr(i,1)), 
-                layerTagManager_.createSingletonTagCollection("raw"),
-                0.0
-            ), 
-            graph_
-        );
         vertices_.push_back(vertex);
+        
+        for (int j = 0; j < indexedTagCollections_.size(); ++j) {
+            graph_[vertex].outEdgesIndex.push_back(std::list<EdgeDescriptor>());
+            graph_[vertex].inEdgesIndex.push_back(std::list<EdgeDescriptor>());
+        }
+        
+        addEdge(
+            vertices_.back(),
+            vertex,
+            AnnotationItem(text.substr(i,1)),
+            layerTagManager_.createSingletonTagCollection("raw"),
+            0.0
+        );
+        
     }
 }
 
