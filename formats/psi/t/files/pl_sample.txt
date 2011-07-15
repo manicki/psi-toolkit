@@ -1,14 +1,15 @@
 # Sample file in PSI format for representing lattices.
-# PSI is inspired by UTT (but not compatible with UTT)
-# '#' is used to denote remark, empty lines are discarded as well.
+# PSI format is inspired by UTT format (but not compatible with UTT)
+# '#' is used to denote remarks, empty lines are discarded as well.
 
 # UTF-8 is used as the encoding.
 
-# This file represents a lattice for a sentence "Ala ma&nbsp;kota"
+# This file represents a lattice for the sentence "Ala ma&nbsp;<b>kta</b>"
 # ("&nbsp;" is an HTML entity for a non-breaking space, the sentence
-# will be treated as a fragment of an HTML file).
+# will be treated as a fragment of an HTML file; note the spelling mistake
+# in the last word).
 
-# Each edge is represented by one line, line is divided
+# Each edge is represented by one line, a line is divided
 # into six fields:
 # * (ordinal) number starting from 1
 # * beginning index in the text (starting from 0)
@@ -18,7 +19,7 @@
 # * annotation item - first the category, then attribute-value pairs
 #   separated with commas
 
-# Eg. the first edge is token 'Ala' (token categories are written with
+# E.g. the first edge is token 'Ala' (token categories are written with
 # quotes) of type `word`, it comprises the first 3 letters of the
 # text.
 
@@ -27,16 +28,16 @@
 # Actually, this is not the first edge. There are some implicit edges
 # in the text, i.e. if for an edge no consituents were specified using
 # square brackets (as is the case for the above edge) then it is
-# assumed that the edge is composed of N sub-edges of layer tag `raw`
+# assumed that the edge is composed of N sub-edges of layer tag `symbol`
 # (N is the length of the edge in characters), the category of each
 # is 'c where c is the given character (note that one quote is used
-# for `raw` edges whereas two quotes for tokens).
+# for `symbol` edges whereas two quotes for tokens).
 
 # In other words, if these sub-edges were specified explicitly, the
 # file would start in the following way:
-#  01 0000 01 A           raw                  'A
-#  02 0001 01 l           raw                  'l
-#  03 0002 01 a           raw                  'a
+#  01 0000 01 A           symbol               'A
+#  02 0001 01 l           symbol               'l
+#  03 0002 01 a           symbol               'a
 #  04 0000 03 Ala         token                'Ala',type=word[1-2-3]
 # ("[1-2-3]" means that the edge is composed of edges 1, 2 and 3).
 
@@ -54,7 +55,7 @@
 # (underscore is escaped)
 
 
-# And now the blank. Again a `raw` edge is implicit here.
+# And now the blank. Again a `symbol` edge is implicit here.
 # The same conventions for special characters is used as in UTT (e.g.
 # "_" denotes a space).
 07 0003 01 _           token                '_',type=blank
@@ -64,36 +65,67 @@
 10 0004 02 ma          lemma,poleng-tagset  mój,pos=ZP,morpho=ŻMP[8]
 11 0004 03 ma          parse,gobio          czasownik,C=teraźniejszy,R=any,L=1,O=3[9]
 
-# Here comes the tricky stuff - the entity &nbsp;, now `raw` edge is
+# Here comes the tricky stuff - the entity &nbsp;, now `symbol` edge is
 # given explicitly:
-12 0006 06 &nbsp;      raw                  '_
+12 0006 06 &nbsp;      symbol               '_
 
-# ... and constituent must be given explicitly for the token:
-13 0006 06 &nbsp;      token                '_,type=blank[12]
+13 0006 06 &nbsp;      token                '_,type=blank
+# ("[12]" could be given explicitly at the end of the above line)
 
-14 0012 04 kota        token                type=word
-15 0012 04 kota        lemma,poleng-tagset  kot,pos=R:2,morpho=MżDP[14]
-16 0012 04 kota        lemma,poleng-tagset  kot,pos=R:2,morpho=MżBP[14]
-17 0012 04 kota        parse,gobio          rzeczownik,R=2,L=1,P=dop[15]
-18 0012 04 kota        parse,gobio          fraza\_rzeczownikowa,R=2,L=1,P=dop[15]
+# A special edge representing HTML mark-up, 
+# note that it has no constituents! And no implicit
+# `symbol` edges are created (`symbol` are used 
+# for characters used used in the text proper).
+14 0012 03 <b>         markup,html          open[]
+
+# There is a spelling mistake in the last word of a sentence,
+# we assume that a spelling corrector was applied, so additional
+# character 'o' must be somehow represented in the lattice.
+# It means that there will be a "fork" in the sequence of symbols.
+
+# Normally it would be implicit, but because of the fork it should
+# be given explicitly:
+15 0015 01 k          symbol               'k
+
+# That's the token with the spelling mistake, "[15-]" means that
+# edge 15 should be used and then the implicit `symbol` edges follow.
+16 0015 04 kta        token                'kta',type=word[15-]
+
+# and now the fork, 'k must be given twice, because edges with the same
+# beginning and the end are forbidden in PSI lattices.
+# Most vertices are related to points between characters, there might be
+# "loose" vertices, their will be denoted with @N, where N is its number.
+# `*` at the beginning of the third line means that a point (vertex) is
+# referred to rather than the edge length.
+17 0015 *@0 k         symbol               'k
+18 @0   *0016 o       symbol               'o     
+19 0015 04 kta        token,corrector      'kota',type=word[17-18-]
+20 0015 03 kta        lemma,poleng-tagset  kot,pos=R:2,morpho=MżDP[19]
+21 0015 03 kta        lemma,poleng-tagset  kot,pos=R:2,morpho=MżBP[19]
+22 0015 03 kta        parse,gobio          rzeczownik,R=2,L=1,P=dop[20]
+23 0015 03 kta        parse,gobio          fraza\_rzeczownikowa,R=2,L=1,P=dop[22]
+
+24 0018 04 </b>       markup,html          close[]
+
+# phrase with markup:
+25 0012 10 <b>kta</b> parse,gobio          fraza\_rzeczownikowa,R=2,L=1,P=dop[14-23-24] 
 
 # ... and a larger phrase composed of two subphrases (and a blank in between):
-19 0004 12 ma&nbsp;kota     parse,gobio     fraza\_czasownikowa,C=teraźniejszy,O=3,L=1[11-13-18]
+26 0004 18 ma...</b>  parse,gobio          fraza\_czasownikowa,C=teraźniejszy,O=3,L=1[11-13-25]
+
+# ... the fourth field is for humans (except for edges with implicit symbol subedges!!), so
+# it can be truncated with `...`
 
 # ... the whole structure
-20 0000 16 Ala ...;kota  parse,gobio     pełna\_fraza\_czasownikowa,C=teraźniejszy[6-7-19]
+27 0000 22 Ala...</b>  parse,gobio       pełna\_fraza\_czasownikowa,C=teraźniejszy[6-7-26]
 
-# ... the fourth field is for humans (except for edges with implicit raw subedges!!), so
-# it can be truncated.
-
-21 0016 01 .           token                '.',type=punct
+28 0022 01 .           token             '.',type=punct
 
 # sentence as given by splitter:
-22 0000 16 Ala ...kota. splitter            sentence
-# note that it is composed of 12 sub-edges (edge 12 and 11 implicit ones)
+29 0000 23 Ala...</b>. splitter          sentence[]
 
 # and (syntactical) sentence, given by the parser:
-23 0000 16 Ala ...kota. parse,gobio         zdanie[20-21]
+30 0000 23 Ala...</b>. parse,gobio      zdanie[27-28]
 
 
 
