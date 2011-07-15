@@ -7,6 +7,7 @@
 #include <string>
 
 #include "lattice.hpp"
+#include "lattice_rw_utils.hpp"
 
 
 class LatticeReader {

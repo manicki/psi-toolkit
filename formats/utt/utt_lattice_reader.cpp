@@ -4,12 +4,15 @@
 void UTTLatticeReader::readIntoLattice(std::istream& inputStream, Lattice& lattice) {
     UTTLRGrammar grammar;
     std::string line;
+    std::string sentenceForm = "";
     int beginningOfSentencePosition = -1;
     while (std::getline(inputStream, line)) {
         UTTLRItem item;
         std::string::const_iterator begin = line.begin();
         std::string::const_iterator end = line.end();
         if (parse(begin, end, grammar, item)) {
+            
+            item.unescape();
             
             if (item.length > 0) {
 
@@ -33,10 +36,13 @@ void UTTLatticeReader::readIntoLattice(std::istream& inputStream, Lattice& latti
                     0.0,
                     partition
                 );
+                
+                sentenceForm += item.form;
             
             } else if (item.segmentType == "BOS") {
                 
                 beginningOfSentencePosition = item.position;
+                sentenceForm = "";
                 
             } else if (item.segmentType == "EOS") {
                 
@@ -44,16 +50,25 @@ void UTTLatticeReader::readIntoLattice(std::istream& inputStream, Lattice& latti
                     throw FileFormatException("UTT reader: EOS tag does not match any BOS tag.");
                 }
 
-                LayerTagCollection sentenceTag 
-                    = lattice.getLayerTagManager().createSingletonTagCollection("sentence");
+                LayerTagCollection tokenTag 
+                    = lattice.getLayerTagManager().createSingletonTagCollection("token");
                 
                 std::list<Lattice::EdgeDescriptor> sentencePartition;
                 for (int i = beginningOfSentencePosition; i < item.position + item.length; ++i) {
                     sentencePartition.push_back(
-                        lattice.firstOutEdge(lattice.getVertexForRawCharIndex(i), sentenceTag)
+                        lattice.firstOutEdge(lattice.getVertexForRawCharIndex(i), tokenTag)
                     );
                 }
                             
+                lattice.addEdge(
+                    lattice.getVertexForRawCharIndex(beginningOfSentencePosition),
+                    lattice.getVertexForRawCharIndex(item.position + item.length),
+                    AnnotationItem(sentenceForm),
+                    lattice.getLayerTagManager().createSingletonTagCollection("sentence"),
+                    0.0,
+                    sentencePartition
+                );
+
             }
             
         }

@@ -12,6 +12,7 @@ runner_SOURCES = \
 	tests/runner.cpp \
 	../common/annotation_item.cpp \
 	../common/lattice.cpp \
+	../common/lattice_rw_utils.cpp \
 	../common/layer_tag_collection.cpp \
 	../common/layer_tag_manager.cpp \
 	../formats/utt/utt_lattice_reader.cpp

@@ -20,6 +20,12 @@ struct UTTLRItem {
     std::string segmentType;
     std::string form;
     std::string annotations;
+    
+    void unescape() {
+        segmentType = LatticeRWUtils::unescape("UTT", segmentType);
+        form = LatticeRWUtils::unescape("UTT", form);
+        annotations = LatticeRWUtils::unescape("UTT", annotations);
+    }
 };
 
 
@@ -68,6 +74,7 @@ public:
      * Gets format name (here: "UTT").
      */
     std::string getFormatName();
+
 };
 
 
