@@ -53,22 +53,52 @@ Lattice::EdgeDescriptor Lattice::addEdge(
     Score score,
     std::list<EdgeDescriptor> partition
 ) {
-    std::pair<EdgeDescriptor, bool> result = boost::add_edge(
-        from, 
-        to, 
-        EdgeEntry(annotationItem, tags, score, partition), 
-        graph_
-    );
-    if (result.second) {
-        for (int i = 0; i < indexedTagCollections_.size(); ++i) {
-            if (createIntersection(tags, indexedTagCollections_.right.at(i)).isNonempty()) {
-                graph_[from].outEdgesIndex[i].push_back(result.first);
-                graph_[to].inEdgesIndex[i].push_back(result.first);
-            }
+    
+    std::pair<EdgeDescriptor, bool> result;
+    
+    std::pair<VertexDescriptor, VertexDescriptor> vpair(from, to);
+    
+    std::pair<
+        std::pair<VertexDescriptor, VertexDescriptor>, 
+        AnnotationItem
+    > hkey(vpair, annotationItem);
+    
+    std::pair<VVCHash::iterator, bool> insertResult(vvcHash_.insert(
+        std::pair<
+            std::pair<std::pair<VertexDescriptor, VertexDescriptor>, AnnotationItem>,
+            EdgeDescriptor
+        >(hkey, EdgeDescriptor())
+    ));
+    
+    if (insertResult.second) {
+        
+        if (!edgeCounterHash_[vpair]) {
+            edgeCounterHash_[vpair] = 1;
+        } else {
+            ++edgeCounterHash_[vpair];
         }
-        return result.first;
+        
+        result = boost::add_edge(
+            from, 
+            to, 
+            EdgeEntry(annotationItem, tags, score, partition), 
+            graph_
+        );
+        
+        if (result.second) {
+            for (int i = 0; i < indexedTagCollections_.size(); ++i) {
+                if (createIntersection(tags, indexedTagCollections_.right.at(i)).isNonempty()) {
+                    graph_[from].outEdgesIndex[i].push_back(result.first);
+                    graph_[to].inEdgesIndex[i].push_back(result.first);
+                }
+            }
+            return result.first;
+        }
+        
     }
+    
     throw NoEdgeException("No edge added.");
+
 }
 
 std::pair<Lattice::EdgeDescriptorIterator, Lattice::EdgeDescriptorIterator> Lattice::outEdges(
