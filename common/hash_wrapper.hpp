@@ -4,6 +4,7 @@
 
 #ifdef __GNUC__
 
+
 #include <ext/hash_map>
 #include <ext/hash_set>
 
@@ -35,7 +36,6 @@ struct HashWrapperSet2 {
     typedef __gnu_cxx::hash_set<A,B> type;
 };
 
-
 #define HASH_WRAPPER_HASH_INTRO namespace __gnu_cxx {
 
 #define HASH_WRAPPER_HASH_OUTRO };
@@ -46,7 +46,9 @@ struct HashWrapperSet2 {
 
 #define HASH_WRAPPER_EXTRA_STUFF
 
+
 #else
+
 
 #include <hash_map>
 #include <hash_set>
@@ -71,7 +73,6 @@ struct HashWrapperSet2 {
     typedef stdext::hash_set<A,B> type;
 };
 
-
 #define HASH_WRAPPER_HASH_INTRO namespace stdext {
 
 #define HASH_WRAPPER_HASH_OUTRO };
@@ -87,3 +88,5 @@ static const size_t min_buckets = 8;
 
 #endif
 
+
+#endif

@@ -10,6 +10,7 @@
 
 #include "annotation_item.hpp"
 #include "exceptions.hpp"
+#include "hash_wrapper.hpp"
 #include "layer_tag_manager.hpp"
 #include "lattice_rw_utils.hpp"
 
@@ -144,6 +145,7 @@ public:
     const AnnotationItem& getEdgeAnnotationItem(EdgeDescriptor edge);
     const LayerTagCollection& getEdgeLayerTags(EdgeDescriptor edge);
 
+
 private:
     
     Graph graph_;
@@ -151,7 +153,7 @@ private:
     LayerTagManager layerTagManager_;
     
     /**
-     * Maintains the topologically ordered vertices.
+     * vector of sorted vertices
      */
     std::vector<VertexDescriptor> vertices_;
     
@@ -161,6 +163,76 @@ private:
     TagCollectionsBimap indexedTagCollections_;
     
     int addTagCollectionIndex_(LayerTagCollection tags);
+
+
+    struct HashFun {
+        HASH_WRAPPER_EXTRA_STUFF
+
+        unsigned int operator()(
+            const std::pair<std::pair<VertexDescriptor, VertexDescriptor>, AnnotationItem>& k
+        ) const {
+#ifdef __VS__
+            return HASH_WRAPPER_FULL_HASH_TRAITS<int>().operator()(int(k.first.first))
+                ^ HASH_WRAPPER_FULL_HASH_TRAITS<int>().operator()(int(k.first.second))
+                ^ HASH_WRAPPER_FULL_HASH_TRAITS<std::string>().operator()(k.second.getCategory());
+#else
+            return (int(k.first.first) << 8) 
+                ^ int(k.first.second) 
+                ^ (HASH_WRAPPER_FULL_HASH_TRAITS<std::string>().operator()(k.second.getCategory()) 
+                    << 16);
+#endif
+	    }
+
+#ifdef __VS__
+        bool operator()(
+            const std::pair<std::pair<VertexDescriptor, VertexDescriptor>, AnnotationItem>& a,
+			const std::pair<std::pair<VertexDescriptor, VertexDescriptor>, AnnotationItem>& b
+        ) const {
+            return a != b;
+	    }
+#endif
+    };
+
+
+    struct VertexPairHashFun {
+        HASH_WRAPPER_EXTRA_STUFF
+
+        unsigned int operator()(
+            const std::pair<VertexDescriptor, VertexDescriptor>& k
+        ) const {
+#ifdef __VS__
+            return HASH_WRAPPER_FULL_HASH_TRAITS<int>().operator()(int(k.first))
+                ^ HASH_WRAPPER_FULL_HASH_TRAITS<int>().operator()(int(k.second));
+#else
+            return (int(k.first) << 8) ^ int(k.second);
+#endif
+	    }
+
+#ifdef __VS__
+        bool operator()(
+            const std::pair<VertexDescriptor, VertexDescriptor>& a,
+			const std::pair<VertexDescriptor, VertexDescriptor>& b
+        ) const {
+            return a != b;
+	    }
+#endif
+    };
+
+
+    typedef HashWrapper3<
+        std::pair<std::pair<VertexDescriptor, VertexDescriptor>, AnnotationItem>, 
+        EdgeDescriptor, 
+        HashFun
+    >::type VVCHash;
+
+    typedef HashWrapper3<
+        std::pair<VertexDescriptor, VertexDescriptor>, 
+        int, 
+        VertexPairHashFun
+    >::type EdgeCounterHash;
+    
+    VVCHash vvcHash_;
+    EdgeCounterHash edgeCounterHash_;
 
 };
 
