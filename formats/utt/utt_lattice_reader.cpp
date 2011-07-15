@@ -1,12 +1,12 @@
-#include "utt_reader.hpp"
+#include "utt_lattice_reader.hpp"
 
 
-void UTTReader::readIntoLattice(std::istream& inputStream, Lattice& lattice) {
-    UTTReaderGrammar grammar;
+void UTTLatticeReader::readIntoLattice(std::istream& inputStream, Lattice& lattice) {
+    UTTLRGrammar grammar;
     std::string line;
     int beginningOfSentencePosition = -1;
     while (std::getline(inputStream, line)) {
-        UTTReaderItem item;
+        UTTLRItem item;
         std::string::const_iterator begin = line.begin();
         std::string::const_iterator end = line.end();
         if (parse(begin, end, grammar, item)) {
@@ -60,6 +60,6 @@ void UTTReader::readIntoLattice(std::istream& inputStream, Lattice& lattice) {
     }
 }
 
-std::string UTTReader::getFormatName() {
+std::string UTTLatticeReader::getFormatName() {
     return "UTT";
 }

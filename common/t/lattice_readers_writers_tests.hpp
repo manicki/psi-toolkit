@@ -1,14 +1,14 @@
-#include "utt_reader.hpp"
+#include "utt_lattice_reader.hpp"
 
 
-class UTTReaderTests : public CxxTest::TestSuite {
+class LatticeReadersWritersTests : public CxxTest::TestSuite {
 
 public:
 
-    void test_simple() {
+    void testUTTLatticeReader() {
         
         Lattice lattice("");
-        LatticeReader * reader = new UTTReader();
+        LatticeReader * reader = new UTTLatticeReader();
         
         reader->readIntoLattice("../test/files/fr_simple_puddle_input.txt", lattice);
         

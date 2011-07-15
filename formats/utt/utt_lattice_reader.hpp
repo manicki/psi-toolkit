@@ -1,5 +1,5 @@
-#ifndef UTT_READER_HDR
-#define UTT_READER_HDR
+#ifndef UTT_LATTICE_READER_HDR
+#define UTT_LATTICE_READER_HDR
 
 #include <boost/fusion/include/adapt_struct.hpp>
 #include <boost/fusion/include/io.hpp>
@@ -14,7 +14,7 @@
 using namespace boost::spirit;
 
 
-struct UTTReaderItem {
+struct UTTLRItem {
     int position;
     int length;
     std::string segmentType;
@@ -24,7 +24,7 @@ struct UTTReaderItem {
 
 
 BOOST_FUSION_ADAPT_STRUCT(
-    UTTReaderItem,
+    UTTLRItem,
     (int, position)
     (int, length)
     (std::string, segmentType)
@@ -33,9 +33,9 @@ BOOST_FUSION_ADAPT_STRUCT(
 )
 
 
-struct UTTReaderGrammar : public qi::grammar<std::string::const_iterator, UTTReaderItem()> {
+struct UTTLRGrammar : public qi::grammar<std::string::const_iterator, UTTLRItem()> {
     
-    UTTReaderGrammar() : UTTReaderGrammar::base_type(start) {
+    UTTLRGrammar() : UTTLRGrammar::base_type(start) {
         
         start 
             %= qi::int_ 
@@ -50,12 +50,12 @@ struct UTTReaderGrammar : public qi::grammar<std::string::const_iterator, UTTRea
             
     }
     
-    qi::rule<std::string::const_iterator, UTTReaderItem()> start;
+    qi::rule<std::string::const_iterator, UTTLRItem()> start;
     
 };
 
 
-class UTTReader : public LatticeReader {
+class UTTLatticeReader : public LatticeReader {
 
 public:
     /**
