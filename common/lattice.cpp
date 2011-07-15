@@ -11,10 +11,8 @@ Lattice::~Lattice() {
 }
 
 void Lattice::appendString(std::string text) {
-    int i = 0;
-    while (i < text.length()) {
-        
-        int symLen = LatticeRWUtils::utf8SymbolLength(text[i]);
+    UTF8String utext(text);
+    for (UTF8String::iterator uti = utext.begin(); uti != utext.end(); ++uti) {
         
         Lattice::VertexDescriptor vertex = boost::add_vertex(graph_);
         vertices_.push_back(vertex);
@@ -27,12 +25,10 @@ void Lattice::appendString(std::string text) {
         addEdge(
             vertices_.back(),
             vertex,
-            AnnotationItem(text.substr(i,symLen)),
+            AnnotationItem(*uti),
             layerTagManager_.createSingletonTagCollection("raw"),
             0.0
         );
-        
-        i += symLen;
         
     }
 }

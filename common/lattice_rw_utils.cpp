@@ -26,7 +26,16 @@ std::string LatticeRWUtils::unescape(std::string formatName, std::string str) {
     return result;
 }
 
-int LatticeRWUtils::utf8SymbolLength(unsigned char firstByte) {
+UTF8String::UTF8String(std::string str) : std::string(str) {
+    int i = 0;
+    while (i < str.length()) {
+        int symLen = utf8SymbolLength_(str[i]);
+        s_.push_back(str.substr(i,symLen));
+        i += symLen;
+    }
+}
+
+int UTF8String::utf8SymbolLength_(unsigned char firstByte) {
     if ((firstByte & 0200) == 0000) return 1;
     if ((firstByte & 0340) == 0300) return 2;
     if ((firstByte & 0360) == 0340) return 3;
