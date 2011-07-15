@@ -26,7 +26,7 @@ std::string LatticeRWUtils::unescape(std::string formatName, std::string str) {
     return result;
 }
 
-UTF8String::UTF8String(std::string str) : std::string(str) {
+UTF8String::UTF8String(const std::string& str) : std::string(str) {
     int i = 0;
     while (i < str.length()) {
         int symLen = utf8SymbolLength_(str[i]);
