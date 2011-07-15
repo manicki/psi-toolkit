@@ -8,9 +8,10 @@
 
 #include <boost/graph/adjacency_list.hpp>
 
-#include "layer_tag_manager.hpp"
 #include "annotation_item.hpp"
 #include "exceptions.hpp"
+#include "layer_tag_manager.hpp"
+#include "lattice_rw_utils.hpp"
 
 /*!
   Lattice is used to keep all the information extracted by annotators
