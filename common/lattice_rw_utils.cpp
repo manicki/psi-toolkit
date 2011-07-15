@@ -35,6 +35,14 @@ UTF8String::UTF8String(std::string str) : std::string(str) {
     }
 }
 
+std::string UTF8String::substr(size_t pos, size_t n) const {
+    std::string result = "";
+    for (int i = pos; i < pos + n; ++i) {
+        result += s_[i];
+    }
+    return result;
+}
+
 int UTF8String::utf8SymbolLength_(unsigned char firstByte) {
     if ((firstByte & 0200) == 0000) return 1;
     if ((firstByte & 0340) == 0300) return 2;

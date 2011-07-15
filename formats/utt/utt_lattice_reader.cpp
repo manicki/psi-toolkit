@@ -16,7 +16,7 @@ void UTTLatticeReader::readIntoLattice(std::istream& inputStream, Lattice& latti
             
             if (item.length > 0) {
 
-                lattice.appendString(item.form.substr(0, item.length));
+                lattice.appendString(UTF8String(item.form).substr(0, item.length));
 
                 LayerTagCollection rawTag 
                     = lattice.getLayerTagManager().createSingletonTagCollection("raw");
