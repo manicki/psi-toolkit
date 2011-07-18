@@ -37,16 +37,9 @@ LayerTagCollection LayerTagManager::createTagCollection(LayerTagMask mask) {
         return result;
     }
     if (mask.isNone()) return LayerTagCollection();
-    if (mask.tags_) return LayerTagCollection(*(mask.tags_));
-    return LayerTagCollection();
+    return LayerTagCollection(mask.tags_);
 }
 
-LayerTagMask LayerTagManager::getMask(LayerTagCollection tagCollection) {
-    LayerTagMask result;
-    result.tags_ = new LayerTagCollection(tagCollection);
-    return result;
-}
-    
 std::list<std::string> LayerTagManager::getTagNames(const LayerTagCollection& tagCollection) {
     std::list<std::string> result;
     for (

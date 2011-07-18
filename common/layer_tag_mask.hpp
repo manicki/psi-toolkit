@@ -7,10 +7,6 @@ class LayerTagMask {
 
 public:
 
-    ~LayerTagMask() {
-        delete tags_;
-    }
-    
     bool isNone();
     
     bool isSome();
@@ -44,7 +40,7 @@ private:
     /**
      * private constructor! only LayerTagManager can be used to create layer tag masks
      */
-    LayerTagMask() : any_(false), none_(false) { }
+    LayerTagMask(LayerTagCollection tags) : any_(false), none_(false), tags_(tags) { }
     
     /**
      * private constructor! only LayerTagManager can be used to create layer tag masks.
@@ -52,7 +48,7 @@ private:
      */
     LayerTagMask(bool val) : any_(val), none_(!val) { }
     
-    LayerTagCollection * tags_;
+    LayerTagCollection tags_;
     
     bool any_;
     bool none_;

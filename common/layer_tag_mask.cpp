@@ -1,11 +1,11 @@
 #include "layer_tag_mask.hpp"
 
 bool LayerTagMask::isNone() {
-    return none_ || (tags_->isEmpty() && (none_ = true));
+    return none_ || (tags_.isEmpty() && (none_ = true));
 }
 
 bool LayerTagMask::isSome() {
-    return any_ || tags_->isNonempty();
+    return any_ || tags_.isNonempty();
 }
 
 bool LayerTagMask::isAny() {
@@ -13,7 +13,7 @@ bool LayerTagMask::isAny() {
 }
 
 bool LayerTagMask::operator<(LayerTagMask other) const {
-    return *tags_ < *(other.tags_);
+    return tags_ < other.tags_;
 }
 
 LayerTagMask createUnion(
@@ -23,9 +23,7 @@ LayerTagMask createUnion(
     if (mask1.any_ || mask2.any_) return LayerTagMask(true);
     if (mask1.none_) return mask2;
     if (mask2.none_) return mask1;
-    LayerTagMask result;
-    result.tags_ = new LayerTagCollection(createUnion(*(mask1.tags_), *(mask2.tags_)));
-    return result;
+    return LayerTagMask(createUnion(mask1.tags_, mask2.tags_));
 }
 
 LayerTagMask createIntersection(
@@ -35,7 +33,5 @@ LayerTagMask createIntersection(
     if (mask1.none_ || mask2.none_) return LayerTagMask(false);
     if (mask1.any_) return mask2;
     if (mask2.any_) return mask1;
-    LayerTagMask result;
-    result.tags_ = new LayerTagCollection(createIntersection(*(mask1.tags_), *(mask2.tags_)));
-    return result;
+    return LayerTagMask(createIntersection(mask1.tags_, mask2.tags_));
 }

@@ -48,6 +48,8 @@ public:
     );
 
     friend class LayerTagManager;
+    
+    friend class LayerTagMask;
 
 private:
     /**

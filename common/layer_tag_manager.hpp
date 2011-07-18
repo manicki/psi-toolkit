@@ -37,7 +37,9 @@ public:
         return LayerTagMask(true);
     }
     
-    LayerTagMask getMask(LayerTagCollection tagCollection);
+    LayerTagMask getMask(LayerTagCollection tagCollection) {
+        return LayerTagMask(tagCollection);
+    }
     
     LayerTagMask getMask(std::string tagName) { 
         return getMask(createSingletonTagCollection(tagName)); 
