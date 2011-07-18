@@ -15,6 +15,6 @@ public:
      * Gets format name (eg. "UTT", "BIN" etc.)
      */
     virtual std::string getFormatName() = 0;
-}
+};
 
 #endif

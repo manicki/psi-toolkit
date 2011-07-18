@@ -15,6 +15,8 @@ runner_SOURCES = \
 	../common/lattice_rw_utils.cpp \
 	../common/layer_tag_collection.cpp \
 	../common/layer_tag_manager.cpp \
+	../formats/psi/psi_lattice_reader.cpp \
+	../formats/psi/psi_lattice_writer.cpp \
 	../formats/utt/utt_lattice_reader.cpp
 
 runner_CPPFLAGS = ${compiler_flags} \
@@ -29,8 +31,10 @@ runner_CPPFLAGS = ${compiler_flags} \
 data_to_be_installed = install-testfiles
 
 install-testfiles:
-	mkdir -p $(exec_prefix)/test/files
-	$(cpprog) ../formats/utt/t/files/*.* $(exec_prefix)/test/files
+	mkdir -p $(exec_prefix)/test/files/psi
+	mkdir -p $(exec_prefix)/test/files/utt
+	$(cpprog) ../formats/psi/t/files/*.* $(exec_prefix)/test/files/psi/
+	$(cpprog) ../formats/utt/t/files/*.* $(exec_prefix)/test/files/utt/
 
 install-data-hook: $(data_to_be_installed)
 
