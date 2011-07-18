@@ -133,6 +133,9 @@ public:
         LayerTagMask mask
     );
 
+    std::pair<OutEdgeIterator, OutEdgeIterator> allOutEdges(VertexDescriptor vertex);
+    std::pair<InEdgeIterator, InEdgeIterator> allInEdges(VertexDescriptor vertex);
+
     EdgeDescriptor firstOutEdge(VertexDescriptor vertex, LayerTagMask mask);
     EdgeDescriptor firstInEdge(VertexDescriptor vertex, LayerTagMask mask);
 

@@ -123,10 +123,23 @@ std::pair<Lattice::EdgeDescriptorIterator, Lattice::EdgeDescriptorIterator> Latt
     );
 }
 
+std::pair<Lattice::OutEdgeIterator, Lattice::OutEdgeIterator> Lattice::allOutEdges(
+    Lattice::VertexDescriptor vertex
+) {
+    return boost::out_edges(vertex, graph_);
+}
+
+std::pair<Lattice::InEdgeIterator, Lattice::InEdgeIterator> Lattice::allInEdges(
+    Lattice::VertexDescriptor vertex
+) {
+    return boost::in_edges(vertex, graph_);
+}
+
 Lattice::EdgeDescriptor Lattice::firstOutEdge(
     Lattice::VertexDescriptor vertex, 
     LayerTagMask mask
 ) {
+    if (mask.isAny()) return *(boost::out_edges(vertex, graph_).first);
     return *(outEdges(vertex, mask).first);
 }
 
@@ -134,6 +147,7 @@ Lattice::EdgeDescriptor Lattice::firstInEdge(
     Lattice::VertexDescriptor vertex, 
     LayerTagMask mask
 ) {
+    if (mask.isAny()) return *(boost::in_edges(vertex, graph_).first);
     return *(inEdges(vertex, mask).first);
 }
 
