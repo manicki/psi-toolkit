@@ -22,7 +22,7 @@ struct UTTLRItem {
     std::string form;
     std::string annotations;
     std::string unused;
-    
+
     void unescape() {
         segmentType = LatticeRWUtils::unescape("UTT", segmentType);
         form = LatticeRWUtils::unescape("UTT", form);
@@ -45,24 +45,24 @@ BOOST_FUSION_ADAPT_STRUCT(
 
 
 struct UTTLRGrammar : public qi::grammar<std::string::const_iterator, UTTLRItem()> {
-    
+
     UTTLRGrammar() : UTTLRGrammar::base_type(start) {
-        
-        start 
-            %= qi::int_ 
+
+        start
+            %= qi::int_
             >> +(qi::space)
-            >> qi::int_ 
+            >> qi::int_
             >> +(qi::space)
             >> +(qi::char_ - ' ')
-            >> +(qi::space) 
+            >> +(qi::space)
             >> +(qi::char_ - ' ')
             >> -(qi::lexeme[' ' >> +(qi::char_)])
             ;
-            
+
     }
-    
+
     qi::rule<std::string::const_iterator, UTTLRItem()> start;
-    
+
 };
 
 

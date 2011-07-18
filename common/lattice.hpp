@@ -37,17 +37,17 @@
 
 
 class Lattice {
-    
+
 public:
 
     struct VertexEntry;
     struct EdgeEntry;
 
     typedef boost::adjacency_list<
-        boost::vecS, 
-        boost::vecS, 
+        boost::vecS,
+        boost::vecS,
         boost::bidirectionalS,
-        VertexEntry, 
+        VertexEntry,
         EdgeEntry
     > Graph;
 
@@ -56,24 +56,24 @@ public:
     typedef Graph::edge_iterator EdgeIterator;
     typedef Graph::out_edge_iterator OutEdgeIterator;
     typedef Graph::in_edge_iterator InEdgeIterator;
-    
+
     typedef std::list<EdgeDescriptor>::const_iterator EdgeDescriptorIterator;
-    
+
     typedef double Score;
 
     struct VertexEntry {
         std::vector< std::list<EdgeDescriptor> > outEdgesIndex;
         std::vector< std::list<EdgeDescriptor> > inEdgesIndex;
     };
-    
+
     struct EdgeEntry {
         AnnotationItem category;
         LayerTagCollection tagList;
         Score score;
         std::list<EdgeDescriptor> partition;
-        
+
         EdgeEntry(
-            AnnotationItem aCategory, 
+            AnnotationItem aCategory,
             LayerTagCollection aTagList,
             Score aScore,
             std::list<EdgeDescriptor> aPartition
@@ -88,7 +88,7 @@ public:
     Lattice(std::string text);
 
     ~Lattice();
-    
+
     void appendString(std::string text);
 
     /**
@@ -108,7 +108,7 @@ public:
 
     /**
      * Adds an edge from vertex `from` to vertex `to` with `annonation_item`
-     * and `tags` as layer tags. The partition of the edge into subedges 
+     * and `tags` as layer tags. The partition of the edge into subedges
      * is given with `partition` argument.
      *
      * A new will not be added if there is already an edge from vertex `from`
@@ -124,12 +124,12 @@ public:
 
     // return outgoing edges which has at least one layer tag from `mask`
     std::pair<EdgeDescriptorIterator, EdgeDescriptorIterator> outEdges(
-        VertexDescriptor vertex, 
+        VertexDescriptor vertex,
         LayerTagMask mask
     );
 
     std::pair<EdgeDescriptorIterator, EdgeDescriptorIterator> inEdges(
-        VertexDescriptor vertex, 
+        VertexDescriptor vertex,
         LayerTagMask mask
     );
 
@@ -150,21 +150,21 @@ public:
 
 
 private:
-    
+
     Graph graph_;
-    
+
     LayerTagManager layerTagManager_;
-    
+
     /**
      * vector of sorted vertices
      */
     std::vector<VertexDescriptor> vertices_;
-    
+
     typedef boost::bimap<LayerTagCollection,int> TagCollectionsBimap;
     typedef TagCollectionsBimap::value_type TagCollectionsBimapItem;
     typedef TagCollectionsBimap::left_map::const_iterator TagCollectionsBimapLeftIterator;
     TagCollectionsBimap indexedTagCollections_;
-    
+
     int addTagCollectionIndex_(LayerTagCollection tags);
 
 
@@ -179,9 +179,9 @@ private:
                 ^ HASH_WRAPPER_FULL_HASH_TRAITS<int>().operator()(int(k.first.second))
                 ^ HASH_WRAPPER_FULL_HASH_TRAITS<std::string>().operator()(k.second.getCategory());
 #else
-            return (int(k.first.first) << 8) 
-                ^ int(k.first.second) 
-                ^ (HASH_WRAPPER_FULL_HASH_TRAITS<std::string>().operator()(k.second.getCategory()) 
+            return (int(k.first.first) << 8)
+                ^ int(k.first.second)
+                ^ (HASH_WRAPPER_FULL_HASH_TRAITS<std::string>().operator()(k.second.getCategory())
                     << 16);
 #endif
 	    }
@@ -223,17 +223,17 @@ private:
 
 
     typedef HashWrapper3<
-        std::pair<std::pair<VertexDescriptor, VertexDescriptor>, AnnotationItem>, 
-        EdgeDescriptor, 
+        std::pair<std::pair<VertexDescriptor, VertexDescriptor>, AnnotationItem>,
+        EdgeDescriptor,
         HashFun
     >::type VVCHash;
 
     typedef HashWrapper3<
-        std::pair<VertexDescriptor, VertexDescriptor>, 
-        int, 
+        std::pair<VertexDescriptor, VertexDescriptor>,
+        int,
         VertexPairHashFun
     >::type EdgeCounterHash;
-    
+
     VVCHash vvcHash_;
     EdgeCounterHash edgeCounterHash_;
 
@@ -241,4 +241,3 @@ private:
 
 
 #endif
-

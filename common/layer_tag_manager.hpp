@@ -22,9 +22,9 @@ public:
     LayerTagCollection createSingletonTagCollection(std::string tagName);
 
     LayerTagCollection createTagCollection(std::list<std::string> tagNames);
-    
+
     LayerTagCollection createTagCollection(LayerTagMask mask);
-    
+
     /**
      * returns tags sorted alphabetically
      */
@@ -36,24 +36,24 @@ public:
     LayerTagMask anyTag() {
         return LayerTagMask(true);
     }
-    
+
     LayerTagMask getMask(LayerTagCollection tagCollection) {
         return LayerTagMask(tagCollection);
     }
-    
-    LayerTagMask getMask(std::string tagName) { 
-        return getMask(createSingletonTagCollection(tagName)); 
+
+    LayerTagMask getMask(std::string tagName) {
+        return getMask(createSingletonTagCollection(tagName));
     }
-    
-    LayerTagMask getMask(std::list<std::string> tagNames) { 
+
+    LayerTagMask getMask(std::list<std::string> tagNames) {
         return getMask(createTagCollection(tagNames));
     }
-    
+
 private:
     typedef boost::bimap<std::string,int> StringBimap;
     typedef StringBimap::value_type StringBimapItem;
     StringBimap m_;
-    
+
     int size_;
 
 };

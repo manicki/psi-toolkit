@@ -7,8 +7,8 @@
 #include "layer_tag_collection.hpp"
 
 /*!
-  Components capable of adding annotations (edges) to a PSI lattice 
-  are (tokenisers, lemmatisers, parsers etc.) are called *annotators*. 
+  Components capable of adding annotations (edges) to a PSI lattice
+  are (tokenisers, lemmatisers, parsers etc.) are called *annotators*.
 */
 class Annotator {
 
@@ -32,7 +32,7 @@ public:
      * Returns layer tags that must be provided in the lattice for
      * the annotator to proceed.
      *
-     * This information can be used by the framework to automagically 
+     * This information can be used by the framework to automagically
      * run other annotators before the given annotator is launched.
      */
     virtual std::list<LayerTagCollection> requiredLayerTags() = 0;
@@ -44,7 +44,7 @@ public:
      * (non-obligatory) annotators before the given annotator is launched.
      */
     virtual std::list<LayerTagCollection> optionalLayerTags() = 0;
- 
+
     /**
      * Layer tags provided by the given annotator. This information
      * could be used by the framework when considering `requiredLayerTags`
