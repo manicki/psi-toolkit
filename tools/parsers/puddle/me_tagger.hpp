@@ -23,7 +23,7 @@ namespace poleng {
 
 namespace bonsai {
     namespace puddle {
-    
+
         class MeTagger : public Tagger {
           public:
             MeTagger();
@@ -34,27 +34,27 @@ namespace bonsai {
             void train(int iterations=50);
             void saveModel(std::string);
             void loadModel(std::string);
-            
+
           private:
             typedef std::string Outcome;
             typedef std::string Feature;
             typedef std::vector<Feature> Context;
-            
+
             boost::u32regex rxUpperCaseFirst;
             boost::u32regex rxUpperCaseAll;
             boost::u32regex rxContainsNumber;
             boost::u32regex rxIsNumber;
             boost::u32regex rxContainsPunct;
             boost::u32regex rxContainsLetter;
-            
+
             maxent::MaxentModel m;
             bool openForEvents;
             bool posModelLoaded;
-            
+
             boost::u32regex tag_to_regex(std::string);
             Context create_context(Entities &, int, int);
         };
-    
+
         typedef boost::shared_ptr<MeTagger> MeTaggerPtr;
     }
 }

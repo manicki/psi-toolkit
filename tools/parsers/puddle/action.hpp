@@ -39,7 +39,7 @@ class Action
     private:
         std::string type;
         bool verbose;
-       
+
         //std::vector<std::string> arguments;
 
 };

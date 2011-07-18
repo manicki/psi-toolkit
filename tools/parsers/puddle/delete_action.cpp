@@ -157,7 +157,7 @@ bool DeleteAction::apply(Entities &entities, Edges &edges, int currentEntity, st
     }
     else if (entity->getType() == "syntok")
     {
-        Syntok *syntok = (Syntok*) entity; 
+        Syntok *syntok = (Syntok*) entity;
         std::string id = syntok->getId();
         Edges::iterator e;
         for (e = edges.begin(); e != edges.end(); e ++)
@@ -184,7 +184,7 @@ bool DeleteAction::apply(Entities &entities, Edges &edges, int currentEntity, st
                         // obserwowac trzeba, czy to tu dopisane nie rozwali czegos gdzie indziej
         }
     }
-//    std::cerr << "zwracam: " << (ret ? "true" : "false") << std::endl; 
+//    std::cerr << "zwracam: " << (ret ? "true" : "false") << std::endl;
 
     return ret;
     //return ret;
@@ -237,7 +237,7 @@ bool DeleteAction::test(Entities entities, int currentEntity, std::vector<int> m
 //            else
 //            {
 //                std::cout << "Nie wyrzuce tokenu o indeksie: " << (currentEntity + entIndex) << std::endl;
-//                
+//
 ////                std::cout << "Nie spasowalem: " << compare << " z " << pattern.str() << std::endl;
 //            }
             i ++;
@@ -282,7 +282,7 @@ bool DeleteAction::test(Entities entities, int currentEntity, std::vector<int> m
     }
     else if (entity->getType() == "syntok")
     {
-        Syntok *syntok = (Syntok*) entity; 
+        Syntok *syntok = (Syntok*) entity;
         std::vector<std::string> interps = syntok->getCompiledInterpretations();
         std::vector<std::string>::iterator i = interps.begin();
         while (i != interps.end())

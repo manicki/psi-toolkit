@@ -130,7 +130,7 @@ bool AttachAction::apply(Entities &entities, Edges &edges, int currentEntity, st
         endId = ((Token*)right)->getId();
     else if (right->getType() == "syntok")
         endId = ((Syntok*)right)->getId();
-    
+
     Edges::iterator e = edges.begin();// + currentEntity; //TODO:czy to jest zawsze prawda, ze taki przeskok mozna se zrobic? na te chwile strzelam, ze tak...
     int startIndex = 0; //currentEntity;
     while (e != edges.end())
@@ -315,7 +315,7 @@ std::string AttachAction::getGroup()
 int AttachAction::getHead()
 {
     return head;
-    //return (head + 1); 
+    //return (head + 1);
 }
 
 void AttachAction::setGroup(std::string aGroup)

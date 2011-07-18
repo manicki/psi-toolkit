@@ -41,7 +41,7 @@ class Token : public Entity // - zrobic jakas abstrakcyjna klase z ktorej bedzie
         void clearMorphology();
         void clearCompiledInterpretations();
         void updateCompiled();
-        
+
         void setId(std::string aId);
         void setId(int aId);
         std::string getId();

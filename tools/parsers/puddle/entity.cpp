@@ -10,16 +10,16 @@ namespace bonsai
     {
 
 Entity::Entity()
-{ 
-    type = "unknown"; 
-    id = ""; 
-    //children = new Entities; 
+{
+    type = "unknown";
+    id = "";
+    //children = new Entities;
 }
 
 Entity::~Entity()
-{ 
-   // delete children; 
-//    std::cerr << "destrukcja entity" << std::endl; 
+{
+   // delete children;
+//    std::cerr << "destrukcja entity" << std::endl;
 }
 
 std::string Entity::getCompiled()

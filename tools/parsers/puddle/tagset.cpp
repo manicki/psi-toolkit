@@ -74,7 +74,7 @@ void Tagset::readFromFile (std::string &filename)
             continue;
         if (boost::regex_match(line, regWhite))
             continue;
-                
+
 
         if (line.find("[ATTR]") != std::string::npos)
         {
@@ -240,7 +240,7 @@ void Tagset::readFromFile (std::string &filename)
 
     }
 
-    //////// generowanie start
+    //////// start generowania
     boost::u32regex regOptional = boost::make_u32regex( "\\[([^\\s\\[\\]]+)\\]" );
     boost::smatch wh;
 
@@ -365,7 +365,7 @@ void Tagset::readFromFile (std::string &filename)
             tmpR ++;
         }
         mapped_morphologies_by_pos.insert(std::pair<std::string, std::vector<std::string> >(mapped_pos , mapped_morphs));
-                
+
         p ++;
     }
 
@@ -654,7 +654,7 @@ void Tagset::readDescFromFile(std::string &filename)
             continue;
         if (boost::regex_match(line, regWhite))
             continue;
-                
+
         if (boost::regex_match(line, regComment))
             continue;
 

@@ -16,7 +16,7 @@ public:
     class CannotOpenFileException : public std::runtime_error {
     public:
         CannotOpenFileException() : std::runtime_error("cannot open a file") { }
-    };    
+    };
 
     /**
      * Reads from `inputStream` into `lattice`. If lattice is not empty,

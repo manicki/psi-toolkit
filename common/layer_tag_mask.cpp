@@ -17,7 +17,7 @@ bool LayerTagMask::operator<(LayerTagMask other) const {
 }
 
 LayerTagMask createUnion(
-    LayerTagMask mask1, 
+    LayerTagMask mask1,
     LayerTagMask mask2
 ) {
     if (mask1.any_ || mask2.any_) return LayerTagMask(true);
@@ -27,7 +27,7 @@ LayerTagMask createUnion(
 }
 
 LayerTagMask createIntersection(
-    LayerTagMask mask1, 
+    LayerTagMask mask1,
     LayerTagMask mask2
 ) {
     if (mask1.none_ || mask2.none_) return LayerTagMask(false);

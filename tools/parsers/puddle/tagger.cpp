@@ -37,7 +37,7 @@ Tagger::Tagger()
 //    regEscRPar = "&rpar;";
 
     //tagset = new Tagset();
-    emptyMorphology = ""; 
+    emptyMorphology = "";
 }
 
 Tagger::~Tagger()

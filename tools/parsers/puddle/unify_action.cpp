@@ -19,7 +19,7 @@ UnifyAction::UnifyAction(std::vector<int> aAttributeIndexes, std::vector<int> aT
 
     type = "unify";
     verbose = false;
-    
+
     attributeIndexes.insert(attributeIndexes.begin(), aAttributeIndexes.begin(), aAttributeIndexes.end());// = new std::vector<int>(aAttributeIndexes);
     tokenIndexes.insert(tokenIndexes.begin(), aTokenIndexes.begin(), aTokenIndexes.end());// = new std::vector<int>(aTokenIndexes);
 
@@ -183,7 +183,7 @@ bool UnifyAction::apply(Entities &entities, Edges &edges, int currentEntity, std
                 std::vector<std::string>::iterator im = morpho.begin();
                 while (ic != compiled.end())
                 {
-                    
+
                     //if (boost::u32regex_match(*ic, *c))
                     boost::regex *r = new boost::regex(*c);
                     if (boost::regex_match(*ic, *r))
@@ -299,7 +299,7 @@ bool UnifyAction::apply(Entities &entities, Edges &edges, int currentEntity, std
                 group->children.at(group->getHeadIndex()) = token;
             }
             else
-            { 
+            {
                 Syntok *syntok = (Syntok*) (group->children.at(group->getHeadIndex()));
                 StringPtr id = StringPtr(new std::string(syntok->getId()));
                 Edges::iterator e;

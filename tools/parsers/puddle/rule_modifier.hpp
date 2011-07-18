@@ -20,7 +20,7 @@ class RuleModifier
         void addRule(RulePtr rule);
         void deleteRule(int index);
         void moveRule(int from, int to);
-        
+
         void setRules(RulesPtr aRules);
         void setRuleCompiler(RuleCompiler *aRuleCompiler);
         RulesPtr getRules();

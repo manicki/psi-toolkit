@@ -13,15 +13,15 @@ Lattice::~Lattice() {
 void Lattice::appendString(std::string text) {
     UTF8String utext(text);
     for (UTF8String::iterator uti = utext.begin(); uti != utext.end(); ++uti) {
-        
+
         Lattice::VertexDescriptor vertex = boost::add_vertex(graph_);
         vertices_.push_back(vertex);
-        
+
         for (int j = 0; j < indexedTagCollections_.size(); ++j) {
             graph_[vertex].outEdgesIndex.push_back(std::list<EdgeDescriptor>());
             graph_[vertex].inEdgesIndex.push_back(std::list<EdgeDescriptor>());
         }
-        
+
         addEdge(
             vertices_.back(),
             vertex,
@@ -29,7 +29,7 @@ void Lattice::appendString(std::string text) {
             layerTagManager_.createSingletonTagCollection("raw"),
             0.0
         );
-        
+
     }
 }
 
@@ -53,38 +53,38 @@ Lattice::EdgeDescriptor Lattice::addEdge(
     Score score,
     std::list<EdgeDescriptor> partition
 ) {
-    
+
     std::pair<EdgeDescriptor, bool> result;
-    
+
     std::pair<VertexDescriptor, VertexDescriptor> vpair(from, to);
-    
+
     std::pair<
-        std::pair<VertexDescriptor, VertexDescriptor>, 
+        std::pair<VertexDescriptor, VertexDescriptor>,
         AnnotationItem
     > hkey(vpair, annotationItem);
-    
+
     std::pair<VVCHash::iterator, bool> insertResult(vvcHash_.insert(
         std::pair<
             std::pair<std::pair<VertexDescriptor, VertexDescriptor>, AnnotationItem>,
             EdgeDescriptor
         >(hkey, EdgeDescriptor())
     ));
-    
+
     if (insertResult.second) {
-        
+
         if (!edgeCounterHash_[vpair]) {
             edgeCounterHash_[vpair] = 1;
         } else {
             ++edgeCounterHash_[vpair];
         }
-        
+
         result = boost::add_edge(
-            from, 
-            to, 
-            EdgeEntry(annotationItem, tags, score, partition), 
+            from,
+            to,
+            EdgeEntry(annotationItem, tags, score, partition),
             graph_
         );
-        
+
         if (result.second) {
             for (int i = 0; i < indexedTagCollections_.size(); ++i) {
                 if (createIntersection(tags, indexedTagCollections_.right.at(i)).isNonempty()) {
@@ -94,15 +94,15 @@ Lattice::EdgeDescriptor Lattice::addEdge(
             }
             return result.first;
         }
-        
+
     }
-    
+
     throw NoEdgeException("No edge added.");
 
 }
 
 std::pair<Lattice::EdgeDescriptorIterator, Lattice::EdgeDescriptorIterator> Lattice::outEdges(
-    Lattice::VertexDescriptor vertex, 
+    Lattice::VertexDescriptor vertex,
     LayerTagMask mask
 ) {
     int ix = addTagCollectionIndex_(layerTagManager_.createTagCollection(mask));
@@ -113,7 +113,7 @@ std::pair<Lattice::EdgeDescriptorIterator, Lattice::EdgeDescriptorIterator> Latt
 }
 
 std::pair<Lattice::EdgeDescriptorIterator, Lattice::EdgeDescriptorIterator> Lattice::inEdges(
-    Lattice::VertexDescriptor vertex, 
+    Lattice::VertexDescriptor vertex,
     LayerTagMask mask
 ) {
     int ix = addTagCollectionIndex_(layerTagManager_.createTagCollection(mask));
@@ -136,7 +136,7 @@ std::pair<Lattice::InEdgeIterator, Lattice::InEdgeIterator> Lattice::allInEdges(
 }
 
 Lattice::EdgeDescriptor Lattice::firstOutEdge(
-    Lattice::VertexDescriptor vertex, 
+    Lattice::VertexDescriptor vertex,
     LayerTagMask mask
 ) {
     if (mask.isAny()) return *(boost::out_edges(vertex, graph_).first);
@@ -144,7 +144,7 @@ Lattice::EdgeDescriptor Lattice::firstOutEdge(
 }
 
 Lattice::EdgeDescriptor Lattice::firstInEdge(
-    Lattice::VertexDescriptor vertex, 
+    Lattice::VertexDescriptor vertex,
     LayerTagMask mask
 ) {
     if (mask.isAny()) return *(boost::in_edges(vertex, graph_).first);
@@ -158,7 +158,7 @@ std::list<Lattice::EdgeDescriptor> Lattice::edgesSorted(LayerTagMask mask) {
         vi != vertices_.end();
         ++vi
     ) {
-        std::pair<Lattice::EdgeDescriptorIterator,Lattice::EdgeDescriptorIterator> 
+        std::pair<Lattice::EdgeDescriptorIterator,Lattice::EdgeDescriptorIterator>
             outEdgesIters = outEdges(*vi, mask);
         result.insert(result.end(), outEdgesIters.first, outEdgesIters.second);
     }
@@ -189,16 +189,16 @@ int Lattice::addTagCollectionIndex_(LayerTagCollection tags) {
             ++vi
         ) {
             graph_[*vi].outEdgesIndex.push_back(std::list<EdgeDescriptor>());
-            std::pair<Lattice::OutEdgeIterator, Lattice::OutEdgeIterator> 
+            std::pair<Lattice::OutEdgeIterator, Lattice::OutEdgeIterator>
                 oeir = boost::out_edges(*vi, graph_);
             for (Lattice::OutEdgeIterator oei = oeir.first; oei != oeir.second; ++oei) {
                 if (createIntersection(graph_[*oei].tagList, tags).isNonempty()) {
                     graph_[*vi].outEdgesIndex[ix].push_back(*oei);
                 }
             }
-            
+
             graph_[*vi].inEdgesIndex.push_back(std::list<EdgeDescriptor>());
-            std::pair<Lattice::InEdgeIterator, Lattice::InEdgeIterator> 
+            std::pair<Lattice::InEdgeIterator, Lattice::InEdgeIterator>
                 ieir = boost::in_edges(*vi, graph_);
             for (Lattice::InEdgeIterator iei = ieir.first; iei != ieir.second; ++iei) {
                 if (createIntersection(graph_[*iei].tagList, tags).isNonempty()) {
