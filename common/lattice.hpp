@@ -51,20 +51,14 @@ public:
         EdgeEntry
     > Graph;
 
-    typedef Graph::vertex_descriptor VertexDescriptor;
-    typedef Graph::edge_descriptor EdgeDescriptor;
-    typedef Graph::edge_iterator EdgeIterator;
-    typedef Graph::out_edge_iterator OutEdgeIterator;
-    typedef Graph::in_edge_iterator InEdgeIterator;
-
-    typedef std::list<EdgeDescriptor>::const_iterator EdgeDescriptorIterator;
-
-    typedef double Score;
+    struct EdgeDescriptor;
 
     struct VertexEntry {
         std::vector< std::list<EdgeDescriptor> > outEdgesIndex;
         std::vector< std::list<EdgeDescriptor> > inEdgesIndex;
     };
+
+    typedef double Score;
 
     struct EdgeEntry {
         AnnotationItem category;
@@ -79,6 +73,20 @@ public:
             std::list<EdgeDescriptor> aPartition
         ): category(aCategory), tagList(aTagList), score(aScore), partition(aPartition) { }
     };
+
+    // should be typedef Graph::edge_descriptor EdgeDescriptor, done this
+    // way because of no typedef forwarding in C++
+    struct EdgeDescriptor: public Graph::edge_descriptor {
+        EdgeDescriptor():Graph::edge_descriptor() {}
+        EdgeDescriptor(const Graph::edge_descriptor& ed):Graph::edge_descriptor(ed) {}
+    };
+
+    typedef Graph::vertex_descriptor VertexDescriptor;
+    typedef Graph::edge_iterator EdgeIterator;
+    typedef Graph::out_edge_iterator OutEdgeIterator;
+    typedef Graph::in_edge_iterator InEdgeIterator;
+
+    typedef std::list<EdgeDescriptor>::const_iterator EdgeDescriptorIterator;
 
     /**
      * Creates a lattice from `text`. Initially each character of text will be
