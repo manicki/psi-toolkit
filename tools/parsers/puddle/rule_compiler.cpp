@@ -351,7 +351,7 @@ RulesPtr RuleCompiler::readFromFile(std::string &filename)
         getline(file, line);
         std::wstring wline = utf8converter::FromUtf8(line);
         std::string u, l;
-        //boost::match_results<std::string::iterator> container; 
+        //boost::match_results<std::string::iterator> container;
         boost::match_flag_type flags = boost::match_default;
         //boost::wsmatch container;
         boost::smatch container;
@@ -404,8 +404,8 @@ RulesPtr RuleCompiler::readFromFile(std::string &filename)
             line = container[3]; //line.substr(pos + 1, std::string::npos);
             //std::cout << line << std::endl;
             //start = container.prefix().second;
-            //flags |= boost::match_prev_avail; 
-            //flags |= boost::match_not_bob; 
+            //flags |= boost::match_prev_avail;
+            //flags |= boost::match_not_bob;
         }
         if (line.length() > 0)
             u += line;
@@ -783,7 +783,7 @@ std::string RuleCompiler::getToken(std::string &matched, std::string &before)
 //                break;
 //        }
 //    }
-//    
+//
 //    //readKey, readOperator, readValue
 //
 //    std::string result = matched.substr(begin, (end - begin + 1));
@@ -920,7 +920,7 @@ std::string RuleCompiler::compileToken(std::string &token)
     bool groupMatch = false;
     std::string compiledHead = "";
     std::string type = "";
-    
+
     std::string result = "";
     while (token != "")
     {
@@ -976,7 +976,7 @@ std::string RuleCompiler::compileToken(std::string &token)
 //                }
             }
             //int cite = token.find("\"", begin + 1);
-            //while (end 
+            //while (end
             std::string head = token.substr(begin, end - begin + 1);
             if ((end + 1) < token.size())
                 token = token.substr(end + 1, std::string::npos);
@@ -1036,7 +1036,7 @@ std::string RuleCompiler::compileToken(std::string &token)
         if (token.find("&&") == 0)
         {
             token = token.substr(2, std::string::npos);
-            
+
         }
         // wytnij &&
     }
@@ -1197,7 +1197,7 @@ std::string RuleCompiler::getValue(std::string &token)
 //        std::cout << "tak wyglada po robocie: " << val << std::endl;
         value = val;
     }
-            
+
     return value;
 }
 
@@ -1321,7 +1321,7 @@ bool RuleCompiler::compileBaseCondition(std::string &comparisonOperator, std::st
             itU.next();
             itL.next();
         }
-        value = ss.str(); 
+        value = ss.str();
     }
 
     if (value.find_first_of(".|*+?") != std::string::npos)
@@ -1621,7 +1621,7 @@ std::string RuleCompiler::compileOrthCondition(std::string &comparisonOperator, 
 }
 
 std::string RuleCompiler::interpretationsToString(Interpretations interps)
-{        
+{
     std::string result = "";
     Interpretations::iterator i = interps.begin();
     while (i != interps.end())
@@ -1872,7 +1872,7 @@ ActionsPtr RuleCompiler::compileRuleAction(std::string &matched, int ruleLeftSiz
             std::vector<int> tokens;
 //            std::string toks = container[1];
             std::string mask = container[1];
-         
+
             for (int x = ruleLeftSize; x < (ruleLeftSize + ruleMatchSize); x ++)
             {
                 tokens.push_back( x + 1);
@@ -2461,7 +2461,7 @@ ActionPtr RuleCompiler::compileAction(std::string actionString, RulePtr rule)
             std::vector<int> tokens;
 //            std::string toks = container[1];
             std::string mask = container[1];
-         
+
             for (int x = rule->getLeftCount(); x < (rule->getLeftCount() + rule->getMatchCount()); x ++)
             {
                 tokens.push_back( x + 1);

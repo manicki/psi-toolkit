@@ -20,7 +20,7 @@ std::string ParseConverter::convert(ParseGraph graph)
 //    VertexIndex index = boost::get(vertex_index, g)
     ParseGraph::Graph *g = graph.getBoostGraph();
     ParseGraph::Vertex v = vertex(0, *g);
-    ParseGraph::Vertex end = vertex(boost::num_vertices(*g) - 1, *g);    
+    ParseGraph::Vertex end = vertex(boost::num_vertices(*g) - 1, *g);
     ParseGraph::VertexIndex index = get(boost::vertex_index, *g);
     ParseGraph::TransitionMap map = get(boost::edge_bundle, *g);
 
@@ -86,8 +86,8 @@ std::string ParseConverter::convert(ParseGraph graph)
             {
                 if ((map[*ei].getEnd() - map[*ei].getStart()) == 1)
                 {
-                ss << "<tok" 
-                    << " id=\"" << map[*ei].getId() << "\">" 
+                ss << "<tok"
+                    << " id=\"" << map[*ei].getId() << "\">"
                     << std::endl;
                 ss << "<orth>" << map[*ei].getLabel() << "</orth>" << std::endl;
                 for (std::vector<PosInfo>::iterator var = map[*ei].variants_.begin(); var != map[*ei].variants_.end(); var ++)
@@ -119,11 +119,11 @@ std::string ParseConverter::convert(ParseGraph graph)
                     << std::endl;
             }
 
-            if (map[*ei].getType() == "group") 
-                edgeStack.push_back(std::pair<int, std::string>(map[*ei].getEnd(), "group")); 
+            if (map[*ei].getType() == "group")
+                edgeStack.push_back(std::pair<int, std::string>(map[*ei].getEnd(), "group"));
             if (map[*ei].getType() == "token")
                 if ((map[*ei].getEnd() - map[*ei].getStart()) == 1)
-                    edgeStack.push_back(std::pair<int, std::string>(map[*ei].getEnd(), "tok")); 
+                    edgeStack.push_back(std::pair<int, std::string>(map[*ei].getEnd(), "tok"));
                 else
                     edgeStack.push_back(std::pair<int, std::string>(map[*ei].getEnd(), "syntok"));
        // }
@@ -147,7 +147,7 @@ std::string ParseConverter::convert(ParseGraph graph)
     ss << "</chunk>" << std::endl;
     ss << "</chunkList>" << std::endl;
     ss << "</cesAna>" << std::endl;
-    return ss.str(); 
+    return ss.str();
 }
 
 void ParseConverter::setTagset(puddle::TagsetPtr tagset_)
@@ -159,7 +159,7 @@ void ParseConverter::addDescription(ParseGraphPtr pg)
 {
     ParseGraph::Graph *g = pg->getBoostGraph();
     ParseGraph::Vertex v = vertex(0, *g);
-    ParseGraph::Vertex end = vertex(boost::num_vertices(*g) - 1, *g);    
+    ParseGraph::Vertex end = vertex(boost::num_vertices(*g) - 1, *g);
     ParseGraph::TransitionMap map = get(boost::edge_bundle, *g);
 
     std::map<std::string, std::string> desc_by_id;
@@ -169,7 +169,7 @@ void ParseConverter::addDescription(ParseGraphPtr pg)
     while (v != end)
     {
         v = vertex(i, *g);
-        for (std::pair <ParseGraph::OutEdgeIt, ParseGraph::OutEdgeIt> p = out_edges(v, *g); p.first != p.second; ++ p.first) 
+        for (std::pair <ParseGraph::OutEdgeIt, ParseGraph::OutEdgeIt> p = out_edges(v, *g); p.first != p.second; ++ p.first)
         {
             ParseGraph::Edge e = *p.first;
 
@@ -240,7 +240,7 @@ void ParseConverter::addDescription(ParseGraphPtr pg)
                             map[e].setDesc(desc);
                             desc_by_id.insert(std::pair<std::string, std::string>(map[e].getId(), desc_non_orth));
                         }
-                        
+
                     }
                     break;
                 }
@@ -255,7 +255,7 @@ void ParseConverter::addDescription(ParseGraphPtr pg)
     while (v != end)
     {
         v = vertex(i, *g);
-        for (std::pair <ParseGraph::OutEdgeIt, ParseGraph::OutEdgeIt> p = out_edges(v, *g); p.first != p.second; ++ p.first) 
+        for (std::pair <ParseGraph::OutEdgeIt, ParseGraph::OutEdgeIt> p = out_edges(v, *g); p.first != p.second; ++ p.first)
         {
             ParseGraph::Edge e = *p.first;
 
@@ -288,7 +288,7 @@ void ParseConverter::addDescription(ParseGraphPtr pg)
                                 desc += ":";
                             desc += what[1];
                         }
-                                
+
                     }
                     break;
                     }
@@ -316,7 +316,7 @@ void ParseConverter::removeDescription(ParseGraphPtr pg)
 {
     ParseGraph::Graph *g = pg->getBoostGraph();
     ParseGraph::Vertex v = vertex(0, *g);
-    ParseGraph::Vertex end = vertex(boost::num_vertices(*g) - 1, *g);    
+    ParseGraph::Vertex end = vertex(boost::num_vertices(*g) - 1, *g);
     ParseGraph::TransitionMap map = get(boost::edge_bundle, *g);
 
     std::map<std::string, std::vector<int> > desc_by_id;
@@ -326,7 +326,7 @@ void ParseConverter::removeDescription(ParseGraphPtr pg)
     while (v != end)
     {
         v = vertex(i, *g);
-        for (std::pair <ParseGraph::OutEdgeIt, ParseGraph::OutEdgeIt> p = out_edges(v, *g); p.first != p.second; ++ p.first) 
+        for (std::pair <ParseGraph::OutEdgeIt, ParseGraph::OutEdgeIt> p = out_edges(v, *g); p.first != p.second; ++ p.first)
         {
             ParseGraph::Edge e = *p.first;
             map[e].unsetDesc();

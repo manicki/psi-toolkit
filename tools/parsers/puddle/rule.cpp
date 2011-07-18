@@ -212,7 +212,7 @@ bool Rule::test(std::string &sentence, Entities &entities, int currentEntity)
     ///{
     ///    return false;
     ///}
-    
+
     ///if (countEntities(matched.prefix()) != currentEntity)
     ///{
     ///    return false;
@@ -702,7 +702,7 @@ std::string Rule::log()
     ss << this->getCompiled() << std::endl;
 
     if (this->getLeftCount() > 0)
-        ss << "Left: 1 - " << this->getLeftCount() << std::endl; 
+        ss << "Left: 1 - " << this->getLeftCount() << std::endl;
     ss << "Match: " << (this->getLeftCount() + 1) << " - " << (this->getLeftCount() + this->getMatchCount()) << std::endl;
     if (this->getRightCount() > 0)
         ss << "Right: " << (this->getLeftCount() + this->getMatchCount() + 1) << " - " << (this->getLeftCount() + this->getMatchCount() + this->getRightCount()) << std::endl;

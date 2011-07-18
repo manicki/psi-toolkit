@@ -221,7 +221,7 @@ std::string Token::toXml()
     std::vector<std::string>::iterator m = morphology.begin();
     while (m != morphology.end())
     {
-        std::string morpho = *m; 
+        std::string morpho = *m;
         int pos = morpho.find(":", 1);  //TODO: to trzeba zrobić sprytniej, bo token może być dwukropkiem na przykład!
         std::string base = morpho.substr(0, pos);
         base = boost::u32regex_replace(base, regLpar, "(", boost::match_default | boost::format_sed);

@@ -23,7 +23,7 @@ class SyntokAction : public Action
         ~SyntokAction();
         bool apply(Entities &entities, Edges &edges, int currentEntity, std::vector<int> matchedTokensSize);
         bool test(Entities entities, int currentEntity, std::vector<int> matchedTokensSize);
-        
+
         int getStart();
         void setStart(int aStart);
         int getEnd();

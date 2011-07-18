@@ -53,18 +53,11 @@ class Puddle
         void setRulesLogFile(std::string filename);
         void logTagset();
         void logRules();
-//        void setXmlOutputFile(std::string filename);
-        void setDotOutputFile(std::string filename);
         ParseGraphPtr parseString(std::string line);
         ParseGraphPtr parseTaggedString(std::string line);
+        ParseGraphPtr parse(ParseGraphPtr graph); // void parse(ParseGraphPtr &graph);
 //        std::vector<ParseGraphPtr>* getGraphs();
-//        bool initNewTagger(std::string filename);
-        void writeXml(std::string filename);
 
-//        std::string save();
-//        void load(std::string serializedGraph);
-//        ParseGraphPtr getGraph();
-        
     protected:
 //        Tagset *tagset;
         TagsetPtr tagset;

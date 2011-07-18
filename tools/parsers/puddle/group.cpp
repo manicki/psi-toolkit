@@ -45,7 +45,7 @@ Group::Group(Entities &entities, int startIndex, int endIndex, int aHeadIndex, s
 //    children = new Entities;
 
 //    std::cout << "Grupe robie typu " << aGroupType << " od " << startIndex << " do " << endIndex << " z glowa w " << aHeadIndex << " z reguly: " << aRuleName << std::endl;
-    
+
     //std::cerr << "aheadindex: " << aHeadIndex << std::endl;
     //std::cerr << "entitisow: " << entities.size() << std::endl;
 
@@ -175,7 +175,7 @@ Group::Group(Entities &entities, int startIndex, int endIndex, int aHeadIndex, s
 
     //Token *token = (Token*)(children[headIndex]);
     //compiledGroup = "<<g<" + id + "<" + groupType + ">" + token->getCompiled();
-    
+
     //compiledGroup = "<<g<" + id + "<" + groupType + ">" + ((Token*)this->getHeadToken())->getCompiled();
     compiledGroup = "<<g<" + id + "<" + groupType;
     std::string head = ((Token*)this->getHeadToken())->getCompiled();
@@ -228,7 +228,7 @@ std::string Group::getType()
 void Group::updateCompiled()
 {
     compiledGroup = "<<g<" + id + "<" + groupType;// + ">";
- 
+
     std::string head = ((Token*)this->getHeadToken())->getCompiled();
     compiledGroup += head.substr(3, std::string::npos);
 //    head.reset();

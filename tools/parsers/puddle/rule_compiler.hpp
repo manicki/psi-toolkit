@@ -94,7 +94,7 @@ class RuleCompiler
 
 //namespace mynamespace
 //{
-//    class utf8_codecvt_facet 
+//    class utf8_codecvt_facet
 //    {
 //    };
 //
