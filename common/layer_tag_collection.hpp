@@ -23,9 +23,9 @@ class LayerTagCollection {
 
 public:
     bool isEmpty();
-    
+
     bool isNonempty();
-    
+
     /**
      * method for compatibility with boost::bimap
      */
@@ -35,7 +35,7 @@ public:
      * created union of two layertaglists
      */
     friend LayerTagCollection createUnion(
-        LayerTagCollection tag_list_a, 
+        LayerTagCollection tag_list_a,
         LayerTagCollection tag_list_b
     );
 
@@ -43,12 +43,12 @@ public:
      * created intersection of two layertaglists
      */
     friend LayerTagCollection createIntersection(
-        LayerTagCollection tag_list_a, 
+        LayerTagCollection tag_list_a,
         LayerTagCollection tag_list_b
     );
 
     friend class LayerTagManager;
-    
+
     friend class LayerTagMask;
 
 private:
@@ -56,19 +56,19 @@ private:
      * private constructor! only LayerTagManager can be used to create layer tag collecions
      */
     LayerTagCollection() : v_(32) {};
-    
+
     /**
      * private constructor! only LayerTagManager can be used to create layer tag collecions
      */
     LayerTagCollection(int size) : v_(size % 32 == 0 ? size : size + 32 - size % 32) { };
-    
+
     boost::dynamic_bitset<> v_;
-    
+
     /**
      * resizes to the nearest power of two
      */
     int resize_(int newSize);
-    
+
     /**
      * equalizes lengths of two LayerTagCollection vectors
      */

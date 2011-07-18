@@ -24,7 +24,7 @@ int LayerTagCollection::resize_(LayerTagCollection& other) {
 }
 
 LayerTagCollection createUnion(
-    LayerTagCollection tag_list_a, 
+    LayerTagCollection tag_list_a,
     LayerTagCollection tag_list_b
 ) {
     LayerTagCollection result(tag_list_a.resize_(tag_list_b));
@@ -34,7 +34,7 @@ LayerTagCollection createUnion(
 }
 
 LayerTagCollection createIntersection(
-    LayerTagCollection tag_list_a, 
+    LayerTagCollection tag_list_a,
     LayerTagCollection tag_list_b
 ) {
     LayerTagCollection result(tag_list_a.resize_(tag_list_b));

@@ -14,13 +14,13 @@ protected:
 };
 
 
-class NoEdgeException : public Exception { 
+class NoEdgeException : public Exception {
 public:
     NoEdgeException(std::string message) : Exception(message) { }
 };
 
 
-class FileFormatException : public Exception { 
+class FileFormatException : public Exception {
 public:
     FileFormatException(std::string message) : Exception(message) { }
 };
