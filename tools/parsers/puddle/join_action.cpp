@@ -142,7 +142,7 @@ bool JoinAction::apply(Entities &entities, Edges &edges, int currentEntity, std:
         endId = ((Token*)right)->getId();
     else if (right->getType() == "syntok")
         endId = ((Syntok*)right)->getId();
-    
+
     Edges::iterator e = edges.begin();// + currentEntity; //TODO:czy to jest zawsze prawda, ze taki przeskok mozna se zrobic? na te chwile strzelam, ze tak...
     int startIndex = 0; //currentEntity;
     while (e != edges.end())
@@ -332,7 +332,7 @@ std::string JoinAction::getGroup()
 int JoinAction::getHead()
 {
     return head;
-    //return (head + 1); 
+    //return (head + 1);
 }
 
 void JoinAction::setGroup(std::string aGroup)

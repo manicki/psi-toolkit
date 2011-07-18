@@ -79,7 +79,7 @@ class Rule
         std::string makeReadable();
         std::string log();
 
-    private: 
+    private:
         std::string name;
         std::vector<TransitionInfo> elements;
         PatternPtr pattern;

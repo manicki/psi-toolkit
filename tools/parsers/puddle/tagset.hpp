@@ -57,7 +57,7 @@ class Tagset
         std::vector<std::string> getGroupDesc(std::string group);
         std::vector<std::string> getTokenDesc(std::string pos);
         std::map<std::string, std::string> getAttributes(std::string morphologyString, bool buffer = false);
-        
+
         std::vector<std::string> getOpenClasses();
         std::vector<std::string> getMappedMorphologies(std::string mapped_pos);
 

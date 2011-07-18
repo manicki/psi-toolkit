@@ -105,7 +105,7 @@ std::string TransformAction::getGroup()
 int TransformAction::getElement()
 {
     return element;
-    //return (head + 1); 
+    //return (head + 1);
 }
 
 void TransformAction::setGroup(std::string aGroup)

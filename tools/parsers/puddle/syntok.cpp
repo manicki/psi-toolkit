@@ -21,7 +21,7 @@ Syntok::Syntok()
     ss << std::hex << Group::groupId;
     id = ss.str();
 //    delete ss;
-    
+
     Group::groupId++;
     compiledSyntok = "";
     ruleName = "";
