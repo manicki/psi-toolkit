@@ -2,24 +2,24 @@
 
 LayerTagManager::LayerTagManager() : size_(0) { }
 
-LayerTagCollection LayerTagManager::createSingletonTagCollection(std::string tag_name) {
+LayerTagCollection LayerTagManager::createSingletonTagCollection(std::string tagName) {
     LayerTagCollection result = LayerTagCollection();
-    m_.insert(StringBimapItem(tag_name,m_.size()));
-    if (m_.left.at(tag_name) >= result.v_.size()) {
-        result.resize_(m_.left.at(tag_name) + 1);
+    m_.insert(StringBimapItem(tagName, m_.size()));
+    if (m_.left.at(tagName) >= result.v_.size()) {
+        result.resize_(m_.left.at(tagName) + 1);
     }
-    result.v_.set(m_.left.at(tag_name), true);
+    result.v_.set(m_.left.at(tagName), true);
     return result;
 }
 
-LayerTagCollection LayerTagManager::createTagCollection(std::list<std::string> tag_names) {
+LayerTagCollection LayerTagManager::createTagCollection(std::list<std::string> tagNames) {
     LayerTagCollection result = LayerTagCollection();
     for (
-        std::list<std::string>::iterator tni = tag_names.begin();
-        tni != tag_names.end();
+        std::list<std::string>::iterator tni = tagNames.begin();
+        tni != tagNames.end();
         ++tni
     ) {
-        m_.insert(StringBimapItem(*tni,m_.size()));
+        m_.insert(StringBimapItem(*tni, m_.size()));
         if (m_.left.at(*tni) >= result.v_.size()) {
             result.resize_(m_.left.at(*tni) + 1);
         }
@@ -28,21 +28,31 @@ LayerTagCollection LayerTagManager::createTagCollection(std::list<std::string> t
     return result;
 }
 
-LayerTagCollection LayerTagManager::getAllTags() {
-    LayerTagCollection result = LayerTagCollection();
-    result.resize_(m_.size());
-    for (int i = 0; i < m_.size(); ++i) {
-        result.v_.set(i, true);
+LayerTagCollection LayerTagManager::createTagCollection(LayerTagMask mask) {
+    if (mask.isAny()) {
+        LayerTagCollection result = LayerTagCollection(m_.size());
+        for (int i = 0; i < m_.size(); ++i) {
+            result.v_.set(i);
+        }
+        return result;
     }
-    return result;
+    if (mask.isNone()) return LayerTagCollection();
+    if (mask.tags_) return LayerTagCollection(*(mask.tags_));
+    return LayerTagCollection();
 }
 
-std::list<std::string> LayerTagManager::getTagNames(const LayerTagCollection& tag_collection) {
+LayerTagMask LayerTagManager::getMask(LayerTagCollection tagCollection) {
+    LayerTagMask result;
+    result.tags_ = new LayerTagCollection(tagCollection);
+    return result;
+}
+    
+std::list<std::string> LayerTagManager::getTagNames(const LayerTagCollection& tagCollection) {
     std::list<std::string> result;
     for (
-        int i = tag_collection.v_.find_first();
+        int i = tagCollection.v_.find_first();
         i != boost::dynamic_bitset<>::npos;
-        i = tag_collection.v_.find_next(i)
+        i = tagCollection.v_.find_next(i)
     ) {
         result.push_back(m_.right.at(i));
     }

@@ -18,13 +18,12 @@ void UTTLatticeReader::readIntoLattice(std::istream& inputStream, Lattice& latti
 
                 lattice.appendString(UTF8String(item.form).substr(0, item.length));
 
-                LayerTagCollection rawTag 
-                    = lattice.getLayerTagManager().createSingletonTagCollection("raw");
+                LayerTagMask rawMask = lattice.getLayerTagManager().getMask("raw");
                 
                 std::list<Lattice::EdgeDescriptor> partition;
                 for (int i = item.position; i < item.position + item.length; ++i) {
                     partition.push_back(
-                        lattice.firstOutEdge(lattice.getVertexForRawCharIndex(i), rawTag)
+                        lattice.firstOutEdge(lattice.getVertexForRawCharIndex(i), rawMask)
                     );
                 }
                 
@@ -50,13 +49,12 @@ void UTTLatticeReader::readIntoLattice(std::istream& inputStream, Lattice& latti
                     throw FileFormatException("UTT reader: EOS tag does not match any BOS tag.");
                 }
 
-                LayerTagCollection tokenTag 
-                    = lattice.getLayerTagManager().createSingletonTagCollection("token");
+                LayerTagMask tokenMask = lattice.getLayerTagManager().getMask("token");
                 
                 std::list<Lattice::EdgeDescriptor> sentencePartition;
                 for (int i = beginningOfSentencePosition; i < item.position + item.length; ++i) {
                     sentencePartition.push_back(
-                        lattice.firstOutEdge(lattice.getVertexForRawCharIndex(i), tokenTag)
+                        lattice.firstOutEdge(lattice.getVertexForRawCharIndex(i), tokenMask)
                     );
                 }
                             

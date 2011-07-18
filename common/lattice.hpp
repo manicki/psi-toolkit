@@ -125,20 +125,20 @@ public:
     // return outgoing edges which has at least one layer tag from `mask`
     std::pair<EdgeDescriptorIterator, EdgeDescriptorIterator> outEdges(
         VertexDescriptor vertex, 
-        LayerTagCollection mask
+        LayerTagMask mask
     );
 
     std::pair<EdgeDescriptorIterator, EdgeDescriptorIterator> inEdges(
         VertexDescriptor vertex, 
-        LayerTagCollection mask
+        LayerTagMask mask
     );
 
-    EdgeDescriptor firstOutEdge(VertexDescriptor vertex, LayerTagCollection mask);
-    EdgeDescriptor firstInEdge(VertexDescriptor vertex, LayerTagCollection mask);
+    EdgeDescriptor firstOutEdge(VertexDescriptor vertex, LayerTagMask mask);
+    EdgeDescriptor firstInEdge(VertexDescriptor vertex, LayerTagMask mask);
 
 
     // returns the list of edges which have at least one layer tag from `mask` sorted
-    std::list<EdgeDescriptor> edgesSorted(LayerTagCollection mask);
+    std::list<EdgeDescriptor> edgesSorted(LayerTagMask mask);
 
     LayerTagManager& getLayerTagManager();
 

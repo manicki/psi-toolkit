@@ -9,7 +9,7 @@ public:
         Lattice lattice("Ala ma kota");
 
         std::list<Lattice::EdgeDescriptor> 
-            allEdges = lattice.edgesSorted(lattice.getLayerTagManager().getAllTags());
+            allEdges = lattice.edgesSorted(lattice.getLayerTagManager().anyTag());
         std::list<Lattice::EdgeDescriptor>::iterator ei = allEdges.begin();
         TS_ASSERT_EQUALS(lattice.getEdgeAnnotationItem(*ei).getCategory(), "A");
         ++ei;
@@ -44,6 +44,9 @@ public:
             raw_tag = lattice.getLayerTagManager().createSingletonTagCollection("raw");
         LayerTagCollection 
             token_tag = lattice.getLayerTagManager().createSingletonTagCollection("token");
+            
+        LayerTagMask rawMask = lattice.getLayerTagManager().getMask(raw_tag);
+        LayerTagMask tokenMask = lattice.getLayerTagManager().getMask(token_tag);
 
         AnnotationItem word_token("word");
         AnnotationItem blank_token("blank");
@@ -52,65 +55,65 @@ public:
         std::list<Lattice::EdgeDescriptor> ala_partition;
         ala_partition.push_back(lattice.firstOutEdge(
             lattice.getVertexForRawCharIndex(0), 
-            raw_tag
+            rawMask
         ));
         ala_partition.push_back(lattice.firstOutEdge(
             lattice.getVertexForRawCharIndex(1), 
-            raw_tag
+            rawMask
         ));
         ala_partition.push_back(lattice.firstOutEdge(
             lattice.getVertexForRawCharIndex(2), 
-            raw_tag
+            rawMask
         ));
         lattice.addEdge(pre_ala, post_ala, word_token, token_tag, 0, ala_partition);
 
         std::list<Lattice::EdgeDescriptor> first_blank_partition;
         first_blank_partition.push_back(lattice.firstOutEdge(
             lattice.getVertexForRawCharIndex(3), 
-            raw_tag
+            rawMask
         ));
         lattice.addEdge(post_ala, pre_ma, blank_token, token_tag, 0, first_blank_partition);
 
         std::list<Lattice::EdgeDescriptor> ma_partition;
         ma_partition.push_back(lattice.firstOutEdge(
             lattice.getVertexForRawCharIndex(4), 
-            raw_tag
+            rawMask
         ));
         ma_partition.push_back(lattice.firstOutEdge(
             lattice.getVertexForRawCharIndex(5), 
-            raw_tag
+            rawMask
         ));
         lattice.addEdge(pre_ma, post_ma, word_token, token_tag, 0, ma_partition);
 
         std::list<Lattice::EdgeDescriptor> second_blank_partition;
         second_blank_partition.push_back(lattice.firstOutEdge(
             lattice.getVertexForRawCharIndex(6), 
-            raw_tag
+            rawMask
         ));
         lattice.addEdge(post_ma, pre_kota, blank_token, token_tag, 0, second_blank_partition);
 
         std::list<Lattice::EdgeDescriptor> kota_partition;
         kota_partition.push_back(lattice.firstOutEdge(
             lattice.getVertexForRawCharIndex(7), 
-            raw_tag
+            rawMask
         ));
         kota_partition.push_back(lattice.firstOutEdge(
             lattice.getVertexForRawCharIndex(8), 
-            raw_tag
+            rawMask
         ));
         kota_partition.push_back(lattice.firstOutEdge(
             lattice.getVertexForRawCharIndex(9), 
-            raw_tag
+            rawMask
         ));
         kota_partition.push_back(lattice.firstOutEdge(
             lattice.getVertexForRawCharIndex(10), 
-            raw_tag
+            rawMask
         ));
         lattice.addEdge(pre_kota, post_kota, word_token, token_tag, 0, kota_partition);
 
         // tests
 
-        std::list<Lattice::EdgeDescriptor> tokens = lattice.edgesSorted(token_tag);
+        std::list<Lattice::EdgeDescriptor> tokens = lattice.edgesSorted(tokenMask);
         std::list<Lattice::EdgeDescriptor>::iterator token_iter = tokens.begin();
         TS_ASSERT_EQUALS(
             lattice.getEdgeAnnotationItem(*token_iter).getCategory(), 
