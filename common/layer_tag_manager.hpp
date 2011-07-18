@@ -7,6 +7,7 @@
 #include <boost/bimap.hpp>
 
 #include "layer_tag_collection.hpp"
+#include "layer_tag_mask.hpp"
 
 /*!
   LayerTagManager is used to
@@ -18,20 +19,36 @@ class LayerTagManager {
 public:
     LayerTagManager();
 
-    LayerTagCollection createSingletonTagCollection(std::string tag_name);
+    LayerTagCollection createSingletonTagCollection(std::string tagName);
 
-    LayerTagCollection createTagCollection(std::list<std::string> tag_names);
+    LayerTagCollection createTagCollection(std::list<std::string> tagNames);
     
-    /**
-     * returns a layer tag collection of all tags
-     */
-    LayerTagCollection getAllTags();
-
+    LayerTagCollection createTagCollection(LayerTagMask mask);
+    
     /**
      * returns tags sorted alphabetically
      */
-    std::list<std::string> getTagNames(const LayerTagCollection& tag_collection);
+    std::list<std::string> getTagNames(const LayerTagCollection& tagCollection);
 
+    /**
+     * returns a layer tag mask that matches any tag
+     */
+    LayerTagMask anyTag() {
+        return LayerTagMask(true);
+    }
+    
+    LayerTagMask getMask(LayerTagCollection tagCollection) {
+        return LayerTagMask(tagCollection);
+    }
+    
+    LayerTagMask getMask(std::string tagName) { 
+        return getMask(createSingletonTagCollection(tagName)); 
+    }
+    
+    LayerTagMask getMask(std::list<std::string> tagNames) { 
+        return getMask(createTagCollection(tagNames));
+    }
+    
 private:
     typedef boost::bimap<std::string,int> StringBimap;
     typedef StringBimap::value_type StringBimapItem;
