@@ -51,20 +51,14 @@ public:
         EdgeEntry
     > Graph;
 
-    typedef Graph::vertex_descriptor VertexDescriptor;
-    typedef Graph::edge_descriptor EdgeDescriptor;
-    typedef Graph::edge_iterator EdgeIterator;
-    typedef Graph::out_edge_iterator OutEdgeIterator;
-    typedef Graph::in_edge_iterator InEdgeIterator;
-
-    typedef std::list<EdgeDescriptor>::const_iterator EdgeDescriptorIterator;
-
-    typedef double Score;
+    struct EdgeDescriptor;
 
     struct VertexEntry {
         std::vector< std::list<EdgeDescriptor> > outEdgesIndex;
         std::vector< std::list<EdgeDescriptor> > inEdgesIndex;
     };
+
+    typedef double Score;
 
     struct EdgeEntry {
         AnnotationItem category;
@@ -78,6 +72,38 @@ public:
             Score aScore,
             std::list<EdgeDescriptor> aPartition
         ): category(aCategory), tagList(aTagList), score(aScore), partition(aPartition) { }
+    };
+
+    // should be typedef Graph::edge_descriptor EdgeDescriptor, done this
+    // way because of no typedef forwarding in C++
+    struct EdgeDescriptor: public Graph::edge_descriptor {
+        EdgeDescriptor():Graph::edge_descriptor() {}
+        EdgeDescriptor(const Graph::edge_descriptor& ed):Graph::edge_descriptor(ed) {}
+    };
+
+    typedef Graph::vertex_descriptor VertexDescriptor;
+    typedef Graph::edge_iterator EdgeIterator;
+    typedef Graph::out_edge_iterator OutEdgeIterator;
+    typedef Graph::in_edge_iterator InEdgeIterator;
+
+    typedef std::list<EdgeDescriptor>::const_iterator EdgeDescriptorIterator;
+
+    class LatticeEdgeIterator {
+    public:
+        LatticeEdgeIterator(std::pair<OutEdgeIterator, OutEdgeIterator> oeir);
+        LatticeEdgeIterator(std::pair<InEdgeIterator, InEdgeIterator> ieir);
+        LatticeEdgeIterator();
+        bool hasNext();
+        EdgeDescriptor next();
+        void remove();
+        void add(EdgeDescriptor edge);
+    private:
+        std::list<
+            boost::detail::edge_desc_impl<boost::bidirectional_tag, unsigned int>
+        > l_;
+        std::list<
+            boost::detail::edge_desc_impl<boost::bidirectional_tag, unsigned int>
+        >::iterator i_;
     };
 
     /**
@@ -123,25 +149,27 @@ public:
                            std::list<EdgeDescriptor> partition = std::list<EdgeDescriptor>());
 
     // return outgoing edges which has at least one layer tag from `mask`
-    std::pair<EdgeDescriptorIterator, EdgeDescriptorIterator> outEdges(
+    LatticeEdgeIterator outEdges(
         VertexDescriptor vertex,
         LayerTagMask mask
     );
 
-    std::pair<EdgeDescriptorIterator, EdgeDescriptorIterator> inEdges(
+    LatticeEdgeIterator inEdges(
         VertexDescriptor vertex,
         LayerTagMask mask
     );
 
-    std::pair<OutEdgeIterator, OutEdgeIterator> allOutEdges(VertexDescriptor vertex);
-    std::pair<InEdgeIterator, InEdgeIterator> allInEdges(VertexDescriptor vertex);
+    LatticeEdgeIterator allOutEdges(VertexDescriptor vertex);
+    LatticeEdgeIterator allInEdges(VertexDescriptor vertex);
 
     EdgeDescriptor firstOutEdge(VertexDescriptor vertex, LayerTagMask mask);
     EdgeDescriptor firstInEdge(VertexDescriptor vertex, LayerTagMask mask);
 
 
     // returns the list of edges which have at least one layer tag from `mask` sorted
-    std::list<EdgeDescriptor> edgesSorted(LayerTagMask mask);
+    LatticeEdgeIterator edgesSorted(LayerTagMask mask);
+
+    LatticeEdgeIterator allEdgesSorted();
 
     LayerTagManager& getLayerTagManager();
 
@@ -172,27 +200,41 @@ private:
         HASH_WRAPPER_EXTRA_STUFF
 
         unsigned int operator()(
-            const std::pair<std::pair<VertexDescriptor, VertexDescriptor>, AnnotationItem>& k
+            const std::pair<
+                std::pair<VertexDescriptor, VertexDescriptor>,
+                std::pair<AnnotationItem, LayerTagCollection>
+            >& k
         ) const {
 #ifdef __VS__
             return HASH_WRAPPER_FULL_HASH_TRAITS<int>().operator()(int(k.first.first))
                 ^ HASH_WRAPPER_FULL_HASH_TRAITS<int>().operator()(int(k.first.second))
-                ^ HASH_WRAPPER_FULL_HASH_TRAITS<std::string>().operator()(k.second.getCategory());
+                ^ HASH_WRAPPER_FULL_HASH_TRAITS<std::string>().operator()(
+                    k.second.first.getCategory())
+                ^ HASH_WRAPPER_FULL_HASH_TRAITS<unsigned long>().operator()(
+                    k.second.second.getHash());
 #else
             return (int(k.first.first) << 8)
                 ^ int(k.first.second)
-                ^ (HASH_WRAPPER_FULL_HASH_TRAITS<std::string>().operator()(k.second.getCategory())
-                    << 16);
+                ^ (HASH_WRAPPER_FULL_HASH_TRAITS<std::string>().operator()(
+                    k.second.first.getCategory()
+                ) << 16)
+                ^ (int(k.second.second.getHash()) << 24);
 #endif
-	    }
+        }
 
 #ifdef __VS__
         bool operator()(
-            const std::pair<std::pair<VertexDescriptor, VertexDescriptor>, AnnotationItem>& a,
-			const std::pair<std::pair<VertexDescriptor, VertexDescriptor>, AnnotationItem>& b
+            const std::pair<
+                std::pair<VertexDescriptor, VertexDescriptor>,
+                std::pair<AnnotationItem, LayerTagCollection>
+            >& a,
+            const std::pair<
+                std::pair<VertexDescriptor, VertexDescriptor>,
+                std::pair<AnnotationItem, LayerTagCollection>
+            >& b
         ) const {
             return a != b;
-	    }
+        }
 #endif
     };
 
@@ -209,21 +251,24 @@ private:
 #else
             return (int(k.first) << 8) ^ int(k.second);
 #endif
-	    }
+        }
 
 #ifdef __VS__
         bool operator()(
             const std::pair<VertexDescriptor, VertexDescriptor>& a,
-			const std::pair<VertexDescriptor, VertexDescriptor>& b
+            const std::pair<VertexDescriptor, VertexDescriptor>& b
         ) const {
             return a != b;
-	    }
+        }
 #endif
     };
 
 
     typedef HashWrapper3<
-        std::pair<std::pair<VertexDescriptor, VertexDescriptor>, AnnotationItem>,
+        std::pair<
+            std::pair<VertexDescriptor, VertexDescriptor>,
+            std::pair<AnnotationItem, LayerTagCollection>
+        >,
         EdgeDescriptor,
         HashFun
     >::type VVCHash;

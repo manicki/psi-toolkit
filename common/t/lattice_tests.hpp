@@ -8,30 +8,31 @@ public:
     void test_simple() {
         Lattice lattice("Ala ma kota");
 
-        std::list<Lattice::EdgeDescriptor>
-            allEdges = lattice.edgesSorted(lattice.getLayerTagManager().anyTag());
-        std::list<Lattice::EdgeDescriptor>::iterator ei = allEdges.begin();
-        TS_ASSERT_EQUALS(lattice.getEdgeAnnotationItem(*ei).getCategory(), "A");
-        ++ei;
-        TS_ASSERT_EQUALS(lattice.getEdgeAnnotationItem(*ei).getCategory(), "l");
-        ++ei;
-        TS_ASSERT_EQUALS(lattice.getEdgeAnnotationItem(*ei).getCategory(), "a");
-        ++ei;
-        TS_ASSERT_EQUALS(lattice.getEdgeAnnotationItem(*ei).getCategory(), " ");
-        ++ei;
-        TS_ASSERT_EQUALS(lattice.getEdgeAnnotationItem(*ei).getCategory(), "m");
-        ++ei;
-        TS_ASSERT_EQUALS(lattice.getEdgeAnnotationItem(*ei).getCategory(), "a");
-        ++ei;
-        TS_ASSERT_EQUALS(lattice.getEdgeAnnotationItem(*ei).getCategory(), " ");
-        ++ei;
-        TS_ASSERT_EQUALS(lattice.getEdgeAnnotationItem(*ei).getCategory(), "k");
-        ++ei;
-        TS_ASSERT_EQUALS(lattice.getEdgeAnnotationItem(*ei).getCategory(), "o");
-        ++ei;
-        TS_ASSERT_EQUALS(lattice.getEdgeAnnotationItem(*ei).getCategory(), "t");
-        ++ei;
-        TS_ASSERT_EQUALS(lattice.getEdgeAnnotationItem(*ei).getCategory(), "a");
+        Lattice::LatticeEdgeIterator ei
+            = lattice.edgesSorted(lattice.getLayerTagManager().anyTag());
+        TS_ASSERT_EQUALS(ei.hasNext(), true);
+        TS_ASSERT_EQUALS(lattice.getEdgeAnnotationItem(ei.next()).getCategory(), "A");
+        TS_ASSERT_EQUALS(ei.hasNext(), true);
+        TS_ASSERT_EQUALS(lattice.getEdgeAnnotationItem(ei.next()).getCategory(), "l");
+        TS_ASSERT_EQUALS(ei.hasNext(), true);
+        TS_ASSERT_EQUALS(lattice.getEdgeAnnotationItem(ei.next()).getCategory(), "a");
+        TS_ASSERT_EQUALS(ei.hasNext(), true);
+        TS_ASSERT_EQUALS(lattice.getEdgeAnnotationItem(ei.next()).getCategory(), " ");
+        TS_ASSERT_EQUALS(ei.hasNext(), true);
+        TS_ASSERT_EQUALS(lattice.getEdgeAnnotationItem(ei.next()).getCategory(), "m");
+        TS_ASSERT_EQUALS(ei.hasNext(), true);
+        TS_ASSERT_EQUALS(lattice.getEdgeAnnotationItem(ei.next()).getCategory(), "a");
+        TS_ASSERT_EQUALS(ei.hasNext(), true);
+        TS_ASSERT_EQUALS(lattice.getEdgeAnnotationItem(ei.next()).getCategory(), " ");
+        TS_ASSERT_EQUALS(ei.hasNext(), true);
+        TS_ASSERT_EQUALS(lattice.getEdgeAnnotationItem(ei.next()).getCategory(), "k");
+        TS_ASSERT_EQUALS(ei.hasNext(), true);
+        TS_ASSERT_EQUALS(lattice.getEdgeAnnotationItem(ei.next()).getCategory(), "o");
+        TS_ASSERT_EQUALS(ei.hasNext(), true);
+        TS_ASSERT_EQUALS(lattice.getEdgeAnnotationItem(ei.next()).getCategory(), "t");
+        TS_ASSERT_EQUALS(ei.hasNext(), true);
+        TS_ASSERT_EQUALS(lattice.getEdgeAnnotationItem(ei.next()).getCategory(), "a");
+        TS_ASSERT_EQUALS(ei.hasNext(), false);
 
         Lattice::VertexDescriptor pre_ala = lattice.getFirstVertex();
         Lattice::VertexDescriptor post_ala = lattice.getVertexForRawCharIndex(3);
@@ -113,40 +114,128 @@ public:
 
         // tests
 
-        std::list<Lattice::EdgeDescriptor> tokens = lattice.edgesSorted(tokenMask);
-        std::list<Lattice::EdgeDescriptor>::iterator token_iter = tokens.begin();
+        Lattice::LatticeEdgeIterator tokenIter = lattice.edgesSorted(tokenMask);
+        TS_ASSERT_EQUALS(tokenIter.hasNext(), true);
+
         TS_ASSERT_EQUALS(
-            lattice.getEdgeAnnotationItem(*token_iter).getCategory(),
+            lattice.getEdgeAnnotationItem(tokenIter.next()).getCategory(),
             word_token.getCategory()
         );
+        TS_ASSERT_EQUALS(tokenIter.hasNext(), true);
 
-        ++token_iter;
         TS_ASSERT_EQUALS(
-            lattice.getEdgeAnnotationItem(*token_iter).getCategory(),
+            lattice.getEdgeAnnotationItem(tokenIter.next()).getCategory(),
             blank_token.getCategory()
         );
+        TS_ASSERT_EQUALS(tokenIter.hasNext(), true);
 
-        ++token_iter;
         TS_ASSERT_EQUALS(
-            lattice.getEdgeAnnotationItem(*token_iter).getCategory(),
+            lattice.getEdgeAnnotationItem(tokenIter.next()).getCategory(),
             word_token.getCategory()
         );
+        TS_ASSERT_EQUALS(tokenIter.hasNext(), true);
 
-        ++token_iter;
         TS_ASSERT_EQUALS(
-            lattice.getEdgeAnnotationItem(*token_iter).getCategory(),
+            lattice.getEdgeAnnotationItem(tokenIter.next()).getCategory(),
             blank_token.getCategory()
         );
+        TS_ASSERT_EQUALS(tokenIter.hasNext(), true);
 
-        ++token_iter;
         TS_ASSERT_EQUALS(
-            lattice.getEdgeAnnotationItem(*token_iter).getCategory(),
+            lattice.getEdgeAnnotationItem(tokenIter.next()).getCategory(),
             word_token.getCategory()
         );
+        TS_ASSERT_EQUALS(tokenIter.hasNext(), false);
 
-        ++token_iter;
-        TS_ASSERT_EQUALS(token_iter, tokens.end());
+    }
 
+    void test_puddle() {
+        Lattice lattice("blanc chat");
+        LayerTagCollection raw_tag
+            = lattice.getLayerTagManager().createSingletonTagCollection("raw");
+        LayerTagCollection token_tag
+            = lattice.getLayerTagManager().createSingletonTagCollection("token");
+        LayerTagCollection lemma_tag
+            = lattice.getLayerTagManager().createSingletonTagCollection("lemma");
+        LayerTagMask rawMask = lattice.getLayerTagManager().getMask(raw_tag);
+        LayerTagMask tokenMask = lattice.getLayerTagManager().getMask(token_tag);
+        LayerTagMask lemmaMask = lattice.getLayerTagManager().getMask(lemma_tag);
+        AnnotationItem word_token("word");
+        AnnotationItem blank_token("blank");
+        AnnotationItem lemma_token("lemma"); // temporary, as long as annotation items are only distinguished by their 'name'
+
+        Lattice::VertexDescriptor pre_blanc = lattice.getFirstVertex();
+        Lattice::VertexDescriptor post_blanc = lattice.getVertexForRawCharIndex(5);
+        Lattice::VertexDescriptor pre_chat = lattice.getVertexForRawCharIndex(6);
+        Lattice::VertexDescriptor post_chat = lattice.getLastVertex();
+
+        Lattice::LatticeEdgeIterator ei
+            = lattice.edgesSorted(lattice.getLayerTagManager().anyTag());
+        TS_ASSERT_EQUALS(ei.hasNext(), true);
+        TS_ASSERT_EQUALS(lattice.getEdgeAnnotationItem(ei.next()).getCategory(), "b");
+        TS_ASSERT_EQUALS(ei.hasNext(), true);
+        TS_ASSERT_EQUALS(lattice.getEdgeAnnotationItem(ei.next()).getCategory(), "l");
+        TS_ASSERT_EQUALS(ei.hasNext(), true);
+        TS_ASSERT_EQUALS(lattice.getEdgeAnnotationItem(ei.next()).getCategory(), "a");
+        TS_ASSERT_EQUALS(ei.hasNext(), true);
+        TS_ASSERT_EQUALS(lattice.getEdgeAnnotationItem(ei.next()).getCategory(), "n");
+        TS_ASSERT_EQUALS(ei.hasNext(), true);
+        TS_ASSERT_EQUALS(lattice.getEdgeAnnotationItem(ei.next()).getCategory(), "c");
+        TS_ASSERT_EQUALS(ei.hasNext(), true);
+        TS_ASSERT_EQUALS(lattice.getEdgeAnnotationItem(ei.next()).getCategory(), " ");
+        TS_ASSERT_EQUALS(ei.hasNext(), true);
+        TS_ASSERT_EQUALS(lattice.getEdgeAnnotationItem(ei.next()).getCategory(), "c");
+        TS_ASSERT_EQUALS(ei.hasNext(), true);
+        TS_ASSERT_EQUALS(lattice.getEdgeAnnotationItem(ei.next()).getCategory(), "h");
+        TS_ASSERT_EQUALS(ei.hasNext(), true);
+        TS_ASSERT_EQUALS(lattice.getEdgeAnnotationItem(ei.next()).getCategory(), "a");
+        TS_ASSERT_EQUALS(ei.hasNext(), true);
+        TS_ASSERT_EQUALS(lattice.getEdgeAnnotationItem(ei.next()).getCategory(), "t");
+        TS_ASSERT_EQUALS(ei.hasNext(), false);
+
+        std::list<Lattice::EdgeDescriptor> blanc_partition;
+        for (int i = 0; i < 5; i ++) {
+            blanc_partition.push_back(lattice.firstOutEdge(
+                        lattice.getVertexForRawCharIndex(i),
+                        rawMask
+                        ));
+        }
+        lattice.addEdge(pre_blanc, post_blanc, word_token, token_tag, 0, blanc_partition);
+        std::list<Lattice::EdgeDescriptor> blank_partition;
+        blank_partition.push_back(lattice.firstOutEdge(
+            lattice.getVertexForRawCharIndex(6),
+            rawMask
+        ));
+        lattice.addEdge(post_blanc, pre_chat, blank_token, token_tag, 0, blank_partition);
+        std::list<Lattice::EdgeDescriptor> chat_partition;
+        for (int i = 6; i < 10; i ++) {
+            chat_partition.push_back(lattice.firstOutEdge(
+                        lattice.getVertexForRawCharIndex(i),
+                        rawMask
+                        ));
+        }
+        lattice.addEdge(pre_chat, post_chat, word_token, token_tag, 0, chat_partition);
+
+        std::list<Lattice::EdgeDescriptor> blanc_lemma_partition;
+        blanc_lemma_partition.push_back(lattice.firstOutEdge(lattice.getVertexForRawCharIndex(0), tokenMask));
+        lattice.addEdge(pre_blanc, post_blanc, lemma_token, lemma_tag, 0, blanc_lemma_partition);
+
+        std::list<Lattice::EdgeDescriptor> chat_lemma_partition;
+        chat_lemma_partition.push_back(lattice.firstOutEdge(lattice.getVertexForRawCharIndex(6), tokenMask));
+        lattice.addEdge(pre_chat, post_chat, lemma_token, lemma_tag, 0, chat_lemma_partition);
+
+        Lattice::LatticeEdgeIterator tokenIter = lattice.edgesSorted(lemmaMask);
+        TS_ASSERT_EQUALS(tokenIter.hasNext(), true);
+        TS_ASSERT_EQUALS(
+            lattice.getEdgeAnnotationItem(tokenIter.next()).getCategory(),
+            lemma_token.getCategory()
+        );
+        TS_ASSERT_EQUALS(tokenIter.hasNext(), true);
+        TS_ASSERT_EQUALS(
+            lattice.getEdgeAnnotationItem(tokenIter.next()).getCategory(),
+            lemma_token.getCategory()
+        );
+        TS_ASSERT_EQUALS(tokenIter.hasNext(), false);
     }
 
 };

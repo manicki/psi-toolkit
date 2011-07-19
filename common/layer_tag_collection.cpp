@@ -9,7 +9,15 @@ bool LayerTagCollection::isNonempty() {
 }
 
 bool LayerTagCollection::operator<(LayerTagCollection other) const {
-    return v_ < other.v_;
+    return v_.size() < other.v_.size() || (v_.size() == other.v_.size() && v_ < other.v_);
+}
+
+bool LayerTagCollection::operator==(const LayerTagCollection& other) const {
+    return v_ == other.v_;
+}
+
+unsigned long LayerTagCollection::getHash() const {
+    return v_.to_ulong();
 }
 
 int LayerTagCollection::resize_(int size) {
