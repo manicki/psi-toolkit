@@ -174,7 +174,11 @@ std::list<Lattice::EdgeDescriptor> Lattice::allEdgesSorted() {
     ) {
         std::pair<Lattice::OutEdgeIterator, Lattice::OutEdgeIterator>
             outEdgesIters = allOutEdges(*vi);
-        result.insert(result.end(), outEdgesIters.first, outEdgesIters.second);
+        Lattice::LatticeEdgeIterator lei(outEdgesIters);
+        while (lei.hasNext()) {
+            result.push_back(lei.next());
+        }
+        // result.insert(result.end(), outEdgesIters.first, outEdgesIters.second);
     }
     return result;
 }
@@ -260,6 +264,6 @@ void Lattice::LatticeEdgeIterator::remove() {
     l_.erase(i_);
 }
 
-void Lattice::LatticeEdgeIterator::add(Lattice::EdgeDescriptor * ep) {
+void Lattice::LatticeEdgeIterator::add(Lattice::EdgeDescriptor const* ep) {
     l_.push_back(ep);
 }

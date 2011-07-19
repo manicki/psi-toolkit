@@ -96,13 +96,13 @@ public:
         bool hasNext();
         EdgeDescriptor next();
         void remove();
-        void add(EdgeDescriptor * ep);
+        void add(EdgeDescriptor const* ep);
     private:
         std::list<
-            boost::detail::edge_desc_impl<boost::bidirectional_tag, unsigned int>*
+            boost::detail::edge_desc_impl<boost::bidirectional_tag, unsigned int> const*
         > l_;
         std::list<
-            boost::detail::edge_desc_impl<boost::bidirectional_tag, unsigned int>*
+            boost::detail::edge_desc_impl<boost::bidirectional_tag, unsigned int> const*
         >::iterator i_;
     };
 
