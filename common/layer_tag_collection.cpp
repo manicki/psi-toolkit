@@ -9,7 +9,7 @@ bool LayerTagCollection::isNonempty() {
 }
 
 bool LayerTagCollection::operator<(LayerTagCollection other) const {
-    return v_ < other.v_;
+    return v_.size() < other.v_.size() || (v_.size() == other.v_.size() && v_ < other.v_);
 }
 
 bool LayerTagCollection::operator==(const LayerTagCollection& other) const {
