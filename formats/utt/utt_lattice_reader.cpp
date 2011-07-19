@@ -53,9 +53,11 @@ void UTTLatticeReader::readIntoLattice(std::istream& inputStream, Lattice& latti
 
                 std::list<Lattice::EdgeDescriptor> sentencePartition;
                 for (int i = beginningOfSentencePosition; i < item.position + item.length; ++i) {
-                    sentencePartition.push_back(
-                        lattice.firstOutEdge(lattice.getVertexForRawCharIndex(i), tokenMask)
-                    );
+                    try {
+                        sentencePartition.push_back(
+                            lattice.firstOutEdge(lattice.getVertexForRawCharIndex(i), tokenMask)
+                        );
+                    } catch (NoEdgeException) { }
                 }
 
                 lattice.addEdge(
