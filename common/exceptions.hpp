@@ -2,12 +2,14 @@
 #define EXCEPTIONS_HDR
 
 
+#include <stdexcept>
 #include <string>
 
 
-class Exception {
+class Exception : public std::runtime_error {
 public:
-    Exception(std::string message) : message_(message) { }
+    Exception(std::string message) : std::runtime_error(message), message_(message) { }
+    ~Exception() throw() { }
     std::string getMessage() { return message_; }
 protected:
     std::string message_;

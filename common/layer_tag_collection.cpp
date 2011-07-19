@@ -12,6 +12,14 @@ bool LayerTagCollection::operator<(LayerTagCollection other) const {
     return v_ < other.v_;
 }
 
+bool LayerTagCollection::operator==(const LayerTagCollection& other) const {
+    return v_ == other.v_;
+}
+
+unsigned long LayerTagCollection::getHash() const {
+    return v_.to_ulong();
+}
+
 int LayerTagCollection::resize_(int size) {
     if (size > v_.size()) {
         v_.resize(size % 32 == 0 ? size : size + 32 - size % 32);

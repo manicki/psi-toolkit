@@ -31,6 +31,13 @@ public:
      */
     bool operator<(LayerTagCollection other) const;
 
+    bool operator==(const LayerTagCollection& other) const;
+
+    /**
+     * method for compatibility with HashWrapper3
+     */
+    unsigned long getHash() const;
+
     /**
      * created union of two layertaglists
      */

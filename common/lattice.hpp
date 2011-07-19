@@ -200,24 +200,38 @@ private:
         HASH_WRAPPER_EXTRA_STUFF
 
         unsigned int operator()(
-            const std::pair<std::pair<VertexDescriptor, VertexDescriptor>, AnnotationItem>& k
+            const std::pair<
+                std::pair<VertexDescriptor, VertexDescriptor>,
+                std::pair<AnnotationItem, LayerTagCollection>
+            >& k
         ) const {
 #ifdef __VS__
             return HASH_WRAPPER_FULL_HASH_TRAITS<int>().operator()(int(k.first.first))
                 ^ HASH_WRAPPER_FULL_HASH_TRAITS<int>().operator()(int(k.first.second))
-                ^ HASH_WRAPPER_FULL_HASH_TRAITS<std::string>().operator()(k.second.getCategory());
+                ^ HASH_WRAPPER_FULL_HASH_TRAITS<std::string>().operator()(
+                    k.second.first.getCategory())
+                ^ HASH_WRAPPER_FULL_HASH_TRAITS<unsigned long>().operator()(
+                    k.second.second.getHash());
 #else
             return (int(k.first.first) << 8)
                 ^ int(k.first.second)
-                ^ (HASH_WRAPPER_FULL_HASH_TRAITS<std::string>().operator()(k.second.getCategory())
-                    << 16);
+                ^ (HASH_WRAPPER_FULL_HASH_TRAITS<std::string>().operator()(
+                    k.second.first.getCategory()
+                ) << 16)
+                ^ (int(k.second.second.getHash()) << 24);
 #endif
         }
 
 #ifdef __VS__
         bool operator()(
-            const std::pair<std::pair<VertexDescriptor, VertexDescriptor>, AnnotationItem>& a,
-            const std::pair<std::pair<VertexDescriptor, VertexDescriptor>, AnnotationItem>& b
+            const std::pair<
+                std::pair<VertexDescriptor, VertexDescriptor>,
+                std::pair<AnnotationItem, LayerTagCollection>
+            >& a,
+            const std::pair<
+                std::pair<VertexDescriptor, VertexDescriptor>,
+                std::pair<AnnotationItem, LayerTagCollection>
+            >& b
         ) const {
             return a != b;
         }
@@ -251,7 +265,10 @@ private:
 
 
     typedef HashWrapper3<
-        std::pair<std::pair<VertexDescriptor, VertexDescriptor>, AnnotationItem>,
+        std::pair<
+            std::pair<VertexDescriptor, VertexDescriptor>,
+            std::pair<AnnotationItem, LayerTagCollection>
+        >,
         EdgeDescriptor,
         HashFun
     >::type VVCHash;

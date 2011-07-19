@@ -65,12 +65,15 @@ Lattice::EdgeDescriptor Lattice::addEdge(
 
     std::pair<
         std::pair<VertexDescriptor, VertexDescriptor>,
-        AnnotationItem
-    > hkey(vpair, annotationItem);
+        std::pair<AnnotationItem, LayerTagCollection>
+    > hkey(vpair, std::pair<AnnotationItem, LayerTagCollection>(annotationItem, tags));
 
     std::pair<VVCHash::iterator, bool> insertResult(vvcHash_.insert(
         std::pair<
-            std::pair<std::pair<VertexDescriptor, VertexDescriptor>, AnnotationItem>,
+            std::pair<
+                std::pair<VertexDescriptor, VertexDescriptor>,
+                std::pair<AnnotationItem, LayerTagCollection>
+            >,
             EdgeDescriptor
         >(hkey, EdgeDescriptor())
     ));
