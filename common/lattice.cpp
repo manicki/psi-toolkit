@@ -3,6 +3,10 @@
 Lattice::Lattice(std::string text) : layerTagManager_() {
     Lattice::VertexDescriptor vertex = boost::add_vertex(graph_);
     vertices_.push_back(vertex);
+    for (int j = 0; j < indexedTagCollections_.size(); ++j) {
+        graph_[vertex].outEdgesIndex.push_back(std::list<EdgeDescriptor>());
+        graph_[vertex].inEdgesIndex.push_back(std::list<EdgeDescriptor>());
+    }
     appendString(text);
 }
 
@@ -14,6 +18,7 @@ void Lattice::appendString(std::string text) {
     UTF8String utext(text);
     for (UTF8String::iterator uti = utext.begin(); uti != utext.end(); ++uti) {
 
+        Lattice::VertexDescriptor previousVertex = vertices_.back();
         Lattice::VertexDescriptor vertex = boost::add_vertex(graph_);
         vertices_.push_back(vertex);
 
@@ -23,7 +28,7 @@ void Lattice::appendString(std::string text) {
         }
 
         addEdge(
-            vertices_.back(),
+            previousVertex,
             vertex,
             AnnotationItem(*uti),
             layerTagManager_.createSingletonTagCollection("raw"),
