@@ -8,8 +8,10 @@ public:
     void test_simple() {
         Lattice lattice("Ala ma kota");
 
+        // std::list<Lattice::EdgeDescriptor>
+            // allEdges = lattice.edgesSorted(lattice.getLayerTagManager().anyTag());
         std::list<Lattice::EdgeDescriptor>
-            allEdges = lattice.edgesSorted(lattice.getLayerTagManager().anyTag());
+            allEdges = lattice.allEdgesSorted();
         std::list<Lattice::EdgeDescriptor>::iterator ei = allEdges.begin();
         TS_ASSERT_EQUALS(lattice.getEdgeAnnotationItem(*ei).getCategory(), "A");
         ++ei;
