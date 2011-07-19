@@ -165,6 +165,20 @@ std::list<Lattice::EdgeDescriptor> Lattice::edgesSorted(LayerTagMask mask) {
     return result;
 }
 
+std::list<Lattice::EdgeDescriptor> Lattice::allEdgesSorted() {
+    std::list<Lattice::EdgeDescriptor> result;
+    for (
+        std::vector<Lattice::VertexDescriptor>::iterator vi = vertices_.begin();
+        vi != vertices_.end();
+        ++vi
+    ) {
+        std::pair<Lattice::OutEdgeIterator, Lattice::OutEdgeIterator>
+            outEdgesIters = allOutEdges(*vi);
+        result.insert(result.end(), outEdgesIters.first, outEdgesIters.second);
+    }
+    return result;
+}
+
 LayerTagManager& Lattice::getLayerTagManager() {
     return layerTagManager_;
 }

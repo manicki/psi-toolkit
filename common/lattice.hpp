@@ -169,6 +169,8 @@ public:
     // returns the list of edges which have at least one layer tag from `mask` sorted
     std::list<EdgeDescriptor> edgesSorted(LayerTagMask mask);
 
+    std::list<EdgeDescriptor> allEdgesSorted();
+
     LayerTagManager& getLayerTagManager();
 
     const AnnotationItem& getEdgeAnnotationItem(EdgeDescriptor edge);
