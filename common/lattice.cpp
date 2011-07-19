@@ -210,3 +210,42 @@ int Lattice::addTagCollectionIndex_(LayerTagCollection tags) {
         return ix;
     }
 }
+
+
+Lattice::LatticeEdgeIterator::LatticeEdgeIterator(
+    std::pair<Lattice::OutEdgeIterator, Lattice::OutEdgeIterator> oeir
+) {
+    for (Lattice::OutEdgeIterator oei = oeir.first; oei != oeir.second; ++oei) {
+        l_.push_back(&(*oei));
+    }
+    i_ = l_.begin();
+}
+
+Lattice::LatticeEdgeIterator::LatticeEdgeIterator(
+    std::pair<Lattice::InEdgeIterator, Lattice::InEdgeIterator> ieir
+) {
+    for (Lattice::InEdgeIterator iei = ieir.first; iei != ieir.second; ++iei) {
+        l_.push_back(&(*iei));
+    }
+    i_ = l_.begin();
+}
+
+Lattice::LatticeEdgeIterator::LatticeEdgeIterator() {
+    i_ = l_.begin();
+}
+
+bool Lattice::LatticeEdgeIterator::hasNext() {
+    return i_ != l_.end();
+}
+
+Lattice::EdgeDescriptor Lattice::LatticeEdgeIterator::next() {
+    return **(i_++);
+}
+
+void Lattice::LatticeEdgeIterator::remove() {
+    l_.erase(i_);
+}
+
+void Lattice::LatticeEdgeIterator::add(Lattice::EdgeDescriptor * ep) {
+    l_.push_back(ep);
+}

@@ -88,6 +88,24 @@ public:
 
     typedef std::list<EdgeDescriptor>::const_iterator EdgeDescriptorIterator;
 
+    class LatticeEdgeIterator {
+    public:
+        LatticeEdgeIterator(std::pair<OutEdgeIterator, OutEdgeIterator> oeir);
+        LatticeEdgeIterator(std::pair<InEdgeIterator, InEdgeIterator> ieir);
+        LatticeEdgeIterator();
+        bool hasNext();
+        EdgeDescriptor next();
+        void remove();
+        void add(EdgeDescriptor * ep);
+    private:
+        std::list<
+            boost::detail::edge_desc_impl<boost::bidirectional_tag, unsigned int>*
+        > l_;
+        std::list<
+            boost::detail::edge_desc_impl<boost::bidirectional_tag, unsigned int>*
+        >::iterator i_;
+    };
+
     /**
      * Creates a lattice from `text`. Initially each character of text will be
      * represented as an edge labeled with layer tag `raw` and category `c`
@@ -192,15 +210,15 @@ private:
                 ^ (HASH_WRAPPER_FULL_HASH_TRAITS<std::string>().operator()(k.second.getCategory())
                     << 16);
 #endif
-	    }
+        }
 
 #ifdef __VS__
         bool operator()(
             const std::pair<std::pair<VertexDescriptor, VertexDescriptor>, AnnotationItem>& a,
-			const std::pair<std::pair<VertexDescriptor, VertexDescriptor>, AnnotationItem>& b
+            const std::pair<std::pair<VertexDescriptor, VertexDescriptor>, AnnotationItem>& b
         ) const {
             return a != b;
-	    }
+        }
 #endif
     };
 
@@ -217,15 +235,15 @@ private:
 #else
             return (int(k.first) << 8) ^ int(k.second);
 #endif
-	    }
+        }
 
 #ifdef __VS__
         bool operator()(
             const std::pair<VertexDescriptor, VertexDescriptor>& a,
-			const std::pair<VertexDescriptor, VertexDescriptor>& b
+            const std::pair<VertexDescriptor, VertexDescriptor>& b
         ) const {
             return a != b;
-	    }
+        }
 #endif
     };
 
