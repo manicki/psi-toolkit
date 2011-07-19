@@ -120,7 +120,7 @@ public:
         Lattice lattice("");
         LatticeReader * reader = new PsiLatticeReader();
 
-        reader->readIntoLattice("../test/files/psi/pl_sample.txt.txt", lattice);
+        reader->readIntoLattice("../formats/psi/t/files/pl_sample.txt", lattice);
 
         delete reader;
 
