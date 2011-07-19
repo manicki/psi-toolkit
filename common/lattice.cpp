@@ -144,13 +144,13 @@ Lattice::LatticeEdgeIterator Lattice::inEdges(
 Lattice::LatticeEdgeIterator Lattice::allOutEdges(
     Lattice::VertexDescriptor vertex
 ) {
-    return boost::out_edges(vertex, graph_);
+    return outEdges(vertex, layerTagManager_.anyTag());
 }
 
 Lattice::LatticeEdgeIterator Lattice::allInEdges(
     Lattice::VertexDescriptor vertex
 ) {
-    return boost::in_edges(vertex, graph_);
+    return inEdges(vertex, layerTagManager_.anyTag());
 }
 
 Lattice::EdgeDescriptor Lattice::firstOutEdge(
@@ -187,18 +187,7 @@ Lattice::LatticeEdgeIterator Lattice::edgesSorted(LayerTagMask mask) {
 }
 
 Lattice::LatticeEdgeIterator Lattice::allEdgesSorted() {
-    Lattice::LatticeEdgeIterator result;
-    for (
-        std::vector<Lattice::VertexDescriptor>::iterator vi = vertices_.begin();
-        vi != vertices_.end();
-        ++vi
-    ) {
-        Lattice::LatticeEdgeIterator lei = allOutEdges(*vi);
-        while (lei.hasNext()) {
-            result.add(lei.next());
-        }
-    }
-    return result;
+    return edgesSorted(layerTagManager_.anyTag());
 }
 
 LayerTagManager& Lattice::getLayerTagManager() {
