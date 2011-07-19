@@ -96,13 +96,13 @@ public:
         bool hasNext();
         EdgeDescriptor next();
         void remove();
-        void add(EdgeDescriptor const* ep);
+        void add(EdgeDescriptor edge);
     private:
         std::list<
-            boost::detail::edge_desc_impl<boost::bidirectional_tag, unsigned int> const*
+            boost::detail::edge_desc_impl<boost::bidirectional_tag, unsigned int>
         > l_;
         std::list<
-            boost::detail::edge_desc_impl<boost::bidirectional_tag, unsigned int> const*
+            boost::detail::edge_desc_impl<boost::bidirectional_tag, unsigned int>
         >::iterator i_;
     };
 
@@ -149,27 +149,27 @@ public:
                            std::list<EdgeDescriptor> partition = std::list<EdgeDescriptor>());
 
     // return outgoing edges which has at least one layer tag from `mask`
-    std::pair<EdgeDescriptorIterator, EdgeDescriptorIterator> outEdges(
+    LatticeEdgeIterator outEdges(
         VertexDescriptor vertex,
         LayerTagMask mask
     );
 
-    std::pair<EdgeDescriptorIterator, EdgeDescriptorIterator> inEdges(
+    LatticeEdgeIterator inEdges(
         VertexDescriptor vertex,
         LayerTagMask mask
     );
 
-    std::pair<OutEdgeIterator, OutEdgeIterator> allOutEdges(VertexDescriptor vertex);
-    std::pair<InEdgeIterator, InEdgeIterator> allInEdges(VertexDescriptor vertex);
+    LatticeEdgeIterator allOutEdges(VertexDescriptor vertex);
+    LatticeEdgeIterator allInEdges(VertexDescriptor vertex);
 
     EdgeDescriptor firstOutEdge(VertexDescriptor vertex, LayerTagMask mask);
     EdgeDescriptor firstInEdge(VertexDescriptor vertex, LayerTagMask mask);
 
 
     // returns the list of edges which have at least one layer tag from `mask` sorted
-    std::list<EdgeDescriptor> edgesSorted(LayerTagMask mask);
+    LatticeEdgeIterator edgesSorted(LayerTagMask mask);
 
-    std::list<EdgeDescriptor> allEdgesSorted();
+    LatticeEdgeIterator allEdgesSorted();
 
     LayerTagManager& getLayerTagManager();
 
