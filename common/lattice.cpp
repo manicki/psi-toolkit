@@ -258,15 +258,23 @@ Lattice::SortedEdgesIterator::SortedEdgesIterator(
 { }
 
 bool Lattice::SortedEdgesIterator::hasNext() {
-    return vi_ != viEnd_ || ei_.hasNext();
+    if (ei_.hasNext()) return true;
+    ++vi_;
+    while (vi_ != viEnd_) {
+        ei_ = lattice_->outEdges(*vi_, mask_);
+        if (ei_.hasNext()) return true;
+        ++vi_;
+    }
+    return false;
 }
 
 Lattice::EdgeDescriptor Lattice::SortedEdgesIterator::next() {
     if (ei_.hasNext()) return ei_.next();
+    ++vi_;
     while (vi_ != viEnd_) {
-        ++vi_;
         ei_ = lattice_->outEdges(*vi_, mask_);
         if (ei_.hasNext()) return ei_.next();
+        ++vi_;
     }
     throw NoEdgeException("Iterator has no next edges.");
 }
