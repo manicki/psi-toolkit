@@ -1,7 +1,7 @@
 #include "utt_lattice_reader.hpp"
 
 
-void UTTLatticeReader::readIntoLattice(std::istream& inputStream, Lattice& lattice) {
+void UTTLatticeReader::doReadIntoLattice(std::istream& inputStream, Lattice& lattice) {
     UTTLRGrammar grammar;
     std::string line;
     std::string sentenceForm = "";

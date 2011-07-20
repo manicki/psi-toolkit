@@ -13,6 +13,7 @@ runner_SOURCES = \
 	../common/annotation_item.cpp \
 	../common/annotation_item_manager.cpp \
 	../common/lattice.cpp \
+	../common/lattice_reader.cpp \
 	../common/lattice_reader_factory.cpp \
 	../common/lattice_rw_utils.cpp \
 	../common/layer_tag_collection.cpp \
@@ -22,6 +23,7 @@ runner_SOURCES = \
 	../common/processor_factory.cpp \
 	../formats/psi/psi_lattice_reader.cpp \
 	../formats/psi/psi_lattice_writer.cpp \
+	../formats/txt/txt_lattice_reader.cpp \
 	../formats/utt/utt_lattice_reader.cpp
 
 runner_CPPFLAGS = ${compiler_flags} \
