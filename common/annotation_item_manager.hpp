@@ -12,11 +12,11 @@ class AnnotationItemManager {
 
 public:
 
-    void setValue(AnnotationItem annotationItem, std::string attribute, std::string value);
+    void setValue(AnnotationItem & annotationItem, std::string attribute, std::string value);
 
-    std::string getValue(AnnotationItem annotationItem, std::string attribute);
+    std::string getValue(AnnotationItem & annotationItem, std::string attribute);
 
-    std::string getCategory(AnnotationItem annotationItem) {
+    std::string getCategory(AnnotationItem & annotationItem) {
         return annotationItem.category_;
     }
 

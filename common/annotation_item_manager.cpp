@@ -1,7 +1,7 @@
 #include "annotation_item_manager.hpp"
 
 void AnnotationItemManager::setValue(
-    AnnotationItem annotationItem,
+    AnnotationItem & annotationItem,
     std::string attribute,
     std::string value
 ) {
@@ -14,8 +14,12 @@ void AnnotationItemManager::setValue(
 }
 
 std::string AnnotationItemManager::getValue(
-    AnnotationItem annotationItem,
+    AnnotationItem & annotationItem,
     std::string attribute
 ) {
-    return annotationItem.attrValues_[m_.left.at(attribute)];
+    try {
+        return annotationItem.attrValues_[m_.left.at(attribute)];
+    } catch (...) {
+        return "";
+    }
 }
