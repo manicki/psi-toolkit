@@ -13,7 +13,7 @@ public:
         reader->readIntoLattice("../formats/utt/t/files/fr_simple_puddle_input.txt", lattice);
 
         LayerTagMask rawMask = lattice.getLayerTagManager().getMask("raw");
-        Lattice::LatticeEdgeIterator rei = lattice.edgesSorted(rawMask);
+        Lattice::SortedEdgesIterator rei = lattice.edgesSorted(rawMask);
 
         TS_ASSERT_EQUALS(rei.hasNext(), true);
         TS_ASSERT_EQUALS(lattice.getEdgeAnnotationItem(rei.next()).getCategory(), "A");
@@ -71,7 +71,7 @@ public:
         TS_ASSERT_EQUALS(lattice.getEdgeAnnotationItem(rei.next()).getCategory(), "e");
 
         LayerTagMask tokenMask = lattice.getLayerTagManager().getMask("token");
-        Lattice::LatticeEdgeIterator tei = lattice.edgesSorted(tokenMask);
+        Lattice::SortedEdgesIterator tei = lattice.edgesSorted(tokenMask);
 
         TS_ASSERT_EQUALS(tei.hasNext(), true);
         TS_ASSERT_EQUALS(lattice.getEdgeAnnotationItem(tei.next()).getCategory(), "Amelie");
@@ -97,7 +97,7 @@ public:
         TS_ASSERT_EQUALS(lattice.getEdgeAnnotationItem(tei.next()).getCategory(), "âge");
 
         LayerTagMask sentenceMask = lattice.getLayerTagManager().getMask("sentence");
-        Lattice::LatticeEdgeIterator sei = lattice.edgesSorted(sentenceMask);
+        Lattice::SortedEdgesIterator sei = lattice.edgesSorted(sentenceMask);
 
         TS_ASSERT_EQUALS(sei.hasNext(), true);
         TS_ASSERT_EQUALS(lattice.getEdgeAnnotationItem(sei.next()).getCategory(),
