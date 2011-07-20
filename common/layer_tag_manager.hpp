@@ -17,7 +17,6 @@
 class LayerTagManager {
 
 public:
-    LayerTagManager();
 
     LayerTagCollection createSingletonTagCollection(std::string tagName);
 
@@ -50,11 +49,10 @@ public:
     }
 
 private:
+
     typedef boost::bimap<std::string,int> StringBimap;
     typedef StringBimap::value_type StringBimapItem;
     StringBimap m_;
-
-    int size_;
 
 };
 

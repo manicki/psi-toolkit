@@ -36,7 +36,7 @@ struct PsiLRItem {
 BOOST_FUSION_ADAPT_STRUCT(
     PsiLRItem,
     (int, ordinal)
-    // (std::string, unused)
+    // (std::string, unused) // strange error in spirit if there are to many string fields
     (int, beginning)
     (std::string, unused)
     (int, length)
@@ -55,7 +55,7 @@ struct PsiLRGrammar : public qi::grammar<std::string::const_iterator, PsiLRItem(
 
         start
             %= qi::int_
-            >> ' '
+            >> ' ' //TODO
             >> qi::int_
             >> +(qi::space)
             >> qi::int_

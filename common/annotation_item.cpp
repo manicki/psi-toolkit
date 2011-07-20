@@ -9,3 +9,16 @@ bool AnnotationItem::operator==(const AnnotationItem& other) const {
 std::string AnnotationItem::getCategory() const {
     return category_;
 }
+
+long AnnotationItem::getHash() const {
+    std::string str = category_;
+    for (
+        std::vector<std::string>::const_iterator avi = attrValues_.begin();
+        avi != attrValues_.end();
+        ++avi
+    ) {
+        str += *avi;
+    }
+    const std::collate<char>& coll = std::use_facet<std::collate<char> >(std::locale());
+    return coll.hash(str.data(), str.data() + str.length());
+}
