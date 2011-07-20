@@ -11,6 +11,7 @@ tests/runner.cpp: ../common/t/layer_tags_tests.hpp ../common/t/lattice_tests.hpp
 runner_SOURCES = \
 	tests/runner.cpp \
 	../common/annotation_item.cpp \
+	../common/annotation_item_manager.cpp \
 	../common/lattice.cpp \
 	../common/lattice_rw_utils.cpp \
 	../common/layer_tag_collection.cpp \
