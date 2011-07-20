@@ -109,45 +109,41 @@ Lattice::EdgeDescriptor Lattice::addEdge(
 
 }
 
-Lattice::LatticeEdgeIterator Lattice::outEdges(
+Lattice::InOutEdgesIterator Lattice::outEdges(
     Lattice::VertexDescriptor vertex,
     LayerTagMask mask
 ) {
-    int ix = addTagCollectionIndex_(layerTagManager_.createTagCollection(mask));
-    Lattice::LatticeEdgeIterator result;
-    for (
-        Lattice::EdgeDescriptorIterator edi = graph_[vertex].outEdgesIndex[ix].begin();
-        edi != graph_[vertex].outEdgesIndex[ix].end();
-        ++edi
-    ) {
-        result.add(*edi);
+    if (mask.isAny()) {
+        return Lattice::InOutEdgesIterator(boost::out_edges(vertex, graph_));
     }
-    return result;
+    int ix = addTagCollectionIndex_(layerTagManager_.createTagCollection(mask));
+    return Lattice::InOutEdgesIterator(
+        graph_[vertex].outEdgesIndex[ix].begin(),
+        graph_[vertex].outEdgesIndex[ix].end()
+    );
 }
 
-Lattice::LatticeEdgeIterator Lattice::inEdges(
+Lattice::InOutEdgesIterator Lattice::inEdges(
     Lattice::VertexDescriptor vertex,
     LayerTagMask mask
 ) {
-    int ix = addTagCollectionIndex_(layerTagManager_.createTagCollection(mask));
-    Lattice::LatticeEdgeIterator result;
-    for (
-        Lattice::EdgeDescriptorIterator edi = graph_[vertex].inEdgesIndex[ix].begin();
-        edi != graph_[vertex].inEdgesIndex[ix].end();
-        ++edi
-    ) {
-        result.add(*edi);
+    if (mask.isAny()) {
+        return Lattice::InOutEdgesIterator(boost::in_edges(vertex, graph_));
     }
-    return result;
+    int ix = addTagCollectionIndex_(layerTagManager_.createTagCollection(mask));
+    return Lattice::InOutEdgesIterator(
+        graph_[vertex].inEdgesIndex[ix].begin(),
+        graph_[vertex].inEdgesIndex[ix].end()
+    );
 }
 
-Lattice::LatticeEdgeIterator Lattice::allOutEdges(
+Lattice::InOutEdgesIterator Lattice::allOutEdges(
     Lattice::VertexDescriptor vertex
 ) {
     return outEdges(vertex, layerTagManager_.anyTag());
 }
 
-Lattice::LatticeEdgeIterator Lattice::allInEdges(
+Lattice::InOutEdgesIterator Lattice::allInEdges(
     Lattice::VertexDescriptor vertex
 ) {
     return inEdges(vertex, layerTagManager_.anyTag());
@@ -171,22 +167,11 @@ Lattice::EdgeDescriptor Lattice::firstInEdge(
     throw NoEdgeException("No in-edges found.");
 }
 
-Lattice::LatticeEdgeIterator Lattice::edgesSorted(LayerTagMask mask) {
-    Lattice::LatticeEdgeIterator result;
-    for (
-        std::vector<Lattice::VertexDescriptor>::iterator vi = vertices_.begin();
-        vi != vertices_.end();
-        ++vi
-    ) {
-        Lattice::LatticeEdgeIterator lei = outEdges(*vi, mask);
-        while (lei.hasNext()) {
-            result.add(lei.next());
-        }
-    }
-    return result;
+Lattice::SortedEdgesIterator Lattice::edgesSorted(LayerTagMask mask) {
+    return Lattice::SortedEdgesIterator(this, mask);
 }
 
-Lattice::LatticeEdgeIterator Lattice::allEdgesSorted() {
+Lattice::SortedEdgesIterator Lattice::allEdgesSorted() {
     return edgesSorted(layerTagManager_.anyTag());
 }
 
@@ -237,41 +222,59 @@ int Lattice::addTagCollectionIndex_(LayerTagCollection tags) {
 }
 
 
-Lattice::LatticeEdgeIterator::LatticeEdgeIterator(
-    std::pair<Lattice::OutEdgeIterator, Lattice::OutEdgeIterator> oeir
-) {
-    for (Lattice::OutEdgeIterator oei = oeir.first; oei != oeir.second; ++oei) {
-        l_.push_back(*oei);
+bool Lattice::InOutEdgesIterator::hasNext() {
+    switch (type_) {
+    case EDGE_DESCRIPTOR_ITER : return edi_ != ediEnd_;
+    case OUT_EDGE_ITER : return oei_ != oeiEnd_;
+    case IN_EDGE_ITER : return iei_ != ieiEnd_;
     }
-    i_ = l_.begin();
 }
 
-Lattice::LatticeEdgeIterator::LatticeEdgeIterator(
-    std::pair<Lattice::InEdgeIterator, Lattice::InEdgeIterator> ieir
-) {
-    for (Lattice::InEdgeIterator iei = ieir.first; iei != ieir.second; ++iei) {
-        l_.push_back(*iei);
+Lattice::EdgeDescriptor Lattice::InOutEdgesIterator::next() {
+    switch (type_) {
+    case EDGE_DESCRIPTOR_ITER :
+        if (edi_ != ediEnd_) return *(edi_++);
+        break;
+    case OUT_EDGE_ITER :
+        if (oei_ != oeiEnd_) return *(oei_++);
+        break;
+    case IN_EDGE_ITER :
+        if (iei_ != ieiEnd_) return *(iei_++);
+        break;
     }
-    i_ = l_.begin();
+    throw NoEdgeException("Iterator has no next edges.");
 }
 
-Lattice::LatticeEdgeIterator::LatticeEdgeIterator() {
-    i_ = l_.begin();
+
+Lattice::SortedEdgesIterator::SortedEdgesIterator(
+    Lattice * lattice,
+    LayerTagMask mask
+) :
+    lattice_(lattice),
+    mask_(mask),
+    vi_(lattice->vertices_.begin()),
+    viEnd_(lattice->vertices_.end()),
+    ei_(lattice->outEdges(*(lattice->vertices_.begin()), mask))
+{ }
+
+bool Lattice::SortedEdgesIterator::hasNext() {
+    if (ei_.hasNext()) return true;
+    ++vi_;
+    while (vi_ != viEnd_) {
+        ei_ = lattice_->outEdges(*vi_, mask_);
+        if (ei_.hasNext()) return true;
+        ++vi_;
+    }
+    return false;
 }
 
-bool Lattice::LatticeEdgeIterator::hasNext() {
-    return i_ != l_.end();
-}
-
-Lattice::EdgeDescriptor Lattice::LatticeEdgeIterator::next() {
-    return *(i_++);
-}
-
-void Lattice::LatticeEdgeIterator::remove() {
-    l_.erase(i_);
-}
-
-void Lattice::LatticeEdgeIterator::add(Lattice::EdgeDescriptor edge) {
-    l_.push_back(edge);
-    i_ = l_.begin();
+Lattice::EdgeDescriptor Lattice::SortedEdgesIterator::next() {
+    if (ei_.hasNext()) return ei_.next();
+    ++vi_;
+    while (vi_ != viEnd_) {
+        ei_ = lattice_->outEdges(*vi_, mask_);
+        if (ei_.hasNext()) return ei_.next();
+        ++vi_;
+    }
+    throw NoEdgeException("Iterator has no next edges.");
 }

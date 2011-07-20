@@ -8,7 +8,7 @@ public:
     void test_simple() {
         Lattice lattice("Ala ma kota");
 
-        Lattice::LatticeEdgeIterator ei
+        Lattice::SortedEdgesIterator ei
             = lattice.edgesSorted(lattice.getLayerTagManager().anyTag());
         TS_ASSERT_EQUALS(ei.hasNext(), true);
         TS_ASSERT_EQUALS(lattice.getEdgeAnnotationItem(ei.next()).getCategory(), "A");
@@ -114,7 +114,7 @@ public:
 
         // tests
 
-        Lattice::LatticeEdgeIterator tokenIter = lattice.edgesSorted(tokenMask);
+        Lattice::SortedEdgesIterator tokenIter = lattice.edgesSorted(tokenMask);
         TS_ASSERT_EQUALS(tokenIter.hasNext(), true);
 
         TS_ASSERT_EQUALS(
@@ -169,7 +169,7 @@ public:
         Lattice::VertexDescriptor pre_chat = lattice.getVertexForRawCharIndex(6);
         Lattice::VertexDescriptor post_chat = lattice.getLastVertex();
 
-        Lattice::LatticeEdgeIterator ei
+        Lattice::SortedEdgesIterator ei
             = lattice.edgesSorted(lattice.getLayerTagManager().anyTag());
         TS_ASSERT_EQUALS(ei.hasNext(), true);
         TS_ASSERT_EQUALS(lattice.getEdgeAnnotationItem(ei.next()).getCategory(), "b");
@@ -224,7 +224,7 @@ public:
         chat_lemma_partition.push_back(lattice.firstOutEdge(lattice.getVertexForRawCharIndex(6), tokenMask));
         lattice.addEdge(pre_chat, post_chat, lemma_token, lemma_tag, 0, chat_lemma_partition);
 
-        Lattice::LatticeEdgeIterator tokenIter = lattice.edgesSorted(lemmaMask);
+        Lattice::SortedEdgesIterator tokenIter = lattice.edgesSorted(lemmaMask);
         TS_ASSERT_EQUALS(tokenIter.hasNext(), true);
         TS_ASSERT_EQUALS(
             lattice.getEdgeAnnotationItem(tokenIter.next()).getCategory(),
