@@ -1,13 +1,12 @@
-
-
 #include "layer_tag_collection.hpp"
 #include "layer_tag_manager.hpp"
 
-class rules_tests : public CxxTest::TestSuite
+
+class LayerTagsTests : public CxxTest::TestSuite
 {
 public:
     void test_simple()
-	{
+    {
         LayerTagManager layer_tag_manager;
 
         LayerTagCollection tag_foo = layer_tag_manager.createSingletonTagCollection("foo");
