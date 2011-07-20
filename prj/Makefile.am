@@ -32,10 +32,10 @@ runner_CPPFLAGS = ${compiler_flags} \
 data_to_be_installed = install-testfiles
 
 install-testfiles:
-	mkdir -p $(exec_prefix)/test/files/psi
-	mkdir -p $(exec_prefix)/test/files/utt
-	$(cpprog) ../formats/psi/t/files/*.* $(exec_prefix)/test/files/psi/
-	$(cpprog) ../formats/utt/t/files/*.* $(exec_prefix)/test/files/utt/
+	mkdir -p $(exec_prefix)/formats/psi/t/files
+	mkdir -p $(exec_prefix)/formats/utt/t/files
+	$(cpprog) ../formats/psi/t/files/*.* $(exec_prefix)/formats/psi/t/files/
+	$(cpprog) ../formats/utt/t/files/*.* $(exec_prefix)/formats/utt/t/files/
 
 install-data-hook: $(data_to_be_installed)
 
