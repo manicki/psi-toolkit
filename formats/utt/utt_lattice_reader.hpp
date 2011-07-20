@@ -78,7 +78,9 @@ public:
     /**
      * Gets format name (here: "UTT").
      */
-    std::string getFormatName();
+    std::string getFormatName() {
+        return "UTT";
+    }
 
 };
 
