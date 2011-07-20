@@ -78,3 +78,8 @@ void UTTLatticeReader::readIntoLattice(std::istream& inputStream, Lattice& latti
 std::string UTTLatticeReader::getFormatName() {
     return "UTT";
 }
+
+std::string UTTLatticeReader::doInfo() {
+    return "UTT reader";
+}
+

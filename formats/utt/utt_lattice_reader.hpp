@@ -80,6 +80,8 @@ public:
      */
     std::string getFormatName();
 
+private:
+    virtual std::string doInfo();
 };
 
 

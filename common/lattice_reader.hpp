@@ -7,9 +7,9 @@
 #include <string>
 
 #include "lattice.hpp"
+#include "processor.hpp"
 
-
-class LatticeReader {
+class LatticeReader : public Processor {
 
 public:
 
