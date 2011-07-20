@@ -17,7 +17,9 @@ public:
     /**
      * Gets format name (here: "Psi").
      */
-    std::string getFormatName();
+    std::string getFormatName() {
+        return "Psi";
+    }
 
 };
 

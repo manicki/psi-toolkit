@@ -1,7 +1,5 @@
 #include "layer_tag_manager.hpp"
 
-LayerTagManager::LayerTagManager() : size_(0) { }
-
 LayerTagCollection LayerTagManager::createSingletonTagCollection(std::string tagName) {
     LayerTagCollection result = LayerTagCollection();
     m_.insert(StringBimapItem(tagName, m_.size()));
