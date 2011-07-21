@@ -10,9 +10,7 @@ Lattice::Lattice(std::string text) : layerTagManager_(), implicitOutEdges_(text.
     appendString(text);
 }
 
-Lattice::~Lattice() {
-    //TODO
-}
+Lattice::~Lattice() { }
 
 void Lattice::appendString(std::string text) {
     allText_ += text;
@@ -48,6 +46,16 @@ void Lattice::appendString(std::string text) {
         );
 
     }
+}
+
+void Lattice::addSymbols(VertexDescriptor startVertex, VertexDescriptor endVertex) {
+    //TODO
+}
+
+void Lattice::appendStringWithSymbols(std::string text) {
+    Lattice::VertexDescriptor joinPoint = getLastVertex();
+    appendString(text);
+    addSymbols(joinPoint, getLastVertex());
 }
 
 Lattice::VertexDescriptor Lattice::getVertexForRawCharIndex(int ix) {

@@ -143,6 +143,10 @@ public:
 
     void appendString(std::string text);
 
+    void addSymbols(VertexDescriptor startVertex, VertexDescriptor endVertex);
+
+    void appendStringWithSymbols(std::string text);
+
     /**
      * Gets the vertex for ix-th character of text
      */
