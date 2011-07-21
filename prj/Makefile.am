@@ -4,9 +4,9 @@ cpprog=`echo $${CPPROG-cp -d -r}`
 
 CLEANFILES=tests/runner.cpp
 
-tests/runner.cpp: ../common/t/layer_tags_tests.hpp ../common/t/annotation_item_tests.hpp ../common/t/lattice_tests.hpp ../common/t/lattice_readers_writers_tests.hpp
+tests/runner.cpp: ../common/t/layer_tags_tests.hpp ../common/t/annotation_item_tests.hpp ../common/t/lattice_tests.hpp ../common/t/quoter_tests.hpp ../common/t/lattice_readers_writers_tests.hpp
 	cd tests; \
-	perl cxxtestgen.pl --have-eh --runner=ErrorPrinter -o runner.cpp ../../common/t/layer_tags_tests.hpp ../../common/t/annotation_item_tests.hpp ../../common/t/lattice_tests.hpp ../../common/t/lattice_readers_writers_tests.hpp
+	perl cxxtestgen.pl --have-eh --runner=ErrorPrinter -o runner.cpp ../../common/t/layer_tags_tests.hpp ../../common/t/annotation_item_tests.hpp ../../common/t/lattice_tests.hpp ../../common/t/quoter_tests.hpp ../../common/t/lattice_readers_writers_tests.hpp
 
 runner_SOURCES = \
 	tests/runner.cpp \
