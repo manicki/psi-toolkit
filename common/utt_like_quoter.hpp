@@ -10,10 +10,12 @@
 /**
  * Escaped characters:
  * ' ' -> '_'
- * '\' -> '\\'
- * '_' -> '\_'
  * new line -> '\n'
- * tab -> '\t'
+ * tabulation -> '\t'
+ * carriage return -> '\r'
+ * '_' -> '\_'
+ * '*' -> '\*'
+ * '\' -> '\\'
  */
 
 class UTTLikeQuoter : public Quoter {
