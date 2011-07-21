@@ -32,7 +32,7 @@ void Lattice::appendString(std::string text) {
         int previousVertexIndex = (*mi).first;
         Graph::vertex_descriptor previousVertex = (*mi).second;
         Graph::vertex_descriptor vertex = boost::add_vertex(graph_);
-        vertices_[previousVertexIndex + 1] = vertex;
+        vertices_[previousVertexIndex + symbol.length()] = vertex;
 
         for (int j = 0; j < indexedTagCollections_.size(); ++j) {
             graph_[vertex].outEdgesIndex.push_back(std::list<EdgeDescriptor>());

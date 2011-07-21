@@ -25,7 +25,7 @@ void UTTLatticeReader::doReadIntoLattice(std::istream& inputStream, Lattice& lat
 
             if (item.length > 0) {
 
-                lattice.appendString(UTF8String(item.form).substr(0, item.length));
+                lattice.appendString(item.form);
 
                 LayerTagMask rawMask = lattice.getLayerTagManager().getMask("raw");
 
