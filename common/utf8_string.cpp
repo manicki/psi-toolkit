@@ -1,30 +1,8 @@
 #include <iomanip>
 #include <iostream>
 
-#include "lattice_rw_utils.hpp"
+#include "utf8_string.hpp"
 
-
-std::string LatticeRWUtils::escape(std::string formatName, std::string str) {
-    std::string result = "";
-    for (int i = 0; i < str.length(); ++i) {
-        switch (str[i]) {
-            case ' ' : result += "_"; break;
-            default : result += str[i];
-        }
-    }
-    return result;
-}
-
-std::string LatticeRWUtils::unescape(std::string formatName, std::string str) {
-    std::string result = "";
-    for (int i = 0; i < str.length(); ++i) {
-        switch (str[i]) {
-            case '_' : result += " "; break;
-            default : result += str[i];
-        }
-    }
-    return result;
-}
 
 UTF8String::UTF8String(const std::string& str) : std::string(str) {
     int i = 0;

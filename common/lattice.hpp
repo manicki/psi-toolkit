@@ -17,6 +17,7 @@
 #include "hash_wrapper.hpp"
 #include "layer_tag_manager.hpp"
 
+
 /*!
   Lattice is used to keep all the information extracted by annotators
   (processors). Language units (tokens, words, phrases etc.)

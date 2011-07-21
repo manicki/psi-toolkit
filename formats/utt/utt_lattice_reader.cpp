@@ -10,6 +10,7 @@ std::string UTTLatticeReader::doInfo() {
 }
 
 void UTTLatticeReader::doReadIntoLattice(std::istream& inputStream, Lattice& lattice) {
+    UTTQuoter quoter;
     UTTLRGrammar grammar;
     std::string line;
     std::string sentenceForm = "";
@@ -20,7 +21,7 @@ void UTTLatticeReader::doReadIntoLattice(std::istream& inputStream, Lattice& lat
         std::string::const_iterator end = line.end();
         if (parse(begin, end, grammar, item)) {
 
-            item.unescape();
+            item.unescape(quoter);
 
             if (item.length > 0) {
 

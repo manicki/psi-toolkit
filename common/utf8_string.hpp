@@ -1,18 +1,9 @@
-#ifndef LATTICE_RW_UTILS_HDR
-#define LATTICE_RW_UTILS_HDR
+#ifndef UTF8_STRING_HDR
+#define UTF8_STRING_HDR
 
 
 #include <string>
 #include <vector>
-
-
-namespace LatticeRWUtils {
-
-    std::string escape(std::string formatName, std::string str);
-
-    std::string unescape(std::string formatName, std::string str);
-
-}
 
 
 class UTF8String : public std::string {
