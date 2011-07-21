@@ -15,6 +15,8 @@ private:
 
     virtual void doReadIntoLattice(std::istream& inputStream, Lattice& lattice);
 
+    void appendParagraphToLattice_(std::string paragraph, Lattice& lattice);
+
 };
 
 #endif
