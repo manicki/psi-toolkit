@@ -8,6 +8,8 @@ public:
     void test_simple() {
         Lattice lattice("Ala ma kota");
 
+        TS_ASSERT_EQUALS(lattice.getAllText(), "Ala ma kota");
+
         Lattice::SortedEdgesIterator ei
             = lattice.edgesSorted(lattice.getLayerTagManager().anyTag());
         TS_ASSERT(ei.hasNext());

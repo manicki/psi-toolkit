@@ -15,12 +15,12 @@ Lattice::~Lattice() {
 }
 
 void Lattice::appendString(std::string text) {
-    std::string utext(text);
-    std::string::iterator uti = utext.begin();
+    allText_ += text;
+    std::string::iterator uti(text.begin());
 
-    while (uti != utext.end()) {
+    while (uti != text.end()) {
 
-        uint32_t code_point = utf8::next(uti, utext.end());
+        uint32_t code_point = utf8::next(uti, text.end());
 
         std::string symbol;
         utf8::append(code_point, std::back_inserter(symbol));
@@ -242,6 +242,10 @@ bool Lattice::InOutEdgesIterator::hasNext() {
     }
 }
 
+const std::string& Lattice::getAllText() const {
+    return allText_;
+}
+
 Lattice::EdgeDescriptor Lattice::InOutEdgesIterator::next() {
     switch (type_) {
     case EDGE_DESCRIPTOR_ITER :
@@ -290,3 +294,6 @@ Lattice::EdgeDescriptor Lattice::SortedEdgesIterator::next() {
     }
     throw NoEdgeException("Iterator has no next edges.");
 }
+
+
+

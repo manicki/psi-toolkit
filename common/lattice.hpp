@@ -198,6 +198,7 @@ public:
     const AnnotationItem& getEdgeAnnotationItem(EdgeDescriptor edge);
     const LayerTagCollection& getEdgeLayerTags(EdgeDescriptor edge);
 
+    const std::string& getAllText() const;
 
 private:
 
@@ -301,6 +302,8 @@ private:
 
     VVCHash vvcHash_;
     EdgeCounterHash edgeCounterHash_;
+
+    std::string allText_;
 
 };
 
