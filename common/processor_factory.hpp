@@ -25,11 +25,18 @@ public:
      */
     boost::program_options::options_description optionsHandled();
 
+    /**
+     * Name as used in the psi toolkit.
+     */
+    std::string getName();
+
 private:
 
     virtual Processor* doCreateProcessor(boost::program_options::variables_map options) = 0;
 
     virtual boost::program_options::options_description doOptionsHandled() = 0;
+
+    virtual std::string doGetName() = 0;
 
 };
 

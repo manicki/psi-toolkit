@@ -7,3 +7,7 @@ Processor* ProcessorFactory::createProcessor(boost::program_options::variables_m
 boost::program_options::options_description ProcessorFactory::optionsHandled() {
     return doOptionsHandled();
 }
+
+std::string ProcessorFactory::getName() {
+    return doGetName();
+}

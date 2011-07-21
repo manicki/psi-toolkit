@@ -9,6 +9,22 @@ std::string TxtLatticeReader::doInfo() {
     return "plain text reader";
 }
 
+LatticeReader* TxtLatticeReader::Factory::doCreateLatticeReader(
+    boost::program_options::variables_map options) {
+    return new TxtLatticeReader();
+}
+
+boost::program_options::options_description doOptionsHandled() {
+    boost::program_options::options_description optionsDescription("Allowed options");
+
+    return optionsDescription;
+}
+
+std::string TxtLatticeReader::Factory::doGetName() {
+    return "txt-reader";
+}
+
+
 TxtLatticeReader::Worker::Worker(TxtLatticeReader& processor,
                                  std::istream& inputStream,
                                  Lattice& lattice):

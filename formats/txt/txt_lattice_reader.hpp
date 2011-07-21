@@ -3,12 +3,20 @@
 
 
 #include "lattice_reader.hpp"
-
+#include "lattice_reader_factory.hpp"
 
 class TxtLatticeReader : public LatticeReader {
 
 public:
     virtual std::string getFormatName();
+
+    class Factory : public LatticeReaderFactory {
+    private:
+        virtual LatticeReader* doCreateLatticeReader(
+            boost::program_options::variables_map options);
+
+        virtual std::string doGetName();
+    };
 
 private:
     virtual std::string doInfo();
