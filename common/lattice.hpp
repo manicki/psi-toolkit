@@ -6,6 +6,7 @@
 #include <list>
 #include <vector>
 
+#include <boost/dynamic_bitset.hpp>
 #include <boost/graph/adjacency_list.hpp>
 
 #include "utf8.h"
@@ -207,6 +208,11 @@ private:
 
     LayerTagManager layerTagManager_;
 
+    std::string allText_;
+
+    boost::dynamic_bitset<> implicitEdges_;
+
+
     /**
      * vector of sorted vertices
      */
@@ -303,8 +309,6 @@ private:
 
     VVCHash vvcHash_;
     EdgeCounterHash edgeCounterHash_;
-
-    std::string allText_;
 
 };
 
