@@ -10,6 +10,8 @@
 #include <boost/spirit/include/qi.hpp>
 
 #include "lattice_reader.hpp"
+#include "quoter.hpp"
+#include "utt_quoter.hpp"
 
 
 using namespace boost::spirit;
@@ -23,10 +25,12 @@ struct UTTLRItem {
     std::string annotations;
     std::string unused;
 
-    void unescape() {
-        segmentType = LatticeRWUtils::unescape("UTT", segmentType);
-        form = LatticeRWUtils::unescape("UTT", form);
-        annotations = LatticeRWUtils::unescape("UTT", annotations);
+    void unescape(Quoter & quoter) {
+        // Quoter * quoter = new UTTQuoter();
+        segmentType = quoter.unescape(segmentType);
+        form = quoter.unescape(form);
+        annotations = quoter.unescape(annotations);
+        // delete quoter;
     }
 };
 

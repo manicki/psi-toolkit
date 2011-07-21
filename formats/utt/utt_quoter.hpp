@@ -7,7 +7,7 @@
 #include "utt_like_quoter.hpp"
 
 
-class UTTQuoter : UTTLikeQuoter {
+class UTTQuoter : public UTTLikeQuoter {
 
 public:
 
