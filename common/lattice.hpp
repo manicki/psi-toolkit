@@ -6,6 +6,8 @@
 #include <list>
 #include <vector>
 
+#include <map>
+
 #include <boost/graph/adjacency_list.hpp>
 
 #include "utf8.h"
@@ -123,8 +125,8 @@ public:
     private:
         Lattice * lattice_;
         LayerTagMask mask_;
-        std::vector<Graph::vertex_descriptor>::iterator vi_;
-        std::vector<Graph::vertex_descriptor>::iterator viEnd_;
+        std::map<int, Graph::vertex_descriptor>::iterator vi_;
+        std::map<int, Graph::vertex_descriptor>::iterator viEnd_;
         InOutEdgesIterator ei_;
     };
 
@@ -209,7 +211,7 @@ private:
     /**
      * vector of sorted vertices
      */
-    std::vector<Graph::vertex_descriptor> vertices_;
+    std::map<int, Graph::vertex_descriptor> vertices_;
 
     typedef boost::bimap<LayerTagCollection,int> TagCollectionsBimap;
     typedef TagCollectionsBimap::value_type TagCollectionsBimapItem;
