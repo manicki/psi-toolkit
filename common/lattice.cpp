@@ -1,7 +1,7 @@
 #include "lattice.hpp"
 
 Lattice::Lattice(std::string text) : layerTagManager_() {
-    Lattice::VertexDescriptor vertex = boost::add_vertex(graph_);
+    Graph::vertex_descriptor vertex = boost::add_vertex(graph_);
     vertices_.push_back(vertex);
     for (int j = 0; j < indexedTagCollections_.size(); ++j) {
         graph_[vertex].outEdgesIndex.push_back(std::list<EdgeDescriptor>());
@@ -18,8 +18,8 @@ void Lattice::appendString(std::string text) {
     UTF8String utext(text);
     for (UTF8String::iterator uti = utext.begin(); uti != utext.end(); ++uti) {
 
-        Lattice::VertexDescriptor previousVertex = vertices_.back();
-        Lattice::VertexDescriptor vertex = boost::add_vertex(graph_);
+        Graph::vertex_descriptor previousVertex = vertices_.back();
+        Graph::vertex_descriptor vertex = boost::add_vertex(graph_);
         vertices_.push_back(vertex);
 
         for (int j = 0; j < indexedTagCollections_.size(); ++j) {
@@ -39,15 +39,15 @@ void Lattice::appendString(std::string text) {
 }
 
 Lattice::VertexDescriptor Lattice::getVertexForRawCharIndex(int ix) {
-    return vertices_[ix];
+    return ix;
 }
 
 Lattice::VertexDescriptor Lattice::getFirstVertex() {
-    return vertices_.front();
+    return 0;
 }
 
 Lattice::VertexDescriptor Lattice::getLastVertex() {
-    return vertices_.back();
+    return vertices_.size() - 1;
 }
 
 Lattice::EdgeDescriptor Lattice::addEdge(
@@ -86,9 +86,12 @@ Lattice::EdgeDescriptor Lattice::addEdge(
             ++edgeCounterHash_[vpair];
         }
 
+        Graph::vertex_descriptor boost_from = vertices_[from];
+        Graph::vertex_descriptor boost_to   = vertices_[to];
+
         result = boost::add_edge(
-            from,
-            to,
+            boost_from,
+            boost_to,
             EdgeEntry(annotationItem, tags, score, partition),
             graph_
         );
@@ -96,8 +99,8 @@ Lattice::EdgeDescriptor Lattice::addEdge(
         if (result.second) {
             for (int i = 0; i < indexedTagCollections_.size(); ++i) {
                 if (createIntersection(tags, indexedTagCollections_.right.at(i)).isNonempty()) {
-                    graph_[from].outEdgesIndex[i].push_back(result.first);
-                    graph_[to].inEdgesIndex[i].push_back(result.first);
+                    graph_[boost_from].outEdgesIndex[i].push_back(result.first);
+                    graph_[boost_to].inEdgesIndex[i].push_back(result.first);
                 }
             }
             return result.first;
@@ -113,13 +116,14 @@ Lattice::InOutEdgesIterator Lattice::outEdges(
     Lattice::VertexDescriptor vertex,
     LayerTagMask mask
 ) {
+    Graph::vertex_descriptor boost_vertex = vertices_[vertex];
     if (mask.isAny()) {
-        return Lattice::InOutEdgesIterator(boost::out_edges(vertex, graph_));
+        return Lattice::InOutEdgesIterator(boost::out_edges(boost_vertex, graph_));
     }
     int ix = addTagCollectionIndex_(layerTagManager_.createTagCollection(mask));
     return Lattice::InOutEdgesIterator(
-        graph_[vertex].outEdgesIndex[ix].begin(),
-        graph_[vertex].outEdgesIndex[ix].end()
+        graph_[boost_vertex].outEdgesIndex[ix].begin(),
+        graph_[boost_vertex].outEdgesIndex[ix].end()
     );
 }
 
@@ -127,13 +131,14 @@ Lattice::InOutEdgesIterator Lattice::inEdges(
     Lattice::VertexDescriptor vertex,
     LayerTagMask mask
 ) {
+    Graph::vertex_descriptor boost_vertex = vertices_[vertex];
     if (mask.isAny()) {
-        return Lattice::InOutEdgesIterator(boost::in_edges(vertex, graph_));
+        return Lattice::InOutEdgesIterator(boost::in_edges(boost_vertex, graph_));
     }
     int ix = addTagCollectionIndex_(layerTagManager_.createTagCollection(mask));
     return Lattice::InOutEdgesIterator(
-        graph_[vertex].inEdgesIndex[ix].begin(),
-        graph_[vertex].inEdgesIndex[ix].end()
+        graph_[boost_vertex].inEdgesIndex[ix].begin(),
+        graph_[boost_vertex].inEdgesIndex[ix].end()
     );
 }
 
@@ -153,7 +158,7 @@ Lattice::EdgeDescriptor Lattice::firstOutEdge(
     Lattice::VertexDescriptor vertex,
     LayerTagMask mask
 ) {
-    if (mask.isAny()) return *(boost::out_edges(vertex, graph_).first);
+    if (mask.isAny()) return *(boost::out_edges(vertices_[vertex], graph_).first);
     if (outEdges(vertex, mask).hasNext()) return outEdges(vertex, mask).next();
     throw NoEdgeException("No out-edges found.");
 }
@@ -162,7 +167,7 @@ Lattice::EdgeDescriptor Lattice::firstInEdge(
     Lattice::VertexDescriptor vertex,
     LayerTagMask mask
 ) {
-    if (mask.isAny()) return *(boost::in_edges(vertex, graph_).first);
+    if (mask.isAny()) return *(boost::in_edges(vertices_[vertex], graph_).first);
     if (inEdges(vertex, mask).hasNext()) return inEdges(vertex, mask).next();
     throw NoEdgeException("No in-edges found.");
 }
@@ -194,7 +199,7 @@ int Lattice::addTagCollectionIndex_(LayerTagCollection tags) {
     } else {
         int ix = indexedTagCollections_.size();
         for (
-            std::vector<VertexDescriptor>::const_iterator vi = vertices_.begin();
+            std::vector<Graph::vertex_descriptor>::const_iterator vi = vertices_.begin();
             vi != vertices_.end();
             ++vi
         ) {
@@ -254,7 +259,7 @@ Lattice::SortedEdgesIterator::SortedEdgesIterator(
     mask_(mask),
     vi_(lattice->vertices_.begin()),
     viEnd_(lattice->vertices_.end()),
-    ei_(lattice->outEdges(*(lattice->vertices_.begin()), mask))
+    ei_(lattice->outEdges(0, mask))
 { }
 
 bool Lattice::SortedEdgesIterator::hasNext() {

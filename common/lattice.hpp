@@ -83,7 +83,7 @@ public:
         EdgeDescriptor(const Graph::edge_descriptor& ed):Graph::edge_descriptor(ed) {}
     };
 
-    typedef Graph::vertex_descriptor VertexDescriptor;
+    typedef int VertexDescriptor;
     typedef Graph::edge_iterator EdgeIterator;
     typedef Graph::out_edge_iterator OutEdgeIterator;
     typedef Graph::in_edge_iterator InEdgeIterator;
@@ -124,8 +124,8 @@ public:
     private:
         Lattice * lattice_;
         LayerTagMask mask_;
-        std::vector<VertexDescriptor>::iterator vi_;
-        std::vector<VertexDescriptor>::iterator viEnd_;
+        std::vector<Graph::vertex_descriptor>::iterator vi_;
+        std::vector<Graph::vertex_descriptor>::iterator viEnd_;
         InOutEdgesIterator ei_;
     };
 
@@ -209,7 +209,7 @@ private:
     /**
      * vector of sorted vertices
      */
-    std::vector<VertexDescriptor> vertices_;
+    std::vector<Graph::vertex_descriptor> vertices_;
 
     typedef boost::bimap<LayerTagCollection,int> TagCollectionsBimap;
     typedef TagCollectionsBimap::value_type TagCollectionsBimapItem;
