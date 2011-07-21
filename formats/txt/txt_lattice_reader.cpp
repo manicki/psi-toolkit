@@ -10,5 +10,13 @@ std::string TxtLatticeReader::doInfo() {
 }
 
 void TxtLatticeReader::doReadIntoLattice(std::istream& inputStream, Lattice& lattice) {
-    ; //TODO
+
+    std::string line;
+    while (getline(inputStream, line)) {
+        appendParagraphToLattice_(line, lattice);
+    }
+}
+
+void TxtLatticeReader::appendParagraphToLattice_(std::string paragraph, Lattice& lattice) {
+    lattice.appendString(paragraph);
 }
