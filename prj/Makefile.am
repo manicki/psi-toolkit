@@ -21,10 +21,14 @@ runner_SOURCES = \
 	../common/layer_tag_mask.cpp \
 	../common/processor.cpp \
 	../common/processor_factory.cpp \
+	../common/quoter.cpp \
+	../common/utt_like_quoter.cpp \
 	../formats/psi/psi_lattice_reader.cpp \
 	../formats/psi/psi_lattice_writer.cpp \
+	../formats/psi/psi_quoter.cpp \
 	../formats/txt/txt_lattice_reader.cpp \
-	../formats/utt/utt_lattice_reader.cpp
+	../formats/utt/utt_lattice_reader.cpp \
+	../formats/utt/utt_quoter.cpp
 
 runner_CPPFLAGS = ${compiler_flags} \
     -Itests \
