@@ -6,15 +6,6 @@
 #include <vector>
 
 
-namespace LatticeRWUtils {
-
-    std::string escape(std::string formatName, std::string str);
-
-    std::string unescape(std::string formatName, std::string str);
-
-}
-
-
 class UTF8String : public std::string {
 
 public:
