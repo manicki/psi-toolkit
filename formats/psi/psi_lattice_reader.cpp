@@ -9,6 +9,6 @@ std::string PsiLatticeReader::doInfo() {
     return "Psi reader";
 }
 
-void PsiLatticeReader::readIntoLattice(std::istream& inputStream, Lattice& lattice) {
+void PsiLatticeReader::doReadIntoLattice(std::istream& inputStream, Lattice& lattice) {
     //TODO
 }
