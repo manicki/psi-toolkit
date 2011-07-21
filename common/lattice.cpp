@@ -1,6 +1,6 @@
 #include "lattice.hpp"
 
-Lattice::Lattice(std::string text) : layerTagManager_() {
+Lattice::Lattice(std::string text) : layerTagManager_(), implicitOutEdges_(text.length() + 1) {
     Graph::vertex_descriptor vertex = boost::add_vertex(graph_);
     vertices_[0] = vertex;
     for (int j = 0; j < indexedTagCollections_.size(); ++j) {
@@ -16,6 +16,7 @@ Lattice::~Lattice() {
 
 void Lattice::appendString(std::string text) {
     allText_ += text;
+    implicitOutEdges_.resize(allText_.length() + 1);
     std::string::iterator uti(text.begin());
 
     while (uti != text.end()) {

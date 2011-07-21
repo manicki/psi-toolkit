@@ -212,7 +212,7 @@ private:
 
     std::string allText_;
 
-    boost::dynamic_bitset<> implicitEdges_;
+    boost::dynamic_bitset<> implicitOutEdges_;
 
 
     /**
