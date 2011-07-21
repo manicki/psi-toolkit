@@ -77,16 +77,16 @@ struct PsiLRGrammar : public qi::grammar<std::string::const_iterator, PsiLRItem(
 class PsiLatticeReader : public LatticeReader {
 
 public:
-    /**
-     * Reads from `inputStream` into `lattice`. If lattice is not empty,
-     * new edges will be appended at the end of lattice.
-     */
-    void readIntoLattice(std::istream& inputStream, Lattice& lattice);
 
     /**
-     * Gets format name (here: "Psi").
+     * Gets format name (here: "UTT").
      */
     std::string getFormatName();
+
+private:
+    virtual std::string doInfo();
+
+    virtual void doReadIntoLattice(std::istream& inputStream, Lattice& lattice);
 
 };
 

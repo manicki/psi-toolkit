@@ -26,5 +26,7 @@ AC_C_INLINE
 # Checks for library functions.
 AC_FUNC_MALLOC
 
+AC_SUBST([LIBS], ["$LIBS -lboost_program_options"])
+
 AC_CONFIG_FILES([Makefile])
 AC_OUTPUT

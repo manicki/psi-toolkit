@@ -7,9 +7,9 @@
 #include <string>
 
 #include "lattice.hpp"
+#include "processor.hpp"
 
-
-class LatticeReader {
+class LatticeReader : public Processor {
 
 public:
 
@@ -22,21 +22,22 @@ public:
      * Reads from `inputStream` into `lattice`. If lattice is not empty,
      * new edges will be appended at the end of lattice.
      */
-    virtual void readIntoLattice(std::istream& inputStream, Lattice& lattice) { }
+    void readIntoLattice(std::istream& inputStream, Lattice& lattice);
 
     /**
      * Reads from file `fileName` into `lattice`. If lattice is not empty,
      * new edges will be appended at the end of lattice.
      */
-    void readIntoLattice(const std::string& fileName, Lattice& lattice) {
-        std::ifstream inputStream(fileName.c_str());
-        readIntoLattice(inputStream, lattice);
-    }
+    void readIntoLattice(const std::string& fileName, Lattice& lattice);
 
     /**
      * Gets format name (eg. "UTT", "BIN" etc.)
      */
     virtual std::string getFormatName() { }
+
+private:
+    virtual void doReadIntoLattice(std::istream& inputStream, Lattice& lattice) = 0;
+
 };
 
 
