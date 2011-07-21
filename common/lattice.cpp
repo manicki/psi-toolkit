@@ -54,7 +54,7 @@ Lattice::VertexDescriptor Lattice::getFirstVertex() {
 }
 
 Lattice::VertexDescriptor Lattice::getLastVertex() {
-    return vertices_.size() - 1;
+    return allText_.length();
 }
 
 Lattice::EdgeDescriptor Lattice::addEdge(
