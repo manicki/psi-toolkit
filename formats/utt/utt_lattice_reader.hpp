@@ -11,6 +11,7 @@
 
 #include "lattice_reader.hpp"
 
+#include "lattice_rw_utils.hpp"
 
 using namespace boost::spirit;
 

@@ -15,8 +15,15 @@ Lattice::~Lattice() {
 }
 
 void Lattice::appendString(std::string text) {
-    UTF8String utext(text);
-    for (UTF8String::iterator uti = utext.begin(); uti != utext.end(); ++uti) {
+    std::string utext(text);
+    std::string::iterator uti = utext.begin();
+
+    while (uti != utext.end()) {
+
+        uint32_t code_point = utf8::next(uti, utext.end());
+
+        std::string symbol;
+        utf8::append(code_point, std::back_inserter(symbol));
 
         Graph::vertex_descriptor previousVertex = vertices_.back();
         Graph::vertex_descriptor vertex = boost::add_vertex(graph_);
@@ -30,7 +37,7 @@ void Lattice::appendString(std::string text) {
         addEdge(
             previousVertex,
             vertex,
-            AnnotationItem(*uti),
+            AnnotationItem(symbol),
             layerTagManager_.createSingletonTagCollection("raw"),
             0.0
         );
