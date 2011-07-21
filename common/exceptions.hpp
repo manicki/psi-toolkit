@@ -10,7 +10,7 @@ class Exception : public std::runtime_error {
 public:
     Exception(std::string message) : std::runtime_error(message), message_(message) { }
     ~Exception() throw() { }
-    std::string getMessage() { return message_; }
+    std::string getMessage() const { return message_; }
 protected:
     std::string message_;
 };
@@ -25,6 +25,12 @@ public:
 class FileFormatException : public Exception {
 public:
     FileFormatException(std::string message) : Exception(message) { }
+};
+
+
+class QuoterException : public Exception {
+public:
+    QuoterException(std::string message) : Exception(message) { }
 };
 
 

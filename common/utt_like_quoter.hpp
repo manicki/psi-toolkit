@@ -2,8 +2,7 @@
 #define UTT_LIKE_QUOTER_HDR
 
 
-#include <vector>
-
+#include "exceptions.hpp"
 #include "quoter.hpp"
 
 

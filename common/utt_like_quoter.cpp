@@ -54,12 +54,11 @@ std::string UTTLikeQuoter::doUnescape(std::string str) {
                         --j;
                     }
                     if (j) break;
-                    result += "\\";
-                    result += str[i];
+                    throw QuoterException("Wrong escape sequence.");
                     break;
                 }
             } else {
-                result += "\\";
+                throw QuoterException("Wrong escape sequence.");
             }
             break;
         default : result += str[i];
