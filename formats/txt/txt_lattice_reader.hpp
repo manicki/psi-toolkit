@@ -1,7 +1,9 @@
 #ifndef TXT_LATTICE_READER_HDR
 #define TXT_LATTICE_READER_HDR
 
+
 #include "lattice_reader.hpp"
+
 
 class TxtLatticeReader : public LatticeReader {
 
