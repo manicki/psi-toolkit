@@ -8,6 +8,8 @@
 
 #include <boost/graph/adjacency_list.hpp>
 
+#include "utf8.h"
+
 #include "annotation_item.hpp"
 #include "exceptions.hpp"
 #include "hash_wrapper.hpp"
