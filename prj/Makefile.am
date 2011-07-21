@@ -15,12 +15,14 @@ runner_SOURCES = \
 	../common/lattice.cpp \
 	../common/lattice_reader.cpp \
 	../common/lattice_reader_factory.cpp \
+	../common/lattice_worker.cpp \
 	../common/layer_tag_collection.cpp \
 	../common/layer_tag_manager.cpp \
 	../common/layer_tag_mask.cpp \
 	../common/processor.cpp \
 	../common/processor_factory.cpp \
 	../common/quoter.cpp \
+	../common/reader_worker.cpp \
 	../common/utf8_string.cpp \
 	../common/utt_like_quoter.cpp \
 	../formats/psi/psi_lattice_reader.cpp \
