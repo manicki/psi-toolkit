@@ -9,14 +9,19 @@ std::string TxtLatticeReader::doInfo() {
     return "plain text reader";
 }
 
-void TxtLatticeReader::doReadIntoLattice(std::istream& inputStream, Lattice& lattice) {
+TxtLatticeReader::Worker::Worker(TxtLatticeReader& processor,
+                                 std::istream& inputStream,
+                                 Lattice& lattice):
+    ReaderWorker(inputStream, lattice), processor_(processor) {
+}
 
+void TxtLatticeReader::Worker::doRun() {
     std::string line;
-    while (getline(inputStream, line)) {
-        appendParagraphToLattice_(line, lattice);
+    while (getline(inputStream_, line)) {
+        appendParagraphToLattice_(line);
     }
 }
 
-void TxtLatticeReader::appendParagraphToLattice_(std::string paragraph, Lattice& lattice) {
-    lattice.appendString(paragraph);
+void TxtLatticeReader::Worker::appendParagraphToLattice_(std::string paragraph) {
+    lattice_.appendString(paragraph);
 }

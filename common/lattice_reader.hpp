@@ -7,6 +7,7 @@
 #include <string>
 
 #include "lattice.hpp"
+#include "reader_worker.hpp"
 #include "processor.hpp"
 
 class LatticeReader : public Processor {
@@ -36,7 +37,7 @@ public:
     virtual std::string getFormatName() { }
 
 private:
-    virtual void doReadIntoLattice(std::istream& inputStream, Lattice& lattice) = 0;
+    virtual ReaderWorker* doCreateReaderWorker(std::istream& inputStream, Lattice& lattice) = 0;
 
 };
 

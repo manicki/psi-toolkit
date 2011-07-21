@@ -13,10 +13,23 @@ public:
 private:
     virtual std::string doInfo();
 
-    virtual void doReadIntoLattice(std::istream& inputStream, Lattice& lattice);
+    class Worker : public ReaderWorker {
+    public:
+        Worker(TxtLatticeReader& processor,
+               std::istream& inputStream,
+               Lattice& lattice);
 
-    void appendParagraphToLattice_(std::string paragraph, Lattice& lattice);
+        virtual void doRun();
 
+    private:
+        void appendParagraphToLattice_(std::string paragraph);
+
+        Processor& processor_;
+    };
+
+    virtual ReaderWorker* doCreateReaderWorker(std::istream& inputStream, Lattice& lattice) {
+        return new Worker(*this, inputStream, lattice);
+    }
 };
 
 #endif
