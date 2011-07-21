@@ -15,8 +15,11 @@ Lattice::~Lattice() { }
 void Lattice::appendString(std::string text) {
     allText_ += text;
     implicitOutEdges_.resize(allText_.length() + 1);
-    std::string::iterator uti(text.begin());
+}
 
+void Lattice::addSymbols(VertexDescriptor startVertex, VertexDescriptor endVertex) {
+    std::string text = allText_.substr(startVertex, endVertex-startVertex);
+    std::string::iterator uti(text.begin());
     while (uti != text.end()) {
 
         uint32_t code_point = utf8::next(uti, text.end());
@@ -37,19 +40,18 @@ void Lattice::appendString(std::string text) {
             graph_[vertex].inEdgesIndex.push_back(std::list<EdgeDescriptor>());
         }
 
+        implicitOutEdges_.set(previousVertexIndex, true);
+
+        // poniższy kod zostanie usunięty
         addEdge(
             previousVertex,
             vertex,
             AnnotationItem(symbol),
-            layerTagManager_.createSingletonTagCollection("raw"),
+            layerTagManager_.createSingletonTagCollection("symbol"),
             0.0
         );
 
     }
-}
-
-void Lattice::addSymbols(VertexDescriptor startVertex, VertexDescriptor endVertex) {
-    //TODO
 }
 
 void Lattice::appendStringWithSymbols(std::string text) {
@@ -136,6 +138,7 @@ Lattice::InOutEdgesIterator Lattice::outEdges(
     Lattice::VertexDescriptor vertex,
     LayerTagMask mask
 ) {
+    // Trzeba zmodyfikować iteratory, żeby iterowały również po niejawnych krawędziach
     Graph::vertex_descriptor boost_vertex = vertices_[vertex];
     if (mask.isAny()) {
         return Lattice::InOutEdgesIterator(boost::out_edges(boost_vertex, graph_));
@@ -151,6 +154,7 @@ Lattice::InOutEdgesIterator Lattice::inEdges(
     Lattice::VertexDescriptor vertex,
     LayerTagMask mask
 ) {
+    // Trzeba zmodyfikować iteratory, żeby iterowały również po niejawnych krawędziach
     Graph::vertex_descriptor boost_vertex = vertices_[vertex];
     if (mask.isAny()) {
         return Lattice::InOutEdgesIterator(boost::in_edges(boost_vertex, graph_));
@@ -246,8 +250,13 @@ int Lattice::addTagCollectionIndex_(LayerTagCollection tags) {
     }
 }
 
+const std::string& Lattice::getAllText() const {
+    return allText_;
+}
+
 
 bool Lattice::InOutEdgesIterator::hasNext() {
+    // Trzeba zmodyfikować iteratory, żeby iterowały również po niejawnych krawędziach
     switch (type_) {
     case EDGE_DESCRIPTOR_ITER : return edi_ != ediEnd_;
     case OUT_EDGE_ITER : return oei_ != oeiEnd_;
@@ -255,11 +264,8 @@ bool Lattice::InOutEdgesIterator::hasNext() {
     }
 }
 
-const std::string& Lattice::getAllText() const {
-    return allText_;
-}
-
 Lattice::EdgeDescriptor Lattice::InOutEdgesIterator::next() {
+    // Trzeba zmodyfikować iteratory, żeby iterowały również po niejawnych krawędziach
     switch (type_) {
     case EDGE_DESCRIPTOR_ITER :
         if (edi_ != ediEnd_) return *(edi_++);

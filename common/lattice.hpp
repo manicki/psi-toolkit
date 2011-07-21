@@ -218,10 +218,6 @@ private:
 
     boost::dynamic_bitset<> implicitOutEdges_;
 
-
-    /**
-     * vector of sorted vertices
-     */
     std::map<int, Graph::vertex_descriptor> vertices_;
 
     typedef boost::bimap<LayerTagCollection,int> TagCollectionsBimap;

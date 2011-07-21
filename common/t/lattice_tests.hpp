@@ -8,6 +8,8 @@ public:
     void test_simple() {
         Lattice lattice("Ala ma kota");
 
+        lattice.addSymbols(lattice.getFirstVertex(), lattice.getLastVertex());
+
         TS_ASSERT_EQUALS(lattice.getAllText(), "Ala ma kota");
 
         Lattice::SortedEdgesIterator ei
@@ -44,7 +46,7 @@ public:
         Lattice::VertexDescriptor post_kota = lattice.getLastVertex();
 
         LayerTagCollection
-            raw_tag = lattice.getLayerTagManager().createSingletonTagCollection("raw");
+            raw_tag = lattice.getLayerTagManager().createSingletonTagCollection("symbol");
         LayerTagCollection
             token_tag = lattice.getLayerTagManager().createSingletonTagCollection("token");
 
@@ -153,8 +155,9 @@ public:
 
     void test_puddle() {
         Lattice lattice("blanc chat");
+        lattice.addSymbols(lattice.getFirstVertex(), lattice.getLastVertex());
         LayerTagCollection raw_tag
-            = lattice.getLayerTagManager().createSingletonTagCollection("raw");
+            = lattice.getLayerTagManager().createSingletonTagCollection("symbol");
         LayerTagCollection token_tag
             = lattice.getLayerTagManager().createSingletonTagCollection("token");
         LayerTagCollection lemma_tag
