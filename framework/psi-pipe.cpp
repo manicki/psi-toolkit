@@ -1,7 +1,7 @@
-#include <iostream>
+#include "pipe_runner.hpp"
 
 int main(int argc, char* argv[]) {
-    std::cout << "Hello world!" << std::endl;
+    PipeRunner pipeRunner(argc, argv);
 
-    return 1;
+    return pipeRunner.run();
 }

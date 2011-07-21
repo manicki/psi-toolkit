@@ -65,7 +65,9 @@ psi_pipe_SOURCES = \
 	../formats/txt/txt_lattice_reader.cpp \
 	../formats/utt/utt_lattice_reader.cpp \
 	../formats/utt/utt_quoter.cpp \
+	../framework/pipe_runner.cpp \
 	../framework/psi-pipe.cpp
+
 
 psi_pipe_CPPFLAGS = ${compiler_flags} \
     -I../common \
