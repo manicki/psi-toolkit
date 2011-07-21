@@ -1,4 +1,4 @@
-bin_PROGRAMS = runner
+bin_PROGRAMS = runner psi-pipe
 
 cpprog=`echo $${CPPROG-cp -d -r}`
 
@@ -42,6 +42,38 @@ runner_CPPFLAGS = ${compiler_flags} \
     -I../formats/utt/t \
     -I../utf8 \
     -I../utf8/utf8
+
+psi_pipe_SOURCES = \
+	../common/annotation_item.cpp \
+	../common/annotation_item_manager.cpp \
+	../common/lattice.cpp \
+	../common/lattice_reader.cpp \
+	../common/lattice_reader_factory.cpp \
+	../common/lattice_worker.cpp \
+	../common/layer_tag_collection.cpp \
+	../common/layer_tag_manager.cpp \
+	../common/layer_tag_mask.cpp \
+	../common/processor.cpp \
+	../common/processor_factory.cpp \
+	../common/quoter.cpp \
+	../common/reader_worker.cpp \
+	../common/utf8_string.cpp \
+	../common/utt_like_quoter.cpp \
+	../formats/psi/psi_lattice_reader.cpp \
+	../formats/psi/psi_lattice_writer.cpp \
+	../formats/psi/psi_quoter.cpp \
+	../formats/txt/txt_lattice_reader.cpp \
+	../formats/utt/utt_lattice_reader.cpp \
+	../formats/utt/utt_quoter.cpp \
+	../framework/psi-pipe.cpp
+
+psi_pipe_CPPFLAGS = ${compiler_flags} \
+    -I../common \
+    -I../formats/psi \
+    -I../formats/utt \
+    -I../utf8 \
+    -I../utf8/utf8
+
 
 data_to_be_installed = install-testfiles
 
