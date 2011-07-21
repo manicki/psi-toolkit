@@ -1,7 +1,7 @@
 #include <iomanip>
 #include <iostream>
 
-#include "lattice_rw_utils.hpp"
+#include "utf8_string.hpp"
 
 
 UTF8String::UTF8String(const std::string& str) : std::string(str) {

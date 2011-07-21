@@ -12,7 +12,7 @@
 #include "exceptions.hpp"
 #include "hash_wrapper.hpp"
 #include "layer_tag_manager.hpp"
-#include "lattice_rw_utils.hpp"
+#include "utf8_string.hpp"
 
 /*!
   Lattice is used to keep all the information extracted by annotators

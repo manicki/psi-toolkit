@@ -1,5 +1,5 @@
-#ifndef LATTICE_RW_UTILS_HDR
-#define LATTICE_RW_UTILS_HDR
+#ifndef UTF8_STRING_HDR
+#define UTF8_STRING_HDR
 
 
 #include <string>
