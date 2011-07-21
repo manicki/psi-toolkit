@@ -7,6 +7,14 @@
 #include "quoter.hpp"
 
 
+/**
+ * Escaped characters:
+ * ' ' -> '_'
+ * '\' -> '\\'
+ * '_' -> '\_'
+ * new line -> '\n'
+ */
+
 class UTTLikeQuoter : public Quoter {
 
 public:
