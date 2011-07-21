@@ -1,6 +1,14 @@
 #include "utt_lattice_reader.hpp"
 
 
+std::string UTTLatticeReader::getFormatName() {
+    return "UTT";
+}
+
+std::string UTTLatticeReader::doInfo() {
+    return "UTT reader";
+}
+
 void UTTLatticeReader::doReadIntoLattice(std::istream& inputStream, Lattice& lattice) {
     UTTLRGrammar grammar;
     std::string line;
@@ -74,12 +82,3 @@ void UTTLatticeReader::doReadIntoLattice(std::istream& inputStream, Lattice& lat
         }
     }
 }
-
-std::string UTTLatticeReader::getFormatName() {
-    return "UTT";
-}
-
-std::string UTTLatticeReader::doInfo() {
-    return "UTT reader";
-}
-

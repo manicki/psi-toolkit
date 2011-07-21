@@ -1,5 +1,6 @@
 #include "txt_lattice_reader.hpp"
 
+
 std::string TxtLatticeReader::getFormatName() {
     return "TXT";
 }
@@ -9,5 +10,5 @@ std::string TxtLatticeReader::doInfo() {
 }
 
 void TxtLatticeReader::doReadIntoLattice(std::istream& inputStream, Lattice& lattice) {
-    ;
+    ; //TODO
 }
