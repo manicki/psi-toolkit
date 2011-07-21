@@ -1,5 +1,6 @@
 #include "utt_like_quoter.hpp"
 
+#include <iostream>
 
 std::string UTTLikeQuoter::doEscape(std::string str) {
     std::string result = "";
@@ -9,7 +10,19 @@ std::string UTTLikeQuoter::doEscape(std::string str) {
         case '\\' : result += "\\\\"; break;
         case '_' : result += "\\_"; break;
         case '\n' : result += "\\n"; break;
-        default : result += str[i];
+        case '\t' : result += "\\t"; break;
+        default :
+            int j = additionalQuotations_.length();
+            while (j) {
+                if (str[i] == additionalQuotations_[j-1]) {
+                    result += "\\";
+                    result += str[i];
+                    break;
+                }
+                --j;
+            }
+            if (j) break;
+            result += str[i]; break;
         }
     }
     return result;
@@ -27,7 +40,19 @@ std::string UTTLikeQuoter::doUnescape(std::string str) {
                 case '\\' : result += "\\"; break;
                 case '_' : result += "_"; break;
                 case 'n' : result += "\n"; break;
-                default : result += ("\\" + str[i]); break;
+                case 't' : result += "\t"; break;
+                default :
+                    int j = additionalQuotations_.length();
+                    while (j) {
+                        if (str[i] == additionalQuotations_[j-1]) {
+                            result += str[i]; break;
+                        }
+                        --j;
+                    }
+                    if (j) break;
+                    result += "\\";
+                    result += str[i];
+                    break;
                 }
             } else {
                 result += "\\";

@@ -13,6 +13,7 @@
  * '\' -> '\\'
  * '_' -> '\_'
  * new line -> '\n'
+ * tab -> '\t'
  */
 
 class UTTLikeQuoter : public Quoter {
@@ -21,7 +22,11 @@ public:
 
     UTTLikeQuoter() { }
 
+    UTTLikeQuoter(std::string addQuot) : additionalQuotations_(addQuot) { }
+
 private:
+
+    std::string additionalQuotations_;
 
     virtual std::string doEscape(std::string str);
     virtual std::string doUnescape(std::string str);
