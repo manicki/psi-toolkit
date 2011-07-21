@@ -37,7 +37,9 @@ runner_CPPFLAGS = ${compiler_flags} \
     -I../formats/psi \
     -I../formats/psi/t \
     -I../formats/utt \
-    -I../formats/utt/t
+    -I../formats/utt/t \
+    -I../utf8 \
+    -I../utf8/utf8
 
 data_to_be_installed = install-testfiles
 

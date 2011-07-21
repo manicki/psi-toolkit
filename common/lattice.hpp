@@ -8,11 +8,13 @@
 
 #include <boost/graph/adjacency_list.hpp>
 
+#include "utf8.h"
+
 #include "annotation_item.hpp"
 #include "exceptions.hpp"
 #include "hash_wrapper.hpp"
 #include "layer_tag_manager.hpp"
-#include "utf8_string.hpp"
+
 
 /*!
   Lattice is used to keep all the information extracted by annotators
@@ -81,7 +83,7 @@ public:
         EdgeDescriptor(const Graph::edge_descriptor& ed):Graph::edge_descriptor(ed) {}
     };
 
-    typedef Graph::vertex_descriptor VertexDescriptor;
+    typedef int VertexDescriptor;
     typedef Graph::edge_iterator EdgeIterator;
     typedef Graph::out_edge_iterator OutEdgeIterator;
     typedef Graph::in_edge_iterator InEdgeIterator;
@@ -122,8 +124,8 @@ public:
     private:
         Lattice * lattice_;
         LayerTagMask mask_;
-        std::vector<VertexDescriptor>::iterator vi_;
-        std::vector<VertexDescriptor>::iterator viEnd_;
+        std::vector<Graph::vertex_descriptor>::iterator vi_;
+        std::vector<Graph::vertex_descriptor>::iterator viEnd_;
         InOutEdgesIterator ei_;
     };
 
@@ -197,6 +199,7 @@ public:
     const AnnotationItem& getEdgeAnnotationItem(EdgeDescriptor edge);
     const LayerTagCollection& getEdgeLayerTags(EdgeDescriptor edge);
 
+    const std::string& getAllText() const;
 
 private:
 
@@ -207,7 +210,7 @@ private:
     /**
      * vector of sorted vertices
      */
-    std::vector<VertexDescriptor> vertices_;
+    std::vector<Graph::vertex_descriptor> vertices_;
 
     typedef boost::bimap<LayerTagCollection,int> TagCollectionsBimap;
     typedef TagCollectionsBimap::value_type TagCollectionsBimapItem;
@@ -300,6 +303,8 @@ private:
 
     VVCHash vvcHash_;
     EdgeCounterHash edgeCounterHash_;
+
+    std::string allText_;
 
 };
 
