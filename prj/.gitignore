@@ -3,6 +3,7 @@ autom4te.cache
 configure
 config.*
 Makefile
+psi-pipe
 runner
 stamp-h1
 *.in

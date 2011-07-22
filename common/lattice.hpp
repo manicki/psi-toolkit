@@ -59,8 +59,8 @@ public:
     struct EdgeDescriptor;
 
     struct VertexEntry {
-        std::vector< std::list<EdgeDescriptor> > outEdgesIndex;
-        std::vector< std::list<EdgeDescriptor> > inEdgesIndex;
+        std::vector< std::list<Graph::edge_descriptor> > outEdgesIndex;
+        std::vector< std::list<Graph::edge_descriptor> > inEdgesIndex;
     };
 
     typedef double Score;
@@ -79,11 +79,13 @@ public:
         ): category(aCategory), tagList(aTagList), score(aScore), partition(aPartition) { }
     };
 
-    // should be typedef Graph::edge_descriptor EdgeDescriptor, done this
-    // way because of no typedef forwarding in C++
     struct EdgeDescriptor: public Graph::edge_descriptor {
-        EdgeDescriptor():Graph::edge_descriptor() {}
-        EdgeDescriptor(const Graph::edge_descriptor& ed):Graph::edge_descriptor(ed) {}
+        Graph::edge_descriptor descriptor;
+        int implicitIndex;
+
+        EdgeDescriptor() : descriptor(), implicitIndex(-1) { }
+        EdgeDescriptor(int implicitIx) : descriptor(), implicitIndex(implicitIx) { }
+        EdgeDescriptor(const Graph::edge_descriptor& ed) : descriptor(ed), implicitIndex(-1) { }
     };
 
     typedef int VertexDescriptor;
@@ -91,32 +93,50 @@ public:
     typedef Graph::out_edge_iterator OutEdgeIterator;
     typedef Graph::in_edge_iterator InEdgeIterator;
 
-    typedef std::list<EdgeDescriptor>::const_iterator EdgeDescriptorIterator;
-
     class InOutEdgesIterator {
     public:
         InOutEdgesIterator(
-            EdgeDescriptorIterator begin, EdgeDescriptorIterator end
-        ) : type_(EDGE_DESCRIPTOR_ITER), edi_(begin), ediEnd_(end) { }
+            std::list<Graph::edge_descriptor>::const_iterator begin,
+            std::list<Graph::edge_descriptor>::const_iterator end,
+            int implicitIndex = -1
+        ) :
+            type_(EDGE_DESCRIPTOR_ITER),
+            edi_(begin),
+            ediEnd_(end),
+            implicitIndex_(implicitIndex)
+        { }
 
         InOutEdgesIterator(
-            std::pair<OutEdgeIterator, OutEdgeIterator> ir
-        ) : type_(OUT_EDGE_ITER), oei_(ir.first), oeiEnd_(ir.second) { }
+            std::pair<OutEdgeIterator, OutEdgeIterator> ir,
+            int implicitIndex = -1
+        ) :
+            type_(OUT_EDGE_ITER),
+            oei_(ir.first),
+            oeiEnd_(ir.second),
+            implicitIndex_(implicitIndex)
+        { }
 
         InOutEdgesIterator(
-            std::pair<InEdgeIterator, InEdgeIterator> ir
-        ) : type_(IN_EDGE_ITER), iei_(ir.first), ieiEnd_(ir.second) { }
+            std::pair<InEdgeIterator, InEdgeIterator> ir,
+            int implicitIndex = -1
+        ) :
+            type_(IN_EDGE_ITER),
+            iei_(ir.first),
+            ieiEnd_(ir.second),
+            implicitIndex_(implicitIndex)
+        { }
 
         bool hasNext();
         EdgeDescriptor next();
     private:
         enum {EDGE_DESCRIPTOR_ITER, OUT_EDGE_ITER, IN_EDGE_ITER} type_;
-        EdgeDescriptorIterator edi_;
-        EdgeDescriptorIterator ediEnd_;
+        std::list<Graph::edge_descriptor>::const_iterator edi_;
+        std::list<Graph::edge_descriptor>::const_iterator ediEnd_;
         OutEdgeIterator oei_;
         OutEdgeIterator oeiEnd_;
         InEdgeIterator iei_;
         InEdgeIterator ieiEnd_;
+        int implicitIndex_;
     };
 
     class SortedEdgesIterator {
@@ -226,6 +246,8 @@ private:
     TagCollectionsBimap indexedTagCollections_;
 
     int addTagCollectionIndex_(LayerTagCollection tags);
+
+    VertexDescriptor priorVertex_(VertexDescriptor vertex);
 
 
     struct HashFun {
