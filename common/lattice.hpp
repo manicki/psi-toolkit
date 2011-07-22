@@ -208,7 +208,7 @@ public:
                            VertexDescriptor to,
                            const AnnotationItem& annotationItem,
                            LayerTagCollection tags,
-                           Score score,
+                           Score score = 0.0,
                            std::list<EdgeDescriptor> partition = std::list<EdgeDescriptor>());
 
     // return outgoing edges which has at least one layer tag from `mask`

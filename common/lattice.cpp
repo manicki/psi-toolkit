@@ -1,12 +1,6 @@
 #include "lattice.hpp"
 
 Lattice::Lattice(std::string text) : implicitOutEdges_(text.length() + 1) {
-    Graph::vertex_descriptor vertex = boost::add_vertex(VertexEntry(0), graph_);
-    vertices_[0] = vertex;
-    for (int j = 0; j < indexedTagCollections_.size(); ++j) {
-        graph_[vertex].outEdgesIndex.push_back(std::list<Graph::edge_descriptor>());
-        graph_[vertex].inEdgesIndex.push_back(std::list<Graph::edge_descriptor>());
-    }
     appendString(text);
 }
 
@@ -18,37 +12,19 @@ void Lattice::appendString(std::string text) {
 }
 
 void Lattice::addSymbols(VertexDescriptor startVertex, VertexDescriptor endVertex) {
-    std::string text = allText_.substr(startVertex, endVertex-startVertex);
-    std::string::iterator uti(text.begin());
-    while (uti != text.end()) {
-
-        uint32_t code_point = utf8::next(uti, text.end());
-
+    std::string::iterator iter = allText_.begin() + startVertex;
+    std::string::iterator end = allText_.begin() + endVertex;
+    VertexDescriptor vd = startVertex;
+    while (iter != end) {
         std::string symbol;
-        utf8::append(code_point, std::back_inserter(symbol));
-
-        std::map<int, Graph::vertex_descriptor>::iterator mi = vertices_.end();
-        --mi;
-
-        int previousVertexIndex = (*mi).first;
-        int vertexIndex = previousVertexIndex + symbol.length();
-        Graph::vertex_descriptor previousVertex = (*mi).second;
-        Graph::vertex_descriptor vertex = boost::add_vertex(VertexEntry(vertexIndex), graph_);
-        vertices_[vertexIndex] = vertex;
-
-        for (int j = 0; j < indexedTagCollections_.size(); ++j) {
-            graph_[vertex].outEdgesIndex.push_back(std::list<Graph::edge_descriptor>());
-            graph_[vertex].inEdgesIndex.push_back(std::list<Graph::edge_descriptor>());
-        }
-
+        utf8::append(utf8::next(iter, end), std::back_inserter(symbol));
         addEdge(
-            previousVertex,
-            vertex,
+            vd,
+            vd + symbol.length(),
             AnnotationItem(symbol),
-            layerTagManager_.createSingletonTagCollection("symbol"),
-            0.0
+            layerTagManager_.createSingletonTagCollection("symbol")
         );
-
+        vd += symbol.length();
     }
 }
 
@@ -113,6 +89,24 @@ Lattice::EdgeDescriptor Lattice::addEdge(
 
         Graph::vertex_descriptor boost_from = vertices_[from];
         Graph::vertex_descriptor boost_to   = vertices_[to];
+
+        if (!boost_from) {
+            boost_from = boost::add_vertex(VertexEntry(from), graph_);
+            vertices_[from] = boost_from;
+            for (int i = 0; i < indexedTagCollections_.size(); ++i) {
+                graph_[boost_from].outEdgesIndex.push_back(std::list<Graph::edge_descriptor>());
+                graph_[boost_from].inEdgesIndex.push_back(std::list<Graph::edge_descriptor>());
+            }
+        }
+
+        if (!boost_to) {
+            boost_to = boost::add_vertex(VertexEntry(to), graph_);
+            vertices_[to] = boost_to;
+            for (int i = 0; i < indexedTagCollections_.size(); ++i) {
+                graph_[boost_to].outEdgesIndex.push_back(std::list<Graph::edge_descriptor>());
+                graph_[boost_to].inEdgesIndex.push_back(std::list<Graph::edge_descriptor>());
+            }
+        }
 
         result = boost::add_edge(
             boost_from,
