@@ -99,16 +99,12 @@ public:
 
     class VertexIterator {
     public:
-        VertexIterator(
-            std::map<int, Graph::vertex_descriptor>::iterator begin,
-            std::map<int, Graph::vertex_descriptor>::iterator end
-        ) : vi_(begin), viEnd_(end) { }
-
+        VertexIterator(Lattice * lattice) : lattice_(lattice), vd_(0) { }
         bool hasNext();
         VertexDescriptor next();
     private:
-        std::map<int, Graph::vertex_descriptor>::iterator vi_;
-        std::map<int, Graph::vertex_descriptor>::iterator viEnd_;
+        Lattice * lattice_;
+        VertexDescriptor vd_;
     };
 
     class InOutEdgesIterator {

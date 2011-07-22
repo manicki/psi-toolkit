@@ -285,11 +285,30 @@ Lattice::VertexDescriptor Lattice::priorVertex_(Lattice::VertexDescriptor vertex
 
 
 bool Lattice::VertexIterator::hasNext() {
-    return vi_ != viEnd_;
+    while (vd_ < lattice_->allText_.length()) {
+        if (
+            lattice_->vertices_[vd_]
+            || lattice_->implicitOutEdges_[vd_]
+            || lattice_->implicitOutEdges_[lattice_->priorVertex_(vd_)]
+        ) {
+            return true;
+        }
+        ++vd_;
+    }
+    return false;
 }
 
 Lattice::VertexDescriptor Lattice::VertexIterator::next() {
-    if (vi_ != viEnd_) return (*(vi_++)).second;
+    while (vd_ < lattice_->allText_.length()) {
+        if (
+            lattice_->vertices_[vd_]
+            || lattice_->implicitOutEdges_[vd_]
+            || lattice_->implicitOutEdges_[lattice_->priorVertex_(vd_)]
+        ) {
+            return vd_++;
+        }
+        ++vd_;
+    }
     throw NoEdgeException("Iterator has no next edges.");
 }
 
@@ -332,7 +351,7 @@ Lattice::SortedEdgesIterator::SortedEdgesIterator(
 ) :
     lattice_(lattice),
     mask_(mask),
-    vi_(lattice->vertices_.begin(), lattice->vertices_.end()),
+    vi_(lattice),
     ei_(lattice->outEdges(0, mask))
 {
     vi_.next();
