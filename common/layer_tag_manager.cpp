@@ -52,6 +52,8 @@ std::list<std::string> LayerTagManager::getTagNames(const LayerTagCollection& ta
 }
 
 bool LayerTagManager::match(LayerTagMask mask, std::string tagName) {
+    if (mask.isAny()) return true;
+    if (mask.isNone()) return false;
     m_.insert(StringBimapItem(tagName, m_.size()));
     mask.tags_.resize_(m_.left.at(tagName) + 1);
     return mask.tags_.v_[m_.left.at(tagName)];
