@@ -1,24 +1,46 @@
 #include "pipe_runner.hpp"
 
 #include <iostream>
-
 #include <list>
+#include <boost/scoped_ptr.hpp>
+
+#include "main_factories_keeper.hpp"
 
 PipeRunner::PipeRunner(int argc, char* argv[]) {
     parseIntoPipelineSpecification_(argc, argv);
 }
 
 int PipeRunner::run() {
-    for (std::list<PipelineElementSpecification>::iterator it = pipelineSpecification_.elements.begin();
+    Lattice lattice("");
+
+    std::list<PipelineElementSpecification>::iterator it = pipelineSpecification_.elements.begin();
+
+    LatticeReaderFactory& readerFactory = getReaderFactory_(*it);
+    boost::scoped_ptr<LatticeReader> reader(readerFactory.createLatticeReader(
+                                                boost::program_options::variables_map()));
+    reader->readIntoLattice(std::cin, lattice);
+    ++it;
+
+    for (;
          it != pipelineSpecification_.elements.end();
-         ++it)
-        std::cout << (*it).processorName << std::endl;
+         ++it) {
+
+    }
 
     return 0;
 }
 
 
 const std::string PipeRunner::PIPELINE_SEPARATOR = "!";
+
+ProcessorFactory& PipeRunner::getFactory_(const PipelineElementSpecification& elementSpec) {
+    return MainFactoriesKeeper::getInstance().getProcessorFactory(elementSpec.processorName);
+}
+
+LatticeReaderFactory& PipeRunner::getReaderFactory_(const PipelineElementSpecification& elementSpec) {
+    return dynamic_cast<LatticeReaderFactory&>(getFactory_(elementSpec));
+}
+
 
 void PipeRunner::parseIntoPipelineSpecification_(int argc, char* argv[]) {
 

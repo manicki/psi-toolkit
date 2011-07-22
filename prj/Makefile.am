@@ -65,6 +65,8 @@ psi_pipe_SOURCES = \
 	../formats/txt/txt_lattice_reader.cpp \
 	../formats/utt/utt_lattice_reader.cpp \
 	../formats/utt/utt_quoter.cpp \
+	../framework/factories_keeper.cpp \
+	../framework/main_factories_keeper.cpp \
 	../framework/pipe_runner.cpp \
 	../framework/psi-pipe.cpp
 
@@ -72,6 +74,7 @@ psi_pipe_SOURCES = \
 psi_pipe_CPPFLAGS = ${compiler_flags} \
     -I../common \
     -I../formats/psi \
+    -I../formats/txt \
     -I../formats/utt \
     -I../utf8 \
     -I../utf8/utf8

@@ -40,6 +40,8 @@ TxtLatticeReader::Worker::Worker(TxtLatticeReader& processor,
 }
 
 void TxtLatticeReader::Worker::doRun() {
+    std::cerr << "READING\n";
+
     std::string line;
     while (getline(inputStream_, line)) {
         appendParagraphToLattice_(line);

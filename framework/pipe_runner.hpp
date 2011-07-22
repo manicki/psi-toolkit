@@ -3,6 +3,9 @@
 
 #include "pipeline_specification.hpp"
 
+#include "processor_factory.hpp"
+#include "lattice_reader_factory.hpp"
+
 class PipeRunner {
 
 public:
@@ -14,6 +17,9 @@ private:
     PipelineSpecification pipelineSpecification_;
 
     void parseIntoPipelineSpecification_(int argc, char* argv[]);
+
+    ProcessorFactory& getFactory_(const PipelineElementSpecification& elementSpec);
+    LatticeReaderFactory& getReaderFactory_(const PipelineElementSpecification& elementSpec);
 
     static const std::string PIPELINE_SEPARATOR;
 
