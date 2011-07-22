@@ -136,6 +136,12 @@ Lattice::InOutEdgesIterator Lattice::outEdges(
     LayerTagMask mask
 ) {
     Graph::vertex_descriptor boost_vertex = vertices_[vertex];
+    if (!boost_vertex) {
+        return Lattice::InOutEdgesIterator(
+            (layerTagManager_.match(mask, "symbol") && implicitOutEdges_[vertex]) ?
+                vertex : -1
+        );
+    }
     if (mask.isAny()) {
         return Lattice::InOutEdgesIterator(
             boost::out_edges(boost_vertex, graph_),
@@ -157,6 +163,12 @@ Lattice::InOutEdgesIterator Lattice::inEdges(
 ) {
     Graph::vertex_descriptor boost_vertex = vertices_[vertex];
     VertexDescriptor priorVertex = priorVertex_(vertex);
+    if (!boost_vertex) {
+        return Lattice::InOutEdgesIterator(
+            (layerTagManager_.match(mask, "symbol") && implicitOutEdges_[priorVertex]) ?
+                priorVertex : -1
+        );
+    }
     if (mask.isAny()) {
         return Lattice::InOutEdgesIterator(
             boost::in_edges(boost_vertex, graph_),
@@ -188,7 +200,6 @@ Lattice::EdgeDescriptor Lattice::firstOutEdge(
     Lattice::VertexDescriptor vertex,
     LayerTagMask mask
 ) {
-    if (mask.isAny()) return EdgeDescriptor(*(boost::out_edges(vertices_[vertex], graph_).first));
     if (outEdges(vertex, mask).hasNext()) return outEdges(vertex, mask).next();
     throw NoEdgeException("No out-edges found.");
 }
@@ -197,7 +208,6 @@ Lattice::EdgeDescriptor Lattice::firstInEdge(
     Lattice::VertexDescriptor vertex,
     LayerTagMask mask
 ) {
-    if (mask.isAny()) return EdgeDescriptor(*(boost::in_edges(vertices_[vertex], graph_).first));
     if (inEdges(vertex, mask).hasNext()) return inEdges(vertex, mask).next();
     throw NoEdgeException("No in-edges found.");
 }
@@ -314,6 +324,7 @@ bool Lattice::InOutEdgesIterator::hasNext() {
     case EDGE_DESCRIPTOR_ITER : return edi_ != ediEnd_;
     case OUT_EDGE_ITER : return oei_ != oeiEnd_;
     case IN_EDGE_ITER : return iei_ != ieiEnd_;
+    case IMPLICIT_ITER : return implicitIndex_ > -1;
     }
 }
 
@@ -332,6 +343,8 @@ Lattice::EdgeDescriptor Lattice::InOutEdgesIterator::next() {
         break;
     case IN_EDGE_ITER :
         if (iei_ != ieiEnd_) return EdgeDescriptor(*(iei_++));
+        break;
+    case IMPLICIT_ITER :
         break;
     }
     throw NoEdgeException("Iterator has no next edges.");

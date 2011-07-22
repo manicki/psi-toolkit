@@ -140,10 +140,17 @@ public:
             implicitIndex_(implicitIndex)
         { }
 
+        InOutEdgesIterator(
+            int implicitIndex = -1
+        ) :
+            type_(IMPLICIT_ITER),
+            implicitIndex_(implicitIndex)
+        { }
+
         bool hasNext();
         EdgeDescriptor next();
     private:
-        enum {EDGE_DESCRIPTOR_ITER, OUT_EDGE_ITER, IN_EDGE_ITER} type_;
+        enum {EDGE_DESCRIPTOR_ITER, OUT_EDGE_ITER, IN_EDGE_ITER, IMPLICIT_ITER} type_;
         std::list<Graph::edge_descriptor>::const_iterator edi_;
         std::list<Graph::edge_descriptor>::const_iterator ediEnd_;
         OutEdgeIterator oei_;
