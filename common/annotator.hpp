@@ -6,11 +6,15 @@
 #include "lattice.hpp"
 #include "layer_tag_collection.hpp"
 
+#include "processor.hpp"
+
+#include "lattice_worker.hpp"
+
 /*!
   Components capable of adding annotations (edges) to a PSI lattice
   are (tokenisers, lemmatisers, parsers etc.) are called *annotators*.
 */
-class Annotator {
+class Annotator : public Processor {
 
 public:
 
@@ -21,8 +25,9 @@ public:
      * `annotate` may return true and add no annotations, e.g. a named entity
      * recogniser could return true if no named entities were found.
      */
-    virtual bool annotate(Lattice& lattice) = 0;
+    bool annotate(Lattice&);
 
+#ifdef BLADSDSD
     /**
      * Returns description of the options handled by the annotator.
      */
@@ -51,6 +56,11 @@ public:
      * and `optionalLayerTags` of another annotator.
      */
     virtual LayerTagCollection providedLayerTags() = 0;
+#endif
+
+private:
+    virtual LatticeWorker* doCreateLatticeWorker(Lattice& lattice) = 0;
+
 };
 
 #endif
