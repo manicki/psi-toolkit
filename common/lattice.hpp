@@ -97,6 +97,20 @@ public:
     typedef Graph::out_edge_iterator OutEdgeIterator;
     typedef Graph::in_edge_iterator InEdgeIterator;
 
+    class VertexIterator {
+    public:
+        VertexIterator(
+            std::map<int, Graph::vertex_descriptor>::iterator begin,
+            std::map<int, Graph::vertex_descriptor>::iterator end
+        ) : vi_(begin), viEnd_(end) { }
+
+        bool hasNext();
+        VertexDescriptor next();
+    private:
+        std::map<int, Graph::vertex_descriptor>::iterator vi_;
+        std::map<int, Graph::vertex_descriptor>::iterator viEnd_;
+    };
+
     class InOutEdgesIterator {
     public:
         InOutEdgesIterator(
@@ -151,8 +165,7 @@ public:
     private:
         Lattice * lattice_;
         LayerTagMask mask_;
-        std::map<int, Graph::vertex_descriptor>::iterator vi_;
-        std::map<int, Graph::vertex_descriptor>::iterator viEnd_;
+        VertexIterator vi_;
         InOutEdgesIterator ei_;
     };
 
