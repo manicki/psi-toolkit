@@ -25,11 +25,16 @@ int PipeRunner::run() {
          it != pipelineSpecification_.elements.end();
          ++it) {
 
+        if (isLastElement_(it, pipelineSpecification_)) {
+            LatticeWriterFactory& writerFactory = getWriterFactory_(*it);
+            boost::scoped_ptr<LatticeWriter> writer(writerFactory.createLatticeWriter(
+                                                        boost::program_options::variables_map()));
+            writer->writeLattice(lattice, std::cout);
+        }
     }
 
     return 0;
 }
-
 
 const std::string PipeRunner::PIPELINE_SEPARATOR = "!";
 
@@ -41,6 +46,9 @@ LatticeReaderFactory& PipeRunner::getReaderFactory_(const PipelineElementSpecifi
     return dynamic_cast<LatticeReaderFactory&>(getFactory_(elementSpec));
 }
 
+LatticeWriterFactory& PipeRunner::getWriterFactory_(const PipelineElementSpecification& elementSpec) {
+    return dynamic_cast<LatticeWriterFactory&>(getFactory_(elementSpec));
+}
 
 void PipeRunner::parseIntoPipelineSpecification_(int argc, char* argv[]) {
 
@@ -67,3 +75,12 @@ void PipeRunner::parseIntoPipelineSpecification_(int argc, char* argv[]) {
         }
     }
 }
+
+bool PipeRunner::isLastElement_(
+    std::list<PipelineElementSpecification>::iterator it,
+    PipelineSpecification& pipelineSpecification) {
+    ++it;
+    return it == pipelineSpecification.elements.end();
+}
+
+

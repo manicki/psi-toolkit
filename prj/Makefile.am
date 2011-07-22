@@ -16,6 +16,8 @@ runner_SOURCES = \
 	../common/lattice_reader.cpp \
 	../common/lattice_reader_factory.cpp \
 	../common/lattice_worker.cpp \
+	../common/lattice_writer.cpp \
+	../common/lattice_writer_factory.cpp \
 	../common/layer_tag_collection.cpp \
 	../common/layer_tag_manager.cpp \
 	../common/layer_tag_mask.cpp \
@@ -25,6 +27,7 @@ runner_SOURCES = \
 	../common/reader_worker.cpp \
 	../common/utf8_string.cpp \
 	../common/utt_like_quoter.cpp \
+	../common/writer_worker.cpp \
 	../formats/psi/psi_lattice_reader.cpp \
 	../formats/psi/psi_lattice_writer.cpp \
 	../formats/psi/psi_quoter.cpp \
@@ -50,6 +53,8 @@ psi_pipe_SOURCES = \
 	../common/lattice_reader.cpp \
 	../common/lattice_reader_factory.cpp \
 	../common/lattice_worker.cpp \
+	../common/lattice_writer.cpp \
+	../common/lattice_writer_factory.cpp \
 	../common/layer_tag_collection.cpp \
 	../common/layer_tag_manager.cpp \
 	../common/layer_tag_mask.cpp \
@@ -59,6 +64,7 @@ psi_pipe_SOURCES = \
 	../common/reader_worker.cpp \
 	../common/utf8_string.cpp \
 	../common/utt_like_quoter.cpp \
+	../common/writer_worker.cpp \
 	../formats/psi/psi_lattice_reader.cpp \
 	../formats/psi/psi_lattice_writer.cpp \
 	../formats/psi/psi_quoter.cpp \
