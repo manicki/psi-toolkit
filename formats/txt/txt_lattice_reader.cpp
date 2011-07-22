@@ -46,9 +46,10 @@ void TxtLatticeReader::Worker::doRun() {
     std::string line;
     while (getline(inputStream_, line)) {
         appendParagraphToLattice_(line);
+        lattice_.appendString("\n");
     }
 }
 
 void TxtLatticeReader::Worker::appendParagraphToLattice_(std::string paragraph) {
-    lattice_.appendString(paragraph);
+    lattice_.appendStringWithSymbols(paragraph);
 }

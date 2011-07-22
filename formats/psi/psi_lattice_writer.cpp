@@ -42,5 +42,16 @@ PsiLatticeWriter::Worker::Worker(PsiLatticeWriter& processor,
 }
 
 void PsiLatticeWriter::Worker::doRun() {
+
+    Lattice::SortedEdgesIterator ei = lattice_.allEdgesSorted();
+
+    while(ei.hasNext()) {
+        Lattice::EdgeDescriptor ed = ei.next();
+
+        const AnnotationItem& item = lattice_.getEdgeAnnotationItem(ed);
+
+        outputStream_ << item.getCategory() << std::endl;
+    }
+
     DEBUG("WRITING");
 }
