@@ -17,7 +17,7 @@ LatticeReader* TxtLatticeReader::Factory::doCreateLatticeReader(
 boost::program_options::options_description TxtLatticeReader::Factory::doOptionsHandled() {
     boost::program_options::options_description optionsDescription("Allowed options");
 
-    optionsDescription.addOptions()
+    optionsDescription.add_options()
         ("line-by-line", "processes line by line")
         ("whole-text",   "read the whole text")
         ("paragraphs",   "paragraphs are delimited with double newlines")
