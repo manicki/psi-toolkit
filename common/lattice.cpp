@@ -291,8 +291,9 @@ bool Lattice::InOutEdgesIterator::hasNext() {
 
 Lattice::EdgeDescriptor Lattice::InOutEdgesIterator::next() {
     if (implicitIndex_ > -1) {
+        int index = implicitIndex_;
         implicitIndex_ = -1;
-        return EdgeDescriptor(implicitIndex_);
+        return EdgeDescriptor(index);
     }
     switch (type_) {
     case EDGE_DESCRIPTOR_ITER :
