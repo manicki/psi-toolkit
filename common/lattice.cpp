@@ -1,7 +1,7 @@
 #include "lattice.hpp"
 
 Lattice::Lattice(std::string text) : implicitOutEdges_(text.length() + 1) {
-    Graph::vertex_descriptor vertex = boost::add_vertex(graph_);
+    Graph::vertex_descriptor vertex = boost::add_vertex(VertexEntry(0), graph_);
     vertices_[0] = vertex;
     for (int j = 0; j < indexedTagCollections_.size(); ++j) {
         graph_[vertex].outEdgesIndex.push_back(std::list<Graph::edge_descriptor>());
@@ -31,18 +31,16 @@ void Lattice::addSymbols(VertexDescriptor startVertex, VertexDescriptor endVerte
         --mi;
 
         int previousVertexIndex = (*mi).first;
+        int vertexIndex = previousVertexIndex + symbol.length();
         Graph::vertex_descriptor previousVertex = (*mi).second;
-        Graph::vertex_descriptor vertex = boost::add_vertex(graph_);
-        vertices_[previousVertexIndex + symbol.length()] = vertex;
+        Graph::vertex_descriptor vertex = boost::add_vertex(VertexEntry(vertexIndex), graph_);
+        vertices_[vertexIndex] = vertex;
 
         for (int j = 0; j < indexedTagCollections_.size(); ++j) {
             graph_[vertex].outEdgesIndex.push_back(std::list<Graph::edge_descriptor>());
             graph_[vertex].inEdgesIndex.push_back(std::list<Graph::edge_descriptor>());
         }
 
-        implicitOutEdges_.set(previousVertexIndex, true);
-
-        // poniższy kod zostanie usunięty
         addEdge(
             previousVertex,
             vertex,
@@ -108,13 +106,13 @@ Lattice::EdgeDescriptor Lattice::addEdge(
             ++edgeCounterHash_[vpair];
         }
 
-        Graph::vertex_descriptor boost_from = vertices_[from];
-        Graph::vertex_descriptor boost_to   = vertices_[to];
-
         if (tags == layerTagManager_.createSingletonTagCollection("symbol")) {
             implicitOutEdges_.set(from, true);
             return EdgeDescriptor(from);
         }
+
+        Graph::vertex_descriptor boost_from = vertices_[from];
+        Graph::vertex_descriptor boost_to   = vertices_[to];
 
         result = boost::add_edge(
             boost_from,
@@ -286,6 +284,36 @@ Lattice::VertexDescriptor Lattice::priorVertex_(Lattice::VertexDescriptor vertex
 
 
 
+bool Lattice::VertexIterator::hasNext() {
+    while (vd_ < lattice_->allText_.length()) {
+        if (
+            lattice_->vertices_[vd_]
+            || lattice_->implicitOutEdges_[vd_]
+            || lattice_->implicitOutEdges_[lattice_->priorVertex_(vd_)]
+        ) {
+            return true;
+        }
+        ++vd_;
+    }
+    return false;
+}
+
+Lattice::VertexDescriptor Lattice::VertexIterator::next() {
+    while (vd_ < lattice_->allText_.length()) {
+        if (
+            lattice_->vertices_[vd_]
+            || lattice_->implicitOutEdges_[vd_]
+            || lattice_->implicitOutEdges_[lattice_->priorVertex_(vd_)]
+        ) {
+            return vd_++;
+        }
+        ++vd_;
+    }
+    throw NoEdgeException("Iterator has no next edges.");
+}
+
+
+
 bool Lattice::InOutEdgesIterator::hasNext() {
     if (implicitIndex_ > -1) return true;
     switch (type_) {
@@ -316,35 +344,33 @@ Lattice::EdgeDescriptor Lattice::InOutEdgesIterator::next() {
 }
 
 
+
 Lattice::SortedEdgesIterator::SortedEdgesIterator(
     Lattice * lattice,
     LayerTagMask mask
 ) :
     lattice_(lattice),
     mask_(mask),
-    vi_(lattice->vertices_.begin()),
-    viEnd_(lattice->vertices_.end()),
+    vi_(lattice),
     ei_(lattice->outEdges(0, mask))
-{ }
+{
+    vi_.next();
+}
 
 bool Lattice::SortedEdgesIterator::hasNext() {
     if (ei_.hasNext()) return true;
-    ++vi_;
-    while (vi_ != viEnd_) {
-        ei_ = lattice_->outEdges((*vi_).second, mask_);
+    while (vi_.hasNext()) {
+        ei_ = lattice_->outEdges(vi_.next(), mask_);
         if (ei_.hasNext()) return true;
-        ++vi_;
     }
     return false;
 }
 
 Lattice::EdgeDescriptor Lattice::SortedEdgesIterator::next() {
     if (ei_.hasNext()) return ei_.next();
-    ++vi_;
-    while (vi_ != viEnd_) {
-        ei_ = lattice_->outEdges((*vi_).second, mask_);
+    while (vi_.hasNext()) {
+        ei_ = lattice_->outEdges(vi_.next(), mask_);
         if (ei_.hasNext()) return ei_.next();
-        ++vi_;
     }
     throw NoEdgeException("Iterator has no next edges.");
 }

@@ -59,8 +59,12 @@ public:
     struct EdgeDescriptor;
 
     struct VertexEntry {
+        int index;
         std::vector< std::list<Graph::edge_descriptor> > outEdgesIndex;
         std::vector< std::list<Graph::edge_descriptor> > inEdgesIndex;
+
+        VertexEntry() : index(-1) { }
+        VertexEntry(int ix) : index(ix) { }
     };
 
     typedef double Score;
@@ -92,6 +96,16 @@ public:
     typedef Graph::edge_iterator EdgeIterator;
     typedef Graph::out_edge_iterator OutEdgeIterator;
     typedef Graph::in_edge_iterator InEdgeIterator;
+
+    class VertexIterator {
+    public:
+        VertexIterator(Lattice * lattice) : lattice_(lattice), vd_(0) { }
+        bool hasNext();
+        VertexDescriptor next();
+    private:
+        Lattice * lattice_;
+        VertexDescriptor vd_;
+    };
 
     class InOutEdgesIterator {
     public:
@@ -147,8 +161,7 @@ public:
     private:
         Lattice * lattice_;
         LayerTagMask mask_;
-        std::map<int, Graph::vertex_descriptor>::iterator vi_;
-        std::map<int, Graph::vertex_descriptor>::iterator viEnd_;
+        VertexIterator vi_;
         InOutEdgesIterator ei_;
     };
 
