@@ -1,5 +1,6 @@
 #include "txt_lattice_reader.hpp"
 
+#include "logging.hpp"
 
 std::string TxtLatticeReader::getFormatName() {
     return "TXT";
@@ -40,7 +41,7 @@ TxtLatticeReader::Worker::Worker(TxtLatticeReader& processor,
 }
 
 void TxtLatticeReader::Worker::doRun() {
-    std::cerr << "READING\n";
+    DEBUG("READING TEXT");
 
     std::string line;
     while (getline(inputStream_, line)) {
