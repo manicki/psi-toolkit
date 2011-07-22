@@ -223,8 +223,8 @@ public:
 
     LayerTagManager& getLayerTagManager();
 
-    const AnnotationItem& getEdgeAnnotationItem(EdgeDescriptor edge);
-    const LayerTagCollection& getEdgeLayerTags(EdgeDescriptor edge);
+    const AnnotationItem getEdgeAnnotationItem(EdgeDescriptor edge);
+    const LayerTagCollection getEdgeLayerTags(EdgeDescriptor edge);
 
     const std::string& getAllText() const;
 

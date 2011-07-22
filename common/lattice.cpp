@@ -222,12 +222,18 @@ LayerTagManager& Lattice::getLayerTagManager() {
     return layerTagManager_;
 }
 
-const AnnotationItem& Lattice::getEdgeAnnotationItem(Lattice::EdgeDescriptor edge) {
-    return graph_[edge].category;
+const AnnotationItem Lattice::getEdgeAnnotationItem(Lattice::EdgeDescriptor edge) {
+    if (edge.implicitIndex < 0) return graph_[edge.descriptor].category;
+    std::string::iterator iter = allText_.begin() + edge.implicitIndex;
+    std::string::iterator end = allText_.end();
+    std::string symbol;
+    utf8::append(utf8::next(iter, end), std::back_inserter(symbol));
+    return AnnotationItem(symbol);
 }
 
-const LayerTagCollection& Lattice::getEdgeLayerTags(Lattice::EdgeDescriptor edge) {
-    return graph_[edge].tagList;
+const LayerTagCollection Lattice::getEdgeLayerTags(Lattice::EdgeDescriptor edge) {
+    if (edge.implicitIndex < 0) return graph_[edge.descriptor].tagList;
+    return layerTagManager_.createSingletonTagCollection("symbol");
 }
 
 const std::string& Lattice::getAllText() const {
