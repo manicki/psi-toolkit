@@ -1,7 +1,7 @@
 #include "lattice.hpp"
 
 Lattice::Lattice(std::string text) : implicitOutEdges_(text.length() + 1) {
-    Graph::vertex_descriptor vertex = boost::add_vertex(graph_);
+    Graph::vertex_descriptor vertex = boost::add_vertex(VertexEntry(0), graph_);
     vertices_[0] = vertex;
     for (int j = 0; j < indexedTagCollections_.size(); ++j) {
         graph_[vertex].outEdgesIndex.push_back(std::list<Graph::edge_descriptor>());
@@ -31,18 +31,16 @@ void Lattice::addSymbols(VertexDescriptor startVertex, VertexDescriptor endVerte
         --mi;
 
         int previousVertexIndex = (*mi).first;
+        int vertexIndex = previousVertexIndex + symbol.length();
         Graph::vertex_descriptor previousVertex = (*mi).second;
-        Graph::vertex_descriptor vertex = boost::add_vertex(graph_);
-        vertices_[previousVertexIndex + symbol.length()] = vertex;
+        Graph::vertex_descriptor vertex = boost::add_vertex(VertexEntry(vertexIndex), graph_);
+        vertices_[vertexIndex] = vertex;
 
         for (int j = 0; j < indexedTagCollections_.size(); ++j) {
             graph_[vertex].outEdgesIndex.push_back(std::list<Graph::edge_descriptor>());
             graph_[vertex].inEdgesIndex.push_back(std::list<Graph::edge_descriptor>());
         }
 
-        implicitOutEdges_.set(previousVertexIndex, true);
-
-        // poniższy kod zostanie usunięty
         addEdge(
             previousVertex,
             vertex,
@@ -108,13 +106,13 @@ Lattice::EdgeDescriptor Lattice::addEdge(
             ++edgeCounterHash_[vpair];
         }
 
-        Graph::vertex_descriptor boost_from = vertices_[from];
-        Graph::vertex_descriptor boost_to   = vertices_[to];
-
         if (tags == layerTagManager_.createSingletonTagCollection("symbol")) {
             implicitOutEdges_.set(from, true);
             return EdgeDescriptor(from);
         }
+
+        Graph::vertex_descriptor boost_from = vertices_[from];
+        Graph::vertex_descriptor boost_to   = vertices_[to];
 
         result = boost::add_edge(
             boost_from,

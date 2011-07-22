@@ -59,8 +59,12 @@ public:
     struct EdgeDescriptor;
 
     struct VertexEntry {
+        int index;
         std::vector< std::list<Graph::edge_descriptor> > outEdgesIndex;
         std::vector< std::list<Graph::edge_descriptor> > inEdgesIndex;
+
+        VertexEntry() : index(-1) { }
+        VertexEntry(int ix) : index(ix) { }
     };
 
     typedef double Score;
