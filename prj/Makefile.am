@@ -10,12 +10,15 @@ tests/runner.cpp: ../common/t/layer_tags_tests.hpp ../common/t/annotation_item_t
 
 runner_SOURCES = \
 	tests/runner.cpp \
+	../common/annotator.cpp \
 	../common/annotation_item.cpp \
 	../common/annotation_item_manager.cpp \
 	../common/lattice.cpp \
 	../common/lattice_reader.cpp \
 	../common/lattice_reader_factory.cpp \
 	../common/lattice_worker.cpp \
+	../common/lattice_writer.cpp \
+	../common/lattice_writer_factory.cpp \
 	../common/layer_tag_collection.cpp \
 	../common/layer_tag_manager.cpp \
 	../common/layer_tag_mask.cpp \
@@ -25,12 +28,14 @@ runner_SOURCES = \
 	../common/reader_worker.cpp \
 	../common/utf8_string.cpp \
 	../common/utt_like_quoter.cpp \
+	../common/writer_worker.cpp \
 	../formats/psi/psi_lattice_reader.cpp \
 	../formats/psi/psi_lattice_writer.cpp \
 	../formats/psi/psi_quoter.cpp \
 	../formats/txt/txt_lattice_reader.cpp \
 	../formats/utt/utt_lattice_reader.cpp \
-	../formats/utt/utt_quoter.cpp
+	../formats/utt/utt_quoter.cpp \
+	../tools/tokenizers/tp/tp_tokenizer.cpp
 
 runner_CPPFLAGS = ${compiler_flags} \
     -Itests \
@@ -40,16 +45,20 @@ runner_CPPFLAGS = ${compiler_flags} \
     -I../formats/psi/t \
     -I../formats/utt \
     -I../formats/utt/t \
+    -I../tools/tokenizers/tp \
     -I../utf8 \
     -I../utf8/utf8
 
 psi_pipe_SOURCES = \
+	../common/annotator.cpp \
 	../common/annotation_item.cpp \
 	../common/annotation_item_manager.cpp \
 	../common/lattice.cpp \
 	../common/lattice_reader.cpp \
 	../common/lattice_reader_factory.cpp \
 	../common/lattice_worker.cpp \
+	../common/lattice_writer.cpp \
+	../common/lattice_writer_factory.cpp \
 	../common/layer_tag_collection.cpp \
 	../common/layer_tag_manager.cpp \
 	../common/layer_tag_mask.cpp \
@@ -59,20 +68,26 @@ psi_pipe_SOURCES = \
 	../common/reader_worker.cpp \
 	../common/utf8_string.cpp \
 	../common/utt_like_quoter.cpp \
+	../common/writer_worker.cpp \
 	../formats/psi/psi_lattice_reader.cpp \
 	../formats/psi/psi_lattice_writer.cpp \
 	../formats/psi/psi_quoter.cpp \
 	../formats/txt/txt_lattice_reader.cpp \
 	../formats/utt/utt_lattice_reader.cpp \
 	../formats/utt/utt_quoter.cpp \
+	../framework/factories_keeper.cpp \
+	../framework/main_factories_keeper.cpp \
 	../framework/pipe_runner.cpp \
-	../framework/psi-pipe.cpp
+	../framework/psi-pipe.cpp \
+	../tools/tokenizers/tp/tp_tokenizer.cpp
 
 
 psi_pipe_CPPFLAGS = ${compiler_flags} \
     -I../common \
     -I../formats/psi \
+    -I../formats/txt \
     -I../formats/utt \
+    -I../tools/tokenizers/tp \
     -I../utf8 \
     -I../utf8/utf8
 

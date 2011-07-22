@@ -5,16 +5,25 @@
 #include <ostream>
 
 #include "lattice.hpp"
+#include "writer_worker.hpp"
+#include "processor.hpp"
 
-class LatticeWriter {
+/*!
+  Lattice writer takes a lattice and writes its content to a stream in some format.
+*/
+class LatticeWriter : public Processor {
 
 public:
-    virtual void writeLattice(std::ostream& outputStream, Lattice& lattice) = 0;
+    void writeLattice(Lattice& lattice, std::ostream& outputStream);
 
     /**
      * Gets format name (eg. "UTT", "BIN" etc.)
      */
     virtual std::string getFormatName() = 0;
+
+private:
+    virtual WriterWorker* doCreateWriterWorker(std::ostream& outputStream, Lattice& lattice) = 0;
+
 };
 
 #endif
