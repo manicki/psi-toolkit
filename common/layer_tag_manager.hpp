@@ -48,6 +48,8 @@ public:
         return getMask(createTagCollection(tagNames));
     }
 
+    bool match(LayerTagMask mask, std::string tagName);
+
 private:
 
     typedef boost::bimap<std::string,int> StringBimap;
