@@ -1,8 +1,6 @@
 #ifndef ANNOTATOR_HDR
 #define ANNOTATOR_HDR
 
-#include <boost/program_options/options_description.hpp>
-
 #include "lattice.hpp"
 #include "layer_tag_collection.hpp"
 
