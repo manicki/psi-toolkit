@@ -11,7 +11,7 @@ PipeRunner::PipeRunner(int argc, char* argv[]) {
 }
 
 int PipeRunner::run() {
-    Lattice lattice("");
+    Lattice lattice;
 
     std::list<PipelineElementSpecification>::iterator it = pipelineSpecification_.elements.begin();
 

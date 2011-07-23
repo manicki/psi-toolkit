@@ -175,6 +175,8 @@ public:
         InOutEdgesIterator ei_;
     };
 
+    Lattice();
+
     /**
      * Creates a lattice from `text`. Initially each character of text will be
      * represented as an edge labeled with layer tag `raw` and category `c`
@@ -267,6 +269,8 @@ private:
     typedef TagCollectionsBimap::value_type TagCollectionsBimapItem;
     typedef TagCollectionsBimap::left_map::const_iterator TagCollectionsBimapLeftIterator;
     TagCollectionsBimap indexedTagCollections_;
+
+    void init_();
 
     int addTagCollectionIndex_(LayerTagCollection tags);
 

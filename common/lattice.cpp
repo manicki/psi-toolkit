@@ -1,16 +1,24 @@
 #include "lattice.hpp"
 
-Lattice::Lattice(std::string text) : implicitOutEdges_(text.length() + 1) {
+Lattice::Lattice() {
+    init_();
+}
+
+Lattice::Lattice(std::string text) {
+    init_();
+    appendString(text);
+}
+
+Lattice::~Lattice() { }
+
+void Lattice::init_() {
     Graph::vertex_descriptor vertex = boost::add_vertex(VertexEntry(0), graph_);
     vertices_[0] = vertex;
     for (int j = 0; j < indexedTagCollections_.size(); ++j) {
         graph_[vertex].outEdgesIndex.push_back(std::list<EdgeDescriptorWrapperToFoolBoost146OrGnu461>());
         graph_[vertex].inEdgesIndex.push_back(std::list<EdgeDescriptorWrapperToFoolBoost146OrGnu461>());
     }
-    appendString(text);
 }
-
-Lattice::~Lattice() { }
 
 void Lattice::appendString(std::string text) {
     allText_ += text;
