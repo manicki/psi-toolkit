@@ -11,6 +11,7 @@ tests/runner.cpp: ../common/t/layer_tags_tests.hpp ../common/t/annotation_item_t
 runner_SOURCES = \
 	tests/runner.cpp \
 	../common/annotator.cpp \
+	../common/annotator_factory.cpp \
 	../common/annotation_item.cpp \
 	../common/annotation_item_manager.cpp \
 	../common/lattice.cpp \
@@ -51,6 +52,7 @@ runner_CPPFLAGS = ${compiler_flags} \
 
 psi_pipe_SOURCES = \
 	../common/annotator.cpp \
+	../common/annotator_factory.cpp \
 	../common/annotation_item.cpp \
 	../common/annotation_item_manager.cpp \
 	../common/lattice.cpp \
