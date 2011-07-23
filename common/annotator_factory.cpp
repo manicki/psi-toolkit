@@ -10,6 +10,18 @@ Annotator* AnnotatorFactory::doCreateProcessor(
     return doCreateAnnotator(options);
 }
 
+std::list<LayerTagCollection> AnnotatorFactory::requiredLayerTags() {
+    return doRequiredLayerTags();
+}
+
+std::list<LayerTagCollection> AnnotatorFactory::optionalLayerTags() {
+    return doOptionalLayerTags();
+}
+
+LayerTagCollection AnnotatorFactory::providedLayerTags() {
+    return doProvidedLayerTags();
+}
+
 
 
 
