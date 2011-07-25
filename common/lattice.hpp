@@ -73,18 +73,26 @@ public:
 
     typedef double Score;
 
+    struct Partition;
+
     struct EdgeEntry {
         AnnotationItem category;
         LayerTagCollection tagList;
         Score score;
-        std::list<EdgeDescriptor> partition;
+        std::list<Partition> partitions;
 
         EdgeEntry(
             AnnotationItem aCategory,
             LayerTagCollection aTagList,
             Score aScore,
-            std::list<EdgeDescriptor> aPartition
-        ): category(aCategory), tagList(aTagList), score(aScore), partition(aPartition) { }
+            Partition& aPartition
+        ): category(aCategory), tagList(aTagList), score(aScore) { 
+            partitions.push_back(aPartition);
+        }
+    };
+
+    struct Partition {
+        std::vector<EdgeDescriptor> links;
     };
 
     struct EdgeDescriptor {
@@ -222,7 +230,7 @@ public:
                            const AnnotationItem& annotationItem,
                            LayerTagCollection tags,
                            Score score,
-                           std::list<EdgeDescriptor> partition = std::list<EdgeDescriptor>());
+                           Partition partition = Partition());
 
     // return outgoing edges which has at least one layer tag from `mask`
     InOutEdgesIterator outEdges(

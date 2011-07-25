@@ -84,7 +84,7 @@ Lattice::EdgeDescriptor Lattice::addEdge(
     const AnnotationItem& annotationItem,
     LayerTagCollection tags,
     Score score,
-    std::list<EdgeDescriptor> partition
+    Partition partition
 ) {
 
     std::pair<Graph::edge_descriptor, bool> result;
