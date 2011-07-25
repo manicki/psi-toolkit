@@ -14,6 +14,7 @@ runner_SOURCES = \
 	../common/annotator_factory.cpp \
 	../common/annotation_item.cpp \
 	../common/annotation_item_manager.cpp \
+	../common/cutter.cpp \
 	../common/lattice.cpp \
 	../common/lattice_reader.cpp \
 	../common/lattice_reader_factory.cpp \
@@ -36,7 +37,9 @@ runner_SOURCES = \
 	../formats/txt/txt_lattice_reader.cpp \
 	../formats/utt/utt_lattice_reader.cpp \
 	../formats/utt/utt_quoter.cpp \
-	../tools/tokenizers/tp/tp_tokenizer.cpp
+	../tools/tokenizers/tp/tp_tokenizer.cpp \
+	../tools/tokenizers/tp/tp_token_cutter.cpp
+
 
 runner_CPPFLAGS = ${compiler_flags} \
     -Itests \
@@ -55,6 +58,7 @@ psi_pipe_SOURCES = \
 	../common/annotator_factory.cpp \
 	../common/annotation_item.cpp \
 	../common/annotation_item_manager.cpp \
+	../common/cutter.cpp \
 	../common/lattice.cpp \
 	../common/lattice_reader.cpp \
 	../common/lattice_reader_factory.cpp \
@@ -81,7 +85,8 @@ psi_pipe_SOURCES = \
 	../framework/main_factories_keeper.cpp \
 	../framework/pipe_runner.cpp \
 	../framework/psi-pipe.cpp \
-	../tools/tokenizers/tp/tp_tokenizer.cpp
+	../tools/tokenizers/tp/tp_tokenizer.cpp \
+	../tools/tokenizers/tp/tp_token_cutter.cpp
 
 
 psi_pipe_CPPFLAGS = ${compiler_flags} \
