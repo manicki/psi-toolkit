@@ -1,6 +1,8 @@
 #include "lattice.hpp"
 
-Lattice::Lattice(std::string text) : implicitOutEdges_(text.length() + 1) {
+Lattice::Lattice { }
+
+Lattice::Lattice(std::string text) {
     appendString(text);
 }
 

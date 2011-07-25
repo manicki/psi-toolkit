@@ -182,6 +182,8 @@ public:
         InOutEdgesIterator ei_;
     };
 
+    Lattice();
+
     /**
      * Creates a lattice from `text`. Initially each character of text will be
      * represented as an edge labeled with layer tag `raw` and category `c`
