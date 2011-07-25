@@ -6,6 +6,7 @@
 #include "processor_factory.hpp"
 #include "lattice_reader_factory.hpp"
 #include "lattice_writer_factory.hpp"
+#include "annotator_factory.hpp"
 
 class PipeRunner {
 
@@ -22,6 +23,7 @@ private:
     ProcessorFactory& getFactory_(const PipelineElementSpecification& elementSpec);
     LatticeReaderFactory& getReaderFactory_(const PipelineElementSpecification& elementSpec);
     LatticeWriterFactory& getWriterFactory_(const PipelineElementSpecification& elementSpec);
+    AnnotatorFactory& getAnnotatorFactory_(const PipelineElementSpecification& elementSpec);
 
     bool isLastElement_(
         std::list<PipelineElementSpecification>::iterator it,

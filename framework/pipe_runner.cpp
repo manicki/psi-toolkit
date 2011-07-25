@@ -11,7 +11,7 @@ PipeRunner::PipeRunner(int argc, char* argv[]) {
 }
 
 int PipeRunner::run() {
-    Lattice lattice("");
+    Lattice lattice;
 
     std::list<PipelineElementSpecification>::iterator it = pipelineSpecification_.elements.begin();
 
@@ -31,6 +31,12 @@ int PipeRunner::run() {
                                                         boost::program_options::variables_map()));
             writer->writeLattice(lattice, std::cout);
         }
+        else {
+            AnnotatorFactory& annotatorFactory = getAnnotatorFactory_(*it);
+            boost::scoped_ptr<Annotator> annotator(annotatorFactory.createAnnotator(
+                                                       boost::program_options::variables_map()));
+            annotator->annotate(lattice);
+        }
     }
 
     return 0;
@@ -49,6 +55,11 @@ LatticeReaderFactory& PipeRunner::getReaderFactory_(const PipelineElementSpecifi
 LatticeWriterFactory& PipeRunner::getWriterFactory_(const PipelineElementSpecification& elementSpec) {
     return dynamic_cast<LatticeWriterFactory&>(getFactory_(elementSpec));
 }
+
+AnnotatorFactory& PipeRunner::getAnnotatorFactory_(const PipelineElementSpecification& elementSpec) {
+    return dynamic_cast<AnnotatorFactory&>(getFactory_(elementSpec));
+}
+
 
 void PipeRunner::parseIntoPipelineSpecification_(int argc, char* argv[]) {
 
