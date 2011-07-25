@@ -94,8 +94,12 @@ Lattice::EdgeDescriptor Lattice::addEdge(
             boost_from = boost::add_vertex(VertexEntry(from), graph_);
             vertices_[from] = boost_from;
             for (int i = 0; i < indexedTagCollections_.size(); ++i) {
-                graph_[boost_from].outEdgesIndex.push_back(std::list<Graph::edge_descriptor>());
-                graph_[boost_from].inEdgesIndex.push_back(std::list<Graph::edge_descriptor>());
+                graph_[boost_from].outEdgesIndex.push_back(
+                    std::list<EdgeDescriptorWrapperToFoolBoost146OrGnu461>()
+                );
+                graph_[boost_from].inEdgesIndex.push_back(
+                    std::list<EdgeDescriptorWrapperToFoolBoost146OrGnu461>()
+                );
             }
         }
 
@@ -103,8 +107,12 @@ Lattice::EdgeDescriptor Lattice::addEdge(
             boost_to = boost::add_vertex(VertexEntry(to), graph_);
             vertices_[to] = boost_to;
             for (int i = 0; i < indexedTagCollections_.size(); ++i) {
-                graph_[boost_to].outEdgesIndex.push_back(std::list<Graph::edge_descriptor>());
-                graph_[boost_to].inEdgesIndex.push_back(std::list<Graph::edge_descriptor>());
+                graph_[boost_to].outEdgesIndex.push_back(
+                    std::list<EdgeDescriptorWrapperToFoolBoost146OrGnu461>()
+                );
+                graph_[boost_to].inEdgesIndex.push_back(
+                    std::list<EdgeDescriptorWrapperToFoolBoost146OrGnu461>()
+                );
             }
         }
 
@@ -255,7 +263,7 @@ int Lattice::addTagCollectionIndex_(LayerTagCollection tags) {
             vi != vertices_.end();
             ++vi
         ) {
-            graph_[(*vi).second].outEdgesIndex.push_back(std::list<Graph::edge_descriptor>());
+            graph_[(*vi).second].outEdgesIndex.push_back(std::list<EdgeDescriptorWrapperToFoolBoost146OrGnu461>());
             std::pair<Lattice::OutEdgeIterator, Lattice::OutEdgeIterator>
                 oeir = boost::out_edges((*vi).second, graph_);
             for (Lattice::OutEdgeIterator oei = oeir.first; oei != oeir.second; ++oei) {
@@ -264,7 +272,7 @@ int Lattice::addTagCollectionIndex_(LayerTagCollection tags) {
                 }
             }
 
-            graph_[(*vi).second].inEdgesIndex.push_back(std::list<Graph::edge_descriptor>());
+            graph_[(*vi).second].inEdgesIndex.push_back(std::list<EdgeDescriptorWrapperToFoolBoost146OrGnu461>());
             std::pair<Lattice::InEdgeIterator, Lattice::InEdgeIterator>
                 ieir = boost::in_edges((*vi).second, graph_);
             for (Lattice::InEdgeIterator iei = ieir.first; iei != ieir.second; ++iei) {

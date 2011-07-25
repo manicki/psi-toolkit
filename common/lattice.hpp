@@ -58,10 +58,13 @@ public:
 
     struct EdgeDescriptor;
 
+
+    struct EdgeDescriptorWrapperToFoolBoost146OrGnu461;
+
     struct VertexEntry {
         int index;
-        std::vector< std::list<Graph::edge_descriptor> > outEdgesIndex;
-        std::vector< std::list<Graph::edge_descriptor> > inEdgesIndex;
+        std::vector< std::list<EdgeDescriptorWrapperToFoolBoost146OrGnu461> > outEdgesIndex;
+        std::vector< std::list<EdgeDescriptorWrapperToFoolBoost146OrGnu461> > inEdgesIndex;
 
         VertexEntry() : index(-1) { }
         VertexEntry(int ix) : index(ix) { }
@@ -92,6 +95,13 @@ public:
         EdgeDescriptor(const Graph::edge_descriptor& ed) : descriptor(ed), implicitIndex(-1) { }
     };
 
+    struct EdgeDescriptorWrapperToFoolBoost146OrGnu461 : public Graph::edge_descriptor {
+    public:
+        EdgeDescriptorWrapperToFoolBoost146OrGnu461() {}
+        EdgeDescriptorWrapperToFoolBoost146OrGnu461(const Graph::edge_descriptor& ed)
+            :Graph::edge_descriptor(ed) {}
+    };
+
     typedef int VertexDescriptor;
     typedef Graph::edge_iterator EdgeIterator;
     typedef Graph::out_edge_iterator OutEdgeIterator;
@@ -110,8 +120,8 @@ public:
     class InOutEdgesIterator {
     public:
         InOutEdgesIterator(
-            std::list<Graph::edge_descriptor>::const_iterator begin,
-            std::list<Graph::edge_descriptor>::const_iterator end,
+            std::list<EdgeDescriptorWrapperToFoolBoost146OrGnu461>::const_iterator begin,
+            std::list<EdgeDescriptorWrapperToFoolBoost146OrGnu461>::const_iterator end,
             int implicitIndex = -1
         ) :
             type_(EDGE_DESCRIPTOR_ITER),
@@ -151,8 +161,8 @@ public:
         EdgeDescriptor next();
     private:
         enum {EDGE_DESCRIPTOR_ITER, OUT_EDGE_ITER, IN_EDGE_ITER, IMPLICIT_ITER} type_;
-        std::list<Graph::edge_descriptor>::const_iterator edi_;
-        std::list<Graph::edge_descriptor>::const_iterator ediEnd_;
+        std::list<EdgeDescriptorWrapperToFoolBoost146OrGnu461>::const_iterator edi_;
+        std::list<EdgeDescriptorWrapperToFoolBoost146OrGnu461>::const_iterator ediEnd_;
         OutEdgeIterator oei_;
         OutEdgeIterator oeiEnd_;
         InEdgeIterator iei_;
