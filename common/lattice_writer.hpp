@@ -4,6 +4,8 @@
 #include <string>
 #include <ostream>
 
+#include <boost/scoped_ptr.hpp>
+
 #include "lattice.hpp"
 #include "writer_worker.hpp"
 #include "processor.hpp"
