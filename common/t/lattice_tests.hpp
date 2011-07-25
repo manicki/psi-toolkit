@@ -2,6 +2,8 @@
 #include "lattice.hpp"
 #include "annotation_item.hpp"
 
+#include "by_spaces_cutter.hpp"
+
 class LatticeTests : public CxxTest::TestSuite
 {
 public:
@@ -240,6 +242,37 @@ public:
             lattice.getEdgeAnnotationItem(tokenIter.next()).getCategory(),
             lemma_token.getCategory()
         );
+        TS_ASSERT(!tokenIter.hasNext());
+    }
+
+    void bla_test_cutter() {
+        Lattice lattice("rower zielony");
+
+        BySpacesCutter cutter;
+
+        LayerTagMask symbolMask = lattice.getLayerTagManager().getMask("symbol");
+
+        lattice.runCutter(cutter, symbolMask);
+
+        LayerTagMask tokenMask = lattice.getLayerTagManager().getMask("token");
+
+        Lattice::SortedEdgesIterator tokenIter = lattice.edgesSorted(tokenMask);
+
+        TS_ASSERT(tokenIter.hasNext());
+        TS_ASSERT_EQUALS(
+            lattice.getEdgeAnnotationItem(tokenIter.next()).getCategory(),
+            "rower");
+
+        TS_ASSERT(tokenIter.hasNext());
+        TS_ASSERT_EQUALS(
+            lattice.getEdgeAnnotationItem(tokenIter.next()).getCategory(),
+            " ");
+
+        TS_ASSERT(tokenIter.hasNext());
+        TS_ASSERT_EQUALS(
+            lattice.getEdgeAnnotationItem(tokenIter.next()).getCategory(),
+            "zielony");
+
         TS_ASSERT(!tokenIter.hasNext());
     }
 

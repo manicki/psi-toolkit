@@ -18,6 +18,7 @@
 #include "hash_wrapper.hpp"
 #include "layer_tag_manager.hpp"
 
+#include "cutter.hpp"
 
 /*!
   Lattice is used to keep all the information extracted by annotators
@@ -252,6 +253,8 @@ public:
     const LayerTagCollection getEdgeLayerTags(EdgeDescriptor edge);
 
     const std::string& getAllText() const;
+
+    void runCutter(Cutter& cutter, LayerTagMask mask);
 
 private:
 

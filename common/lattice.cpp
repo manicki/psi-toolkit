@@ -246,7 +246,9 @@ const std::string& Lattice::getAllText() const {
     return allText_;
 }
 
-
+void Lattice::runCutter(Cutter& cutter, LayerTagMask mask) {
+    // TODO
+}
 
 int Lattice::addTagCollectionIndex_(LayerTagCollection tags) {
     TagCollectionsBimapLeftIterator li = indexedTagCollections_.left.find(tags);

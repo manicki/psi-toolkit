@@ -1,6 +1,6 @@
-#include "tp_token_cutter.hpp"
+#include "by_spaces_cutter.hpp"
 
-AnnotationItem TpTokenCutter::doCutOff(const std::string& text, size_t& positionInText) {
+AnnotationItem BySpacesCutter::doCutOff(const std::string& text, size_t& positionInText) {
     size_t spacePosition = text.find(' ', positionInText);
 
     if (spacePosition == positionInText) {
@@ -15,12 +15,12 @@ AnnotationItem TpTokenCutter::doCutOff(const std::string& text, size_t& position
     }
 }
 
-int TpTokenCutter::doMaximumFragmentLength() {
+int BySpacesCutter::doMaximumFragmentLength() {
     return 1000;
 }
 
-std::list<std::string > TpTokenCutter::doLayerTags() {
-    std::list<std::string>  tags;
+std::list<std::string> BySpacesCutter::doLayerTags() {
+    std::list<std::string> tags;
     tags.push_back(std::string("token"));
 
     return tags;

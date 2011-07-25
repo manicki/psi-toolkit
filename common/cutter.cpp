@@ -8,3 +8,6 @@ int Cutter::maximumFragmentLength() {
     return doMaximumFragmentLength();
 }
 
+std::list<std::string> Cutter::layerTags() {
+    return doLayerTags();
+}

@@ -31,6 +31,7 @@ runner_SOURCES = \
 	../common/utf8_string.cpp \
 	../common/utt_like_quoter.cpp \
 	../common/writer_worker.cpp \
+	../common/t/by_spaces_cutter.cpp \
 	../formats/psi/psi_lattice_reader.cpp \
 	../formats/psi/psi_lattice_writer.cpp \
 	../formats/psi/psi_quoter.cpp \

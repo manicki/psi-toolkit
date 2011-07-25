@@ -1,6 +1,9 @@
 #ifndef CUTTER_HDR
 #define CUTTER_HDR
 
+#include <list>
+#include <string>
+
 #include "annotation_item.hpp"
 
 /**
@@ -25,9 +28,12 @@ public:
      */
     int maximumFragmentLength();
 
+    std::list<std::string> layerTags();
+
 private:
     virtual AnnotationItem doCutOff(const std::string& text, size_t& positionInText) = 0;
     virtual int doMaximumFragmentLength() = 0;
+    virtual std::list<std::string> doLayerTags() = 0;
 };
 
 
