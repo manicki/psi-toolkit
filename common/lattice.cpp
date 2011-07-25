@@ -79,7 +79,7 @@ Lattice::EdgeDescriptor Lattice::addEdge(
     std::list<EdgeDescriptor> partition
 ) {
 
-    std::pair<EdgeDescriptor, bool> result;
+    std::pair<Graph::edge_descriptor, bool> result;
 
     std::pair<VertexDescriptor, VertexDescriptor> vpair(from, to);
 

@@ -83,7 +83,7 @@ public:
         ): category(aCategory), tagList(aTagList), score(aScore), partition(aPartition) { }
     };
 
-    struct EdgeDescriptor: public Graph::edge_descriptor {
+    struct EdgeDescriptor {
         Graph::edge_descriptor descriptor;
         int implicitIndex;
 
