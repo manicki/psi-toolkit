@@ -244,7 +244,9 @@ LayerTagManager& Lattice::getLayerTagManager() {
 }
 
 const AnnotationItem Lattice::getEdgeAnnotationItem(Lattice::EdgeDescriptor edge) {
-    if (edge.implicitIndex < 0) return graph_[edge.descriptor].category;
+    if (edge.implicitIndex < 0) {
+        return graph_[edge.descriptor].category;
+    }
     std::string::iterator iter = allText_.begin() + edge.implicitIndex;
     std::string::iterator end = allText_.end();
     std::string symbol;
@@ -253,8 +255,25 @@ const AnnotationItem Lattice::getEdgeAnnotationItem(Lattice::EdgeDescriptor edge
 }
 
 const LayerTagCollection Lattice::getEdgeLayerTags(Lattice::EdgeDescriptor edge) {
-    if (edge.implicitIndex < 0) return graph_[edge.descriptor].tagList;
+    if (edge.implicitIndex < 0) {
+        return graph_[edge.descriptor].tagList;
+    }
     return layerTagManager_.createSingletonTagCollection("symbol");
+}
+
+int Lattice::getEdgeBeginIndex(Lattice::EdgeDescriptor edge) {
+    if (edge.implicitIndex < 0) {
+        return graph_[boost::source(edge.descriptor, graph_)].index;
+    }
+    return edge.implicitIndex;
+}
+
+int Lattice::getEdgeLength(Lattice::EdgeDescriptor edge) {
+    if (edge.implicitIndex < 0) {
+        return graph_[boost::target(edge.descriptor, graph_)].index
+            - graph_[boost::source(edge.descriptor, graph_)].index;
+    }
+    return edge.implicitIndex;
 }
 
 const std::string& Lattice::getAllText() const {
