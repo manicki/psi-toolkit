@@ -20,6 +20,10 @@ public:
         return annotationItem.category_;
     }
 
+    std::list< std::pair<std::string, std::string> > getValues(
+        AnnotationItem & annotationItem
+    );
+
 private:
 
     typedef boost::bimap<std::string,int> StringBimap;
