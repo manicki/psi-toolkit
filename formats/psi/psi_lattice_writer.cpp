@@ -62,9 +62,31 @@ void PsiLatticeWriter::Worker::doRun() {
         outputStream_ << std::setw(2) << lattice_.getEdgeLength(edge);
         outputStream_ << " ";
 
-        const AnnotationItem& item = lattice_.getEdgeAnnotationItem(edge);
+        outputStream_ << std::left << std::setfill(' ');
+        const AnnotationItem& annotationItem = lattice_.getEdgeAnnotationItem(edge);
+        outputStream_ << std::setw(12) << annotationItem.getCategory().substr(0,12);
+        outputStream_ << " ";
 
-        outputStream_ << item.getCategory() << std::endl;
+        std::string tagStr = "";
+        std::list<std::string> tagNames
+            = lattice_.getLayerTagManager().getTagNames(lattice_.getEdgeLayerTags(edge));
+        for (
+            std::list<std::string>::iterator ti = tagNames.begin();
+            ti != tagNames.end();
+            ++ti
+        ) {
+            if (tagStr != "") {
+                tagStr += ",";
+            }
+            tagStr += *ti;
+        }
+        outputStream_ << std::setw(20) << tagStr;
+        outputStream_ << " ";
+
+        outputStream_ << annotationItem.getCategory();
+        //TODO
+
+        outputStream_ << std::endl;
     }
 
     DEBUG("WRITING");
