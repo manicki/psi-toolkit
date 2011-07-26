@@ -89,10 +89,12 @@ Lattice::EdgeDescriptor Lattice::addEdge(
             return EdgeDescriptor(from);
         }
 
-        Graph::vertex_descriptor boost_from = vertices_[from];
-        Graph::vertex_descriptor boost_to   = vertices_[to];
+        Graph::vertex_descriptor boost_from;
+        Graph::vertex_descriptor boost_to;
 
-        if (!boost_from) {
+        if (vertices_[from]) {
+            boost_from = vertices_[from];
+        } else {
             boost_from = boost::add_vertex(VertexEntry(from), graph_);
             vertices_[from] = boost_from;
             for (int i = 0; i < indexedTagCollections_.size(); ++i) {
@@ -105,7 +107,9 @@ Lattice::EdgeDescriptor Lattice::addEdge(
             }
         }
 
-        if (!boost_to) {
+        if (vertices_[to]) {
+            boost_to = vertices_[to];
+        } else {
             boost_to = boost::add_vertex(VertexEntry(to), graph_);
             vertices_[to] = boost_to;
             for (int i = 0; i < indexedTagCollections_.size(); ++i) {
@@ -145,13 +149,13 @@ Lattice::InOutEdgesIterator Lattice::outEdges(
     Lattice::VertexDescriptor vertex,
     LayerTagMask mask
 ) {
-    Graph::vertex_descriptor boost_vertex = vertices_[vertex];
-    if (!boost_vertex) {
+    if (!vertices_[vertex]) {
         return Lattice::InOutEdgesIterator(
             (layerTagManager_.match(mask, "symbol") && implicitOutEdges_[vertex]) ?
                 vertex : -1
         );
     }
+    Graph::vertex_descriptor boost_vertex = vertices_[vertex];
     if (mask.isAny()) {
         return Lattice::InOutEdgesIterator(
             boost::out_edges(boost_vertex, graph_),
@@ -171,14 +175,14 @@ Lattice::InOutEdgesIterator Lattice::inEdges(
     Lattice::VertexDescriptor vertex,
     LayerTagMask mask
 ) {
-    Graph::vertex_descriptor boost_vertex = vertices_[vertex];
     VertexDescriptor priorVertex = priorVertex_(vertex);
-    if (!boost_vertex) {
+    if (!vertices_[vertex]) {
         return Lattice::InOutEdgesIterator(
             (layerTagManager_.match(mask, "symbol") && implicitOutEdges_[priorVertex]) ?
                 priorVertex : -1
         );
     }
+    Graph::vertex_descriptor boost_vertex = vertices_[vertex];
     if (mask.isAny()) {
         return Lattice::InOutEdgesIterator(
             boost::in_edges(boost_vertex, graph_),
