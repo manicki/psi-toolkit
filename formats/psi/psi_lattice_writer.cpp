@@ -57,9 +57,9 @@ void PsiLatticeWriter::Worker::doRun() {
         outputStream_ << std::right << std::setfill('0');
         outputStream_ << std::setw(2) << ordinal;
         outputStream_ << " ";
-        // outputStream << std::setw(4) << lattice_.getBeginIndex(edge);
+        outputStream_ << std::setw(4) << lattice_.getEdgeBeginIndex(edge);
         outputStream_ << " ";
-        // outputStream << std::setw(2) << lattice_.getLength(edge);
+        outputStream_ << std::setw(2) << lattice_.getEdgeLength(edge);
         outputStream_ << " ";
 
         const AnnotationItem& item = lattice_.getEdgeAnnotationItem(edge);
