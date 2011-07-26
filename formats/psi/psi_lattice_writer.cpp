@@ -1,5 +1,8 @@
 #include "psi_lattice_writer.hpp"
 
+#include <iomanip>
+#include <iostream>
+
 #include "logging.hpp"
 
 std::string PsiLatticeWriter::getFormatName() {
@@ -43,12 +46,23 @@ PsiLatticeWriter::Worker::Worker(PsiLatticeWriter& processor,
 
 void PsiLatticeWriter::Worker::doRun() {
 
-    Lattice::SortedEdgesIterator ei = lattice_.allEdgesSorted();
+    Lattice::SortedEdgesIterator ei = lattice_.edgesSorted(lattice_.getLayerTagManager().anyTag());
+
+    int ordinal = 0;
 
     while(ei.hasNext()) {
-        Lattice::EdgeDescriptor ed = ei.next();
+        Lattice::EdgeDescriptor edge = ei.next();
+        ++ordinal;
 
-        const AnnotationItem& item = lattice_.getEdgeAnnotationItem(ed);
+        outputStream_ << std::right << std::setfill('0');
+        outputStream_ << std::setw(2) << ordinal;
+        outputStream_ << " ";
+        // outputStream << std::setw(4) << lattice_.getBeginIndex(edge);
+        outputStream_ << " ";
+        // outputStream << std::setw(2) << lattice_.getLength(edge);
+        outputStream_ << " ";
+
+        const AnnotationItem& item = lattice_.getEdgeAnnotationItem(edge);
 
         outputStream_ << item.getCategory() << std::endl;
     }
