@@ -7,10 +7,10 @@ void AnnotationItemManager::setValue(
 ) {
     m_.insert(StringBimapItem(attribute, m_.size()));
     int ix = m_.left.at(attribute);
-    if (ix >= annotationItem.attrValues_.size()) {
-        annotationItem.attrValues_.resize(ix + 1);
+    if (ix >= annotationItem.values_.size()) {
+        annotationItem.values_.resize(ix + 1);
     }
-    annotationItem.attrValues_[ix] = value;
+    annotationItem.values_[ix] = value;
 }
 
 std::string AnnotationItemManager::getValue(
@@ -18,7 +18,7 @@ std::string AnnotationItemManager::getValue(
     std::string attribute
 ) {
     try {
-        return annotationItem.attrValues_[m_.left.at(attribute)];
+        return annotationItem.values_[m_.left.at(attribute)];
     } catch (...) {
         return "";
     }
