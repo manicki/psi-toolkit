@@ -92,7 +92,7 @@ Lattice::EdgeDescriptor Lattice::addEdge(
         Graph::vertex_descriptor boost_from;
         Graph::vertex_descriptor boost_to;
 
-        if (vertices_[from]) {
+        if (vertices_.count(from)) {
             boost_from = vertices_[from];
         } else {
             boost_from = boost::add_vertex(VertexEntry(from), graph_);
@@ -107,7 +107,7 @@ Lattice::EdgeDescriptor Lattice::addEdge(
             }
         }
 
-        if (vertices_[to]) {
+        if (vertices_.count(to)) {
             boost_to = vertices_[to];
         } else {
             boost_to = boost::add_vertex(VertexEntry(to), graph_);
@@ -149,7 +149,7 @@ Lattice::InOutEdgesIterator Lattice::outEdges(
     Lattice::VertexDescriptor vertex,
     LayerTagMask mask
 ) {
-    if (!vertices_[vertex]) {
+    if (!vertices_.count(vertex)) {
         return Lattice::InOutEdgesIterator(
             (layerTagManager_.match(mask, "symbol") && implicitOutEdges_[vertex]) ?
                 vertex : -1
@@ -176,7 +176,7 @@ Lattice::InOutEdgesIterator Lattice::inEdges(
     LayerTagMask mask
 ) {
     VertexDescriptor priorVertex = priorVertex_(vertex);
-    if (!vertices_[vertex]) {
+    if (!vertices_.count(vertex)) {
         return Lattice::InOutEdgesIterator(
             (layerTagManager_.match(mask, "symbol") && implicitOutEdges_[priorVertex]) ?
                 priorVertex : -1
@@ -305,7 +305,7 @@ Lattice::VertexDescriptor Lattice::priorVertex_(Lattice::VertexDescriptor vertex
 bool Lattice::VertexIterator::hasNext() {
     while (vd_ < lattice_->allText_.length()) {
         if (
-            lattice_->vertices_[vd_]
+            lattice_->vertices_.count(vd_)
             || lattice_->implicitOutEdges_[vd_]
             || lattice_->implicitOutEdges_[lattice_->priorVertex_(vd_)]
         ) {
@@ -319,7 +319,7 @@ bool Lattice::VertexIterator::hasNext() {
 Lattice::VertexDescriptor Lattice::VertexIterator::next() {
     while (vd_ < lattice_->allText_.length()) {
         if (
-            lattice_->vertices_[vd_]
+            lattice_->vertices_.count(vd_)
             || lattice_->implicitOutEdges_[vd_]
             || lattice_->implicitOutEdges_[lattice_->priorVertex_(vd_)]
         ) {
