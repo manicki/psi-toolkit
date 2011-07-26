@@ -21,7 +21,7 @@ public:
     }
 
     std::list< std::pair<std::string, std::string> > getValues(
-        AnnotationItem & annotationItem
+        const AnnotationItem & annotationItem
     );
 
 private:
