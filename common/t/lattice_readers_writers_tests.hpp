@@ -138,6 +138,8 @@ public:
         LayerTagMask tokenMask = lattice.getLayerTagManager().getMask(token_tag);
 
         AnnotationItem word_token("word");
+        lattice.getAnnotationItemManager().setValue(word_token, "type", "word");
+
         AnnotationItem blank_token("blank");
 
         Lattice::Partition ala_partition;
