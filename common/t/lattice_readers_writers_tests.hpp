@@ -203,7 +203,18 @@ public:
 
         LatticeWriter * writer = new PsiLatticeWriter();
 
-        writer->writeLattice(lattice, std::cout);
+        std::ostringstream osstr;
+        writer->writeLattice(lattice, osstr);
+
+        std::string line;
+        std::string contents;
+        std::ifstream s("../formats/psi/t/files/pl_sample_2.txt");
+        while (getline(s, line)) {
+            contents += line;
+            contents += "\n";
+        }
+
+        TS_ASSERT_EQUALS(osstr.str(), contents);
 
     }
 
