@@ -266,6 +266,8 @@ public:
 
     const AnnotationItem getEdgeAnnotationItem(EdgeDescriptor edge);
     const LayerTagCollection getEdgeLayerTags(EdgeDescriptor edge);
+    int getEdgeBeginIndex(EdgeDescriptor edge);
+    int getEdgeLength(EdgeDescriptor edge);
 
     const std::string& getAllText() const;
 
