@@ -84,7 +84,20 @@ void PsiLatticeWriter::Worker::doRun() {
         outputStream_ << " ";
 
         outputStream_ << annotationItem.getCategory();
-        //TODO
+        std::string avStr = "";
+        std::list< std::pair<std::string, std::string> > avPairs
+            = lattice_.getAnnotationItemManager().getValues(annotationItem);
+        for (
+            std::list< std::pair<std::string, std::string> >::iterator avi = avPairs.begin();
+            avi != avPairs.end();
+            ++avi
+        ) {
+            avStr += ",";
+            avStr += (*avi).first;
+            avStr += "=";
+            avStr += (*avi).second;
+        }
+        outputStream_ << avStr;
 
         outputStream_ << std::endl;
     }
