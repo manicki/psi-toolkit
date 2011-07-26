@@ -22,6 +22,9 @@ long AnnotationItem::getHash() const {
 }
 
 int AnnotationItem::resize_(int size) {
+    if (size > values_.size()) {
+        values_.resize(size);
+    }
     if (size > attributes_.size()) {
         attributes_.resize(size % 32 == 0 ? size : size + 32 - size % 32);
     }

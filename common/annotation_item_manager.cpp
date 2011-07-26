@@ -8,9 +8,10 @@ void AnnotationItemManager::setValue(
     m_.insert(StringBimapItem(attribute, m_.size()));
     int ix = m_.left.at(attribute);
     if (ix >= annotationItem.values_.size()) {
-        annotationItem.values_.resize(ix + 1);
+        annotationItem.resize_(ix + 1);
     }
     annotationItem.values_[ix] = value;
+    annotationItem.attributes_[ix] = true;
 }
 
 std::string AnnotationItemManager::getValue(
