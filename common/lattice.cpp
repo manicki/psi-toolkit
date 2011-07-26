@@ -243,6 +243,10 @@ LayerTagManager& Lattice::getLayerTagManager() {
     return layerTagManager_;
 }
 
+AnnotationItemManager& Lattice::getAnnotationItemManager() {
+    return annotationItemManager_;
+}
+
 const AnnotationItem Lattice::getEdgeAnnotationItem(Lattice::EdgeDescriptor edge) {
     if (edge.implicitIndex < 0) {
         return graph_[edge.descriptor].category;

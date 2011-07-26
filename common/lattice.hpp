@@ -14,6 +14,7 @@
 #include "utf8.h"
 
 #include "annotation_item.hpp"
+#include "annotation_item_manager.hpp"
 #include "exceptions.hpp"
 #include "hash_wrapper.hpp"
 #include "layer_tag_manager.hpp"
@@ -263,6 +264,7 @@ public:
     SortedEdgesIterator allEdgesSorted();
 
     LayerTagManager& getLayerTagManager();
+    AnnotationItemManager& getAnnotationItemManager();
 
     const AnnotationItem getEdgeAnnotationItem(EdgeDescriptor edge);
     const LayerTagCollection getEdgeLayerTags(EdgeDescriptor edge);
@@ -278,6 +280,8 @@ private:
     Graph graph_;
 
     LayerTagManager layerTagManager_;
+
+    AnnotationItemManager annotationItemManager_;
 
     std::string allText_;
 
