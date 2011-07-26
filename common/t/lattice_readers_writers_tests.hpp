@@ -1,3 +1,6 @@
+#include <iostream>
+
+#include "psi_lattice_writer.hpp"
 #include "utt_lattice_reader.hpp"
 
 
@@ -112,6 +115,94 @@ public:
 
         delete reader;
 */
+    }
+
+    void testPsiLatticeWriter() {
+
+        Lattice lattice("Ala ma kota");
+        lattice.addSymbols(lattice.getFirstVertex(), lattice.getLastVertex());
+
+        Lattice::VertexDescriptor pre_ala = lattice.getFirstVertex();
+        Lattice::VertexDescriptor post_ala = lattice.getVertexForRawCharIndex(3);
+        Lattice::VertexDescriptor pre_ma = lattice.getVertexForRawCharIndex(4);
+        Lattice::VertexDescriptor post_ma = lattice.getVertexForRawCharIndex(6);
+        Lattice::VertexDescriptor pre_kota = lattice.getVertexForRawCharIndex(7);
+        Lattice::VertexDescriptor post_kota = lattice.getLastVertex();
+
+        LayerTagCollection
+            raw_tag = lattice.getLayerTagManager().createSingletonTagCollection("symbol");
+        LayerTagCollection
+            token_tag = lattice.getLayerTagManager().createSingletonTagCollection("token");
+
+        LayerTagMask rawMask = lattice.getLayerTagManager().getMask(raw_tag);
+        LayerTagMask tokenMask = lattice.getLayerTagManager().getMask(token_tag);
+
+        AnnotationItem word_token("word");
+        AnnotationItem blank_token("blank");
+
+        Lattice::Partition ala_partition;
+        ala_partition.links.push_back(lattice.firstOutEdge(
+            lattice.getVertexForRawCharIndex(0),
+            rawMask
+        ));
+        ala_partition.links.push_back(lattice.firstOutEdge(
+            lattice.getVertexForRawCharIndex(1),
+            rawMask
+        ));
+        ala_partition.links.push_back(lattice.firstOutEdge(
+            lattice.getVertexForRawCharIndex(2),
+            rawMask
+        ));
+        lattice.addEdge(pre_ala, post_ala, word_token, token_tag, 0, ala_partition);
+
+        Lattice::Partition first_blank_partition;
+        first_blank_partition.links.push_back(lattice.firstOutEdge(
+            lattice.getVertexForRawCharIndex(3),
+            rawMask
+        ));
+        lattice.addEdge(post_ala, pre_ma, blank_token, token_tag, 0, first_blank_partition);
+
+        Lattice::Partition ma_partition;
+        ma_partition.links.push_back(lattice.firstOutEdge(
+            lattice.getVertexForRawCharIndex(4),
+            rawMask
+        ));
+        ma_partition.links.push_back(lattice.firstOutEdge(
+            lattice.getVertexForRawCharIndex(5),
+            rawMask
+        ));
+        lattice.addEdge(pre_ma, post_ma, word_token, token_tag, 0, ma_partition);
+
+        Lattice::Partition second_blank_partition;
+        second_blank_partition.links.push_back(lattice.firstOutEdge(
+            lattice.getVertexForRawCharIndex(6),
+            rawMask
+        ));
+        lattice.addEdge(post_ma, pre_kota, blank_token, token_tag, 0, second_blank_partition);
+
+        Lattice::Partition kota_partition;
+        kota_partition.links.push_back(lattice.firstOutEdge(
+            lattice.getVertexForRawCharIndex(7),
+            rawMask
+        ));
+        kota_partition.links.push_back(lattice.firstOutEdge(
+            lattice.getVertexForRawCharIndex(8),
+            rawMask
+        ));
+        kota_partition.links.push_back(lattice.firstOutEdge(
+            lattice.getVertexForRawCharIndex(9),
+            rawMask
+        ));
+        kota_partition.links.push_back(lattice.firstOutEdge(
+            lattice.getVertexForRawCharIndex(10),
+            rawMask
+        ));
+        lattice.addEdge(pre_kota, post_kota, word_token, token_tag, 0, kota_partition);
+
+        LatticeWriter * writer = new PsiLatticeWriter();
+
+        writer->writeLattice(lattice, std::cout);
+
     }
 
 };
