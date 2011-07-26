@@ -46,6 +46,8 @@ PsiLatticeWriter::Worker::Worker(PsiLatticeWriter& processor,
 
 void PsiLatticeWriter::Worker::doRun() {
 
+    PsiQuoter quoter;
+
     Lattice::SortedEdgesIterator ei = lattice_.edgesSorted(lattice_.getLayerTagManager().anyTag());
 
     int ordinal = 0;
@@ -64,7 +66,7 @@ void PsiLatticeWriter::Worker::doRun() {
 
         outputStream_ << std::left << std::setfill(' ');
         const AnnotationItem& annotationItem = lattice_.getEdgeAnnotationItem(edge);
-        outputStream_ << std::setw(12) << annotationItem.getCategory().substr(0,12);
+        outputStream_ << std::setw(12) << quoter.escape(annotationItem.getCategory().substr(0,12));
         outputStream_ << " ";
 
         std::string tagStr = "";
@@ -80,10 +82,11 @@ void PsiLatticeWriter::Worker::doRun() {
             }
             tagStr += *ti;
         }
-        outputStream_ << std::setw(20) << tagStr;
+        outputStream_ << std::setw(20) << quoter.escape(tagStr);
         outputStream_ << " ";
 
-        outputStream_ << annotationItem.getCategory();
+        outputStream_ << quoter.escape(annotationItem.getCategory());
+
         std::string avStr = "";
         std::list< std::pair<std::string, std::string> > avPairs
             = lattice_.getAnnotationItemManager().getValues(annotationItem);
@@ -97,7 +100,7 @@ void PsiLatticeWriter::Worker::doRun() {
             avStr += "=";
             avStr += (*avi).second;
         }
-        outputStream_ << avStr;
+        outputStream_ << quoter.escape(avStr);
 
         outputStream_ << std::endl;
     }
