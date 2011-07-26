@@ -29,9 +29,9 @@ void UTTLatticeReader::doReadIntoLattice(std::istream& inputStream, Lattice& lat
 
                 LayerTagMask rawMask = lattice.getLayerTagManager().getMask("raw");
 
-                std::list<Lattice::EdgeDescriptor> partition;
+                Lattice::Partition partition;
                 for (int i = item.position; i < item.position + item.length; ++i) {
-                    partition.push_back(
+                    partition.links.push_back(
                         lattice.firstOutEdge(lattice.getVertexForRawCharIndex(i), rawMask)
                     );
                 }
@@ -60,10 +60,10 @@ void UTTLatticeReader::doReadIntoLattice(std::istream& inputStream, Lattice& lat
 
                 LayerTagMask tokenMask = lattice.getLayerTagManager().getMask("token");
 
-                std::list<Lattice::EdgeDescriptor> sentencePartition;
+                Lattice::Partition sentencePartition;
                 for (int i = beginningOfSentencePosition; i < item.position + item.length; ++i) {
                     try {
-                        sentencePartition.push_back(
+                        sentencePartition.links.push_back(
                             lattice.firstOutEdge(lattice.getVertexForRawCharIndex(i), tokenMask)
                         );
                     } catch (NoEdgeException) { }

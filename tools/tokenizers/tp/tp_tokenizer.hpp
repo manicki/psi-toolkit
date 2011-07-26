@@ -17,9 +17,9 @@ public:
         virtual std::string doGetName();
 
         virtual std::list<std::list<std::string> > doRequiredLayerTags();
-        
+
         virtual std::list<std::list<std::string> > doOptionalLayerTags();
-        
+
         virtual std::list<std::string> doProvidedLayerTags();
 
     };

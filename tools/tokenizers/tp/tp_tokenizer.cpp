@@ -44,4 +44,3 @@ void TpTokenizer::Worker::doRun() {
 std::string TpTokenizer::doInfo() {
     return "tp tokenizer";
 }
-

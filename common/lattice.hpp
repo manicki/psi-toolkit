@@ -18,6 +18,7 @@
 #include "hash_wrapper.hpp"
 #include "layer_tag_manager.hpp"
 
+#include "cutter.hpp"
 
 /*!
   Lattice is used to keep all the information extracted by annotators
@@ -72,18 +73,26 @@ public:
 
     typedef double Score;
 
+    struct Partition;
+
     struct EdgeEntry {
         AnnotationItem category;
         LayerTagCollection tagList;
         Score score;
-        std::list<EdgeDescriptor> partition;
+        std::list<Partition> partitions;
 
         EdgeEntry(
             AnnotationItem aCategory,
             LayerTagCollection aTagList,
             Score aScore,
-            std::list<EdgeDescriptor> aPartition
-        ): category(aCategory), tagList(aTagList), score(aScore), partition(aPartition) { }
+            Partition& aPartition
+        ): category(aCategory), tagList(aTagList), score(aScore) {
+            partitions.push_back(aPartition);
+        }
+    };
+
+    struct Partition {
+        std::vector<EdgeDescriptor> links;
     };
 
     struct EdgeDescriptor {
@@ -228,7 +237,7 @@ public:
                            const AnnotationItem& annotationItem,
                            LayerTagCollection tags,
                            Score score = 0.0,
-                           std::list<EdgeDescriptor> partition = std::list<EdgeDescriptor>());
+                           Partition partition = Partition());
 
     // return outgoing edges which has at least one layer tag from `mask`
     InOutEdgesIterator outEdges(
@@ -259,6 +268,8 @@ public:
     const LayerTagCollection getEdgeLayerTags(EdgeDescriptor edge);
 
     const std::string& getAllText() const;
+
+    void runCutter(Cutter& cutter, LayerTagMask mask);
 
 private:
 
