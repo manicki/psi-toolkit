@@ -26,7 +26,7 @@ std::string AnnotationItemManager::getValue(
 }
 
 std::list< std::pair<std::string, std::string> > AnnotationItemManager::getValues(
-    AnnotationItem & annotationItem
+    const AnnotationItem & annotationItem
 ) {
     std::list< std::pair<std::string, std::string> > result;
     for (
