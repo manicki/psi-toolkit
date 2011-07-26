@@ -74,7 +74,7 @@ private:
     /**
      * resizes to the nearest power of two
      */
-    int resize_(int newSize);
+    int resize_(int size);
 
     /**
      * equalizes lengths of two LayerTagCollection vectors
