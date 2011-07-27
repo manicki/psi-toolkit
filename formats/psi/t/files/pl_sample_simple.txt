@@ -1,0 +1,16 @@
+01 0000 00 A            symbol               A
+02 0000 03 word         token                word,type=word
+03 0001 01 l            symbol               l
+04 0002 02 a            symbol               a
+05 0003 03 _            symbol               _
+06 0003 01 blank        token                blank
+07 0004 04 m            symbol               m
+08 0004 02 word         token                word,type=word
+09 0005 05 a            symbol               a
+10 0006 06 _            symbol               _
+11 0006 01 blank        token                blank
+12 0007 07 k            symbol               k
+13 0007 04 word         token                word,type=word
+14 0008 08 o            symbol               o
+15 0009 09 t            symbol               t
+16 0010 10 a            symbol               a
