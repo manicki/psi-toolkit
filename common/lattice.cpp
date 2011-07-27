@@ -288,6 +288,13 @@ bool Lattice::isEdgeHidden(Lattice::EdgeDescriptor edge) {
     return edge.implicitIndex > -1 && hiddenImplicitOutEdges_[edge.implicitIndex];
 }
 
+std::list<Lattice::Partition> Lattice::getEdgePartitions(Lattice::EdgeDescriptor edge) {
+    if (edge.implicitIndex < 0) {
+        return graph_[edge.descriptor].partitions;
+    }
+    return std::list<Lattice::Partition>();
+}
+
 const std::string& Lattice::getAllText() const {
     return allText_;
 }

@@ -271,6 +271,7 @@ public:
     int getEdgeBeginIndex(EdgeDescriptor edge);
     int getEdgeLength(EdgeDescriptor edge);
     bool isEdgeHidden(EdgeDescriptor edge);
+    std::list<Partition> getEdgePartitions(EdgeDescriptor edge);
 
     const std::string& getAllText() const;
 
