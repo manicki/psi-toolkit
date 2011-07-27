@@ -10,6 +10,7 @@
 #include <boost/spirit/include/qi.hpp>
 
 #include "lattice_reader.hpp"
+#include "lattice_reader_factory.hpp"
 #include "quoter.hpp"
 #include "utt_quoter.hpp"
 #include "utf8_string.hpp"
@@ -83,7 +84,23 @@ public:
 private:
     virtual std::string doInfo();
 
-    virtual void doReadIntoLattice(std::istream& inputStream, Lattice& lattice);
+    // virtual void doReadIntoLattice(std::istream& inputStream, Lattice& lattice);
+
+    class Worker : public ReaderWorker {
+    public:
+        Worker(UTTLatticeReader& processor,
+               std::istream& inputStream,
+               Lattice& lattice);
+
+        virtual void doRun();
+
+    private:
+        UTTLatticeReader& processor_;
+    };
+
+    virtual ReaderWorker* doCreateReaderWorker(std::istream& inputStream, Lattice& lattice) {
+        return new Worker(*this, inputStream, lattice);
+    }
 };
 
 
