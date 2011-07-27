@@ -270,6 +270,7 @@ public:
     const LayerTagCollection getEdgeLayerTags(EdgeDescriptor edge);
     int getEdgeBeginIndex(EdgeDescriptor edge);
     int getEdgeLength(EdgeDescriptor edge);
+    bool isEdgeHidden(EdgeDescriptor edge);
 
     const std::string& getAllText() const;
 
@@ -286,6 +287,8 @@ private:
     std::string allText_;
 
     boost::dynamic_bitset<> implicitOutEdges_;
+
+    boost::dynamic_bitset<> hiddenImplicitOutEdges_;
 
     std::map<int, Graph::vertex_descriptor> vertices_;
 

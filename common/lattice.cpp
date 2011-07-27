@@ -11,6 +11,7 @@ Lattice::~Lattice() { }
 void Lattice::appendString(std::string text) {
     allText_ += text;
     implicitOutEdges_.resize(allText_.length() + 1);
+    hiddenImplicitOutEdges_.resize(allText_.length() + 1);
 }
 
 void Lattice::addSymbols(VertexDescriptor startVertex, VertexDescriptor endVertex) {
@@ -278,6 +279,10 @@ int Lattice::getEdgeLength(Lattice::EdgeDescriptor edge) {
             - graph_[boost::source(edge.descriptor, graph_)].index;
     }
     return edge.implicitIndex;
+}
+
+bool Lattice::isEdgeHidden(Lattice::EdgeDescriptor edge) {
+    return edge.implicitIndex > -1 && hiddenImplicitOutEdges_[edge.implicitIndex];
 }
 
 const std::string& Lattice::getAllText() const {
