@@ -140,6 +140,9 @@ Lattice::EdgeDescriptor Lattice::addEdge(
                     graph_[boost_to].inEdgesIndex[i].push_back(result.first);
                 }
             }
+            for (VertexDescriptor vd = from; vd < to; ++vd) {
+                hiddenImplicitOutEdges_[vd] = true;
+            }
             return EdgeDescriptor(result.first);
         }
 
