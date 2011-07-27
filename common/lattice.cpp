@@ -112,7 +112,7 @@ Lattice::EdgeDescriptor Lattice::addEdge(
         }
 
         if (iterTo != vertices_.end()) {
-            boost_to = (*iterFrom).second;
+            boost_to = (*iterTo).second;
         } else {
             boost_to = boost::add_vertex(VertexEntry(to), graph_);
             vertices_[to] = boost_to;

@@ -48,6 +48,8 @@ void PsiLatticeWriter::Worker::doRun() {
 
     PsiQuoter quoter;
 
+    std::map<Lattice::EdgeDescriptor, int> edgeOrdinalMap;
+
     Lattice::SortedEdgesIterator ei = lattice_.edgesSorted(lattice_.getLayerTagManager().anyTag());
 
     int ordinal = 0;
@@ -58,6 +60,8 @@ void PsiLatticeWriter::Worker::doRun() {
         if (lattice_.isEdgeHidden(edge)) continue;
 
         ++ordinal;
+
+        edgeOrdinalMap[edge] = ordinal;
 
         outputStream_ << std::right << std::setfill('0');
         outputStream_ << std::setw(2) << ordinal;
@@ -104,6 +108,33 @@ void PsiLatticeWriter::Worker::doRun() {
             avStr += (*avi).second;
         }
         outputStream_ << quoter.escape(avStr);
+
+        std::list<Lattice::Partition> partitions = lattice_.getEdgePartitions(edge);
+        std::string partStr = "";
+        for (
+            std::list<Lattice::Partition>::iterator pi = partitions.begin();
+            pi != partitions.end();
+            ++pi
+        ) {
+            std::stringstream linkSs;
+            for (
+                std::vector<Lattice::EdgeDescriptor>::iterator ei = (*pi).links.begin();
+                ei != (*pi).links.end();
+                ++ei
+            ) {
+                std::map<Lattice::EdgeDescriptor, int>::iterator mi = edgeOrdinalMap.find(*ei);
+                if (mi != edgeOrdinalMap.end()) {
+                    if (linkSs.str() != "") {
+                        linkSs << "-";
+                    }
+                    linkSs << (*mi).second;
+                }
+            }
+            partStr += linkSs.str();
+        }
+        if (partStr != "") {
+            outputStream_ << "[" << partStr << "]";
+        }
 
         outputStream_ << std::endl;
     }

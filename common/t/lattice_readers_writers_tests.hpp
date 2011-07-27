@@ -223,6 +223,7 @@ public:
         Lattice lattice("Ala ma&nbsp;<b>kta</b>");
         lattice.addSymbols(lattice.getFirstVertex(), lattice.getLastVertex());
 
+
         Lattice::VertexDescriptor preAla = lattice.getFirstVertex();
         Lattice::VertexDescriptor postAla = lattice.getVertexForRawCharIndex(3);
 
@@ -251,12 +252,30 @@ public:
             rawMask
         ));
 
-        lattice.addEdge(preAla, postAla, aiAla, tokenTag, 0, partitionAla);
+        Lattice::EdgeDescriptor edgeAla
+            = lattice.addEdge(preAla, postAla, aiAla, tokenTag, 0, partitionAla);
+
+
+        std::list<std::string> lemmaTagsetStr;
+        lemmaTagsetStr.push_back("lemma");
+        lemmaTagsetStr.push_back("poleng-tagset");
+        LayerTagCollection
+            lemmaTagsetTag = lattice.getLayerTagManager().createTagCollection(lemmaTagsetStr);
+
+        AnnotationItem aiAlaLemma("Ala");
+        lattice.getAnnotationItemManager().setValue(aiAlaLemma, "pos", "R:4");
+        lattice.getAnnotationItemManager().setValue(aiAlaLemma, "morpho", "ŻMP");
+
+        Lattice::Partition partitionAlaLemma;
+        partitionAlaLemma.links.push_back(edgeAla);
+
+        lattice.addEdge(preAla, postAla, aiAlaLemma, lemmaTagsetTag, 0, partitionAlaLemma);
+
 
         LatticeWriter * writer = new PsiLatticeWriter();
-/*
-        writer->writeLattice(lattice, std::cout);
 
+        // writer->writeLattice(lattice, std::cout);
+/*
         std::ostringstream osstr;
         writer->writeLattice(lattice, osstr);
 

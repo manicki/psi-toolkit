@@ -103,6 +103,13 @@ public:
         EdgeDescriptor() : descriptor(), implicitIndex(-1) { }
         EdgeDescriptor(int implicitIx) : descriptor(), implicitIndex(implicitIx) { }
         EdgeDescriptor(const Graph::edge_descriptor& ed) : descriptor(ed), implicitIndex(-1) { }
+
+        bool operator<(EdgeDescriptor other) const {
+            if (implicitIndex == -1 && other.implicitIndex == -1) {
+                return descriptor < other.descriptor;
+            }
+            return implicitIndex < other.implicitIndex;
+        }
     };
 
     struct EdgeDescriptorWrapperToFoolBoost146OrGnu461 : public Graph::edge_descriptor {
