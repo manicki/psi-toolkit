@@ -54,6 +54,9 @@ void PsiLatticeWriter::Worker::doRun() {
 
     while(ei.hasNext()) {
         Lattice::EdgeDescriptor edge = ei.next();
+
+        if (lattice_.isEdgeHidden(edge)) continue;
+
         ++ordinal;
 
         outputStream_ << std::right << std::setfill('0');
