@@ -281,7 +281,7 @@ int Lattice::getEdgeLength(Lattice::EdgeDescriptor edge) {
         return graph_[boost::target(edge.descriptor, graph_)].index
             - graph_[boost::source(edge.descriptor, graph_)].index;
     }
-    return edge.implicitIndex;
+    return edge.implicitIndex - priorVertex_(edge.implicitIndex);
 }
 
 bool Lattice::isEdgeHidden(Lattice::EdgeDescriptor edge) {
