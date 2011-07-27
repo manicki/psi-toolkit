@@ -117,7 +117,7 @@ public:
 */
     }
 
-    void testPsiLatticeWriter() {
+    void testPsiLatticeWriterSimple() {
 
         Lattice lattice("Ala ma kota");
         lattice.addSymbols(lattice.getFirstVertex(), lattice.getLastVertex());
@@ -208,7 +208,7 @@ public:
 
         std::string line;
         std::string contents;
-        std::ifstream s("../formats/psi/t/files/pl_sample_2.txt");
+        std::ifstream s("../formats/psi/t/files/pl_sample_simple.txt");
         while (getline(s, line)) {
             contents += line;
             contents += "\n";
@@ -216,6 +216,60 @@ public:
 
         TS_ASSERT_EQUALS(osstr.str(), contents);
 
+    }
+
+    void testPsiLatticeWriterAdvanced() {
+
+        Lattice lattice("Ala ma&nbsp;<b>kta</b>");
+        lattice.addSymbols(lattice.getFirstVertex(), lattice.getLastVertex());
+
+        Lattice::VertexDescriptor preAla = lattice.getFirstVertex();
+        Lattice::VertexDescriptor postAla = lattice.getVertexForRawCharIndex(3);
+
+        LayerTagCollection
+            rawTag = lattice.getLayerTagManager().createSingletonTagCollection("symbol");
+        LayerTagCollection
+            tokenTag = lattice.getLayerTagManager().createSingletonTagCollection("token");
+
+        LayerTagMask rawMask = lattice.getLayerTagManager().getMask(rawTag);
+        LayerTagMask tokenMask = lattice.getLayerTagManager().getMask(tokenTag);
+
+        AnnotationItem aiAla("'Ala'");
+        lattice.getAnnotationItemManager().setValue(aiAla, "type", "word");
+
+        Lattice::Partition partitionAla;
+        partitionAla.links.push_back(lattice.firstOutEdge(
+            lattice.getVertexForRawCharIndex(0),
+            rawMask
+        ));
+        partitionAla.links.push_back(lattice.firstOutEdge(
+            lattice.getVertexForRawCharIndex(1),
+            rawMask
+        ));
+        partitionAla.links.push_back(lattice.firstOutEdge(
+            lattice.getVertexForRawCharIndex(2),
+            rawMask
+        ));
+
+        lattice.addEdge(preAla, postAla, aiAla, tokenTag, 0, partitionAla);
+
+        LatticeWriter * writer = new PsiLatticeWriter();
+
+        writer->writeLattice(lattice, std::cout);
+/*
+        std::ostringstream osstr;
+        writer->writeLattice(lattice, osstr);
+
+        std::string line;
+        std::string contents;
+        std::ifstream s("../formats/psi/t/files/pl_sample_nocomments.txt");
+        while (getline(s, line)) {
+            contents += line;
+            contents += "\n";
+        }
+
+        TS_ASSERT_EQUALS(osstr.str(), contents);
+*/
     }
 
 };
