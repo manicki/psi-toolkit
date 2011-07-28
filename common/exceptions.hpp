@@ -22,6 +22,12 @@ public:
 };
 
 
+class NoVertexException : public Exception {
+public:
+    NoVertexException(std::string message) : Exception(message) { }
+};
+
+
 class FileFormatException : public Exception {
 public:
     FileFormatException(std::string message) : Exception(message) { }
