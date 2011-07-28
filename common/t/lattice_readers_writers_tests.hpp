@@ -1,5 +1,6 @@
 #include <iostream>
 
+#include "psi_lattice_reader.hpp"
 #include "psi_lattice_writer.hpp"
 #include "utt_lattice_reader.hpp"
 
@@ -352,6 +353,17 @@ public:
         }
 
         TS_ASSERT_EQUALS(osstr.str(), contents);
+
+    }
+
+    void testPsiLatticeReader() {
+
+        Lattice lattice("");
+        LatticeReader * reader = new PsiLatticeReader();
+
+        reader->readIntoLattice("../formats/psi/t/files/pl_sample.txt", lattice);
+
+        delete reader;
 
     }
 
