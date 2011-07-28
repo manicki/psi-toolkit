@@ -301,12 +301,13 @@ public:
 
     const AnnotationItem getEdgeAnnotationItem(EdgeDescriptor edge);
     const LayerTagCollection getEdgeLayerTags(EdgeDescriptor edge);
-    int getEdgeBeginIndex(EdgeDescriptor edge);
-    int getEdgeLength(EdgeDescriptor edge);
-    bool isEdgeHidden(EdgeDescriptor edge);
+    int getEdgeBeginIndex(EdgeDescriptor edge) const;
+    int getEdgeLength(EdgeDescriptor edge) const;
+    bool isEdgeHidden(EdgeDescriptor edge) const;
     std::list<Partition> getEdgePartitions(EdgeDescriptor edge);
 
     const std::string& getAllText() const;
+    const std::string getEdgeText(EdgeDescriptor edge) const;
 
     void runCutter(Cutter& cutter, LayerTagMask mask);
 
