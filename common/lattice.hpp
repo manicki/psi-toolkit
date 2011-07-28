@@ -187,28 +187,32 @@ public:
         int implicitIndex_;
     };
 
-    class EdgesSortedBySourceIterator {
+    class SortedEdgesIterator {
     public:
-        EdgesSortedBySourceIterator(Lattice * lattice, LayerTagMask mask);
+        SortedEdgesIterator(Lattice * lattice, LayerTagMask mask);
         bool hasNext();
         EdgeDescriptor next();
-    private:
+    protected:
         Lattice * lattice_;
         LayerTagMask mask_;
-        VertexIterator vi_;
         InOutEdgesIterator ei_;
+    private:
+        VertexIterator vi_;
+        virtual InOutEdgesIterator getEdgesIterator_(VertexDescriptor vd) = 0;
     };
 
-    class EdgesSortedByTargetIterator {
+    class EdgesSortedBySourceIterator : public SortedEdgesIterator {
+    public:
+        EdgesSortedBySourceIterator(Lattice * lattice, LayerTagMask mask);
+    private:
+        virtual InOutEdgesIterator getEdgesIterator_(VertexDescriptor vd);
+    };
+
+    class EdgesSortedByTargetIterator : public SortedEdgesIterator {
     public:
         EdgesSortedByTargetIterator(Lattice * lattice, LayerTagMask mask);
-        bool hasNext();
-        EdgeDescriptor next();
     private:
-        Lattice * lattice_;
-        LayerTagMask mask_;
-        VertexIterator vi_;
-        InOutEdgesIterator ei_;
+        virtual InOutEdgesIterator getEdgesIterator_(VertexDescriptor vd);
     };
 
     Lattice();

@@ -419,67 +419,61 @@ Lattice::EdgeDescriptor Lattice::InOutEdgesIterator::next() {
 
 
 
-Lattice::EdgesSortedBySourceIterator::EdgesSortedBySourceIterator(
+Lattice::SortedEdgesIterator::SortedEdgesIterator(
     Lattice * lattice,
     LayerTagMask mask
 ) :
     lattice_(lattice),
     mask_(mask),
-    vi_(lattice),
-    ei_(lattice->outEdges(0, mask))
+    vi_(lattice)
 {
     vi_.next();
 }
 
-bool Lattice::EdgesSortedBySourceIterator::hasNext() {
+bool Lattice::SortedEdgesIterator::hasNext() {
     if (ei_.hasNext()) return true;
     while (vi_.hasNext()) {
-        ei_ = lattice_->outEdges(vi_.next(), mask_);
+        ei_ = getEdgesIterator_(vi_.next());
         if (ei_.hasNext()) return true;
     }
     return false;
 }
 
-Lattice::EdgeDescriptor Lattice::EdgesSortedBySourceIterator::next() {
+Lattice::EdgeDescriptor Lattice::SortedEdgesIterator::next() {
     if (ei_.hasNext()) return ei_.next();
     while (vi_.hasNext()) {
-        ei_ = lattice_->outEdges(vi_.next(), mask_);
+        ei_ = getEdgesIterator_(vi_.next());
         if (ei_.hasNext()) return ei_.next();
     }
     throw NoEdgeException("Iterator has no next edges.");
 }
 
+Lattice::EdgesSortedBySourceIterator::EdgesSortedBySourceIterator(
+    Lattice * lattice,
+    LayerTagMask mask
+) : SortedEdgesIterator(lattice, mask) {
+    ei_ = lattice_->outEdges(0, mask_);
+}
 
+Lattice::InOutEdgesIterator Lattice::EdgesSortedBySourceIterator::getEdgesIterator_(
+    Lattice::VertexDescriptor vd
+) {
+    return lattice_->outEdges(vd, mask_);
+}
 
 Lattice::EdgesSortedByTargetIterator::EdgesSortedByTargetIterator(
     Lattice * lattice,
     LayerTagMask mask
-) :
-    lattice_(lattice),
-    mask_(mask),
-    vi_(lattice),
-    ei_(lattice->inEdges(0, mask))
-{
-    vi_.next();
+) : SortedEdgesIterator(lattice, mask) {
+    ei_ = lattice_->inEdges(0, mask_);
 }
 
-bool Lattice::EdgesSortedByTargetIterator::hasNext() {
-    if (ei_.hasNext()) return true;
-    while (vi_.hasNext()) {
-        ei_ = lattice_->inEdges(vi_.next(), mask_);
-        if (ei_.hasNext()) return true;
-    }
-    return false;
+Lattice::InOutEdgesIterator Lattice::EdgesSortedByTargetIterator::getEdgesIterator_(
+    Lattice::VertexDescriptor vd
+) {
+    return lattice_->inEdges(vd, mask_);
 }
 
-Lattice::EdgeDescriptor Lattice::EdgesSortedByTargetIterator::next() {
-    if (ei_.hasNext()) return ei_.next();
-    while (vi_.hasNext()) {
-        ei_ = lattice_->inEdges(vi_.next(), mask_);
-        if (ei_.hasNext()) return ei_.next();
-    }
-    throw NoEdgeException("Iterator has no next edges.");
-}
 
 
 
