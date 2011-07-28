@@ -1,5 +1,5 @@
-#ifndef UTT_LATTICE_READER_HDR
-#define UTT_LATTICE_READER_HDR
+#ifndef PSI_LATTICE_READER_HDR
+#define PSI_LATTICE_READER_HDR
 
 
 #include "lattice_reader.hpp"
