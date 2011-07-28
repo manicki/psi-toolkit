@@ -274,7 +274,7 @@ public:
 
         LatticeWriter * writer = new PsiLatticeWriter();
 
-        writer->writeLattice(lattice, std::cout);
+        // writer->writeLattice(lattice, std::cout);
 /*
         std::ostringstream osstr;
         writer->writeLattice(lattice, osstr);
