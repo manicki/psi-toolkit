@@ -183,6 +183,9 @@ Lattice::InOutEdgesIterator Lattice::inEdges(
     Lattice::VertexDescriptor vertex,
     LayerTagMask mask
 ) {
+    if (vertex < 1) {
+        return InOutEdgesIterator();
+    }
     VertexDescriptor priorVertex = priorVertex_(vertex);
     std::map<int, Graph::vertex_descriptor>::iterator iter = vertices_.find(vertex);
     if (iter == vertices_.end()) {
@@ -289,7 +292,11 @@ int Lattice::getEdgeLength(Lattice::EdgeDescriptor edge) {
         return graph_[boost::target(edge.descriptor, graph_)].index
             - graph_[boost::source(edge.descriptor, graph_)].index;
     }
-    return edge.implicitIndex - priorVertex_(edge.implicitIndex);
+    std::string::iterator iter = allText_.begin() + edge.implicitIndex;
+    std::string::iterator end = allText_.end();
+    std::string symbol;
+    utf8::append(utf8::next(iter, end), std::back_inserter(symbol));
+    return symbol.length();
 }
 
 bool Lattice::isEdgeHidden(Lattice::EdgeDescriptor edge) {
@@ -346,6 +353,9 @@ int Lattice::addTagCollectionIndex_(LayerTagCollection tags) {
 }
 
 Lattice::VertexDescriptor Lattice::priorVertex_(Lattice::VertexDescriptor vertex) {
+    if (vertex < 1) {
+        throw NoVertexException("Beginning vertex has no prior vertex.");
+    }
     std::string::iterator begin = allText_.begin();
     std::string::iterator iter = begin + vertex;
     std::string symbol;
@@ -360,7 +370,7 @@ bool Lattice::VertexIterator::hasNext() {
         if (
             lattice_->vertices_.find(vd_) != lattice_->vertices_.end()
             || lattice_->implicitOutEdges_[vd_]
-            || lattice_->implicitOutEdges_[lattice_->priorVertex_(vd_)]
+            || (vd_ > 0 && lattice_->implicitOutEdges_[lattice_->priorVertex_(vd_)])
         ) {
             return true;
         }
@@ -374,7 +384,7 @@ Lattice::VertexDescriptor Lattice::VertexIterator::next() {
         if (
             lattice_->vertices_.find(vd_) != lattice_->vertices_.end()
             || lattice_->implicitOutEdges_[vd_]
-            || lattice_->implicitOutEdges_[lattice_->priorVertex_(vd_)]
+            || (vd_ > 0 && lattice_->implicitOutEdges_[lattice_->priorVertex_(vd_)])
         ) {
             return vd_++;
         }
