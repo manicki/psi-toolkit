@@ -319,6 +319,7 @@ public:
 
     const std::string& getAllText() const;
     const std::string getEdgeText(EdgeDescriptor edge) const;
+    const std::string getPartitionText(Partition partition) const;
 
     void runCutter(Cutter& cutter, LayerTagMask mask);
 

@@ -341,12 +341,24 @@ const std::string Lattice::getEdgeText(EdgeDescriptor edge) const {
     return allText_.substr(getEdgeBeginIndex(edge), getEdgeLength(edge));
 }
 
-void Lattice::runCutter(Cutter& cutter, LayerTagMask mask) {
-    std::string text;
+const std::string Lattice::getPartitionText(Partition partition) const {
+    std::string r;
 
+    for(std::vector<EdgeDescriptor>::iterator it = partition.links.begin();
+        it != partition.links.end();
+        ++it)
+        r += getEdgeText(*it);
+
+    return r;
+}
+
+
+void Lattice::runCutter(Cutter& cutter, LayerTagMask mask) {
     VertexDescriptor vertex = getFirstVertex();
 
     Partition partition = getPath(vertex, mask);
+
+    std::string text = getPartitionText(partition);
 }
 
 Lattice::Partition Lattice::getPath(VertexDescriptor& vertex, LayerTagMask mask) {
