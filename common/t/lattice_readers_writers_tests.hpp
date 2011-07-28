@@ -221,7 +221,14 @@ public:
     void testPsiLatticeWriterAdvanced() {
 
         Lattice lattice("Ala ma&nbsp;<b>kta</b>");
-        lattice.addSymbols(lattice.getFirstVertex(), lattice.getVertexForRawCharIndex(4));
+        lattice.addSymbols(
+            lattice.getFirstVertex(),
+            lattice.getVertexForRawCharIndex(6)
+        );
+        lattice.addSymbols(
+            lattice.getVertexForRawCharIndex(12),
+            lattice.getVertexForRawCharIndex(12)
+        );
 
 
         Lattice::VertexDescriptor preAla = lattice.getFirstVertex();
@@ -301,13 +308,37 @@ public:
             rawMask
         ));
 
-        Lattice::EdgeDescriptor edgeBlank
-            = lattice.addEdge(postAla, preMa, aiBlank, tokenTag, 0, partitionBlank);
+        lattice.addEdge(postAla, preMa, aiBlank, tokenTag, 0, partitionBlank);
+
+
+        Lattice::VertexDescriptor postMa = lattice.getVertexForRawCharIndex(6);
+
+        AnnotationItem aiMa("'ma'");
+        lattice.getAnnotationItemManager().setValue(aiMa, "type", "word");
+
+        Lattice::Partition partitionMa;
+        partitionMa.links.push_back(lattice.firstOutEdge(
+            lattice.getVertexForRawCharIndex(4),
+            rawMask
+        ));
+        partitionMa.links.push_back(lattice.firstOutEdge(
+            lattice.getVertexForRawCharIndex(5),
+            rawMask
+        ));
+
+        lattice.addEdge(preMa, postMa, aiMa, tokenTag, 0, partitionMa);
+
+
+        Lattice::VertexDescriptor preKota = lattice.getVertexForRawCharIndex(12);
+
+        AnnotationItem aiNbsp("' ");
+
+        lattice.addEdge(postMa, preKota, aiNbsp, rawTag);
 
 
         LatticeWriter * writer = new PsiLatticeWriter();
 
-        // writer->writeLattice(lattice, std::cout);
+        writer->writeLattice(lattice, std::cout);
 
         std::ostringstream osstr;
         writer->writeLattice(lattice, osstr);

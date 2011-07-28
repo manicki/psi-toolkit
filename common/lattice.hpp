@@ -337,6 +337,8 @@ private:
 
     VertexDescriptor priorVertex_(VertexDescriptor vertex);
 
+    int symbolLength_(VertexDescriptor vertex) const;
+
 
     struct HashFun {
         HASH_WRAPPER_EXTRA_STUFF

@@ -85,7 +85,10 @@ Lattice::EdgeDescriptor Lattice::addEdge(
             ++edgeCounterHash_[vpair];
         }
 
-        if (tags == layerTagManager_.createSingletonTagCollection("symbol")) {
+        if (
+            tags == layerTagManager_.createSingletonTagCollection("symbol")
+            && from + symbolLength_(from) == to
+        ) {
             implicitOutEdges_.set(from, true);
             return EdgeDescriptor(from);
         }
@@ -292,11 +295,7 @@ int Lattice::getEdgeLength(Lattice::EdgeDescriptor edge) const {
         return graph_[boost::target(edge.descriptor, graph_)].index
             - graph_[boost::source(edge.descriptor, graph_)].index;
     }
-    std::string::const_iterator iter = allText_.begin() + edge.implicitIndex;
-    std::string::const_iterator end = allText_.end();
-    std::string symbol;
-    utf8::append(utf8::next(iter, end), std::back_inserter(symbol));
-    return symbol.length();
+    return symbolLength_(edge.implicitIndex);
 }
 
 bool Lattice::isEdgeHidden(Lattice::EdgeDescriptor edge) const {
@@ -372,6 +371,14 @@ Lattice::VertexDescriptor Lattice::priorVertex_(Lattice::VertexDescriptor vertex
     std::string symbol;
     utf8::append(utf8::prior(iter, begin), std::back_inserter(symbol));
     return vertex - symbol.length();
+}
+
+int Lattice::symbolLength_(Lattice::VertexDescriptor vertex) const {
+    std::string::const_iterator iter = allText_.begin() + vertex;
+    std::string::const_iterator end = allText_.end();
+    std::string symbol;
+    utf8::append(utf8::next(iter, end), std::back_inserter(symbol));
+    return symbol.length();
 }
 
 
