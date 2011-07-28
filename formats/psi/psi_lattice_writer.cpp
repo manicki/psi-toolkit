@@ -95,6 +95,11 @@ void PsiLatticeWriter::Worker::doRun() {
 
         outputStream_ << quoter.escape(annotationItem.getCategory());
 
+        Lattice::Score score = lattice_.getEdgeScore(edge);
+        if (score != 0.0) {
+            outputStream_ << "<" << score << ">";
+        }
+
         std::string avStr = "";
         std::list< std::pair<std::string, std::string> > avPairs
             = lattice_.getAnnotationItemManager().getValues(annotationItem);
