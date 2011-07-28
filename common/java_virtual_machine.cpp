@@ -16,14 +16,8 @@ JavaVirtualMachine* JavaVirtualMachine::Instance () {
 }
      
 JavaVirtualMachine::JavaVirtualMachine() {	// constructor
-
-	printf("Hello JVM\n");
-	printf("%i\n", JNI_VERSION);
-
 	javaVM = NULL;
 	jniENV = create(&javaVM);
-	
-	printf("");
 }
 
 JNIEnv* JavaVirtualMachine::create(JavaVM ** jvm) {
