@@ -310,6 +310,13 @@ std::list<Lattice::Partition> Lattice::getEdgePartitions(Lattice::EdgeDescriptor
     return std::list<Lattice::Partition>();
 }
 
+Lattice::Score Lattice::getEdgeScore(Lattice::EdgeDescriptor edge) const {
+    if (edge.implicitIndex < 0) {
+        return graph_[edge.descriptor].score;
+    }
+    return 0.0;
+}
+
 const std::string& Lattice::getAllText() const {
     return allText_;
 }

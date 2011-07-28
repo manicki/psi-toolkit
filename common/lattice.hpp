@@ -305,6 +305,7 @@ public:
     int getEdgeLength(EdgeDescriptor edge) const;
     bool isEdgeHidden(EdgeDescriptor edge) const;
     std::list<Partition> getEdgePartitions(EdgeDescriptor edge);
+    Score getEdgeScore(EdgeDescriptor edge) const;
 
     const std::string& getAllText() const;
     const std::string getEdgeText(EdgeDescriptor edge) const;
