@@ -11,6 +11,8 @@
 #include <boost/spirit/include/qi.hpp>
 
 #include "lattice_reader.hpp"
+#include "quoter.hpp"
+#include "psi_quoter.hpp"
 
 
 using namespace boost::spirit;
@@ -79,14 +81,28 @@ class PsiLatticeReader : public LatticeReader {
 public:
 
     /**
-     * Gets format name (here: "UTT").
+     * Gets format name (here: "Psi").
      */
     std::string getFormatName();
 
 private:
     virtual std::string doInfo();
 
-    virtual void doReadIntoLattice(std::istream& inputStream, Lattice& lattice);
+    class Worker : public ReaderWorker {
+    public:
+        Worker(PsiLatticeReader& processor,
+               std::istream& inputStream,
+               Lattice& lattice);
+
+        virtual void doRun();
+
+    private:
+        PsiLatticeReader& processor_;
+    };
+
+    virtual ReaderWorker* doCreateReaderWorker(std::istream& inputStream, Lattice& lattice) {
+        return new Worker(*this, inputStream, lattice);
+    }
 
 };
 

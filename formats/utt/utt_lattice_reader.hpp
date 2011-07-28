@@ -28,11 +28,9 @@ struct UTTLRItem {
     std::string unused;
 
     void unescape(Quoter & quoter) {
-        // Quoter * quoter = new UTTQuoter();
         segmentType = quoter.unescape(segmentType);
         form = quoter.unescape(form);
         annotations = quoter.unescape(annotations);
-        // delete quoter;
     }
 };
 
@@ -83,8 +81,6 @@ public:
 
 private:
     virtual std::string doInfo();
-
-    // virtual void doReadIntoLattice(std::istream& inputStream, Lattice& lattice);
 
     class Worker : public ReaderWorker {
     public:
