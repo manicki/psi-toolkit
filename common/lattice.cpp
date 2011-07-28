@@ -292,11 +292,7 @@ int Lattice::getEdgeLength(Lattice::EdgeDescriptor edge) const {
         return graph_[boost::target(edge.descriptor, graph_)].index
             - graph_[boost::source(edge.descriptor, graph_)].index;
     }
-    std::string::const_iterator iter = allText_.begin() + edge.implicitIndex;
-    std::string::const_iterator end = allText_.end();
-    std::string symbol;
-    utf8::append(utf8::next(iter, end), std::back_inserter(symbol));
-    return symbol.length();
+    return symbolLength_(edge.implicitIndex);
 }
 
 bool Lattice::isEdgeHidden(Lattice::EdgeDescriptor edge) const {
@@ -317,6 +313,23 @@ Lattice::Score Lattice::getEdgeScore(Lattice::EdgeDescriptor edge) const {
     return 0.0;
 }
 
+Lattice::VertexDescriptor Lattice::getEdgeSource(EdgeDescriptor edge) const {
+    if (edge.implicitIndex < 0) {
+        return VertexDescriptor(boost::source(edge.descriptor, graph_));
+    }
+
+    return VertexDescriptor(edge.implicitIndex);
+}
+
+Lattice::VertexDescriptor Lattice::getEdgeTarget(EdgeDescriptor edge) const {
+    if (edge.implicitIndex < 0) {
+        return VertexDescriptor(boost::target(edge.descriptor, graph_));
+    }
+
+    return VertexDescriptor(edge.implicitIndex + symbolLength_(edge.implicitIndex));
+}
+
+
 const std::string& Lattice::getAllText() const {
     return allText_;
 }
@@ -326,7 +339,35 @@ const std::string Lattice::getEdgeText(EdgeDescriptor edge) const {
 }
 
 void Lattice::runCutter(Cutter& cutter, LayerTagMask mask) {
-    // TODO
+    std::string text;
+
+    VertexDescriptor vertex = getFirstVertex();
+
+    Partition partition = getPath(vertex, mask);
+}
+
+Lattice::Partition Lattice::getPath(VertexDescriptor& vertex, LayerTagMask mask) {
+    bool nextVertexFound = true;
+
+    Lattice::Partition path;
+
+    do {
+        InOutEdgesIterator iter = outEdges(vertex, mask);
+
+        if (iter.hasNext()) {
+            EdgeDescriptor bestOne = iter.next();
+
+            while (iter.hasNext())
+                bestOne = iter.next();
+
+            path.addEdge(bestOne);
+            vertex = getEdgeTarget(bestOne);
+        } else
+            nextVertexFound = false;
+
+    } while(nextVertexFound);
+
+    return path;
 }
 
 int Lattice::addTagCollectionIndex_(LayerTagCollection tags) {
@@ -374,7 +415,13 @@ Lattice::VertexDescriptor Lattice::priorVertex_(Lattice::VertexDescriptor vertex
     return vertex - symbol.length();
 }
 
-
+size_t Lattice::symbolLength_(int ix) const {
+    std::string::const_iterator iter = allText_.begin() + ix;
+    std::string::const_iterator end = allText_.end();
+    std::string symbol;
+    utf8::append(utf8::next(iter, end), std::back_inserter(symbol));
+    return symbol.length();
+}
 
 bool Lattice::VertexIterator::hasNext() {
     while (vd_ <= lattice_->allText_.length()) {

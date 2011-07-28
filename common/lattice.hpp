@@ -94,6 +94,14 @@ public:
 
     struct Partition {
         std::vector<EdgeDescriptor> links;
+
+        void addEdge(EdgeDescriptor edge) {
+            links.push_back(edge);
+        }
+
+        int size() {
+            return links.size();
+        }
     };
 
     struct EdgeDescriptor {
@@ -306,11 +314,23 @@ public:
     bool isEdgeHidden(EdgeDescriptor edge) const;
     std::list<Partition> getEdgePartitions(EdgeDescriptor edge);
     Score getEdgeScore(EdgeDescriptor edge) const;
+    VertexDescriptor getEdgeSource(EdgeDescriptor edge) const;
+    VertexDescriptor getEdgeTarget(EdgeDescriptor edge) const;
 
     const std::string& getAllText() const;
     const std::string getEdgeText(EdgeDescriptor edge) const;
 
     void runCutter(Cutter& cutter, LayerTagMask mask);
+
+    /**
+     * Get a path starting with `vertex` composed of edges matching `mask`.
+     * The final vertex of the returned path will be assigned to `vertex`.
+     * The path is returned as a partition.
+     *
+     * If there are multiple outgoing edges matching `mask` the best
+     * one is chosen (the last one with the higher score).
+     */
+    Lattice::Partition getPath(VertexDescriptor& vertex, LayerTagMask mask);
 
 private:
 
@@ -337,6 +357,7 @@ private:
 
     VertexDescriptor priorVertex_(VertexDescriptor vertex);
 
+    size_t symbolLength_(int ix) const;
 
     struct HashFun {
         HASH_WRAPPER_EXTRA_STUFF

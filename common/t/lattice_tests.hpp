@@ -245,6 +245,21 @@ public:
         TS_ASSERT(!tokenIter.hasNext());
     }
 
+    void test_get_path() {
+        Lattice lattice;
+        lattice.appendStringWithSymbols("ćma zielona");
+        lattice.appendString("<br>");
+        lattice.appendString("mucha");
+
+        LayerTagMask symbolMask = lattice.getLayerTagManager().getMask("symbol");
+
+        Lattice::VertexDescriptor vertex = lattice.getFirstVertex();
+
+        Lattice::Partition partition = lattice.getPath(vertex, symbolMask);
+
+        TS_ASSERT_EQUALS(partition.size(), 11);
+    }
+
     void bla_test_cutter() {
         Lattice lattice;
         lattice.appendStringWithSymbols("zielony rower");
