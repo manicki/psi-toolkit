@@ -268,7 +268,7 @@ const AnnotationItem Lattice::getEdgeAnnotationItem(Lattice::EdgeDescriptor edge
     }
     std::string::iterator iter = allText_.begin() + edge.implicitIndex;
     std::string::iterator end = allText_.end();
-    std::string symbol;
+    std::string symbol = "'";
     utf8::append(utf8::next(iter, end), std::back_inserter(symbol));
     return AnnotationItem(symbol);
 }
