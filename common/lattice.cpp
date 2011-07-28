@@ -366,7 +366,7 @@ Lattice::VertexDescriptor Lattice::priorVertex_(Lattice::VertexDescriptor vertex
 
 
 bool Lattice::VertexIterator::hasNext() {
-    while (vd_ < lattice_->allText_.length()) {
+    while (vd_ <= lattice_->allText_.length()) {
         if (
             lattice_->vertices_.find(vd_) != lattice_->vertices_.end()
             || lattice_->implicitOutEdges_[vd_]
@@ -380,7 +380,7 @@ bool Lattice::VertexIterator::hasNext() {
 }
 
 Lattice::VertexDescriptor Lattice::VertexIterator::next() {
-    while (vd_ < lattice_->allText_.length()) {
+    while (vd_ <= lattice_->allText_.length()) {
         if (
             lattice_->vertices_.find(vd_) != lattice_->vertices_.end()
             || lattice_->implicitOutEdges_[vd_]
