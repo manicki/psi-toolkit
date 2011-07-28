@@ -249,13 +249,16 @@ public:
         Lattice lattice;
         lattice.appendStringWithSymbols("ćma zielona");
         lattice.appendString("<br>");
-        lattice.appendString("mucha");
+        lattice.appendStringWithSymbols("mucha");
 
         LayerTagMask symbolMask = lattice.getLayerTagManager().getMask("symbol");
 
         Lattice::VertexDescriptor vertex = lattice.getFirstVertex();
 
         Lattice::Partition partition = lattice.getPath(vertex, symbolMask);
+
+        InOutEdgesIterator iter = lattice.outEdges(vertex, symbolMask);
+        TS_ASSERT(!iter.hasNext());
 
         TS_ASSERT_EQUALS(partition.size(), 11);
     }
