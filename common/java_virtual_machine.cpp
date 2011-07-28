@@ -17,6 +17,7 @@ JavaVirtualMachine* JavaVirtualMachine::Instance () {
      
 JavaVirtualMachine::JavaVirtualMachine() {	// constructor
 	javaVM = NULL;
+	inited = false;
 	jniENV = create(&javaVM);
 }
 
@@ -39,6 +40,9 @@ JNIEnv* JavaVirtualMachine::create(JavaVM ** jvm) {
   if (result < 0) {
 		// it should be an exception
   	printf("Unable to Launch JVM\n");
+	}
+	else {
+		inited = true;
 	}
   return env;
 }
