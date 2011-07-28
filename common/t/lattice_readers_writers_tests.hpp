@@ -221,7 +221,7 @@ public:
     void testPsiLatticeWriterAdvanced() {
 
         Lattice lattice("Ala ma&nbsp;<b>kta</b>");
-        lattice.addSymbols(lattice.getFirstVertex(), lattice.getLastVertex());
+        lattice.addSymbols(lattice.getFirstVertex(), lattice.getVertexForRawCharIndex(4));
 
 
         Lattice::VertexDescriptor preAla = lattice.getFirstVertex();
@@ -269,13 +269,46 @@ public:
         Lattice::Partition partitionAlaLemma;
         partitionAlaLemma.links.push_back(edgeAla);
 
-        lattice.addEdge(preAla, postAla, aiAlaLemma, lemmaTagsetTag, 0, partitionAlaLemma);
+        Lattice::EdgeDescriptor edgeAlaLemma
+            = lattice.addEdge(preAla, postAla, aiAlaLemma, lemmaTagsetTag, 0, partitionAlaLemma);
+
+
+        std::list<std::string> parseGobioStr;
+        parseGobioStr.push_back("parse");
+        parseGobioStr.push_back("gobio");
+        LayerTagCollection
+            parseGobioTag = lattice.getLayerTagManager().createTagCollection(parseGobioStr);
+
+        AnnotationItem aiRzeczownik("rzeczownik");
+        lattice.getAnnotationItemManager().setValue(aiRzeczownik, "R", "4");
+        lattice.getAnnotationItemManager().setValue(aiRzeczownik, "L", "1");
+        lattice.getAnnotationItemManager().setValue(aiRzeczownik, "P", "mian");
+
+        Lattice::Partition partitionRzeczownik;
+        partitionRzeczownik.links.push_back(edgeAlaLemma);
+
+        lattice.addEdge(preAla, postAla, aiRzeczownik, parseGobioTag, 0, partitionRzeczownik);
+
+
+        Lattice::VertexDescriptor preMa = lattice.getVertexForRawCharIndex(4);
+
+        AnnotationItem aiBlank("' '");
+        lattice.getAnnotationItemManager().setValue(aiBlank, "type", "blank");
+
+        Lattice::Partition partitionBlank;
+        partitionBlank.links.push_back(lattice.firstOutEdge(
+            lattice.getVertexForRawCharIndex(3),
+            rawMask
+        ));
+
+        Lattice::EdgeDescriptor edgeBlank
+            = lattice.addEdge(postAla, preMa, aiBlank, tokenTag, 0, partitionBlank);
 
 
         LatticeWriter * writer = new PsiLatticeWriter();
 
         // writer->writeLattice(lattice, std::cout);
-/*
+
         std::ostringstream osstr;
         writer->writeLattice(lattice, osstr);
 
@@ -288,7 +321,7 @@ public:
         }
 
         TS_ASSERT_EQUALS(osstr.str(), contents);
-*/
+
     }
 
 };
