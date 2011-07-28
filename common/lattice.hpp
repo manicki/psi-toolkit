@@ -187,9 +187,9 @@ public:
         int implicitIndex_;
     };
 
-    class SortedEdgesIterator {
+    class EdgesSortedBySourceIterator {
     public:
-        SortedEdgesIterator(Lattice * lattice, LayerTagMask mask);
+        EdgesSortedBySourceIterator(Lattice * lattice, LayerTagMask mask);
         bool hasNext();
         EdgeDescriptor next();
     private:
@@ -266,9 +266,9 @@ public:
 
 
     // returns the list of edges which have at least one layer tag from `mask` sorted
-    SortedEdgesIterator edgesSorted(LayerTagMask mask);
+    EdgesSortedBySourceIterator edgesSortedBySource(LayerTagMask mask);
 
-    SortedEdgesIterator allEdgesSorted();
+    EdgesSortedBySourceIterator allEdgesSortedBySource();
 
     LayerTagManager& getLayerTagManager();
     AnnotationItemManager& getAnnotationItemManager();

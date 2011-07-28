@@ -50,7 +50,8 @@ void PsiLatticeWriter::Worker::doRun() {
 
     std::map<Lattice::EdgeDescriptor, int> edgeOrdinalMap;
 
-    Lattice::SortedEdgesIterator ei = lattice_.edgesSorted(lattice_.getLayerTagManager().anyTag());
+    Lattice::EdgesSortedBySourceIterator ei
+        = lattice_.edgesSortedBySource(lattice_.getLayerTagManager().anyTag());
 
     int ordinal = 0;
 

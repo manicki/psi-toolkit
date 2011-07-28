@@ -235,12 +235,12 @@ Lattice::EdgeDescriptor Lattice::firstInEdge(
     throw NoEdgeException("No in-edges found.");
 }
 
-Lattice::SortedEdgesIterator Lattice::edgesSorted(LayerTagMask mask) {
-    return Lattice::SortedEdgesIterator(this, mask);
+Lattice::EdgesSortedBySourceIterator Lattice::edgesSortedBySource(LayerTagMask mask) {
+    return Lattice::EdgesSortedBySourceIterator(this, mask);
 }
 
-Lattice::SortedEdgesIterator Lattice::allEdgesSorted() {
-    return edgesSorted(layerTagManager_.anyTag());
+Lattice::EdgesSortedBySourceIterator Lattice::allEdgesSortedBySource() {
+    return edgesSortedBySource(layerTagManager_.anyTag());
 }
 
 LayerTagManager& Lattice::getLayerTagManager() {
@@ -411,7 +411,7 @@ Lattice::EdgeDescriptor Lattice::InOutEdgesIterator::next() {
 
 
 
-Lattice::SortedEdgesIterator::SortedEdgesIterator(
+Lattice::EdgesSortedBySourceIterator::EdgesSortedBySourceIterator(
     Lattice * lattice,
     LayerTagMask mask
 ) :
@@ -423,7 +423,7 @@ Lattice::SortedEdgesIterator::SortedEdgesIterator(
     vi_.next();
 }
 
-bool Lattice::SortedEdgesIterator::hasNext() {
+bool Lattice::EdgesSortedBySourceIterator::hasNext() {
     if (ei_.hasNext()) return true;
     while (vi_.hasNext()) {
         ei_ = lattice_->outEdges(vi_.next(), mask_);
@@ -432,7 +432,7 @@ bool Lattice::SortedEdgesIterator::hasNext() {
     return false;
 }
 
-Lattice::EdgeDescriptor Lattice::SortedEdgesIterator::next() {
+Lattice::EdgeDescriptor Lattice::EdgesSortedBySourceIterator::next() {
     if (ei_.hasNext()) return ei_.next();
     while (vi_.hasNext()) {
         ei_ = lattice_->outEdges(vi_.next(), mask_);
