@@ -268,7 +268,7 @@ const AnnotationItem Lattice::getEdgeAnnotationItem(Lattice::EdgeDescriptor edge
     }
     std::string::iterator iter = allText_.begin() + edge.implicitIndex;
     std::string::iterator end = allText_.end();
-    std::string symbol;
+    std::string symbol = "'";
     utf8::append(utf8::next(iter, end), std::back_inserter(symbol));
     return AnnotationItem(symbol);
 }
@@ -280,26 +280,26 @@ const LayerTagCollection Lattice::getEdgeLayerTags(Lattice::EdgeDescriptor edge)
     return layerTagManager_.createSingletonTagCollection("symbol");
 }
 
-int Lattice::getEdgeBeginIndex(Lattice::EdgeDescriptor edge) {
+int Lattice::getEdgeBeginIndex(Lattice::EdgeDescriptor edge) const {
     if (edge.implicitIndex < 0) {
         return graph_[boost::source(edge.descriptor, graph_)].index;
     }
     return edge.implicitIndex;
 }
 
-int Lattice::getEdgeLength(Lattice::EdgeDescriptor edge) {
+int Lattice::getEdgeLength(Lattice::EdgeDescriptor edge) const {
     if (edge.implicitIndex < 0) {
         return graph_[boost::target(edge.descriptor, graph_)].index
             - graph_[boost::source(edge.descriptor, graph_)].index;
     }
-    std::string::iterator iter = allText_.begin() + edge.implicitIndex;
-    std::string::iterator end = allText_.end();
+    std::string::const_iterator iter = allText_.begin() + edge.implicitIndex;
+    std::string::const_iterator end = allText_.end();
     std::string symbol;
     utf8::append(utf8::next(iter, end), std::back_inserter(symbol));
     return symbol.length();
 }
 
-bool Lattice::isEdgeHidden(Lattice::EdgeDescriptor edge) {
+bool Lattice::isEdgeHidden(Lattice::EdgeDescriptor edge) const {
     return edge.implicitIndex > -1 && hiddenImplicitOutEdges_[edge.implicitIndex];
 }
 
@@ -312,6 +312,10 @@ std::list<Lattice::Partition> Lattice::getEdgePartitions(Lattice::EdgeDescriptor
 
 const std::string& Lattice::getAllText() const {
     return allText_;
+}
+
+const std::string Lattice::getEdgeText(EdgeDescriptor edge) const {
+    return allText_.substr(getEdgeBeginIndex(edge), getEdgeLength(edge));
 }
 
 void Lattice::runCutter(Cutter& cutter, LayerTagMask mask) {

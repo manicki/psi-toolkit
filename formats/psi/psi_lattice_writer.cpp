@@ -74,7 +74,7 @@ void PsiLatticeWriter::Worker::doRun() {
 
         outputStream_ << std::left << std::setfill(' ');
         const AnnotationItem& annotationItem = lattice_.getEdgeAnnotationItem(edge);
-        outputStream_ << std::setw(12) << quoter.escape(annotationItem.getCategory().substr(0,12));
+        outputStream_ << std::setw(12) << quoter.escape(lattice_.getEdgeText(edge));
         outputStream_ << " ";
 
         std::string tagStr = "";
