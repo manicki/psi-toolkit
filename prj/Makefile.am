@@ -1,4 +1,4 @@
-bin_PROGRAMS = runner psi-pipe
+bin_PROGRAMS = runner psi-pipe puddle
 
 cpprog=`echo $${CPPROG-cp -d -r}`
 
@@ -99,7 +99,6 @@ psi_pipe_CPPFLAGS = ${compiler_flags} \
     -I../utf8 \
     -I../utf8/utf8
 
-
 data_to_be_installed = install-testfiles
 
 install-testfiles:
@@ -110,3 +109,42 @@ install-testfiles:
 
 install-data-hook: $(data_to_be_installed)
 
+puddle_SOURCES = \
+	../tools/parsers/puddle/puddle_main.cpp \
+    ../tools/parsers/puddle/action.cpp \
+    ../tools/parsers/puddle/add_action.cpp \
+    ../tools/parsers/puddle/attach_action.cpp \
+    ../tools/parsers/puddle/delete_action.cpp \
+    ../tools/parsers/puddle/entity.cpp \
+    ../tools/parsers/puddle/graph_writer.cpp \
+    ../tools/parsers/puddle/group_action.cpp \
+    ../tools/parsers/puddle/group.cpp \
+    ../tools/parsers/puddle/join_action.cpp \
+    ../tools/parsers/puddle/parse_converter.cpp \
+    ../tools/parsers/puddle/puddle.cpp \
+    ../tools/parsers/puddle/rule.cpp \
+    ../tools/parsers/puddle/rule_loader.cpp \
+    ../tools/parsers/puddle/rule_matcher.cpp \
+    ../tools/parsers/puddle/rule_modifier.cpp \
+    ../tools/parsers/puddle/sentence_tagger.cpp \
+    ../tools/parsers/puddle/special_token.cpp \
+    ../tools/parsers/puddle/syntok_action.cpp \
+    ../tools/parsers/puddle/syntok.cpp \
+    ../tools/parsers/puddle/tagger.cpp \
+    ../tools/parsers/puddle/tagset.cpp \
+    ../tools/parsers/puddle/tagset_loader.cpp \
+    ../tools/parsers/puddle/token.cpp \
+    ../tools/parsers/puddle/transform_action.cpp \
+    ../tools/parsers/puddle/unify_action.cpp
+
+puddle_SOURCES += /home/leszekm/poleng/poleng4/src/bonsai/common/ParseGraph.cpp \
+	/home/leszekm/poleng/poleng4/src/bonsai/common/TransitionInfo.cpp \
+	/home/leszekm/poleng/poleng4/src/bonsai/common/TransferTypes.cpp
+
+puddle_CPPFLAGS = ${compiler_flags} \
+	-I/home/leszekm/poleng/poleng4/src/bonsai/common # -I/home/leszekm/poleng/poleng4/lib/linux/icu/include -I/home/leszekm/poleng/poleng4/lib/linux/boost/include/boost-1_37 -I/home/leszekm/poleng/poleng4/lib/linux/boost/include/boost-1_37/boost
+
+LIBS += \
+	-lre2 \
+	-licuuc -licudata -licui18n -licuio \
+	-lboost_graph -lboost_serialization -lboost_program_options -lboost_wserialization -lboost_regex #-L/home/leszekm/poleng/poleng4/lib/linux/icu/lib -L/home/leszekm/poleng/poleng4/lib/linux/boost/lib -lboost_graph-gcc44 -lboost_serialization-gcc44 -lboost_program_options-gcc44 -lboost_wserialization-gcc44 -lboost_regex-gcc44
