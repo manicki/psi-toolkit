@@ -85,7 +85,10 @@ Lattice::EdgeDescriptor Lattice::addEdge(
             ++edgeCounterHash_[vpair];
         }
 
-        if (tags == layerTagManager_.createSingletonTagCollection("symbol")) {
+        if (
+            tags == layerTagManager_.createSingletonTagCollection("symbol")
+            && from + symbolLength_(from) == to
+        ) {
             implicitOutEdges_.set(from, true);
             return EdgeDescriptor(from);
         }

@@ -1,5 +1,6 @@
 #include <iostream>
 
+#include "psi_lattice_reader.hpp"
 #include "psi_lattice_writer.hpp"
 #include "utt_lattice_reader.hpp"
 
@@ -221,7 +222,14 @@ public:
     void testPsiLatticeWriterAdvanced() {
 
         Lattice lattice("Ala ma&nbsp;<b>kta</b>");
-        lattice.addSymbols(lattice.getFirstVertex(), lattice.getLastVertex());
+        lattice.addSymbols(
+            lattice.getFirstVertex(),
+            lattice.getVertexForRawCharIndex(6)
+        );
+        lattice.addSymbols(
+            lattice.getVertexForRawCharIndex(12),
+            lattice.getVertexForRawCharIndex(12)
+        );
 
 
         Lattice::VertexDescriptor preAla = lattice.getFirstVertex();
@@ -269,13 +277,70 @@ public:
         Lattice::Partition partitionAlaLemma;
         partitionAlaLemma.links.push_back(edgeAla);
 
-        lattice.addEdge(preAla, postAla, aiAlaLemma, lemmaTagsetTag, 0, partitionAlaLemma);
+        Lattice::EdgeDescriptor edgeAlaLemma
+            = lattice.addEdge(preAla, postAla, aiAlaLemma, lemmaTagsetTag, 0, partitionAlaLemma);
+
+
+        std::list<std::string> parseGobioStr;
+        parseGobioStr.push_back("parse");
+        parseGobioStr.push_back("gobio");
+        LayerTagCollection
+            parseGobioTag = lattice.getLayerTagManager().createTagCollection(parseGobioStr);
+
+        AnnotationItem aiRzeczownik("rzeczownik");
+        lattice.getAnnotationItemManager().setValue(aiRzeczownik, "R", "4");
+        lattice.getAnnotationItemManager().setValue(aiRzeczownik, "L", "1");
+        lattice.getAnnotationItemManager().setValue(aiRzeczownik, "P", "mian");
+
+        Lattice::Partition partitionRzeczownik;
+        partitionRzeczownik.links.push_back(edgeAlaLemma);
+
+        lattice.addEdge(preAla, postAla, aiRzeczownik, parseGobioTag, 0, partitionRzeczownik);
+
+
+        Lattice::VertexDescriptor preMa = lattice.getVertexForRawCharIndex(4);
+
+        AnnotationItem aiBlank("' '");
+        lattice.getAnnotationItemManager().setValue(aiBlank, "type", "blank");
+
+        Lattice::Partition partitionBlank;
+        partitionBlank.links.push_back(lattice.firstOutEdge(
+            lattice.getVertexForRawCharIndex(3),
+            rawMask
+        ));
+
+        lattice.addEdge(postAla, preMa, aiBlank, tokenTag, 0, partitionBlank);
+
+
+        Lattice::VertexDescriptor postMa = lattice.getVertexForRawCharIndex(6);
+
+        AnnotationItem aiMa("'ma'");
+        lattice.getAnnotationItemManager().setValue(aiMa, "type", "word");
+
+        Lattice::Partition partitionMa;
+        partitionMa.links.push_back(lattice.firstOutEdge(
+            lattice.getVertexForRawCharIndex(4),
+            rawMask
+        ));
+        partitionMa.links.push_back(lattice.firstOutEdge(
+            lattice.getVertexForRawCharIndex(5),
+            rawMask
+        ));
+
+        lattice.addEdge(preMa, postMa, aiMa, tokenTag, 0, partitionMa);
+
+
+        Lattice::VertexDescriptor preKota = lattice.getVertexForRawCharIndex(12);
+
+        AnnotationItem aiNbsp("' ");
+
+        lattice.addEdge(postMa, preKota, aiNbsp, rawTag);
 
 
         LatticeWriter * writer = new PsiLatticeWriter();
 
         // writer->writeLattice(lattice, std::cout);
-/*
+
         std::ostringstream osstr;
         writer->writeLattice(lattice, osstr);
 
@@ -288,7 +353,18 @@ public:
         }
 
         TS_ASSERT_EQUALS(osstr.str(), contents);
-*/
+
+    }
+
+    void testPsiLatticeReader() {
+
+        Lattice lattice("");
+        LatticeReader * reader = new PsiLatticeReader();
+
+        reader->readIntoLattice("../formats/psi/t/files/pl_sample.txt", lattice);
+
+        delete reader;
+
     }
 
 };

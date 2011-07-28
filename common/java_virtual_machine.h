@@ -17,7 +17,7 @@ class JavaVirtualMachine {
 	static JavaVirtualMachine* Instance();
 
 	private:
-	int inited;
+	bool inited;
 	JavaVM* javaVM;
 	JNIEnv* jniENV;
 	JNIEnv* create(JavaVM ** jvm);

@@ -1,7 +1,7 @@
 #                                               -*- Autoconf -*-
 # Process this file with autoconf to produce a configure script.
 
-AC_PREREQ([2.67])
+AC_PREREQ([2.65])
 AC_INIT([PSI-TOOLS], [2011.07.11], [BUG-REPORT-ADDRESS])
 
 AM_INIT_AUTOMAKE

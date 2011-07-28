@@ -257,7 +257,7 @@ public:
 
         Lattice::Partition partition = lattice.getPath(vertex, symbolMask);
 
-        InOutEdgesIterator iter = lattice.outEdges(vertex, symbolMask);
+        Lattice::InOutEdgesIterator iter = lattice.outEdges(vertex, symbolMask);
         TS_ASSERT(!iter.hasNext());
 
         TS_ASSERT_EQUALS(partition.size(), 11);
