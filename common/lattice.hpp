@@ -199,6 +199,18 @@ public:
         InOutEdgesIterator ei_;
     };
 
+    class EdgesSortedByTargetIterator {
+    public:
+        EdgesSortedByTargetIterator(Lattice * lattice, LayerTagMask mask);
+        bool hasNext();
+        EdgeDescriptor next();
+    private:
+        Lattice * lattice_;
+        LayerTagMask mask_;
+        VertexIterator vi_;
+        InOutEdgesIterator ei_;
+    };
+
     Lattice();
 
     /**
@@ -264,11 +276,21 @@ public:
     EdgeDescriptor firstOutEdge(VertexDescriptor vertex, LayerTagMask mask);
     EdgeDescriptor firstInEdge(VertexDescriptor vertex, LayerTagMask mask);
 
-
-    // returns the list of edges which have at least one layer tag from `mask` sorted
+    /**
+     * returns the list of edges which have at least one layer tag from `mask`
+     * sorted by source vertex
+     */
     EdgesSortedBySourceIterator edgesSortedBySource(LayerTagMask mask);
 
     EdgesSortedBySourceIterator allEdgesSortedBySource();
+
+    /**
+     * returns the list of edges which have at least one layer tag from `mask`
+     * sorted by target vertex
+     */
+    EdgesSortedByTargetIterator edgesSortedByTarget(LayerTagMask mask);
+
+    EdgesSortedByTargetIterator allEdgesSortedByTarget();
 
     LayerTagManager& getLayerTagManager();
     AnnotationItemManager& getAnnotationItemManager();
