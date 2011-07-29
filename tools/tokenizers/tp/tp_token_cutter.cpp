@@ -8,8 +8,12 @@ AnnotationItem TpTokenCutter::doCutOff(const std::string& text, size_t& position
         return AnnotationItem("' '");
     }
     else {
-        // could be string::npos and it will be ok
-        std::string cat = std::string("'") + text.substr(positionInText, spacePosition) + std::string("'");
+        std::string token = text.substr(positionInText,
+                                        (spacePosition == std::string::npos ?
+                                         std::string::npos :
+                                         spacePosition - positionInText));
+
+        std::string cat = std::string("'") + token + std::string("'");
         positionInText = spacePosition;
         return AnnotationItem(cat);
     }

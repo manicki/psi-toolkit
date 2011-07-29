@@ -40,7 +40,7 @@ private:
     /**
      * private constructor! only LayerTagManager can be used to create layer tag masks
      */
-    LayerTagMask(LayerTagCollection tags) : any_(false), none_(false), tags_(tags) { }
+    LayerTagMask(LayerTagCollection tags) : tags_(tags), any_(false), none_(false) { }
 
     /**
      * private constructor! only LayerTagManager can be used to create layer tag masks.

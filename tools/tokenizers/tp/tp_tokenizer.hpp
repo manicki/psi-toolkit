@@ -26,7 +26,7 @@ public:
 
 private:
 
-    class Worker : LatticeWorker {
+    class Worker : public LatticeWorker {
     public:
         Worker(Processor& processor, Lattice& lattice);
     private:

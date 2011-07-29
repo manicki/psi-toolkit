@@ -99,9 +99,18 @@ public:
             links.push_back(edge);
         }
 
-        int size() {
+        int size() const {
             return links.size();
         }
+
+        EdgeDescriptor firstEdge() const {
+            return links.front();
+        }
+
+        EdgeDescriptor lastEdge() const {
+            return links.back();
+        }
+
     };
 
     struct EdgeDescriptor {
@@ -359,6 +368,12 @@ private:
     VertexDescriptor priorVertex_(VertexDescriptor vertex);
 
     size_t symbolLength_(int ix) const;
+
+    VertexDescriptor firstPartitionVertex_(const Partition& partition) const;
+    VertexDescriptor lastPartitionVertex_(const Partition& partition) const;
+    Partition cutPartitionByTextLength_(const Partition& partition,
+                                        std::vector<EdgeDescriptor>::const_iterator& partitionIterator,
+                                        int length);
 
     struct HashFun {
         HASH_WRAPPER_EXTRA_STUFF

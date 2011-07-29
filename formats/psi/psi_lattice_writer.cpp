@@ -46,6 +46,8 @@ PsiLatticeWriter::Worker::Worker(PsiLatticeWriter& processor,
 
 void PsiLatticeWriter::Worker::doRun() {
 
+    DEBUG("starting writer...");
+
     PsiQuoter quoter;
 
     std::map<Lattice::EdgeDescriptor, int> edgeOrdinalMap;

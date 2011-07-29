@@ -359,6 +359,29 @@ void Lattice::runCutter(Cutter& cutter, LayerTagMask mask) {
     Partition partition = getPath(vertex, mask);
 
     std::string text = getPartitionText(partition);
+
+    size_t pos = 0;
+    std::vector<EdgeDescriptor>::const_iterator partitionIter = partition.links.begin();
+
+    LayerTagCollection tags = layerTagManager_.createTagCollection(cutter.layerTags());
+
+    do {
+        size_t prevPos = pos;
+
+        AnnotationItem item = cutter.cutOff(text, pos);
+
+        int itemLength = (pos == std::string::npos ? text.length() : pos) - prevPos;
+
+        Partition itemPartition = cutPartitionByTextLength_(partition, partitionIter, itemLength);
+
+        addEdge(firstPartitionVertex_(itemPartition),
+                lastPartitionVertex_(itemPartition),
+                item,
+                tags,
+                0.0,
+                itemPartition);
+
+    } while (pos != std::string::npos);
 }
 
 Lattice::Partition Lattice::getPath(VertexDescriptor& vertex, LayerTagMask mask) {
@@ -437,6 +460,30 @@ size_t Lattice::symbolLength_(int ix) const {
     utf8::append(utf8::next(iter, end), std::back_inserter(symbol));
     return symbol.length();
 }
+
+Lattice::VertexDescriptor Lattice::firstPartitionVertex_(const Partition& partition) const {
+    return getEdgeSource(partition.firstEdge());
+}
+
+Lattice::VertexDescriptor Lattice::lastPartitionVertex_(const Partition& partition) const {
+    return getEdgeTarget(partition.lastEdge());
+}
+
+Lattice::Partition Lattice::cutPartitionByTextLength_(const Partition& partition,
+                                                      std::vector<EdgeDescriptor>::const_iterator& partitionIterator,
+                                                      int length) {
+    int lengthGathered = 0;
+
+    Partition ret;
+
+    for(;
+        partitionIterator != partition.links.end() && lengthGathered < length;
+        ++partitionIterator, lengthGathered += getEdgeText(*partitionIterator).length())
+        ret.links.push_back(*partitionIterator);
+
+    return ret;
+}
+
 
 bool Lattice::VertexIterator::hasNext() {
     while (vd_ <= lattice_->allText_.length()) {

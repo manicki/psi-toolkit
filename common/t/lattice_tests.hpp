@@ -263,9 +263,9 @@ public:
         TS_ASSERT_EQUALS(partition.size(), 11);
     }
 
-    void bla_test_cutter() {
+    void test_cutter() {
         Lattice lattice;
-        lattice.appendStringWithSymbols("zielony rower");
+        lattice.appendStringWithSymbols("szybki zielony rower");
 
         BySpacesCutter cutter;
 
@@ -280,17 +280,27 @@ public:
         TS_ASSERT(tokenIter.hasNext());
         TS_ASSERT_EQUALS(
             lattice.getEdgeAnnotationItem(tokenIter.next()).getCategory(),
-            "rower");
+            "'szybki'");
 
         TS_ASSERT(tokenIter.hasNext());
         TS_ASSERT_EQUALS(
             lattice.getEdgeAnnotationItem(tokenIter.next()).getCategory(),
-            " ");
+            "' '");
 
         TS_ASSERT(tokenIter.hasNext());
         TS_ASSERT_EQUALS(
             lattice.getEdgeAnnotationItem(tokenIter.next()).getCategory(),
-            "zielony");
+            "'zielony'");
+
+        TS_ASSERT(tokenIter.hasNext());
+        TS_ASSERT_EQUALS(
+            lattice.getEdgeAnnotationItem(tokenIter.next()).getCategory(),
+            "' '");
+
+        TS_ASSERT(tokenIter.hasNext());
+        TS_ASSERT_EQUALS(
+            lattice.getEdgeAnnotationItem(tokenIter.next()).getCategory(),
+            "'rower'");
 
         TS_ASSERT(!tokenIter.hasNext());
     }
