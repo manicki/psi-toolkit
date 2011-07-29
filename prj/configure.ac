@@ -13,6 +13,12 @@ AC_CONFIG_HEADERS([config.h])
 AC_PROG_CXX
 AC_PROG_CC
 
+compiler_flags="\
+        -Wall \
+        "
+
+CPPFLAGS="$compiler_flags $CPP_FLAGS"
+
 # Checks for libraries.
 
 # Checks for header files.
