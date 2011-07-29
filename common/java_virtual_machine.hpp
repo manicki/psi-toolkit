@@ -1,3 +1,6 @@
+#ifndef JAVA_VIRTUAL_MACHINE_HDR
+#define JAVA_VIRTUAL_MACHINE_HDR
+
 #include <jni.h>
 #include <string>
 
@@ -13,6 +16,7 @@ class JavaVirtualMachine {
 	JavaVM* getJVM();
 	JNIEnv* getENV();
 	static void setJavaPaths(string classPath, string libraryPath);
+	static void setJavaClassPath(string);
 
 	static JavaVirtualMachine* Instance();
 
@@ -28,3 +32,4 @@ class JavaVirtualMachine {
   JavaVirtualMachine& operator= (const JavaVirtualMachine&);
 
 };
+#endif

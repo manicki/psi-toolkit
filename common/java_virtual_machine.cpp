@@ -1,9 +1,7 @@
-#include "java_virtual_machine.h"
-#include <stdio.h>
-
+#include "java_virtual_machine.hpp"
 
 jint const JavaVirtualMachine::JNI_VERSION = JNI_VERSION_1_6;
-string JavaVirtualMachine::javaClassPath = "";
+string JavaVirtualMachine::javaClassPath = "../common/java";
 string JavaVirtualMachine::javaLibraryPath = "";
 
 JavaVirtualMachine* JavaVirtualMachine::jvmInstance = NULL;
@@ -58,3 +56,7 @@ void JavaVirtualMachine::setJavaPaths(string classPath, string libraryPath) {
 	javaClassPath = classPath;
 	javaLibraryPath = libraryPath;
 }
+void JavaVirtualMachine::setJavaClassPath(string classPath) {
+	javaClassPath = classPath;
+}
+
