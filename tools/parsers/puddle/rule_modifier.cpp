@@ -56,7 +56,7 @@ void RuleModifier::setRules(RulesPtr aRules)
     rules = aRules;
 }
 
-void RuleModifier::setRuleCompiler(RuleCompiler *aRuleCompiler)
+void RuleModifier::setRuleCompiler(RuleLoader *aRuleCompiler)
 {
     ruleCompiler = aRuleCompiler;
 }

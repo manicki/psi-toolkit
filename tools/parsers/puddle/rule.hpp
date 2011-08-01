@@ -4,10 +4,10 @@
 #include <vector>
 #include <string>
 
-#include <boost/regex.hpp>
-#include <boost/regex/icu.hpp>
+//#include <boost/regex.hpp>
+//#include <boost/regex/icu.hpp>
 
-#include "utf8_converter.hpp"
+//#include "utf8_converter.hpp"
 
 #include "TransitionInfo.hpp"
 #include "entity.hpp"
@@ -36,7 +36,7 @@ class Rule
 {
     public:
         Rule();
-        Rule(std::string aName, std::string aCompiled, int aLeftCount, int aMatchCount, int aRightCount, ActionsPtr aActions, std::vector<std::string> aTokensPatterns, std::vector<std::string> aTokensModifiers, std::vector<bool> aTokensRequired, std::vector<int> aMatchedIndexes, bool aRepeat, std::string aLeft, std::string aMatch, std::string aRight);
+        Rule(std::string aName, std::string aCompiled, int aLeftCount, int aMatchCount, int aRightCount, ActionsPtr aActions, std::vector<std::string> aTokensPatterns, std::vector<std::string> aTokensModifiers, std::vector<bool> aTokensRequired, std::vector<int> aMatchedIndexes, bool aRepeat, std::string aLeft, std::string aMatch, std::string aRight); //@todo: zmienic tu typy, bo mnie krew zaleje
         ~Rule();
 
         bool test(std::string &sentence, Entities &entities, int currentEntity);
@@ -90,7 +90,9 @@ class Rule
         std::string beforeMatch;
         int countEntities(std::string matched);
 
-        boost::match_results<std::string::const_iterator> match;
+        //boost::match_results<std::string::const_iterator> match;
+        re2::StringPiece *match;
+        bool match_set; //note: to jest nowosc, przy zmianie biblioteki wyr. reg. - moze nie byc to konieczne koniec koncow
         std::string matching;
 
         std::vector<std::string> tokensPatterns;

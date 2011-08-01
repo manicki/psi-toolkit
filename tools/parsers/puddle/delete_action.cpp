@@ -5,17 +5,15 @@
 #include "group.hpp"
 #include "syntok.hpp"
 
-namespace poleng
-{
+namespace poleng {
 
-namespace bonsai
-{
-    namespace puddle
-    {
+    namespace bonsai {
+        namespace puddle {
 
-DeleteAction::DeleteAction(std::string aPattern, int aTokenIndex, std::string uPattern)
-{
-    pattern = boost::make_u32regex(aPattern);
+DeleteAction::DeleteAction(std::string aPattern, int aTokenIndex, std::string uPattern) {
+    //pattern = boost::make_u32regex(aPattern);
+    //pattern();
+    pattern = PatternPtr(new RE2(aPattern));
     patternString = aPattern;
     tokenIndex = aTokenIndex;
     type = "delete";
@@ -226,8 +224,8 @@ bool DeleteAction::test(Entities entities, int currentEntity, std::vector<int> m
 //            std::cout << "Interpretejszyn: " << *i << std::endl;
             std::string compare = token->getOrth() + "<" + *i;
          //   std::cerr << "Takie wyrazenie: " << pattern.str() << std::endl;
-            if (boost::u32regex_match(compare, pattern))
-            {
+            //if (boost::u32regex_match(compare, pattern)) {
+            if (RE2::FullMatch(compare, *pattern)) {
 //                std::cout << "Wyrzucac bede token o indeksie: " << (currentEntity + entIndex) << std::endl;
                 ret = true;
 //                compare.reset();
@@ -262,8 +260,8 @@ bool DeleteAction::test(Entities entities, int currentEntity, std::vector<int> m
 //            std::cout << "Interpretejszyn: " << *i << std::endl;
             std::string compare = token->getOrth() + "<" + *i;
         //    std::cerr << "Takie wyrazenie: " << pattern.str() << std::endl;
-            if (boost::u32regex_match(compare, pattern))
-            {
+            //if (boost::u32regex_match(compare, pattern)) {
+            if (RE2::FullMatch(compare, *pattern)) {
                 ret = true;
                 //compare.reset();
 //                std::cerr << "Spasowalem: " << compare << " z " << getPattern() << std::endl;
@@ -288,8 +286,8 @@ bool DeleteAction::test(Entities entities, int currentEntity, std::vector<int> m
         while (i != interps.end())
         {
             std::string compare = syntok->getOrth() + "<" + *i;
-            if (boost::u32regex_match(compare, pattern))
-            {
+            //if (boost::u32regex_match(compare, pattern))
+            if (RE2::FullMatch(compare, *pattern)) {
                 ret = true;
                 //compare.reset();
                 break;
@@ -313,7 +311,8 @@ bool DeleteAction::test(Entities entities, int currentEntity, std::vector<int> m
 
 void DeleteAction::setPattern(std::string aPattern)
 {
-    pattern = boost::make_u32regex(aPattern);
+    //pattern = boost::make_u32regex(aPattern);
+    pattern = PatternPtr(new RE2(aPattern));
     patternString = aPattern;
 }
 

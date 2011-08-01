@@ -13,26 +13,26 @@ namespace bonsai
 
 Tagger::Tagger()
 {
+    //@todo: przeniesc to do jakiejs funkcji init_szatan
     data = new std::map<std::string, std::string>;
 
-    regSeparator = "\\s+";
-    regDigit = "\\d+(\\.\\d+)?";
-    regPunct = "[\\.,;:!\\?<>&\\-\\(\\)\\[\\]\"`'\\+\\*\\|~]+";
-    regInterpSeparator = "; ";
+    //regSeparator = PatternPtr(new RE2("\\s+"));
+    regDigit = PatternPtr(new RE2("\\d+(\\.\\d+)?"));
+    regPunct = PatternPtr(new RE2("[\\.,;:!\\?<>&\\-\\(\\)\\[\\]\"`'\\+\\*\\|~]+"));
+    interpSeparator = ";";
 //    regEscAmp = "(&amp;)";
 //    regEscLt = "(&lt;)";
 //    regEscGt = "(&gt;)";
-    regAmp = "&";
-    regLt = "<";
-    regGt = ">";
-    regLPar = "\\(";
-    regRPar = "\\)";
-    regAlt = "\\|";
-    regPlus = "\\+";
-    regAsterisk = "\\*";
-    regOpt = "\\?";
+    regAmp = PatternPtr(new RE2("&"));
+    regLt = PatternPtr(new RE2("<"));
+    regGt = PatternPtr(new RE2(">"));
+    regLPar = PatternPtr(new RE2("\\("));
+    regRPar = PatternPtr(new RE2("\\)"));
+    regAlt = PatternPtr(new RE2("\\|"));
+    regPlus = PatternPtr(new RE2("\\+"));
+    regAsterisk = PatternPtr(new RE2("\\*"));
+    regOpt = PatternPtr(new RE2("\\?"));
 
-    regSep = "\\|";
 //    regEscLPar = "&lpar;";
 //    regEscRPar = "&rpar;";
 
@@ -47,16 +47,14 @@ Tagger::~Tagger()
 //    delete tagset;
 }
 
-void Tagger::loadDictionary(std::string &filename)
-{
+void Tagger::loadDictionary(std::string &filename) {
     std::ifstream input(filename.c_str());
     boost::archive::text_iarchive ia(input);
     ia >> *data;
     input.close();
 }
 
-void Tagger::setTagset(TagsetPtr aTagset)
-{
+void Tagger::setTagset(TagsetPtr aTagset) {
     //delete tagset;
     tagset = aTagset;
     emptyMorphology = "";
@@ -69,13 +67,13 @@ void Tagger::setTagset(TagsetPtr aTagset)
     }
 }
 
-std::string Tagger::tagSentence(std::string sentence, Entities &entities, Edges &edges)
-{
+std::string Tagger::tagSentence(std::string sentence, Entities &entities,
+        Edges &edges) {
     std::stringstream cs;
     std::stringstream ss;   //pomocniczy one
     int tokenCount = 0;
 
-    regSeparator = "\\s+";
+    //regSeparator = "\\s+";
 
     SpecialToken *sb = new SpecialToken();
     std::string id = "0";
@@ -92,11 +90,15 @@ std::string Tagger::tagSentence(std::string sentence, Entities &entities, Edges 
     cs << "<<s<0<sb<>";
     tokenCount ++;
 
-    boost::regex_token_iterator<std::string::iterator> u(sentence.begin(), sentence.end(), regSeparator, -1);
-    boost::regex_token_iterator<std::string::iterator> v;
-    while (u != v)
-    {
-        std::string token = *u;
+    std::string tokSeparator = " ";
+    std::vector<std::string> tokensVector;
+    boost::split(tokensVector, sentence, boost::is_any_of(tokSeparator));
+    //boost::regex_token_iterator<std::string::iterator> u(sentence.begin(), sentence.end(), regSeparator, -1);
+    //boost::regex_token_iterator<std::string::iterator> v;
+    //while (u != v)
+    for (std::vector<std::string>::iterator tok_it = tokensVector.begin();
+            tok_it != tokensVector.end(); tok_it ++) {
+        std::string token = boost::trim_copy(*tok_it);
 
         std::string compiledToken = "<<t";
         std::stringstream sss;// = new std::stringstream;
@@ -117,34 +119,40 @@ std::string Tagger::tagSentence(std::string sentence, Entities &entities, Edges 
         ti->setDepth(0);
         ti->setId(id);
 
-        if (boost::regex_match(token, regPunct))
-        {
-            token = boost::regex_replace(token, regAmp, "\\&amp;", boost::match_default | boost::format_sed);
-            token = boost::regex_replace(token, regLt, "\\&lt;", boost::match_default | boost::format_sed);
-            token = boost::regex_replace(token, regGt, "\\&gt;", boost::match_default | boost::format_sed);
-            token = boost::regex_replace(token, regLPar, "\\&lpar;", boost::match_default | boost::format_sed);
-            token = boost::regex_replace(token, regRPar, "\\&rpar;", boost::match_default | boost::format_sed);
-            token = boost::regex_replace(token, regAlt, "\\&bar;", boost::match_default | boost::format_sed);
-            token = boost::regex_replace(token, regPlus, "\\&plus;", boost::match_default | boost::format_sed);
-            token = boost::regex_replace(token, regAsterisk, "\\&astr;", boost::match_default | boost::format_sed);
-            token = boost::regex_replace(token, regOpt, "\\&qmark;", boost::match_default | boost::format_sed);
+        //if (boost::regex_match(token, regPunct))
+        if (RE2::FullMatch(token, *regPunct)) {
+//            token = boost::regex_replace(token, regAmp, "\\&amp;", boost::match_default | boost::format_sed);
+//            token = boost::regex_replace(token, regLt, "\\&lt;", boost::match_default | boost::format_sed);
+//            token = boost::regex_replace(token, regGt, "\\&gt;", boost::match_default | boost::format_sed);
+//            token = boost::regex_replace(token, regLPar, "\\&lpar;", boost::match_default | boost::format_sed);
+//            token = boost::regex_replace(token, regRPar, "\\&rpar;", boost::match_default | boost::format_sed);
+//            token = boost::regex_replace(token, regAlt, "\\&bar;", boost::match_default | boost::format_sed);
+//            token = boost::regex_replace(token, regPlus, "\\&plus;", boost::match_default | boost::format_sed);
+//            token = boost::regex_replace(token, regAsterisk, "\\&astr;", boost::match_default | boost::format_sed);
+//            token = boost::regex_replace(token, regOpt, "\\&qmark;", boost::match_default | boost::format_sed);
+            //@todo: przeniesc takie rzeczy do jakiejs ogolnej metody
+            RE2::GlobalReplace(&token, *regAmp, "\\&amp;");
+            RE2::GlobalReplace(&token, *regLt, "\\&lt;");
+            RE2::GlobalReplace(&token, *regGt, "\\&gt;");
+            RE2::GlobalReplace(&token, *regLPar, "\\&lpar;");
+            RE2::GlobalReplace(&token, *regRPar, "\\&rpar;");
+            RE2::GlobalReplace(&token, *regAlt, "\\&bar;");
+            RE2::GlobalReplace(&token, *regPlus, "\\&plus;");
+            RE2::GlobalReplace(&token, *regAsterisk, "\\&astr;");
+            RE2::GlobalReplace(&token, *regOpt, "\\&qmark;");
 
             compiledToken += "<" + token;
             tok->setOrth(token);
             ti->setLabel(token);
 
             std::string pos = "";
-            if (!boost::regex_match(token, regDigit))
-            {
+            if (!RE2::FullMatch(token, *regDigit)) {
                 pos = "interp";
-            }
-            else
-            {
+            } else {
                 pos = "ign";
             }
             std::string mapped = tagset->mapMorphology(pos);
-            if (mapped == "")
-            {
+            if (mapped == "") {
                 mapped = emptyMorphology;
                 //                        std::cerr << "Nie ma skompilowanej interpretacji morfologicznej: " << ctag << " dla " << orth << "!!!!!!" << std::endl;
             }
@@ -166,49 +174,52 @@ std::string Tagger::tagSentence(std::string sentence, Entities &entities, Edges 
 
             //delete pos;
             ti->addMorphology(posInfo);
-        }
-        else
-        {
+        } else {
             bool orthSet = false;
 
-            token = boost::regex_replace(token, regAmp, "\\&amp;", boost::match_default | boost::format_sed);
-            token = boost::regex_replace(token, regLt, "\\&lt;", boost::match_default | boost::format_sed);
-            token = boost::regex_replace(token, regGt, "\\&gt;", boost::match_default | boost::format_sed);
-            token = boost::regex_replace(token, regLPar, "\\&lpar;", boost::match_default | boost::format_sed);
-            token = boost::regex_replace(token, regRPar, "\\&rpar;", boost::match_default | boost::format_sed);
-            token = boost::regex_replace(token, regAlt, "\\&bar;", boost::match_default | boost::format_sed);
-            token = boost::regex_replace(token, regPlus, "\\&plus;", boost::match_default | boost::format_sed);
-            token = boost::regex_replace(token, regAsterisk, "\\&astr;", boost::match_default | boost::format_sed);
-            token = boost::regex_replace(token, regOpt, "\\&qmark;", boost::match_default | boost::format_sed);
+            RE2::GlobalReplace(&token, *regAmp, "\\&amp;");
+            RE2::GlobalReplace(&token, *regLt, "\\&lt;");
+            RE2::GlobalReplace(&token, *regGt, "\\&gt;");
+            RE2::GlobalReplace(&token, *regLPar, "\\&lpar;");
+            RE2::GlobalReplace(&token, *regRPar, "\\&rpar;");
+            RE2::GlobalReplace(&token, *regAlt, "\\&bar;");
+            RE2::GlobalReplace(&token, *regPlus, "\\&plus;");
+            RE2::GlobalReplace(&token, *regAsterisk, "\\&astr;");
+            RE2::GlobalReplace(&token, *regOpt, "\\&qmark;");
 
 //            *compiledToken += "<" + token;
 //            tok->setOrth(token);
 //            ti->setLabel(token);
 
             std::string lowcase = token;
-            UnicodeString valL = icuConverter::fromUtf(token);
-            valL.toLower();
-            StringCharacterIterator itL(valL);
-            std::stringstream ss;
-            while (itL.hasNext())
-            {
-                UnicodeString tl = itL.current();
-                ss << icuConverter::toUtf(tl);
-                itL.next();
-            }
-            lowcase = ss.str();
-            std::string titlecase = token;
-            UnicodeString valUf = icuConverter::fromUtf(token);
-            valUf.toTitle(0);
-            StringCharacterIterator itUf(valUf);
-            std::stringstream ss2;
-            while (itUf.hasNext())
-            {
-                UnicodeString tuf = itUf.current();
-                ss2 << icuConverter::toUtf(tuf);
-                itUf.next();
-            }
-            titlecase = ss2.str();
+            boost::to_lower(lowcase);
+//            UnicodeString valL = icuConverter::fromUtf(token);
+//            valL.toLower();
+//            StringCharacterIterator itL(valL);
+//            std::stringstream ss;
+//            while (itL.hasNext())
+//            {
+//                UnicodeString tl = itL.current();
+//                ss << icuConverter::toUtf(tl);
+//                itL.next();
+//            }
+//            lowcase = ss.str();
+            //std::string titlecase = token;
+            std::string titlecase = token.substr(0,1);
+            boost::to_upper(titlecase);
+            if (token.size() > 1)
+                titlecase += token.substr(1, std::string::npos);
+//            UnicodeString valUf = icuConverter::fromUtf(token);
+//            valUf.toTitle(0);
+//            StringCharacterIterator itUf(valUf);
+//            std::stringstream ss2;
+//            while (itUf.hasNext())
+//            {
+//                UnicodeString tuf = itUf.current();
+//                ss2 << icuConverter::toUtf(tuf);
+//                itUf.next();
+//            }
+//            titlecase = ss2.str();
 
 ////zmiana przez Państwo, Parlament, 20.07.2009
 //            if (lowcase != token)
@@ -220,25 +231,27 @@ std::string Tagger::tagSentence(std::string sentence, Entities &entities, Edges 
             //std::transform(token.begin(), token.end(), lowcase.begin(), ::tolower);
 
             std::map<std::string, std::string>::iterator it = data->find(token);
-            if (it != data->end())
-            {
+            if (it != data->end()) {
                 orthSet = true;
                 compiledToken += "<" + token;
                 tok->setOrth(token);
                 ti->setLabel(token);
 
                 std::string interps = it->second;
-                boost::regex_token_iterator<std::string::iterator> i(interps.begin(), interps.end(), regInterpSeparator, -1);
-                boost::regex_token_iterator<std::string::iterator> j;
-                while (i != j)
-                {
-                    std::string interp = *i;
-                    boost::algorithm::trim(interp);
+                std::vector<std::string> interpsVector;
+                boost::split(interpsVector, interps, boost::is_any_of(interpSeparator));
+                //boost::regex_token_iterator<std::string::iterator> i(interps.begin(), interps.end(), regInterpSeparator, -1);
+                //boost::regex_token_iterator<std::string::iterator> j;
+                //while (i != j)
+                for (std::vector<std::string>::iterator interp_it = interpsVector.begin();
+                        interp_it != interpsVector.end(); interp_it ++ ) {
+                    std::string interp = boost::algorithm::trim_copy(*interp_it);
+                    //boost::algorithm::trim(interp);
                     std::string base = interp.substr(0, interp.find(":", 1));
-                    std::string ctag = interp.substr(interp.find(":", 1) + 1, std::string::npos);
+                    std::string ctag = interp.substr(interp.find(":", 1) + 1,
+                                                     std::string::npos);
                     std::string mapped = tagset->mapMorphology(ctag);
-                    if (mapped == "")
-                    {
+                    if (mapped == "") {
                         mapped = emptyMorphology;
 //                        std::cerr << "Nie ma skompilowanej interpretacji morfologicznej: " << ctag << " dla " << token << "!!!!!!" << std::endl;
                     }
@@ -264,7 +277,7 @@ std::string Tagger::tagSentence(std::string sentence, Entities &entities, Edges 
                     //delete ctag;
                     ti->addMorphology(posInfo);
 
-                    i ++;
+                    //i ++;
                 }
             }
             else
@@ -278,8 +291,7 @@ std::string Tagger::tagSentence(std::string sentence, Entities &entities, Edges 
 
                     std::string pos = "ign";
                     std::string mapped = tagset->mapMorphology(pos);
-                    if (mapped == "")
-                    {
+                    if (mapped == "") {
                         mapped = emptyMorphology;
 //                                                std::cerr << "Nie ma skompilowanej interpretacji morfologicznej: " << ctag << " dla " << orth << "!!!!!!" << std::endl;
                     }
@@ -304,8 +316,7 @@ std::string Tagger::tagSentence(std::string sentence, Entities &entities, Edges 
                 }
             }
 
-            if (token != lowcase)
-            {
+            if (token != lowcase) {
                 it = data->find(lowcase);
                 if (it != data->end())
                 {
@@ -321,12 +332,15 @@ std::string Tagger::tagSentence(std::string sentence, Entities &entities, Edges 
                     }
 
                     std::string interps = it->second;
-                    boost::regex_token_iterator<std::string::iterator> i(interps.begin(), interps.end(), regInterpSeparator, -1);
-                    boost::regex_token_iterator<std::string::iterator> j;
-                    while (i != j)
-                    {
-                        std::string interp = *i;
-                        boost::algorithm::trim(interp);
+                    std::vector<std::string> interpsVector;
+                    boost::split(interpsVector, interps, boost::is_any_of(interpSeparator));
+//                    boost::regex_token_iterator<std::string::iterator> i(interps.begin(), interps.end(), regInterpSeparator, -1);
+//                    boost::regex_token_iterator<std::string::iterator> j;
+//                    while (i != j)
+                    for (std::vector<std::string>::iterator interp_it = interpsVector.begin();
+                            interp_it != interpsVector.end(); interp_it ++) {
+                        std::string interp = boost::algorithm::trim_copy(*interp_it);
+                        //boost::algorithm::trim(interp);
                         std::string base = interp.substr(0, interp.find(":", 1));
                         std::string ctag = interp.substr(interp.find(":", 1) + 1, std::string::npos);
                         std::string mapped = tagset->mapMorphology(ctag);
@@ -354,7 +368,7 @@ std::string Tagger::tagSentence(std::string sentence, Entities &entities, Edges 
                         //delete ctag;
                         //delete base;
                         ti->addMorphology(posInfo);
-                        i ++;
+                        //i ++;
                     }
                 }
             }
@@ -372,17 +386,19 @@ std::string Tagger::tagSentence(std::string sentence, Entities &entities, Edges 
                     }
 
                     std::string interps = it->second;
-                    boost::regex_token_iterator<std::string::iterator> i(interps.begin(), interps.end(), regInterpSeparator, -1);
-                    boost::regex_token_iterator<std::string::iterator> j;
-                    while (i != j)
-                    {
-                        std::string interp = *i;
-                        boost::algorithm::trim(interp);
+                    std::vector<std::string> interpsVector;
+                    boost::split(interpsVector, interps, boost::is_any_of(interpSeparator));
+                    //boost::regex_token_iterator<std::string::iterator> i(interps.begin(), interps.end(), regInterpSeparator, -1);
+                    //boost::regex_token_iterator<std::string::iterator> j;
+                    //while (i != j)
+                    for (std::vector<std::string>::iterator interp_it = interpsVector.begin();
+                            interp_it != interpsVector.end(); interp_it ++) {
+                        std::string interp = boost::algorithm::trim_copy(*interp_it);;
+                        //boost::algorithm::trim(interp);
                         std::string base = interp.substr(0, interp.find(":", 1));
                         std::string ctag = interp.substr(interp.find(":", 1) + 1, std::string::npos);
                         std::string mapped = tagset->mapMorphology(ctag);
-                        if (mapped == "")
-                        {
+                        if (mapped == "") {
                             mapped = emptyMorphology;
                             //std::cerr << "Nie ma skompilowanej interpretacji morfologicznej: " << ctag << " dla " << orth << "!!!!!!" << std::endl;
                         }
@@ -393,7 +409,7 @@ std::string Tagger::tagSentence(std::string sentence, Entities &entities, Edges 
 
                         PosInfo posInfo(base, ctag, 1);
                         ti->addMorphology(posInfo);
-                        i ++;
+       //                 i ++;
                     }
                 }
             }
@@ -413,7 +429,7 @@ std::string Tagger::tagSentence(std::string sentence, Entities &entities, Edges 
 
         tokenCount ++;
 
-        u ++;
+     //   u ++;
     }
 
     SpecialToken *se = new SpecialToken();
@@ -437,8 +453,8 @@ std::string Tagger::tagSentence(std::string sentence, Entities &entities, Edges 
     return cs.str();
 }
 
-std::string Tagger::tagSentenceReadable(std::string sentence, Entities &entities, Edges &edges)
-{
+std::string Tagger::tagSentenceReadable(std::string sentence,
+        Entities &entities, Edges &edges) {
     std::string tagged = tagSentence(sentence, entities, edges);
     std::string readable = getReadable(entities);
     return readable;
@@ -467,7 +483,7 @@ std::string Tagger::processInput(std::string &sentence, Entities &entities, Edge
     std::stringstream ss;   //pomocniczy one
     int tokenCount = 0;
 
-    regSeparator = "\\s+";
+    //regSeparator = "\\s+";
 
     SpecialToken *sb = new SpecialToken();
     std::string id = "0";
@@ -484,11 +500,15 @@ std::string Tagger::processInput(std::string &sentence, Entities &entities, Edge
     cs << "<<s<0<sb<>";
     tokenCount ++;
 
-    boost::regex_token_iterator<std::string::iterator> u(sentence.begin(), sentence.end(), regSeparator, -1);
-    boost::regex_token_iterator<std::string::iterator> v;
-    while (u != v)
-    {
-        std::string token = *u;
+    std::string tokSeparator = " ";
+    std::vector<std::string> tokensVector;
+    boost::split(tokensVector, sentence, boost::is_any_of(tokSeparator));
+    //boost::regex_token_iterator<std::string::iterator> u(sentence.begin(), sentence.end(), regSeparator, -1);
+    //boost::regex_token_iterator<std::string::iterator> v;
+    //while (u != v)
+    for (std::vector<std::string>::iterator tok_it = tokensVector.begin();
+            tok_it != tokensVector.end(); tok_it ++) {
+        std::string token = boost::algorithm::trim_copy(*tok_it);
 
         int pos = token.find("|||");
         if (pos == 0)
@@ -501,7 +521,7 @@ std::string Tagger::processInput(std::string &sentence, Entities &entities, Edge
         if (pos == std::string::npos)
         {
             std::cerr << "Invalid token: " << token << "." << std::endl;
-            u ++;
+            //u ++;
             continue;
         }
 
@@ -509,15 +529,15 @@ std::string Tagger::processInput(std::string &sentence, Entities &entities, Edge
         std::string grapheme = token.substr(0, pos);
         std::string info = token.substr(pos + 3, std::string::npos);
 
-        grapheme = boost::regex_replace(grapheme, regAmp, "\\&amp;", boost::match_default | boost::format_sed);
-        grapheme = boost::regex_replace(grapheme, regLt, "\\&lt;", boost::match_default | boost::format_sed);
-        grapheme = boost::regex_replace(grapheme, regGt, "\\&gt;", boost::match_default | boost::format_sed);
-        grapheme = boost::regex_replace(grapheme, regLPar, "\\&lpar;", boost::match_default | boost::format_sed);
-        grapheme = boost::regex_replace(grapheme, regRPar, "\\&rpar;", boost::match_default | boost::format_sed);
-        grapheme = boost::regex_replace(grapheme, regPlus, "\\&plus;", boost::match_default | boost::format_sed);
-        grapheme = boost::regex_replace(grapheme, regAsterisk, "\\&astr;", boost::match_default | boost::format_sed);
-        grapheme = boost::regex_replace(grapheme, regOpt, "\\&qmark;", boost::match_default | boost::format_sed);
-        grapheme = boost::regex_replace(grapheme, regAlt, "\\&bar;", boost::match_default | boost::format_sed);
+        RE2::GlobalReplace(&grapheme, *regAmp, "\\&amp;");
+        RE2::GlobalReplace(&grapheme, *regLt, "\\&lt;");
+        RE2::GlobalReplace(&grapheme, *regGt, "\\&gt;");
+        RE2::GlobalReplace(&grapheme, *regLPar, "\\&lpar;");
+        RE2::GlobalReplace(&grapheme, *regRPar, "\\&rpar;");
+        RE2::GlobalReplace(&grapheme, *regPlus, "\\&plus;");
+        RE2::GlobalReplace(&grapheme, *regAsterisk, "\\&astr;");
+        RE2::GlobalReplace(&grapheme, *regOpt, "\\&qmark;");
+        RE2::GlobalReplace(&grapheme, *regAlt, "\\&bar;");
 
         std::string compiledToken = "<<t";
         std::stringstream sss;// = new std::stringstream;
@@ -547,12 +567,16 @@ std::string Tagger::processInput(std::string &sentence, Entities &entities, Edge
             info = "&bar;" + info.substr(1, std::string::npos);
         }
 
-        boost::regex_token_iterator<std::string::iterator> x(info.begin(), info.end(), regSep, -1);
-        boost::regex_token_iterator<std::string::iterator> y;
+        std::string infoSeparator = "|";
+        std::vector<std::string> infosVector;
+        boost::split(infosVector, info, boost::is_any_of(infoSeparator));
+        //boost::regex_token_iterator<std::string::iterator> x(info.begin(), info.end(), regSep, -1);
+        //boost::regex_token_iterator<std::string::iterator> y;
         bool first_interp = true;
-        while (x != y)
-        {
-            std::string interp = *x;
+        //while (x != y)
+        for (std::vector<std::string>::iterator interp_it = infosVector.begin();
+                interp_it != infosVector.end(); interp_it ++) {
+            std::string interp = boost::algorithm::trim_copy(*interp_it);
             if (first_interp)
             {
                 if (interp.find("&bar;") == 0)
@@ -567,19 +591,18 @@ std::string Tagger::processInput(std::string &sentence, Entities &entities, Edge
                 std::cerr << "Invalid interpretation: " << interp << "." << std::endl;
             }
             std::string base = interp.substr(0, interp.find("#", 1));
-            base = boost::regex_replace(base, regAmp, "\\&amp;", boost::match_default | boost::format_sed);
-            base = boost::regex_replace(base, regLt, "\\&lt;", boost::match_default | boost::format_sed);
-            base = boost::regex_replace(base, regGt, "\\&gt;", boost::match_default | boost::format_sed);
-            base = boost::regex_replace(base, regLPar, "\\&lpar;", boost::match_default | boost::format_sed);
-            base = boost::regex_replace(base, regRPar, "\\&rpar;", boost::match_default | boost::format_sed);
-            base = boost::regex_replace(base, regPlus, "\\&plus;", boost::match_default | boost::format_sed);
-            base = boost::regex_replace(base, regAsterisk, "\\&astr;", boost::match_default | boost::format_sed);
-            base = boost::regex_replace(base, regOpt, "\\&qmark;", boost::match_default | boost::format_sed);
-            base = boost::regex_replace(base, regAlt, "\\&bar;", boost::match_default | boost::format_sed);
+            RE2::GlobalReplace(&base, *regAmp, "\\&amp;");
+            RE2::GlobalReplace(&base, *regLt, "\\&lt;");
+            RE2::GlobalReplace(&base, *regGt, "\\&gt;");
+            RE2::GlobalReplace(&base, *regLPar, "\\&lpar;");
+            RE2::GlobalReplace(&base, *regRPar, "\\&rpar;");
+            RE2::GlobalReplace(&base, *regPlus, "\\&plus;");
+            RE2::GlobalReplace(&base, *regAsterisk, "\\&astr;");
+            RE2::GlobalReplace(&base, *regOpt, "\\&qmark;");
+            RE2::GlobalReplace(&base, *regAlt, "\\&bar;");
             std::string ctag = interp.substr(interp.find("#", 1) + 1, std::string::npos);
             std::string mapped = tagset->mapMorphology(ctag);
-            if (mapped == "")
-            {
+            if (mapped == "") {
                 mapped = emptyMorphology;
                 //std::cerr << "Nie ma skompilowanej interpretacji morfologicznej: " << ctag << " dla " << grapheme << "!!!!!!" << std::endl;
             }
@@ -595,7 +618,7 @@ std::string Tagger::processInput(std::string &sentence, Entities &entities, Edge
             //delete ctag;
             //delete base;
             ti->addMorphology(posInfo);
-            x ++;
+            //x ++;
         }
 
         compiledToken += ">";
@@ -611,11 +634,11 @@ std::string Tagger::processInput(std::string &sentence, Entities &entities, Edge
 
         tokenCount ++;
 
-        u ++;
+     //   u ++;
     }
 
     SpecialToken *se = new SpecialToken();
-    ss << std::hex << tokenCount;  //no to jest rozwiazane w sposob zenujacy!
+    ss << std::hex << tokenCount;  //@todo: no to jest rozwiazane w sposob zenujacy! przeniesc to do jakiejs metody puddle::util
     id = ss.str();
     se->setId(id);
     tokType = "se";

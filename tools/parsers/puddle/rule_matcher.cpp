@@ -1,7 +1,7 @@
 
 #include "rule_matcher.hpp"
 
-#include <boost/regex.hpp>
+//#include <boost/regex.hpp>
 #include <iostream>
 
 namespace poleng
@@ -36,16 +36,6 @@ void RuleMatcher::setRules(RulesPtr aRules)
     //rules = //new Rules(aRules);
     rules = aRules;
 }
-
-//void RuleMatcher::setXmlWriter(XmlWriter *aXmlWriter)
-//{
-//    xmlWriter = aXmlWriter;
-//}
-
-//void RuleMatcher::setNoxml()
-//{
-//    noxml = true;
-//}
 
 //void RuleMatcher::applyRules(std::string sentence, Entities &entities, Edges &lattice)
 //{
@@ -153,6 +143,7 @@ ParseGraphPtr RuleMatcher::applyRules(std::string &sentence, Entities &entities,
         bool first_match = true;
         std::string before = "";
         std::string prev_before = "";
+        //@todo: przerobic to tak, zeby nie bylo miliard razy dopasowywane ten lancuch, tylko zeby go dopasowac tyle razy ile pasuje i odpowiednio odpalac reguly tam, gdzie pasuja
         while ((currentEntity = (*ir)->matchPattern(sentence, currentMatch, before)) > -1)
         {
             currentMatch ++;
@@ -353,7 +344,7 @@ ParseGraphPtr RuleMatcher::applyRules(std::string &sentence, Entities &entities,
                     var_base = var_base.substr(0, pos) + ">" + var_base.substr(pos + 4, std::string::npos);
                 }
             }
-            if (var_base.find("&bar;") != std::string::npos)
+            if (var_base.find("&bar;") != std::string::npos) // @todo: ustandaryzowac te nomenklaturre
             {
                 while (var_base.find("&bar;") != std::string::npos)
                 {
@@ -417,17 +408,18 @@ ParseGraphPtr RuleMatcher::applyRules(std::string &sentence, Entities &entities,
         int end = (*e)->getEnd();
 
         std::string lowcase = (*e)->getLabel();
-        UnicodeString valL = icuConverter::fromUtf((*e)->getLabel());
-        valL.toLower();
-        StringCharacterIterator itL(valL);
-        std::stringstream ss;
-        while (itL.hasNext())
-        {
-            UnicodeString tl = itL.current();
-            ss << icuConverter::toUtf(tl);
-            itL.next();
-        }
-        lowcase = ss.str();
+        boost::to_lower(lowcase);
+//        UnicodeString valL = icuConverter::fromUtf((*e)->getLabel());
+//        valL.toLower();
+//        StringCharacterIterator itL(valL);
+//        std::stringstream ss;
+//        while (itL.hasNext())
+//        {
+//            UnicodeString tl = itL.current();
+//            ss << icuConverter::toUtf(tl);
+//            itL.next();
+//        }
+//        lowcase = ss.str();
         if (lowcase != (*e)->getLabel())
             lowFlag = true;
 
@@ -438,17 +430,18 @@ ParseGraphPtr RuleMatcher::applyRules(std::string &sentence, Entities &entities,
                 std::string var_base = boost::get<0>((*e)->variants_[vari]);
 
                 std::string lowbase = var_base;
-                UnicodeString valL = icuConverter::fromUtf(var_base);
-                valL.toLower();
-                StringCharacterIterator itL(valL);
-                std::stringstream ss;
-                while (itL.hasNext())
-                {
-                    UnicodeString tl = itL.current();
-                    ss << icuConverter::toUtf(tl);
-                    itL.next();
-                }
-                lowbase = ss.str();
+                boost::to_lower(lowbase);
+//                UnicodeString valL = icuConverter::fromUtf(var_base);
+//                valL.toLower();
+//                StringCharacterIterator itL(valL);
+//                std::stringstream ss;
+//                while (itL.hasNext())
+//                {
+//                    UnicodeString tl = itL.current();
+//                    ss << icuConverter::toUtf(tl);
+//                    itL.next();
+//                }
+//                lowbase = ss.str();
                 if (lowbase == var_base) //istnieje forma bazowa pisana mala litera
                 {
                     (*e)->setLabel(lowcase);

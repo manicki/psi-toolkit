@@ -176,7 +176,8 @@ bool UnifyAction::apply(Entities &entities, Edges &edges, int currentEntity, std
                 boost::get<2>(*pi) = 0;
 
             //std::set<boost::u32regex>::iterator c = commonInterpretations.begin();
-            std::set<boost::regex>::iterator c = commonInterpretations.begin();
+            //std::set<boost::regex>::iterator c = commonInterpretations.begin();
+            std::set<PatternPtr>::iterator c = commonInterpretations.begin();
             while (c != commonInterpretations.end())
             {
                 std::vector<std::string>::iterator ic = compiled.begin();
@@ -185,9 +186,10 @@ bool UnifyAction::apply(Entities &entities, Edges &edges, int currentEntity, std
                 {
 
                     //if (boost::u32regex_match(*ic, *c))
-                    boost::regex *r = new boost::regex(*c);
-                    if (boost::regex_match(*ic, *r))
-                    {
+                    //boost::regex *r = new boost::regex(*c);
+                    PatternPtr r = *c;
+                    //if (boost::regex_match(*ic, *r))
+                    if (RE2::FullMatch(*ic, *r)) {
                         token->addInterpretation(*im, *ic);
                         for (std::vector<PosInfo>::iterator pi = (*e)->variants_.begin(); pi != (*e)->variants_.end(); pi ++)
                         {
@@ -203,12 +205,13 @@ bool UnifyAction::apply(Entities &entities, Edges &edges, int currentEntity, std
                         //ic = compiled.erase(ic);
                         //im = morpho.erase(im);
                         //continue;
-                        delete r;
+
+                        //delete r;
                         ic = compiled.erase(ic);
                         im = morpho.erase(im);
                         continue;
                     }
-                    delete r;
+                    //delete r;
 
                     ic ++;
                     im ++;
@@ -248,7 +251,8 @@ bool UnifyAction::apply(Entities &entities, Edges &edges, int currentEntity, std
                     boost::get<2>(*pi) = 0;
 
                 //std::set<boost::u32regex>::iterator c = commonInterpretations.begin();
-                std::set<boost::regex>::iterator c = commonInterpretations.begin();
+                //std::set<boost::regex>::iterator c = commonInterpretations.begin();
+                std::set<PatternPtr>::iterator c = commonInterpretations.begin();
                 while (c != commonInterpretations.end())
                 {
                     std::vector<std::string>::iterator ic = compiled.begin();
@@ -256,9 +260,10 @@ bool UnifyAction::apply(Entities &entities, Edges &edges, int currentEntity, std
                     while (ic != compiled.end())
                     {
                         //if (boost::u32regex_match(*ic, *c))
-                        boost::regex *r = new boost::regex(*c);
-                        if (boost::regex_match(*ic, *r))
-                        {
+                        //boost::regex *r = new boost::regex(*c);
+                        PatternPtr r = *c;
+                        //if (boost::regex_match(*ic, *r))
+                        if (RE2::FullMatch(*ic, *r)) {
                             token->addInterpretation(*im, *ic);
                             for (std::vector<PosInfo>::iterator pi = (*e)->variants_.begin(); pi != (*e)->variants_.end(); pi ++)
                             {
@@ -275,12 +280,13 @@ bool UnifyAction::apply(Entities &entities, Edges &edges, int currentEntity, std
                             //ic = compiled.erase(ic);
                             //im = morpho.erase(im);
                             //continue;
-                            delete r;
+
+                            //delete r;
                             ic = compiled.erase(ic);
                             im = morpho.erase(im);
                             continue;
                         }
-                        delete r;
+                        //delete r;
                         ic ++;
                         im ++;
                     }
@@ -303,8 +309,7 @@ bool UnifyAction::apply(Entities &entities, Edges &edges, int currentEntity, std
                 Syntok *syntok = (Syntok*) (group->children.at(group->getHeadIndex()));
                 StringPtr id = StringPtr(new std::string(syntok->getId()));
                 Edges::iterator e;
-                for (e = edges.begin(); e != edges.end(); e ++)
-                {
+                for (e = edges.begin(); e != edges.end(); e ++) {
                     if ((*e)->getId() == *id)
                         break;
                 }
@@ -317,7 +322,8 @@ bool UnifyAction::apply(Entities &entities, Edges &edges, int currentEntity, std
                     boost::get<2>(*pi) = 0;
 
                 //std::set<boost::u32regex>::iterator c = commonInterpretations.begin();
-                std::set<boost::regex>::iterator c = commonInterpretations.begin();
+                //std::set<boost::regex>::iterator c = commonInterpretations.begin();
+                std::set<PatternPtr>::iterator c = commonInterpretations.begin();
                 while (c != commonInterpretations.end())
                 {
                     std::vector<std::string>::iterator ic = compiled.begin();
@@ -325,8 +331,10 @@ bool UnifyAction::apply(Entities &entities, Edges &edges, int currentEntity, std
                     while (ic != compiled.end())
                     {
                         //if (boost::u32regex_match(*ic, *c))
-                        boost::regex *r = new boost::regex(*c);
-                        if (boost::regex_match(*ic, *r))
+                        //boost::regex *r = new boost::regex(*c);
+                        PatternPtr r = *c;
+                        //if (boost::regex_match(*ic, *r))
+                        if (RE2::FullMatch(*ic, *r))
                         {
                             syntok->addInterpretation(*im, *ic);
                             for (std::vector<PosInfo>::iterator pi = (*e)->variants_.begin(); pi != (*e)->variants_.end(); pi ++)
@@ -344,12 +352,13 @@ bool UnifyAction::apply(Entities &entities, Edges &edges, int currentEntity, std
                             //ic = compiled.erase(ic);
                             //im = morpho.erase(im);
                             //continue;
-                            delete r;
+
+                            //delete r;
                             ic = compiled.erase(ic);
                             im = morpho.erase(im);
                             continue;
                         }
-                        delete r;
+                        //delete r;
                         ic ++;
                         im ++;
                     }
@@ -396,7 +405,8 @@ bool UnifyAction::apply(Entities &entities, Edges &edges, int currentEntity, std
                 boost::get<2>(*pi) = 0;
 
             //std::set<boost::u32regex>::iterator c = commonInterpretations.begin();
-            std::set<boost::regex>::iterator c = commonInterpretations.begin();
+            //std::set<boost::regex>::iterator c = commonInterpretations.begin();
+            std::set<PatternPtr>::iterator c = commonInterpretations.begin();
             while (c != commonInterpretations.end())
             {
                 std::vector<std::string>::iterator ic = compiled.begin();
@@ -404,8 +414,10 @@ bool UnifyAction::apply(Entities &entities, Edges &edges, int currentEntity, std
                 while (ic != compiled.end())
                 {
                     //if (boost::u32regex_match(*ic, *c))
-                    boost::regex *r = new boost::regex(*c);
-                    if (boost::regex_match(*ic, *r))
+                    //boost::regex *r = new boost::regex(*c);
+                    PatternPtr r = *c;
+                    //if (boost::regex_match(*ic, *r))
+                    if (RE2::FullMatch(*ic, *r))
                     {
                         syntok->addInterpretation(*im, *ic);
                         for (std::vector<PosInfo>::iterator pi = (*e)->variants_.begin(); pi != (*e)->variants_.end(); pi ++)
@@ -422,12 +434,13 @@ bool UnifyAction::apply(Entities &entities, Edges &edges, int currentEntity, std
                         //ic = compiled.erase(ic);
                         //im = morpho.erase(im);
                         //continue;
-                        delete r;
+
+                        //delete r;
                         ic = compiled.erase(ic);
                         im = morpho.erase(im);
                         continue;
                     }
-                    delete r;
+                    //delete r;
                     ic ++;
                     im ++;
                 }
@@ -836,15 +849,17 @@ bool UnifyAction::test(Entities entities, int currentEntity, std::vector<int> ma
                 //if (boost::regex_match(*s, boost::regex(*ic)))
 //                std::cerr << "666takie wyrazenie: " << **ic << std::endl;
 //                std::cerr << "555a taka interpretacja: " << **s << std::endl;
-                boost::regex *r = new boost::regex(*ic);
-                if (boost::regex_match(*s, *r))
+                //boost::regex *r = new boost::regex(*ic);
+                RE2 r(*ic);
+                //if (boost::regex_match(*s, *r))
+                if (RE2::FullMatch(*s, r))
                 {
 //                    std::cerr << "pasuje " << **s << " do " << r->str() << std::endl;
                     foundInToken = true;
                     //znajda = *s;
                     if (diffrent)
                     {
-                        delete r;
+                        //delete r;
                         //       ret = true;
                         break;
                     }
@@ -854,7 +869,7 @@ bool UnifyAction::test(Entities entities, int currentEntity, std::vector<int> ma
 //                    std::cerr << "nei pasuje " << **s << " do " << r->str() << std::endl;
                     diffrent = true;
                 }
-                delete r;
+                //delete r;
 //                std::cout << "przezylem" << std::endl;
                 s ++;
             }
@@ -949,7 +964,8 @@ bool UnifyAction::test(Entities entities, int currentEntity, std::vector<int> ma
                 //commonInterpretations.insert(boost::make_u32regex("^" + *ic + "[^<>]+"));
 //                std::cerr << "robie wyrazenie2: " << *ic << std::endl;
                 //commonInterpretations.insert(boost::regex("^" + *ic + "[^<>]+"));
-                commonInterpretations.insert(boost::regex("^" + *ic + "[^<>]+"));
+                //commonInterpretations.insert(boost::regex("^" + *ic + "[^<>]+"));
+                commonInterpretations.insert(PatternPtr(new RE2( "^" + *ic + "[^<>]+" )));
 //                std::cout << "przezylem" << std::endl;
                 ic++;
             }

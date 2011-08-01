@@ -4,10 +4,11 @@
 #include <string>
 #include <vector>
 #include <set>
-#include <boost/regex.hpp>
-#include <boost/regex/icu.hpp>
+//#include <boost/regex.hpp>
+//#include <boost/regex/icu.hpp>
 
-#include "utf8_converter.hpp"
+//#include "utf8_converter.hpp"
+#include <re2/re2.h>
 
 #include "action.hpp"
 #include "entity.hpp"
@@ -52,7 +53,8 @@ class UnifyAction : public Action
 
         bool nullAgreement; // true = jak w czesci mowy atrybut nie wystepuje, to traktuj jako dajacy sie z unifikowac, false = jak w czesci mowy nie ma atrybutu, to nie da sie zunifikowac
 
-        std::set<boost::regex> commonInterpretations;
+        //std::set<boost::regex> commonInterpretations;
+        std::set<PatternPtr> commonInterpretations;
         //std::set<boost::u32regex> commonInterpretations;
 
         std::string baseMask;

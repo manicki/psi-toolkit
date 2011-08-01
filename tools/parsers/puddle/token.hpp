@@ -3,14 +3,16 @@
 
 #include <string>
 #include <vector>
-#include <boost/regex.hpp>
-#include <boost/regex/icu.hpp>
+//#include <boost/regex.hpp>
+//#include <boost/regex/icu.hpp>
 
-#include "utf8_converter.hpp"
+//#include "utf8_converter.hpp"
 
 #include "entity.hpp"
 
 #include "TransitionInfo.hpp"
+
+#include "action.hpp"
 
 namespace poleng
 {
@@ -30,7 +32,7 @@ class Token : public Entity // - zrobic jakas abstrakcyjna klase z ktorej bedzie
         void setCompiled(std::string aCompiledToken);
         //void addMorphology(std::string aMorphology);
         bool addInterpretation(std::string aMorphology, std::string aCompiledInterpretation);
-        bool deleteInterpretation(boost::u32regex condition, TransitionInfo* &tok);
+        bool deleteInterpretation(PatternPtr condition, TransitionInfo* &tok); //@todo: tu musi byc takie kombo *& ?
 
         std::string getCompiled();
         std::vector<std::string> getMorphology();

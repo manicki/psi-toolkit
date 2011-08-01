@@ -13,11 +13,12 @@
 #include <sstream>
 #include <boost/serialization/map.hpp>
 #include <boost/archive/text_iarchive.hpp>
-#include <boost/regex.hpp>
+//#include <boost/regex.hpp>
 #include <boost/algorithm/string/trim.hpp>
 #include "tagset.hpp"
-#include "icu_converter.hpp"
-#include <unicode/schriter.h>
+//#include "icu_converter.hpp"
+#include <boost/algorithm/string.hpp>
+//#include <unicode/schriter.h>
 #include <boost/shared_ptr.hpp>
 
 namespace poleng
@@ -47,21 +48,20 @@ class Tagger
 
         TagsetPtr tagset;
         std::string emptyMorphology;
-        boost::regex regSeparator;
-        boost::regex regPunct;
-        boost::regex regDigit;
-        boost::regex regInterpSeparator;
+        //PatternPtr regSeparator;
+        PatternPtr regPunct;
+        PatternPtr regDigit;
+        std::string interpSeparator;
 //        boost::regex regEscAmp;
 //        boost::regex regEscLt;
 //        boost::regex regEscGt;
-        boost::regex regLt;
-        boost::regex regAmp;
-        boost::regex regGt;
-        boost::regex regLPar;
-        boost::regex regRPar;
-        boost::regex regAlt, regPlus, regAsterisk, regOpt;
+        PatternPtr regLt;
+        PatternPtr regAmp;
+        PatternPtr regGt;
+        PatternPtr regLPar;
+        PatternPtr regRPar;
+        PatternPtr regAlt, regPlus, regAsterisk, regOpt;
 
-        boost::regex regSep;
 //        boost::regex regEscLPar;
 //        boost::regex regEscRPar;
 };

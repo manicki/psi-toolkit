@@ -4,7 +4,8 @@
 #include "ParseGraph.hpp"
 #include <string>
 #include "tagset.hpp"
-#include <boost/regex.hpp>
+//#include <boost/regex.hpp>
+#include <re2/re2.h>
 
 namespace poleng
 {

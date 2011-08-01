@@ -69,7 +69,7 @@ bool Token::addInterpretation(std::string aMorphology, std::string aCompiledInte
     return true;
 }
 
-bool Token::deleteInterpretation(boost::u32regex condition, TransitionInfo* &tok)
+bool Token::deleteInterpretation(PatternPtr condition, TransitionInfo* &tok)
 {
     bool ret = false;
     //boost::regex regCondition(condition);
@@ -79,8 +79,8 @@ bool Token::deleteInterpretation(boost::u32regex condition, TransitionInfo* &tok
     {
 //        std::cerr << "kompiled interpretacja: " << **i << std::endl;
         std::string compare = this->orth + "<" + *i;
-        if (boost::u32regex_match(compare, condition))
-        {
+        //if (boost::u32regex_match(compare, condition))
+        if (RE2::FullMatch(compare, *condition)) {
             ret = true;
 //            std::cout << "Pasuje, wiec usuwam: " << compare << std::endl;
             i = compiledInterpretations.erase(i);
@@ -210,12 +210,13 @@ std::string Token::getId()
 
 std::string Token::toXml()
 {
-    boost::u32regex regLpar = boost::make_u32regex("&lpar;");
-    boost::u32regex regRpar = boost::make_u32regex("&rpar;");
+    RE2 regLpar("&lpar;");
+    RE2 regRpar("&rpar;");
     std::stringstream ss;
     ss << "<tok id=\"" << id << "\">" << std::endl;
-    std::string porth = boost::u32regex_replace(orth, regLpar, "(", boost::match_default | boost::format_sed);
-    porth = boost::u32regex_replace(porth, regRpar, ")", boost::match_default | boost::format_sed);
+    std::string porth = orth;
+    RE2::GlobalReplace(&porth, regLpar, "(");
+    RE2::GlobalReplace(&porth, regRpar, ")");
     ss << "<orth>" << porth << "</orth>" << std::endl;
 //    porth.reset();
     std::vector<std::string>::iterator m = morphology.begin();
@@ -224,8 +225,8 @@ std::string Token::toXml()
         std::string morpho = *m;
         int pos = morpho.find(":", 1);  //TODO: to trzeba zrobić sprytniej, bo token może być dwukropkiem na przykład!
         std::string base = morpho.substr(0, pos);
-        base = boost::u32regex_replace(base, regLpar, "(", boost::match_default | boost::format_sed);
-        base = boost::u32regex_replace(base, regRpar, ")", boost::match_default | boost::format_sed);
+        RE2::GlobalReplace(&base, regLpar, "(");
+        RE2::GlobalReplace(&base, regRpar, ")");
         morpho = morpho.substr(pos + 1, std::string::npos);
         ss << "<lex><base>" << base << "</base><ctag>" << morpho << "</ctag></lex>" << std::endl;
         m ++;

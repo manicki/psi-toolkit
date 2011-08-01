@@ -1,10 +1,10 @@
 #ifndef ACTION_H__
 #define ACTION_H__
 
-#include <boost/regex.hpp>
-#include <boost/regex/icu.hpp>
+//#include <boost/regex.hpp>
+//#include <boost/regex/icu.hpp>
 
-#include "utf8_converter.hpp"
+//#include "utf8_converter.hpp"
 
 #include "entity.hpp"
 #include "TransitionInfo.hpp"
@@ -12,6 +12,8 @@
 #include <string>
 #include <vector>
 #include <boost/shared_ptr.hpp>
+
+#include <re2/re2.h>
 
 namespace poleng
 {
@@ -22,7 +24,8 @@ namespace bonsai
 namespace puddle
 {
 
-    typedef boost::u32regex Pattern;
+    //typedef boost::u32regex Pattern;
+    typedef RE2 Pattern;
     typedef boost::shared_ptr<Pattern> PatternPtr;
 
 class Action

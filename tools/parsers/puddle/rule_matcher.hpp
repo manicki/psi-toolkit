@@ -15,50 +15,47 @@
 #include "group.hpp"
 //#include "XmlWriter.hpp"
 #include <boost/date_time/posix_time/posix_time.hpp>
-#include "icu_converter.hpp"
-#include <unicode/schriter.h>
+//#include "icu_converter.hpp"
+#include <boost/algorithm/string.hpp>
+//#include <unicode/schriter.h>
 
-namespace poleng
-{
+namespace poleng {
 
-namespace bonsai
-{
+    namespace bonsai {
 
-namespace puddle
-{
+        namespace puddle {
 
-class RuleMatcher
-{
-    public:
-        RuleMatcher();
-        ~RuleMatcher();
-        ParseGraphPtr applyRules(std::string &sentence, Entities &entities, Edges &lattice);
+            class RuleMatcher {
+                public:
+                    RuleMatcher();
+                    ~RuleMatcher();
+                    ParseGraphPtr applyRules(std::string &sentence, Entities &entities, Edges &lattice);
 
-        //void setRules(Rules aRules);
-        void setRules(RulesPtr aRules);
-//        void setXmlWriter(XmlWriter *aXmlWriter);
+                    //void setRules(Rules aRules);
+                    void setRules(RulesPtr aRules);
+                    //        void setXmlWriter(XmlWriter *aXmlWriter);
 
-        static int sentencesCount;
-        static boost::posix_time::ptime start_time;
+                    static int sentencesCount; //@todo: potrzebne to? wywalic to w diably
+                    static boost::posix_time::ptime start_time; //@todo: potrzebne to? wywalic to w diably
 
-        void setSyntok();
-        void setNoSyntok();
-//        void setNoxml();
-        void setDisamb();
-        void setNoRepeats();
+                    void setSyntok();
+                    void setNoSyntok();
+                    //        void setNoxml();
+                    void setDisamb();
+                    void setNoRepeats();
 
-    private:
-        RulesPtr rules;
-        bool disamb;
-        bool norepeats;
-//        XmlWriter *xmlWriter;
-        bool syntok;
-//        bool noxml;
-};
+                private:
+                    RulesPtr rules;
+                    bool disamb; //@todo: do czego to jest?
+                    bool norepeats;
+                    //        XmlWriter *xmlWriter;
+                    bool syntok; //@todo: do czego to jest?
+                    //        bool noxml;
+            };
 
-}
+        }
 
-}
+    }
 
 }
 

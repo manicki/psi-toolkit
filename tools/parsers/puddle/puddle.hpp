@@ -5,7 +5,7 @@
 //#include "../common/ParseGraph.hpp"
 //#include "XmlParser.hpp"
 #include "tagset.hpp"
-#include "rule_compiler.hpp"
+#include "rule_loader.hpp"
 #include "rule_matcher.hpp"
 #include "rule.hpp"
 #include "graph_writer.hpp"

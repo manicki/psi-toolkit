@@ -1,10 +1,10 @@
 #ifndef SYNTOK_H__
 #define SYNTOK_H__
 
-#include <boost/regex.hpp>
-#include <boost/regex/icu.hpp>
+//#include <boost/regex.hpp>
+//#include <boost/regex/icu.hpp>
 
-#include "utf8_converter.hpp"
+//#include "utf8_converter.hpp"
 
 #include "entity.hpp"
 #include "token.hpp"
@@ -31,7 +31,7 @@ class Syntok : public Entity
         void setCompiled(std::string aCompiled);
         std::string getCompiled();
         bool addInterpretation(std::string aMorphology, std::string aCompiledInterpretation);
-        bool deleteInterpretation(boost::u32regex condition, TransitionInfo* &wd);
+        bool deleteInterpretation(PatternPtr condition, TransitionInfo* &wd);
 
         std::vector<std::string> getMorphology();
         std::vector<std::string> getCompiledInterpretations();
