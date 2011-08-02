@@ -6,14 +6,13 @@
 
 //#include "utf8_converter.hpp"
 
+#include "puddle_types.hpp"
 #include "entity.hpp"
 #include "TransitionInfo.hpp"
 //#include "TransitionGraph.hpp"
 #include <string>
 #include <vector>
 #include <boost/shared_ptr.hpp>
-
-#include <re2/re2.h>
 
 namespace poleng
 {
@@ -25,8 +24,6 @@ namespace puddle
 {
 
     //typedef boost::u32regex Pattern;
-    typedef RE2 Pattern;
-    typedef boost::shared_ptr<Pattern> PatternPtr;
 
 class Action
 {

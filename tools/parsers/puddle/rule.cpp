@@ -160,20 +160,6 @@ int Rule::matchPattern(std::string &sentence, int matchNumber, std::string &befo
     int start = 0;
     int end = sentence_str.size();
     std::string before = "";
-/*  probne uzycie re2 do dopasowywania reguly
- *  while (regPattern.Match(sentence6, szatan_start, sentence6.size(), anchor, match6, szatan_n )) { // @todo: tu nie bedzie chyba while tylko if, skoro bedzie parametrem odkad szukac, a nie ktore ogolnie dopasowanie ma byc wziete na warsztat
-        std::cerr << "IIHA" << std::endl;
-        std::cerr << "0: " << match6[0] << std::endl;
-        //int prefix_len = match6[0].end() - sentence6.begin(); // ? a nie begin?
-        int prefix_len = match6[0].begin() - sentence6.begin(); // ? a nie begin?
-        std::cerr << "skok: " << prefix_len << std::endl;
-        before6 = sentence.substr(0, prefix_len);
-        std::cerr << "before: " << before6 << std::endl;
-        szatan_start += prefix_len + 1;
-        //szatan_start += prefix_len;// @todo: nie + 1?
-        if (szatan_start > sentence6.size()) szatan_start = sentence6.size();
-    }
-    */
 //    std::cerr << "macz namber: " << matchNumber << std::endl;
 
 //        std::cout << "Zdanie: " << sentence << std::endl;
@@ -182,8 +168,8 @@ int Rule::matchPattern(std::string &sentence, int matchNumber, std::string &befo
     while ( pattern->Match( sentence_str, start, end,
                             RE2::UNANCHORED, matched, num_groups ) ) { // @todo: tu nie bedzie chyba while tylko if, skoro bedzie parametrem odkad szukac, a nie ktore ogolnie dopasowanie ma byc wziete na warsztat
     //while (boost::u32regex_search(start, end, matched, *pattern, flags)) {
-//        std::cerr << "Zdanie: " << sentence << std::endl;
-//        std::cerr << "Dopasowadlo: " << matched[0] << std::endl;
+        std::cerr << "Zdanie: " << sentence << std::endl;
+        std::cerr << "Dopasowadlo: " << matched[0] << std::endl;
         int prefix_len = matched[0].begin() - sentence_str.begin();
         std::string prefix = sentence.substr(0, prefix_len); //@todo: czy od start do prefix_len?
         //before += matched.prefix(); //before + matched.prefix();
@@ -208,13 +194,13 @@ int Rule::matchPattern(std::string &sentence, int matchNumber, std::string &befo
 //            std::cerr << "jedynka: " << matched[1] << std::endl;
 //            std::cout << "dwojka: " << matched[3] << std::endl;
 //            std::string before = matched.prefix();
-//            std::cerr << "Dopasowalem regule: " << name << std::endl;
-//            std::cerr << "Dopasowalem wzorzec: " << compiled << std::endl;
-//            std::cerr << "Dopasowane: " << matching << std::endl;
-//            std::cout << "Przed: " << before << std::endl;
-//            std::cout << "Zdanie: " << sentence << std::endl;
+            std::cerr << "Dopasowalem regule: " << name << std::endl;
+            std::cerr << "Dopasowalem wzorzec: " << compiled << std::endl;
+            std::cerr << "Dopasowane: " << matching << std::endl;
+            std::cout << "Przed: " << before << std::endl;
+            std::cout << "Zdanie: " << sentence << std::endl;
 //            std::cerr << "before: " << before << std::endl;
-//            std::cerr << "Zwracam: " << countEntities(before) << std::endl;
+            std::cerr << "Zwracam: " << countEntities(before) << std::endl;
             return countEntities(before);
         }
         else {
@@ -338,6 +324,7 @@ bool Rule::test(std::string &sentence, Entities &entities, int currentEntity)
 //    while (it != tokensPatterns.end())
     while (it != matchedIndexes.end())
     {
+        std::cerr << "MACZD INDEKSES: " << *it << ": " << match[*it].as_string() << std::endl;
 //        std::cerr << "Numerex: " << *it << std::endl;
 //        std::cerr << "a dwojka: " << match[0] << std::endl;
 //        std::cerr << "i: " << i << "; Macz: " << match[*it] << std::endl;
