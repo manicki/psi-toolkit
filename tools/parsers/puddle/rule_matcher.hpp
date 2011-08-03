@@ -15,6 +15,8 @@
 
 #include "puddle_util.hpp"
 
+#include "tagset.hpp"
+
 namespace poleng {
 
     namespace bonsai {
@@ -35,6 +37,8 @@ namespace poleng {
                     void setDisamb();
                     void setNoRepeats();
 
+                    void setTagset(TagsetPtr tagset_) { tagset = tagset_; }
+
                 private:
                     RulesPtr rules;
                     bool disamb; //@todo: do czego to jest?
@@ -43,6 +47,9 @@ namespace poleng {
 
                     void unescapeSpecialChars(Edges &edges);
                     void addPosEdges(Edges &edges);
+
+                    TagsetPtr tagset;
+                    std::string generateSentencePattern(Edges &edges);
             };
 
         }

@@ -87,6 +87,10 @@ ParseGraphPtr RuleMatcher::applyRules(std::string &sentence, Entities &entities,
 //                std::cerr << "test zdany" << std::endl;
                 if ((*ir)->apply(sentence, entities, lattice, currentEntity))
                 {
+                    sentence = generateSentencePattern(lattice);
+                    std::cerr << "SENT PRZED: " << oldSentence << std::endl;
+                    std::cerr << "SENT PO:    " << sentence << std::endl;
+                    //TU: na nowo zrobic sentence
 //                    prev_before = before;
 //                    std::cerr << "zaaplikowany" << std::endl;
                     if (sentence != oldSentence)
@@ -308,6 +312,81 @@ void RuleMatcher::addPosEdges(Edges &edges) {
     for (Edges::iterator ei = posEdges.begin(); ei != posEdges.end(); ei++)
         edges.push_back(*ei);
 
+}
+
+std::string RuleMatcher::generateSentencePattern(Edges &edges) {
+    ParseGraphPtr tmp_pg = ParseGraphPtr(new ParseGraph()); //tymczasowy graf, wszak dzialamy docelowo na grafie/kracie, a nie na jakis badziewiach
+    for (Edges::iterator e = edges.begin(); e != edges.end(); e ++) {
+        tmp_pg->add_edge((*e)->getStart(), (*e)->getEnd(), **e);
+    }
+    std::stringstream ss;
+    ss << "<<s<0<sb<>";
+
+    ParseGraph::Graph *g = tmp_pg->getBoostGraph();
+    //ParseGraph::Vertex end = vertex(boost::num_vertices(*g) - 1, *g); //potrzebne to w ogole?
+    ParseGraph::VertexIndex index = get(boost::vertex_index, *g);
+    ParseGraph::TransitionMap map = get(boost::edge_bundle, *g);
+
+    std::string emptyMorphology(tagset->getNumberOfAttributes(), '0');
+    int i = 0;
+    while (i < (boost::num_vertices(*g) - 1) ) {
+    //for (int i = 0; i < boost::num_vertices(*g); i ++) {
+        ParseGraph::Vertex v = vertex(i, *g);
+
+        int max_depth = 0;
+        int max_start, max_end;
+        std::string max_label, max_type, max_orth;
+        std::vector<PosInfo> max_variants;
+
+        for (std::pair <ParseGraph::OutEdgeIt, ParseGraph::OutEdgeIt> p = out_edges(v, *g); p.first != p.second; ++ p.first) {
+            ParseGraph::Edge e = *p.first;
+            if (map[e].isPos())
+                continue;
+            if ((max_depth == 0) || ((max_depth > 0) && (map[e].getDepth() > max_depth))) {
+                max_depth = map[e].getDepth();
+                max_start = map[e].getStart();
+                max_end = map[e].getEnd();
+                max_label = map[e].getLabel();
+                max_type = map[e].getType();
+                max_orth = map[e].getOrth();
+                max_variants = map[e].variants_;
+            }
+        }
+
+        if (max_type != "group") {
+            ss << "<<t";
+        } else {
+            ss << "<<g";
+        }
+        ss << "<" << max_start;
+        ss << "<" << max_end;
+        if (max_type == "group") {
+            ss << "<" << max_label;
+        } else {
+            ss << "<" << "TOKEN";
+        }
+        ss << "<" << max_orth; //@todo: nie dziala to dla gruyp
+        if (max_variants.size() == 0) {
+            PosInfo pi(max_orth, "ign", 1);
+            max_variants.push_back(pi);
+        }
+        for (std::vector<PosInfo>::iterator vit = max_variants.begin();
+                vit != max_variants.end(); vit ++) {
+            if (! boost::get<2>(*vit))
+                continue;
+            std::string mapped = tagset->mapMorphology(boost::get<1>(*vit));
+            if (mapped == "")
+                mapped = emptyMorphology;
+            ss << "<";
+            ss << mapped;
+            ss << boost::get<0>(*vit);
+        }
+        ss << ">";
+        i = max_end;
+    }
+    ss << "<<s<666<se<>";
+
+    return ss.str();
 }
 
 void RuleMatcher::setSyntok() {

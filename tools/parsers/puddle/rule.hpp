@@ -102,6 +102,8 @@ class Rule
         std::vector<int> matchedIndexes;
 
         bool repeat;
+
+        int getPatternStart(std::string &matchedPattern); //wcale nie powiedziane, ze to bedzie wyciagac (tylko lub w ogole) start, wiec funkcja z nazwa wlacznie ulegac ma zmianom
 };
 
 typedef boost::shared_ptr<Rule> RulePtr;

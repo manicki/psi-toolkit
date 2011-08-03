@@ -40,9 +40,11 @@ GroupAction::~GroupAction()
 {
 }
 
+//@todo: zmienic chyba te nazwe currentEntity na cos wlasciwszego
 bool GroupAction::apply(Entities &entities, Edges &edges, int currentEntity, std::vector<int> matchedTokensSize)
 {
 
+    std::cerr << "grupe robie: " << group << "; current entity: " << currentEntity << std::endl;
 //    std::cout << "Poczatek reguly: " << ruleName << std::endl;
 //    std::cout << "PRZED mam elementow: " << entities.size() << std::endl;
 
@@ -101,6 +103,7 @@ bool GroupAction::apply(Entities &entities, Edges &edges, int currentEntity, std
     group->setId(gr->getId()); //TODO id nadawanie!
     group->setLabel(this->group);
     group->setHead(((Token*)(gr->getHeadToken()))->getId());
+    group->setOrth(((Token*)(gr->getHeadToken()))->getOrth());
     std::string startId, endId;
     Entity *left = gr->children.front();
     while (left->getType() == "group")

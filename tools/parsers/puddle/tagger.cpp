@@ -477,6 +477,7 @@ std::string Tagger::getReadable(Entities entities)
     return ss.str();
 }
 
+//@todo: przepisac funkcje 'tagujace' na uzywanie stringstream a nie jakies dziwactwa ze stringami i wskaznikami
 std::string Tagger::processInput(std::string &sentence, Entities &entities, Edges &edges)
 {
     std::stringstream cs;
@@ -510,6 +511,8 @@ std::string Tagger::processInput(std::string &sentence, Entities &entities, Edge
             tok_it != tokensVector.end(); tok_it ++) {
         std::string token = boost::algorithm::trim_copy(*tok_it);
 
+        std::stringstream sst;
+
         int pos = token.find("|||");
         if (pos == 0)
         {
@@ -539,12 +542,18 @@ std::string Tagger::processInput(std::string &sentence, Entities &entities, Edge
         RE2::GlobalReplace(&grapheme, *regOpt, "\\&qmark;");
         RE2::GlobalReplace(&grapheme, *regAlt, "\\&bar;");
 
-        std::string compiledToken = "<<t";
+        //std::string compiledToken = "<<t";
+        sst << "<<t";
         std::stringstream sss;// = new std::stringstream;
         sss << std::hex << tokenCount;
         std::string id = sss.str();
         //delete sss;
-        compiledToken += "<" + id;
+        /*compiledToken += "<" + id;*/
+        //@todo: tu robimy nowy format skompilowanego tokenu. zamiast id jest: from, to, type (TOKEN)
+        sst << "<" << (tokenCount - 1); // from  @todo: (przerobic na zwykle getStart, getEnd itd
+        sst << "<" << tokenCount;       // to
+        sst << "<" << "TOKEN";          //type
+
 
         Token *tok = new Token();
         tok->setId(id);
@@ -558,7 +567,8 @@ std::string Tagger::processInput(std::string &sentence, Entities &entities, Edge
         ti->setDepth(0);
         ti->setId(id);
 
-        compiledToken += "<" + grapheme;
+        //compiledToken += "<" + grapheme;
+        sst << "<" << grapheme;
         tok->setOrth(grapheme);
         ti->setLabel(grapheme);
 
@@ -609,7 +619,8 @@ std::string Tagger::processInput(std::string &sentence, Entities &entities, Edge
             std::string morpho = base + ":" + ctag;
             std::string compiled = mapped + base;
             tok->addInterpretation(morpho, compiled);
-            compiledToken += "<" + mapped + base;
+            //compiledToken += "<" + mapped + base;
+            sst << "<" << mapped << base;
             //delete morpho;
             //delete compiled;
             //delete mapped;
@@ -621,7 +632,9 @@ std::string Tagger::processInput(std::string &sentence, Entities &entities, Edge
             //x ++;
         }
 
-        compiledToken += ">";
+        //compiledToken += ">";
+        sst << ">";
+        std::string compiledToken = sst.str();
 
         tok->setCompiled(compiledToken);
         cs << compiledToken;

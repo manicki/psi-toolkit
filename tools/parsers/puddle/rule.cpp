@@ -123,7 +123,8 @@ bool Rule::apply(std::string &sentence, Entities &entities, Edges &edges, int cu
 //        std::cerr << "akcja: " << (*i)->getType() << std::endl;
         if ((*i)->apply(entities, edges, currentEntity, matchedTokensSize))
         {
-            sentence = "";
+            //@todo: wylaczam generowanie tego napisu w tym miejscu. po wszystkim zrobi to rulematcher
+/*            sentence = "";
   //          if (beforeMatch != "")
     //            sentence += beforeMatch;
             Entities::iterator e = entities.begin();// + currentEntity;
@@ -132,7 +133,7 @@ bool Rule::apply(std::string &sentence, Entities &entities, Edges &edges, int cu
                 sentence += (*e)->getCompiled();
                 e ++;
             }
-//            std::cout << "Sentencja po zmianie: " << sentence << std::endl;
+//            std::cout << "Sentencja po zmianie: " << sentence << std::endl;*/
             ret = true;
         }
         i ++;
@@ -201,7 +202,10 @@ int Rule::matchPattern(std::string &sentence, int matchNumber, std::string &befo
             std::cout << "Zdanie: " << sentence << std::endl;
 //            std::cerr << "before: " << before << std::endl;
             std::cerr << "Zwracam: " << countEntities(before) << std::endl;
-            return countEntities(before);
+            std::cerr << "Alternatywnie zwracam: " << getPatternStart(matching) << std::endl;
+            int r = getPatternStart(matching) + 1; //@todo: ten +1 wynika ze sposobu numerowania? w kazdym razie tak jest, zeby bylo w akcjach potem dokadlnie tak, jak wczesniej bylo. moze to sie uda zmienic po wymienieniu calosci
+            //return countEntities(before);
+            return r;
         }
         else {
             before += matched[0].as_string();
@@ -818,6 +822,18 @@ std::string Rule::log()
     return ss.str();
 }
 
+
+        int Rule::getPatternStart(std::string &matchedPattern) {
+            int r = -1;
+
+            RE2 regPatternInfo("<<[tsg]<(\\d+)"); //syntoki jakas inna literke jeszcze mialy?
+            int start;
+            if (RE2::PartialMatch(matchedPattern, regPatternInfo, &start)) {
+                r = start;
+            }
+
+            return r;
+        }
 
 }
 

@@ -66,6 +66,8 @@ void Puddle::setTagset(bonsai::puddle::TagsetPtr tagset_)
 //    ruleCompiler->setTagset(tagset);
 //    newtagger->setTagset(tagset);
     parseConverter->setTagset(tagset);
+
+    ruleMatcher->setTagset(tagset_);
 }
 
 void Puddle::setRules(bonsai::puddle::RulesPtr rules_)
