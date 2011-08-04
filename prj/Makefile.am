@@ -15,7 +15,7 @@ tests/runner.cpp: $(test_files)
 	cd tests; \
 	perl cxxtestgen.pl --have-eh --runner=ErrorPrinter -o runner.cpp $(foreach file, $(test_files), "../$(file)" )
 
-# Should be in WITH_JAVA condition but a bug occurs
+# Should be in the WITH_JAVA condition but a bug occurs
 JAVAROOT=../common/java
 
 if WITH_JAVA
