@@ -1,8 +1,9 @@
 #include "java_virtual_machine.hpp"
 
 jint const JavaVirtualMachine::JNI_VERSION = JNI_VERSION_1_6;
-string JavaVirtualMachine::javaClassPath = "../common/java:../common/java/morfologik-stemming-1.5.0.jar";
-string JavaVirtualMachine::javaLibraryPath = "";
+// Each class path is separated by colon (:)
+std::string JavaVirtualMachine::javaClassPath = "../common/java:../common/java/morfologik-stemming-1.5.0.jar";
+std::string JavaVirtualMachine::javaLibraryPath = "";
 
 JavaVirtualMachine* JavaVirtualMachine::jvmInstance = NULL;
 
@@ -24,9 +25,9 @@ JNIEnv* JavaVirtualMachine::create(JavaVM ** jvm) {
     JavaVMInitArgs vm_args;
     JavaVMOption options[2];
   
-	string cp = "-Djava.class.path=" + string(javaClassPath);
+	std::string cp = "-Djava.class.path=" + std::string(javaClassPath);
 	options[0].optionString = (char *)cp.c_str();
-	string lp = "-Djava.library.path=" + string(javaLibraryPath);
+	std::string lp = "-Djava.library.path=" + std::string(javaLibraryPath);
 	options[1].optionString = (char *)lp.c_str();
 
     vm_args.version = JNI_VERSION; 
@@ -52,10 +53,10 @@ JNIEnv* JavaVirtualMachine::getENV() {
 	return jniENV;
 }
 
-void JavaVirtualMachine::setJavaClassPath(string classPath) {
+void JavaVirtualMachine::setJavaClassPath(std::string classPath) {
 	javaClassPath = classPath;
 }
-void JavaVirtualMachine::setJavaLibraryPath(string libraryPath) {
+void JavaVirtualMachine::setJavaLibraryPath(std::string libraryPath) {
 	javaLibraryPath = libraryPath;
 }
 

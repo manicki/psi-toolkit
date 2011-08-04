@@ -18,7 +18,7 @@ class JavaVirtualMachineTests : public CxxTest::TestSuite {
 		JavaVirtualMachine * jvm = JavaVirtualMachine::Instance();
 		jclass cls = NULL;
 		jmethodID mid = NULL;
-		const char * hello;
+		const char * hello = NULL;
 
 		JNIEnv * env = jvm->getENV();
 		TS_ASSERT(env != NULL);
@@ -35,7 +35,7 @@ class JavaVirtualMachineTests : public CxxTest::TestSuite {
 			jstring jstr = (jstring)env->CallStaticObjectMethod(cls, mid, NULL);
 			hello = env->GetStringUTFChars(jstr,0);
 		}
-		TS_ASSERT((string)hello == "Hello World from Java");
+		TS_ASSERT_EQUALS((std::string)hello, "Hello World from Java");
 	}
 
 };

@@ -4,8 +4,6 @@
 #include <jni.h>
 #include <string>
 
-using std::string;
-
 class JavaVirtualMachine {
 
 	public:
@@ -13,14 +11,14 @@ class JavaVirtualMachine {
 
 	JavaVM* getJVM();
 	JNIEnv* getENV();
-	static void setJavaClassPath(string);
-    static void setJavaLibraryPath(string);
+	static void setJavaClassPath(std::string);
+    static void setJavaLibraryPath(std::string);
 
 	static JavaVirtualMachine* Instance();
 
 	private:
-	static string javaClassPath;
-	static string javaLibraryPath;
+	static std::string javaClassPath;
+	static std::string javaLibraryPath;
 	bool inited;
 	JavaVM* javaVM;
 	JNIEnv* jniENV;

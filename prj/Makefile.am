@@ -53,13 +53,13 @@ runner_SOURCES = \
 	../formats/txt/txt_lattice_reader.cpp \
 	../formats/utt/utt_lattice_reader.cpp \
 	../formats/utt/utt_quoter.cpp \
-	../tools/lemmatizers/morfologik/morfologik.cpp \
 	../tools/tokenizers/tp/tp_tokenizer.cpp \
 	../tools/tokenizers/tp/tp_token_cutter.cpp 
 
 if WITH_JAVA
 runner_SOURCES += \
-	../common/java_virtual_machine.cpp
+	../common/java_virtual_machine.cpp \
+	../tools/lemmatizers/morfologik/morfologik.cpp
 endif
 
 runner_CPPFLAGS = ${compiler_flags} \
