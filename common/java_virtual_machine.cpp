@@ -1,7 +1,7 @@
 #include "java_virtual_machine.hpp"
 
 jint const JavaVirtualMachine::JNI_VERSION = JNI_VERSION_1_6;
-string JavaVirtualMachine::javaClassPath = "../common/java";
+string JavaVirtualMachine::javaClassPath = "../common/java:../common/java/morfologik-stemming-1.5.0.jar";
 string JavaVirtualMachine::javaLibraryPath = "";
 
 JavaVirtualMachine* JavaVirtualMachine::jvmInstance = NULL;

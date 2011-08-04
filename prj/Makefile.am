@@ -8,7 +8,7 @@ CLEANFILES=tests/runner.cpp
 test_files = ../common/t/layer_tags_tests.hpp ../common/t/annotation_item_tests.hpp ../common/t/lattice_tests.hpp ../common/t/quoter_tests.hpp ../common/t/lattice_readers_writers_tests.hpp
 
 if WITH_JAVA
-test_files += ../common/t/java_virtual_machine_tests.hpp
+test_files += ../common/t/java_virtual_machine_tests.hpp ../common/t/morfologik_tests.hpp
 endif
 
 tests/runner.cpp: $(test_files)
@@ -53,8 +53,9 @@ runner_SOURCES = \
 	../formats/txt/txt_lattice_reader.cpp \
 	../formats/utt/utt_lattice_reader.cpp \
 	../formats/utt/utt_quoter.cpp \
+	../tools/lemmatizers/morfologik/morfologik.cpp \
 	../tools/tokenizers/tp/tp_tokenizer.cpp \
-	../tools/tokenizers/tp/tp_token_cutter.cpp
+	../tools/tokenizers/tp/tp_token_cutter.cpp 
 
 if WITH_JAVA
 runner_SOURCES += \
