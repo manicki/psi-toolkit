@@ -21,13 +21,11 @@ class Morfologik {
 		void initializePolishStemmer();
 
 		jclass clsList;
-		jobject objList;
 		jmethodID midListGetElement;
 		jmethodID midListGetSize;
 		void initializeList();
 
 		jclass clsWordData;
-		jobject objWordData;
 		jmethodID midWordDataGetStem;
 		jmethodID midWordDataGetTag;
 		void initializeWordData();

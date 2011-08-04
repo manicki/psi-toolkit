@@ -37,8 +37,7 @@ JNIEnv* JavaVirtualMachine::create(JavaVM ** jvm) {
       
     int result = JNI_CreateJavaVM(jvm, (void**)&env, &vm_args);
     if (result < 0) {
-		// it should be an exception
-        printf("Unable to Launch JVM\n");
+        throw JavaVirtualMachineException("Unable to Launch JVM\n");
 	}
 	else {
 		inited = true;

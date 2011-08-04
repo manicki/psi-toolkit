@@ -3,6 +3,7 @@
 
 #include <jni.h>
 #include <string>
+#include "exceptions.hpp"
 
 class JavaVirtualMachine {
 

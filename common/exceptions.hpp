@@ -40,4 +40,10 @@ public:
 };
 
 
+class JavaVirtualMachineException : public Exception {
+public:
+    JavaVirtualMachineException(std::string message) : Exception(message) { }
+};
+
+
 #endif
