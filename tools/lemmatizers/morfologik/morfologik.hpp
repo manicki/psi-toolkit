@@ -12,6 +12,7 @@ class Morfologik {
 
 	private:
 		JNIEnv * jenv;
+		static std::string tagSeparator;
 
 		jclass clsPolishStemmer;
 		jobject objPolishStemmer;
@@ -34,8 +35,7 @@ class Morfologik {
 		jclass clsString;
 		jmethodID midStringToString;
 		void initializeString();
-
-			
 };
 
 #endif
+
