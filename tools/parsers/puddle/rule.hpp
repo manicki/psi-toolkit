@@ -10,7 +10,7 @@
 //#include "utf8_converter.hpp"
 
 #include "TransitionInfo.hpp"
-#include "entity.hpp"
+//#include "entity.hpp"
 #include "action.hpp"
 #include "group_action.hpp"
 #include "delete_action.hpp"
@@ -36,11 +36,13 @@ class Rule
 {
     public:
         Rule();
-        Rule(std::string aName, std::string aCompiled, int aLeftCount, int aMatchCount, int aRightCount, ActionsPtr aActions, std::vector<std::string> aTokensPatterns, std::vector<std::string> aTokensModifiers, std::vector<bool> aTokensRequired, std::vector<int> aMatchedIndexes, bool aRepeat, std::string aLeft, std::string aMatch, std::string aRight); //@todo: zmienic tu typy, bo mnie krew zaleje
+        Rule(std::string aName, std::string aCompiled, int aLeftCount, int aMatchCount, int aRightCount, ActionsPtr aActions, std::vector<std::string> aTokensPatterns, std::vector<std::string> aTokensModifiers, std::vector<bool> aTokensRequired, std::vector<int> aMatchedIndices, bool aRepeat, std::string aLeft, std::string aMatch, std::string aRight); //@todo: zmienic tu typy, bo mnie krew zaleje
         ~Rule();
 
-        bool test(std::string &sentence, Entities &entities, int currentEntity);
-        bool apply(std::string &sentence, Entities &entities, Edges &edges, int currentEntity);
+        //bool test(std::string &sentence, Entities &entities, int currentEntity);
+        bool test(std::string &sentenceString, ParseGraphPtr pg, int currentEntity);
+        //bool apply(std::string &sentence, Entities &entities, Edges &edges, int currentEntity);
+        bool apply(std::string &sentenceString, ParseGraphPtr pg, int currentEntity);
 
         std::string getName();
         PatternPtr getPattern();
@@ -69,7 +71,7 @@ class Rule
         void setTokensPatterns(std::vector<std::string> aTokensPatterns);
         void setTokensModifiers(std::vector<std::string> aTokensModifiers);
         void setTokensRequired(std::vector<bool> aTokensRequired);
-        void setMatchedIndexes(std::vector<int> aMatchedIndexes);
+        void setMatchedIndices(std::vector<int> aMatchedIndices);
 
         int matchPattern(std::string &sentence, int matchNumber, std::string &beforeMatched);
 
@@ -99,7 +101,7 @@ class Rule
         std::vector<std::string> tokensModifiers;
         std::vector<bool> tokensRequired;
         std::vector<int> matchedTokensSize;
-        std::vector<int> matchedIndexes;
+        std::vector<int> matchedIndices;
 
         bool repeat;
 

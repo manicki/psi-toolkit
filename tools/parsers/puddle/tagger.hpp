@@ -2,11 +2,11 @@
 #define PUDDLETAGGER_H__
 
 #include "TransitionInfo.hpp"
-#include "entity.hpp"
-#include "token.hpp"
-#include "group.hpp"
-#include "syntok.hpp"
-#include "special_token.hpp"
+//#include "entity.hpp"
+//#include "token.hpp"
+//#include "group.hpp"
+//#include "syntok.hpp"
+//#include "special_token.hpp"
 #include <string>
 #include <map>
 #include <fstream>
@@ -15,11 +15,13 @@
 #include <boost/archive/text_iarchive.hpp>
 //#include <boost/regex.hpp>
 #include <boost/algorithm/string/trim.hpp>
+#include "puddle_types.hpp"
 #include "tagset.hpp"
 //#include "icu_converter.hpp"
 #include <boost/algorithm/string.hpp>
 //#include <unicode/schriter.h>
 #include <boost/shared_ptr.hpp>
+#include "puddle_util.hpp"
 
 namespace poleng
 {
@@ -36,10 +38,12 @@ class Tagger
         Tagger();
         ~Tagger();
         void loadDictionary(std::string &filename);
-        std::string tagSentence(std::string sentence, Entities &entities, Edges &edges);
-        std::string getReadable(Entities entities);
-        std::string tagSentenceReadable(std::string sentence, Entities &entities, Edges &edges);
-        std::string processInput(std::string &sentence, Entities &entities, Edges &edges);
+        //std::string tagSentence(std::string sentence, Entities &entities, Edges &edges);
+        std::string tagSentence(std::string sentence, ParseGraphPtr inputGraph);
+        //std::string getReadable(Entities entities); //@todo: funkcje 'readable' sa tymczasowo wylaczone. patrz uwaga w pliku cpp
+        //std::string tagSentenceReadable(std::string sentence, Entities &entities, Edges &edges);
+        //std::string processInput(std::string &sentence, Entities &entities, Edges &edges);
+        std::string processInput(std::string &sentence, ParseGraphPtr inputGraph);
 
         void setTagset(TagsetPtr aTagset);
 

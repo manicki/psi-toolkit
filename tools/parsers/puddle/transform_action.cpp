@@ -29,8 +29,9 @@ TransformAction::~TransformAction()
 {
 }
 
-bool TransformAction::apply(Entities &entities, Edges &edges, int currentEntity, std::vector<int> matchedTokensSize)
-{
+//bool TransformAction::apply(Entities &entities, Edges &edges, int currentEntity, std::vector<int> matchedTokensSize)
+bool TransformAction::apply(ParseGraphPtr pg, int currentEntity,
+        std::vector<int> matchedTokensSize) {
 
 
     int before = 0;
@@ -41,12 +42,14 @@ bool TransformAction::apply(Entities &entities, Edges &edges, int currentEntity,
         i ++;
     }
 
-    Group *gr = (Group*)(entities[currentEntity + before]);
+//    Group *gr = (Group*)(entities[currentEntity + before]);
 
-    gr->setRuleName(ruleName);
-    gr->setGroupType(group);
+//    gr->setRuleName(ruleName);
+//    gr->setGroupType(group);
 
-    Edges::iterator e = edges.begin();
+    TransitionInfo *edge = util::getEdge(pg, currentEntity, before);
+    edge->setLabel(group);
+/*    Edges::iterator e = edges.begin();
     int index = -1;
     i = 0;
     while (e != edges.end())
@@ -65,15 +68,16 @@ bool TransformAction::apply(Entities &entities, Edges &edges, int currentEntity,
         {
             std::cerr << "Could not find edge to transform. Id: " << gr->getId() << "." << std::endl;
             return false;
-        }
+        }*/
 
     return true;
 }
 
-bool TransformAction::test(Entities entities, int currentEntity, std::vector<int> matchedTokensSize)
-{
-    if (entities.size() < element)
-    {
+//bool TransformAction::test(Entities entities, int currentEntity, std::vector<int> matchedTokensSize)
+bool TransformAction::test(ParseGraphPtr pg, int currentEntity,
+        std::vector<int> matchedTokensSize) {
+    //if (entities.size() < element)
+    if ( (pg->num_vertices() - 1) < element ) {
         return false;
     }
     if (matchedTokensSize[element - 1] == 0)
@@ -90,8 +94,9 @@ bool TransformAction::test(Entities entities, int currentEntity, std::vector<int
         i ++;
     }
 
-    if (entities[currentEntity + before]->getType() != "group")
-    {
+    //if (entities[currentEntity + before]->getType() != "group")
+    TransitionInfo *edge = util::getEdge(pg, currentEntity, before);
+    if (edge->getType() != "group") {
         return false;
     }
     return true;

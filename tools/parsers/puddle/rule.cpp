@@ -39,14 +39,15 @@ Rule::Rule()
 Rule::Rule( std::string aName, std::string aCompiled, int aLeftCount,
             int aMatchCount, int aRightCount, ActionsPtr aActions,
             std::vector<std::string> aTokensPatterns, std::vector<std::string> aTokensModifiers,
-            std::vector<bool> aTokensRequired, std::vector<int> aMatchedIndexes,
+            std::vector<bool> aTokensRequired, std::vector<int> aMatchedIndices,
             bool aRepeat, std::string aLeft, std::string aMatch, std::string aRight ) {
 
     tokensPatterns.insert(tokensPatterns.begin(), aTokensPatterns.begin(), aTokensPatterns.end());// = new std::vector<std::string>(aTokensPatterns);
     tokensModifiers.insert(tokensModifiers.begin(), aTokensModifiers.begin(), aTokensModifiers.end());// = new std::vector<std::string>(aTokensModifiers);
     tokensRequired.insert(tokensRequired.begin(), aTokensRequired.begin(), aTokensRequired.end());// = new std::vector<bool>(aTokensRequired);
 //    matchedTokensSize = new std::vector<int>;
-    matchedIndexes.insert(matchedIndexes.begin(), aMatchedIndexes.begin(), aMatchedIndexes.end());// = new std::vector<int>(aMatchedIndexes);
+    matchedIndices.insert(matchedIndices.begin(), aMatchedIndices.begin(),
+            aMatchedIndices.end());// = new std::vector<int>(aMatchedIndexes);
 //    std::cerr << "3" << std::endl;
 
     pattern = PatternPtr( new Pattern("") );
@@ -112,8 +113,8 @@ Rule::~Rule()
     delete[] match;
 }
 
-bool Rule::apply(std::string &sentence, Entities &entities, Edges &edges, int currentEntity)
-{
+//bool Rule::apply(std::string &sentence, Entities &entities, Edges &edges, int currentEntity)
+bool Rule::apply(std::string &sentence, ParseGraphPtr pg, int currentEntity) {
     bool ret = false;
     Actions::iterator i = actions->begin();
     while (i != actions->end())
@@ -121,8 +122,8 @@ bool Rule::apply(std::string &sentence, Entities &entities, Edges &edges, int cu
 //        Action *act = *i
 //
 //        std::cerr << "akcja: " << (*i)->getType() << std::endl;
-        if ((*i)->apply(entities, edges, currentEntity, matchedTokensSize))
-        {
+        //if ((*i)->apply(entities, edges, currentEntity, matchedTokensSize))
+        if ((*i)->apply(pg, currentEntity, matchedTokensSize)) {
             //@todo: wylaczam generowanie tego napisu w tym miejscu. po wszystkim zrobi to rulematcher
 /*            sentence = "";
   //          if (beforeMatch != "")
@@ -142,7 +143,7 @@ bool Rule::apply(std::string &sentence, Entities &entities, Edges &edges, int cu
     return ret;
 }
 
-int Rule::matchPattern(std::string &sentence, int matchNumber, std::string &beforeMatched) {
+int Rule::matchPattern(std::string &sentenceString, int matchNumber, std::string &beforeMatched) {
     std::cerr << "MACZ NUMBER: " << matchNumber << std::endl;
     //std::string::const_iterator start = sentence.begin();
     //std::string::const_iterator end = sentence.end();
@@ -157,7 +158,7 @@ int Rule::matchPattern(std::string &sentence, int matchNumber, std::string &befo
     //RE2::Anchor anchor = RE2::UNANCHORED; // @todo: do czego to jest?
     int num_groups = pattern->NumberOfCapturingGroups() + 1;
     re2::StringPiece* matched = new re2::StringPiece[num_groups];
-    re2::StringPiece sentence_str(sentence);
+    re2::StringPiece sentence_str(sentenceString);
     int start = 0;
     int end = sentence_str.size();
     std::string before = "";
@@ -169,10 +170,10 @@ int Rule::matchPattern(std::string &sentence, int matchNumber, std::string &befo
     while ( pattern->Match( sentence_str, start, end,
                             RE2::UNANCHORED, matched, num_groups ) ) { // @todo: tu nie bedzie chyba while tylko if, skoro bedzie parametrem odkad szukac, a nie ktore ogolnie dopasowanie ma byc wziete na warsztat
     //while (boost::u32regex_search(start, end, matched, *pattern, flags)) {
-        std::cerr << "Zdanie: " << sentence << std::endl;
+        std::cerr << "Zdanie: " << sentenceString << std::endl;
         std::cerr << "Dopasowadlo: " << matched[0] << std::endl;
         int prefix_len = matched[0].begin() - sentence_str.begin();
-        std::string prefix = sentence.substr(0, prefix_len); //@todo: czy od start do prefix_len?
+        std::string prefix = sentenceString.substr(0, prefix_len); //@todo: czy od start do prefix_len?
         //before += matched.prefix(); //before + matched.prefix();
         before += prefix;
         //start = matched[0].second;
@@ -199,11 +200,11 @@ int Rule::matchPattern(std::string &sentence, int matchNumber, std::string &befo
             std::cerr << "Dopasowalem wzorzec: " << compiled << std::endl;
             std::cerr << "Dopasowane: " << matching << std::endl;
             std::cout << "Przed: " << before << std::endl;
-            std::cout << "Zdanie: " << sentence << std::endl;
+            std::cout << "Zdanie: " << sentenceString << std::endl;
 //            std::cerr << "before: " << before << std::endl;
             std::cerr << "Zwracam: " << countEntities(before) << std::endl;
-            std::cerr << "Alternatywnie zwracam: " << getPatternStart(matching) << std::endl;
-            int r = getPatternStart(matching) + 1; //@todo: ten +1 wynika ze sposobu numerowania? w kazdym razie tak jest, zeby bylo w akcjach potem dokadlnie tak, jak wczesniej bylo. moze to sie uda zmienic po wymienieniu calosci
+            std::cerr << "Alternatywnie zwracam: " << getPatternStart(before) << std::endl;
+            int r = getPatternStart(before); // + 1; //@todo: ten +1 wynika ze sposobu numerowania? w kazdym razie tak jest, zeby bylo w akcjach potem dokadlnie tak, jak wczesniej bylo. moze to sie uda zmienic po wymienieniu calosci
             //return countEntities(before);
             return r;
         }
@@ -233,8 +234,8 @@ int Rule::matchPattern(std::string &sentence, int matchNumber, std::string &befo
     return -1;
 }
 
-bool Rule::test(std::string &sentence, Entities &entities, int currentEntity)
-{
+//bool Rule::test(std::string &sentence, Entities &entities, int currentEntity)
+bool Rule::test(std::string &sentenceString, ParseGraphPtr pg, int currentEntity) {
 //    std::cerr << "testuje regule: " << name << std::endl;
 //    std::cerr << "ten luj: " << match[0] << std::endl;
     ///std::string::const_iterator start = sentence.begin();
@@ -258,7 +259,7 @@ bool Rule::test(std::string &sentence, Entities &entities, int currentEntity)
     //matchedTokensSize = new std::vector<int>;
     matchedTokensSize.clear();
 
-    matchedTokensSize.assign(matchedIndexes.size(), 0);
+    matchedTokensSize.assign(matchedIndices.size(), 0);
 
 //    std::cerr << "patterns: " << tokensPatterns.size() << std::endl;
 //    std::cerr << "modifs: " << tokensModifiers.size() << std::endl;
@@ -275,7 +276,7 @@ bool Rule::test(std::string &sentence, Entities &entities, int currentEntity)
 //    }
 //    std::cout << "Maczing przed: " << matching << std::endl;
 //    std::vector<std::string>::iterator it = tokensPatterns.begin();
-    std::vector<int>::iterator it = matchedIndexes.begin();
+    std::vector<int>::iterator it = matchedIndices.begin();
     int i = 0;
     int j = 0;
 //    while (it != tokensPatterns.end())
@@ -326,7 +327,7 @@ bool Rule::test(std::string &sentence, Entities &entities, int currentEntity)
 //    it = tokensPatterns.begin();
 //    i = 0;
 //    while (it != tokensPatterns.end())
-    while (it != matchedIndexes.end())
+    while (it != matchedIndices.end())
     {
         std::cerr << "MACZD INDEKSES: " << *it << ": " << match[*it].as_string() << std::endl;
 //        std::cerr << "Numerex: " << *it << std::endl;
@@ -424,7 +425,8 @@ bool Rule::test(std::string &sentence, Entities &entities, int currentEntity)
     while (ia != actions->end())
     {
 //        Action *act = new Action(*ia);
-        if ((*ia)->test(entities, currentEntity, matchedTokensSize) == false)
+        //if ((*ia)->test(entities, currentEntity, matchedTokensSize) == false)
+        if ((*ia)->test(pg, currentEntity, matchedTokensSize) == false)
         {
             int limit;
             if (tokensModifiers.at(leftCount + matchCount - 1) == "+" || tokensModifiers.at(leftCount + matchCount - 1) == "")
@@ -454,6 +456,7 @@ bool Rule::test(std::string &sentence, Entities &entities, int currentEntity)
     return ret;
 }
 
+//@todo: a tego nie zamienimy na jakies zliczenie ile jest ciagow <<[tgs] w dopasowaniu?
 int Rule::countEntities(std::string matched)
 {
     int i = 0;
@@ -635,10 +638,11 @@ void Rule::setTokensRequired(std::vector<bool> aTokensRequired)
 //    tokensRequired = new std::vector<bool>(aTokensRequired);
 }
 
-void Rule::setMatchedIndexes(std::vector<int> aMatchedIndexes)
+void Rule::setMatchedIndices(std::vector<int> aMatchedIndices)
 {
-    matchedIndexes.clear();
-    matchedIndexes.insert(matchedIndexes.begin(), aMatchedIndexes.begin(), aMatchedIndexes.end());
+    matchedIndices.clear();
+    matchedIndices.insert(matchedIndices.begin(), aMatchedIndices.begin(),
+            aMatchedIndices.end());
 //    delete matchedIndexes;
 //    matchedIndexes = new std::vector<int>(aMatchedIndexes);
 }
@@ -701,7 +705,7 @@ std::string Rule::makeReadable()
         {
             ss << "unify(";
             std::vector<std::string> attributes = (boost::dynamic_pointer_cast<UnifyAction>(*a))->getUAttributes();
-            std::vector<int> indexes = (boost::dynamic_pointer_cast<UnifyAction>(*a))->getTokenIndexes();
+            std::vector<int> indices = (boost::dynamic_pointer_cast<UnifyAction>(*a))->getTokenIndices();
 
             for (std::vector<std::string>::iterator it = attributes.begin(); it != attributes.end(); it ++)
             {
@@ -709,7 +713,7 @@ std::string Rule::makeReadable()
                     ss << " ";
                 ss << *it;
             }
-            for (std::vector<int>::iterator it = indexes.begin(); it != indexes.end(); it ++)
+            for (std::vector<int>::iterator it = indices.begin(); it != indices.end(); it ++)
                 ss << ", " << *it;
             ss << ");" << std::endl;
         }
@@ -749,16 +753,22 @@ std::string Rule::log()
     for (Actions::iterator a = actions->begin(); a != actions->end(); a ++)
     {
         if ((*a)->getType() == "delete")
-            ss << "Delete " << (boost::dynamic_pointer_cast<DeleteAction>(*a))->getTokenIndex() << " " << (boost::dynamic_pointer_cast<DeleteAction>(*a))->getPattern() << std::endl;
+            //ss << "Delete " << (boost::dynamic_pointer_cast<DeleteAction>(*a))->getTokenIndex() << " " << (boost::dynamic_pointer_cast<DeleteAction>(*a))->getPattern() << std::endl;
+            ss << "Delete " << (boost::dynamic_pointer_cast<DeleteAction>(*a))->getTokenIndex() << std::endl;
         else if ((*a)->getType() == "add")
         {
             //std::vector<InterpretationPair> interps = ((AddAction*)(*a))->getInterpretations();
-            std::vector<InterpretationPair> interps = (boost::dynamic_pointer_cast<AddAction>(*a))->getInterpretations();
-            std::vector<InterpretationPair>::iterator it = interps.begin();
+            //std::vector<InterpretationPair> interps = (boost::dynamic_pointer_cast<AddAction>(*a))->getInterpretations();
+            //std::vector<InterpretationPair>::iterator it = interps.begin();
+            std::vector<std::string> interps = (boost::dynamic_pointer_cast<AddAction>(*a))->getInterpretations();
+            std::vector<std::string>::iterator it = interps.begin();
             while (it != interps.end())
             {
                 //logfile << "Add " << ((AddAction*)*a)->getTokenIndex() << " " << it->second << ((AddAction*)*a)->getBase() << std::endl;
-                ss << "Add " << (boost::dynamic_pointer_cast<AddAction>(*a))->getTokenIndex() << " " << it->second << (boost::dynamic_pointer_cast<AddAction>(*a))->getBase() << std::endl;
+                //ss << "Add " << (boost::dynamic_pointer_cast<AddAction>(*a))->getTokenIndex() << " " << it->second << (boost::dynamic_pointer_cast<AddAction>(*a))->getBase() << std::endl;
+                ss << "Add " << (boost::dynamic_pointer_cast<AddAction>(*a))->getTokenIndex()
+                    << " " << *it << (boost::dynamic_pointer_cast<AddAction>(*a))->getBase()
+                    << std::endl;
                 it ++;
             }
         }
@@ -768,33 +778,36 @@ std::string Rule::log()
         else if ((*a)->getType() == "unify")
         {
             ss << "Unify ";
-            std::vector<int> tokenIndexes = (boost::dynamic_pointer_cast<UnifyAction>(*a))->getTokenIndexes();
-            std::vector<int> attributeIndexes = (boost::dynamic_pointer_cast<UnifyAction>(*a))->getAttributeIndexes();
-            std::vector<int>::iterator it = tokenIndexes.begin();
+            std::vector<int> tokenIndices = (boost::dynamic_pointer_cast<UnifyAction>(*a))->getTokenIndices();
+            //std::vector<int> attributeIndexes = (boost::dynamic_pointer_cast<UnifyAction>(*a))->getAttributeIndexes();
+            std::vector<int>::iterator it = tokenIndices.begin();
             ss << "entities: ";
-            while (it != tokenIndexes.end())
+            while (it != tokenIndices.end())
             {
                 ss << *it;
                 it ++;
-                if (it != tokenIndexes.end())
+                if (it != tokenIndices.end())
                     ss << ", ";
             }
-            it = attributeIndexes.begin();
-            ss << " attributes: ";
-            while (it != attributeIndexes.end())
-            {
-                ss << *it;
-                it ++;
-                if (it != attributeIndexes.end())
-                    ss << ", ";
-            }
+            //it = attributeIndexes.begin();
+            //ss << " attributes: ";
+            //while (it != attributeIndexes.end())
+            //{
+            //    ss << *it;
+            //    it ++;
+            //    if (it != attributeIndexes.end())
+            //        ss << ", ";
+            //}
             ss << std::endl;
         }
         else if ((*a)->getType() == "syntok")
         {
             ss << "Syntok ";
-            std::vector<InterpretationPair> morphos = (boost::dynamic_pointer_cast<SyntokAction>(*a))->getMorphology();
-            std::string m = morphos.front().first;
+            //std::vector<InterpretationPair> morphos = (boost::dynamic_pointer_cast<SyntokAction>(*a))->getMorphology();
+            std::vector<std::string> morphos =
+                (boost::dynamic_pointer_cast<SyntokAction>(*a))->getMorphology();
+            //std::string m = morphos.front().first;
+            std::string m = morphos.front();
             ss << m.substr(m.find(":", 1) + 1, std::string::npos);
             //                logfile << " base=";
             //                std::vector<int> indexes = ((SyntokAction*)*a)->getTokenIndexes();
@@ -823,13 +836,25 @@ std::string Rule::log()
 }
 
 
-        int Rule::getPatternStart(std::string &matchedPattern) {
+//stare:
+//        int Rule::getPatternStart(std::string &matchedPattern) {
+//            int r = -1;
+//
+//            RE2 regPatternInfo("<<[tsg]<(\\d+)"); //syntoki jakas inna literke jeszcze mialy?
+//            int start;
+//            if (RE2::PartialMatch(matchedPattern, regPatternInfo, &start)) {
+//                r = start;
+//            }
+//
+//            return r;
+//        }
+        int Rule::getPatternStart(std::string &beforePattern) {
             int r = -1;
 
-            RE2 regPatternInfo("<<[tsg]<(\\d+)"); //syntoki jakas inna literke jeszcze mialy?
-            int start;
-            if (RE2::PartialMatch(matchedPattern, regPatternInfo, &start)) {
-                r = start;
+            RE2 regPatternInfo("<<[tsg]<\\d+<(\\d+)[^>]+>$"); //syntoki jakas inna literke jeszcze mialy?
+            int end;
+            if (RE2::PartialMatch(beforePattern, regPatternInfo, &end)) {
+                r = end;
             }
 
             return r;

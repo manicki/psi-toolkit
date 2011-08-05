@@ -1004,6 +1004,91 @@ std::vector<std::string> Tagset::getMappedMorphologies(std::string mapped_pos)
     }
 }
 
+        std::vector<std::string> Tagset::getPosMatching(std::string regexp) {
+            RE2 reg(regexp);
+            std::vector<std::string> result;
+            for (std::map<std::string,
+                    std::vector<std::string> >::iterator pos_it = POSs.begin();
+                    pos_it != POSs.end(); pos_it ++) {
+                if (RE2::FullMatch(pos_it->first, reg))
+                    result.push_back(pos_it->first);
+            }
+            return result;
+        }
+
+        std::vector<std::string> Tagset::getPosNotMatching(std::string regexp) {
+            RE2 reg(regexp);
+            std::vector<std::string> result;
+            for (std::map<std::string,
+                    std::vector<std::string> >::iterator pos_it = POSs.begin();
+                    pos_it != POSs.end(); pos_it ++) {
+                if (!RE2::FullMatch(pos_it->first, reg))
+                    result.push_back(pos_it->first);
+            }
+            return result;
+        }
+
+        std::vector<std::string> Tagset::getPosExcept(std::string pos) {
+            std::vector<std::string> result;
+            for (std::map<std::string,
+                    std::vector<std::string> >::iterator pos_it = POSs.begin();
+                    pos_it != POSs.end(); pos_it ++) {
+                if (pos_it->first != pos)
+                    result.push_back(pos_it->first);
+            }
+            return result;
+        }
+
+        std::vector<std::string> Tagset::getAttributeValuesMatching(std::string attribute,
+                std::string regexp) {
+            RE2 reg(regexp);
+            std::vector<std::string> result;
+            std::map<std::string, std::vector<std::string> >::iterator attr_it =
+                attributes.find(attribute);
+            if (attr_it != attributes.end()) {
+                std::vector<std::string> values = attr_it->second;
+                for (std::vector<std::string>::iterator val_it = values.begin();
+                        val_it != values.end(); val_it ++) {
+                    if (RE2::FullMatch(*val_it, reg))
+                        result.push_back(*val_it);
+                }
+            }
+            return result;
+        }
+
+        std::vector<std::string> Tagset::getAttributeValuesNotMatching(std::string attribute,
+                std::string regexp) {
+            RE2 reg(regexp);
+            std::vector<std::string> result;
+            std::map<std::string, std::vector<std::string> >::iterator attr_it =
+                attributes.find(attribute);
+            if (attr_it != attributes.end()) {
+                std::vector<std::string> values = attr_it->second;
+                for (std::vector<std::string>::iterator val_it = values.begin();
+                        val_it != values.end(); val_it ++) {
+                    if (!RE2::FullMatch(*val_it, reg))
+                        result.push_back(*val_it);
+                }
+            }
+            return result;
+        }
+
+        std::vector<std::string> Tagset::getAttributeValuesExcept(std::string attribute,
+                std::string value) {
+            std::vector<std::string> result;
+            std::map<std::string, std::vector<std::string> >::iterator attr_it =
+                attributes.find(attribute);
+            if (attr_it != attributes.end()) {
+                std::vector<std::string> values = attr_it->second;
+                for (std::vector<std::string>::iterator val_it = values.begin();
+                        val_it != values.end(); val_it ++) {
+                    if (*val_it != value)
+                        result.push_back(*val_it);
+                }
+            }
+            return result;
+}
+
 }
 
 }

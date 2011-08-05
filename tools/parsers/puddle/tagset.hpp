@@ -61,6 +61,13 @@ class Tagset
         std::vector<std::string> getOpenClasses();
         std::vector<std::string> getMappedMorphologies(std::string mapped_pos);
 
+        std::vector<std::string> getPosMatching(std::string regexp);
+        std::vector<std::string> getPosNotMatching(std::string regexp);
+        std::vector<std::string> getPosExcept(std::string pos);
+        std::vector<std::string> getAttributeValuesMatching(std::string attribute, std::string regexp);
+        std::vector<std::string> getAttributeValuesNotMatching(std::string attribute, std::string regexp);
+        std::vector<std::string> getAttributeValuesExcept(std::string attribute, std::string value);
+
     private:
 
         std::vector<std::string> attrList;

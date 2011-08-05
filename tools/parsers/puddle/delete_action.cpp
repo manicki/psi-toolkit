@@ -1,16 +1,27 @@
 
 #include <iostream>
 #include "delete_action.hpp"
-#include "token.hpp"
-#include "group.hpp"
-#include "syntok.hpp"
+//#include "token.hpp"
+//#include "group.hpp"
+//#include "syntok.hpp"
 
 namespace poleng {
 
     namespace bonsai {
         namespace puddle {
 
-DeleteAction::DeleteAction(std::string aPattern, int aTokenIndex, std::string uPattern) {
+            DeleteAction::DeleteAction(DeleteConditions aConditions, int aTokenIndex,
+                    std::string uPattern) {
+                //pattern = PatternPtr(new RE2(""));
+                //patternString = "";
+                tokenIndex = aTokenIndex;
+                type = "delete";
+                verbose = false;
+                pattern_ = uPattern;
+                conditions = aConditions;
+            }
+
+/*DeleteAction::DeleteAction(std::string aPattern, int aTokenIndex, std::string uPattern) {
     //pattern = boost::make_u32regex(aPattern);
     //pattern();
     pattern = PatternPtr(new RE2(aPattern));
@@ -19,9 +30,64 @@ DeleteAction::DeleteAction(std::string aPattern, int aTokenIndex, std::string uP
     type = "delete";
     verbose = false;
     pattern_ = uPattern;
+}*/
+
+bool DeleteAction::apply(ParseGraphPtr pg, int currentEntity,
+        std::vector<int> matchedTokensSize) {
+    int count = matchedTokensSize[tokenIndex - 1];
+    if (count == 0)
+    {
+//        std::cout << "Nothing matched to " << tokenIndex << " in ...." << std::endl;
+        return true;
+    }
+
+    if (nothingToDelete)
+    {
+//        std::cerr << "nic do delete" << std::endl;
+        return true; //returns true in order to continue other actions of the rule
+    }
+
+    int before = 0;
+    int i = 0;
+    while (i < (tokenIndex - 1)) {
+        before += matchedTokensSize[i];
+        i ++;
+    }
+
+    for (int edge_i = before; edge_i < (before + count); edge_i ++) {
+        TransitionInfo *edge = util::getEdge(pg, currentEntity, edge_i);
+        for (DeleteConditions::iterator cond_it = conditions.begin();
+                cond_it != conditions.end(); cond_it ++) {
+            if (cond_it->type == BASE_CONDITION) {
+                for (std::vector<PosInfo>::iterator var_it = edge->variants_.begin();
+                        var_it != edge->variants_.end(); var_it ++) {
+                    std::string tokenBase = boost::get<0>(*var_it);
+                    if (cond_it->negation) {
+                        if (!RE2::FullMatch(tokenBase, cond_it->pattern)) {
+                            boost::get<2>(*var_it) = 0;
+                        }
+                    } else {
+                        if (RE2::FullMatch(tokenBase, cond_it->pattern)) {
+                            boost::get<2>(*var_it) = 0;
+                        }
+                    }
+                }
+            } else if (cond_it->type == MORPHOLOGY_CONDITION) {
+                for (std::vector<PosInfo>::iterator var_it = edge->variants_.begin();
+                        var_it != edge->variants_.end(); var_it ++) {
+                    std::string tokenMorphology = boost::get<1>(*var_it);
+                    if (RE2::FullMatch(tokenMorphology, cond_it->pattern)) {
+                        boost::get<2>(*var_it) = 0;
+                    }
+                }
+            }
+        }
+    }
+
+    return true;
 }
 
-bool DeleteAction::apply(Entities &entities, Edges &edges, int currentEntity, std::vector<int> matchedTokensSize)
+/*bool DeleteAction::apply(Entities &entities, Edges &edges, int currentEntity, std::vector<int> matchedTokensSize)
 {
     int count = matchedTokensSize[tokenIndex - 1];
     if (count == 0)
@@ -186,154 +252,229 @@ bool DeleteAction::apply(Entities &entities, Edges &edges, int currentEntity, st
 
     return ret;
     //return ret;
-}
+}*/
 
-bool DeleteAction::test(Entities entities, int currentEntity, std::vector<int> matchedTokensSize)
-{
-//    std::cout << "Test usuwania" << std::endl;
+bool DeleteAction::test(ParseGraphPtr pg, int currentEntity,
+        std::vector<int> matchedTokensSize) {
+    std::cerr << "Test usuwania" << std::endl;
     bool ret = false;
     nothingToDelete = false;
 
     int count = matchedTokensSize[tokenIndex - 1];
-    if (count == 0)
-    {
+    if (count == 0) {
         if (verbose)
             std::cerr << "Nothing matched to " << tokenIndex << " in delete ...." << std::endl;
         return true;
     }
     int before = 0;
     int i = 0;
-    while (i < (tokenIndex - 1))
-    {
+    while (i < (tokenIndex - 1)) {
         before += matchedTokensSize[i];
         i ++;
     }
 
-    for (int entIndex = before; entIndex < (count + before); entIndex ++)
-    {
-
-    Entity *entity = entities[currentEntity + entIndex];
-
-    if (entity->getType() == "token")
-    {
-        Token *token = (Token*) entity; //entities[currentEntity + entIndex];
-        std::vector<std::string> interps = token->getCompiledInterpretations();
-        std::vector<std::string>::iterator i = interps.begin();
-        while (i != interps.end())
-        {
-//            std::cout << "Interpretejszyn: " << *i << std::endl;
-            std::string compare = token->getOrth() + "<" + *i;
-         //   std::cerr << "Takie wyrazenie: " << pattern.str() << std::endl;
-            //if (boost::u32regex_match(compare, pattern)) {
-            if (RE2::FullMatch(compare, *pattern)) {
-//                std::cout << "Wyrzucac bede token o indeksie: " << (currentEntity + entIndex) << std::endl;
-                ret = true;
-//                compare.reset();
-           //     std::cerr << "Spasowalem: " << compare << " z " << pattern.str() << std::endl;
+    bool foundToDelete = false;
+    for (int edge_i = before; edge_i < (before + count); edge_i ++) {
+        TransitionInfo *edge = util::getEdge(pg, currentEntity, edge_i);
+        bool conditionsSatisfied = true;
+        for (DeleteConditions::iterator cond_it = conditions.begin();
+                cond_it != conditions.end(); cond_it ++) {
+            bool satisfied = true;
+            if (cond_it->type == BASE_CONDITION) {
+                for (std::vector<PosInfo>::iterator var_it = edge->variants_.begin();
+                        var_it != edge->variants_.end(); var_it ++) {
+                    std::string tokenBase = boost::get<0>(*var_it);
+                    if (cond_it->negation) {
+                        if (RE2::FullMatch(tokenBase, cond_it->pattern)) {
+                            satisfied = false;
+                            break;
+                        }
+                    } else {
+                        if (!RE2::FullMatch(tokenBase, cond_it->pattern)) {
+                            satisfied = false;
+                            break;
+                        }
+                    }
+                }
+            } else if (cond_it->type == MORPHOLOGY_CONDITION) {
+                for (std::vector<PosInfo>::iterator var_it = edge->variants_.begin();
+                        var_it != edge->variants_.end(); var_it ++) {
+                    std::string tokenMorphology = boost::get<1>(*var_it);
+                    if (!RE2::FullMatch(tokenMorphology, cond_it->pattern)) {
+                        std::cerr << "NIE PASUJE " << tokenMorphology << " do " << cond_it->pattern << std::endl;
+                        satisfied = false;
+                        break;
+                    }
+                }
+            }
+            if (! satisfied) {
+                conditionsSatisfied = false;
                 break;
             }
-//            else
-//            {
-//                std::cout << "Nie wyrzuce tokenu o indeksie: " << (currentEntity + entIndex) << std::endl;
-//
-////                std::cout << "Nie spasowalem: " << compare << " z " << pattern.str() << std::endl;
-//            }
-            i ++;
-//            compare.reset();
         }
-    }
-    else if (entity->getType() == "group")
-    {
-        Group *group = (Group*) entity;
-        while ((group->children.at(group->getHeadIndex()))->getType() == "group")
-        {
-            group = (Group*) (group->children.at(group->getHeadIndex()));
-        }
-
-        int index = group->getHeadIndex();
-
-        Token *token = (Token*) group->children.at(index);
-        std::vector<std::string> interps = token->getCompiledInterpretations();
-        std::vector<std::string>::iterator i = interps.begin();
-        while (i != interps.end())
-        {
-//            std::cout << "Interpretejszyn: " << *i << std::endl;
-            std::string compare = token->getOrth() + "<" + *i;
-        //    std::cerr << "Takie wyrazenie: " << pattern.str() << std::endl;
-            //if (boost::u32regex_match(compare, pattern)) {
-            if (RE2::FullMatch(compare, *pattern)) {
-                ret = true;
-                //compare.reset();
-//                std::cerr << "Spasowalem: " << compare << " z " << getPattern() << std::endl;
-                break;
-            }
-//            else
-//            {
-//                std::cout << "Nie spasowalem: " << compare << " z " << getPattern() << std::endl;
-//            }
-            i ++;
-            //compare.reset();
-        }
-
-        int current = index - entIndex + 1;
-        //return test(group->children, current);
-    }
-    else if (entity->getType() == "syntok")
-    {
-        Syntok *syntok = (Syntok*) entity;
-        std::vector<std::string> interps = syntok->getCompiledInterpretations();
-        std::vector<std::string>::iterator i = interps.begin();
-        while (i != interps.end())
-        {
-            std::string compare = syntok->getOrth() + "<" + *i;
-            //if (boost::u32regex_match(compare, pattern))
-            if (RE2::FullMatch(compare, *pattern)) {
-                ret = true;
-                //compare.reset();
-                break;
-            }
-            i ++;
-            //compare.reset();
+        if (! conditionsSatisfied) {
+            foundToDelete = true;
+            //@todo: i tu break?
         }
     }
 
-    }
-
-    if (!ret)
-    {
+    if (foundToDelete) {
+        ret = true;
+    } else {
         nothingToDelete = true;
         ret = true;
     }
 
-//    std::cout << "Wzorzec usuwanych: " << this->getPattern() << std::endl;
     return ret;
 }
 
-void DeleteAction::setPattern(std::string aPattern)
-{
-    //pattern = boost::make_u32regex(aPattern);
-    pattern = PatternPtr(new RE2(aPattern));
-    patternString = aPattern;
+//bool DeleteAction::test(Entities entities, int currentEntity, std::vector<int> matchedTokensSize)
+//{
+////    std::cout << "Test usuwania" << std::endl;
+//    bool ret = false;
+//    nothingToDelete = false;
+//
+//    int count = matchedTokensSize[tokenIndex - 1];
+//    if (count == 0)
+//    {
+//        if (verbose)
+//            std::cerr << "Nothing matched to " << tokenIndex << " in delete ...." << std::endl;
+//        return true;
+//    }
+//    int before = 0;
+//    int i = 0;
+//    while (i < (tokenIndex - 1))
+//    {
+//        before += matchedTokensSize[i];
+//        i ++;
+//    }
+//
+//    for (int entIndex = before; entIndex < (count + before); entIndex ++)
+//    {
+//
+//    Entity *entity = entities[currentEntity + entIndex];
+//
+//    if (entity->getType() == "token")
+//    {
+//        Token *token = (Token*) entity; //entities[currentEntity + entIndex];
+//        std::vector<std::string> interps = token->getCompiledInterpretations();
+//        std::vector<std::string>::iterator i = interps.begin();
+//        while (i != interps.end())
+//        {
+////            std::cout << "Interpretejszyn: " << *i << std::endl;
+//            std::string compare = token->getOrth() + "<" + *i;
+//         //   std::cerr << "Takie wyrazenie: " << pattern.str() << std::endl;
+//            //if (boost::u32regex_match(compare, pattern)) {
+//            if (RE2::FullMatch(compare, *pattern)) {
+////                std::cout << "Wyrzucac bede token o indeksie: " << (currentEntity + entIndex) << std::endl;
+//                ret = true;
+////                compare.reset();
+//           //     std::cerr << "Spasowalem: " << compare << " z " << pattern.str() << std::endl;
+//                break;
+//            }
+////            else
+////            {
+////                std::cout << "Nie wyrzuce tokenu o indeksie: " << (currentEntity + entIndex) << std::endl;
+////
+//////                std::cout << "Nie spasowalem: " << compare << " z " << pattern.str() << std::endl;
+////            }
+//            i ++;
+////            compare.reset();
+//        }
+//    }
+//    else if (entity->getType() == "group")
+//    {
+//        Group *group = (Group*) entity;
+//        while ((group->children.at(group->getHeadIndex()))->getType() == "group")
+//        {
+//            group = (Group*) (group->children.at(group->getHeadIndex()));
+//        }
+//
+//        int index = group->getHeadIndex();
+//
+//        Token *token = (Token*) group->children.at(index);
+//        std::vector<std::string> interps = token->getCompiledInterpretations();
+//        std::vector<std::string>::iterator i = interps.begin();
+//        while (i != interps.end())
+//        {
+////            std::cout << "Interpretejszyn: " << *i << std::endl;
+//            std::string compare = token->getOrth() + "<" + *i;
+//        //    std::cerr << "Takie wyrazenie: " << pattern.str() << std::endl;
+//            //if (boost::u32regex_match(compare, pattern)) {
+//            if (RE2::FullMatch(compare, *pattern)) {
+//                ret = true;
+//                //compare.reset();
+////                std::cerr << "Spasowalem: " << compare << " z " << getPattern() << std::endl;
+//                break;
+//            }
+////            else
+////            {
+////                std::cout << "Nie spasowalem: " << compare << " z " << getPattern() << std::endl;
+////            }
+//            i ++;
+//            //compare.reset();
+//        }
+//
+//        int current = index - entIndex + 1;
+//        //return test(group->children, current);
+//    }
+//    else if (entity->getType() == "syntok")
+//    {
+//        Syntok *syntok = (Syntok*) entity;
+//        std::vector<std::string> interps = syntok->getCompiledInterpretations();
+//        std::vector<std::string>::iterator i = interps.begin();
+//        while (i != interps.end())
+//        {
+//            std::string compare = syntok->getOrth() + "<" + *i;
+//            //if (boost::u32regex_match(compare, pattern))
+//            if (RE2::FullMatch(compare, *pattern)) {
+//                ret = true;
+//                //compare.reset();
+//                break;
+//            }
+//            i ++;
+//            //compare.reset();
+//        }
+//    }
+//
+//    }
+//
+//    if (!ret)
+//    {
+//        nothingToDelete = true;
+//        ret = true;
+//    }
+//
+////    std::cout << "Wzorzec usuwanych: " << this->getPattern() << std::endl;
+//    return ret;
+//}
+//
+//void DeleteAction::setPattern(std::string aPattern)
+//{
+//    //pattern = boost::make_u32regex(aPattern);
+//    pattern = PatternPtr(new RE2(aPattern));
+//    patternString = aPattern;
+//}
+
+//std::string DeleteAction::getPattern()
+//{
+//    return patternString;
+////    return pattern.str();
+//}
+
+DeleteConditions DeleteAction::getConditions() {
+    return conditions;
 }
 
-std::string DeleteAction::getPattern()
-{
-    return patternString;
-//    return pattern.str();
-}
-
-int DeleteAction::getTokenIndex()
-{
+int DeleteAction::getTokenIndex() {
     return tokenIndex;
 }
 
-void DeleteAction::setTokenIndex(int aTokenIndex)
-{
+void DeleteAction::setTokenIndex(int aTokenIndex) {
     tokenIndex = aTokenIndex;
 }
 
-std::string DeleteAction::getUPattern()
-{
+std::string DeleteAction::getUPattern() {
     return pattern_;
 }
 
