@@ -8,7 +8,7 @@ CLEANFILES=tests/runner.cpp
 test_files = ../common/t/layer_tags_tests.hpp ../common/t/annotation_item_tests.hpp ../common/t/lattice_tests.hpp ../common/t/quoter_tests.hpp ../common/t/lattice_readers_writers_tests.hpp
 
 if WITH_JAVA
-test_files += ../common/t/java_virtual_machine_tests.hpp ../common/t/morfologik_tests.hpp
+test_files += ../common/t/java_virtual_machine_tests.hpp ../tools/lemmatizers/morfologik/t/morfologik_tests.hpp
 endif
 
 tests/runner.cpp: $(test_files)
