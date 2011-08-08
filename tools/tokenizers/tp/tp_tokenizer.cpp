@@ -1,6 +1,8 @@
 #include "tp_tokenizer.hpp"
+#include "tp_token_cutter.hpp"
 
 #include "logging.hpp"
+
 
 Annotator* TpTokenizer::Factory::doCreateAnnotator(
     boost::program_options::variables_map options) {
@@ -30,7 +32,7 @@ std::list<std::string> TpTokenizer::Factory::doProvidedLayerTags() {
 }
 
 LatticeWorker* TpTokenizer::doCreateLatticeWorker(Lattice& lattice) {
-    new Worker(*this, lattice);
+    return new Worker(*this, lattice);
 }
 
 TpTokenizer::Worker::Worker(Processor& processor, Lattice& lattice):
@@ -38,7 +40,13 @@ TpTokenizer::Worker::Worker(Processor& processor, Lattice& lattice):
 }
 
 void TpTokenizer::Worker::doRun() {
-    DEBUG("NA RAZIE NIC NIE ROBIĘ");
+    DEBUG("starting tp tokenizer...");
+
+    LayerTagMask symbolMask = lattice_.getLayerTagManager().getMask("symbol");
+
+    TpTokenCutter tokenCutter;
+
+    lattice_.runCutter(tokenCutter, symbolMask);
 }
 
 std::string TpTokenizer::doInfo() {

@@ -22,6 +22,12 @@ public:
 };
 
 
+class NoVertexException : public Exception {
+public:
+    NoVertexException(std::string message) : Exception(message) { }
+};
+
+
 class FileFormatException : public Exception {
 public:
     FileFormatException(std::string message) : Exception(message) { }
@@ -31,6 +37,12 @@ public:
 class QuoterException : public Exception {
 public:
     QuoterException(std::string message) : Exception(message) { }
+};
+
+
+class JavaVirtualMachineException : public Exception {
+public:
+    JavaVirtualMachineException(std::string message) : Exception(message) { }
 };
 
 

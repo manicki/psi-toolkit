@@ -11,6 +11,7 @@ Lattice::~Lattice() { }
 void Lattice::appendString(std::string text) {
     allText_ += text;
     implicitOutEdges_.resize(allText_.length() + 1);
+    hiddenImplicitOutEdges_.resize(allText_.length() + 1);
 }
 
 void Lattice::addSymbols(VertexDescriptor startVertex, VertexDescriptor endVertex) {
@@ -84,7 +85,10 @@ Lattice::EdgeDescriptor Lattice::addEdge(
             ++edgeCounterHash_[vpair];
         }
 
-        if (tags == layerTagManager_.createSingletonTagCollection("symbol")) {
+        if (
+            tags == layerTagManager_.createSingletonTagCollection("symbol")
+            && from + symbolLength_(from) == to
+        ) {
             implicitOutEdges_.set(from, true);
             return EdgeDescriptor(from);
         }
@@ -111,7 +115,7 @@ Lattice::EdgeDescriptor Lattice::addEdge(
         }
 
         if (iterTo != vertices_.end()) {
-            boost_to = (*iterFrom).second;
+            boost_to = (*iterTo).second;
         } else {
             boost_to = boost::add_vertex(VertexEntry(to), graph_);
             vertices_[to] = boost_to;
@@ -138,6 +142,9 @@ Lattice::EdgeDescriptor Lattice::addEdge(
                     graph_[boost_from].outEdgesIndex[i].push_back(result.first);
                     graph_[boost_to].inEdgesIndex[i].push_back(result.first);
                 }
+            }
+            for (VertexDescriptor vd = from; vd < to; ++vd) {
+                hiddenImplicitOutEdges_[vd] = true;
             }
             return EdgeDescriptor(result.first);
         }
@@ -179,6 +186,9 @@ Lattice::InOutEdgesIterator Lattice::inEdges(
     Lattice::VertexDescriptor vertex,
     LayerTagMask mask
 ) {
+    if (vertex < 1) {
+        return InOutEdgesIterator();
+    }
     VertexDescriptor priorVertex = priorVertex_(vertex);
     std::map<int, Graph::vertex_descriptor>::iterator iter = vertices_.find(vertex);
     if (iter == vertices_.end()) {
@@ -231,38 +241,171 @@ Lattice::EdgeDescriptor Lattice::firstInEdge(
     throw NoEdgeException("No in-edges found.");
 }
 
-Lattice::SortedEdgesIterator Lattice::edgesSorted(LayerTagMask mask) {
-    return Lattice::SortedEdgesIterator(this, mask);
+Lattice::EdgesSortedBySourceIterator Lattice::edgesSortedBySource(LayerTagMask mask) {
+    return Lattice::EdgesSortedBySourceIterator(this, mask);
 }
 
-Lattice::SortedEdgesIterator Lattice::allEdgesSorted() {
-    return edgesSorted(layerTagManager_.anyTag());
+Lattice::EdgesSortedBySourceIterator Lattice::allEdgesSortedBySource() {
+    return edgesSortedBySource(layerTagManager_.anyTag());
+}
+
+Lattice::EdgesSortedByTargetIterator Lattice::edgesSortedByTarget(LayerTagMask mask) {
+    return Lattice::EdgesSortedByTargetIterator(this, mask);
+}
+
+Lattice::EdgesSortedByTargetIterator Lattice::allEdgesSortedByTarget() {
+    return edgesSortedByTarget(layerTagManager_.anyTag());
 }
 
 LayerTagManager& Lattice::getLayerTagManager() {
     return layerTagManager_;
 }
 
+AnnotationItemManager& Lattice::getAnnotationItemManager() {
+    return annotationItemManager_;
+}
+
 const AnnotationItem Lattice::getEdgeAnnotationItem(Lattice::EdgeDescriptor edge) {
-    if (edge.implicitIndex < 0) return graph_[edge.descriptor].category;
+    if (edge.implicitIndex < 0) {
+        return graph_[edge.descriptor].category;
+    }
     std::string::iterator iter = allText_.begin() + edge.implicitIndex;
     std::string::iterator end = allText_.end();
-    std::string symbol;
+    std::string symbol = "'";
     utf8::append(utf8::next(iter, end), std::back_inserter(symbol));
     return AnnotationItem(symbol);
 }
 
 const LayerTagCollection Lattice::getEdgeLayerTags(Lattice::EdgeDescriptor edge) {
-    if (edge.implicitIndex < 0) return graph_[edge.descriptor].tagList;
+    if (edge.implicitIndex < 0) {
+        return graph_[edge.descriptor].tagList;
+    }
     return layerTagManager_.createSingletonTagCollection("symbol");
 }
+
+int Lattice::getEdgeBeginIndex(Lattice::EdgeDescriptor edge) const {
+    if (edge.implicitIndex < 0) {
+        return graph_[boost::source(edge.descriptor, graph_)].index;
+    }
+    return edge.implicitIndex;
+}
+
+int Lattice::getEdgeLength(Lattice::EdgeDescriptor edge) const {
+    if (edge.implicitIndex < 0) {
+        return graph_[boost::target(edge.descriptor, graph_)].index
+            - graph_[boost::source(edge.descriptor, graph_)].index;
+    }
+    return symbolLength_(edge.implicitIndex);
+}
+
+bool Lattice::isEdgeHidden(Lattice::EdgeDescriptor edge) const {
+    return edge.implicitIndex > -1 && hiddenImplicitOutEdges_[edge.implicitIndex];
+}
+
+std::list<Lattice::Partition> Lattice::getEdgePartitions(Lattice::EdgeDescriptor edge) {
+    if (edge.implicitIndex < 0) {
+        return graph_[edge.descriptor].partitions;
+    }
+    return std::list<Lattice::Partition>();
+}
+
+Lattice::Score Lattice::getEdgeScore(Lattice::EdgeDescriptor edge) const {
+    if (edge.implicitIndex < 0) {
+        return graph_[edge.descriptor].score;
+    }
+    return 0.0;
+}
+
+Lattice::VertexDescriptor Lattice::getEdgeSource(EdgeDescriptor edge) const {
+    if (edge.implicitIndex < 0) {
+        return VertexDescriptor(boost::source(edge.descriptor, graph_));
+    }
+
+    return VertexDescriptor(edge.implicitIndex);
+}
+
+Lattice::VertexDescriptor Lattice::getEdgeTarget(EdgeDescriptor edge) const {
+    if (edge.implicitIndex < 0) {
+        return VertexDescriptor(boost::target(edge.descriptor, graph_));
+    }
+
+    return VertexDescriptor(edge.implicitIndex + symbolLength_(edge.implicitIndex));
+}
+
 
 const std::string& Lattice::getAllText() const {
     return allText_;
 }
 
+const std::string Lattice::getEdgeText(EdgeDescriptor edge) const {
+    return allText_.substr(getEdgeBeginIndex(edge), getEdgeLength(edge));
+}
+
+const std::string Lattice::getPartitionText(Partition partition) const {
+    std::string r;
+
+    for(std::vector<EdgeDescriptor>::iterator it = partition.links.begin();
+        it != partition.links.end();
+        ++it)
+        r += getEdgeText(*it);
+
+    return r;
+}
+
+
 void Lattice::runCutter(Cutter& cutter, LayerTagMask mask) {
-    // TODO
+    VertexDescriptor vertex = getFirstVertex();
+
+    Partition partition = getPath(vertex, mask);
+
+    std::string text = getPartitionText(partition);
+
+    size_t pos = 0;
+    std::vector<EdgeDescriptor>::const_iterator partitionIter = partition.links.begin();
+
+    LayerTagCollection tags = layerTagManager_.createTagCollection(cutter.layerTags());
+
+    do {
+        size_t prevPos = pos;
+
+        AnnotationItem item = cutter.cutOff(text, pos);
+
+        int itemLength = (pos == std::string::npos ? text.length() : pos) - prevPos;
+
+        Partition itemPartition = cutPartitionByTextLength_(partition, partitionIter, itemLength);
+
+        addEdge(firstPartitionVertex_(itemPartition),
+                lastPartitionVertex_(itemPartition),
+                item,
+                tags,
+                0.0,
+                itemPartition);
+
+    } while (pos != std::string::npos);
+}
+
+Lattice::Partition Lattice::getPath(VertexDescriptor& vertex, LayerTagMask mask) {
+    bool nextVertexFound = true;
+
+    Lattice::Partition path;
+
+    do {
+        InOutEdgesIterator iter = outEdges(vertex, mask);
+
+        if (iter.hasNext()) {
+            EdgeDescriptor bestOne = iter.next();
+
+            while (iter.hasNext())
+                bestOne = iter.next();
+
+            path.addEdge(bestOne);
+            vertex = getEdgeTarget(bestOne);
+        } else
+            nextVertexFound = false;
+
+    } while(nextVertexFound);
+
+    return path;
 }
 
 int Lattice::addTagCollectionIndex_(LayerTagCollection tags) {
@@ -300,6 +443,9 @@ int Lattice::addTagCollectionIndex_(LayerTagCollection tags) {
 }
 
 Lattice::VertexDescriptor Lattice::priorVertex_(Lattice::VertexDescriptor vertex) {
+    if (vertex < 1) {
+        throw NoVertexException("Beginning vertex has no prior vertex.");
+    }
     std::string::iterator begin = allText_.begin();
     std::string::iterator iter = begin + vertex;
     std::string symbol;
@@ -307,14 +453,44 @@ Lattice::VertexDescriptor Lattice::priorVertex_(Lattice::VertexDescriptor vertex
     return vertex - symbol.length();
 }
 
+size_t Lattice::symbolLength_(int ix) const {
+    std::string::const_iterator iter = allText_.begin() + ix;
+    std::string::const_iterator end = allText_.end();
+    std::string symbol;
+    utf8::append(utf8::next(iter, end), std::back_inserter(symbol));
+    return symbol.length();
+}
+
+Lattice::VertexDescriptor Lattice::firstPartitionVertex_(const Partition& partition) const {
+    return getEdgeSource(partition.firstEdge());
+}
+
+Lattice::VertexDescriptor Lattice::lastPartitionVertex_(const Partition& partition) const {
+    return getEdgeTarget(partition.lastEdge());
+}
+
+Lattice::Partition Lattice::cutPartitionByTextLength_(const Partition& partition,
+                                                      std::vector<EdgeDescriptor>::const_iterator& partitionIterator,
+                                                      int length) {
+    int lengthGathered = 0;
+
+    Partition ret;
+
+    for(;
+        partitionIterator != partition.links.end() && lengthGathered < length;
+        ++partitionIterator, lengthGathered += getEdgeText(*partitionIterator).length())
+        ret.links.push_back(*partitionIterator);
+
+    return ret;
+}
 
 
 bool Lattice::VertexIterator::hasNext() {
-    while (vd_ < lattice_->allText_.length()) {
+    while (vd_ <= lattice_->allText_.length()) {
         if (
             lattice_->vertices_.find(vd_) != lattice_->vertices_.end()
             || lattice_->implicitOutEdges_[vd_]
-            || lattice_->implicitOutEdges_[lattice_->priorVertex_(vd_)]
+            || (vd_ > 0 && lattice_->implicitOutEdges_[lattice_->priorVertex_(vd_)])
         ) {
             return true;
         }
@@ -324,11 +500,11 @@ bool Lattice::VertexIterator::hasNext() {
 }
 
 Lattice::VertexDescriptor Lattice::VertexIterator::next() {
-    while (vd_ < lattice_->allText_.length()) {
+    while (vd_ <= lattice_->allText_.length()) {
         if (
             lattice_->vertices_.find(vd_) != lattice_->vertices_.end()
             || lattice_->implicitOutEdges_[vd_]
-            || lattice_->implicitOutEdges_[lattice_->priorVertex_(vd_)]
+            || (vd_ > 0 && lattice_->implicitOutEdges_[lattice_->priorVertex_(vd_)])
         ) {
             return vd_++;
         }
@@ -379,8 +555,7 @@ Lattice::SortedEdgesIterator::SortedEdgesIterator(
 ) :
     lattice_(lattice),
     mask_(mask),
-    vi_(lattice),
-    ei_(lattice->outEdges(0, mask))
+    vi_(lattice)
 {
     vi_.next();
 }
@@ -388,7 +563,7 @@ Lattice::SortedEdgesIterator::SortedEdgesIterator(
 bool Lattice::SortedEdgesIterator::hasNext() {
     if (ei_.hasNext()) return true;
     while (vi_.hasNext()) {
-        ei_ = lattice_->outEdges(vi_.next(), mask_);
+        ei_ = getEdgesIterator_(vi_.next());
         if (ei_.hasNext()) return true;
     }
     return false;
@@ -397,11 +572,38 @@ bool Lattice::SortedEdgesIterator::hasNext() {
 Lattice::EdgeDescriptor Lattice::SortedEdgesIterator::next() {
     if (ei_.hasNext()) return ei_.next();
     while (vi_.hasNext()) {
-        ei_ = lattice_->outEdges(vi_.next(), mask_);
+        ei_ = getEdgesIterator_(vi_.next());
         if (ei_.hasNext()) return ei_.next();
     }
     throw NoEdgeException("Iterator has no next edges.");
 }
+
+Lattice::EdgesSortedBySourceIterator::EdgesSortedBySourceIterator(
+    Lattice * lattice,
+    LayerTagMask mask
+) : SortedEdgesIterator(lattice, mask) {
+    ei_ = lattice_->outEdges(0, mask_);
+}
+
+Lattice::InOutEdgesIterator Lattice::EdgesSortedBySourceIterator::getEdgesIterator_(
+    Lattice::VertexDescriptor vd
+) {
+    return lattice_->outEdges(vd, mask_);
+}
+
+Lattice::EdgesSortedByTargetIterator::EdgesSortedByTargetIterator(
+    Lattice * lattice,
+    LayerTagMask mask
+) : SortedEdgesIterator(lattice, mask) {
+    ei_ = lattice_->inEdges(0, mask_);
+}
+
+Lattice::InOutEdgesIterator Lattice::EdgesSortedByTargetIterator::getEdgesIterator_(
+    Lattice::VertexDescriptor vd
+) {
+    return lattice_->inEdges(vd, mask_);
+}
+
 
 
 

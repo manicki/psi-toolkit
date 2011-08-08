@@ -9,13 +9,19 @@ std::string UTTLatticeReader::doInfo() {
     return "UTT reader";
 }
 
-void UTTLatticeReader::doReadIntoLattice(std::istream& inputStream, Lattice& lattice) {
+UTTLatticeReader::Worker::Worker(UTTLatticeReader& processor,
+                                 std::istream& inputStream,
+                                 Lattice& lattice):
+    ReaderWorker(inputStream, lattice), processor_(processor) {
+}
+
+void UTTLatticeReader::Worker::doRun() {
     UTTQuoter quoter;
     UTTLRGrammar grammar;
     std::string line;
     std::string sentenceForm = "";
     int beginningOfSentencePosition = -1;
-    while (std::getline(inputStream, line)) {
+    while (std::getline(inputStream_, line)) {
         UTTLRItem item;
         std::string::const_iterator begin = line.begin();
         std::string::const_iterator end = line.end();
@@ -25,22 +31,22 @@ void UTTLatticeReader::doReadIntoLattice(std::istream& inputStream, Lattice& lat
 
             if (item.length > 0) {
 
-                lattice.appendString(item.form);
+                lattice_.appendString(item.form);
 
-                LayerTagMask rawMask = lattice.getLayerTagManager().getMask("raw");
+                LayerTagMask rawMask = lattice_.getLayerTagManager().getMask("raw");
 
                 Lattice::Partition partition;
                 for (int i = item.position; i < item.position + item.length; ++i) {
                     partition.links.push_back(
-                        lattice.firstOutEdge(lattice.getVertexForRawCharIndex(i), rawMask)
+                        lattice_.firstOutEdge(lattice_.getVertexForRawCharIndex(i), rawMask)
                     );
                 }
 
-                lattice.addEdge(
-                    lattice.getVertexForRawCharIndex(item.position),
-                    lattice.getVertexForRawCharIndex(item.position + item.length),
+                lattice_.addEdge(
+                    lattice_.getVertexForRawCharIndex(item.position),
+                    lattice_.getVertexForRawCharIndex(item.position + item.length),
                     AnnotationItem(item.form),
-                    lattice.getLayerTagManager().createSingletonTagCollection("token"),
+                    lattice_.getLayerTagManager().createSingletonTagCollection("token"),
                     0.0,
                     partition
                 );
@@ -58,22 +64,22 @@ void UTTLatticeReader::doReadIntoLattice(std::istream& inputStream, Lattice& lat
                     throw FileFormatException("UTT reader: EOS tag does not match any BOS tag.");
                 }
 
-                LayerTagMask tokenMask = lattice.getLayerTagManager().getMask("token");
+                LayerTagMask tokenMask = lattice_.getLayerTagManager().getMask("token");
 
                 Lattice::Partition sentencePartition;
                 for (int i = beginningOfSentencePosition; i < item.position + item.length; ++i) {
                     try {
                         sentencePartition.links.push_back(
-                            lattice.firstOutEdge(lattice.getVertexForRawCharIndex(i), tokenMask)
+                            lattice_.firstOutEdge(lattice_.getVertexForRawCharIndex(i), tokenMask)
                         );
                     } catch (NoEdgeException) { }
                 }
 
-                lattice.addEdge(
-                    lattice.getVertexForRawCharIndex(beginningOfSentencePosition),
-                    lattice.getVertexForRawCharIndex(item.position + item.length),
+                lattice_.addEdge(
+                    lattice_.getVertexForRawCharIndex(beginningOfSentencePosition),
+                    lattice_.getVertexForRawCharIndex(item.position + item.length),
                     AnnotationItem(sentenceForm),
-                    lattice.getLayerTagManager().createSingletonTagCollection("sentence"),
+                    lattice_.getLayerTagManager().createSingletonTagCollection("sentence"),
                     0.0,
                     sentencePartition
                 );

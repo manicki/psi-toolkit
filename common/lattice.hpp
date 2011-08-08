@@ -14,6 +14,7 @@
 #include "utf8.h"
 
 #include "annotation_item.hpp"
+#include "annotation_item_manager.hpp"
 #include "exceptions.hpp"
 #include "hash_wrapper.hpp"
 #include "layer_tag_manager.hpp"
@@ -93,6 +94,23 @@ public:
 
     struct Partition {
         std::vector<EdgeDescriptor> links;
+
+        void addEdge(EdgeDescriptor edge) {
+            links.push_back(edge);
+        }
+
+        int size() const {
+            return links.size();
+        }
+
+        EdgeDescriptor firstEdge() const {
+            return links.front();
+        }
+
+        EdgeDescriptor lastEdge() const {
+            return links.back();
+        }
+
     };
 
     struct EdgeDescriptor {
@@ -102,6 +120,13 @@ public:
         EdgeDescriptor() : descriptor(), implicitIndex(-1) { }
         EdgeDescriptor(int implicitIx) : descriptor(), implicitIndex(implicitIx) { }
         EdgeDescriptor(const Graph::edge_descriptor& ed) : descriptor(ed), implicitIndex(-1) { }
+
+        bool operator<(EdgeDescriptor other) const {
+            if (implicitIndex == -1 && other.implicitIndex == -1) {
+                return descriptor < other.descriptor;
+            }
+            return implicitIndex < other.implicitIndex;
+        }
     };
 
     struct EdgeDescriptorWrapperToFoolBoost146OrGnu461 : public Graph::edge_descriptor {
@@ -184,11 +209,27 @@ public:
         SortedEdgesIterator(Lattice * lattice, LayerTagMask mask);
         bool hasNext();
         EdgeDescriptor next();
-    private:
+    protected:
         Lattice * lattice_;
         LayerTagMask mask_;
-        VertexIterator vi_;
         InOutEdgesIterator ei_;
+    private:
+        VertexIterator vi_;
+        virtual InOutEdgesIterator getEdgesIterator_(VertexDescriptor vd) = 0;
+    };
+
+    class EdgesSortedBySourceIterator : public SortedEdgesIterator {
+    public:
+        EdgesSortedBySourceIterator(Lattice * lattice, LayerTagMask mask);
+    private:
+        virtual InOutEdgesIterator getEdgesIterator_(VertexDescriptor vd);
+    };
+
+    class EdgesSortedByTargetIterator : public SortedEdgesIterator {
+    public:
+        EdgesSortedByTargetIterator(Lattice * lattice, LayerTagMask mask);
+    private:
+        virtual InOutEdgesIterator getEdgesIterator_(VertexDescriptor vd);
     };
 
     Lattice();
@@ -256,20 +297,50 @@ public:
     EdgeDescriptor firstOutEdge(VertexDescriptor vertex, LayerTagMask mask);
     EdgeDescriptor firstInEdge(VertexDescriptor vertex, LayerTagMask mask);
 
+    /**
+     * returns the list of edges which have at least one layer tag from `mask`
+     * sorted by source vertex
+     */
+    EdgesSortedBySourceIterator edgesSortedBySource(LayerTagMask mask);
 
-    // returns the list of edges which have at least one layer tag from `mask` sorted
-    SortedEdgesIterator edgesSorted(LayerTagMask mask);
+    EdgesSortedBySourceIterator allEdgesSortedBySource();
 
-    SortedEdgesIterator allEdgesSorted();
+    /**
+     * returns the list of edges which have at least one layer tag from `mask`
+     * sorted by target vertex
+     */
+    EdgesSortedByTargetIterator edgesSortedByTarget(LayerTagMask mask);
+
+    EdgesSortedByTargetIterator allEdgesSortedByTarget();
 
     LayerTagManager& getLayerTagManager();
+    AnnotationItemManager& getAnnotationItemManager();
 
     const AnnotationItem getEdgeAnnotationItem(EdgeDescriptor edge);
     const LayerTagCollection getEdgeLayerTags(EdgeDescriptor edge);
+    int getEdgeBeginIndex(EdgeDescriptor edge) const;
+    int getEdgeLength(EdgeDescriptor edge) const;
+    bool isEdgeHidden(EdgeDescriptor edge) const;
+    std::list<Partition> getEdgePartitions(EdgeDescriptor edge);
+    Score getEdgeScore(EdgeDescriptor edge) const;
+    VertexDescriptor getEdgeSource(EdgeDescriptor edge) const;
+    VertexDescriptor getEdgeTarget(EdgeDescriptor edge) const;
 
     const std::string& getAllText() const;
+    const std::string getEdgeText(EdgeDescriptor edge) const;
+    const std::string getPartitionText(Partition partition) const;
 
     void runCutter(Cutter& cutter, LayerTagMask mask);
+
+    /**
+     * Get a path starting with `vertex` composed of edges matching `mask`.
+     * The final vertex of the returned path will be assigned to `vertex`.
+     * The path is returned as a partition.
+     *
+     * If there are multiple outgoing edges matching `mask` the best
+     * one is chosen (the last one with the higher score).
+     */
+    Lattice::Partition getPath(VertexDescriptor& vertex, LayerTagMask mask);
 
 private:
 
@@ -277,9 +348,13 @@ private:
 
     LayerTagManager layerTagManager_;
 
+    AnnotationItemManager annotationItemManager_;
+
     std::string allText_;
 
     boost::dynamic_bitset<> implicitOutEdges_;
+
+    boost::dynamic_bitset<> hiddenImplicitOutEdges_;
 
     std::map<int, Graph::vertex_descriptor> vertices_;
 
@@ -292,6 +367,13 @@ private:
 
     VertexDescriptor priorVertex_(VertexDescriptor vertex);
 
+    size_t symbolLength_(int ix) const;
+
+    VertexDescriptor firstPartitionVertex_(const Partition& partition) const;
+    VertexDescriptor lastPartitionVertex_(const Partition& partition) const;
+    Partition cutPartitionByTextLength_(const Partition& partition,
+                                        std::vector<EdgeDescriptor>::const_iterator& partitionIterator,
+                                        int length);
 
     struct HashFun {
         HASH_WRAPPER_EXTRA_STUFF

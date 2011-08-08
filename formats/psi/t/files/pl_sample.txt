@@ -72,9 +72,9 @@
 13 0006 06 &nbsp;      token                '_,type=blank
 # ("[12]" could be given explicitly at the end of the above line)
 
-# A special edge representing HTML mark-up, 
+# A special edge representing HTML mark-up,
 # note that it has no constituents! And no implicit
-# `symbol` edges are created (`symbol` are used 
+# `symbol` edges are created (`symbol` are used
 # for characters used used in the text proper).
 14 0012 03 <b>         markup,html          open[]
 
@@ -98,7 +98,7 @@
 # `*` at the beginning of the third line means that a point (vertex) is
 # referred to rather than the edge length.
 17 0015 *@0 k         symbol               'k
-18 @0   *0016 o       symbol               'o     
+18 @0   *0016 o       symbol               'o
 19 0015 04 kta        token,corrector      'kota',type=word[17-18-]
 20 0015 03 kta        lemma,poleng-tagset  kot,pos=R:2,morpho=MżDP[19]
 21 0015 03 kta        lemma,poleng-tagset  kot,pos=R:2,morpho=MżBP[19]
@@ -108,7 +108,7 @@
 24 0018 04 </b>       markup,html          close[]
 
 # phrase with markup:
-25 0012 10 <b>kta</b> parse,gobio          fraza\_rzeczownikowa,R=2,L=1,P=dop[14-23-24] 
+25 0012 10 <b>kta</b> parse,gobio          fraza\_rzeczownikowa,R=2,L=1,P=dop[14-23-24]
 
 # ... and a larger phrase composed of two subphrases (and a blank in between):
 26 0004 18 ma...</b>  parse,gobio          fraza\_czasownikowa,C=teraźniejszy,O=3,L=1[11-13-25]
@@ -117,7 +117,8 @@
 # it can be truncated with `...`
 
 # ... the whole structure
-27 0000 22 Ala...</b>  parse,gobio       pełna\_fraza\_czasownikowa,C=teraźniejszy[6-7-26]
+# score is written in <...>, zero scores are omitted
+27 0000 22 Ala...</b>  parse,gobio       pełna\_fraza\_czasownikowa<-0.342>,C=teraźniejszy[6-7-26]
 
 28 0022 01 .           token             '.',type=punct
 

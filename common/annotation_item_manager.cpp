@@ -7,10 +7,11 @@ void AnnotationItemManager::setValue(
 ) {
     m_.insert(StringBimapItem(attribute, m_.size()));
     int ix = m_.left.at(attribute);
-    if (ix >= annotationItem.attrValues_.size()) {
-        annotationItem.attrValues_.resize(ix + 1);
+    if (ix >= annotationItem.values_.size()) {
+        annotationItem.resize_(ix + 1);
     }
-    annotationItem.attrValues_[ix] = value;
+    annotationItem.values_[ix] = value;
+    annotationItem.attributes_[ix] = true;
 }
 
 std::string AnnotationItemManager::getValue(
@@ -18,8 +19,25 @@ std::string AnnotationItemManager::getValue(
     std::string attribute
 ) {
     try {
-        return annotationItem.attrValues_[m_.left.at(attribute)];
+        return annotationItem.values_[m_.left.at(attribute)];
     } catch (...) {
         return "";
     }
+}
+
+std::list< std::pair<std::string, std::string> > AnnotationItemManager::getValues(
+    const AnnotationItem & annotationItem
+) {
+    std::list< std::pair<std::string, std::string> > result;
+    for (
+        int i = annotationItem.attributes_.find_first();
+        i != boost::dynamic_bitset<>::npos && i < m_.size();
+        i = annotationItem.attributes_.find_next(i)
+    ) {
+        result.push_back(std::pair<std::string, std::string>(
+            m_.right.at(i),
+            annotationItem.values_[i]
+        ));
+    }
+    return result;
 }

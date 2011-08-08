@@ -1,0 +1,6 @@
+01 0000 03 Ala          token                'Ala',type=word
+02 0000 03 Ala          lemma,poleng-tagset  Ala,pos=R:4,morpho=ŻMP[1]
+03 0000 03 Ala          gobio,parse          rzeczownik,R=4,L=1,P=mian[2]
+04 0003 01 _            token                '_',type=blank
+05 0004 02 ma           token                'ma',type=word
+06 0006 06 &nbsp;       symbol               '_

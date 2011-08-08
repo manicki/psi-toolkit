@@ -34,7 +34,7 @@ public:
     /**
      * Gets format name (eg. "UTT", "BIN" etc.)
      */
-    virtual std::string getFormatName() { }
+    virtual std::string getFormatName() = 0;
 
 private:
     virtual ReaderWorker* doCreateReaderWorker(std::istream& inputStream, Lattice& lattice) = 0;

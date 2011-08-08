@@ -1,2 +1,5 @@
 *~
+*.swp
+*.class
+classjava.stamp
 psi-pipe
