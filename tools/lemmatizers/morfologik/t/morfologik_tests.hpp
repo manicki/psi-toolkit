@@ -1,4 +1,4 @@
-#include "../tools/lemmatizers/morfologik/morfologik.hpp"
+#include "../morfologik.hpp"
 
 class MorfologikTests : public CxxTest::TestSuite {
 

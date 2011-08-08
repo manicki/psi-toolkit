@@ -7,7 +7,10 @@
 class Morfologik {
 	
 public:
-	Morfologik(); 
+	Morfologik();
+	friend class MorfologikTests; 
+
+protected:
 	std::vector<std::string> stem(const std::string& word);
 
 private:
