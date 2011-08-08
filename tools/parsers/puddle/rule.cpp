@@ -144,7 +144,6 @@ bool Rule::apply(std::string &sentence, ParseGraphPtr pg, int currentEntity) {
 }
 
 int Rule::matchPattern(std::string &sentenceString, int matchNumber, std::string &beforeMatched) {
-    std::cerr << "MACZ NUMBER: " << matchNumber << std::endl;
     //std::string::const_iterator start = sentence.begin();
     //std::string::const_iterator end = sentence.end();
     //boost::match_results<std::string::const_iterator> matched;
@@ -170,8 +169,6 @@ int Rule::matchPattern(std::string &sentenceString, int matchNumber, std::string
     while ( pattern->Match( sentence_str, start, end,
                             RE2::UNANCHORED, matched, num_groups ) ) { // @todo: tu nie bedzie chyba while tylko if, skoro bedzie parametrem odkad szukac, a nie ktore ogolnie dopasowanie ma byc wziete na warsztat
     //while (boost::u32regex_search(start, end, matched, *pattern, flags)) {
-        std::cerr << "Zdanie: " << sentenceString << std::endl;
-        std::cerr << "Dopasowadlo: " << matched[0] << std::endl;
         int prefix_len = matched[0].begin() - sentence_str.begin();
         std::string prefix = sentenceString.substr(0, prefix_len); //@todo: czy od start do prefix_len?
         //before += matched.prefix(); //before + matched.prefix();
@@ -196,14 +193,14 @@ int Rule::matchPattern(std::string &sentenceString, int matchNumber, std::string
 //            std::cerr << "jedynka: " << matched[1] << std::endl;
 //            std::cout << "dwojka: " << matched[3] << std::endl;
 //            std::string before = matched.prefix();
-            std::cerr << "Dopasowalem regule: " << name << std::endl;
-            std::cerr << "Dopasowalem wzorzec: " << compiled << std::endl;
-            std::cerr << "Dopasowane: " << matching << std::endl;
-            std::cout << "Przed: " << before << std::endl;
-            std::cout << "Zdanie: " << sentenceString << std::endl;
-//            std::cerr << "before: " << before << std::endl;
-            std::cerr << "Zwracam: " << countEntities(before) << std::endl;
-            std::cerr << "Alternatywnie zwracam: " << getPatternStart(before) << std::endl;
+//            std::cerr << "Dopasowalem regule: " << name << std::endl;
+//            std::cerr << "Dopasowalem wzorzec: " << compiled << std::endl;
+//            std::cerr << "Dopasowane: " << matching << std::endl;
+//            std::cout << "Przed: " << before << std::endl;
+//            std::cout << "Zdanie: " << sentenceString << std::endl;
+////            std::cerr << "before: " << before << std::endl;
+//            std::cerr << "Zwracam: " << countEntities(before) << std::endl;
+//            std::cerr << "Alternatywnie zwracam: " << getPatternStart(before) << std::endl;
             int r = getPatternStart(before); // + 1; //@todo: ten +1 wynika ze sposobu numerowania? w kazdym razie tak jest, zeby bylo w akcjach potem dokadlnie tak, jak wczesniej bylo. moze to sie uda zmienic po wymienieniu calosci
             //return countEntities(before);
             return r;
@@ -329,7 +326,6 @@ bool Rule::test(std::string &sentenceString, ParseGraphPtr pg, int currentEntity
 //    while (it != tokensPatterns.end())
     while (it != matchedIndices.end())
     {
-        std::cerr << "MACZD INDEKSES: " << *it << ": " << match[*it].as_string() << std::endl;
 //        std::cerr << "Numerex: " << *it << std::endl;
 //        std::cerr << "a dwojka: " << match[0] << std::endl;
 //        std::cerr << "i: " << i << "; Macz: " << match[*it] << std::endl;

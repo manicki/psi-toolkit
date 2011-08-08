@@ -169,7 +169,8 @@ public:
         LayerTagMask lemmaMask = lattice.getLayerTagManager().getMask(lemma_tag);
         AnnotationItem word_token("word");
         AnnotationItem blank_token("blank");
-        AnnotationItem lemma_token("lemma"); // temporary, as long as annotation items are only distinguished by their 'name'
+        //AnnotationItem lemma_token("lemma"); // temporary, as long as annotation items are only distinguished by their 'name'
+        AnnotationItemManager ami;
 
         Lattice::VertexDescriptor pre_blanc = lattice.getFirstVertex();
         Lattice::VertexDescriptor post_blanc = lattice.getVertexForRawCharIndex(5);
@@ -225,23 +226,79 @@ public:
 
         Lattice::Partition blanc_lemma_partition;
         blanc_lemma_partition.links.push_back(lattice.firstOutEdge(lattice.getVertexForRawCharIndex(0), tokenMask));
-        lattice.addEdge(pre_blanc, post_blanc, lemma_token, lemma_tag, 0, blanc_lemma_partition);
+        AnnotationItem ai_blanc_adj("adj");
+        ami.setValue(ai_blanc_adj, "number", "sg");
+        ami.setValue(ai_blanc_adj, "gender", "m");
+        lattice.addEdge(pre_blanc, post_blanc, ai_blanc_adj, lemma_tag, 0, blanc_lemma_partition);
+        AnnotationItem ai_blanc_subst("subst");
+        ami.setValue(ai_blanc_subst, "number", "sg");
+        ami.setValue(ai_blanc_subst, "gender", "m");
+        lattice.addEdge(pre_blanc, post_blanc, ai_blanc_subst, lemma_tag, 0, blanc_lemma_partition);
 
         Lattice::Partition chat_lemma_partition;
         chat_lemma_partition.links.push_back(lattice.firstOutEdge(lattice.getVertexForRawCharIndex(6), tokenMask));
-        lattice.addEdge(pre_chat, post_chat, lemma_token, lemma_tag, 0, chat_lemma_partition);
+        AnnotationItem ai_chat("subst");
+        ami.setValue(ai_chat, "number", "sg");
+        ami.setValue(ai_chat, "gender", "m");
+        lattice.addEdge(pre_chat, post_chat, ai_chat, lemma_tag, 0, chat_lemma_partition);
 
+        Lattice::EdgeDescriptor edge;
         Lattice::EdgesSortedBySourceIterator tokenIter = lattice.edgesSortedBySource(lemmaMask);
         TS_ASSERT(tokenIter.hasNext());
+        edge = tokenIter.next();
         TS_ASSERT_EQUALS(
-            lattice.getEdgeAnnotationItem(tokenIter.next()).getCategory(),
-            lemma_token.getCategory()
+            lattice.getEdgeAnnotationItem(edge).getCategory(),
+            ai_blanc_adj.getCategory()
         );
+        std::list< std::pair<std::string, std::string> > av
+            = ami.getValues(
+                    lattice.getEdgeAnnotationItem(edge)
+                    );
+        std::list< std::pair<std::string, std::string> >::iterator avi = av.begin();
+        TS_ASSERT_EQUALS((*avi).first, "number");
+        TS_ASSERT_EQUALS((*avi).second, "sg");
+        ++avi;
+        TS_ASSERT(avi != av.end());
+        TS_ASSERT_EQUALS((*avi).first, "gender");
+        TS_ASSERT_EQUALS((*avi).second, "m");
+        ++avi;
+        TS_ASSERT(avi == av.end());
         TS_ASSERT(tokenIter.hasNext());
+        edge = tokenIter.next();
         TS_ASSERT_EQUALS(
-            lattice.getEdgeAnnotationItem(tokenIter.next()).getCategory(),
-            lemma_token.getCategory()
+            lattice.getEdgeAnnotationItem(edge).getCategory(),
+            ai_blanc_subst.getCategory()
         );
+        av = ami.getValues(
+                    lattice.getEdgeAnnotationItem(edge)
+                    );
+        avi = av.begin();
+        TS_ASSERT_EQUALS((*avi).first, "number");
+        TS_ASSERT_EQUALS((*avi).second, "sg");
+        ++avi;
+        TS_ASSERT(avi != av.end());
+        TS_ASSERT_EQUALS((*avi).first, "gender");
+        TS_ASSERT_EQUALS((*avi).second, "m");
+        ++avi;
+        TS_ASSERT(avi == av.end());
+        TS_ASSERT(tokenIter.hasNext());
+        edge = tokenIter.next();
+        TS_ASSERT_EQUALS(
+            lattice.getEdgeAnnotationItem(edge).getCategory(),
+            ai_chat.getCategory()
+        );
+        av = ami.getValues(
+                    lattice.getEdgeAnnotationItem(edge)
+                    );
+        avi = av.begin();
+        TS_ASSERT_EQUALS((*avi).first, "number");
+        TS_ASSERT_EQUALS((*avi).second, "sg");
+        ++avi;
+        TS_ASSERT(avi != av.end());
+        TS_ASSERT_EQUALS((*avi).first, "gender");
+        TS_ASSERT_EQUALS((*avi).second, "m");
+        ++avi;
+        TS_ASSERT(avi == av.end());
         TS_ASSERT(!tokenIter.hasNext());
     }
 

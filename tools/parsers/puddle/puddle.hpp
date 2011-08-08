@@ -18,6 +18,7 @@
 //#include "me_tagger.hpp"
 #include "parse_converter.hpp"
 #include "rule_modifier.hpp"
+#include "lattice_wrapper.hpp"
 
 namespace poleng
 {
@@ -56,6 +57,7 @@ class Puddle
         ParseGraphPtr parseString(std::string line);
         ParseGraphPtr parseTaggedString(std::string line);
         ParseGraphPtr parse(ParseGraphPtr graph); // void parse(ParseGraphPtr &graph);
+        ParseGraphPtr parse(Lattice &lattice);
 //        std::vector<ParseGraphPtr>* getGraphs();
 
     protected:
@@ -85,6 +87,7 @@ class Puddle
         bool norepeats;
 
         RuleModifier *ruleModifier;
+        LatticeWrapper *latticeWrapper;
 
 //        ParseGraphPtr graph;
 };

@@ -1,0 +1,10 @@
+[POS]
+
+subst = [number]
+adj = [number]
+verb =
+interp =
+ign =
+
+[ATTR]
+number = sg pl tr

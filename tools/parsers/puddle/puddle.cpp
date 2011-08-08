@@ -31,6 +31,7 @@ Puddle::Puddle()
     describe = false;
 
     ruleModifier = new RuleModifier;
+    latticeWrapper = new LatticeWrapper();
 
     tagsetLogFilename = "";
     rulesLogFilename = "";
@@ -50,6 +51,7 @@ Puddle::~Puddle()
     delete parseConverter;
 
     delete ruleModifier;
+    delete latticeWrapper;
 //    delete rules;
 }
 
@@ -174,6 +176,13 @@ ParseGraphPtr Puddle::parseTaggedString(std::string line)
 
 //    graph = pg;
 //    graphWriter->setGraph(pg);
+    return pg;
+}
+
+ParseGraphPtr Puddle::parse(Lattice &lattice) {
+    std::string sentenceString;
+    ParseGraphPtr inputGraph = latticeWrapper->readInputLattice(lattice, sentenceString);
+    ParseGraphPtr pg = ruleMatcher->applyRules(sentenceString, inputGraph);
     return pg;
 }
 

@@ -1,0 +1,15 @@
+#sample rules
+
+Rule "test 1"
+Match: [base~"liść"/i]; #case insensitive match
+Eval:  group(XP, 1);
+
+Rule "test del"
+Match: [orth~"kota"];
+Eval:  delete(number!~"sg|tr", 1);
+
+  # AAAAAAAAAAAAA
+
+Rule "test 2"
+Match: [base~".*[ßåàâçéèêëîïôûùüÿ].*"/i]; #non-latin1 characters test
+Eval:  group(YP, 1);

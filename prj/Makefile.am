@@ -4,9 +4,9 @@ cpprog=`echo $${CPPROG-cp -d -r}`
 
 CLEANFILES=tests/runner.cpp
 
-tests/runner.cpp: ../common/t/layer_tags_tests.hpp ../common/t/annotation_item_tests.hpp ../common/t/lattice_tests.hpp ../common/t/quoter_tests.hpp ../common/t/lattice_readers_writers_tests.hpp
+tests/runner.cpp: ../common/t/layer_tags_tests.hpp ../common/t/annotation_item_tests.hpp ../common/t/lattice_tests.hpp ../common/t/quoter_tests.hpp ../common/t/lattice_readers_writers_tests.hpp ../tools/parsers/puddle/t/puddle_tests.hpp
 	cd tests; \
-	perl cxxtestgen.pl --have-eh --runner=ErrorPrinter -o runner.cpp ../../common/t/layer_tags_tests.hpp ../../common/t/annotation_item_tests.hpp ../../common/t/lattice_tests.hpp ../../common/t/quoter_tests.hpp ../../common/t/lattice_readers_writers_tests.hpp
+	perl cxxtestgen.pl --have-eh --runner=ErrorPrinter -o runner.cpp ../../common/t/layer_tags_tests.hpp ../../common/t/annotation_item_tests.hpp ../../common/t/lattice_tests.hpp ../../common/t/quoter_tests.hpp ../../common/t/lattice_readers_writers_tests.hpp ../../tools/parsers/puddle/t/puddle_tests.hpp
 
 runner_SOURCES = \
 	tests/runner.cpp \
@@ -39,8 +39,31 @@ runner_SOURCES = \
 	../formats/utt/utt_lattice_reader.cpp \
 	../formats/utt/utt_quoter.cpp \
 	../tools/tokenizers/tp/tp_tokenizer.cpp \
-	../tools/tokenizers/tp/tp_token_cutter.cpp
-
+	../tools/tokenizers/tp/tp_token_cutter.cpp \
+	../tools/parsers/puddle/puddle.cpp \
+	../tools/parsers/puddle/tagset_loader.cpp \
+	../tools/parsers/puddle/rule_loader.cpp \
+	../tools/parsers/puddle/tagger.cpp \
+	../tools/parsers/puddle/tagset.cpp \
+	../tools/parsers/puddle/action.cpp \
+	../tools/parsers/puddle/add_action.cpp \
+	../tools/parsers/puddle/attach_action.cpp \
+	../tools/parsers/puddle/delete_action.cpp \
+	../tools/parsers/puddle/group_action.cpp \
+	../tools/parsers/puddle/join_action.cpp \
+	../tools/parsers/puddle/syntok_action.cpp \
+	../tools/parsers/puddle/transform_action.cpp \
+	../tools/parsers/puddle/unify_action.cpp \
+	../tools/parsers/puddle/puddle_util.cpp \
+	../tools/parsers/puddle/rule.cpp \
+	../tools/parsers/puddle/rule_matcher.cpp \
+	../tools/parsers/puddle/rule_modifier.cpp \
+	../tools/parsers/puddle/graph_writer.cpp \
+	../tools/parsers/puddle/parse_converter.cpp \
+	../tools/parsers/puddle/lattice_wrapper.cpp \
+	/home/leszekm/poleng/poleng4/src/bonsai/common/ParseGraph.cpp \
+	/home/leszekm/poleng/poleng4/src/bonsai/common/TransferTypes.cpp \
+	/home/leszekm/poleng/poleng4/src/bonsai/common/TransitionInfo.cpp
 
 runner_CPPFLAGS = ${compiler_flags} \
     -Itests \
@@ -52,7 +75,9 @@ runner_CPPFLAGS = ${compiler_flags} \
     -I../formats/utt/t \
     -I../tools/tokenizers/tp \
     -I../utf8 \
-    -I../utf8/utf8
+    -I../utf8/utf8 \
+	-I../tools/parsers/puddle \
+	-I/home/leszekm/poleng/poleng4/src/bonsai/common
 
 psi_pipe_SOURCES = \
 	../common/annotator.cpp \
@@ -119,6 +144,7 @@ puddle_SOURCES = \
     ../tools/parsers/puddle/graph_writer.cpp \
     ../tools/parsers/puddle/group_action.cpp \
     ../tools/parsers/puddle/join_action.cpp \
+	../tools/parsers/puddle/lattice_wrapper.cpp \
     ../tools/parsers/puddle/parse_converter.cpp \
     ../tools/parsers/puddle/puddle.cpp \
 	../tools/parsers/puddle/puddle_util.cpp \
@@ -132,7 +158,13 @@ puddle_SOURCES = \
     ../tools/parsers/puddle/tagset.cpp \
     ../tools/parsers/puddle/tagset_loader.cpp \
     ../tools/parsers/puddle/transform_action.cpp \
-    ../tools/parsers/puddle/unify_action.cpp
+    ../tools/parsers/puddle/unify_action.cpp \
+	../common/annotation_item.cpp \
+	../common/annotation_item_manager.cpp \
+	../common/layer_tag_collection.cpp \
+	../common/layer_tag_manager.cpp \
+	../common/layer_tag_mask.cpp \
+	../common/lattice.cpp
 
 #    ../tools/parsers/puddle/entity.cpp
 #    ../tools/parsers/puddle/token.cpp
@@ -145,6 +177,7 @@ puddle_SOURCES += /home/leszekm/poleng/poleng4/src/bonsai/common/ParseGraph.cpp 
 	/home/leszekm/poleng/poleng4/src/bonsai/common/TransferTypes.cpp
 
 puddle_CPPFLAGS = ${compiler_flags} \
+	-I../common \
 	-I../utf8 \
 	-I../utf8/utf8 \
 	-I/home/leszekm/poleng/poleng4/src/bonsai/common # -I/home/leszekm/poleng/poleng4/lib/linux/icu/include -I/home/leszekm/poleng/poleng4/lib/linux/boost/include/boost-1_37 -I/home/leszekm/poleng/poleng4/lib/linux/boost/include/boost-1_37/boost
