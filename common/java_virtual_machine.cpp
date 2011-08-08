@@ -2,7 +2,7 @@
 
 jint const JavaVirtualMachine::JNI_VERSION = JNI_VERSION_1_6;
 // Each class path is separated by colon (:)
-std::string JavaVirtualMachine::javaClassPath = "../common/java:../common/java/morfologik-stemming-1.5.0.jar";
+std::string JavaVirtualMachine::javaClassPath = ":../common/java:../tools/lemmatizers/morfologik/j/morfologik-stemming-1.5.0.jar";
 std::string JavaVirtualMachine::javaLibraryPath = "";
 
 JavaVirtualMachine* JavaVirtualMachine::jvmInstance = NULL;
@@ -52,10 +52,10 @@ JNIEnv* JavaVirtualMachine::getENV() {
 	return jniENV;
 }
 
-void JavaVirtualMachine::setJavaClassPath(std::string classPath) {
-	javaClassPath = classPath;
+void JavaVirtualMachine::addJavaClassPath(std::string classPath) {
+	javaClassPath += ":" + classPath;
 }
-void JavaVirtualMachine::setJavaLibraryPath(std::string libraryPath) {
-	javaLibraryPath = libraryPath;
+void JavaVirtualMachine::addJavaLibraryPath(std::string libraryPath) {
+	javaLibraryPath += ":" + libraryPath;
 }
 

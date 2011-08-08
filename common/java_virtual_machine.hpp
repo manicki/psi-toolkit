@@ -7,17 +7,17 @@
 
 class JavaVirtualMachine {
 
-	public:
+public:
 	static jint const JNI_VERSION;
 
 	JavaVM* getJVM();
 	JNIEnv* getENV();
-	static void setJavaClassPath(std::string);
-    static void setJavaLibraryPath(std::string);
+	static void addJavaClassPath(std::string);
+    static void addJavaLibraryPath(std::string);
 
 	static JavaVirtualMachine* Instance();
 
-	private:
+private:
 	static std::string javaClassPath;
 	static std::string javaLibraryPath;
 	bool inited;
