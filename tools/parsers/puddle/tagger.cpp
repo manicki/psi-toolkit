@@ -621,16 +621,17 @@ std::string Tagger::processInput(std::string &sentence, ParseGraphPtr inputGraph
             RE2::GlobalReplace(&base, *regOpt, "&#63;");
             RE2::GlobalReplace(&base, *regAlt, "&#124;");
             std::string ctag = interp.substr(interp.find("#", 1) + 1, std::string::npos);
-            std::string mapped = tagset->mapMorphology(ctag);
-            if (mapped == "") {
-                mapped = emptyMorphology;
-                //std::cerr << "Nie ma skompilowanej interpretacji morfologicznej: " << ctag << " dla " << grapheme << "!!!!!!" << std::endl;
-            }
-            std::string morpho = base + ":" + ctag;
-            std::string compiled = mapped + base;
+            //std::string mapped = tagset->mapMorphology(ctag);
+            //if (mapped == "") {
+            //    mapped = emptyMorphology;
+            //    //std::cerr << "Nie ma skompilowanej interpretacji morfologicznej: " << ctag << " dla " << grapheme << "!!!!!!" << std::endl;
+            //}
+            //std::string morpho = base + ":" + ctag;
+            //std::string compiled = mapped + base;
             //tok->addInterpretation(morpho, compiled);
             //compiledToken += "<" + mapped + base;
-            sst << "<" << mapped << base;
+            //sst << "<" << mapped << base;
+            sst << "<" << base << "<" << ctag;
             //delete morpho;
             //delete compiled;
             //delete mapped;

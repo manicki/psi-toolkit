@@ -120,7 +120,7 @@ namespace poleng {
                             if ((max_depth == 0) || ((max_depth > 0) && (map[e].getDepth() > max_depth))) {
                                 max_depth = map[e].getDepth();
                                 max_end = map[e].getEnd();
-                                if (i = stop_i) {
+                                if (i == stop_i) {
                                     ti = &(map[e]);
                                 }
                             }

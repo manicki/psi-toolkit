@@ -115,6 +115,7 @@ void RuleModifier::setMatch(int ruleIndex, std::string match)
         std::vector<std::string> tokensModifiers;
         std::vector<bool> tokensRequired;
         std::vector<int> matchedIndices;
+        NegativePatternStrings negativePatterns;
         int bracketCount = 0;
         int size;
         std::string compiled = "";
@@ -123,18 +124,18 @@ void RuleModifier::setMatch(int ruleIndex, std::string match)
             std::string tmp = rules->at(ruleIndex)->getLeft();
             compiled = ruleCompiler->compileRulePattern(tmp, size,
                     tokensPatterns, tokensModifiers, tokensRequired,
-                    matchedIndices, bracketCount);
+                    matchedIndices, bracketCount, negativePatterns);
         }
         compiled += ruleCompiler->compileRulePattern(match, size,
                 tokensPatterns, tokensModifiers, tokensRequired,
-                matchedIndices, bracketCount);
+                matchedIndices, bracketCount, negativePatterns);
         rules->at(ruleIndex)->setMatchCount(size);
         if (rules->at(ruleIndex)->getRightCount() > 0)
         {
             std::string tmp = rules->at(ruleIndex)->getRight();
             compiled += ruleCompiler->compileRulePattern(tmp, size,
                     tokensPatterns, tokensModifiers, tokensRequired,
-                    matchedIndices, bracketCount);
+                    matchedIndices, bracketCount, negativePatterns);
         }
         rules->at(ruleIndex)->setMatch(match);
         rules->at(ruleIndex)->setTokensPatterns(tokensPatterns);
@@ -153,23 +154,24 @@ void RuleModifier::setLeftContext(int ruleIndex, std::string context)
         std::vector<std::string> tokensModifiers;
         std::vector<bool> tokensRequired;
         std::vector<int> matchedIndices;
+        NegativePatternStrings negativePatterns;
         int bracketCount = 0;
         int size;
         std::string compiled = "";
         compiled = ruleCompiler->compileRulePattern(context, size,
                 tokensPatterns, tokensModifiers, tokensRequired,
-                matchedIndices, bracketCount);
+                matchedIndices, bracketCount, negativePatterns);
         rules->at(ruleIndex)->setLeftCount(size);
         std::string tmp = rules->at(ruleIndex)->getMatch();
         compiled += ruleCompiler->compileRulePattern(tmp, size,
                 tokensPatterns, tokensModifiers, tokensRequired,
-                matchedIndices, bracketCount);
+                matchedIndices, bracketCount, negativePatterns);
         if (rules->at(ruleIndex)->getRightCount() > 0)
         {
             std::string tmp = rules->at(ruleIndex)->getRight();
             compiled += ruleCompiler->compileRulePattern(tmp, size,
                     tokensPatterns, tokensModifiers, tokensRequired,
-                    matchedIndices, bracketCount);
+                    matchedIndices, bracketCount, negativePatterns);
         }
         rules->at(ruleIndex)->setLeft(context);
         rules->at(ruleIndex)->setTokensPatterns(tokensPatterns);
@@ -188,6 +190,7 @@ void RuleModifier::setRightContext(int ruleIndex, std::string context)
         std::vector<std::string> tokensModifiers;
         std::vector<bool> tokensRequired;
         std::vector<int> matchedIndices;
+        NegativePatternStrings negativePatterns;
         int bracketCount = 0;
         int size;
         std::string compiled = "";
@@ -196,15 +199,15 @@ void RuleModifier::setRightContext(int ruleIndex, std::string context)
             std::string tmp = rules->at(ruleIndex)->getLeft();
             compiled = ruleCompiler->compileRulePattern(tmp, size,
                     tokensPatterns, tokensModifiers, tokensRequired,
-                    matchedIndices, bracketCount);
+                    matchedIndices, bracketCount, negativePatterns);
         }
         std::string tmp = rules->at(ruleIndex)->getMatch();
         compiled += ruleCompiler->compileRulePattern(tmp, size,
                 tokensPatterns, tokensModifiers, tokensRequired,
-                matchedIndices, bracketCount);
+                matchedIndices, bracketCount, negativePatterns);
         compiled += ruleCompiler->compileRulePattern(context, size,
                 tokensPatterns, tokensModifiers, tokensRequired,
-                matchedIndices, bracketCount);
+                matchedIndices, bracketCount, negativePatterns);
         rules->at(ruleIndex)->setRightCount(size);
         rules->at(ruleIndex)->setRight(context);
         rules->at(ruleIndex)->setTokensPatterns(tokensPatterns);

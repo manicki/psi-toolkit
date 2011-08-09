@@ -68,6 +68,9 @@ class Tagset
         std::vector<std::string> getAttributeValuesNotMatching(std::string attribute, std::string regexp);
         std::vector<std::string> getAttributeValuesExcept(std::string attribute, std::string value);
 
+        std::vector<std::string> getAttributes();
+        std::vector<std::string> getPartsOfSpeech();
+
     private:
 
         std::vector<std::string> attrList;

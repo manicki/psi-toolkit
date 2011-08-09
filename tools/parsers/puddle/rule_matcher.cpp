@@ -93,7 +93,7 @@ ParseGraphPtr RuleMatcher::applyRules(std::string &sentenceString, ParseGraphPtr
                 if ((*ir)->apply(sentenceString, inputGraph, currentEntity))
                 {
                     //sentence = generateSentencePattern(lattice);
-                    sentenceString = generateSentencePattern(inputGraph);
+                    sentenceString = generateSentenceString(inputGraph);
                     //std::cerr << "SENT PRZED: " << oldSentence << std::endl;
                     std::cerr << "SENT PRZED: " << oldSentenceString << std::endl;
                     //std::cerr << "SENT PO:    " << sentence << std::endl;
@@ -403,20 +403,20 @@ void RuleMatcher::addPosEdges(ParseGraphPtr pg) {
 }
 
 //std::string RuleMatcher::generateSentencePattern(Edges &edges) {
-std::string RuleMatcher::generateSentencePattern(ParseGraphPtr pg) {
+std::string RuleMatcher::generateSentenceString(ParseGraphPtr pg) {
 /*    ParseGraphPtr tmp_pg = ParseGraphPtr(new ParseGraph()); //tymczasowy graf, wszak dzialamy docelowo na grafie/kracie, a nie na jakis badziewiach
     for (Edges::iterator e = edges.begin(); e != edges.end(); e ++) {
         tmp_pg->add_edge((*e)->getStart(), (*e)->getEnd(), **e);
     }*/
     std::stringstream ss;
-    ss << "<<s<0<sb<>";
+    ss << "<<s<0<0<sb<>";
 
     ParseGraph::Graph *g = pg->getBoostGraph();
     //ParseGraph::Vertex end = vertex(boost::num_vertices(*g) - 1, *g); //potrzebne to w ogole?
     ParseGraph::VertexIndex index = get(boost::vertex_index, *g);
     ParseGraph::TransitionMap map = get(boost::edge_bundle, *g);
 
-    std::string emptyMorphology(tagset->getNumberOfAttributes(), '0');
+    //std::string emptyMorphology(tagset->getNumberOfAttributes(), '0');
     int i = 0;
     while (i < (boost::num_vertices(*g) - 1) ) {
     //for (int i = 0; i < boost::num_vertices(*g); i ++) {
@@ -463,17 +463,19 @@ std::string RuleMatcher::generateSentencePattern(ParseGraphPtr pg) {
                 vit != max_variants.end(); vit ++) {
             if (! boost::get<2>(*vit))
                 continue;
-            std::string mapped = tagset->mapMorphology(boost::get<1>(*vit));
-            if (mapped == "")
-                mapped = emptyMorphology;
+            //std::string mapped = tagset->mapMorphology(boost::get<1>(*vit));
+            //if (mapped == "")
+            //    mapped = emptyMorphology;
             ss << "<";
-            ss << mapped;
+            //ss << mapped;
             ss << boost::get<0>(*vit);
+            ss << "<";
+            ss << boost::get<1>(*vit);
         }
         ss << ">";
         i = max_end;
     }
-    ss << "<<s<666<se<>";
+    ss << "<<s<" << i - 1 << "<" << i - 1 << "<se<>";
 
     return ss.str();
 }

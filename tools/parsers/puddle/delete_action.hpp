@@ -41,7 +41,7 @@ namespace poleng {
                     void setTokenIndex(int aTokenIndex);
                     DeleteConditions getConditions();
 
-                    std::string getType() { return type;}
+                    std::string getType() { return type; }
                     void setVerbose() { verbose = true; }
 
                 private:

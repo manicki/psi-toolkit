@@ -55,6 +55,7 @@ bool GroupAction::apply(ParseGraphPtr pg, int currentEntity,
     int i = 0;
     while (i < matchedTokensSize.size())
     {
+        std::cerr << "i: "<< i << std::endl;
         if (i < start)
             realStart += matchedTokensSize[i];
         if ((i >= start) && (i < (head - 1)))
@@ -76,6 +77,7 @@ bool GroupAction::apply(ParseGraphPtr pg, int currentEntity,
             break;
         i ++;
     }
+    std::cerr << "koneic tego" << std::endl;
     //if (realHead > 0)
     //    realHead --;
     realEnd --;
@@ -107,13 +109,22 @@ bool GroupAction::apply(ParseGraphPtr pg, int currentEntity,
     group->setId( util::getNewEdgeId(pg) ); //@todo: nadawanie identyfikatora krawedzi
     group->setLabel(this->group);
 
+    std::cerr << "wybieram edze" << std::endl;
+    std::cerr << "real start: " << realStart << std::endl;
     TransitionInfo *edgeStart = util::getEdge(pg, currentEntity, realStart);
+    std::cerr << "mam start" << std::endl;
     TransitionInfo *edgeHead = util::getEdge(pg, currentEntity, realHead);
+    std::cerr << "mam head" << std::endl;
     TransitionInfo *edgeEnd = util::getEdge(pg, currentEntity, realEnd);
+    std::cerr << "mam end" << std::endl;
     group->setStart(edgeStart->getStart());
+    std::cerr << "1" << std::endl;
     group->setEnd(edgeEnd->getEnd());
+    std::cerr << "2" << std::endl;
     group->setHead(edgeHead->getId());
+    std::cerr << "3" << std::endl;
     group->setOrth(edgeHead->getOrth());
+    std::cerr << "4" << std::endl;
     std::vector<PosInfo> headVariants = edgeHead->variants_;
     for (std::vector<PosInfo>::iterator vit = headVariants.begin();
             vit != headVariants.end(); vit ++) {
@@ -274,6 +285,7 @@ bool GroupAction::apply(ParseGraphPtr pg, int currentEntity,
 //        }
 //    }
 //    std::cout << "W akcji grupowania" << std::endl;
+    std::cerr << "zrobione" << std::endl;
     return true;
 }
 

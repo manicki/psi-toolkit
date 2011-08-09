@@ -31,7 +31,6 @@ Puddle::Puddle()
     describe = false;
 
     ruleModifier = new RuleModifier;
-    latticeWrapper = new LatticeWrapper();
 
     tagsetLogFilename = "";
     rulesLogFilename = "";
@@ -70,6 +69,7 @@ void Puddle::setTagset(bonsai::puddle::TagsetPtr tagset_)
     parseConverter->setTagset(tagset);
 
     ruleMatcher->setTagset(tagset_);
+    latticeWrapper = new LatticeWrapper(tagset_);
 }
 
 void Puddle::setRules(bonsai::puddle::RulesPtr rules_)

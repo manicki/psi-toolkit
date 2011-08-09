@@ -22,7 +22,11 @@ public:
         LayerTagMask lemmaMask = lattice.getLayerTagManager().getMask(lemma_tag);
         AnnotationItem word_token("word");
         AnnotationItem blank_token("blank");
-        AnnotationItemManager ami;
+        AnnotationItemManager aim;
+        AnnotationItem ai("base");
+        aim.setValue(ai, "base", "xxx");
+        aim.setValue(ai, "number", "xxx");
+        aim.setValue(ai, "gender", "xxx");
 
         Lattice::VertexDescriptor pre_blanc = lattice.getFirstVertex();
         Lattice::VertexDescriptor post_blanc = lattice.getVertexForRawCharIndex(5);
@@ -79,22 +83,22 @@ public:
         Lattice::Partition blanc_lemma_partition;
         blanc_lemma_partition.links.push_back(lattice.firstOutEdge(lattice.getVertexForRawCharIndex(0), tokenMask));
         AnnotationItem ai_blanc_adj("adj");
-        ami.setValue(ai_blanc_adj, "base", "blanc");
-        ami.setValue(ai_blanc_adj, "number", "sg");
-        ami.setValue(ai_blanc_adj, "gender", "m");
+        aim.setValue(ai_blanc_adj, "base", "blanc");
+        aim.setValue(ai_blanc_adj, "number", "sg");
+        aim.setValue(ai_blanc_adj, "gender", "m");
         lattice.addEdge(pre_blanc, post_blanc, ai_blanc_adj, lemma_tag, 0, blanc_lemma_partition);
         AnnotationItem ai_blanc_subst("subst");
-        ami.setValue(ai_blanc_subst, "base", "blanc");
-        ami.setValue(ai_blanc_subst, "number", "sg");
-        ami.setValue(ai_blanc_subst, "gender", "m");
+        aim.setValue(ai_blanc_subst, "base", "blanc");
+        aim.setValue(ai_blanc_subst, "number", "sg");
+        aim.setValue(ai_blanc_subst, "gender", "m");
         lattice.addEdge(pre_blanc, post_blanc, ai_blanc_subst, lemma_tag, 0, blanc_lemma_partition);
 
         Lattice::Partition chat_lemma_partition;
         chat_lemma_partition.links.push_back(lattice.firstOutEdge(lattice.getVertexForRawCharIndex(6), tokenMask));
         AnnotationItem ai_chat("subst");
-        ami.setValue(ai_chat, "base", "chat");
-        ami.setValue(ai_chat, "number", "sg");
-        ami.setValue(ai_chat, "gender", "m");
+        aim.setValue(ai_chat, "base", "chat");
+        aim.setValue(ai_chat, "number", "sg");
+        aim.setValue(ai_chat, "gender", "m");
         lattice.addEdge(pre_chat, post_chat, ai_chat, lemma_tag, 0, chat_lemma_partition);
 
         Lattice::EdgeDescriptor edge;
@@ -106,7 +110,7 @@ public:
             ai_blanc_adj.getCategory()
         );
         std::list< std::pair<std::string, std::string> > av
-            = ami.getValues(
+            = aim.getValues(
                     lattice.getEdgeAnnotationItem(edge)
                     );
         std::list< std::pair<std::string, std::string> >::iterator avi = av.begin();
@@ -127,7 +131,7 @@ public:
             lattice.getEdgeAnnotationItem(edge).getCategory(),
             ai_blanc_subst.getCategory()
         );
-        av = ami.getValues(
+        av = aim.getValues(
                     lattice.getEdgeAnnotationItem(edge)
                     );
         avi = av.begin();
@@ -148,7 +152,7 @@ public:
             lattice.getEdgeAnnotationItem(edge).getCategory(),
             ai_chat.getCategory()
         );
-        av = ami.getValues(
+        av = aim.getValues(
                     lattice.getEdgeAnnotationItem(edge)
                     );
         avi = av.begin();
@@ -163,9 +167,6 @@ public:
         TS_ASSERT_EQUALS((*avi).second, "m");
         ++avi;
         TS_ASSERT(avi == av.end());
-        std::cerr << "TU TYLE1: " << av.size() << std::endl;
-        std::cerr << "TU TYLE2: " << ami.getValues(lattice.getEdgeAnnotationItem(edge)).size() << std::endl;
-        std::cerr << "TU HASZ:  " << lattice.getEdgeAnnotationItem(edge).getHash() << std::endl;
         TS_ASSERT(!tokenIter.hasNext());
 
         //preparing parser

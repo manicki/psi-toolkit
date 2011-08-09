@@ -40,7 +40,8 @@ Rule::Rule( std::string aName, std::string aCompiled, int aLeftCount,
             int aMatchCount, int aRightCount, ActionsPtr aActions,
             std::vector<std::string> aTokensPatterns, std::vector<std::string> aTokensModifiers,
             std::vector<bool> aTokensRequired, std::vector<int> aMatchedIndices,
-            bool aRepeat, std::string aLeft, std::string aMatch, std::string aRight ) {
+            bool aRepeat, std::string aLeft, std::string aMatch, std::string aRight,
+            NegativePatternStrings aNegativePatterns ) {
 
     tokensPatterns.insert(tokensPatterns.begin(), aTokensPatterns.begin(), aTokensPatterns.end());// = new std::vector<std::string>(aTokensPatterns);
     tokensModifiers.insert(tokensModifiers.begin(), aTokensModifiers.begin(), aTokensModifiers.end());// = new std::vector<std::string>(aTokensModifiers);
@@ -75,6 +76,14 @@ Rule::Rule( std::string aName, std::string aCompiled, int aLeftCount,
     matchedTokensSize.assign(tokensPatterns.size(), 0);
 //    matchedTokensSize.assign(tokensPatterns.size(), 0);
     match_set = false;
+
+    for (NegativePatternStrings::iterator negPatIt =
+            aNegativePatterns.begin(); negPatIt != aNegativePatterns.end();
+            negPatIt ++ ) {
+        PatternPtr negativePattern = PatternPtr(new RE2( negPatIt->second ));
+        negativePatterns.insert(std::pair<std::string, PatternPtr>(
+                    negPatIt->first, negativePattern) );
+    }
 }
 
 Rule::~Rule()
@@ -156,6 +165,7 @@ int Rule::matchPattern(std::string &sentenceString, int matchNumber, std::string
     //RE2 regPattern(pieklo);
     //RE2::Anchor anchor = RE2::UNANCHORED; // @todo: do czego to jest?
     int num_groups = pattern->NumberOfCapturingGroups() + 1;
+    std::map<std::string, int> namedGroups = pattern->NamedCapturingGroups();
     re2::StringPiece* matched = new re2::StringPiece[num_groups];
     re2::StringPiece sentence_str(sentenceString);
     int start = 0;
@@ -163,6 +173,13 @@ int Rule::matchPattern(std::string &sentenceString, int matchNumber, std::string
     std::string before = "";
 //    std::cerr << "macz namber: " << matchNumber << std::endl;
 
+    std::cerr << "ZDANIE: " << sentenceString << std::endl;
+    std::cerr << "REGULA: " << compiled << std::endl;
+//    std::map<std::string, int> groups_map = pattern->NamedCapturingGroups();
+//    std::cerr << "NGRUP:  " << groups_map.size() << std::endl;
+//    for (std::map<std::string, int>::iterator buc = groups_map.begin();
+//            buc != groups_map.end(); buc ++)
+//        std::cerr << "  " << buc->first << " -> " << buc->second << std::endl;
 //        std::cout << "Zdanie: " << sentence << std::endl;
 //    std::cerr << "wzorzec reguly felernyj" << compiled << std::endl;
     try {
@@ -179,6 +196,8 @@ int Rule::matchPattern(std::string &sentenceString, int matchNumber, std::string
         //flags |= boost::match_not_bob;
         if (matchCount == matchNumber) {
             matching = matched[0].as_string();
+
+            std::cerr << "MACZING: " << matching << std::endl;
             //match = matched; //@todo: co to w okole jest?
             if (match_set) {
                 delete[] match;
@@ -186,6 +205,31 @@ int Rule::matchPattern(std::string &sentenceString, int matchNumber, std::string
             match = new re2::StringPiece[num_groups];
             for (int i = 0; i < num_groups; i ++)
                 match[i] = matched[i];
+
+            if (namedGroups.size() > 0) {
+                bool negPatternMatched = false;
+                for (std::map<std::string, int>::iterator namedGroupIt =
+                        namedGroups.begin(); namedGroupIt != namedGroups.end();
+                        namedGroupIt ++) {
+                    std::string groupName = namedGroupIt->first;
+                    int groupIndex = namedGroupIt->second;
+                    NegativePatterns::iterator negPatternIt =
+                        negativePatterns.find(groupName);
+                    if (negPatternIt != negativePatterns.end()) {
+                        std::string submatch = matched[groupIndex].as_string();
+                        std::cerr << "SUBMATCH: " << submatch << std::endl;
+                        if (RE2::FullMatch(submatch, *(negPatternIt->second) )) {
+                            negPatternMatched = true;
+                            std::cerr << "PASUJE A NIE POWINIEN: " << negPatternIt->second->pattern() << std::endl;
+                            break;
+                        }
+                    }
+                }
+                if (negPatternMatched) {
+                    before += matched[0].as_string();
+                    continue;
+                }
+            }
 
             if (matching == "")
                 return -1;

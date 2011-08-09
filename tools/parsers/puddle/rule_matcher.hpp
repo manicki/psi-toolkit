@@ -53,7 +53,7 @@ namespace poleng {
 
                     TagsetPtr tagset;
                     //std::string generateSentencePattern(Edges &edges);
-                    std::string generateSentencePattern(ParseGraphPtr pg);
+                    std::string generateSentenceString(ParseGraphPtr pg);
             };
 
         }

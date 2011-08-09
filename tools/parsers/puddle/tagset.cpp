@@ -1087,7 +1087,23 @@ std::vector<std::string> Tagset::getMappedMorphologies(std::string mapped_pos)
                 }
             }
             return result;
-}
+        }
+
+        std::vector<std::string> Tagset::getAttributes() {
+            std::vector<std::string> result;
+            for (std::map<std::string, std::vector<std::string> >::iterator it =
+                    attributes.begin(); it != attributes.end(); it ++)
+                result.push_back(it->first);
+            return result;
+        }
+
+        std::vector<std::string> Tagset::getPartsOfSpeech() {
+            std::vector<std::string> result;
+            for (std::map<std::string, std::vector<std::string> >::iterator it =
+                    POSs.begin(); it != POSs.end(); it ++)
+                result.push_back(it->first);
+            return result;
+        }
 
 }
 

@@ -32,11 +32,21 @@ namespace bonsai
 namespace puddle
 {
 
+    typedef std::map<std::string, std::string> NegativePatternStrings;
+    typedef std::map<std::string, PatternPtr> NegativePatterns;
+
 class Rule
 {
     public:
         Rule();
-        Rule(std::string aName, std::string aCompiled, int aLeftCount, int aMatchCount, int aRightCount, ActionsPtr aActions, std::vector<std::string> aTokensPatterns, std::vector<std::string> aTokensModifiers, std::vector<bool> aTokensRequired, std::vector<int> aMatchedIndices, bool aRepeat, std::string aLeft, std::string aMatch, std::string aRight); //@todo: zmienic tu typy, bo mnie krew zaleje
+        Rule(std::string aName, std::string aCompiled, int aLeftCount,
+                int aMatchCount, int aRightCount, ActionsPtr aActions,
+                std::vector<std::string> aTokensPatterns,
+                std::vector<std::string> aTokensModifiers,
+                std::vector<bool> aTokensRequired,
+                std::vector<int> aMatchedIndices, bool aRepeat,
+                std::string aLeft, std::string aMatch, std::string aRight,
+                NegativePatternStrings aNegativePatterns); //@todo: zmienic tu typy, bo mnie krew zaleje
         ~Rule();
 
         //bool test(std::string &sentence, Entities &entities, int currentEntity);
@@ -85,6 +95,7 @@ class Rule
         std::string name;
         std::vector<TransitionInfo> elements;
         PatternPtr pattern;
+        NegativePatterns negativePatterns;
         std::string compiled;
         std::string left_, match_, right_;
         ActionsPtr actions;

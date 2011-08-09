@@ -1,7 +1,7 @@
 #sample rules
 
 Rule "test 1"
-Match: [base~"liść"/i]; #case insensitive match
+Match: [base~"blanc"/i]; #case insensitive match
 Eval:  group(XP, 1);
 
 Rule "test del"
