@@ -212,16 +212,21 @@ void ParseConverter::addDescription(ParseGraphPtr pg)
                             {
                                 for (std::vector<std::string>::iterator d = desc_.begin(); d != desc_.end(); d ++)
                                 {
-                                    boost::regex reg(*d);
-                                    boost::smatch what;
-                                    if (boost::regex_match(morpho, what, reg))
+                                    RE2 reg(*d);
+                                    std::string what;
+                                    //boost::regex reg(*d);
+                                    //boost::smatch what;
+                                    //if (boost::regex_match(morpho, what, reg))
+                                    if (RE2::FullMatch(morpho, reg, &what))
                                     {
                                         if (desc != "")
                                             desc += tagset->desc_separator;
-                                        desc += what[1];
+                                        //desc += what[1];
+                                        desc += what;
                                         if (desc_non_orth != "")
                                             desc_non_orth += tagset->desc_separator;
-                                        desc_non_orth += what[1];
+                                        //desc_non_orth += what[1];
+                                        desc_non_orth += what;
                                     }
                                 }
                             }
@@ -279,14 +284,18 @@ void ParseConverter::addDescription(ParseGraphPtr pg)
 
                     for (std::vector<std::string>::iterator d = grdesc.begin(); d != grdesc.end(); d ++)
                     {
-                        boost::regex reg(*d);
-                        boost::smatch what;
-                        if (boost::regex_match(morpho, what, reg))
+                        RE2 reg(*d);
+                        std::string what;
+                        //boost::regex reg(*d);
+                        //boost::smatch what;
+                        //if (boost::regex_match(morpho, what, reg))
+                        if (RE2::FullMatch(morpho, reg, &what))
                         {
                             if (desc != "")
                                 //desc += tagset.desc_separator;
                                 desc += ":";
-                            desc += what[1];
+                            //desc += what[1];
+                            desc += what;
                         }
 
                     }

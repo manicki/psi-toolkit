@@ -1,7 +1,7 @@
 #ifndef RULEMODIFIER_H__
 #define RULEMODIFIER_H__
 
-#include "rule_compiler.hpp"
+#include "rule_loader.hpp"
 
 namespace poleng
 {
@@ -22,7 +22,7 @@ class RuleModifier
         void moveRule(int from, int to);
 
         void setRules(RulesPtr aRules);
-        void setRuleCompiler(RuleCompiler *aRuleCompiler);
+        void setRuleCompiler(RuleLoader *aRuleCompiler);
         RulesPtr getRules();
 
         void addAction(int ruleIndex, ActionPtr action);
@@ -39,7 +39,7 @@ class RuleModifier
     private:
 
         RulesPtr rules;
-        RuleCompiler *ruleCompiler;
+        RuleLoader *ruleCompiler;
 };
 
 }
