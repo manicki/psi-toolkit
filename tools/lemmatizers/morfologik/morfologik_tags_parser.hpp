@@ -1,6 +1,7 @@
 #ifndef MORFOLOGIK_TAGS_PARSER_HDR
 #define MORFOLOGIK_TAGS_PARSER_HDR
 
+#include <string>
 #include <map>
 #include <vector>
 

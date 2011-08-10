@@ -74,11 +74,12 @@ std::map<std::string, std::string> MorfologikTagsParser::predefinedTags =
 		("irreg", "irregularity");
 
 
-std::vector<std::map<std::string, std::string> > MorfologikTagsParser::parse (std::string & tag) {
+std::vector<std::map<std::string, std::string> > MorfologikTagsParser::parse (
+	std::string & tag) {
+
 	int complexAttributeCounter = 0;
 	std::vector<std::map<std::string, std::string> > allDescriptions;
 	std::map<std::string, std::string> rawDescription;
-	std::map<std::string, std::string>::iterator it;
 
 	rawDescription = parseSimple(tag, complexAttributeCounter); 
 
@@ -101,7 +102,7 @@ std::vector<std::map<std::string, std::string> >
 	
 	while (complexAttributeCounter > 0) {
 		std::vector<std::map<std::string, std::string> > tempDescriptions;
-		for (int i = 0; i < allDescriptions.size(); i++)
+		for (unsigned int i = 0; i < allDescriptions.size(); i++)
 		{
 			std::vector<std::map<std::string, std::string> > expanded = 
 				expandSingleDescription(allDescriptions[i]);
@@ -111,7 +112,6 @@ std::vector<std::map<std::string, std::string> >
 		allDescriptions = tempDescriptions;
 		complexAttributeCounter--;
 	}
-	
 	return allDescriptions;
 }
 
@@ -150,7 +150,7 @@ std::vector<std::map<std::string, std::string> >
 		else {
 			for (int i = 0; i < lengthOfCurrentComplexAttribute; i++) {
 				result[i].insert( std::pair<std::string, std::string>
-				(it->first, it->second) );
+					(it->first, it->second) );
 			}			
 		}
 	}
