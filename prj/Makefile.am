@@ -1,12 +1,21 @@
-bin_PROGRAMS = runner psi-pipe puddle
+bin_PROGRAMS = runner psi-pipe
+if WITH_PUDDLE
+bin_PROGRAMS += puddle
+endif
 
 cpprog=`echo $${CPPROG-cp -d -r}`
 
 CLEANFILES=tests/runner.cpp
 
+if WITH_PUDDLE
 tests/runner.cpp: ../common/t/layer_tags_tests.hpp ../common/t/annotation_item_tests.hpp ../common/t/lattice_tests.hpp ../common/t/quoter_tests.hpp ../common/t/lattice_readers_writers_tests.hpp ../tools/parsers/puddle/t/puddle_tests.hpp
 	cd tests; \
 	perl cxxtestgen.pl --have-eh --runner=ErrorPrinter -o runner.cpp ../../common/t/layer_tags_tests.hpp ../../common/t/annotation_item_tests.hpp ../../common/t/lattice_tests.hpp ../../common/t/quoter_tests.hpp ../../common/t/lattice_readers_writers_tests.hpp ../../tools/parsers/puddle/t/puddle_tests.hpp
+else
+tests/runner.cpp: ../common/t/layer_tags_tests.hpp ../common/t/annotation_item_tests.hpp ../common/t/lattice_tests.hpp ../common/t/quoter_tests.hpp ../common/t/lattice_readers_writers_tests.hpp
+	cd tests; \
+	perl cxxtestgen.pl --have-eh --runner=ErrorPrinter -o runner.cpp ../../common/t/layer_tags_tests.hpp ../../common/t/annotation_item_tests.hpp ../../common/t/lattice_tests.hpp ../../common/t/quoter_tests.hpp ../../common/t/lattice_readers_writers_tests.hpp
+endif
 
 runner_SOURCES = \
 	tests/runner.cpp \
@@ -39,7 +48,9 @@ runner_SOURCES = \
 	../formats/utt/utt_lattice_reader.cpp \
 	../formats/utt/utt_quoter.cpp \
 	../tools/tokenizers/tp/tp_tokenizer.cpp \
-	../tools/tokenizers/tp/tp_token_cutter.cpp \
+	../tools/tokenizers/tp/tp_token_cutter.cpp
+if WITH_PUDDLE
+runner_SOURCES += \
 	../tools/parsers/puddle/puddle.cpp \
 	../tools/parsers/puddle/tagset_loader.cpp \
 	../tools/parsers/puddle/rule_loader.cpp \
@@ -61,9 +72,10 @@ runner_SOURCES = \
 	../tools/parsers/puddle/graph_writer.cpp \
 	../tools/parsers/puddle/parse_converter.cpp \
 	../tools/parsers/puddle/lattice_wrapper.cpp \
-	/home/leszekm/poleng/poleng4/src/bonsai/common/ParseGraph.cpp \
-	/home/leszekm/poleng/poleng4/src/bonsai/common/TransferTypes.cpp \
-	/home/leszekm/poleng/poleng4/src/bonsai/common/TransitionInfo.cpp
+	@BONSAI_PATH@/ParseGraph.cpp \
+	@BONSAI_PATH@/TransferTypes.cpp \
+	@BONSAI_PATH@/TransitionInfo.cpp
+endif
 
 runner_CPPFLAGS = ${compiler_flags} \
     -Itests \
@@ -75,9 +87,10 @@ runner_CPPFLAGS = ${compiler_flags} \
     -I../formats/utt/t \
     -I../tools/tokenizers/tp \
     -I../utf8 \
-    -I../utf8/utf8 \
-	-I../tools/parsers/puddle \
-	-I/home/leszekm/poleng/poleng4/src/bonsai/common
+    -I../utf8/utf8
+if WITH_PUDDLE
+runner_CPPFLAGS += -I../tools/parsers/puddle
+endif
 
 psi_pipe_SOURCES = \
 	../common/annotator.cpp \
@@ -135,6 +148,7 @@ install-testfiles:
 
 install-data-hook: $(data_to_be_installed)
 
+if WITH_PUDDLE
 puddle_SOURCES = \
 	../tools/parsers/puddle/puddle_main.cpp \
     ../tools/parsers/puddle/action.cpp \
@@ -164,24 +178,14 @@ puddle_SOURCES = \
 	../common/layer_tag_collection.cpp \
 	../common/layer_tag_manager.cpp \
 	../common/layer_tag_mask.cpp \
-	../common/lattice.cpp
-
-#    ../tools/parsers/puddle/entity.cpp
-#    ../tools/parsers/puddle/token.cpp
-#    ../tools/parsers/puddle/syntok.cpp
-#    ../tools/parsers/puddle/group.cpp
-#    ../tools/parsers/puddle/special_token.cpp
-
-puddle_SOURCES += /home/leszekm/poleng/poleng4/src/bonsai/common/ParseGraph.cpp \
-	/home/leszekm/poleng/poleng4/src/bonsai/common/TransitionInfo.cpp \
-	/home/leszekm/poleng/poleng4/src/bonsai/common/TransferTypes.cpp
+	../common/lattice.cpp \
+	@BONSAI_PATH@/ParseGraph.cpp \
+	@BONSAI_PATH@/TransitionInfo.cpp \
+	@BONSAI_PATH@/TransferTypes.cpp
 
 puddle_CPPFLAGS = ${compiler_flags} \
 	-I../common \
 	-I../utf8 \
-	-I../utf8/utf8 \
-	-I/home/leszekm/poleng/poleng4/src/bonsai/common # -I/home/leszekm/poleng/poleng4/lib/linux/icu/include -I/home/leszekm/poleng/poleng4/lib/linux/boost/include/boost-1_37 -I/home/leszekm/poleng/poleng4/lib/linux/boost/include/boost-1_37/boost
+	-I../utf8/utf8
 
-LIBS += \
-	-lre2 \
-	-lboost_graph -lboost_serialization -lboost_program_options -lboost_wserialization #-lboost_regex -L/home/leszekm/poleng/poleng4/lib/linux/icu/lib -L/home/leszekm/poleng/poleng4/lib/linux/boost/lib -lboost_graph-gcc44 -lboost_serialization-gcc44 -lboost_program_options-gcc44 -lboost_wserialization-gcc44 -lboost_regex-gcc44 	-licuuc -licudata -licui18n -licuio
+endif

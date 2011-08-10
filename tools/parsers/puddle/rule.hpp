@@ -52,7 +52,7 @@ class Rule
         //bool test(std::string &sentence, Entities &entities, int currentEntity);
         bool test(std::string &sentenceString, ParseGraphPtr pg, int currentEntity);
         //bool apply(std::string &sentence, Entities &entities, Edges &edges, int currentEntity);
-        bool apply(std::string &sentenceString, ParseGraphPtr pg, int currentEntity);
+        bool apply(std::string &sentenceString, ParseGraphPtr pg, Lattice &lattice, int currentEntity);
 
         std::string getName();
         PatternPtr getPattern();

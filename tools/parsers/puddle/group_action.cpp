@@ -42,10 +42,10 @@ GroupAction::~GroupAction()
 
 //@todo: zmienic chyba te nazwe currentEntity na cos wlasciwszego
 //bool GroupAction::apply(Entities &entities, Edges &edges, int currentEntity, std::vector<int> matchedTokensSize)
-bool GroupAction::apply(ParseGraphPtr pg, int currentEntity,
-        std::vector<int> matchedTokensSize) {
+bool GroupAction::apply(ParseGraphPtr pg, Lattice &lattice,
+        int currentEntity, std::vector<int> matchedTokensSize) {
 
-    std::cerr << "grupe robie: " << group << "; current entity: " << currentEntity << std::endl;
+//    std::cerr << "grupe robie: " << group << "; current entity: " << currentEntity << std::endl;
 //    std::cout << "Poczatek reguly: " << ruleName << std::endl;
 //    std::cout << "PRZED mam elementow: " << entities.size() << std::endl;
 
@@ -55,7 +55,6 @@ bool GroupAction::apply(ParseGraphPtr pg, int currentEntity,
     int i = 0;
     while (i < matchedTokensSize.size())
     {
-        std::cerr << "i: "<< i << std::endl;
         if (i < start)
             realStart += matchedTokensSize[i];
         if ((i >= start) && (i < (head - 1)))
@@ -77,7 +76,6 @@ bool GroupAction::apply(ParseGraphPtr pg, int currentEntity,
             break;
         i ++;
     }
-    std::cerr << "koneic tego" << std::endl;
     //if (realHead > 0)
     //    realHead --;
     realEnd --;
@@ -109,22 +107,17 @@ bool GroupAction::apply(ParseGraphPtr pg, int currentEntity,
     group->setId( util::getNewEdgeId(pg) ); //@todo: nadawanie identyfikatora krawedzi
     group->setLabel(this->group);
 
-    std::cerr << "wybieram edze" << std::endl;
-    std::cerr << "real start: " << realStart << std::endl;
     TransitionInfo *edgeStart = util::getEdge(pg, currentEntity, realStart);
-    std::cerr << "mam start" << std::endl;
+    Lattice::VertexDescriptor startVertex = currentEntity + realStart;
+    Lattice::EdgeDescriptor edgeStart2 = lattice.firstOutEdge(startVertex,
+            lattice.getLayerTagManager().getMask("lemma"));
+    std::cerr << lattice.getEdgeText(edgeStart2) << " " << lattice.getEdgeSource(edgeStart2) << " " << lattice.getEdgeTarget(edgeStart2) << " " << lattice.getEdgeBeginIndex(edgeStart2) << " " << lattice.getEdgeLength(edgeStart2) << std::endl;
     TransitionInfo *edgeHead = util::getEdge(pg, currentEntity, realHead);
-    std::cerr << "mam head" << std::endl;
     TransitionInfo *edgeEnd = util::getEdge(pg, currentEntity, realEnd);
-    std::cerr << "mam end" << std::endl;
     group->setStart(edgeStart->getStart());
-    std::cerr << "1" << std::endl;
     group->setEnd(edgeEnd->getEnd());
-    std::cerr << "2" << std::endl;
     group->setHead(edgeHead->getId());
-    std::cerr << "3" << std::endl;
     group->setOrth(edgeHead->getOrth());
-    std::cerr << "4" << std::endl;
     std::vector<PosInfo> headVariants = edgeHead->variants_;
     for (std::vector<PosInfo>::iterator vit = headVariants.begin();
             vit != headVariants.end(); vit ++) {
@@ -285,7 +278,6 @@ bool GroupAction::apply(ParseGraphPtr pg, int currentEntity,
 //        }
 //    }
 //    std::cout << "W akcji grupowania" << std::endl;
-    std::cerr << "zrobione" << std::endl;
     return true;
 }
 

@@ -31,7 +31,7 @@ void RuleMatcher::setRules(RulesPtr aRules) {
 }
 
 //ParseGraphPtr RuleMatcher::applyRules(std::string &sentence, Entities &entities, Edges &lattice)
-ParseGraphPtr RuleMatcher::applyRules(std::string &sentenceString, ParseGraphPtr inputGraph)
+ParseGraphPtr RuleMatcher::applyRules(std::string &sentenceString, ParseGraphPtr inputGraph, Lattice &lattice)
 {
 //    std::cerr << "ZDANIE!" << std::endl;
     //trzeba jechać po kolei tokenami ze zdania - zdanie to nie bedzie string, tylko obiekt: co najmniej wektor tokenow (elementow tych od grafu) oraz napis bedacy tym 'skompilowanym' ciagiem
@@ -90,14 +90,12 @@ ParseGraphPtr RuleMatcher::applyRules(std::string &sentenceString, ParseGraphPtr
             {
 //                std::cerr << "test zdany" << std::endl;
                 //if ((*ir)->apply(sentence, entities, lattice, currentEntity))
-                if ((*ir)->apply(sentenceString, inputGraph, currentEntity))
+                if ((*ir)->apply(sentenceString, inputGraph, lattice, currentEntity))
                 {
                     //sentence = generateSentencePattern(lattice);
                     sentenceString = generateSentenceString(inputGraph);
                     //std::cerr << "SENT PRZED: " << oldSentence << std::endl;
-                    std::cerr << "SENT PRZED: " << oldSentenceString << std::endl;
                     //std::cerr << "SENT PO:    " << sentence << std::endl;
-                    std::cerr << "SENT PO:    " << sentenceString << std::endl;
                     //TU: na nowo zrobic sentence
 //                    prev_before = before;
 //                    std::cerr << "zaaplikowany" << std::endl;
@@ -423,7 +421,8 @@ std::string RuleMatcher::generateSentenceString(ParseGraphPtr pg) {
         ParseGraph::Vertex v = vertex(i, *g);
 
         int max_depth = 0;
-        int max_start, max_end;
+        int max_start = -1;
+        int max_end = -1;
         std::string max_label, max_type, max_orth;
         std::vector<PosInfo> max_variants;
 
@@ -438,8 +437,17 @@ std::string RuleMatcher::generateSentenceString(ParseGraphPtr pg) {
                 max_label = map[e].getLabel();
                 max_type = map[e].getType();
                 max_orth = map[e].getOrth();
-                max_variants = map[e].variants_;
+                for (std::vector<PosInfo>::iterator var_it = map[e].variants_.begin();
+                        var_it != map[e].variants_.end(); var_it ++) {
+                    if (boost::get<2>(*var_it))
+                        max_variants.push_back(*var_it);
+                }
+                //max_variants = map[e].variants_;
             }
+        }
+        if (max_start == -1) {
+            i ++;
+            continue;
         }
 
         if (max_type != "group") {
@@ -456,7 +464,7 @@ std::string RuleMatcher::generateSentenceString(ParseGraphPtr pg) {
         }
         ss << "<" << max_orth; //@todo: nie dziala to dla gruyp
         if (max_variants.size() == 0) {
-            PosInfo pi(max_orth, "ign", 1);
+            PosInfo pi(max_orth, "ign", 1); //@todo: ten identyfikator ign ma byc konfigurowalny
             max_variants.push_back(pi);
         }
         for (std::vector<PosInfo>::iterator vit = max_variants.begin();

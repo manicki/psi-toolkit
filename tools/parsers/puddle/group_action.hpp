@@ -21,7 +21,7 @@ class GroupAction : public Action
         GroupAction(std::string aGroup, int aStart, int aEnd, int aHead, std::string aRuleName);
         ~GroupAction();
         //bool apply(Entities &entities, Edges &edges, int currentEntity, std::vector<int> matchedTokensSize);
-        bool apply(ParseGraphPtr pg, int currentEntity, std::vector<int> matchedTokensSize);
+        bool apply(ParseGraphPtr pg, Lattice &lattice, int currentEntity, std::vector<int> matchedTokensSize);
         //bool test(Entities entities, int currentEntity, std::vector<int> matchedTokensSize);
         bool test(ParseGraphPtr pg, int currentEntity, std::vector<int> matchedTokensSize);
         std::string getGroup();

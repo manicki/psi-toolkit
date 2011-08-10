@@ -186,7 +186,7 @@ public:
         puddle->setTagger(tagger);
         poleng::bonsai::puddle::RulesPtr rules = rule_loader.readFromFile(rulesFilename);
         puddle->setRules(rules);
-        TS_ASSERT_EQUALS(rules->size(), 3);
+        TS_ASSERT_EQUALS(rules->size(), 1);
 
         //parsing
         TS_ASSERT(puddle->parse(lattice));

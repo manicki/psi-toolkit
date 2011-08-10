@@ -123,7 +123,7 @@ Rule::~Rule()
 }
 
 //bool Rule::apply(std::string &sentence, Entities &entities, Edges &edges, int currentEntity)
-bool Rule::apply(std::string &sentence, ParseGraphPtr pg, int currentEntity) {
+bool Rule::apply(std::string &sentence, ParseGraphPtr pg, Lattice &lattice, int currentEntity) {
     bool ret = false;
     Actions::iterator i = actions->begin();
     while (i != actions->end())
@@ -132,7 +132,7 @@ bool Rule::apply(std::string &sentence, ParseGraphPtr pg, int currentEntity) {
 //
 //        std::cerr << "akcja: " << (*i)->getType() << std::endl;
         //if ((*i)->apply(entities, edges, currentEntity, matchedTokensSize))
-        if ((*i)->apply(pg, currentEntity, matchedTokensSize)) {
+        if ((*i)->apply(pg, lattice, currentEntity, matchedTokensSize)) {
             //@todo: wylaczam generowanie tego napisu w tym miejscu. po wszystkim zrobi to rulematcher
 /*            sentence = "";
   //          if (beforeMatch != "")
@@ -173,8 +173,8 @@ int Rule::matchPattern(std::string &sentenceString, int matchNumber, std::string
     std::string before = "";
 //    std::cerr << "macz namber: " << matchNumber << std::endl;
 
-    std::cerr << "ZDANIE: " << sentenceString << std::endl;
-    std::cerr << "REGULA: " << compiled << std::endl;
+//    std::cerr << "ZDANIE: " << sentenceString << std::endl;
+//    std::cerr << "REGULA: " << compiled << std::endl;
 //    std::map<std::string, int> groups_map = pattern->NamedCapturingGroups();
 //    std::cerr << "NGRUP:  " << groups_map.size() << std::endl;
 //    for (std::map<std::string, int>::iterator buc = groups_map.begin();
@@ -197,7 +197,6 @@ int Rule::matchPattern(std::string &sentenceString, int matchNumber, std::string
         if (matchCount == matchNumber) {
             matching = matched[0].as_string();
 
-            std::cerr << "MACZING: " << matching << std::endl;
             //match = matched; //@todo: co to w okole jest?
             if (match_set) {
                 delete[] match;
@@ -217,10 +216,10 @@ int Rule::matchPattern(std::string &sentenceString, int matchNumber, std::string
                         negativePatterns.find(groupName);
                     if (negPatternIt != negativePatterns.end()) {
                         std::string submatch = matched[groupIndex].as_string();
-                        std::cerr << "SUBMATCH: " << submatch << std::endl;
+//                        std::cerr << "SUBMATCH: " << submatch << std::endl;
                         if (RE2::FullMatch(submatch, *(negPatternIt->second) )) {
                             negPatternMatched = true;
-                            std::cerr << "PASUJE A NIE POWINIEN: " << negPatternIt->second->pattern() << std::endl;
+//                            std::cerr << "PASUJE A NIE POWINIEN: " << negPatternIt->second->pattern() << std::endl;
                             break;
                         }
                     }

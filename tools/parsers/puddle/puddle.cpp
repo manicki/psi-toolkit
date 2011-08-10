@@ -98,7 +98,9 @@ ParseGraphPtr Puddle::parseString(std::string line)
     //std::string sentence = tagger->tagSentence(line, entities, edges);
     std::string sentenceString = tagger->tagSentence(line, inputGraph); //@todo: a tu sentence_string a input_pg nie ppowinny byc raczej miejscami zamienione?
 //    std::cerr << "otagowane: " << sentence << std::endl;
-    ParseGraphPtr pg = ruleMatcher->applyRules(sentenceString, inputGraph);
+    Lattice lattice("aa");
+    lattice.addSymbols(lattice.getFirstVertex(), lattice.getLastVertex());
+    ParseGraphPtr pg = ruleMatcher->applyRules(sentenceString, inputGraph, lattice);
 //    std::cerr << "sparsowany" << std::endl;
     if (describe)
         parseConverter->addDescription(pg);
@@ -150,7 +152,9 @@ ParseGraphPtr Puddle::parseTaggedString(std::string line)
     std::string sentenceString = tagger->processInput(line, inputGraph); //@todo: a tu sentence_string a input_pg nie ppowinny byc raczej miejscami zamienione?
 //    std::cerr << "otagowane: " << sentence << std::endl;
     //ParseGraphPtr pg = ruleMatcher->applyRules(sentence, entities, edges);
-    ParseGraphPtr pg = ruleMatcher->applyRules(sentenceString, inputGraph);
+    Lattice lattice("aa");
+    lattice.addSymbols(lattice.getFirstVertex(), lattice.getLastVertex());
+    ParseGraphPtr pg = ruleMatcher->applyRules(sentenceString, inputGraph, lattice);
 //    std::cerr << "sparsowany" << std::endl;
     if (describe)
         parseConverter->addDescription(pg);
@@ -182,7 +186,7 @@ ParseGraphPtr Puddle::parseTaggedString(std::string line)
 ParseGraphPtr Puddle::parse(Lattice &lattice) {
     std::string sentenceString;
     ParseGraphPtr inputGraph = latticeWrapper->readInputLattice(lattice, sentenceString);
-    ParseGraphPtr pg = ruleMatcher->applyRules(sentenceString, inputGraph);
+    ParseGraphPtr pg = ruleMatcher->applyRules(sentenceString, inputGraph, lattice);
     return pg;
 }
 

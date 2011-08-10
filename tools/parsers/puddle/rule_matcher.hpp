@@ -28,7 +28,7 @@ namespace poleng {
                     RuleMatcher();
                     ~RuleMatcher();
                     //ParseGraphPtr applyRules(std::string &sentence, Entities &entities, Edges &lattice);
-                    ParseGraphPtr applyRules(std::string &sentenceString, ParseGraphPtr inputGraph);
+                    ParseGraphPtr applyRules(std::string &sentenceString, ParseGraphPtr inputGraph, Lattice &lattice);
 
                     //void setRules(Rules aRules);
                     void setRules(RulesPtr aRules);

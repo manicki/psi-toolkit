@@ -53,6 +53,9 @@ bool DeleteAction::apply(ParseGraphPtr pg, int currentEntity,
         before += matchedTokensSize[i];
         i ++;
     }
+    while (util::getEdge(pg, currentEntity, before) == NULL) { //if there is no edge at a given position, proceed to the next vertex, as it may be a whitespace
+        before ++;
+    }
 
     for (int edge_i = before; edge_i < (before + count); edge_i ++) {
         TransitionInfo *edge = util::getEdge(pg, currentEntity, edge_i);
@@ -256,7 +259,6 @@ bool DeleteAction::apply(ParseGraphPtr pg, int currentEntity,
 
 bool DeleteAction::test(ParseGraphPtr pg, int currentEntity,
         std::vector<int> matchedTokensSize) {
-    std::cerr << "Test usuwania" << std::endl;
     bool ret = false;
     nothingToDelete = false;
 
@@ -271,6 +273,9 @@ bool DeleteAction::test(ParseGraphPtr pg, int currentEntity,
     while (i < (tokenIndex - 1)) {
         before += matchedTokensSize[i];
         i ++;
+    }
+    while (util::getEdge(pg, currentEntity, before) == NULL) { //if there is no edge at a given position, proceed to the next vertex, as it may be a whitespace
+        before ++;
     }
 
     bool foundToDelete = false;
@@ -301,7 +306,6 @@ bool DeleteAction::test(ParseGraphPtr pg, int currentEntity,
                         var_it != edge->variants_.end(); var_it ++) {
                     std::string tokenMorphology = boost::get<1>(*var_it);
                     if (!RE2::FullMatch(tokenMorphology, cond_it->pattern)) {
-                        std::cerr << "NIE PASUJE " << tokenMorphology << " do " << cond_it->pattern << std::endl;
                         satisfied = false;
                         break;
                     }
@@ -312,7 +316,7 @@ bool DeleteAction::test(ParseGraphPtr pg, int currentEntity,
                 break;
             }
         }
-        if (! conditionsSatisfied) {
+        if ( conditionsSatisfied) {
             foundToDelete = true;
             //@todo: i tu break?
         }

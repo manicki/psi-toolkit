@@ -14,6 +14,7 @@
 #include <vector>
 #include <boost/shared_ptr.hpp>
 #include "puddle_util.hpp"
+#include "lattice.hpp"
 
 namespace poleng
 {
@@ -33,7 +34,7 @@ class Action
         //virtual bool test(Entities entities, int currentEntity, std::vector<int> matchedTokensSize); //tu nie bedzie to na napisie wykonywane, tylko na tych obiektach?
         virtual bool test(ParseGraphPtr pg, int currentEntity, std::vector<int> matchedTokensSize); //tu nie bedzie to na napisie wykonywane, tylko na tych obiektach?
         //virtual bool apply(Entities &entities, Edges &edges, int currentEntity, std::vector<int> matchedTokensSize); //jw
-        virtual bool apply(ParseGraphPtr pg, int currentEntity, std::vector<int> matchedTokensSize); //jw
+        virtual bool apply(ParseGraphPtr pg, Lattice &lattice, int currentEntity, std::vector<int> matchedTokensSize); //jw
         virtual std::string getType() { return type; }
         void setType(std::string aType); //@todo: a to czemu nie virtual
 
