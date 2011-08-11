@@ -10,13 +10,13 @@ public:
     /**
      * Creates a lattice reader with the options specified.
      */
-    LatticeReader* createLatticeReader(boost::program_options::variables_map options);
+    LatticeReader* createLatticeReader(const boost::program_options::variables_map& options);
 
 private:
 
-    virtual LatticeReader* doCreateProcessor(boost::program_options::variables_map options);
+    virtual LatticeReader* doCreateProcessor(const boost::program_options::variables_map& options);
 
-    virtual LatticeReader* doCreateLatticeReader(boost::program_options::variables_map options) = 0;
+    virtual LatticeReader* doCreateLatticeReader(const boost::program_options::variables_map& options) = 0;
 
 };
 

@@ -13,7 +13,7 @@ public:
     class Factory : public LatticeWriterFactory {
     private:
         virtual LatticeWriter* doCreateLatticeWriter(
-            boost::program_options::variables_map options);
+            const boost::program_options::variables_map& options);
 
         virtual boost::program_options::options_description doOptionsHandled();
 

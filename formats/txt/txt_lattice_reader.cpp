@@ -11,7 +11,7 @@ std::string TxtLatticeReader::doInfo() {
 }
 
 LatticeReader* TxtLatticeReader::Factory::doCreateLatticeReader(
-    boost::program_options::variables_map options) {
+    const boost::program_options::variables_map& options) {
     return new TxtLatticeReader();
 }
 

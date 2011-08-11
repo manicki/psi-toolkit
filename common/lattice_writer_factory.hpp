@@ -10,13 +10,13 @@ public:
     /**
      * Creates a lattice writer with the options specified.
      */
-    LatticeWriter* createLatticeWriter(boost::program_options::variables_map options);
+    LatticeWriter* createLatticeWriter(const boost::program_options::variables_map& options);
 
 private:
 
-    virtual LatticeWriter* doCreateProcessor(boost::program_options::variables_map options);
+    virtual LatticeWriter* doCreateProcessor(const boost::program_options::variables_map& options);
 
-    virtual LatticeWriter* doCreateLatticeWriter(boost::program_options::variables_map options) = 0;
+    virtual LatticeWriter* doCreateLatticeWriter(const boost::program_options::variables_map& options) = 0;
 
 };
 
