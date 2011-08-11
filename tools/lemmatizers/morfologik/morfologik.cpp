@@ -4,8 +4,9 @@
 
 std::string Morfologik::tagSeparator = "+";
 
-Morfologik::Morfologik() {
+Morfologik::Morfologik(AnnotationItemManager & manager) {
 	jenv = NULL;
+	annotationManager = manager;
 
 	JavaVirtualMachine *jvm = JavaVirtualMachine::Instance();
 	jenv = jvm->getENV();
@@ -44,10 +45,13 @@ std::list<AnnotationItem> Morfologik::createAnnotation(
 	std::map<std::string, std::string>::iterator it;
 
 	for (int i = 0; i < (int)tags.size(); i++) {
-	
+
 		AnnotationItem annotation(stem);
 		for (it = tags[i].begin(); it != tags[i].end(); it++) {
-			annotationManager.setValue(annotation, it->first, it->second);
+
+			std::string atr(it->first);
+			std::string val(it->second);
+			annotationManager.setValue(annotation, atr, val);
 		}
 		annotations.push_back(annotation);
 	}

@@ -11,9 +11,11 @@
 class Morfologik {
 	
 public:
-	Morfologik();
+	Morfologik(AnnotationItemManager & manager);
 	std::list<AnnotationItem> stems(std::string & word);
 
+	AnnotationItemManager annotationManager;
+	
 	friend class MorfologikTests; 
 
 protected:
@@ -45,7 +47,6 @@ private:
 
 	MorfologikTagsParser tagsParser;
 
-	AnnotationItemManager annotationManager;
 	std::list<AnnotationItem> createAnnotation(
 		std::string & stem, std::string & tag
 	);
