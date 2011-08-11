@@ -16,11 +16,15 @@ Morfologik::Morfologik() {
 	initializeString();
 }
 
-std::vector<std::string> Morfologik::stem(const std::string& word) {
+std::multimap<std::string, std::string> Morfologik::stem(
+	const std::string& word
+) {
 
 	jstring jword = jenv->NewStringUTF(word.c_str());	
-	jobject objList = (jobject)jenv->CallObjectMethod(objPolishStemmer, midPolishStemmerLookup, jword);
+	jobject objList = (jobject)jenv->CallObjectMethod
+		(objPolishStemmer, midPolishStemmerLookup, jword);
 	jenv->DeleteLocalRef(jword);
+
 	int stemsCount = (int)jenv->CallIntMethod(objList, midListGetSize, NULL);
 
 	jobject objWordData = NULL;
@@ -28,22 +32,27 @@ std::vector<std::string> Morfologik::stem(const std::string& word) {
 	jstring text = NULL;
 	const char *pstem = NULL;
 	const char *ptags = NULL;
-	std::vector<std::string> stems;
+	std::multimap<std::string, std::string> stems;
 	
 	for (int i = 0; i < stemsCount; i++) {
-		objWordData = (jobject)jenv->CallObjectMethod(objList, midListGetElement, (jint)i);
+		objWordData = (jobject)jenv->CallObjectMethod
+			(objList, midListGetElement, (jint)i);
 
 		// Get stem of word.
-		objForString = jenv->CallObjectMethod(objWordData, midWordDataGetStem, NULL);
-		text = (jstring)jenv->CallObjectMethod(objForString, midStringToString, NULL);
+		objForString = jenv->CallObjectMethod
+			(objWordData, midWordDataGetStem, NULL);
+		text = (jstring)jenv->CallObjectMethod
+			(objForString, midStringToString, NULL);
 		pstem = jenv->GetStringUTFChars(text, NULL);
 		if (pstem == NULL) {
 			/* OutOfMemoryError already throw */
 		}
 		
 		// Get tags of word.
-		objForString = jenv->CallObjectMethod(objWordData, midWordDataGetTag, NULL);
-		text = (jstring)jenv->CallObjectMethod(objForString, midStringToString, NULL);
+		objForString = jenv->CallObjectMethod(
+			objWordData, midWordDataGetTag, NULL);
+		text = (jstring)jenv->CallObjectMethod
+			(objForString, midStringToString, NULL);
 		ptags = jenv->GetStringUTFChars(text, NULL);
 		if (pstem == NULL) {
 			/* OutOfMemoryError already throw */
@@ -56,13 +65,13 @@ std::vector<std::string> Morfologik::stem(const std::string& word) {
 			boost::split(tags, ptags, boost::is_any_of(tagSeparator));
 
 			for (int j = 0; j < (int)tags.size(); j++) {
-				stems.insert(stems.end(), pstem);
-				stems.insert(stems.end(), tags[j]);
+				stems.insert(std::pair<std::string, std::string>
+					(pstem, tags[j]) 
+				);
 			}
 		}
 		else {
-			stems.insert(stems.end(), pstem);
-			stems.insert(stems.end(), ptags);
+			stems.insert(std::pair<std::string, std::string>(pstem, ptags) );
 		}
 		
 		jenv->ReleaseStringUTFChars(text, pstem);
@@ -84,13 +93,16 @@ void Morfologik::initializePolishStemmer() {
 
 	clsPolishStemmer = jenv->FindClass("morfologik/stemming/PolishStemmer");
 	if (clsPolishStemmer != NULL) {
-		midPolishStemmerConstructor = jenv->GetMethodID(clsPolishStemmer, "<init>", "()V");
-		midPolishStemmerLookup = jenv->GetMethodID(clsPolishStemmer, "lookup", "(Ljava/lang/CharSequence;)Ljava/util/List;");
+		midPolishStemmerConstructor = jenv->GetMethodID
+			(clsPolishStemmer, "<init>", "()V");
+		midPolishStemmerLookup = jenv->GetMethodID
+			(clsPolishStemmer, "lookup", "(Ljava/lang/CharSequence;)Ljava/util/List;");
 	}
 	else {
 		printf("clsPolishStemmer is NULL\n");	// FIXME: should be an exception
 	}
-	objPolishStemmer = jenv->NewObject(clsPolishStemmer, midPolishStemmerConstructor, NULL);
+	objPolishStemmer = jenv->NewObject
+		(clsPolishStemmer, midPolishStemmerConstructor, NULL);
 }
 
 void Morfologik::initializeList() {
@@ -101,7 +113,8 @@ void Morfologik::initializeList() {
 	clsList = jenv->FindClass("java/util/List");
 	if (clsList != NULL) {
 		midListGetSize = jenv->GetMethodID(clsList, "size", "()I");
-		midListGetElement = jenv->GetMethodID(clsList, "get", "(I)Ljava/lang/Object;");
+		midListGetElement = jenv->GetMethodID
+			(clsList, "get", "(I)Ljava/lang/Object;");
 	}
 }
 
@@ -112,8 +125,10 @@ void Morfologik::initializeWordData() {
 
 	clsWordData = jenv->FindClass("morfologik/stemming/WordData");
 	if (clsWordData != NULL) {
-		midWordDataGetStem = jenv->GetMethodID(clsWordData, "getStem", "()Ljava/lang/CharSequence;");
-		midWordDataGetTag = jenv->GetMethodID(clsWordData, "getTag", "()Ljava/lang/CharSequence;");
+		midWordDataGetStem = jenv->GetMethodID
+			(clsWordData, "getStem", "()Ljava/lang/CharSequence;");
+		midWordDataGetTag = jenv->GetMethodID
+			(clsWordData, "getTag", "()Ljava/lang/CharSequence;");
 	}
 }
 
@@ -123,7 +138,8 @@ void Morfologik::initializeString() {
 
 	clsString = jenv->FindClass("java/lang/String");
 	if (clsString != NULL) {
-		midStringToString = jenv->GetMethodID(clsString, "toString", "()Ljava/lang/String;");
+		midStringToString = jenv->GetMethodID
+			(clsString, "toString", "()Ljava/lang/String;");
 	}
 }
 
