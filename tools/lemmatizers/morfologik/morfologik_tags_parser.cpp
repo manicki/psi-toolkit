@@ -73,9 +73,9 @@ std::map<std::string, std::string> MorfologikTagsParser::predefinedTags =
 		("qub", "uninflected")
 		("irreg", "irregularity");
 
-
-std::vector<std::map<std::string, std::string> > MorfologikTagsParser::parse (
-	std::string & tag) {
+std::vector<std::map<std::string, std::string> > MorfologikTagsParser::parse(
+	std::string & tag
+) {
 
 	int complexAttributeCounter = 0;
 	std::vector<std::map<std::string, std::string> > allDescriptions;
@@ -93,9 +93,10 @@ std::vector<std::map<std::string, std::string> > MorfologikTagsParser::parse (
 }
 
 std::vector<std::map<std::string, std::string> > 
-	MorfologikTagsParser::expandDescriptions (
-		std::map<std::string, std::string> description, 
-		int & complexAttributeCounter) {
+MorfologikTagsParser::expandDescriptions(
+	std::map<std::string, std::string> description, 
+	int & complexAttributeCounter
+) {
 
 	std::vector<std::map<std::string, std::string> > allDescriptions;
 	allDescriptions.insert(allDescriptions.begin(), description);
@@ -117,8 +118,9 @@ std::vector<std::map<std::string, std::string> >
 
 
 std::vector<std::map<std::string, std::string> > 
-	MorfologikTagsParser::expandSingleDescription (
-		std::map<std::string, std::string> description) {
+MorfologikTagsParser::expandSingleDescription(
+	std::map<std::string, std::string> description
+) {
 
 	int lengthOfCurrentComplexAttribute = getLengthOfFirstComplexAttribute(
 		description);
@@ -157,8 +159,9 @@ std::vector<std::map<std::string, std::string> >
 	return result;
 }
 
-std::map<std::string, std::string> MorfologikTagsParser::parseSimple
-	(std::string & tag, int & complexAttributeCounter) {
+std::map<std::string, std::string> MorfologikTagsParser::parseSimple(
+	std::string & tag, int & complexAttributeCounter
+) {
 
 	std::map<std::string, std::string> descriptions;
 	std::map<std::string, std::string>::iterator foundAttribute;
@@ -181,8 +184,9 @@ std::map<std::string, std::string> MorfologikTagsParser::parseSimple
 	return descriptions;
 }
 
-std::string MorfologikTagsParser::getAttributeToSeek
-	(std::string & attribute, int & complexAttributeCounter) {
+std::string MorfologikTagsParser::getAttributeToSeek(
+	std::string & attribute, int & complexAttributeCounter
+) {
 	
 	size_t innerSeparatorPosition = attribute.find(innerSeparator);
 	if (innerSeparatorPosition != std::string::npos) {
@@ -194,8 +198,9 @@ std::string MorfologikTagsParser::getAttributeToSeek
 	}
 }
 
-int MorfologikTagsParser::getLengthOfFirstComplexAttribute (
-	std::map<std::string, std::string> tag) {
+int MorfologikTagsParser::getLengthOfFirstComplexAttribute(
+	std::map<std::string, std::string> tag
+) {
 
 	std::map<std::string, std::string>::iterator it;
 	for (it = tag.begin(); it != tag.end() ; it++) {

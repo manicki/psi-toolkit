@@ -2,16 +2,19 @@
 #define MORFOLOGIK_HDR
 
 #include "java_virtual_machine.hpp"
-#include <vector>
+#include "annotation_item_manager.hpp"
+#include "morfologik_tags_parser.hpp"
+#include <map>
 
 class Morfologik {
 	
 public:
 	Morfologik();
+
 	friend class MorfologikTests; 
 
 protected:
-	std::vector<std::string> stem(const std::string& word);
+	std::multimap<std::string, std::string> stem(const std::string & word);
 
 private:
 	JNIEnv * jenv;
