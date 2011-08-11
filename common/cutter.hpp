@@ -30,6 +30,8 @@ public:
 
     std::list<std::string> layerTags();
 
+    virtual ~Cutter();
+
 private:
     virtual AnnotationItem doCutOff(const std::string& text, size_t& positionInText) = 0;
     virtual int doMaximumFragmentLength() = 0;

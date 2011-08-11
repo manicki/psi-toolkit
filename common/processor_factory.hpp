@@ -30,6 +30,8 @@ public:
      */
     std::string getName();
 
+    virtual ~ProcessorFactory();
+
 private:
 
     virtual Processor* doCreateProcessor(const boost::program_options::variables_map& options) = 0;

@@ -15,6 +15,7 @@ AC_PROG_CC
 
 compiler_flags="\
         -Wall \
+        -Wnon-virtual-dtor \
         "
 
 CPPFLAGS="$compiler_flags $CPP_FLAGS"

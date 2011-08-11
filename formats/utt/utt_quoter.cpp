@@ -4,3 +4,6 @@
 UTTQuoter::UTTQuoter() : UTTLikeQuoter() {
     //TODO
 }
+
+UTTQuoter::~UTTQuoter() {
+}

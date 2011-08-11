@@ -10,6 +10,8 @@ class WriterWorker : public LatticeWorker {
 public:
     WriterWorker(std::ostream& outputStream, Lattice& lattice);
 
+    virtual ~WriterWorker();
+
 protected:
     std::ostream& outputStream_;
 

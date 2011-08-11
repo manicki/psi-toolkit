@@ -6,3 +6,7 @@ LatticeWorker::LatticeWorker(Lattice& lattice):lattice_(lattice) {
 void LatticeWorker::run() {
     doRun();
 }
+
+LatticeWorker::~LatticeWorker() {
+}
+

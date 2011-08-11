@@ -89,3 +89,6 @@ void UTTLatticeReader::Worker::doRun() {
         }
     }
 }
+
+UTTLatticeReader::~UTTLatticeReader() {
+}

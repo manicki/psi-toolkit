@@ -67,3 +67,5 @@ std::string UTTLikeQuoter::doUnescape(std::string str) {
     return result;
 }
 
+UTTLikeQuoter::~UTTLikeQuoter() {
+}

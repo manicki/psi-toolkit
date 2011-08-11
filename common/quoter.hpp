@@ -18,6 +18,8 @@ public:
      */
     std::string unescape(std::string str);
 
+    virtual ~Quoter();
+
 private:
 
     virtual std::string doEscape(std::string str) = 0;

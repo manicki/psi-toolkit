@@ -36,6 +36,8 @@ public:
      */
     virtual std::string getFormatName() = 0;
 
+    virtual ~LatticeReader();
+
 private:
     virtual ReaderWorker* doCreateReaderWorker(std::istream& inputStream, Lattice& lattice) = 0;
 

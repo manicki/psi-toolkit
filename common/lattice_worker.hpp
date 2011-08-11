@@ -13,6 +13,8 @@ public:
 
     void run();
 
+    virtual ~LatticeWorker();
+
 protected:
     Lattice& lattice_;
 

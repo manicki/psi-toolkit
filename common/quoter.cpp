@@ -9,3 +9,5 @@ std::string Quoter::unescape(std::string str) {
     return doUnescape(str);
 }
 
+Quoter::~Quoter() {
+}

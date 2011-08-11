@@ -5,6 +5,9 @@
 #include "cutter.hpp"
 
 class BySpacesCutter : public Cutter {
+public:
+    virtual ~BySpacesCutter();
+
 private:
     virtual AnnotationItem doCutOff(const std::string& text, size_t& positionInText);
     virtual int doMaximumFragmentLength();

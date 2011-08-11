@@ -29,3 +29,6 @@ std::list<std::string> BySpacesCutter::doLayerTags() {
 
     return tags;
 }
+
+BySpacesCutter::~BySpacesCutter() {
+}

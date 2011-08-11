@@ -578,6 +578,9 @@ Lattice::EdgeDescriptor Lattice::SortedEdgesIterator::next() {
     throw NoEdgeException("Iterator has no next edges.");
 }
 
+Lattice::SortedEdgesIterator::~SortedEdgesIterator() {
+}
+
 Lattice::EdgesSortedBySourceIterator::EdgesSortedBySourceIterator(
     Lattice * lattice,
     LayerTagMask mask

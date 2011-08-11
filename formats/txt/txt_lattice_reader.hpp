@@ -11,6 +11,9 @@ public:
     virtual std::string getFormatName();
 
     class Factory : public LatticeReaderFactory {
+    public:
+        virtual ~Factory();
+
     private:
         virtual LatticeReader* doCreateLatticeReader(
             const boost::program_options::variables_map& options);

@@ -13,6 +13,7 @@ public:
 
     UTTQuoter();
 
+    virtual ~UTTQuoter();
 };
 
 

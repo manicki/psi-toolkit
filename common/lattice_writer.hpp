@@ -23,6 +23,8 @@ public:
      */
     virtual std::string getFormatName() = 0;
 
+    virtual ~LatticeWriter();
+
 private:
     virtual WriterWorker* doCreateWriterWorker(std::ostream& outputStream, Lattice& lattice) = 0;
 

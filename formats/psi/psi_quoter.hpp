@@ -13,6 +13,8 @@ public:
 
     PsiQuoter();
 
+    virtual ~PsiQuoter();
+
 };
 
 

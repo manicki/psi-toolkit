@@ -11,3 +11,6 @@ boost::program_options::options_description ProcessorFactory::optionsHandled() {
 std::string ProcessorFactory::getName() {
     return doGetName();
 }
+
+ProcessorFactory::~ProcessorFactory() {
+}

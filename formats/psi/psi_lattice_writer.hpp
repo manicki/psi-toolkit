@@ -32,6 +32,7 @@ private:
 
         virtual void doRun();
 
+        virtual ~Worker();
     private:
         PsiLatticeWriter& processor_;
     };

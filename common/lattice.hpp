@@ -209,6 +209,7 @@ public:
         SortedEdgesIterator(Lattice * lattice, LayerTagMask mask);
         bool hasNext();
         EdgeDescriptor next();
+        virtual ~SortedEdgesIterator();
     protected:
         Lattice * lattice_;
         LayerTagMask mask_;

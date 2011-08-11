@@ -12,6 +12,8 @@ public:
      */
     LatticeWriter* createLatticeWriter(const boost::program_options::variables_map& options);
 
+    virtual ~LatticeWriterFactory();
+
 private:
 
     virtual LatticeWriter* doCreateProcessor(const boost::program_options::variables_map& options);

@@ -10,6 +10,9 @@ std::string TxtLatticeReader::doInfo() {
     return "plain text reader";
 }
 
+TxtLatticeReader::Factory::~Factory() {
+}
+
 LatticeReader* TxtLatticeReader::Factory::doCreateLatticeReader(
     const boost::program_options::variables_map& options) {
     return new TxtLatticeReader();

@@ -149,3 +149,6 @@ void PsiLatticeWriter::Worker::doRun() {
 
     DEBUG("WRITING");
 }
+
+PsiLatticeWriter::Worker::~Worker() {
+}

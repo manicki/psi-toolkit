@@ -12,4 +12,6 @@ void LatticeReader::readIntoLattice(const std::string& fileName, Lattice& lattic
     readIntoLattice(inputStream, lattice);
 }
 
+LatticeReader::~LatticeReader() {
+}
 

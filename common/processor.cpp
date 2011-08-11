@@ -4,3 +4,7 @@ std::string Processor::info() {
     return doInfo();
 }
 
+Processor::~Processor() {
+}
+
+

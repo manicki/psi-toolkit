@@ -16,6 +16,8 @@ public:
      */
     std::string info();
 
+    virtual ~Processor();
+
 public:
     virtual std::string doInfo() = 0;
 

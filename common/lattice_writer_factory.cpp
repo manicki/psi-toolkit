@@ -8,3 +8,8 @@ LatticeWriter* LatticeWriterFactory::createLatticeWriter(const boost::program_op
 LatticeWriter* LatticeWriterFactory::doCreateProcessor(const boost::program_options::variables_map& options) {
     return doCreateLatticeWriter(options);
 }
+
+LatticeWriterFactory::~LatticeWriterFactory() {
+}
+
+

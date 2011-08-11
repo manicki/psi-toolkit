@@ -11,3 +11,7 @@ int Cutter::maximumFragmentLength() {
 std::list<std::string> Cutter::layerTags() {
     return doLayerTags();
 }
+
+Cutter::~Cutter() {
+}
+

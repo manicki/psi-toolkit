@@ -25,6 +25,8 @@ public:
 
     UTTLikeQuoter(std::string addQuot) : additionalQuotations_(addQuot) { }
 
+    virtual ~UTTLikeQuoter();
+
 private:
 
     std::string additionalQuotations_;

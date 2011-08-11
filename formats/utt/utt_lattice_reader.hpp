@@ -79,6 +79,8 @@ public:
      */
     std::string getFormatName();
 
+    virtual ~UTTLatticeReader();
+
 private:
     virtual std::string doInfo();
 
