@@ -34,7 +34,7 @@ AC_FUNC_MALLOC
 
 AC_SUBST([LIBS], ["$LIBS -lboost_program_options"])
 
-# Checks for enable Java support. If options is not specified, enable it only 
+# Checks for enable Java support. If options is not specified, enable it only
 # if Java is available. User has to set two environment variables: JAVA_HOME
 # and LD_LIBRARY_PATH.
 AC_ARG_WITH([java],
@@ -52,12 +52,12 @@ AS_IF([test "x$with_java" != xno],
     AS_IF([test "$JAVA_HOME" = ""],
         AC_MSG_RESULT(no),
 
-        AC_MSG_RESULT(yes) 
+        AC_MSG_RESULT(yes)
         java_path="$JAVA_HOME"
         AC_CHECK_FILE($java_path/bin/java)
         AC_CHECK_FILE($java_path/include/jni.h)
         AC_SUBST(java_path)
-       
+
         # FIXME: May be changed if the system architecture was determined,
         # then the variable should be '$java_path/jre/lib/i386/server' or
         # '$java_path/jre/lib/amd64/server'

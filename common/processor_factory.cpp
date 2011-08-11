@@ -1,6 +1,6 @@
 #include "processor_factory.hpp"
 
-Processor* ProcessorFactory::createProcessor(boost::program_options::variables_map options) {
+Processor* ProcessorFactory::createProcessor(const boost::program_options::variables_map& options) {
     return doCreateProcessor(options);
 }
 
