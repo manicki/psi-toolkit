@@ -3,47 +3,63 @@
 
 #include "action.hpp"
 
-namespace poleng
-{
+namespace poleng {
 
-namespace bonsai
-{
+    namespace bonsai {
 
-namespace puddle
-{
+        namespace puddle {
 
-class DeleteAction : public Action
-{
-    public:
-        DeleteAction(std::string aPattern, int aTokenIndex, std::string uPattern);
-        bool apply(Entities &entities, Edges &edges, int currentEntity, std::vector<int> matchedTokensSize);
-        bool test(Entities entities, int currentEntity, std::vector<int> matchedTokensSize);
-        void setPattern(std::string aPattern);
-        std::string getPattern();
-        std::string getUPattern();
-        int getTokenIndex();
-        void setTokenIndex(int aTokenIndex);
+            enum DeleteConditionType {
+                //ORTH_CONDITION, - nie ma chyba warunkow delete orth!~ bo bez sensu
+                BASE_CONDITION,
+                MORPHOLOGY_CONDITION
+            };
 
-        std::string getType() { return type;}
-        void setVerbose() { verbose = true; }
+            class DeleteCondition {
+                public:
+                    DeleteConditionType type;
+                    bool negation;
+                    std::string pattern;
+            };
+            typedef std::vector<DeleteCondition> DeleteConditions;
 
-    private:
-        Pattern pattern;
-        std::string patternString;
-        int tokenIndex;
-        bool nothingToDelete;
-        std::string type;
-        bool verbose;
-        std::string pattern_;
-};
+            class DeleteAction : public Action {
+                public:
+                    //DeleteAction(std::string aPattern, int aTokenIndex, std::string uPattern);
+                    DeleteAction(DeleteConditions aConditions, int aTokenIndex,
+                            std::string uPattern);
+                    //bool apply(Entities &entities, Edges &edges, int currentEntity, std::vector<int> matchedTokensSize);
+                    bool apply(ParseGraphPtr pg, int currentEntity,
+                            std::vector<int> matchedTokensSize);
+                    //bool test(Entities entities, int currentEntity, std::vector<int> matchedTokensSize);
+                    bool test(ParseGraphPtr pg, int currentEntity,
+                            std::vector<int> matchedTokensSize);
+                    //void setPattern(std::string aPattern);
+                    //std::string getPattern();
+                    std::string getUPattern();
+                    int getTokenIndex();
+                    void setTokenIndex(int aTokenIndex);
+                    DeleteConditions getConditions();
 
-typedef boost::shared_ptr<DeleteAction> DeleteActionPtr;
+                    std::string getType() { return type; }
+                    void setVerbose() { verbose = true; }
+
+                private:
+                    //PatternPtr pattern;
+                    //std::string patternString;
+                    int tokenIndex;
+                    bool nothingToDelete;
+                    std::string type;
+                    bool verbose;
+                    std::string pattern_;
+                    DeleteConditions conditions;
+            };
+
+            typedef boost::shared_ptr<DeleteAction> DeleteActionPtr;
+        }
+
+    }
+
 }
-
-}
-
-}
-
-//typedef std::vector<GroupAction> Actions;
 
 #endif

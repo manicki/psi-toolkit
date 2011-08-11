@@ -2,9 +2,9 @@
 #define JOINACTION_H__
 
 #include "action.hpp"
-#include "group.hpp"
-#include "token.hpp"
-#include "syntok.hpp"
+//#include "group.hpp"
+//#include "token.hpp"
+//#include "syntok.hpp"
 
 namespace poleng
 {
@@ -20,8 +20,10 @@ class JoinAction : public Action
     public:
         JoinAction(std::string aGroup, int aStart, int aEnd, int aHead, std::string aRuleName);
         ~JoinAction();
-        bool apply(Entities &entities, Edges &edges, int currentEntity, std::vector<int> matchedTokensSize);
-        bool test(Entities entities, int currentEntity, std::vector<int> matchedTokensSize);
+        //bool apply(Entities &entities, Edges &edges, int currentEntity, std::vector<int> matchedTokensSize);
+        bool apply(ParseGraphPtr, int currentEntity, std::vector<int> matchedTokensSize);
+        //bool test(Entities entities, int currentEntity, std::vector<int> matchedTokensSize);
+        bool test(ParseGraphPtr, int currentEntity, std::vector<int> matchedTokensSize);
         std::string getGroup();
         int getHead();
         void setGroup(std::string aGroup);

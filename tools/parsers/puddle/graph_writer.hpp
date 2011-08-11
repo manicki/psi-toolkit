@@ -6,7 +6,7 @@
 #include "TransitionInfo.hpp"
 #include "ParseGraph.hpp"
 
-#include "entity.hpp"
+//#include "entity.hpp"
 
 namespace poleng
 {
@@ -15,6 +15,8 @@ namespace bonsai
 
 namespace puddle
 {
+
+typedef boost::shared_ptr<std::string> StringPtr;
 
 class GraphWriter
 {

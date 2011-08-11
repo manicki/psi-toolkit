@@ -1,9 +1,9 @@
 
 #include "add_action.hpp"
 #include <iostream>
-#include "token.hpp"
-#include "group.hpp"
-#include "syntok.hpp"
+//#include "token.hpp"
+//#include "group.hpp"
+//#include "syntok.hpp"
 
 namespace poleng
 {
@@ -13,18 +13,20 @@ namespace bonsai
     namespace puddle
     {
 
-AddAction::AddAction(std::vector<InterpretationPair> aInterpretations, std::string aBase, int aTokenIndex, std::string uInterpretation)
-{
+//AddAction::AddAction(std::vector<InterpretationPair> aInterpretations, std::string aBase, int aTokenIndex, std::string uInterpretation)
+AddAction::AddAction(std::vector<std::string> aInterpretations, std::string aBase,
+        int aTokenIndex, std::string uInterpretation) {
     base = aBase;
     tokenIndex = aTokenIndex;
     type = "add";
     verbose = false;
 
     //interpretations = new std::vector<InterpretationPair>(aInterpretations);
-    interpretations.insert(interpretations.begin(), aInterpretations.begin(), aInterpretations.end());
+    interpretations.insert(interpretations.begin(), aInterpretations.begin(),
+            aInterpretations.end());
     //interpretations = aInterpretations;
 
-    interpretation_ = uInterpretation;
+    interpretation_ = uInterpretation; //@todo: to jest gdzie w ogole tu potrzebne? czy w syntoku?
 }
 
 AddAction::~AddAction()
@@ -32,8 +34,9 @@ AddAction::~AddAction()
     //delete interpretations;
 }
 
-bool AddAction::apply(Entities &entities, Edges &edges, int currentEntity, std::vector<int> matchedTokensSize)
-{
+//bool AddAction::apply(Entities &entities, Edges &edges, int currentEntity, std::vector<int> matchedTokensSize)
+bool AddAction::apply(ParseGraphPtr pg, int currentEntity,
+        std::vector<int> matchedTokensSize) {
     int count = matchedTokensSize[tokenIndex - 1];
     if (count == 0)
     {
@@ -48,7 +51,31 @@ bool AddAction::apply(Entities &entities, Edges &edges, int currentEntity, std::
         i ++;
     }
 
-    for (int entIndex = before; entIndex < (before + count); entIndex ++)
+    bool allBaseForms = (base == "[^<>]+");
+    for (int edge_i = before; edge_i < (before + count); edge_i ++) {
+        TransitionInfo *edge = util::getEdge(pg, currentEntity, edge_i);
+        //for (std::vector<InterpretationPair>::iterator interp_it =
+        for (std::vector<std::string>::iterator morph_it =
+                interpretations.begin();
+                morph_it != interpretations.end();
+                morph_it ++) {
+            if (! allBaseForms) {
+                PosInfo pi(base, *morph_it, 1);
+                edge->addMorphology(pi);
+            } else {
+                for (std::vector<PosInfo>::iterator var_it =
+                        edge->variants_.begin();
+                        var_it != edge->variants_.end();
+                        var_it ++) {
+                    std::string orig_base = boost::get<0>(*var_it);
+                    PosInfo pi(orig_base, *morph_it, 1);
+                    edge->addMorphology(pi);
+                }
+            }
+        }
+    }
+
+/*    for (int entIndex = before; entIndex < (before + count); entIndex ++)
     {
         Entity *entity = entities[currentEntity + entIndex];
 
@@ -261,29 +288,64 @@ bool AddAction::apply(Entities &entities, Edges &edges, int currentEntity, std::
             entities[currentEntity + entIndex] = syntok;
 
         }
-    }
+    }*/
     return true;
 }
 
-bool AddAction::test(Entities entities, int currentEntity, std::vector<int> matchedTokensSize)
-{
-    bool ret = false;
+//bool AddAction::test(Entities entities, int currentEntity, std::vector<int> matchedTokensSize)
+bool AddAction::test(ParseGraphPtr pg, int currentEntity,
+        std::vector<int> matchedTokensSize) {
 
     int count = matchedTokensSize[tokenIndex - 1];
-    if (count == 0)
-    {
+    if (count == 0) {
         if (verbose)
             std::cerr << "Nothing matched to " << tokenIndex << " in add ...." << std::endl;
         return true;
     }
     int before = 0;
     int i = 0;
-    while (i < (tokenIndex - 1))
-    {
+    while (i < (tokenIndex - 1)) {
         before += matchedTokensSize[i];
         i ++;
     }
 
+    //check whether the interpretation(s) (with the given or all base forms
+    //of the token) which is/are to be added is/are not already in token's
+    //morphological features
+    bool ret = true; //@todo: moze by tak zmienic ret w akcjach na cos w stylu to_apply
+
+    bool allBaseForms = (base == "[^<>]+");
+    for (int edge_i = before; edge_i < (before + count); edge_i ++) {
+        TransitionInfo *edge = util::getEdge(pg, currentEntity, edge_i);
+        for (std::vector<PosInfo>::iterator var_it =
+                edge->variants_.begin();
+                var_it != edge->variants_.end();
+                var_it ++) {
+            if (! boost::get<2>(*var_it) )
+                continue; //skip discarded interpretations
+            if (! allBaseForms) {
+                if (boost::get<0>(*var_it) != base)
+                    continue; //take the next variant
+            }
+            bool interpretationFound = false;
+            //for (std::vector<InterpretationPair>::iterator interp_it =
+            for (std::vector<std::string>::iterator morph_it =
+                    interpretations.begin();
+                    morph_it != interpretations.end();
+                    morph_it ++) {
+                if (boost::get<1>(*var_it) == *morph_it) {
+                    interpretationFound = true;
+                    break;
+                }
+            }
+            if (interpretationFound) { //if found the interpration in the token, finish testing and do not add the interpration again
+                ret = false;
+                break;
+            }
+        }
+    }
+    //old version below
+    /*
     for (int entIndex = before; entIndex < (before + count); entIndex ++)
     {
 
@@ -441,18 +503,18 @@ bool AddAction::test(Entities entities, int currentEntity, std::vector<int> matc
             }
 
         }
-    }
+    }*/
 
     return ret;
 }
 
-void AddAction::setInterpretations(std::vector<InterpretationPair> aInterpretations)
-{
-    interpretations.insert(interpretations.begin(), aInterpretations.begin(), aInterpretations.end());
+//void AddAction::setInterpretations(std::vector<InterpretationPair> aInterpretations)
+void AddAction::setInterpretations(std::vector<std::string> aInterpretations) {
+    interpretations.insert(interpretations.begin(), aInterpretations.begin(),
+            aInterpretations.end());
 }
 
-std::vector<InterpretationPair> AddAction::getInterpretations()
-{
+std::vector<std::string> AddAction::getInterpretations() {
     return interpretations;
 }
 

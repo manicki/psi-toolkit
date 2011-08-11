@@ -50,6 +50,7 @@ Puddle::~Puddle()
     delete parseConverter;
 
     delete ruleModifier;
+    delete latticeWrapper;
 //    delete rules;
 }
 
@@ -66,6 +67,9 @@ void Puddle::setTagset(bonsai::puddle::TagsetPtr tagset_)
 //    ruleCompiler->setTagset(tagset);
 //    newtagger->setTagset(tagset);
     parseConverter->setTagset(tagset);
+
+    ruleMatcher->setTagset(tagset_);
+    latticeWrapper = new LatticeWrapper(tagset_);
 }
 
 void Puddle::setRules(bonsai::puddle::RulesPtr rules_)
@@ -84,20 +88,24 @@ void Puddle::setTagger(bonsai::puddle::TaggerPtr tagger_)
 
 ParseGraphPtr Puddle::parseString(std::string line)
 {
-    Entities entities;
-    Edges edges;
+    /*Entities entities;
+    Edges edges;*/
+    ParseGraphPtr inputGraph = ParseGraphPtr(new ParseGraph()); //@todo: zmienic koniecznie nazwe tego
 
     boost::algorithm::trim(line);
 
 //    std::cerr << "zdanie: " << line << std::endl;
-    std::string sentence = tagger->tagSentence(line, entities, edges);
+    //std::string sentence = tagger->tagSentence(line, entities, edges);
+    std::string sentenceString = tagger->tagSentence(line, inputGraph); //@todo: a tu sentence_string a input_pg nie ppowinny byc raczej miejscami zamienione?
 //    std::cerr << "otagowane: " << sentence << std::endl;
-    ParseGraphPtr pg = ruleMatcher->applyRules(sentence, entities, edges);
+    Lattice lattice("aa");
+    lattice.addSymbols(lattice.getFirstVertex(), lattice.getLastVertex());
+    ParseGraphPtr pg = ruleMatcher->applyRules(sentenceString, inputGraph, lattice);
 //    std::cerr << "sparsowany" << std::endl;
     if (describe)
         parseConverter->addDescription(pg);
 
-    for (Entities::iterator i = entities.begin(); i != entities.end(); i++)
+/*    for (Entities::iterator i = entities.begin(); i != entities.end(); i++)
     {
         if ((*i)->getType() == "token")
             delete ((Token*)(*i));
@@ -118,7 +126,7 @@ ParseGraphPtr Puddle::parseString(std::string line)
     {
 //        std::cerr << "usuwam: " << (*i)->getLabel() << ", " << (*i)->getType() << std::endl;
         delete *i;
-    }
+    }*/
 
 //    graph = pg;
 //    std::cerr << "przed:" << pg->write_graphviz() << std::endl;
@@ -133,20 +141,25 @@ ParseGraphPtr Puddle::parseString(std::string line)
 
 ParseGraphPtr Puddle::parseTaggedString(std::string line)
 {
-    Entities entities;
-    Edges edges;
+    /*Entities entities;
+    Edges edges;*/
+    ParseGraphPtr inputGraph = ParseGraphPtr(new ParseGraph()); //@todo: zmienic koniecznie nazwe tego
 
     boost::algorithm::trim(line);
 
 //    std::cerr << "zdanie: " << line << std::endl;
-    std::string sentence = tagger->processInput(line, entities, edges);
+    //std::string sentence = tagger->processInput(line, entities, edges);
+    std::string sentenceString = tagger->processInput(line, inputGraph); //@todo: a tu sentence_string a input_pg nie ppowinny byc raczej miejscami zamienione?
 //    std::cerr << "otagowane: " << sentence << std::endl;
-    ParseGraphPtr pg = ruleMatcher->applyRules(sentence, entities, edges);
+    //ParseGraphPtr pg = ruleMatcher->applyRules(sentence, entities, edges);
+    Lattice lattice("aa");
+    lattice.addSymbols(lattice.getFirstVertex(), lattice.getLastVertex());
+    ParseGraphPtr pg = ruleMatcher->applyRules(sentenceString, inputGraph, lattice);
 //    std::cerr << "sparsowany" << std::endl;
     if (describe)
         parseConverter->addDescription(pg);
 
-    for (Entities::iterator i = entities.begin(); i != entities.end(); i++)
+/*    for (Entities::iterator i = entities.begin(); i != entities.end(); i++)
     {
         if ((*i)->getType() == "token")
             delete ((Token*)(*i));
@@ -163,10 +176,17 @@ ParseGraphPtr Puddle::parseTaggedString(std::string line)
     for (Edges::iterator i = edges.begin(); i != edges.end(); i++)
     {
         delete *i;
-    }
+    }*/
 
 //    graph = pg;
 //    graphWriter->setGraph(pg);
+    return pg;
+}
+
+ParseGraphPtr Puddle::parse(Lattice &lattice) {
+    std::string sentenceString;
+    ParseGraphPtr inputGraph = latticeWrapper->readInputLattice(lattice, sentenceString);
+    ParseGraphPtr pg = ruleMatcher->applyRules(sentenceString, inputGraph, lattice);
     return pg;
 }
 

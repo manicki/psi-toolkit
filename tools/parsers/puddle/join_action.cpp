@@ -40,8 +40,9 @@ JoinAction::~JoinAction()
 {
 }
 
-bool JoinAction::apply(Entities &entities, Edges &edges, int currentEntity, std::vector<int> matchedTokensSize)
-{
+//bool JoinAction::apply(Entities &entities, Edges &edges, int currentEntity, std::vector<int> matchedTokensSize)
+bool JoinAction::apply(ParseGraphPtr pg, int currentEntity,
+        std::vector<int> matchedTokensSize) {
 
 //    std::cout << "Poczatek reguly: " << ruleName << std::endl;
 //    std::cout << "PRZED mam elementow: " << entities.size() << std::endl;
@@ -79,7 +80,7 @@ bool JoinAction::apply(Entities &entities, Edges &edges, int currentEntity, std:
 //    std::cout << "Wymiary: " << std::endl << "Current: " << currentEntity << std::endl << "realStart: " << realStart << std::endl << "realEnd: " << realEnd << std::endl << "realHead: " << realHead << std::endl;
 
     //Group *gr = new Group(entities, currentEntity + realStart, currentEntity + realEnd, realHead, this->group, ruleName, ACTION_JOIN);
-    Group *gr = new Group(entities, currentEntity + realStart, currentEntity + realEnd, currentEntity + realHead, this->group, ruleName, ACTION_JOIN);
+    //666::Group *gr = new Group(entities, currentEntity + realStart, currentEntity + realEnd, currentEntity + realHead, this->group, ruleName, ACTION_JOIN);
 
 //    std::cout << "grupa zrobiona" << std::endl;
 
@@ -94,10 +95,10 @@ bool JoinAction::apply(Entities &entities, Edges &edges, int currentEntity, std:
 //    }
 
 
-    if ((currentEntity + start) < entities.size())
+/*    if ((currentEntity + start) < entities.size())
         entities.insert((entities.begin() + currentEntity + start), gr); //TODO: a nie +realStart?
     else
-        entities.insert((entities.begin() + entities.size() - 1), gr); //TODO: a nie +realStart?
+        entities.insert((entities.begin() + entities.size() - 1), gr); //TODO: a nie +realStart?*/
 //        std::cerr << "====================================" << std::endl;
 //        std::cerr << "Entities:"<<std::endl;
 //        for (Entities::iterator hu = entities.begin(); hu != entities.end(); hu ++)
@@ -115,8 +116,27 @@ bool JoinAction::apply(Entities &entities, Edges &edges, int currentEntity, std:
     TransitionInfo *group = new TransitionInfo("group");
     //std::stringstream ss;
     //ss << std::hex << Group::groupId;
-    group->setId(gr->getId()); //TODO id nadawanie!
+    //group->setId(gr->getId()); //TODO id nadawanie!
+    group->setId( util::getNewEdgeId(pg) );
     group->setLabel(this->group);
+
+    TransitionInfo *edgeStart = util::getEdge(pg, currentEntity, realStart);
+    TransitionInfo *edgeHead = util::getEdge(pg, currentEntity, realHead);
+    TransitionInfo *edgeEnd = util::getEdge(pg, currentEntity, realEnd);
+    group->setStart(edgeStart->getStart());
+    group->setEnd(edgeEnd->getEnd());
+    group->setHead(edgeHead->getId());
+    group->setOrth(edgeHead->getOrth());
+    std::vector<PosInfo> headVariants = edgeHead->variants_;
+    for (std::vector<PosInfo>::iterator vit = headVariants.begin();
+            vit != headVariants.end(); vit ++) {
+        group->addMorphology(*vit);
+    }
+    //note: tu sztucznie wymuszam numerowanie od 2. glebokosc 1 maja miec krawedzie typu 'pos', ale one sa dodawane dopiero po zakonczeniu parsingu, wiec trzeba nie jako zalozyc tu, ze takowe istnieja
+    group->setDepth(edgeStart->getDepth() + 1);
+    if (group->getDepth() == 1) //note: tu nastepuje wspomniany wyzej trik
+        group->setDepth(2);
+    /*
     group->setHead(((Token*)(gr->getHeadToken()))->getId());
     std::string startId, endId;
     Entity *left = gr->children.front();
@@ -288,7 +308,7 @@ bool JoinAction::apply(Entities &entities, Edges &edges, int currentEntity, std:
         e ++;
     }
 
-    group->setDepth(max);
+    group->setDepth(max);*/
 
     //boost::graph_traits<Graph>::vertex_iterator u, v;
     //boost::tie(u, v) = boost::vertices(g);
@@ -304,16 +324,24 @@ bool JoinAction::apply(Entities &entities, Edges &edges, int currentEntity, std:
 
 //    std::cout << "PO mam elementow: " << entities.size() << std::endl;
 
-    edges.push_back(group);
+    if (edgeStart->getType() == "group") {
+        util::removeGraphEdge(pg, *edgeStart);
+        //usunac edgeHead z grafu trzeba
+        //@todo: zweryfikowac to
+    }
+
+    //edges.push_back(group);
+    pg->add_edge(group->getStart(), group->getEnd(), *group);
 
 //    std::cout << "W akcji grupowania" << std::endl;
     return true;
 }
 
-bool JoinAction::test(Entities entities, int currentEntity, std::vector<int> matchedTokensSize)
-{
-    if (entities.size() < head)
-    {
+//bool JoinAction::test(Entities entities, int currentEntity, std::vector<int> matchedTokensSize)
+bool JoinAction::test(ParseGraphPtr pg, int currentEntity,
+        std::vector<int> matchedTokensSize) {
+    //if (entities.size() < head)
+    if ( (pg->num_vertices() - 1) < head ) {
         return false;
     }
     if (matchedTokensSize[head - 1] == 0)
