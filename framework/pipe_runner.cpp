@@ -28,14 +28,12 @@ int PipeRunner::run() {
 
         if (isLastElement_(it, pipelineSpecification_)) {
             LatticeWriterFactory& writerFactory = getWriterFactory_(*it);
-            boost::scoped_ptr<LatticeWriter> writer(writerFactory.createLatticeWriter(
-                                                        boost::program_options::variables_map()));
+            boost::scoped_ptr<LatticeWriter> writer(writerFactory.createLatticeWriter(options));
             writer->writeLattice(lattice, std::cout);
         }
         else {
             AnnotatorFactory& annotatorFactory = getAnnotatorFactory_(*it);
-            boost::scoped_ptr<Annotator> annotator(annotatorFactory.createAnnotator(
-                                                       boost::program_options::variables_map()));
+            boost::scoped_ptr<Annotator> annotator(annotatorFactory.createAnnotator(options));
             annotator->annotate(lattice);
         }
     }
