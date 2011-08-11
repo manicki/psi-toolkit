@@ -14,6 +14,10 @@ namespace poleng {
                     LatticeWrapper(TagsetPtr tagset);
                     ParseGraphPtr readInputLattice(Lattice &lattice,
                             std::string &sentenceString);
+                    /*std::list<Lattice::EdgeDescriptor> getEdge(Lattice &lattice,
+                            Lattice::VertexDescriptor start, LayerTagMask mask);
+                    void addParseEdge(Lattice &lattice, Lattice::VertexDescriptor start,
+                            Lattice::VertexDescriptor end, std::string &parseLabel);*/
                 private:
                     AnnotationItemManager annotationItemManager;
                     void initAnnotationItemManager(TagsetPtr tagset);

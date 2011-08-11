@@ -91,7 +91,6 @@ namespace poleng {
                 sentenceString += "<<s<666<666<se<>";
 
 //                std::cerr << "TAKI LUJ: "<< pg->write_graphviz() << std::endl;
-//                std::cerr << "TAKI HUJ: " << sentenceString << std::endl;
                 return pg;
             }
 
@@ -107,6 +106,18 @@ namespace poleng {
                     annotationItemManager.setValue(ai, *it, "aaa");
                 }
             }
+
+           /* std::list<Lattice::EdgeDescriptor> LatticeWrapper::getEdge(
+                    Lattice &lattice, Lattice::VertexDescriptor start,
+                    LayerTagMask mask) {
+
+            }
+
+            void LatticeWrapper::addParseEdge(Lattice &lattice,
+                    Lattice::VertexDescriptor start, Lattice::VertexDescriptor end,
+                    std::string &parseLabel) {
+
+            }*/
 
         }
     }

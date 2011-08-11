@@ -111,7 +111,7 @@ bool GroupAction::apply(ParseGraphPtr pg, Lattice &lattice,
     Lattice::VertexDescriptor startVertex = currentEntity + realStart;
     Lattice::EdgeDescriptor edgeStart2 = lattice.firstOutEdge(startVertex,
             lattice.getLayerTagManager().getMask("lemma"));
-    std::cerr << lattice.getEdgeText(edgeStart2) << " " << lattice.getEdgeSource(edgeStart2) << " " << lattice.getEdgeTarget(edgeStart2) << " " << lattice.getEdgeBeginIndex(edgeStart2) << " " << lattice.getEdgeLength(edgeStart2) << std::endl;
+    /*std::cerr << lattice.getEdgeText(edgeStart2) << " " << lattice.getEdgeSource(edgeStart2) << " " << lattice.getEdgeTarget(edgeStart2) << " " << lattice.getEdgeBeginIndex(edgeStart2) << " " << lattice.getEdgeLength(edgeStart2) << std::endl;*/
     TransitionInfo *edgeHead = util::getEdge(pg, currentEntity, realHead);
     TransitionInfo *edgeEnd = util::getEdge(pg, currentEntity, realEnd);
     group->setStart(edgeStart->getStart());

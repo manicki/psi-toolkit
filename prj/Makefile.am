@@ -8,6 +8,7 @@ cpprog=`echo $${CPPROG-cp -d -r}`
 CLEANFILES=tests/runner.cpp
 
 # Only one place where the .hpp test files have to be specified
+#test_files = ../common/t/layer_tags_tests.hpp ../common/t/annotation_item_tests.hpp ../common/t/lattice_tests.hpp ../common/t/quoter_tests.hpp ../common/t/lattice_readers_writers_tests.hpp
 test_files = ../common/t/layer_tags_tests.hpp ../common/t/annotation_item_tests.hpp ../common/t/lattice_tests.hpp ../common/t/quoter_tests.hpp ../common/t/lattice_readers_writers_tests.hpp
 
 if WITH_JAVA
@@ -196,6 +197,7 @@ puddle_SOURCES = \
 	../common/layer_tag_collection.cpp \
 	../common/layer_tag_manager.cpp \
 	../common/layer_tag_mask.cpp \
+	../common/cutter.cpp \
 	../common/lattice.cpp \
 	@BONSAI_PATH@/ParseGraph.cpp \
 	@BONSAI_PATH@/TransitionInfo.cpp \
