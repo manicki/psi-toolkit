@@ -1,0 +1,11 @@
+[POS]
+
+subst = [number] [gender]
+adj = [number] [gender]
+verb =
+interp =
+ign =
+
+[ATTR]
+number = sg pl
+gender = m f

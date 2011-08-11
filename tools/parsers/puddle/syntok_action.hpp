@@ -2,8 +2,8 @@
 #define SYNTOKACTION_H__
 
 #include "action.hpp"
-#include "token.hpp"
-#include "syntok.hpp"
+//#include "token.hpp"
+//#include "syntok.hpp"
 
 #include "add_action.hpp"
 
@@ -19,19 +19,28 @@ namespace puddle
 class SyntokAction : public Action
 {
     public:
-        SyntokAction(int aStart, int aEnd, std::vector<int> aTokenIndexes, std::vector<InterpretationPair> aMorphology, std::string aRuleName, std::string uMorphology);
+        //SyntokAction(int aStart, int aEnd, std::vector<int> aTokenIndexes, std::vector<InterpretationPair> aMorphology, std::string aRuleName, std::string uMorphology);
+        SyntokAction(int aStart, int aEnd, std::vector<int> aTokenIndices,
+                std::vector<std::string> aMorphology, std::string aRuleName,
+                std::string uMorphology);
         ~SyntokAction();
-        bool apply(Entities &entities, Edges &edges, int currentEntity, std::vector<int> matchedTokensSize);
-        bool test(Entities entities, int currentEntity, std::vector<int> matchedTokensSize);
+        //bool apply(Entities &entities, Edges &edges, int currentEntity, std::vector<int> matchedTokensSize);
+        bool apply(ParseGraphPtr pg, int currentEntity,
+                std::vector<int> matchedTokensSize);
+        //bool test(Entities entities, int currentEntity, std::vector<int> matchedTokensSize);
+        bool test(ParseGraphPtr pg, int currentEntity,
+                std::vector<int> matchedTokensSize);
 
         int getStart();
         void setStart(int aStart);
         int getEnd();
         void setEnd(int aEnd);
-        std::vector<InterpretationPair> getMorphology();
-        void setMorphology(std::vector<InterpretationPair> aMorphology);
-        std::vector<int> getTokenIndexes();
-        void setTokenIndexes(std::vector<int> aTokenIndexes);
+        //std::vector<InterpretationPair> getMorphology();
+        //void setMorphology(std::vector<InterpretationPair> aMorphology);
+        std::vector<std::string> getMorphology();
+        void setMorphology(std::vector<std::string> aMorphology);
+        std::vector<int> getTokenIndices();
+        void setTokenIndices(std::vector<int> aTokenIndices);
         std::string getRuleName();
         void setRuleName(std::string aRuleName);
 
@@ -42,8 +51,9 @@ class SyntokAction : public Action
         void setVerbose() { verbose = true; }
         void setSyntok() { syntok = true; }
     private:
-        std::vector<int> tokenIndexes;
-        std::vector<InterpretationPair> morphology;
+        std::vector<int> tokenIndices;
+        //std::vector<InterpretationPair> morphology;
+        std::vector<std::string> morphology;
         int start, end;
 
         std::string ruleName;

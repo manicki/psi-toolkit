@@ -1,10 +1,12 @@
 
 #include <iostream>
 #include <fstream>
-#include <boost/regex.hpp>
-#include <boost/regex/icu.hpp>
+//#include <boost/regex.hpp>
+//#include <boost/regex/icu.hpp>
 
-#include "utf8_converter.hpp"
+//#include "utf8_converter.hpp"
+#include <re2/re2.h>
+#include <boost/algorithm/string.hpp>
 
 #include <boost/lexical_cast.hpp>
 #include <vector>
@@ -37,8 +39,7 @@ Tagset::Tagset(std::string &filename)
     readFromFile(filename);
 }
 
-void Tagset::readFromFile (std::string &filename)
-{
+void Tagset::readFromFile (std::string &filename) {
     std::ifstream tagsetFile(filename.c_str());
     if (!tagsetFile)
     {
@@ -50,10 +51,15 @@ void Tagset::readFromFile (std::string &filename)
     bool pos = false;
     bool open = false;
 
-    boost::regex regKeyVal( "\\s*([^\\s]+)\\s*=\\s*([^\\s].*[^\\s#])?\\s*(#.*)?" );
-    boost::regex regComment( "#.*" );
-    boost::regex regWhite( "\\s+" );
-    boost::regex regOpenClasses( "\\s*[^\\s]+(\\s\\s*[^\\s]+\\s*)*\\s*" );
+    //boost::regex regKeyVal( "\\s*([^\\s]+)\\s*=\\s*([^\\s].*[^\\s#])?\\s*(#.*)?" );
+    //boost::regex regComment( "#.*" );
+    //boost::regex regWhite( "\\s+" );
+    //boost::regex regOpenClasses( "\\s*[^\\s]+(\\s\\s*[^\\s]+\\s*)*\\s*" );
+    RE2 regKeyVal( "\\s*([^\\s]+)\\s*=\\s*([^\\s].*[^\\s#])?\\s*(#.*)?" );
+    RE2 regComment( "#.*" );
+    RE2 regWhite( "\\s+" );
+    RE2 regOpenClasses( "\\s*[^\\s]+(\\s\\s*[^\\s]+\\s*)*\\s*" );
+    std::string whiteChars(" \t\n");
 
     //std::vector<std::string> attrList;
     //std::map<std::string, std::vector<std::string> > attributes;
@@ -72,7 +78,8 @@ void Tagset::readFromFile (std::string &filename)
 
         if (line == "")
             continue;
-        if (boost::regex_match(line, regWhite))
+        //if (boost::regex_match(line, regWhite))
+        if (RE2::FullMatch(line, regWhite))
             continue;
 
 
@@ -100,17 +107,20 @@ void Tagset::readFromFile (std::string &filename)
             continue;
         }
 
-        if (boost::regex_match(line, regComment))
+        //if (boost::regex_match(line, regComment))
+        if (RE2::FullMatch(line, regComment))
             continue;
 
-        line = boost::regex_replace(line, regComment, "", boost::match_default | boost::format_sed);
-        boost::smatch what;
-        if (boost::regex_match(line, what, regKeyVal))
-        {
-            if (attr)
-            {
+        //line = boost::regex_replace(line, regComment, "", boost::match_default | boost::format_sed);
+        RE2::Replace(&line, regComment, "");
+        std::string key_;
+        std::string value_;
+        //boost::smatch what;
+        //if (boost::regex_match(line, what, regKeyVal))
+        if (RE2::FullMatch(line, regKeyVal, &key_, &value_)) {
+            if (attr) {
                 //std::cout << "Atrybut: " << what[1] << std::endl;
-                std::string attrName = what[1];
+                std::string attrName = key_;
 
                 if (attributes.find(attrName) != attributes.end())
                 {
@@ -119,17 +129,22 @@ void Tagset::readFromFile (std::string &filename)
                 }
 
                 //std::string::iterator start, end;
-                std::string values = what[2];
-                boost::sregex_token_iterator i (values.begin(), values.end(), regWhite, -1);
-                boost::sregex_token_iterator j;
+                std::string values = value_;
+                //boost::sregex_token_iterator i (values.begin(), values.end(), regWhite, -1);
+                //boost::sregex_token_iterator j;
+                std::vector<std::string> valuesVector;
+                boost::split(valuesVector, values, boost::is_any_of(whiteChars));
 
                 std::vector<std::string> attrValues;
                 //std::cout << "Wartosci: " << std::endl;
-                while (i != j)
-                {
-                    attrValues.push_back(*i);
+                //while (i != j)
+                for (std::vector<std::string>::iterator val_it = valuesVector.begin();
+                        val_it != valuesVector.end(); val_it ++) {
+                    //attrValues.push_back(*i);
+                    std::string value = boost::algorithm::trim_copy(*val_it);
+                    attrValues.push_back(value);
                     //std::cout << *i << std::endl;
-                    i ++;
+                    //i ++;
                 }
 
                 attrList.push_back(attrName);
@@ -140,8 +155,7 @@ void Tagset::readFromFile (std::string &filename)
                 val = attrValues.begin();
                 char mapped = 'A';
                 std::map<std::string, char> mappings;
-                while (val != attrValues.end())
-                {
+                while (val != attrValues.end()) {
                     mappings.insert(std::pair<std::string, char>(*val, mapped));
                     mapped ++;
                     if (mapped == '[')
@@ -153,8 +167,7 @@ void Tagset::readFromFile (std::string &filename)
                 attrMappings.insert(std::pair<std::string, std::map<std::string, char> >(attrName, mappings));
                 //std::cout << "Wartosci: " << what[2] << std::endl;
             }
-            if (pos)
-            {
+            if (pos) {
                 //std::cout << "Czesc mowy: " << what[1] << std::endl;
                 //if (what[2] == "")
                 //{
@@ -164,7 +177,7 @@ void Tagset::readFromFile (std::string &filename)
 
                 //std::string attributes = what[2];
 
-                std::string posName = what[1];
+                std::string posName = key_;
 
                 if (POSs.find(posName) != POSs.end())
                 {
@@ -172,26 +185,28 @@ void Tagset::readFromFile (std::string &filename)
                     continue;
                 }
 
-                std::string attrs = what[2];
+                std::string attrs = value_;
                 std::vector<std::string> posAttrs;
 
-                if (attrs != "")
-                {
-                    boost::sregex_token_iterator i (attrs.begin(), attrs.end(), regWhite, -1);
-                    boost::sregex_token_iterator j;
+                if (attrs != "") {
+                    //boost::sregex_token_iterator i (attrs.begin(), attrs.end(), regWhite, -1);
+                    //boost::sregex_token_iterator j;
+                    std::vector<std::string> valuesVector;
+                    boost::split(valuesVector, attrs, boost::is_any_of(whiteChars));
 
                     //std::cout << "Atrybuty: " << std::endl;
                     //boost::regex regOptional( "\\[([^\\s\\[\\]]+)\\]" );
-                    while (i != j)
-                    {
-                        std::string attribute = *i;
+                    //while (i != j)
+                    for (std::vector<std::string>::iterator val_it = valuesVector.begin();
+                            val_it != valuesVector.end(); val_it ++) {
+                        std::string attribute = boost::algorithm::trim_copy(*val_it);
                        //if (boost::regex_search(attribute, what, regOptional))
                        //     attribute = what[1];
                         //    attribute = "*" + what[1];
 
                         posAttrs.push_back(attribute);
                         //std::cout << attribute << std::endl;
-                        i ++;
+                        //i ++;
                     }
 
                 }
@@ -207,55 +222,49 @@ void Tagset::readFromFile (std::string &filename)
 
             }
         }
-        else if (boost::regex_match(line, regOpenClasses))
-        {
-            if (open)
-            {
-                boost::sregex_token_iterator i (line.begin(), line.end(), regWhite, -1);
-                boost::sregex_token_iterator j;
-                while (i != j)
-                {
-                    std::string class_name = *i;
+        else if (RE2::FullMatch(line, regOpenClasses)) {
+            if (open) {
+                //boost::sregex_token_iterator i (line.begin(), line.end(), regWhite, -1);
+                //boost::sregex_token_iterator j;
+                std::vector<std::string> valuesVector;
+                boost::split(valuesVector, line, boost::is_any_of(whiteChars));
+                //while (i != j)
+                for (std::vector<std::string>::iterator val_it = valuesVector.begin();
+                        val_it != valuesVector.end(); val_it ++) {
+                    std::string val = boost::algorithm::trim_copy(*val_it);
+                    std::string class_name = val;
                     std::map<std::string, char>::iterator it = posMappings.find(class_name);
-                    if (it != posMappings.end())
-                    {
+                    if (it != posMappings.end()) {
                         open_classes.push_back(class_name);
-                    }
-                    else
-                    {
+                    } else {
                         std::cerr << "Unknown class: " << class_name << " given as an open class name." << std::endl;
                     }
-                    i ++;
+                    //i ++;
                 }
-            }
-            else
-            {
+            } else {
                 std::cerr << "Wrong linex: " << line << std::endl;
             }
-        }
-        else
-        {
+        } else {
             std::cerr << "Wrong line: " << line << std::endl;
         }
 
     }
 
     //////// start generowania
-    boost::u32regex regOptional = boost::make_u32regex( "\\[([^\\s\\[\\]]+)\\]" );
-    boost::smatch wh;
+    //boost::u32regex regOptional = boost::make_u32regex( "\\[([^\\s\\[\\]]+)\\]" );
+    RE2 regOptional( "\\[([^\\s\\[\\]]+)\\]" );
+    //boost::smatch wh;
 
     std::map<std::string, std::vector<std::string> >::iterator p;
     p = POSs.begin();
-    while (p != POSs.end())
-    {
+    while (p != POSs.end()) {
         std::vector<std::string> left;
         std::vector<std::string> right;
         left.push_back(p->first);
         std::string mapped_pos = boost::lexical_cast<std::string>(posMappings[p->first]);
         std::string initRight = mapped_pos;
         int i = 0;
-        while (i < attrList.size())
-        {
+        while (i < attrList.size()) {
             initRight += boost::lexical_cast<std::string>("0");
             i ++;
         }
@@ -273,9 +282,12 @@ void Tagset::readFromFile (std::string &filename)
         {
             bool optional = false;
             std::string attribute = *attrIt;
-            if (boost::u32regex_search(attribute, wh, regOptional))
+            std::string attribute_;
+            //if (boost::u32regex_search(attribute, wh, regOptional))
+            if (RE2::FullMatch(attribute, regOptional, &attribute_)) //@todo: tu ma byc fullmatch, partialmatch a moze w ogole cos innego w zastepstwie tego search?
             {
-                attribute = wh[1];
+                //attribute = wh[1];
+                attribute = attribute_;
                 optional = true;
             }
             std::vector<std::string> attrs = attributes[attribute];
@@ -296,7 +308,7 @@ void Tagset::readFromFile (std::string &filename)
             }
             int position = -1;
             std::vector<std::string>::iterator j;
-            j = attrList.begin();
+            j = attrList.begin(); //@todo: zmienic te literki na cos ludzkiego
             int c = 0;
             while (j != attrList.end())
             {
@@ -376,14 +388,12 @@ void Tagset::readFromFile (std::string &filename)
 //    return 0;
 }
 
-std::string Tagset::log()
-{
+std::string Tagset::log() {
     std::stringstream ss;
 
     std::map<std::string, std::string>::iterator i;
     i = morphologyMappings.begin();
-    while (i != morphologyMappings.end())
-    {
+    while (i != morphologyMappings.end()) {
         ss << i->first << "\t" << i->second << std::endl;
         i ++;
     }
@@ -536,24 +546,25 @@ int Tagset::size()
     return posMappings.size();
 }
 
-std::vector<char> Tagset::mapPosMatching(std::string &regexp) //TODO: obsluga ladna sytuacji, ze wyrazenie regularne jest bledne (nie jest wyrazeniem regularnym)
-{
-    boost::regex regPos (regexp);
+std::vector<char> Tagset::mapPosMatching(std::string &regexp) { //@todo: obsluga ladna sytuacji, ze wyrazenie regularne jest bledne (nie jest wyrazeniem regularnym)
+    //boost::regex regPos (regexp);
+    RE2 regPos (regexp);
     std::vector<char> matching;
     std::map<std::string, char>::iterator i;
     i = posMappings.begin();
     while (i != posMappings.end())
     {
-        if (boost::regex_match(i->first, regPos))
+        //if (boost::regex_match(i->first, regPos))
+        if (RE2::FullMatch(i->first, regPos))
             matching.push_back(i->second);
         i ++;
     }
     return matching;
 }
 
-std::vector<char> Tagset::mapAttributeValuesMatching(std::string &attribute, std::string &regexp)
-{
-    boost::regex regAttr (regexp);
+std::vector<char> Tagset::mapAttributeValuesMatching(std::string &attribute, std::string &regexp) {
+    //boost::regex regAttr (regexp);
+    RE2 regAttr (regexp);
     std::vector<char> matching;
     if (attrMappings.find(attribute) != attrMappings.end())
     {
@@ -563,7 +574,8 @@ std::vector<char> Tagset::mapAttributeValuesMatching(std::string &attribute, std
         i = p->second.begin();
         while (i != p->second.end())
         {
-            if (boost::regex_match(i->first, regAttr))
+            //if (boost::regex_match(i->first, regAttr))
+            if (RE2::FullMatch(i->first, regAttr))
                 matching.push_back(i->second);
             i ++;
         }
@@ -625,7 +637,7 @@ std::vector<std::string> Tagset::getAttributeValues(std::string &attribute)
     }
 }
 
-void Tagset::readDescFromFile(std::string &filename)
+void Tagset::readDescFromFile(std::string &filename) //@todo: zlaczyc dwie metody w jedna ale biegiem. chyba ze to jednak inne rzeczy sa
 {
     std::ifstream tagsetFile(filename.c_str());
     if (!tagsetFile)
@@ -634,9 +646,13 @@ void Tagset::readDescFromFile(std::string &filename)
         return;
     }
 
-    boost::regex regKeyVal( "\\s*([^\\s]+)\\s*=\\s*([^\\s].*)?\\s*(#.*)?" );
-    boost::regex regComment( "#.*" );
-    boost::regex regWhite( "\\s+" );
+    //boost::regex regKeyVal( "\\s*([^\\s]+)\\s*=\\s*([^\\s].*)?\\s*(#.*)?" );
+    //boost::regex regComment( "#.*" );
+    //boost::regex regWhite( "\\s+" );
+    RE2 regKeyVal( "\\s*([^\\s]+)\\s*=\\s*([^\\s].*)?\\s*(#.*)?" );
+    RE2 regComment( "#.*" );
+    RE2 regWhite( "\\s+" );
+    std::string whiteChars(" \t\n");
 
     bool general = false;
     bool posflag = false;
@@ -645,20 +661,22 @@ void Tagset::readDescFromFile(std::string &filename)
     bool includepos = false;
     desc_separator = "#";
 
-    while (!tagsetFile.eof())
-    {
+    while (!tagsetFile.eof()) {
         std::string line;
         getline(tagsetFile, line);
 
         if (line == "")
             continue;
-        if (boost::regex_match(line, regWhite))
+        //if (boost::regex_match(line, regWhite))
+        if (RE2::FullMatch(line, regWhite))
             continue;
 
-        if (boost::regex_match(line, regComment))
+        //if (boost::regex_match(line, regComment))
+        if (RE2::FullMatch(line, regComment))
             continue;
 
-        line = boost::regex_replace(line, regComment, "", boost::match_default | boost::format_sed);
+        //line = boost::regex_replace(line, regComment, "", boost::match_default | boost::format_sed);
+        RE2::Replace(&line, regComment, "");
 
         if (line.find("[GENERAL]") != std::string::npos)
         {
@@ -684,37 +702,40 @@ void Tagset::readDescFromFile(std::string &filename)
 
         if (general)
         {
-            boost::smatch what;
-            if (boost::regex_match(line, what, regKeyVal))
-            {
-                std::string key = what[1];
+            std::string key;
+            std::string value;
+            //boost::smatch what;
+            //if (boost::regex_match(line, what, regKeyVal))
+            if (RE2::FullMatch(line, regKeyVal, &key, &value)) {
+                //std::string key = what[1];
 
-                if (key == "order")
-                {
+                if (key == "order") {
                     desc_order.clear();
-                    std::string values = what[2];
-                    boost::sregex_token_iterator i (values.begin(), values.end(), regWhite, -1);
-                    boost::sregex_token_iterator j;
-                    while (i != j)
-                    {
-                        if (*i == "orth")
+                    //std::string values = what[2];
+                    std::string values = value;
+                    //boost::sregex_token_iterator i (values.begin(), values.end(), regWhite, -1);
+                    //boost::sregex_token_iterator j;
+                    std::vector<std::string> valuesVector;
+                    boost::split(valuesVector, values, boost::is_any_of(whiteChars));
+                    //while (i != j)
+                    for (std::vector<std::string>::iterator val_it = valuesVector.begin();
+                            val_it != valuesVector.end(); val_it ++) {
+                        std::string val = boost::algorithm::trim_copy(*val_it);
+                        if (val == "orth")
                             desc_order.push_back(DESC_ORTH);
-                        else if (*i == "base")
+                        else if (val == "base")
                             desc_order.push_back(DESC_BASE);
-                        else if (*i == "morpho")
+                        else if (val == "morpho")
                             desc_order.push_back(DESC_MORPHO);
-                        else
-                        {
-                            std::cerr << "Unknown order value: " << *i << std::endl;
+                        else {
+                            std::cerr << "Unknown order value: " << val << std::endl;
                         }
-                        i ++;
+                        //i ++;
                     }
 
                     continue;
-                }
-                else if (key == "include-pos")
-                {
-                    std::string value = what[2];
+                } else if (key == "include-pos") {
+                    //std::string value = what[2];
                     if (value == "1")
                         includepos = true;
                     else if (value == "0")
@@ -722,10 +743,8 @@ void Tagset::readDescFromFile(std::string &filename)
                     else
                         std::cerr << "Unknown value: " << value << " of option: " << key << std::endl;
                     continue;
-                }
-                else if (key == "desc-terminals")
-                {
-                    std::string value = what[2];
+                } else if (key == "desc-terminals") {
+                    //std::string value = what[2];
                     if (value == "1")
                         desc_terminals = true;
                     else if (value == "0")
@@ -733,10 +752,8 @@ void Tagset::readDescFromFile(std::string &filename)
                     else
                         std::cerr << "Unknown value: " << value << " of option: " << key << std::endl;
                     continue;
-                }
-                else if (key == "desc-nonterminals")
-                {
-                    std::string value = what[2];
+                } else if (key == "desc-nonterminals") {
+                    //std::string value = what[2];
                     if (value == "1")
                         desc_nonterminals = true;
                     else if (value == "0")
@@ -744,14 +761,10 @@ void Tagset::readDescFromFile(std::string &filename)
                     else
                         std::cerr << "Unknown value: " << value << " of option: " << key << std::endl;
                     continue;
-                }
-                else if (key == "separator")
-                {
-                    std::string value = what[2];
+                } else if (key == "separator") {
+                    //std::string value = what[2];
                     desc_separator = value;
-                }
-                else
-                {
+                } else {
                     std::cerr << "Unknown option: " << key << std::endl;
                     continue;
                 }
@@ -762,23 +775,26 @@ void Tagset::readDescFromFile(std::string &filename)
 
         if (posflag)
         {
-            boost::smatch what;
-            if (boost::regex_match(line, what, regKeyVal))
-            {
-                std::string pos = what[1];
+            //boost::smatch what;
+            std::string pos;
+            std::string values;
+            //if (boost::regex_match(line, what, regKeyVal))
+            if (RE2::FullMatch(line, regKeyVal, &pos, &values)) {
+                //std::string pos = what[1];
 
                 std::map<std::string, std::vector<std::string> >::iterator p = POSs.find(pos);
-                if (p == POSs.end())
-                {
+                if (p == POSs.end()) {
                     std::cerr << "Unknown part of speech: " << pos << std::endl;
                     continue;
                 }
 
                 std::vector<std::string> patterns;
                 std::vector<std::string> pos_vals = p->second;
-                std::string values = what[2];
-                boost::sregex_token_iterator i (values.begin(), values.end(), regWhite, -1);
-                boost::sregex_token_iterator j;
+                //std::string values = what[2];
+                //boost::sregex_token_iterator i (values.begin(), values.end(), regWhite, -1);
+                //boost::sregex_token_iterator j;
+                std::vector<std::string> valuesVector;
+                boost::split(valuesVector, values, boost::is_any_of(whiteChars));
 
                 std::vector<int> desc;
                 if (includepos)
@@ -786,13 +802,15 @@ void Tagset::readDescFromFile(std::string &filename)
                     std::string pattern = "^(" + pos + ").*";
                     patterns.push_back(pattern);
                 }
-                while (i != j)
-                {
-                    std::map<std::string, std::vector<std::string> >::iterator q = attributes.find(*i);
+                //while (i != j)
+                for (std::vector<std::string>::iterator val_it = valuesVector.begin();
+                        val_it != valuesVector.end(); val_it ++) {
+                    std::string val = boost::algorithm::trim_copy(*val_it);
+                    std::map<std::string, std::vector<std::string> >::iterator q = attributes.find(val);
                     if (q == attributes.end())
                     {
-                        std::cerr << "Unknown attribute: " << *i << std::endl;
-                        i ++;
+                        std::cerr << "Unknown attribute: " << val << std::endl;
+                  //      i ++;
                         continue;
                     }
                     std::string pattern = "";
@@ -805,7 +823,7 @@ void Tagset::readDescFromFile(std::string &filename)
                     pattern = ".*(" + pattern;
                     pattern += ").*";
                     patterns.push_back(pattern);
-                    i ++;
+                    //i ++;
                 }
 
                 token_description.insert(std::pair<std::string, std::vector<std::string> >(pos, patterns));
@@ -814,29 +832,35 @@ void Tagset::readDescFromFile(std::string &filename)
 
         if (groups)
         {
-            boost::smatch what;
-            if (boost::regex_match(line, what, regKeyVal))
-            {
-                std::string group = what[1];
+            //boost::smatch what;
+            std::string group;
+            std::string values;
+            //if (boost::regex_match(line, what, regKeyVal))
+            if (RE2::FullMatch(line, regKeyVal, &group, &values)) {
+                //std::string group = what[1];
 
                 std::vector<std::string> patterns;
-                std::string values = what[2];
-                boost::sregex_token_iterator i (values.begin(), values.end(), regWhite, -1);
-                boost::sregex_token_iterator j;
+                //std::string values = what[2];
+                //boost::sregex_token_iterator i (values.begin(), values.end(), regWhite, -1);
+                //boost::sregex_token_iterator j;
+                std::vector<std::string> valuesVector;
+                boost::split(valuesVector, values, boost::is_any_of(whiteChars));
 
-                while (i != j)
-                {
-                    std::map<std::string, std::vector<std::string> >::iterator p = attributes.find(*i);
-                    if (p == attributes.end())
-                    {
-                        std::cerr << "Unknown attribute: " << *i << std::endl;
-                        i ++;
+                //while (i != j)
+                for (std::vector<std::string>::iterator val_it = valuesVector.begin();
+                        val_it != valuesVector.end(); val_it ++) {
+                    std::string val = boost::algorithm::trim_copy(*val_it);
+                    std::map<std::string, std::vector<std::string> >::iterator p =
+                        attributes.find(val);
+                    if (p == attributes.end()) {
+                        std::cerr << "Unknown attribute: " << val << std::endl;
+                        //i ++;
                         continue;
                     }
 
                     std::string pattern = "";
-                    for (std::vector<std::string>::iterator it = p->second.begin(); it != p->second.end(); it ++)
-                    {
+                    for (std::vector<std::string>::iterator it = p->second.begin();
+                            it != p->second.end(); it ++) {
                         if (pattern != "")
                             pattern += "|";
                         pattern += *it;
@@ -844,10 +868,13 @@ void Tagset::readDescFromFile(std::string &filename)
                     pattern = ".*(" + pattern;
                     pattern += ").*";
                     patterns.push_back(pattern);
-                    i ++;
+                    //i ++;
                 }
 
-                group_description.insert(std::pair<std::string, std::vector<std::string> >(group, patterns));
+                group_description.insert(
+                        std::pair<std::string, std::vector<std::string> >(
+                            group, patterns)
+                        );
             }
         }
 
@@ -856,18 +883,15 @@ void Tagset::readDescFromFile(std::string &filename)
 
 }
 
-bool Tagset::containsDesc()
-{
+bool Tagset::containsDesc() {
     return (token_description.size() > 0);
 }
 
-std::vector<std::string> Tagset::getGroupDesc(std::string group)
-{
+std::vector<std::string> Tagset::getGroupDesc(std::string group) {
     std::map<std::string, std::vector<std::string> >::iterator p = group_description.find(group);
     if (p != group_description.end())
         return p->second;
-    else
-    {
+    else {
         std::vector<std::string> a;
         return a;
     }
@@ -901,18 +925,25 @@ std::map<std::string, std::string> Tagset::getAttributes(std::string morphologyS
             return bufit->second;
         }
     }
-    boost::regex regSep(":");
-    boost::sregex_token_iterator i (morphologyString.begin(), morphologyString.end(), regSep, -1);
-    boost::sregex_token_iterator j;
+    //boost::regex regSep(":");
+    std::string attrSeparator = ":";
+
+    //boost::sregex_token_iterator i (morphologyString.begin(), morphologyString.end(), regSep, -1);
+    //boost::sregex_token_iterator j;
+    std::vector<std::string> valuesVector;
+    boost::split(valuesVector, morphologyString, boost::is_any_of(attrSeparator));
+
     std::string base = "";
     std::string pos = "";
     int attribute_start = 0;
     std::vector<std::string> attrs;
-    while (i != j)
-    {
+    //while (i != j)
+    for (std::vector<std::string>::iterator val_it = valuesVector.begin();
+            val_it != valuesVector.end(); val_it ++) {
+        std::string val = boost::algorithm::trim_copy(*val_it);
         if (pos == "")
         {
-            pos = *i;
+            pos = val;
             if (checkPos(pos))
             {
                 results.insert(std::pair<std::string, std::string>("pos", pos));
@@ -929,7 +960,7 @@ std::map<std::string, std::string> Tagset::getAttributes(std::string morphologyS
             while (ai != attrs.end())
             {
                 std::string attr = *ai;
-                std::string val = *i;
+                //std::string val = *i;
                 if (attr[0] == '[' && attr[attr.size() - 1] == ']')
                     attr = attr.substr(1, attr.size() - 2);
                 if (checkAttributeValue(attr, val))
@@ -945,7 +976,7 @@ std::map<std::string, std::string> Tagset::getAttributes(std::string morphologyS
                 }
             }
         }
-        i ++;
+        //i ++;
     }
     if (buffer)
     {
@@ -972,6 +1003,107 @@ std::vector<std::string> Tagset::getMappedMorphologies(std::string mapped_pos)
         return empty;
     }
 }
+
+        std::vector<std::string> Tagset::getPosMatching(std::string regexp) {
+            RE2 reg(regexp);
+            std::vector<std::string> result;
+            for (std::map<std::string,
+                    std::vector<std::string> >::iterator pos_it = POSs.begin();
+                    pos_it != POSs.end(); pos_it ++) {
+                if (RE2::FullMatch(pos_it->first, reg))
+                    result.push_back(pos_it->first);
+            }
+            return result;
+        }
+
+        std::vector<std::string> Tagset::getPosNotMatching(std::string regexp) {
+            RE2 reg(regexp);
+            std::vector<std::string> result;
+            for (std::map<std::string,
+                    std::vector<std::string> >::iterator pos_it = POSs.begin();
+                    pos_it != POSs.end(); pos_it ++) {
+                if (!RE2::FullMatch(pos_it->first, reg))
+                    result.push_back(pos_it->first);
+            }
+            return result;
+        }
+
+        std::vector<std::string> Tagset::getPosExcept(std::string pos) {
+            std::vector<std::string> result;
+            for (std::map<std::string,
+                    std::vector<std::string> >::iterator pos_it = POSs.begin();
+                    pos_it != POSs.end(); pos_it ++) {
+                if (pos_it->first != pos)
+                    result.push_back(pos_it->first);
+            }
+            return result;
+        }
+
+        std::vector<std::string> Tagset::getAttributeValuesMatching(std::string attribute,
+                std::string regexp) {
+            RE2 reg(regexp);
+            std::vector<std::string> result;
+            std::map<std::string, std::vector<std::string> >::iterator attr_it =
+                attributes.find(attribute);
+            if (attr_it != attributes.end()) {
+                std::vector<std::string> values = attr_it->second;
+                for (std::vector<std::string>::iterator val_it = values.begin();
+                        val_it != values.end(); val_it ++) {
+                    if (RE2::FullMatch(*val_it, reg))
+                        result.push_back(*val_it);
+                }
+            }
+            return result;
+        }
+
+        std::vector<std::string> Tagset::getAttributeValuesNotMatching(std::string attribute,
+                std::string regexp) {
+            RE2 reg(regexp);
+            std::vector<std::string> result;
+            std::map<std::string, std::vector<std::string> >::iterator attr_it =
+                attributes.find(attribute);
+            if (attr_it != attributes.end()) {
+                std::vector<std::string> values = attr_it->second;
+                for (std::vector<std::string>::iterator val_it = values.begin();
+                        val_it != values.end(); val_it ++) {
+                    if (!RE2::FullMatch(*val_it, reg))
+                        result.push_back(*val_it);
+                }
+            }
+            return result;
+        }
+
+        std::vector<std::string> Tagset::getAttributeValuesExcept(std::string attribute,
+                std::string value) {
+            std::vector<std::string> result;
+            std::map<std::string, std::vector<std::string> >::iterator attr_it =
+                attributes.find(attribute);
+            if (attr_it != attributes.end()) {
+                std::vector<std::string> values = attr_it->second;
+                for (std::vector<std::string>::iterator val_it = values.begin();
+                        val_it != values.end(); val_it ++) {
+                    if (*val_it != value)
+                        result.push_back(*val_it);
+                }
+            }
+            return result;
+        }
+
+        std::vector<std::string> Tagset::getAttributes() {
+            std::vector<std::string> result;
+            for (std::map<std::string, std::vector<std::string> >::iterator it =
+                    attributes.begin(); it != attributes.end(); it ++)
+                result.push_back(it->first);
+            return result;
+        }
+
+        std::vector<std::string> Tagset::getPartsOfSpeech() {
+            std::vector<std::string> result;
+            for (std::map<std::string, std::vector<std::string> >::iterator it =
+                    POSs.begin(); it != POSs.end(); it ++)
+                result.push_back(it->first);
+            return result;
+        }
 
 }
 
