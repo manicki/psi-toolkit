@@ -74,12 +74,12 @@ private:
     /**
      * resizes to the nearest power of two
      */
-    int resize_(int size);
+    boost::dynamic_bitset<>::size_type resize_(boost::dynamic_bitset<>::size_type size);
 
     /**
      * equalizes lengths of two LayerTagCollection vectors
      */
-    int resize_(LayerTagCollection& other);
+    boost::dynamic_bitset<>::size_type resize_(LayerTagCollection& other);
 
 };
 

@@ -21,7 +21,7 @@ long AnnotationItem::getHash() const {
     return coll.hash(str.data(), str.data() + str.length());
 }
 
-int AnnotationItem::resize_(int size) {
+size_t AnnotationItem::resize_(size_t size) {
     if (size > values_.size()) {
         values_.resize(size);
     }

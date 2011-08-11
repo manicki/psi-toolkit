@@ -29,7 +29,7 @@ LayerTagCollection LayerTagManager::createTagCollection(std::list<std::string> t
 LayerTagCollection LayerTagManager::createTagCollection(LayerTagMask mask) {
     if (mask.isAny()) {
         LayerTagCollection result = LayerTagCollection(m_.size());
-        for (int i = 0; i < m_.size(); ++i) {
+        for (size_t i = 0; i < m_.size(); ++i) {
             result.v_.set(i);
         }
         return result;
@@ -41,7 +41,7 @@ LayerTagCollection LayerTagManager::createTagCollection(LayerTagMask mask) {
 std::list<std::string> LayerTagManager::getTagNames(const LayerTagCollection& tagCollection) {
     std::list<std::string> result;
     for (
-        int i = tagCollection.v_.find_first();
+        size_t i = tagCollection.v_.find_first();
         i != boost::dynamic_bitset<>::npos;
         i = tagCollection.v_.find_next(i)
     ) {

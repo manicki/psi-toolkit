@@ -6,7 +6,7 @@ void AnnotationItemManager::setValue(
     std::string value
 ) {
     m_.insert(StringBimapItem(attribute, m_.size()));
-    int ix = m_.left.at(attribute);
+    size_t ix = m_.left.at(attribute);
     if (ix >= annotationItem.values_.size()) {
         annotationItem.resize_(ix + 1);
     }
@@ -30,7 +30,7 @@ std::list< std::pair<std::string, std::string> > AnnotationItemManager::getValue
 ) {
     std::list< std::pair<std::string, std::string> > result;
     for (
-        int i = annotationItem.attributes_.find_first();
+        boost::dynamic_bitset<>::size_type i = annotationItem.attributes_.find_first();
         i != boost::dynamic_bitset<>::npos && i < m_.size();
         i = annotationItem.attributes_.find_next(i)
     ) {

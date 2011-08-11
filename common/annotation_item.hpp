@@ -36,7 +36,7 @@ private:
     std::vector<std::string> values_;
     boost::dynamic_bitset<> attributes_;
 
-    int resize_(int size);
+    size_t resize_(size_t size);
 
 };
 

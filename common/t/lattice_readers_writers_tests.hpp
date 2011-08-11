@@ -12,8 +12,9 @@ public:
     void testUTTLatticeReader() {
 
         Lattice lattice("");
-        LatticeReader * reader = new UTTLatticeReader();
 /*
+        LatticeReader * reader = new UTTLatticeReader();
+
         reader->readIntoLattice("../formats/utt/t/files/fr_simple_puddle_input.txt", lattice);
 
         LayerTagMask rawMask = lattice.getLayerTagManager().getMask("raw");

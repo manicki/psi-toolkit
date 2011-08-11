@@ -87,7 +87,7 @@ Lattice::EdgeDescriptor Lattice::addEdge(
 
         if (
             tags == layerTagManager_.createSingletonTagCollection("symbol")
-            && from + symbolLength_(from) == to
+            && from + (int) symbolLength_(from) == to
         ) {
             implicitOutEdges_.set(from, true);
             return EdgeDescriptor(from);
@@ -104,7 +104,7 @@ Lattice::EdgeDescriptor Lattice::addEdge(
         } else {
             boost_from = boost::add_vertex(VertexEntry(from), graph_);
             vertices_[from] = boost_from;
-            for (int i = 0; i < indexedTagCollections_.size(); ++i) {
+            for (size_t i = 0; i < indexedTagCollections_.size(); ++i) {
                 graph_[boost_from].outEdgesIndex.push_back(
                     std::list<EdgeDescriptorWrapperToFoolBoost146OrGnu461>()
                 );
@@ -119,7 +119,7 @@ Lattice::EdgeDescriptor Lattice::addEdge(
         } else {
             boost_to = boost::add_vertex(VertexEntry(to), graph_);
             vertices_[to] = boost_to;
-            for (int i = 0; i < indexedTagCollections_.size(); ++i) {
+            for (size_t i = 0; i < indexedTagCollections_.size(); ++i) {
                 graph_[boost_to].outEdgesIndex.push_back(
                     std::list<EdgeDescriptorWrapperToFoolBoost146OrGnu461>()
                 );
@@ -137,7 +137,7 @@ Lattice::EdgeDescriptor Lattice::addEdge(
         );
 
         if (result.second) {
-            for (int i = 0; i < indexedTagCollections_.size(); ++i) {
+            for (size_t i = 0; i < indexedTagCollections_.size(); ++i) {
                 if (createIntersection(tags, indexedTagCollections_.right.at(i)).isNonempty()) {
                     graph_[boost_from].outEdgesIndex[i].push_back(result.first);
                     graph_[boost_to].inEdgesIndex[i].push_back(result.first);
@@ -486,7 +486,7 @@ Lattice::Partition Lattice::cutPartitionByTextLength_(const Partition& partition
 
 
 bool Lattice::VertexIterator::hasNext() {
-    while (vd_ <= lattice_->allText_.length()) {
+    while (vd_ <= (int)lattice_->allText_.length()) {
         if (
             lattice_->vertices_.find(vd_) != lattice_->vertices_.end()
             || lattice_->implicitOutEdges_[vd_]
@@ -500,7 +500,7 @@ bool Lattice::VertexIterator::hasNext() {
 }
 
 Lattice::VertexDescriptor Lattice::VertexIterator::next() {
-    while (vd_ <= lattice_->allText_.length()) {
+    while (vd_ <= (int)lattice_->allText_.length()) {
         if (
             lattice_->vertices_.find(vd_) != lattice_->vertices_.end()
             || lattice_->implicitOutEdges_[vd_]
