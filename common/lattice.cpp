@@ -523,6 +523,8 @@ bool Lattice::InOutEdgesIterator::hasNext() {
     case IN_EDGE_ITER : return iei_ != ieiEnd_;
     case IMPLICIT_ITER : return implicitIndex_ > -1;
     }
+
+    throw NoEdgeException("unexpected state");
 }
 
 Lattice::EdgeDescriptor Lattice::InOutEdgesIterator::next() {
