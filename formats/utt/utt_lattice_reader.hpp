@@ -13,7 +13,6 @@
 #include "lattice_reader_factory.hpp"
 #include "quoter.hpp"
 #include "utt_quoter.hpp"
-#include "utf8_string.hpp"
 
 
 using namespace boost::spirit;

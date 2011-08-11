@@ -51,7 +51,6 @@ runner_SOURCES = \
 	../common/processor_factory.cpp \
 	../common/quoter.cpp \
 	../common/reader_worker.cpp \
-	../common/utf8_string.cpp \
 	../common/utt_like_quoter.cpp \
 	../common/writer_worker.cpp \
 	../common/t/by_spaces_cutter.cpp \
@@ -133,7 +132,6 @@ psi_pipe_SOURCES = \
 	../common/processor_factory.cpp \
 	../common/quoter.cpp \
 	../common/reader_worker.cpp \
-	../common/utf8_string.cpp \
 	../common/utt_like_quoter.cpp \
 	../common/writer_worker.cpp \
 	../formats/psi/psi_lattice_reader.cpp \
