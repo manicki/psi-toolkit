@@ -4,7 +4,7 @@
 
 std::string UTTLikeQuoter::doEscape(std::string str) {
     std::string result = "";
-    for (int i = 0; i < str.length(); ++i) {
+    for (size_t i = 0; i < str.length(); ++i) {
         switch (str[i]) {
         case ' ' : result += "_"; break;
         case '\n' : result += "\\n"; break;
@@ -14,7 +14,7 @@ std::string UTTLikeQuoter::doEscape(std::string str) {
         case '*' : result += "\\*"; break;
         case '\\' : result += "\\\\"; break;
         default :
-            int j = additionalQuotations_.length();
+            size_t j = additionalQuotations_.length();
             while (j) {
                 if (str[i] == additionalQuotations_[j-1]) {
                     result += "\\";
@@ -32,7 +32,7 @@ std::string UTTLikeQuoter::doEscape(std::string str) {
 
 std::string UTTLikeQuoter::doUnescape(std::string str) {
     std::string result = "";
-    for (int i = 0; i < str.length(); ++i) {
+    for (size_t i = 0; i < str.length(); ++i) {
         switch (str[i]) {
         case '_' : result += " "; break;
         case '\\' :
@@ -46,7 +46,7 @@ std::string UTTLikeQuoter::doUnescape(std::string str) {
                 case '*' : result += "*"; break;
                 case '\\' : result += "\\"; break;
                 default :
-                    int j = additionalQuotations_.length();
+                    size_t j = additionalQuotations_.length();
                     while (j) {
                         if (str[i] == additionalQuotations_[j-1]) {
                             result += str[i]; break;
