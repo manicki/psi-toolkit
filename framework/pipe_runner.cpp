@@ -16,8 +16,9 @@ int PipeRunner::run() {
     std::list<PipelineElementSpecification>::iterator it = pipelineSpecification_.elements.begin();
 
     LatticeReaderFactory& readerFactory = getReaderFactory_(*it);
-    boost::scoped_ptr<LatticeReader> reader(readerFactory.createLatticeReader(
-                                                boost::program_options::variables_map()));
+    boost::program_options::variables_map options;
+    boost::scoped_ptr<LatticeReader> reader(readerFactory.createLatticeReader(options));
+
     reader->readIntoLattice(std::cin, lattice);
     ++it;
 

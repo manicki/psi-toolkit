@@ -10,9 +10,9 @@
 #include <list>
 
 class AnnotatorFactory : public ProcessorFactory {
-    
+
 public:
-    Annotator* createAnnotator(boost::program_options::variables_map options);
+    Annotator* createAnnotator(const boost::program_options::variables_map& options);
 
     /**
      * Returns layer tags that must be provided in the lattice for
@@ -39,9 +39,9 @@ public:
     std::list<std::string> providedLayerTags();;
 
 private:
-    virtual Annotator* doCreateProcessor(boost::program_options::variables_map options);
+    virtual Annotator* doCreateProcessor(const boost::program_options::variables_map& options);
 
-    virtual Annotator* doCreateAnnotator(boost::program_options::variables_map options) = 0;
+    virtual Annotator* doCreateAnnotator(const boost::program_options::variables_map& options) = 0;
 
 
     virtual std::list<std::list<std::string> > doRequiredLayerTags() = 0;

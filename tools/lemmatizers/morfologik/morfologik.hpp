@@ -1,17 +1,23 @@
 #ifndef MORFOLOGIK_HDR
 #define MORFOLOGIK_HDR
 
+#include <map>
+#include <list>
+
 #include "java_virtual_machine.hpp"
-#include <vector>
+#include "morfologik_tags_parser.hpp"
+#include "annotation_item_manager.hpp"
 
 class Morfologik {
 	
 public:
 	Morfologik();
+	std::list<AnnotationItem> stems(std::string & word);
+
 	friend class MorfologikTests; 
 
 protected:
-	std::vector<std::string> stem(const std::string& word);
+	std::multimap<std::string, std::string> stem(const std::string & word);
 
 private:
 	JNIEnv * jenv;
@@ -36,6 +42,13 @@ private:
 	jclass clsString;
 	jmethodID midStringToString;
 	void initializeString();
+
+	MorfologikTagsParser tagsParser;
+
+	AnnotationItemManager annotationManager;
+	std::list<AnnotationItem> createAnnotation(
+		std::string & stem, std::string & tag
+	);
 };
 
 #endif

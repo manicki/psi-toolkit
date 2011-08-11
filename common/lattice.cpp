@@ -478,7 +478,7 @@ Lattice::Partition Lattice::cutPartitionByTextLength_(const Partition& partition
 
     for(;
         partitionIterator != partition.links.end() && lengthGathered < length;
-        ++partitionIterator, lengthGathered += getEdgeText(*partitionIterator).length())
+        lengthGathered += getEdgeText(*partitionIterator).length(), ++partitionIterator)
         ret.links.push_back(*partitionIterator);
 
     return ret;

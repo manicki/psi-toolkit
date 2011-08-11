@@ -18,7 +18,7 @@ public:
     /**
      * Creates a processor with the options specified.
      */
-    Processor* createProcessor(boost::program_options::variables_map options);
+    Processor* createProcessor(const boost::program_options::variables_map& options);
 
     /**
      * Returns the description of options handled by the processor.
@@ -32,7 +32,7 @@ public:
 
 private:
 
-    virtual Processor* doCreateProcessor(boost::program_options::variables_map options) = 0;
+    virtual Processor* doCreateProcessor(const boost::program_options::variables_map& options) = 0;
 
     virtual boost::program_options::options_description doOptionsHandled() = 0;
 
