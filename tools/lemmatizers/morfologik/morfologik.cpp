@@ -16,8 +16,47 @@ Morfologik::Morfologik() {
 	initializeString();
 }
 
+std::list<AnnotationItem> Morfologik::stems(std::string & word) {
+	
+	std::multimap<std::string, std::string> rawStems = stem(word);
+	std::multimap<std::string, std::string>::iterator it;
+	std::list<AnnotationItem> stems;
+
+	for (it = rawStems.begin(); it != rawStems.end(); it++) {
+		std::string stem = it->first;
+		std::string tag = it->second;
+
+		std::list<AnnotationItem> tempAnnotations = 
+			createAnnotation(stem, tag);
+		stems.splice(stems.end(), tempAnnotations);
+	}
+
+	return stems;
+}
+
+std::list<AnnotationItem> Morfologik::createAnnotation(
+	std::string & stem, std::string & tag
+) {
+
+	std::list<AnnotationItem> annotations;
+	std::vector<std::map<std::string, std::string> > tags = 
+		tagsParser.parse(tag);
+	std::map<std::string, std::string>::iterator it;
+
+	for (int i = 0; i < (int)tags.size(); i++) {
+	
+		AnnotationItem annotation(stem);
+		for (it = tags[i].begin(); it != tags[i].end(); it++) {
+			annotationManager.setValue(annotation, it->first, it->second);
+		}
+		annotations.push_back(annotation);
+	}
+
+	return annotations;
+}
+
 std::multimap<std::string, std::string> Morfologik::stem(
-	const std::string& word
+	const std::string & word
 ) {
 
 	jstring jword = jenv->NewStringUTF(word.c_str());	
