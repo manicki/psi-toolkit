@@ -169,7 +169,7 @@ public:
         Lattice::InOutEdgesIterator iter = lattice.outEdges(vertex, symbolMask);
         TS_ASSERT(!iter.hasNext());
 
-        TS_ASSERT_EQUALS(sequence.size(), 11);
+        TS_ASSERT_EQUALS(sequence.size(), 11U);
     }
 
     void test_cutter() {
