@@ -357,7 +357,7 @@ public:
     AnnotationItemManager& getAnnotationItemManager();
 
     const AnnotationItem getEdgeAnnotationItem(EdgeDescriptor edge);
-    const LayerTagCollection getEdgeLayerTags(EdgeDescriptor edge);
+    const LayerTagCollection& getEdgeLayerTags(EdgeDescriptor edge) const;
     int getEdgeBeginIndex(EdgeDescriptor edge) const;
     int getEdgeLength(EdgeDescriptor edge) const;
     bool isEdgeHidden(EdgeDescriptor edge) const;
@@ -409,6 +409,7 @@ private:
     VertexDescriptor priorVertex_(VertexDescriptor vertex);
 
     size_t symbolLength_(int ix) const;
+    const LayerTagCollection& getSymbolTag_() const;
 
     VertexDescriptor firstSequenceVertex_(const EdgeSequence& sequence) const;
     VertexDescriptor lastSequenceVertex_(const EdgeSequence& sequence) const;
@@ -502,6 +503,8 @@ private:
 
     VVCHash vvcHash_;
     EdgeCounterHash edgeCounterHash_;
+
+    LayerTagCollection symbolTag_;
 
 };
 

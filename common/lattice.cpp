@@ -1,8 +1,10 @@
 #include "lattice.hpp"
 
-Lattice::Lattice() { }
+Lattice::Lattice():symbolTag_(layerTagManager_.createSingletonTagCollection("symbol")) {
+}
 
-Lattice::Lattice(std::string text) {
+Lattice::Lattice(std::string text)
+ :symbolTag_(layerTagManager_.createSingletonTagCollection("symbol")) {
     appendString(text);
 }
 
@@ -25,8 +27,7 @@ void Lattice::addSymbols(VertexDescriptor startVertex, VertexDescriptor endVerte
             vd,
             vd + symbol.length(),
             AnnotationItem(symbol),
-            layerTagManager_.createSingletonTagCollection("symbol")
-        );
+            getSymbolTag_());
         vd += symbol.length();
     }
 }
@@ -87,7 +88,7 @@ Lattice::EdgeDescriptor Lattice::addEdge(
         }
 
         if (
-            tags == layerTagManager_.createSingletonTagCollection("symbol")
+            tags == getSymbolTag_()
             && from + (int) symbolLength_(from) == to
         ) {
             implicitOutEdges_.set(from, true);
@@ -277,11 +278,11 @@ const AnnotationItem Lattice::getEdgeAnnotationItem(Lattice::EdgeDescriptor edge
     return AnnotationItem(symbol);
 }
 
-const LayerTagCollection Lattice::getEdgeLayerTags(Lattice::EdgeDescriptor edge) {
+const LayerTagCollection& Lattice::getEdgeLayerTags(Lattice::EdgeDescriptor edge) const { 
     if (edge.implicitIndex < 0) {
         return graph_[edge.descriptor].tagList;
     }
-    return layerTagManager_.createSingletonTagCollection("symbol");
+    return getSymbolTag_();
 }
 
 int Lattice::getEdgeBeginIndex(Lattice::EdgeDescriptor edge) const {
@@ -465,6 +466,9 @@ size_t Lattice::symbolLength_(int ix) const {
     return symbol.length();
 }
 
+const LayerTagCollection& Lattice::getSymbolTag_() const {
+    return symbolTag_;
+}
 
 Lattice::EdgeSequence::EdgeSequence() {
 }
