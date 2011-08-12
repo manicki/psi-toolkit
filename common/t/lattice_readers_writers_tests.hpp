@@ -144,64 +144,64 @@ public:
 
         AnnotationItem blank_token("blank");
 
-        Lattice::Partition ala_partition;
-        ala_partition.links.push_back(lattice.firstOutEdge(
-            lattice.getVertexForRawCharIndex(0),
-            rawMask
-        ));
-        ala_partition.links.push_back(lattice.firstOutEdge(
-            lattice.getVertexForRawCharIndex(1),
-            rawMask
-        ));
-        ala_partition.links.push_back(lattice.firstOutEdge(
-            lattice.getVertexForRawCharIndex(2),
-            rawMask
-        ));
-        lattice.addEdge(pre_ala, post_ala, word_token, token_tag, 0, ala_partition);
+        {
+            Lattice::EdgeSequence::Builder ala_builder;
+            ala_builder.addEdge(lattice.firstOutEdge(
+                                lattice.getVertexForRawCharIndex(0),
+                                rawMask));
+            ala_builder.addEdge(lattice.firstOutEdge(
+                                lattice.getVertexForRawCharIndex(1),
+                                rawMask));
+            ala_builder.addEdge(lattice.firstOutEdge(
+                                lattice.getVertexForRawCharIndex(2),
+                                rawMask));
 
-        Lattice::Partition first_blank_partition;
-        first_blank_partition.links.push_back(lattice.firstOutEdge(
-            lattice.getVertexForRawCharIndex(3),
-            rawMask
-        ));
-        lattice.addEdge(post_ala, pre_ma, blank_token, token_tag, 0, first_blank_partition);
+            lattice.addEdge(pre_ala, post_ala, word_token, token_tag, ala_builder.build());
+        }
 
-        Lattice::Partition ma_partition;
-        ma_partition.links.push_back(lattice.firstOutEdge(
-            lattice.getVertexForRawCharIndex(4),
-            rawMask
-        ));
-        ma_partition.links.push_back(lattice.firstOutEdge(
-            lattice.getVertexForRawCharIndex(5),
-            rawMask
-        ));
-        lattice.addEdge(pre_ma, post_ma, word_token, token_tag, 0, ma_partition);
+        {
+            Lattice::EdgeSequence::Builder first_blank_builder;
+            first_blank_builder.addEdge(lattice.firstOutEdge(
+                                            lattice.getVertexForRawCharIndex(3),
+                                            rawMask));
+            lattice.addEdge(post_ala, pre_ma, blank_token, token_tag, first_blank_builder.build());
+        }
 
-        Lattice::Partition second_blank_partition;
-        second_blank_partition.links.push_back(lattice.firstOutEdge(
-            lattice.getVertexForRawCharIndex(6),
-            rawMask
-        ));
-        lattice.addEdge(post_ma, pre_kota, blank_token, token_tag, 0, second_blank_partition);
+        {
+            Lattice::EdgeSequence::Builder ma_builder;
+            ma_builder.addEdge(lattice.firstOutEdge(
+                                lattice.getVertexForRawCharIndex(4),
+                                rawMask));
+            ma_builder.addEdge(lattice.firstOutEdge(
+                                lattice.getVertexForRawCharIndex(5),
+                                rawMask));
+            lattice.addEdge(pre_ma, post_ma, word_token, token_tag, ma_builder.build());
+        }
 
-        Lattice::Partition kota_partition;
-        kota_partition.links.push_back(lattice.firstOutEdge(
-            lattice.getVertexForRawCharIndex(7),
-            rawMask
-        ));
-        kota_partition.links.push_back(lattice.firstOutEdge(
-            lattice.getVertexForRawCharIndex(8),
-            rawMask
-        ));
-        kota_partition.links.push_back(lattice.firstOutEdge(
-            lattice.getVertexForRawCharIndex(9),
-            rawMask
-        ));
-        kota_partition.links.push_back(lattice.firstOutEdge(
-            lattice.getVertexForRawCharIndex(10),
-            rawMask
-        ));
-        lattice.addEdge(pre_kota, post_kota, word_token, token_tag, 0, kota_partition);
+        {
+            Lattice::EdgeSequence::Builder second_blank_builder;
+            second_blank_builder.addEdge(lattice.firstOutEdge(
+                                lattice.getVertexForRawCharIndex(6),
+                                rawMask));
+            lattice.addEdge(post_ma, pre_kota, blank_token, token_tag, second_blank_builder.build());
+        }
+
+        {
+            Lattice::EdgeSequence::Builder kota_builder;
+            kota_builder.addEdge(lattice.firstOutEdge(
+                                lattice.getVertexForRawCharIndex(7),
+                                rawMask));
+            kota_builder.addEdge(lattice.firstOutEdge(
+                                lattice.getVertexForRawCharIndex(8),
+                                rawMask));
+            kota_builder.addEdge(lattice.firstOutEdge(
+                                lattice.getVertexForRawCharIndex(9),
+                                rawMask));
+            kota_builder.addEdge(lattice.firstOutEdge(
+                                lattice.getVertexForRawCharIndex(10),
+                                rawMask));
+            lattice.addEdge(pre_kota, post_kota, word_token, token_tag, kota_builder.build());
+        }
 
         LatticeWriter * writer = new PsiLatticeWriter();
 
@@ -247,22 +247,20 @@ public:
         AnnotationItem aiAla("'Ala'");
         lattice.getAnnotationItemManager().setValue(aiAla, "type", "word");
 
-        Lattice::Partition partitionAla;
-        partitionAla.links.push_back(lattice.firstOutEdge(
-            lattice.getVertexForRawCharIndex(0),
-            rawMask
-        ));
-        partitionAla.links.push_back(lattice.firstOutEdge(
-            lattice.getVertexForRawCharIndex(1),
-            rawMask
-        ));
-        partitionAla.links.push_back(lattice.firstOutEdge(
-            lattice.getVertexForRawCharIndex(2),
-            rawMask
-        ));
+
+        Lattice::EdgeSequence::Builder alaBuilder;
+        alaBuilder.addEdge(lattice.firstOutEdge(
+                               lattice.getVertexForRawCharIndex(0),
+                               rawMask));
+        alaBuilder.addEdge(lattice.firstOutEdge(
+                               lattice.getVertexForRawCharIndex(1),
+                               rawMask));
+        alaBuilder.addEdge(lattice.firstOutEdge(
+                               lattice.getVertexForRawCharIndex(2),
+                               rawMask));
 
         Lattice::EdgeDescriptor edgeAla
-            = lattice.addEdge(preAla, postAla, aiAla, tokenTag, 0, partitionAla);
+            = lattice.addEdge(preAla, postAla, aiAla, tokenTag, alaBuilder.build());
 
 
         std::list<std::string> lemmaTagsetStr;
@@ -275,11 +273,11 @@ public:
         lattice.getAnnotationItemManager().setValue(aiAlaLemma, "pos", "R:4");
         lattice.getAnnotationItemManager().setValue(aiAlaLemma, "morpho", "ŻMP");
 
-        Lattice::Partition partitionAlaLemma;
-        partitionAlaLemma.links.push_back(edgeAla);
+        Lattice::EdgeSequence::Builder alaLemmaBuilder;
+        alaLemmaBuilder.addEdge(edgeAla);
 
         Lattice::EdgeDescriptor edgeAlaLemma
-            = lattice.addEdge(preAla, postAla, aiAlaLemma, lemmaTagsetTag, 0, partitionAlaLemma);
+            = lattice.addEdge(preAla, postAla, aiAlaLemma, lemmaTagsetTag, alaLemmaBuilder.build());
 
 
         std::list<std::string> parseGobioStr;
@@ -293,10 +291,10 @@ public:
         lattice.getAnnotationItemManager().setValue(aiRzeczownik, "L", "1");
         lattice.getAnnotationItemManager().setValue(aiRzeczownik, "P", "mian");
 
-        Lattice::Partition partitionRzeczownik;
-        partitionRzeczownik.links.push_back(edgeAlaLemma);
+        Lattice::EdgeSequence::Builder rzeczownikBuilder;
+        rzeczownikBuilder.addEdge(edgeAlaLemma);
 
-        lattice.addEdge(preAla, postAla, aiRzeczownik, parseGobioTag, 0, partitionRzeczownik);
+        lattice.addEdge(preAla, postAla, aiRzeczownik, parseGobioTag, rzeczownikBuilder.build());
 
 
         Lattice::VertexDescriptor preMa = lattice.getVertexForRawCharIndex(4);
@@ -304,32 +302,30 @@ public:
         AnnotationItem aiBlank("' '");
         lattice.getAnnotationItemManager().setValue(aiBlank, "type", "blank");
 
-        Lattice::Partition partitionBlank;
-        partitionBlank.links.push_back(lattice.firstOutEdge(
-            lattice.getVertexForRawCharIndex(3),
-            rawMask
-        ));
+        {
+            Lattice::EdgeSequence::Builder blankBuilder;
+            blankBuilder.addEdge(lattice.firstOutEdge(
+                                     lattice.getVertexForRawCharIndex(3),
+                                     rawMask));
 
-        lattice.addEdge(postAla, preMa, aiBlank, tokenTag, 0, partitionBlank);
-
+            lattice.addEdge(postAla, preMa, aiBlank, tokenTag, blankBuilder.build());
+        }
 
         Lattice::VertexDescriptor postMa = lattice.getVertexForRawCharIndex(6);
 
         AnnotationItem aiMa("'ma'");
         lattice.getAnnotationItemManager().setValue(aiMa, "type", "word");
 
-        Lattice::Partition partitionMa;
-        partitionMa.links.push_back(lattice.firstOutEdge(
-            lattice.getVertexForRawCharIndex(4),
-            rawMask
-        ));
-        partitionMa.links.push_back(lattice.firstOutEdge(
-            lattice.getVertexForRawCharIndex(5),
-            rawMask
-        ));
-
-        lattice.addEdge(preMa, postMa, aiMa, tokenTag, 0, partitionMa);
-
+        {
+            Lattice::EdgeSequence::Builder maBuilder;
+            maBuilder.addEdge(lattice.firstOutEdge(
+                                  lattice.getVertexForRawCharIndex(4),
+                                  rawMask));
+            maBuilder.addEdge(lattice.firstOutEdge(
+                                  lattice.getVertexForRawCharIndex(5),
+                                  rawMask));
+            lattice.addEdge(preMa, postMa, aiMa, tokenTag, maBuilder.build());
+        }
 
         Lattice::VertexDescriptor preKota = lattice.getVertexForRawCharIndex(12);
 

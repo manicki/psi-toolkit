@@ -86,7 +86,7 @@ public:
             AnnotationItem aItem,
             LayerTagCollection aTagList,
             Score aScore,
-            Partition& aPartition
+            Partition aPartition
         ): item(aItem), tagList(aTagList), score(aScore) {
             partitions.push_back(aPartition);
         }
@@ -121,26 +121,34 @@ public:
         EdgeSequence(const std::vector<EdgeDescriptor>& aLinks);
     };
 
-    struct Partition {
-        std::vector<EdgeDescriptor> links;
-        Score score;
-        int ruleId;
+    class Partition {
 
-        void addEdge(EdgeDescriptor edge) {
-            links.push_back(edge);
-        }
+    public:
+        Partition(LayerTagCollection aTagList,
+                  EdgeSequence aSequence = EdgeSequence(),
+                  Score aScore = 0,
+                  int aRuleId = -1);
 
-        int size() const {
-            return links.size();
-        }
+        size_t size() const;
 
-        EdgeDescriptor firstEdge() const {
-            return links.front();
-        }
+        typedef EdgeSequence::Iterator Iterator;
 
-        EdgeDescriptor lastEdge() const {
-            return links.back();
-        }
+        Iterator begin() const;
+
+        Iterator end() const;
+
+        EdgeDescriptor firstEdge() const;
+
+        EdgeDescriptor lastEdge() const;
+
+        const EdgeSequence& getSequence() const;
+
+    private:
+        EdgeSequence sequence_;
+        LayerTagCollection tagList_;
+        Score score_;
+        int ruleId_;
+
     };
 
     struct EdgeDescriptor {
@@ -308,8 +316,9 @@ public:
                            VertexDescriptor to,
                            const AnnotationItem& annotationItem,
                            LayerTagCollection tags,
+                           EdgeSequence sequence = EdgeSequence(),
                            Score score = 0.0,
-                           Partition partition = Partition());
+                           int ruleId = -1);
 
     // return outgoing edges which has at least one layer tag from `mask`
     InOutEdgesIterator outEdges(
@@ -359,19 +368,20 @@ public:
 
     const std::string& getAllText() const;
     const std::string getEdgeText(EdgeDescriptor edge) const;
-    const std::string getPartitionText(Partition partition) const;
+    const std::string getSequenceText(const EdgeSequence& sequence) const;
+    const std::string getPartitionText(const Partition& partition) const;
 
     void runCutter(Cutter& cutter, LayerTagMask mask);
 
     /**
      * Get a path starting with `vertex` composed of edges matching `mask`.
      * The final vertex of the returned path will be assigned to `vertex`.
-     * The path is returned as a partition.
+     * The path is returned as an edge sequence.
      *
      * If there are multiple outgoing edges matching `mask` the best
      * one is chosen (the last one with the higher score).
      */
-    Lattice::Partition getPath(VertexDescriptor& vertex, LayerTagMask mask);
+    Lattice::EdgeSequence getPath(VertexDescriptor& vertex, LayerTagMask mask);
 
 private:
 
@@ -400,11 +410,14 @@ private:
 
     size_t symbolLength_(int ix) const;
 
+    VertexDescriptor firstSequenceVertex_(const EdgeSequence& sequence) const;
+    VertexDescriptor lastSequenceVertex_(const EdgeSequence& sequence) const;
     VertexDescriptor firstPartitionVertex_(const Partition& partition) const;
     VertexDescriptor lastPartitionVertex_(const Partition& partition) const;
-    Partition cutPartitionByTextLength_(const Partition& partition,
-                                        std::vector<EdgeDescriptor>::const_iterator& partitionIterator,
-                                        int length);
+
+    EdgeSequence cutSequenceByTextLength_(const EdgeSequence& partition,
+                                          EdgeSequence::Iterator& sequenceIterator,
+                                          int length);
 
     struct HashFun {
         HASH_WRAPPER_EXTRA_STUFF

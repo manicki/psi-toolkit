@@ -35,9 +35,10 @@ void UTTLatticeReader::Worker::doRun() {
 
                 LayerTagMask rawMask = lattice_.getLayerTagManager().getMask("raw");
 
-                Lattice::Partition partition;
+                Lattice::EdgeSequence::Builder seqBuilder;
+
                 for (int i = item.position; i < item.position + item.length; ++i) {
-                    partition.links.push_back(
+                    seqBuilder.addEdge(
                         lattice_.firstOutEdge(lattice_.getVertexForRawCharIndex(i), rawMask)
                     );
                 }
@@ -47,8 +48,7 @@ void UTTLatticeReader::Worker::doRun() {
                     lattice_.getVertexForRawCharIndex(item.position + item.length),
                     AnnotationItem(item.form),
                     lattice_.getLayerTagManager().createSingletonTagCollection("token"),
-                    0.0,
-                    partition
+                    seqBuilder.build()
                 );
 
                 sentenceForm += item.form;
@@ -66,10 +66,10 @@ void UTTLatticeReader::Worker::doRun() {
 
                 LayerTagMask tokenMask = lattice_.getLayerTagManager().getMask("token");
 
-                Lattice::Partition sentencePartition;
+                Lattice::EdgeSequence::Builder sentenceBuilder;
                 for (int i = beginningOfSentencePosition; i < item.position + item.length; ++i) {
                     try {
-                        sentencePartition.links.push_back(
+                        sentenceBuilder.addEdge(
                             lattice_.firstOutEdge(lattice_.getVertexForRawCharIndex(i), tokenMask)
                         );
                     } catch (NoEdgeException) { }
@@ -80,8 +80,7 @@ void UTTLatticeReader::Worker::doRun() {
                     lattice_.getVertexForRawCharIndex(item.position + item.length),
                     AnnotationItem(sentenceForm),
                     lattice_.getLayerTagManager().createSingletonTagCollection("sentence"),
-                    0.0,
-                    sentencePartition
+                    sentenceBuilder.build()
                 );
 
             }

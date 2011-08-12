@@ -54,9 +54,10 @@ Lattice::EdgeDescriptor Lattice::addEdge(
     VertexDescriptor to,
     const AnnotationItem& annotationItem,
     LayerTagCollection tags,
+    EdgeSequence sequence,
     Score score,
-    Partition partition
-) {
+    int ruleId)
+{
 
     std::pair<Graph::edge_descriptor, bool> result;
 
@@ -132,7 +133,7 @@ Lattice::EdgeDescriptor Lattice::addEdge(
         result = boost::add_edge(
             boost_from,
             boost_to,
-            EdgeEntry(annotationItem, tags, score, partition),
+            EdgeEntry(annotationItem, tags, score, Partition(tags, sequence, score, ruleId)),
             graph_
         );
 
@@ -341,27 +342,31 @@ const std::string Lattice::getEdgeText(EdgeDescriptor edge) const {
     return allText_.substr(getEdgeBeginIndex(edge), getEdgeLength(edge));
 }
 
-const std::string Lattice::getPartitionText(Partition partition) const {
+const std::string Lattice::getSequenceText(const EdgeSequence& sequence) const {
     std::string r;
 
-    for(std::vector<EdgeDescriptor>::iterator it = partition.links.begin();
-        it != partition.links.end();
+    for(EdgeSequence::Iterator it = sequence.begin();
+        it != sequence.end();
         ++it)
         r += getEdgeText(*it);
 
     return r;
 }
 
+const std::string Lattice::getPartitionText(const Partition& partition) const {
+    return getSequenceText(partition.getSequence());
+}
+
 
 void Lattice::runCutter(Cutter& cutter, LayerTagMask mask) {
     VertexDescriptor vertex = getFirstVertex();
 
-    Partition partition = getPath(vertex, mask);
+    EdgeSequence sequence = getPath(vertex, mask);
 
-    std::string text = getPartitionText(partition);
+    std::string text = getSequenceText(sequence);
 
     size_t pos = 0;
-    std::vector<EdgeDescriptor>::const_iterator partitionIter = partition.links.begin();
+    EdgeSequence::Iterator sequenceIter = sequence.begin();
 
     LayerTagCollection tags = layerTagManager_.createTagCollection(cutter.layerTags());
 
@@ -372,22 +377,21 @@ void Lattice::runCutter(Cutter& cutter, LayerTagMask mask) {
 
         int itemLength = (pos == std::string::npos ? text.length() : pos) - prevPos;
 
-        Partition itemPartition = cutPartitionByTextLength_(partition, partitionIter, itemLength);
+        EdgeSequence itemSequence = cutSequenceByTextLength_(sequence, sequenceIter, itemLength);
 
-        addEdge(firstPartitionVertex_(itemPartition),
-                lastPartitionVertex_(itemPartition),
+        addEdge(firstSequenceVertex_(itemSequence),
+                lastSequenceVertex_(itemSequence),
                 item,
                 tags,
-                0.0,
-                itemPartition);
+                itemSequence);
 
     } while (pos != std::string::npos);
 }
 
-Lattice::Partition Lattice::getPath(VertexDescriptor& vertex, LayerTagMask mask) {
+Lattice::EdgeSequence Lattice::getPath(VertexDescriptor& vertex, LayerTagMask mask) {
     bool nextVertexFound = true;
 
-    Lattice::Partition path;
+    Lattice::EdgeSequence::Builder pathBuilder;
 
     do {
         InOutEdgesIterator iter = outEdges(vertex, mask);
@@ -398,14 +402,14 @@ Lattice::Partition Lattice::getPath(VertexDescriptor& vertex, LayerTagMask mask)
             while (iter.hasNext())
                 bestOne = iter.next();
 
-            path.addEdge(bestOne);
+            pathBuilder.addEdge(bestOne);
             vertex = getEdgeTarget(bestOne);
         } else
             nextVertexFound = false;
 
     } while(nextVertexFound);
 
-    return path;
+    return pathBuilder.build();
 }
 
 int Lattice::addTagCollectionIndex_(LayerTagCollection tags) {
@@ -502,27 +506,68 @@ Lattice::EdgeSequence::EdgeSequence(const std::vector<EdgeDescriptor>& aLinks) {
 }
 
 
+Lattice::Partition::Partition(LayerTagCollection aTagList,
+                              EdgeSequence aSequence,
+                              Score aScore,
+                              int aRuleId):
+    sequence_(aSequence), tagList_(aTagList), score_(aScore), ruleId_(aRuleId) {
+}
+
+size_t Lattice::Partition::size() const {
+    return sequence_.size();
+}
+
+
+Lattice::Partition::Iterator Lattice::Partition::begin() const {
+    return sequence_.begin();
+}
+
+Lattice::Partition::Iterator Lattice::Partition::end() const {
+    return sequence_.end();
+}
+
+
+Lattice::EdgeDescriptor Lattice::Partition::firstEdge() const {
+    return sequence_.firstEdge();
+}
+
+Lattice::EdgeDescriptor Lattice::Partition::lastEdge() const {
+    return sequence_.lastEdge();
+}
+
+const Lattice::EdgeSequence& Lattice::Partition::getSequence() const {
+    return sequence_;
+}
+
+Lattice::VertexDescriptor Lattice::firstSequenceVertex_(const EdgeSequence& sequence) const {
+    return getEdgeSource(sequence.firstEdge());
+}
+
+Lattice::VertexDescriptor Lattice::lastSequenceVertex_(const EdgeSequence& sequence) const {
+    return getEdgeTarget(sequence.lastEdge());
+}
+
 Lattice::VertexDescriptor Lattice::firstPartitionVertex_(const Partition& partition) const {
-    return getEdgeSource(partition.firstEdge());
+    return firstSequenceVertex_(partition.getSequence());
 }
 
 Lattice::VertexDescriptor Lattice::lastPartitionVertex_(const Partition& partition) const {
-    return getEdgeTarget(partition.lastEdge());
+    return lastSequenceVertex_(partition.getSequence());
 }
 
-Lattice::Partition Lattice::cutPartitionByTextLength_(const Partition& partition,
-                                                      std::vector<EdgeDescriptor>::const_iterator& partitionIterator,
-                                                      int length) {
+Lattice::EdgeSequence Lattice::cutSequenceByTextLength_(const EdgeSequence& sequence,
+                                                    EdgeSequence::Iterator& sequenceIterator,
+                                                    int length) {
     int lengthGathered = 0;
 
-    Partition ret;
+    EdgeSequence::Builder sequenceBuilder;
 
     for(;
-        partitionIterator != partition.links.end() && lengthGathered < length;
-        lengthGathered += getEdgeText(*partitionIterator).length(), ++partitionIterator)
-        ret.links.push_back(*partitionIterator);
+        sequenceIterator != sequence.end() && lengthGathered < length;
+        lengthGathered += getEdgeText(*sequenceIterator).length(), ++sequenceIterator)
+        sequenceBuilder.addEdge(*sequenceIterator);
 
-    return ret;
+    return sequenceBuilder.build();
 }
 
 

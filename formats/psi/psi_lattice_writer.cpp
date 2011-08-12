@@ -126,8 +126,8 @@ void PsiLatticeWriter::Worker::doRun() {
         ) {
             std::stringstream linkSs;
             for (
-                std::vector<Lattice::EdgeDescriptor>::iterator ei = (*pi).links.begin();
-                ei != (*pi).links.end();
+                Lattice::Partition::Iterator ei = (*pi).begin();
+                ei != (*pi).end();
                 ++ei
             ) {
                 std::map<Lattice::EdgeDescriptor, int>::iterator mi = edgeOrdinalMap.find(*ei);
