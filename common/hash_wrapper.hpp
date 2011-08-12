@@ -1,8 +1,44 @@
 #ifndef HASH_WRAPPER_HDR
 #define HASH_WRAPPER_HDR
 
+#define USE_UNORDERED
 
-#ifdef __GNUC__
+#ifdef USE_UNORDERED
+
+#include <tr1/unordered_map>
+#include <tr1/unordered_set>
+
+template<class A, class B>
+struct HashWrapper {
+    typedef std::tr1::unordered_map<A,B> type;
+};
+
+template<class A, class B, class C>
+struct HashWrapper3 {
+    typedef std::tr1::unordered_map<A,B,C> type;
+};
+
+template<class A>
+struct HashWrapperSet {
+    typedef std::tr1::unordered_set<A> type;
+};
+
+template<class A, class B>
+struct HashWrapperSet2 {
+    typedef std::tr1::unordered_set<A,B> type;
+};
+
+#define HASH_WRAPPER_HASH_INTRO namespace std::tr1 {
+
+#define HASH_WRAPPER_HASH_OUTRO };
+
+#define HASH_WRAPPER_HASH_TRAITS hash
+
+#define HASH_WRAPPER_FULL_HASH_TRAITS std::tr1::hash
+
+#define HASH_WRAPPER_EXTRA_STUFF
+
+#elif __GNUC__
 
 
 #include <ext/hash_map>
