@@ -461,6 +461,47 @@ size_t Lattice::symbolLength_(int ix) const {
     return symbol.length();
 }
 
+
+Lattice::EdgeSequence::EdgeSequence() {
+}
+
+Lattice::EdgeSequence::Iterator Lattice::EdgeSequence::begin() const {
+    return links.begin();
+}
+
+Lattice::EdgeSequence::Iterator Lattice::EdgeSequence::end() const {
+    return links.end();
+}
+
+Lattice::EdgeDescriptor Lattice::EdgeSequence::firstEdge() const {
+    return links.front();
+}
+
+Lattice::EdgeDescriptor Lattice::EdgeSequence::lastEdge() const {
+    return links.back();
+}
+
+size_t Lattice::EdgeSequence::size() const {
+    return links.size();
+}
+
+Lattice::EdgeSequence::Builder& Lattice::EdgeSequence::Builder::addEdge(EdgeDescriptor edge) {
+    links.push_back(edge);
+
+    return *this;
+}
+
+Lattice::EdgeSequence Lattice::EdgeSequence::Builder::build() {
+    Lattice::EdgeSequence seq(links);
+
+    return seq;
+}
+
+Lattice::EdgeSequence::EdgeSequence(const std::vector<EdgeDescriptor>& aLinks) {
+    links = aLinks;
+}
+
+
 Lattice::VertexDescriptor Lattice::firstPartitionVertex_(const Partition& partition) const {
     return getEdgeSource(partition.firstEdge());
 }

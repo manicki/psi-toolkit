@@ -92,8 +92,39 @@ public:
         }
     };
 
+    class EdgeSequence {
+    public:
+        typedef std::vector<EdgeDescriptor>::const_iterator Iterator;
+
+        EdgeSequence();
+
+        Iterator begin() const;
+
+        Iterator end () const;
+
+        EdgeDescriptor firstEdge() const;
+
+        EdgeDescriptor lastEdge() const;
+
+        size_t size() const;
+
+        class Builder {
+        public:
+            Builder& addEdge(EdgeDescriptor edge);
+            EdgeSequence build();
+        private:
+            std::vector<EdgeDescriptor> links;
+        };
+
+    private:
+        std::vector<EdgeDescriptor> links;
+        EdgeSequence(const std::vector<EdgeDescriptor>& aLinks);
+    };
+
     struct Partition {
         std::vector<EdgeDescriptor> links;
+        Score score;
+        int ruleId;
 
         void addEdge(EdgeDescriptor edge) {
             links.push_back(edge);
@@ -110,7 +141,6 @@ public:
         EdgeDescriptor lastEdge() const {
             return links.back();
         }
-
     };
 
     struct EdgeDescriptor {
