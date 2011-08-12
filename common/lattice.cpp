@@ -242,7 +242,7 @@ Lattice::EdgeDescriptor Lattice::firstInEdge(
 }
 
 Lattice::EdgesSortedBySourceIterator Lattice::edgesSortedBySource(LayerTagMask mask) {
-    return Lattice::EdgesSortedBySourceIterator(this, mask);
+    return Lattice::EdgesSortedBySourceIterator(*this, mask);
 }
 
 Lattice::EdgesSortedBySourceIterator Lattice::allEdgesSortedBySource() {
@@ -250,7 +250,7 @@ Lattice::EdgesSortedBySourceIterator Lattice::allEdgesSortedBySource() {
 }
 
 Lattice::EdgesSortedByTargetIterator Lattice::edgesSortedByTarget(LayerTagMask mask) {
-    return Lattice::EdgesSortedByTargetIterator(this, mask);
+    return Lattice::EdgesSortedByTargetIterator(*this, mask);
 }
 
 Lattice::EdgesSortedByTargetIterator Lattice::allEdgesSortedByTarget() {
@@ -486,11 +486,11 @@ Lattice::Partition Lattice::cutPartitionByTextLength_(const Partition& partition
 
 
 bool Lattice::VertexIterator::hasNext() {
-    while (vd_ <= (int)lattice_->allText_.length()) {
+    while (vd_ <= (int)lattice_.allText_.length()) {
         if (
-            lattice_->vertices_.find(vd_) != lattice_->vertices_.end()
-            || lattice_->implicitOutEdges_[vd_]
-            || (vd_ > 0 && lattice_->implicitOutEdges_[lattice_->priorVertex_(vd_)])
+            lattice_.vertices_.find(vd_) != lattice_.vertices_.end()
+            || lattice_.implicitOutEdges_[vd_]
+            || (vd_ > 0 && lattice_.implicitOutEdges_[lattice_.priorVertex_(vd_)])
         ) {
             return true;
         }
@@ -500,11 +500,11 @@ bool Lattice::VertexIterator::hasNext() {
 }
 
 Lattice::VertexDescriptor Lattice::VertexIterator::next() {
-    while (vd_ <= (int)lattice_->allText_.length()) {
+    while (vd_ <= (int)lattice_.allText_.length()) {
         if (
-            lattice_->vertices_.find(vd_) != lattice_->vertices_.end()
-            || lattice_->implicitOutEdges_[vd_]
-            || (vd_ > 0 && lattice_->implicitOutEdges_[lattice_->priorVertex_(vd_)])
+            lattice_.vertices_.find(vd_) != lattice_.vertices_.end()
+            || lattice_.implicitOutEdges_[vd_]
+            || (vd_ > 0 && lattice_.implicitOutEdges_[lattice_.priorVertex_(vd_)])
         ) {
             return vd_++;
         }
@@ -552,7 +552,7 @@ Lattice::EdgeDescriptor Lattice::InOutEdgesIterator::next() {
 
 
 Lattice::SortedEdgesIterator::SortedEdgesIterator(
-    Lattice * lattice,
+    Lattice& lattice,
     LayerTagMask mask
 ) :
     lattice_(lattice),
@@ -584,29 +584,29 @@ Lattice::SortedEdgesIterator::~SortedEdgesIterator() {
 }
 
 Lattice::EdgesSortedBySourceIterator::EdgesSortedBySourceIterator(
-    Lattice * lattice,
+    Lattice& lattice,
     LayerTagMask mask
 ) : SortedEdgesIterator(lattice, mask) {
-    ei_ = lattice_->outEdges(0, mask_);
+    ei_ = lattice_.outEdges(0, mask_);
 }
 
 Lattice::InOutEdgesIterator Lattice::EdgesSortedBySourceIterator::getEdgesIterator_(
     Lattice::VertexDescriptor vd
 ) {
-    return lattice_->outEdges(vd, mask_);
+    return lattice_.outEdges(vd, mask_);
 }
 
 Lattice::EdgesSortedByTargetIterator::EdgesSortedByTargetIterator(
-    Lattice * lattice,
+    Lattice& lattice,
     LayerTagMask mask
 ) : SortedEdgesIterator(lattice, mask) {
-    ei_ = lattice_->inEdges(0, mask_);
+    ei_ = lattice_.inEdges(0, mask_);
 }
 
 Lattice::InOutEdgesIterator Lattice::EdgesSortedByTargetIterator::getEdgesIterator_(
     Lattice::VertexDescriptor vd
 ) {
-    return lattice_->inEdges(vd, mask_);
+    return lattice_.inEdges(vd, mask_);
 }
 
 

@@ -143,11 +143,11 @@ public:
 
     class VertexIterator {
     public:
-        VertexIterator(Lattice * lattice) : lattice_(lattice), vd_(0) { }
+        VertexIterator(Lattice& lattice) : lattice_(lattice), vd_(0) { }
         bool hasNext();
         VertexDescriptor next();
     private:
-        Lattice * lattice_;
+        Lattice& lattice_;
         VertexDescriptor vd_;
     };
 
@@ -206,12 +206,12 @@ public:
 
     class SortedEdgesIterator {
     public:
-        SortedEdgesIterator(Lattice * lattice, LayerTagMask mask);
+        SortedEdgesIterator(Lattice& lattice, LayerTagMask mask);
         bool hasNext();
         EdgeDescriptor next();
         virtual ~SortedEdgesIterator();
     protected:
-        Lattice * lattice_;
+        Lattice& lattice_;
         LayerTagMask mask_;
         InOutEdgesIterator ei_;
     private:
@@ -221,14 +221,14 @@ public:
 
     class EdgesSortedBySourceIterator : public SortedEdgesIterator {
     public:
-        EdgesSortedBySourceIterator(Lattice * lattice, LayerTagMask mask);
+        EdgesSortedBySourceIterator(Lattice& lattice, LayerTagMask mask);
     private:
         virtual InOutEdgesIterator getEdgesIterator_(VertexDescriptor vd);
     };
 
     class EdgesSortedByTargetIterator : public SortedEdgesIterator {
     public:
-        EdgesSortedByTargetIterator(Lattice * lattice, LayerTagMask mask);
+        EdgesSortedByTargetIterator(Lattice& lattice, LayerTagMask mask);
     private:
         virtual InOutEdgesIterator getEdgesIterator_(VertexDescriptor vd);
     };
