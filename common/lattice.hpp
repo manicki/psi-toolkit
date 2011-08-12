@@ -77,17 +77,17 @@ public:
     struct Partition;
 
     struct EdgeEntry {
-        AnnotationItem category;
+        AnnotationItem item;
         LayerTagCollection tagList;
         Score score;
         std::list<Partition> partitions;
 
         EdgeEntry(
-            AnnotationItem aCategory,
+            AnnotationItem aItem,
             LayerTagCollection aTagList,
             Score aScore,
             Partition& aPartition
-        ): category(aCategory), tagList(aTagList), score(aScore) {
+        ): item(aItem), tagList(aTagList), score(aScore) {
             partitions.push_back(aPartition);
         }
     };

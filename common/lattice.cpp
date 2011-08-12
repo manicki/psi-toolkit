@@ -267,7 +267,7 @@ AnnotationItemManager& Lattice::getAnnotationItemManager() {
 
 const AnnotationItem Lattice::getEdgeAnnotationItem(Lattice::EdgeDescriptor edge) {
     if (edge.implicitIndex < 0) {
-        return graph_[edge.descriptor].category;
+        return graph_[edge.descriptor].item;
     }
     std::string::iterator iter = allText_.begin() + edge.implicitIndex;
     std::string::iterator end = allText_.end();
