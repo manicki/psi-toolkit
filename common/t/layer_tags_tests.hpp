@@ -22,7 +22,7 @@ public:
         TS_ASSERT(tags_foo_bar.isNonempty());
 
         std::list<std::string> tag_list = layer_tag_manager.getTagNames(tags_foo_bar);
-        TS_ASSERT_EQUALS(tag_list.size(), 2);
+        TS_ASSERT_EQUALS(tag_list.size(), 2U);
         TS_ASSERT_EQUALS(tag_list.front(), "bar");
         TS_ASSERT_EQUALS(tag_list.back(), "foo");
     }
