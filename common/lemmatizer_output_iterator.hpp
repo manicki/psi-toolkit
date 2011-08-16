@@ -1,6 +1,9 @@
 #ifndef DESCRIPTION_OUTPUT_ITERATOR_HDR
 #define DESCRIPTION_OUTPUT_ITERATOR_HDR
 
+#include <string>
+
+#include "annotation_item.hpp"
 #include "lattice.hpp"
 
 /**
@@ -9,45 +12,50 @@
  */
 class LemmatizerOutputIterator {
 public:
+    // usually spell checking correction
     void addCorrection(
         const std::string correction,
-        Lattice::Score score,
-        int ruleId);
+        Lattice::Score score=0,
+        int ruleId=-1);
 
+    // usually truecasing
     void addNormalization(
         const std::string normalization,
-        Lattice::Score score,
-        int ruleId);
+        Lattice::Score score=0,
+        int ruleId=-1);
 
-    void addLexeme(
+    void addLemma(
         const AnnotationItem& item,
-        Lattice::Score score,
-        int ruleId);
-    
+        Lattice::Score score=0,
+        int ruleId=-1);
+
     void addForm(
         const AnnotationItem& item,
-        Lattice::Score score,
-        int ruleId);
+        Lattice::Score score=0,
+        int ruleId=-1);
+
+    virtual ~LemmatizerOutputIterator();
+
 private:
     virtual void doAddCorrection(
         const std::string correction,
         Lattice::Score score,
-        int ruleId);
+        int ruleId) = 0;
 
     virtual void doAddNormalization(
         const std::string normalization,
         Lattice::Score score,
-        int ruleId);
+        int ruleId) = 0;
 
-    virtual void doAddLexeme(
+    virtual void doAddLemma(
         const AnnotationItem& item,
         Lattice::Score score,
-        int ruleId);
-    
+        int ruleId) = 0;
+
     virtual void doAddForm(
         const AnnotationItem& item,
         Lattice::Score score,
-        int ruleId);
+        int ruleId) = 0;
 };
 
 #endif

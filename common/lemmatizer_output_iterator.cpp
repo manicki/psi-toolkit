@@ -14,17 +14,20 @@ void LemmatizerOutputIterator::addNormalization(
     doAddNormalization(normalization, score, ruleId);
 }
 
-void LemmatizerOutputIterator::addLexeme(
+void LemmatizerOutputIterator::addLemma(
     const AnnotationItem& item,
     Lattice::Score score,
     int ruleId) {
-    doAddLexeme(item, score, ruleId);
+    doAddLemma(item, score, ruleId);
 }
-    
+
 void LemmatizerOutputIterator::addForm(
     const AnnotationItem& item,
     Lattice::Score score,
     int ruleId) {
     doAddForm(item, score, ruleId);
+}
+
+LemmatizerOutputIterator::~LemmatizerOutputIterator() {
 }
 

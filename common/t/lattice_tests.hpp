@@ -3,6 +3,8 @@
 #include "annotation_item.hpp"
 
 #include "by_spaces_cutter.hpp"
+#include "fake_lemmatizer.hpp"
+#include "lemmatizer_annotator.hpp"
 
 class LatticeTests : public CxxTest::TestSuite
 {
@@ -212,6 +214,49 @@ public:
             "'rower'");
 
         TS_ASSERT(!tokenIter.hasNext());
+    }
+
+    void test_lemmatizer() {
+        Lattice lattice;
+        lattice.appendStringWithSymbols("prowokacjami");
+
+        BySpacesCutter cutter;
+
+        LayerTagMask symbolMask = lattice.getLayerTagManager().getMask("symbol");
+
+        lattice.runCutter(cutter, symbolMask);
+
+        LemmatizerAnnotator<FakeLemmatizer> annotator;
+
+        annotator.annotate(lattice);
+
+        // now checking
+
+        {
+            LayerTagMask lemmaMask_ = lattice.getLayerTagManager().getMask("lemma");
+            Lattice::EdgesSortedByTargetIterator lemmaIter = lattice.edgesSortedByTarget(lemmaMask_);
+
+            TS_ASSERT(lemmaIter.hasNext());
+            Lattice::EdgeDescriptor prowokacjamiLemma = lemmaIter.next();
+            AnnotationItem prowokacjamiItem = lattice.getEdgeAnnotationItem(prowokacjamiLemma);
+
+            TS_ASSERT_EQUALS(prowokacjamiItem.getCategory(), "'$prowokacja'");
+
+            TS_ASSERT(!lemmaIter.hasNext());
+        }
+
+        {
+            LayerTagMask formMask_ = lattice.getLayerTagManager().getMask("form");
+            Lattice::EdgesSortedByTargetIterator formIter = lattice.edgesSortedByTarget(formMask_);
+
+            TS_ASSERT(formIter.hasNext());
+            Lattice::EdgeDescriptor prowokacjamiForm = formIter.next();
+            AnnotationItem prowokacjamiItem = lattice.getEdgeAnnotationItem(prowokacjamiForm);
+
+            TS_ASSERT_EQUALS(prowokacjamiItem.getCategory(), "'$prowokacja'");
+
+            TS_ASSERT(!formIter.hasNext());
+        }
     }
 
 };

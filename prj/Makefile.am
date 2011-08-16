@@ -47,6 +47,7 @@ runner_SOURCES = \
 	../common/layer_tag_collection.cpp \
 	../common/layer_tag_manager.cpp \
 	../common/layer_tag_mask.cpp \
+	../common/lemmatizer_output_iterator.cpp \
 	../common/processor.cpp \
 	../common/processor_factory.cpp \
 	../common/quoter.cpp \
@@ -54,6 +55,7 @@ runner_SOURCES = \
 	../common/utt_like_quoter.cpp \
 	../common/writer_worker.cpp \
 	../common/t/by_spaces_cutter.cpp \
+	../common/t/fake_lemmatizer.cpp \
 	../formats/psi/psi_lattice_reader.cpp \
 	../formats/psi/psi_lattice_writer.cpp \
 	../formats/psi/psi_quoter.cpp \
@@ -128,6 +130,7 @@ psi_pipe_SOURCES = \
 	../common/layer_tag_collection.cpp \
 	../common/layer_tag_manager.cpp \
 	../common/layer_tag_mask.cpp \
+	../common/lemmatizer_output_iterator.cpp \
 	../common/processor.cpp \
 	../common/processor_factory.cpp \
 	../common/quoter.cpp \
