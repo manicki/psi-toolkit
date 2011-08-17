@@ -8,8 +8,13 @@ std::string AnnotationItem::getCategory() const {
     return category_;
 }
 
+std::string AnnotationItem::getText() const {
+    return text_;
+}
+
 long AnnotationItem::getHash() const {
     std::string str = category_;
+    str += text_;
     for (
         std::vector<std::string>::const_iterator avi = values_.begin();
         avi != values_.end();
