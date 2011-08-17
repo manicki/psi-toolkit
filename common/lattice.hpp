@@ -373,6 +373,9 @@ public:
     const std::string getSequenceText(const EdgeSequence& sequence) const;
     const std::string getPartitionText(const Partition& partition) const;
 
+    const std::string getAnnotationText(EdgeDescriptor edge);
+    const std::string getAnnotationCategory(EdgeDescriptor edge);
+
     void runCutter(Cutter& cutter, LayerTagMask mask);
 
     /**

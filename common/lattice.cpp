@@ -358,6 +358,14 @@ const std::string Lattice::getPartitionText(const Partition& partition) const {
     return getSequenceText(partition.getSequence());
 }
 
+const std::string Lattice::getAnnotationText(EdgeDescriptor edge) {
+    return getEdgeAnnotationItem(edge).getText();
+}
+
+const std::string Lattice::getAnnotationCategory(EdgeDescriptor edge) {
+    return getEdgeAnnotationItem(edge).getCategory();
+}
+
 
 void Lattice::runCutter(Cutter& cutter, LayerTagMask mask) {
     VertexDescriptor vertex = getFirstVertex();

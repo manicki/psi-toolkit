@@ -139,11 +139,13 @@ public:
             while (edgeIterator.hasNext()) {
                 Lattice::EdgeDescriptor edge = edgeIterator.next();
 
-                WorkerOutputIterator outputIterator(lattice_, edge);
-                dynamic_cast<LemmatizerAnnotator&>(processor_).lemmatizer_.lemmatize(
-                    lattice_.getEdgeText(edge),
-                    lattice_.getAnnotationItemManager(),
-                    outputIterator);
+                if (lattice_.getAnnotationCategory(edge) == "word") {
+                    WorkerOutputIterator outputIterator(lattice_, edge);
+                    dynamic_cast<LemmatizerAnnotator&>(processor_).lemmatizer_.lemmatize(
+                        lattice_.getAnnotationText(edge),
+                        lattice_.getAnnotationItemManager(),
+                        outputIterator);
+                }
             }
         }
 

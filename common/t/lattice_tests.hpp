@@ -188,30 +188,40 @@ public:
 
         Lattice::EdgesSortedBySourceIterator tokenIter = lattice.edgesSortedBySource(tokenMask);
 
-        TS_ASSERT(tokenIter.hasNext());
-        TS_ASSERT_EQUALS(
-            lattice.getEdgeAnnotationItem(tokenIter.next()).getCategory(),
-            "'szybki'");
+        {
+            TS_ASSERT(tokenIter.hasNext());
+            AnnotationItem item = lattice.getEdgeAnnotationItem(tokenIter.next());
+            TS_ASSERT_EQUALS(item.getText(), "szybki");
+            TS_ASSERT_EQUALS(item.getCategory(), "word");
+        }
 
-        TS_ASSERT(tokenIter.hasNext());
-        TS_ASSERT_EQUALS(
-            lattice.getEdgeAnnotationItem(tokenIter.next()).getCategory(),
-            "' '");
+        {
+            TS_ASSERT(tokenIter.hasNext());
+            AnnotationItem item = lattice.getEdgeAnnotationItem(tokenIter.next());
+            TS_ASSERT_EQUALS(item.getText(), " ");
+            TS_ASSERT_EQUALS(item.getCategory(), "blank");
+        }
 
-        TS_ASSERT(tokenIter.hasNext());
-        TS_ASSERT_EQUALS(
-            lattice.getEdgeAnnotationItem(tokenIter.next()).getCategory(),
-            "'zielony'");
+        {
+            TS_ASSERT(tokenIter.hasNext());
+            AnnotationItem item = lattice.getEdgeAnnotationItem(tokenIter.next());
+            TS_ASSERT_EQUALS(item.getText(), "zielony");
+            TS_ASSERT_EQUALS(item.getCategory(), "word");
+        }
 
-        TS_ASSERT(tokenIter.hasNext());
-        TS_ASSERT_EQUALS(
-            lattice.getEdgeAnnotationItem(tokenIter.next()).getCategory(),
-            "' '");
+        {
+            TS_ASSERT(tokenIter.hasNext());
+            AnnotationItem item = lattice.getEdgeAnnotationItem(tokenIter.next());
+            TS_ASSERT_EQUALS(item.getText(), " ");
+            TS_ASSERT_EQUALS(item.getCategory(), "blank");
+        }
 
-        TS_ASSERT(tokenIter.hasNext());
-        TS_ASSERT_EQUALS(
-            lattice.getEdgeAnnotationItem(tokenIter.next()).getCategory(),
-            "'rower'");
+        {
+            TS_ASSERT(tokenIter.hasNext());
+            AnnotationItem item = lattice.getEdgeAnnotationItem(tokenIter.next());
+            TS_ASSERT_EQUALS(item.getText(), "rower");
+            TS_ASSERT_EQUALS(item.getCategory(), "word");
+        }
 
         TS_ASSERT(!tokenIter.hasNext());
     }
