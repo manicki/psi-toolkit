@@ -7,13 +7,14 @@ void FakeLemmatizer::lemmatize(const std::string token,
                                AnnotationItemManager& annotationItemManager,
                                LemmatizerOutputIterator& outputIterator) {
     if (token == "prowokacjami") {
-        AnnotationItem lemma("'$prowokacja'");
-        annotationItemManager.setValue(lemma, "pos", "R");
-        annotationItemManager.setValue(lemma, "flags", "4");
-        outputIterator.addLemma(lemma);
+        outputIterator.addLemma("prowokacja");
 
-        AnnotationItem form = lemma;
-        annotationItemManager.setValue(lemma, "morpho", "ŻNM");
+        AnnotationItem lexeme("R", "prowokacja_R");
+        annotationItemManager.setValue(lexeme, "flags", "4");
+        outputIterator.addLexeme(lexeme);
+
+        AnnotationItem form = lexeme;
+        annotationItemManager.setValue(form, "morpho", "ŻNM");
         outputIterator.addForm(form);
     }
 }

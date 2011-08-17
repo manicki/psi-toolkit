@@ -259,14 +259,15 @@ public:
         // now checking
 
         {
-            LayerTagMask lemmaMask_ = lattice.getLayerTagManager().getMask("lemma");
+            LayerTagMask lemmaMask_ = lattice.getLayerTagManager().getMask("lexeme");
             Lattice::EdgesSortedByTargetIterator lemmaIter = lattice.edgesSortedByTarget(lemmaMask_);
 
             TS_ASSERT(lemmaIter.hasNext());
             Lattice::EdgeDescriptor prowokacjamiLemma = lemmaIter.next();
             AnnotationItem prowokacjamiItem = lattice.getEdgeAnnotationItem(prowokacjamiLemma);
 
-            TS_ASSERT_EQUALS(prowokacjamiItem.getCategory(), "'$prowokacja'");
+            TS_ASSERT_EQUALS(prowokacjamiItem.getCategory(), "R");
+            TS_ASSERT_EQUALS(prowokacjamiItem.getText(), "prowokacja_R");
 
             TS_ASSERT(!lemmaIter.hasNext());
         }
@@ -279,7 +280,8 @@ public:
             Lattice::EdgeDescriptor prowokacjamiForm = formIter.next();
             AnnotationItem prowokacjamiItem = lattice.getEdgeAnnotationItem(prowokacjamiForm);
 
-            TS_ASSERT_EQUALS(prowokacjamiItem.getCategory(), "'$prowokacja'");
+            TS_ASSERT_EQUALS(prowokacjamiItem.getCategory(), "R");
+            TS_ASSERT_EQUALS(prowokacjamiItem.getText(), "prowokacja_R");
 
             TS_ASSERT(!formIter.hasNext());
         }

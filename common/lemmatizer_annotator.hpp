@@ -54,6 +54,7 @@ public:
         class WorkerOutputIterator : public LemmatizerOutputIterator {
         private:
             Lattice& lattice_;
+            LayerTagCollection normalizationTag_;
             LayerTagCollection lemmaTag_;
             LayerTagCollection lexemeTag_;
             LayerTagCollection formTag_;
@@ -66,8 +67,9 @@ public:
         public:
             WorkerOutputIterator(Lattice& lattice, Lattice::EdgeDescriptor tokenEdge)
                 :lattice_(lattice),
+                 normalizationTag_(lattice.getLayerTagManager().createSingletonTagCollection("normalization")),
                  lemmaTag_(lattice.getLayerTagManager().createSingletonTagCollection("lemma")),
-                 lemmaTag_(lattice.getLayerTagManager().createSingletonTagCollection("lexeme")),
+                 lexemeTag_(lattice.getLayerTagManager().createSingletonTagCollection("lexeme")),
                  formTag_(lattice.getLayerTagManager().createSingletonTagCollection("form")),
                  tokenEdge_(tokenEdge),
                  lastCorrection_(tokenEdge),
@@ -87,7 +89,43 @@ public:
                 const std::string& normalization,
                 Lattice::Score score,
                 int ruleId) {
-                ;
+
+                Lattice::EdgeSequence::Builder seqBuilder;
+                seqBuilder.addEdge(lastCorrection_);
+
+                AnnotationItem item("word", normalization);
+
+                lastNormalization_ =
+                    lattice_.addEdge(
+                        lattice_.getEdgeSource(lastCorrection_),
+                        lattice_.getEdgeTarget(lastCorrection_),
+                        item,
+                        normalizationTag_,
+                        seqBuilder.build(),
+                        score,
+                        ruleId);
+
+            }
+
+            virtual void doAddLemma(
+                const std::string& lemma,
+                Lattice::Score score,
+                int ruleId) {
+
+                Lattice::EdgeSequence::Builder seqBuilder;
+                seqBuilder.addEdge(lastNormalization_);
+
+                AnnotationItem item("word", lemma);
+
+                lastLemma_ =
+                    lattice_.addEdge(
+                        lattice_.getEdgeSource(lastNormalization_),
+                        lattice_.getEdgeTarget(lastNormalization_),
+                        item,
+                        lemmaTag_,
+                        seqBuilder.build(),
+                        score,
+                        ruleId);
             }
 
             virtual void doAddLexeme(
@@ -96,14 +134,14 @@ public:
                 int ruleId) {
 
                 Lattice::EdgeSequence::Builder seqBuilder;
-                seqBuilder.addEdge(lastNormalization_);
+                seqBuilder.addEdge(lastLemma_);
 
                 lastLexeme_ =
                     lattice_.addEdge(
                         lattice_.getEdgeSource(lastLemma_),
                         lattice_.getEdgeTarget(lastLemma_),
                         item,
-                        lemmaTag_,
+                        lexemeTag_,
                         seqBuilder.build(),
                         score,
                         ruleId);

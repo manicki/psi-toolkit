@@ -350,7 +350,6 @@ public:
         }
 
         TS_ASSERT_EQUALS(osstr.str(), contents);
-
     }
 
     void testPsiLatticeReader() {
@@ -361,7 +360,6 @@ public:
         reader->readIntoLattice("../formats/psi/t/files/pl_sample.txt", lattice);
 
         delete reader;
-
     }
 
 };
