@@ -22,12 +22,13 @@ class AddAction : public Action
     public:
         //AddAction(std::vector<InterpretationPair> aInterpretations, std::string aBase, int aTokenIndex, std::string uInterpretation);
         AddAction(std::vector<std::string> aInterpretations, std::string aBase,
-                int aTokenIndex, std::string uInterpretation);
+                int aTokenIndex, std::string uInterpretation,
+                LatticeWrapperPtr aLatticeWrapper);
         ~AddAction();
         //bool apply(Entities &entities, Edges &edges, int currentEntity, std::vector<int> matchedTokensSize);
-        bool apply(ParseGraphPtr pg, int currentEntity, std::vector<int> matchedTokensSize);
+        bool apply(ParseGraphPtr pg, Lattice &lattice, int currentEntity, std::vector<int> matchedTokensSize);
         //bool test(Entities entities, int currentEntity, std::vector<int> matchedTokensSize);
-        bool test(ParseGraphPtr pg, int currentEntity, std::vector<int> matchedTokensSize);
+        bool test(ParseGraphPtr pg, Lattice &lattice, int currentEntity, std::vector<int> matchedTokensSize);
         //void setInterpretations(std::vector<InterpretationPair> aInterpretations);
         //std::vector<InterpretationPair> getInterpretations();
         void setInterpretations(std::vector<std::string> aInterpretations);
@@ -49,6 +50,8 @@ class AddAction : public Action
         std::string type;
         bool verbose;
         std::string interpretation_;
+
+        LatticeWrapperPtr latticeWrapper;
 };
 
 typedef boost::shared_ptr<AddAction> AddActionPtr;

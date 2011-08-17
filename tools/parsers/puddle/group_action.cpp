@@ -16,8 +16,9 @@ namespace bonsai
     namespace puddle
     {
 
-GroupAction::GroupAction(std::string aGroup, int aStart, int aEnd, int aHead, std::string aRuleName)
-{
+GroupAction::GroupAction(std::string aGroup, unsigned int aStart,
+        unsigned int aEnd, unsigned int aHead,
+        std::string aRuleName, LatticeWrapperPtr aLatticeWrapper) {
     group = aGroup;
     start = aStart;
     end = aEnd;
@@ -34,6 +35,7 @@ GroupAction::GroupAction(std::string aGroup, int aStart, int aEnd, int aHead, st
     type = "group";
     ruleName = aRuleName;
     verbose = false;
+    latticeWrapper = aLatticeWrapper;
 }
 
 GroupAction::~GroupAction()
@@ -52,7 +54,7 @@ bool GroupAction::apply(ParseGraphPtr pg, Lattice &lattice,
     int realStart = 0;// start;
     int realEnd = 0;//start;
     int realHead = 0;//start;
-    int i = 0;
+    unsigned int i = 0;
     while (i < matchedTokensSize.size())
     {
         if (i < start)
@@ -109,9 +111,44 @@ bool GroupAction::apply(ParseGraphPtr pg, Lattice &lattice,
 
     TransitionInfo *edgeStart = util::getEdge(pg, currentEntity, realStart);
     Lattice::VertexDescriptor startVertex = currentEntity + realStart;
-    Lattice::EdgeDescriptor edgeStart2 = lattice.firstOutEdge(startVertex,
-            lattice.getLayerTagManager().getMask("lemma"));
-    /*std::cerr << lattice.getEdgeText(edgeStart2) << " " << lattice.getEdgeSource(edgeStart2) << " " << lattice.getEdgeTarget(edgeStart2) << " " << lattice.getEdgeBeginIndex(edgeStart2) << " " << lattice.getEdgeLength(edgeStart2) << std::endl;*/
+    Lattice::VertexDescriptor headVertex = currentEntity + realHead;
+    Lattice::VertexDescriptor endVertex = currentEntity + realEnd;
+    //Lattice::EdgeDescriptor edgeStart2 = lattice.firstOutEdge(startVertex,
+    //lattice.getLayerTagManager().getMask("lemma"));
+    //std::cerr << lattice.getEdgeText(edgeStart2) << " " << lattice.getEdgeSource(edgeStart2) << " " << lattice.getEdgeTarget(edgeStart2) << " " << lattice.getEdgeBeginIndex(edgeStart2) << " " << lattice.getEdgeLength(edgeStart2) << std::endl;
+    std::list<Lattice::EdgeDescriptor> startEdges = latticeWrapper->getTopEdges(
+            lattice, startVertex);
+    std::list<Lattice::EdgeDescriptor> headEdges = latticeWrapper->getTopEdges(
+            lattice, headVertex);
+    std::list<Lattice::EdgeDescriptor> endEdges = latticeWrapper->getTopEdges(
+            lattice, endVertex);
+    std::cerr << "head" << std::endl;
+    for (std::list<Lattice::EdgeDescriptor>::iterator edgeIt =
+            headEdges.begin(); edgeIt != headEdges.end(); edgeIt ++) {
+        std::cerr << lattice.getEdgeText(*edgeIt) << " " << lattice.getEdgeSource(*edgeIt) << " " << lattice.getEdgeTarget(*edgeIt) << " " << lattice.getEdgeBeginIndex(*edgeIt) << " " << lattice.getEdgeLength(*edgeIt) << std::endl;
+    }
+    std::list<Lattice::EdgeSequence> groupPartitions =
+        latticeWrapper->getEdgesRange(
+            lattice, startVertex, endVertex
+            );
+    std::cerr << "Partycje" << std::endl;
+    for (std::list<Lattice::EdgeSequence>::iterator partIt = groupPartitions.begin();
+            partIt != groupPartitions.end(); partIt ++) {
+        std::cerr << "!" << std::endl;
+        for (Lattice::EdgeSequence::Iterator edgeIt =
+                partIt->begin(); edgeIt != partIt->end(); edgeIt ++) {
+            std::cerr << lattice.getEdgeText(*edgeIt) << " " << lattice.getEdgeSource(*edgeIt) << " " << lattice.getEdgeTarget(*edgeIt) << " " << lattice.getEdgeBeginIndex(*edgeIt) << " " << lattice.getEdgeLength(*edgeIt) << std::endl;
+        }
+    }
+    latticeWrapper->addParseEdges(
+            lattice,
+            startEdges,
+            endEdges,
+            this->group,
+            headEdges,
+            groupPartitions
+            );
+
     TransitionInfo *edgeHead = util::getEdge(pg, currentEntity, realHead);
     TransitionInfo *edgeEnd = util::getEdge(pg, currentEntity, realEnd);
     group->setStart(edgeStart->getStart());
@@ -282,7 +319,7 @@ bool GroupAction::apply(ParseGraphPtr pg, Lattice &lattice,
 }
 
 //bool GroupAction::test(Entities entities, int currentEntity, std::vector<int> matchedTokensSize)
-bool GroupAction::test(ParseGraphPtr pg, int currentEntity,
+bool GroupAction::test(ParseGraphPtr pg, Lattice &lattice, int currentEntity,
         std::vector<int> matchedTokensSize) {
     //if (entities.size() < head)
     if ( (pg->num_vertices() - 1) < head) { //the last vertex is only the 'in-vertex', so it is not taken into consideration
@@ -302,7 +339,7 @@ std::string GroupAction::getGroup()
     return group;
 }
 
-int GroupAction::getHead()
+unsigned int GroupAction::getHead()
 {
     return head;
     //return (head + 1);
@@ -313,27 +350,27 @@ void GroupAction::setGroup(std::string aGroup)
     group = aGroup;
 }
 
-void GroupAction::setHead(int aHead)
+void GroupAction::setHead(unsigned int aHead)
 {
     head = aHead; // - 1;
 }
 
-int GroupAction::getStart()
+unsigned int GroupAction::getStart()
 {
     return start;
 }
 
-void GroupAction::setStart(int aStart)
+void GroupAction::setStart(unsigned int aStart)
 {
     start = aStart;
 }
 
-int GroupAction::getEnd()
+unsigned int GroupAction::getEnd()
 {
     return end;
 }
 
-void GroupAction::setEnd(int aEnd)
+void GroupAction::setEnd(unsigned int aEnd)
 {
     end = aEnd;
 }

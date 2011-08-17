@@ -18,20 +18,21 @@ namespace puddle
 class GroupAction : public Action
 {
     public:
-        GroupAction(std::string aGroup, int aStart, int aEnd, int aHead, std::string aRuleName);
+        GroupAction(std::string aGroup, unsigned int aStart, unsigned int aEnd, unsigned int aHead,
+                std::string aRuleName, LatticeWrapperPtr aLatticeWrapper);
         ~GroupAction();
         //bool apply(Entities &entities, Edges &edges, int currentEntity, std::vector<int> matchedTokensSize);
         bool apply(ParseGraphPtr pg, Lattice &lattice, int currentEntity, std::vector<int> matchedTokensSize);
         //bool test(Entities entities, int currentEntity, std::vector<int> matchedTokensSize);
-        bool test(ParseGraphPtr pg, int currentEntity, std::vector<int> matchedTokensSize);
+        bool test(ParseGraphPtr pg, Lattice &lattice, int currentEntity, std::vector<int> matchedTokensSize);
         std::string getGroup();
-        int getHead();
+        unsigned int getHead();
         void setGroup(std::string aGroup);
-        void setHead(int aHead);
-        int getStart();
-        void setStart(int aStart);
-        int getEnd();
-        void setEnd(int aEnd);
+        void setHead(unsigned int aHead);
+        unsigned int getStart();
+        void setStart(unsigned int aStart);
+        unsigned int getEnd();
+        void setEnd(unsigned int aEnd);
         std::string getRuleName();
         void setRuleName(std::string aRuleName);
 
@@ -40,11 +41,12 @@ class GroupAction : public Action
         void setVerbose() { verbose = true; }
     private:
         std::string group;
-        int head;
-        int start, end;
+        unsigned int head;
+        unsigned int start, end;
         std::string ruleName;
         std::string type;
         bool verbose;
+        LatticeWrapperPtr latticeWrapper;
 };
 
 typedef boost::shared_ptr<GroupAction> GroupActionPtr;

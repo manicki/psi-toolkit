@@ -14,7 +14,7 @@ namespace bonsai
 //SyntokAction::SyntokAction(int aStart, int aEnd, std::vector<int> aTokenIndexes, std::vector<InterpretationPair> aMorphology, std::string aRuleName, std::string uMorphology)
 SyntokAction::SyntokAction(int aStart, int aEnd, std::vector<int> aTokenIndices,
         std::vector<std::string> aMorphology, std::string aRuleName,
-        std::string uMorphology) {
+        std::string uMorphology, LatticeWrapperPtr aLatticeWrapper) {
     type = "syntok";
     start = aStart;
     end = aEnd;
@@ -28,6 +28,8 @@ SyntokAction::SyntokAction(int aStart, int aEnd, std::vector<int> aTokenIndices,
     morphology.insert(morphology.begin(), aMorphology.begin(), aMorphology.end());// = new std::vector<InterpretationPair>(aMorphology);
 
     morphology_ = uMorphology;
+
+    latticeWrapper = aLatticeWrapper;
 }
 
 SyntokAction::~SyntokAction()
@@ -41,7 +43,7 @@ SyntokAction::~SyntokAction()
 //1. ustalenie skad zaczynamy
 //2. zebranie scalonych form bazowych
 //3. wstawienie nowej krawedzi typu token albo grup (w zaleznosci od przelacznika) NOWOSC: wczesniej bylo, ze albo dawaj krawedz group albo nic. teraz musi byc krawedz ,jak graf to jedyna struktura. ewentualnei mozna dac na koniec opcje, wywal syntoki z grafu, przeliczyc reszte grafu
-bool SyntokAction::apply(ParseGraphPtr pg, int currentEntity,
+bool SyntokAction::apply(ParseGraphPtr pg, Lattice &lattice, int currentEntity,
         std::vector<int> matchedTokensSize) {
     int realStart = 0;// start;
     int realEnd = 0;//start;
@@ -86,6 +88,78 @@ bool SyntokAction::apply(ParseGraphPtr pg, int currentEntity,
                 base_forms.push_back(base);
             }
         }
+    }
+    Lattice::VertexDescriptor startVertex = currentEntity + realStart;
+    Lattice::VertexDescriptor endVertex = currentEntity + realEnd;
+    std::list<Lattice::EdgeDescriptor> startEdges = latticeWrapper->getTopEdges(
+            lattice, startVertex);
+    std::list<Lattice::EdgeDescriptor> endEdges = latticeWrapper->getTopEdges(
+            lattice, endVertex);
+    std::vector<std::string> baseForms;
+    std::string concatenatedOrth6 = "";
+    std::list<Lattice::EdgeSequence> edgeSequences =
+        latticeWrapper->getEdgesRange(
+                lattice, startVertex, endVertex
+                );
+    for (std::list<Lattice::EdgeSequence>::iterator sequenceIt =
+            edgeSequences.begin();
+            sequenceIt != edgeSequences.end();
+            sequenceIt ++) {
+        for (Lattice::EdgeSequence::Iterator edgeIt = sequenceIt->begin();
+                edgeIt != sequenceIt->end();
+                edgeIt ++) {
+            AnnotationItem ai = lattice.getEdgeAnnotationItem(*edgeIt);
+            if (lattice.getAnnotationItemManager().getValue(
+                    ai, "discard") == "1")
+                continue;
+
+            std::string base = lattice.getAnnotationItemManager().getValue(
+                    ai, "base");
+
+            if (baseForms.size() > 0) {
+                std::vector<std::string> tmpBaseForms;
+                for (std::vector<std::string>::iterator concIt =
+                        baseForms.begin();
+                        concIt != baseForms.end();
+                        concIt ++) {
+                    std::string concatenated = *concIt + " " + base;
+                    tmpBaseForms.push_back(concatenated);
+                }
+                baseForms.clear();
+                baseForms.assign( tmpBaseForms.begin(), tmpBaseForms.end());
+            } else {
+                baseForms.push_back(base);
+            }
+        }
+    }
+    concatenatedOrth6 = lattice.getSequenceText(edgeSequences.front());
+    std::string syntokCategory;
+    if (syntok) {
+        syntokCategory = "SYNTOK";
+        LayerTagCollection tags =
+            lattice.getLayerTagManager().createSingletonTagCollection("parse");
+        latticeWrapper->addSyntokEdges(
+                lattice,
+                startEdges,
+                endEdges,
+                syntokCategory,
+                baseForms,
+                morphology,
+                edgeSequences,
+                tags);
+    } else {
+        syntokCategory = concatenatedOrth6;
+        LayerTagCollection tags =
+            lattice.getLayerTagManager().createSingletonTagCollection("lemma");
+        latticeWrapper->addSyntokEdges(
+                lattice,
+                startEdges,
+                endEdges,
+                syntokCategory,
+                baseForms,
+                morphology,
+                edgeSequences,
+                tags);
     }
 /*    std::vector<std::string> concatenated;// = new std::vector<StringPtr>;
     std::vector<int>::iterator ie = tokenIndexes.begin();
@@ -319,7 +393,7 @@ bool SyntokAction::apply(ParseGraphPtr pg, int currentEntity,
 }
 
 //bool SyntokAction::test(Entities entities, int currentEntity, std::vector<int> matchedTokensSize)
-bool SyntokAction::test(ParseGraphPtr pg, int currentEntity,
+bool SyntokAction::test(ParseGraphPtr pg, Lattice &lattice, int currentEntity,
         std::vector<int> matchedTokensSize) {
     //int sum = 0;
     for (std::vector<int>::iterator i = matchedTokensSize.begin();

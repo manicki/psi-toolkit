@@ -14,7 +14,7 @@
 #include <vector>
 #include <boost/shared_ptr.hpp>
 #include "puddle_util.hpp"
-#include "lattice.hpp"
+#include "lattice_wrapper.hpp"
 
 namespace poleng
 {
@@ -31,6 +31,7 @@ class Action
 {
     public:
         Action() { type = "abstract"; verbose = false; }
+        virtual ~Action() {}
         //virtual bool test(Entities entities, int currentEntity, std::vector<int> matchedTokensSize); //tu nie bedzie to na napisie wykonywane, tylko na tych obiektach?
         virtual bool test(ParseGraphPtr pg, int currentEntity, std::vector<int> matchedTokensSize); //tu nie bedzie to na napisie wykonywane, tylko na tych obiektach?
         //virtual bool apply(Entities &entities, Edges &edges, int currentEntity, std::vector<int> matchedTokensSize); //jw
@@ -43,6 +44,7 @@ class Action
     private:
         std::string type;
         bool verbose;
+        LatticeWrapperPtr latticeWrapper;
 
         //std::vector<std::string> arguments;
 

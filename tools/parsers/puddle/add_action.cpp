@@ -15,7 +15,8 @@ namespace bonsai
 
 //AddAction::AddAction(std::vector<InterpretationPair> aInterpretations, std::string aBase, int aTokenIndex, std::string uInterpretation)
 AddAction::AddAction(std::vector<std::string> aInterpretations, std::string aBase,
-        int aTokenIndex, std::string uInterpretation) {
+        int aTokenIndex, std::string uInterpretation,
+        LatticeWrapperPtr aLatticeWrapper) {
     base = aBase;
     tokenIndex = aTokenIndex;
     type = "add";
@@ -27,6 +28,8 @@ AddAction::AddAction(std::vector<std::string> aInterpretations, std::string aBas
     //interpretations = aInterpretations;
 
     interpretation_ = uInterpretation; //@todo: to jest gdzie w ogole tu potrzebne? czy w syntoku?
+
+    latticeWrapper = aLatticeWrapper;
 }
 
 AddAction::~AddAction()
@@ -35,7 +38,7 @@ AddAction::~AddAction()
 }
 
 //bool AddAction::apply(Entities &entities, Edges &edges, int currentEntity, std::vector<int> matchedTokensSize)
-bool AddAction::apply(ParseGraphPtr pg, int currentEntity,
+bool AddAction::apply(ParseGraphPtr pg, Lattice &lattice, int currentEntity,
         std::vector<int> matchedTokensSize) {
     int count = matchedTokensSize[tokenIndex - 1];
     if (count == 0)
@@ -71,6 +74,33 @@ bool AddAction::apply(ParseGraphPtr pg, int currentEntity,
                     PosInfo pi(orig_base, *morph_it, 1);
                     edge->addMorphology(pi);
                 }
+            }
+        }
+    }
+
+    Lattice::VertexDescriptor startVertex = currentEntity + before;
+    Lattice::VertexDescriptor endVertex = currentEntity + (before + count);
+    std::list<Lattice::EdgeSequence> edgeSequences = latticeWrapper->getEdgesRange(
+            lattice, startVertex, endVertex);
+    for (std::list<Lattice::EdgeSequence>::iterator sequenceIt = edgeSequences.begin();
+            sequenceIt != edgeSequences.end(); sequenceIt ++) {
+        for (Lattice::EdgeSequence::Iterator edgeIt = sequenceIt->begin();
+                edgeIt != sequenceIt->end(); edgeIt ++) {
+            AnnotationItem ai = lattice.getEdgeAnnotationItem(*edgeIt);
+            if (lattice.getAnnotationItemManager().getValue(ai, "discard") == "1")
+                continue; //skip discarded interpretations
+            if (! allBaseForms) {
+                std::vector<std::string> baseForms;
+                baseForms.push_back(base);
+                latticeWrapper->addNewVariantEdges(lattice, *edgeIt,
+                        baseForms, interpretations);
+            } else {
+                std::vector<std::string> baseForms;
+                std::string baseForm = lattice.getAnnotationItemManager().
+                    getValue(ai, "base");
+                baseForms.push_back(baseForm);
+                latticeWrapper->addNewVariantEdges(lattice, *edgeIt,
+                        baseForms, interpretations);
             }
         }
     }
@@ -293,7 +323,7 @@ bool AddAction::apply(ParseGraphPtr pg, int currentEntity,
 }
 
 //bool AddAction::test(Entities entities, int currentEntity, std::vector<int> matchedTokensSize)
-bool AddAction::test(ParseGraphPtr pg, int currentEntity,
+bool AddAction::test(ParseGraphPtr pg, Lattice &lattice, int currentEntity,
         std::vector<int> matchedTokensSize) {
 
     int count = matchedTokensSize[tokenIndex - 1];
@@ -338,12 +368,46 @@ bool AddAction::test(ParseGraphPtr pg, int currentEntity,
                     break;
                 }
             }
-            if (interpretationFound) { //if found the interpration in the token, finish testing and do not add the interpration again
+            if (interpretationFound) { //if the interpration in the token found, finish testing and do not add the interpration again
                 ret = false;
                 break;
             }
         }
     }
+    Lattice::VertexDescriptor startVertex = currentEntity + before;
+    Lattice::VertexDescriptor endVertex = currentEntity + (before + count);
+    std::list<Lattice::EdgeSequence> edgeSequences = latticeWrapper->getEdgesRange(
+            lattice, startVertex, endVertex);
+    for (std::list<Lattice::EdgeSequence>::iterator sequenceIt = edgeSequences.begin();
+            sequenceIt != edgeSequences.end(); sequenceIt ++) {
+    for (Lattice::EdgeSequence::Iterator edgeIt = sequenceIt->begin();
+            edgeIt != sequenceIt->end(); edgeIt ++) {
+        AnnotationItem ai = lattice.getEdgeAnnotationItem(*edgeIt);
+        if (lattice.getAnnotationItemManager().getValue(ai, "discard") == "1")
+            continue; //skip discarded interpretations
+        if (! allBaseForms) {
+            if (lattice.getAnnotationItemManager().getValue(ai, "base") !=
+                    base)
+                continue; //take the next variant
+        }
+        bool interpretationFound = false;
+        for (std::vector<std::string>::iterator morph_it =
+                interpretations.begin();
+                morph_it != interpretations.end();
+                morph_it ++) {
+            if (lattice.getAnnotationItemManager().getValue(ai, "base") !=
+                    *morph_it) {
+                interpretationFound = true;
+                break;
+            }
+        }
+        if (interpretationFound) { //if the interpration in the token found, finish testing and do not add the interpration again
+            ret = false;
+            break;
+        }
+    }
+    }
+
     //old version below
     /*
     for (int entIndex = before; entIndex < (before + count); entIndex ++)

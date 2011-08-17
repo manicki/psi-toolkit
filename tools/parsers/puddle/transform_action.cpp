@@ -15,7 +15,7 @@ namespace bonsai
     namespace puddle
     {
 
-TransformAction::TransformAction(std::string aGroup, int aElement, std::string aRuleName)
+TransformAction::TransformAction(std::string aGroup, int aElement, std::string aRuleName, LatticeWrapperPtr aLatticeWrapper)
 {
     group = aGroup;
     element = aElement; // - 1;
@@ -30,9 +30,8 @@ TransformAction::~TransformAction()
 }
 
 //bool TransformAction::apply(Entities &entities, Edges &edges, int currentEntity, std::vector<int> matchedTokensSize)
-bool TransformAction::apply(ParseGraphPtr pg, int currentEntity,
-        std::vector<int> matchedTokensSize) {
-
+bool TransformAction::apply(ParseGraphPtr pg, Lattice &lattice,
+        int currentEntity, std::vector<int> matchedTokensSize) {
 
     int before = 0;
     int i = 0;
@@ -49,6 +48,28 @@ bool TransformAction::apply(ParseGraphPtr pg, int currentEntity,
 
     TransitionInfo *edge = util::getEdge(pg, currentEntity, before);
     edge->setLabel(group);
+    Lattice::VertexDescriptor startVertex = currentEntity + before; //@todo: czy te numerki tu sie kupy trzymaja trzeba sprawdzic
+    Lattice::VertexDescriptor headVertex = currentEntity + before;
+    Lattice::VertexDescriptor endVertex = currentEntity + before;
+    std::list<Lattice::EdgeDescriptor> startEdges = latticeWrapper->getTopEdges(
+            lattice, startVertex);
+    std::list<Lattice::EdgeDescriptor> headEdges = latticeWrapper->getTopEdges(
+            lattice, headVertex);
+    std::list<Lattice::EdgeDescriptor> endEdges = latticeWrapper->getTopEdges(
+            lattice, endVertex);
+    latticeWrapper->removeParseEdges(lattice, headVertex, headVertex + 1);
+    std::list<Lattice::EdgeSequence> groupPartitions =
+        latticeWrapper->getEdgesRange(
+                lattice, startVertex, endVertex
+                );
+    latticeWrapper->addParseEdges(
+            lattice,
+            startEdges,
+            endEdges,
+            this->group,
+            headEdges,
+            groupPartitions
+            );
 /*    Edges::iterator e = edges.begin();
     int index = -1;
     i = 0;
@@ -74,8 +95,8 @@ bool TransformAction::apply(ParseGraphPtr pg, int currentEntity,
 }
 
 //bool TransformAction::test(Entities entities, int currentEntity, std::vector<int> matchedTokensSize)
-bool TransformAction::test(ParseGraphPtr pg, int currentEntity,
-        std::vector<int> matchedTokensSize) {
+bool TransformAction::test(ParseGraphPtr pg, Lattice &lattice,
+        int currentEntity, std::vector<int> matchedTokensSize) {
     //if (entities.size() < element)
     if ( (pg->num_vertices() - 1) < element ) {
         return false;

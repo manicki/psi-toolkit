@@ -12,7 +12,8 @@ namespace bonsai
 
 UnifyAction::UnifyAction(std::vector<std::string> aUnifiedPatterns,
         std::vector<std::string> aUnifiedAttributes,
-        std::vector<int> aTokenIndices, std::vector<std::string> uAttributes) {
+        std::vector<int> aTokenIndices, std::vector<std::string> uAttributes,
+        LatticeWrapperPtr aLatticeWrapper) {
     nullAgreement = true; //@todo: to ma byc parametrem parsera
 
     //baseMask = "";
@@ -28,6 +29,8 @@ UnifyAction::UnifyAction(std::vector<std::string> aUnifiedPatterns,
 
     unifiedAttributes = aUnifiedAttributes;
     unifiedPatterns = aUnifiedPatterns;
+
+    latticeWrapper = aLatticeWrapper;
 }
 
 /*UnifyAction::UnifyAction(std::vector<int> aAttributeIndexes, std::vector<int> aTokenIndexes, std::vector<std::string> uAttributes)
@@ -58,13 +61,14 @@ UnifyAction::~UnifyAction()
     //elete attributes_;
 }
 
-bool UnifyAction::apply(ParseGraphPtr pg, int currentEntity,
+bool UnifyAction::apply(ParseGraphPtr pg, Lattice &lattice, int currentEntity,
         std::vector<int> matchedTokensSize) {
 
-    std::vector<std::string>::iterator attribute_it = unifiedAttributes.begin();
+   // std::vector<std::string>::iterator attribute_it = unifiedAttributes.begin();
     for (std::vector<std::string>::iterator pattern_it = unifiedPatterns.begin();
             pattern_it != unifiedPatterns.end(); pattern_it ++) {
 
+        std::set<std::string> refValues;
         for (std::vector<int>::iterator index_it = tokenIndices.begin();
                 index_it != tokenIndices.end(); index_it ++) {
 
@@ -79,38 +83,162 @@ bool UnifyAction::apply(ParseGraphPtr pg, int currentEntity,
                 i ++;
             }
 
-            for (int edge_i = before; edge_i < (before + count); edge_i ++) {
-                TransitionInfo *edge = util::getEdge(pg, currentEntity, edge_i);
-                for (std::vector<PosInfo>::iterator var_it =
-                        edge->variants_.begin();
-                        var_it != edge->variants_.end();
-                        var_it ++) {
-                    if (! boost::get<2>(*var_it) )
-                        continue;
-                    std::string morphology = boost::get<1>(*var_it);
+            Lattice::VertexDescriptor vertex = currentEntity + before;
+            while (latticeWrapper->getTopEdges(lattice, vertex).size() == 0) {
+                before ++;
+                vertex = currentEntity + before;
+            }
+
+            for (vertex = currentEntity + before;
+                    vertex < (currentEntity + before + count); vertex ++) {
+                std::list<Lattice::EdgeDescriptor> edges =
+                    latticeWrapper->getTopEdges(lattice, vertex);
+                std::set<std::string> values;
+                //                TransitionInfo *edge = util::getEdge(pg, currentEntity, edge_i);
+                //                for (std::vector<PosInfo>::iterator var_it =
+                //                        edge->variants_.begin();
+                //                        var_it != edge->variants_.end();
+                //                        var_it ++) {
+                //                    if (! boost::get<2>(*var_it) )
+                //                        continue;
+                //                    std::string morphology = boost::get<1>(*var_it);
+                for (std::list<Lattice::EdgeDescriptor>::iterator edgeIt =
+                        edges.begin();
+                        edgeIt != edges.end(); edgeIt ++) {
+                    AnnotationItem annotationItem =
+                        lattice.getEdgeAnnotationItem(*edgeIt);
+                    if (lattice.getAnnotationItemManager().getValue(
+                                annotationItem, "discard") == "1")
+                        continue; //skip discarded edges
+                    std::string morphology = lattice.getAnnotationItemManager().
+                        getValue(annotationItem, "morphology");
 
                     std::string slot;
                     std::string value;
                     if (RE2::FullMatch(morphology, *pattern_it, &slot, &value)) {
-                        bool valueFound = false;
-                        std::vector<std::string> unified = unifiedValues.find(*attribute_it)->second;
-                        for (std::vector<std::string>::iterator unifIt = unified.begin();
-                                unifIt != unified.end(); unifIt ++) {
-                            if (*unifIt == value) {
-                                valueFound = true;
-                                break;
-                            }
+                        values.insert(value);
+                    }
+
+                    if (values.size() > 0) {
+                        if (refValues.size() == 0) {
+                            refValues.insert(values.begin(), values.end());
+                        } else {
+                            std::set<std::string> intersection;
+                            std::set<std::string>::iterator it;
+                            std::set_intersection(refValues.begin(), refValues.end(),
+                                    values.begin(), values.end(),
+                                    std::inserter(intersection, intersection.begin())
+                                    );
+                            refValues.clear();
+                            refValues.insert(intersection.begin(), intersection.end());
                         }
-                        if (!valueFound)
-                            boost::get<2>(*var_it) = 0; //delete the variant
                     }
                 }
             }
+            }
 
+            for (std::vector<int>::iterator index_it = tokenIndices.begin();
+                    index_it != tokenIndices.end(); index_it ++) {
+
+                int count = matchedTokensSize[*index_it - 1];
+                if (count == 0) {
+                    continue;
+                }
+                int before = 0;
+                int i = 0;
+                while (i < (*index_it - 1)) {
+                    before += matchedTokensSize[i];
+                    i ++;
+                }
+                Lattice::VertexDescriptor vertex = currentEntity + before;
+                while (latticeWrapper->getTopEdges(lattice, vertex).size() == 0) {
+                    before ++;
+                    vertex = currentEntity + before;
+                }
+
+                for (vertex = currentEntity + before;
+                        vertex < (currentEntity + before + count); vertex ++) {
+                    std::list<Lattice::EdgeDescriptor> edges =
+                        latticeWrapper->getTopEdges(lattice, vertex);
+                    for (std::list<Lattice::EdgeDescriptor>::iterator edgeIt =
+                            edges.begin();
+                            edgeIt != edges.end(); edgeIt ++) {
+                        AnnotationItem annotationItem =
+                            lattice.getEdgeAnnotationItem(*edgeIt);
+                        if (lattice.getAnnotationItemManager().getValue(
+                                    annotationItem, "discard") == "1")
+                            continue; //skip discarded edges
+                        std::string morphology = lattice.getAnnotationItemManager().
+                            getValue(annotationItem, "morphology");
+
+                        std::string slot;
+                        std::string value;
+                        if (RE2::FullMatch(morphology, *pattern_it, &slot, &value)) {
+                            std::set<std::string>::iterator unifIt = refValues.find(value);
+                            if (unifIt == refValues.end()) {
+                                //boost::get<2>(*var_it) = 0; //delete the variant
+                                //discard the edge
+                                lattice.getAnnotationItemManager().setValue(annotationItem,
+                                        "discard", "1");
+                            }
+                        }
+                    }
+                }
+
+                //attribute_it ++;
+            }
         }
-        attribute_it ++;
-    }
     return true;
+//    std::vector<std::string>::iterator attribute_it = unifiedAttributes.begin();
+//    for (std::vector<std::string>::iterator pattern_it = unifiedPatterns.begin();
+//            pattern_it != unifiedPatterns.end(); pattern_it ++) {
+//
+//        for (std::vector<int>::iterator index_it = tokenIndices.begin();
+//                index_it != tokenIndices.end(); index_it ++) {
+//
+//            int count = matchedTokensSize[*index_it - 1];
+//            if (count == 0) {
+//                continue;
+//            }
+//            int before = 0;
+//            int i = 0;
+//            while (i < (*index_it - 1)) {
+//                before += matchedTokensSize[i];
+//                i ++;
+//            }
+//
+//            for (int edge_i = before; edge_i < (before + count); edge_i ++) {
+//                TransitionInfo *edge = util::getEdge(pg, currentEntity, edge_i);
+//                for (std::vector<PosInfo>::iterator var_it =
+//                        edge->variants_.begin();
+//                        var_it != edge->variants_.end();
+//                        var_it ++) {
+//                    if (! boost::get<2>(*var_it) )
+//                        continue;
+//                    std::string morphology = boost::get<1>(*var_it);
+//
+//                    std::string slot;
+//                    std::string value;
+//                    if (RE2::FullMatch(morphology, *pattern_it, &slot, &value)) {
+//                        bool valueFound = false;
+//                        std::vector<std::string> unified = unifiedValues.find(*attribute_it)->second;
+//                        for (std::vector<std::string>::iterator unifIt = unified.begin();
+//                                unifIt != unified.end(); unifIt ++) {
+//                            if (*unifIt == value) {
+//                                valueFound = true;
+//                                break;
+//                            }
+//                        }
+//                        if (!valueFound)
+//                            boost::get<2>(*var_it) = 0; //delete the variant
+//                    }
+//                }
+//            }
+//
+//        }
+//        attribute_it ++;
+//    }
+//    return true;
 }
 
 
@@ -539,10 +667,10 @@ bool UnifyAction::apply(ParseGraphPtr pg, int currentEntity,
     return ret;
 }*/
 
-bool UnifyAction::test(ParseGraphPtr pg, int currentEntity,
+bool UnifyAction::test(ParseGraphPtr pg, Lattice &lattice, int currentEntity,
         std::vector<int> matchedTokensSize) {
 
-    unifiedValues.clear();
+    //unifiedValues.clear();
     bool toApply = true;
     std::vector<std::string>::iterator attribute_it = unifiedAttributes.begin();
     for (std::vector<std::string>::iterator pattern_it = unifiedPatterns.begin();
@@ -566,17 +694,36 @@ bool UnifyAction::test(ParseGraphPtr pg, int currentEntity,
                 i ++;
             }
 
-            for (int edge_i = before; edge_i < (before + count); edge_i ++) {
-                TransitionInfo *edge = util::getEdge(pg, currentEntity, edge_i);
+            Lattice::VertexDescriptor vertex = currentEntity + before;
+            while (latticeWrapper->getTopEdges(lattice, vertex).size() == 0) {
+                before ++;
+                vertex = currentEntity + before;
+            }
+
+            for (vertex = currentEntity + before;
+                    vertex < (currentEntity + before + count); vertex ++) {
+                //TransitionInfo *edge = util::getEdge(pg, currentEntity, edge_i);
+                std::list<Lattice::EdgeDescriptor> edges =
+                    latticeWrapper->getTopEdges(lattice, vertex);
                 bool allValuesNull = true;
                 std::set<std::string> values;
-                for (std::vector<PosInfo>::iterator var_it =
-                        edge->variants_.begin();
-                        var_it != edge->variants_.end();
-                        var_it ++) {
-                    if (! boost::get<2>(*var_it) )
-                        continue;
-                    std::string morphology = boost::get<1>(*var_it);
+                for (std::list<Lattice::EdgeDescriptor>::iterator edgeIt =
+                        edges.begin();
+                        edgeIt != edges.end(); edgeIt ++) {
+                    AnnotationItem annotationItem =
+                        lattice.getEdgeAnnotationItem(*edgeIt);
+                    if (lattice.getAnnotationItemManager().getValue(
+                                annotationItem, "discard") == "1")
+                        continue; //skip discarded edges
+                //for (std::vector<PosInfo>::iterator var_it =
+                //        edge->variants_.begin();
+                //        var_it != edge->variants_.end();
+                //        var_it ++) {
+                //    if (! boost::get<2>(*var_it) )
+                //        continue;
+                    //std::string morphology = boost::get<1>(*var_it);
+                    std::string morphology = lattice.getAnnotationItemManager().
+                        getValue(annotationItem, "morphology");
 
                     std::string slot;
                     std::string value;
@@ -616,16 +763,99 @@ bool UnifyAction::test(ParseGraphPtr pg, int currentEntity,
         }
         if (! toApply)
             break;
-        else {
-            std::vector<std::string> attributeUnifiedValues(
-                    refValues.begin(), refValues.end());
-            unifiedValues.insert(std::pair<std::string, std::vector<std::string> >(
-                        *attribute_it, attributeUnifiedValues
-                        ));
-        }
+//        else {
+//            std::vector<std::string> attributeUnifiedValues(
+//                    refValues.begin(), refValues.end());
+//            unifiedValues.insert(std::pair<std::string, std::vector<std::string> >(
+//                        *attribute_it, attributeUnifiedValues
+//                        ));
+//        }
         attribute_it ++;
     }
     return toApply;
+//    bool toApply = true;
+//    std::vector<std::string>::iterator attribute_it = unifiedAttributes.begin();
+//    for (std::vector<std::string>::iterator pattern_it = unifiedPatterns.begin();
+//            pattern_it != unifiedPatterns.end(); pattern_it ++) {
+//
+//        bool wasAllNulls = false;
+//        bool wasNotNull = false;
+//
+//        std::set<std::string> refValues;
+//        for (std::vector<int>::iterator index_it = tokenIndices.begin();
+//                index_it != tokenIndices.end(); index_it ++) {
+//
+//            int count = matchedTokensSize[*index_it - 1];
+//            if (count == 0) {
+//                continue;
+//            }
+//            int before = 0;
+//            int i = 0;
+//            while (i < (*index_it - 1)) {
+//                before += matchedTokensSize[i];
+//                i ++;
+//            }
+//
+//            for (int edge_i = before; edge_i < (before + count); edge_i ++) {
+//                TransitionInfo *edge = util::getEdge(pg, currentEntity, edge_i);
+//                bool allValuesNull = true;
+//                std::set<std::string> values;
+//                for (std::vector<PosInfo>::iterator var_it =
+//                        edge->variants_.begin();
+//                        var_it != edge->variants_.end();
+//                        var_it ++) {
+//                    if (! boost::get<2>(*var_it) )
+//                        continue;
+//                    std::string morphology = boost::get<1>(*var_it);
+//
+//                    std::string slot;
+//                    std::string value;
+//                    if (RE2::FullMatch(morphology, *pattern_it, &slot, &value)) {
+//                        allValuesNull = false;
+//                        values.insert(value);
+//                    }
+//                }
+//                if (values.size() > 0) {
+//                    wasNotNull = true;
+//                    if (refValues.size() == 0) {
+//                        refValues.insert(values.begin(), values.end());
+//                    } else {
+//                        std::set<std::string> intersection;
+//                        std::set<std::string>::iterator it;
+//                        std::set_intersection(refValues.begin(), refValues.end(),
+//                                values.begin(), values.end(),
+//                                std::inserter(intersection, intersection.begin())
+//                                );
+//                        refValues.clear();
+//                        refValues.insert(intersection.begin(), intersection.end());
+//                    }
+//                }
+//                if (allValuesNull && (! wasAllNulls)) {
+//                    wasAllNulls = true;
+//                }
+//            }
+//
+//        }
+//        if (refValues.size() > 0) { //there are some common values of the attribute
+//            if (wasAllNulls) { //there is a token with no value of the attribute defined
+//                if (! nullAgreement)
+//                    toApply = false; //cannot apply
+//            }
+//        } else { //no common values of the attribute, cannot unify
+//            toApply = false;
+//        }
+//        if (! toApply)
+//            break;
+//        else {
+//            std::vector<std::string> attributeUnifiedValues(
+//                    refValues.begin(), refValues.end());
+//            unifiedValues.insert(std::pair<std::string, std::vector<std::string> >(
+//                        *attribute_it, attributeUnifiedValues
+//                        ));
+//        }
+//        attribute_it ++;
+//    }
+//    return toApply;
 }
 
 /*bool UnifyAction::test(Entities entities, int currentEntity, std::vector<int> matchedTokensSize)

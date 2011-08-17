@@ -16,7 +16,7 @@ namespace bonsai
     namespace puddle
     {
 
-AttachAction::AttachAction(std::string aGroup, int aStart, int aEnd, int aHead, std::string aRuleName)
+AttachAction::AttachAction(std::string aGroup, int aStart, int aEnd, int aHead, std::string aRuleName, LatticeWrapperPtr aLatticeWrapper)
 {
     group = aGroup;
     start = aStart;
@@ -34,6 +34,8 @@ AttachAction::AttachAction(std::string aGroup, int aStart, int aEnd, int aHead, 
     type = "attach";
     ruleName = aRuleName;
     verbose = false;
+
+    latticeWrapper = aLatticeWrapper;
 }
 
 AttachAction::~AttachAction()
@@ -41,7 +43,8 @@ AttachAction::~AttachAction()
 }
 
 //bool AttachAction::apply(Entities &entities, Edges &edges, int currentEntity, std::vector<int> matchedTokensSize)
-bool AttachAction::apply(ParseGraphPtr pg, int currentEntity, std::vector<int> matchedTokensSize) {
+bool AttachAction::apply(ParseGraphPtr pg, Lattice &lattice,
+        int currentEntity, std::vector<int> matchedTokensSize) {
 
 //    std::cout << "Poczatek reguly: " << ruleName << std::endl;
 //    std::cout << "PRZED mam elementow: " << entities.size() << std::endl;
@@ -111,6 +114,28 @@ bool AttachAction::apply(ParseGraphPtr pg, int currentEntity, std::vector<int> m
     TransitionInfo *edgeStart = util::getEdge(pg, currentEntity, realStart);
     TransitionInfo *edgeHead = util::getEdge(pg, currentEntity, realHead);
     TransitionInfo *edgeEnd = util::getEdge(pg, currentEntity, realEnd);
+    Lattice::VertexDescriptor startVertex = currentEntity + realStart;
+    Lattice::VertexDescriptor headVertex = currentEntity + realHead;
+    Lattice::VertexDescriptor endVertex = currentEntity + realEnd;
+    std::list<Lattice::EdgeDescriptor> startEdges = latticeWrapper->getTopEdges(
+            lattice, startVertex);
+    std::list<Lattice::EdgeDescriptor> headEdges = latticeWrapper->getTopEdges(
+            lattice, headVertex);
+    std::list<Lattice::EdgeDescriptor> endEdges = latticeWrapper->getTopEdges(
+            lattice, endVertex);
+    latticeWrapper->removeParseEdges(lattice, headVertex, headVertex + 1);
+    std::list<Lattice::EdgeSequence> groupPartitions =
+        latticeWrapper->getEdgesRange(
+                lattice, startVertex, endVertex
+                );
+    latticeWrapper->addParseEdges(
+            lattice,
+            startEdges,
+            endEdges,
+            this->group,
+            headEdges,
+            groupPartitions
+            );
     group->setStart(edgeStart->getStart());
     group->setEnd(edgeEnd->getEnd());
     group->setHead(edgeHead->getId());
@@ -321,7 +346,7 @@ bool AttachAction::apply(ParseGraphPtr pg, int currentEntity, std::vector<int> m
 }
 
 //bool AttachAction::test(Entities entities, int currentEntity, std::vector<int> matchedTokensSize)
-bool AttachAction::test(ParseGraphPtr pg, int currentEntity,
+bool AttachAction::test(ParseGraphPtr pg, Lattice &lattice, int currentEntity,
         std::vector<int> matchedTokensSize) {
     //if (entities.size() < head)
     if ( (pg->num_vertices() - 1) < head) {

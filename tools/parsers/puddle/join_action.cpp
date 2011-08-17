@@ -16,7 +16,7 @@ namespace bonsai
     namespace puddle
     {
 
-JoinAction::JoinAction(std::string aGroup, int aStart, int aEnd, int aHead, std::string aRuleName)
+JoinAction::JoinAction(std::string aGroup, int aStart, int aEnd, int aHead, std::string aRuleName, LatticeWrapperPtr aLatticeWrapper)
 {
     group = aGroup;
     start = aStart;
@@ -34,6 +34,8 @@ JoinAction::JoinAction(std::string aGroup, int aStart, int aEnd, int aHead, std:
     type = "join";
     ruleName = aRuleName;
     verbose = false;
+
+    latticeWrapper = aLatticeWrapper;
 }
 
 JoinAction::~JoinAction()
@@ -41,7 +43,7 @@ JoinAction::~JoinAction()
 }
 
 //bool JoinAction::apply(Entities &entities, Edges &edges, int currentEntity, std::vector<int> matchedTokensSize)
-bool JoinAction::apply(ParseGraphPtr pg, int currentEntity,
+bool JoinAction::apply(ParseGraphPtr pg, Lattice &lattice, int currentEntity,
         std::vector<int> matchedTokensSize) {
 
 //    std::cout << "Poczatek reguly: " << ruleName << std::endl;
@@ -123,6 +125,28 @@ bool JoinAction::apply(ParseGraphPtr pg, int currentEntity,
     TransitionInfo *edgeStart = util::getEdge(pg, currentEntity, realStart);
     TransitionInfo *edgeHead = util::getEdge(pg, currentEntity, realHead);
     TransitionInfo *edgeEnd = util::getEdge(pg, currentEntity, realEnd);
+    Lattice::VertexDescriptor startVertex = currentEntity + realStart;
+    Lattice::VertexDescriptor headVertex = currentEntity + realHead;
+    Lattice::VertexDescriptor endVertex = currentEntity + realEnd;
+    std::list<Lattice::EdgeDescriptor> startEdges = latticeWrapper->getTopEdges(
+            lattice, startVertex);
+    std::list<Lattice::EdgeDescriptor> headEdges = latticeWrapper->getTopEdges(
+            lattice, headVertex);
+    std::list<Lattice::EdgeDescriptor> endEdges = latticeWrapper->getTopEdges(
+            lattice, endVertex);
+    latticeWrapper->removeParseEdges(lattice, startVertex, endVertex); //@todo: nie jestem przekonany, czy to jest dobre miejsce. addParseEdges moze sie wowczas nie powiesc. z drugiej strony, jak krawedzie nie sa usuniete tylko discarded, to moze sie nic nie stac. co tylko z groupPartitions? nie powinno byc generowane po usunieciu?
+    std::list<Lattice::EdgeSequence> groupPartitions =
+        latticeWrapper->getEdgesRange(
+                lattice, startVertex, endVertex
+                );
+    latticeWrapper->addParseEdges(
+            lattice,
+            startEdges,
+            endEdges,
+            this->group,
+            headEdges,
+            groupPartitions
+            );
     group->setStart(edgeStart->getStart());
     group->setEnd(edgeEnd->getEnd());
     group->setHead(edgeHead->getId());
@@ -329,6 +353,7 @@ bool JoinAction::apply(ParseGraphPtr pg, int currentEntity,
         //usunac edgeHead z grafu trzeba
         //@todo: zweryfikowac to
     }
+    //@todo: startEdges chcemy usunac typu parse z wierzchu pierwsza
 
     //edges.push_back(group);
     pg->add_edge(group->getStart(), group->getEnd(), *group);
@@ -338,7 +363,7 @@ bool JoinAction::apply(ParseGraphPtr pg, int currentEntity,
 }
 
 //bool JoinAction::test(Entities entities, int currentEntity, std::vector<int> matchedTokensSize)
-bool JoinAction::test(ParseGraphPtr pg, int currentEntity,
+bool JoinAction::test(ParseGraphPtr pg, Lattice &lattice, int currentEntity,
         std::vector<int> matchedTokensSize) {
     //if (entities.size() < head)
     if ( (pg->num_vertices() - 1) < head ) {

@@ -22,11 +22,10 @@ public:
         LayerTagMask lemmaMask = lattice.getLayerTagManager().getMask(lemma_tag);
         AnnotationItem word_token("word");
         AnnotationItem blank_token("blank");
-        AnnotationItemManager aim;
         AnnotationItem ai("base");
-        aim.setValue(ai, "base", "xxx");
-        aim.setValue(ai, "number", "xxx");
-        aim.setValue(ai, "gender", "xxx");
+//        lattice.getAnnotationItemManager().setValue(ai, "base", "xxx"); //czy to jest potrzebne w ogole?
+//        lattice.getAnnotationItemManager().setValue(ai, "number", "xxx");
+//        lattice.getAnnotationItemManager().setValue(ai, "gender", "xxx");
 
         Lattice::VertexDescriptor pre_blanc = lattice.getFirstVertex();
         Lattice::VertexDescriptor post_blanc = lattice.getVertexForRawCharIndex(5);
@@ -57,49 +56,67 @@ public:
         TS_ASSERT_EQUALS(lattice.getEdgeAnnotationItem(ei.next()).getCategory(), "'t");
         TS_ASSERT(!ei.hasNext());
 
-        Lattice::Partition blanc_partition;
+//        Lattice::Partition blanc_partition;
+//        for (int i = 0; i < 5; i ++) {
+//            blanc_partition.links.push_back(lattice.firstOutEdge(
+//                        lattice.getVertexForRawCharIndex(i),
+//                        rawMask
+//                        ));
+//        }
+        Lattice::EdgeSequence::Builder blanc_builder;
         for (int i = 0; i < 5; i ++) {
-            blanc_partition.links.push_back(lattice.firstOutEdge(
+            blanc_builder.addEdge(lattice.firstOutEdge(
                         lattice.getVertexForRawCharIndex(i),
                         rawMask
                         ));
         }
-        lattice.addEdge(pre_blanc, post_blanc, word_token, token_tag, 0, blanc_partition);
-        Lattice::Partition blank_partition;
-        blank_partition.links.push_back(lattice.firstOutEdge(
+        lattice.addEdge(pre_blanc, post_blanc, word_token, token_tag, blanc_builder.build());
+
+//        Lattice::Partition blank_partition;
+        Lattice::EdgeSequence::Builder blank_builder;
+        blank_builder.addEdge(lattice.firstOutEdge(
             lattice.getVertexForRawCharIndex(6),
             rawMask
         ));
-        lattice.addEdge(post_blanc, pre_chat, blank_token, token_tag, 0, blank_partition);
-        Lattice::Partition chat_partition;
+        lattice.addEdge(post_blanc, pre_chat, blank_token, token_tag, blank_builder.build());
+        Lattice::EdgeSequence::Builder chat_builder;
         for (int i = 6; i < 10; i ++) {
-            chat_partition.links.push_back(lattice.firstOutEdge(
+            chat_builder.addEdge(lattice.firstOutEdge(
                         lattice.getVertexForRawCharIndex(i),
                         rawMask
                         ));
         }
-        lattice.addEdge(pre_chat, post_chat, word_token, token_tag, 0, chat_partition);
+        lattice.addEdge(pre_chat, post_chat, word_token, token_tag, chat_builder.build());
 
-        Lattice::Partition blanc_lemma_partition;
-        blanc_lemma_partition.links.push_back(lattice.firstOutEdge(lattice.getVertexForRawCharIndex(0), tokenMask));
-        AnnotationItem ai_blanc_adj("adj");
-        aim.setValue(ai_blanc_adj, "base", "blanc");
-        aim.setValue(ai_blanc_adj, "number", "sg");
-        aim.setValue(ai_blanc_adj, "gender", "m");
-        lattice.addEdge(pre_blanc, post_blanc, ai_blanc_adj, lemma_tag, 0, blanc_lemma_partition);
-        AnnotationItem ai_blanc_subst("subst");
-        aim.setValue(ai_blanc_subst, "base", "blanc");
-        aim.setValue(ai_blanc_subst, "number", "sg");
-        aim.setValue(ai_blanc_subst, "gender", "m");
-        lattice.addEdge(pre_blanc, post_blanc, ai_blanc_subst, lemma_tag, 0, blanc_lemma_partition);
+        Lattice::EdgeSequence::Builder blanc_lemma_builder;
+        blanc_lemma_builder.addEdge(lattice.firstOutEdge(lattice.getVertexForRawCharIndex(0), tokenMask));
+        AnnotationItem ai_blanc_adj("blanc");
+        lattice.getAnnotationItemManager().setValue(ai_blanc_adj, "base", "blanc");
+        lattice.getAnnotationItemManager().setValue(ai_blanc_adj, "morphology", "adj:sg:m");
+//        lattice.getAnnotationItemManager().setValue(ai_blanc_adj, "pos", "adj");
+//        lattice.getAnnotationItemManager().setValue(ai_blanc_adj, "number", "sg");
+//        lattice.getAnnotationItemManager().setValue(ai_blanc_adj, "gender", "m");
+        lattice.getAnnotationItemManager().setValue(ai_blanc_adj, "discard", "0");
+        lattice.addEdge(pre_blanc, post_blanc, ai_blanc_adj, lemma_tag, blanc_lemma_builder.build());
+        AnnotationItem ai_blanc_subst("blanc");
+        lattice.getAnnotationItemManager().setValue(ai_blanc_subst, "base", "blanc");
+        lattice.getAnnotationItemManager().setValue(ai_blanc_subst, "morphology", "subst:sg:m");
+//        lattice.getAnnotationItemManager().setValue(ai_blanc_subst, "pos", "subst");
+//        lattice.getAnnotationItemManager().setValue(ai_blanc_subst, "number", "sg");
+//        lattice.getAnnotationItemManager().setValue(ai_blanc_subst, "gender", "m");
+        lattice.getAnnotationItemManager().setValue(ai_blanc_subst, "discard", "0");
+        lattice.addEdge(pre_blanc, post_blanc, ai_blanc_subst, lemma_tag, blanc_lemma_builder.build());
 
-        Lattice::Partition chat_lemma_partition;
-        chat_lemma_partition.links.push_back(lattice.firstOutEdge(lattice.getVertexForRawCharIndex(6), tokenMask));
-        AnnotationItem ai_chat("subst");
-        aim.setValue(ai_chat, "base", "chat");
-        aim.setValue(ai_chat, "number", "sg");
-        aim.setValue(ai_chat, "gender", "m");
-        lattice.addEdge(pre_chat, post_chat, ai_chat, lemma_tag, 0, chat_lemma_partition);
+        Lattice::EdgeSequence::Builder chat_lemma_builder;
+        chat_lemma_builder.addEdge(lattice.firstOutEdge(lattice.getVertexForRawCharIndex(6), tokenMask));
+        AnnotationItem ai_chat("chat");
+        lattice.getAnnotationItemManager().setValue(ai_chat, "base", "chat");
+        lattice.getAnnotationItemManager().setValue(ai_chat, "morphology", "subst:sg:m");
+//        lattice.getAnnotationItemManager().setValue(ai_chat, "pos", "subst");
+//        lattice.getAnnotationItemManager().setValue(ai_chat, "number", "sg");
+//        lattice.getAnnotationItemManager().setValue(ai_chat, "gender", "m");
+        lattice.getAnnotationItemManager().setValue(ai_chat, "discard", "0");
+        lattice.addEdge(pre_chat, post_chat, ai_chat, lemma_tag, chat_lemma_builder.build());
 
         Lattice::EdgeDescriptor edge;
         Lattice::EdgesSortedBySourceIterator tokenIter = lattice.edgesSortedBySource(lemmaMask);
@@ -110,19 +127,29 @@ public:
             ai_blanc_adj.getCategory()
         );
         std::list< std::pair<std::string, std::string> > av
-            = aim.getValues(
+            = lattice.getAnnotationItemManager().getValues(
                     lattice.getEdgeAnnotationItem(edge)
                     );
         std::list< std::pair<std::string, std::string> >::iterator avi = av.begin();
         TS_ASSERT_EQUALS((*avi).first, "base");
         TS_ASSERT_EQUALS((*avi).second, "blanc");
         ++avi;
-        TS_ASSERT_EQUALS((*avi).first, "number");
-        TS_ASSERT_EQUALS((*avi).second, "sg");
+        TS_ASSERT_EQUALS((*avi).first, "morphology");
+        TS_ASSERT_EQUALS((*avi).second, "adj:sg:m");
+//        ++avi;
+//        TS_ASSERT_EQUALS((*avi).first, "pos");
+//        TS_ASSERT_EQUALS((*avi).second, "adj");
+//        ++avi;
+//        TS_ASSERT_EQUALS((*avi).first, "number");
+//        TS_ASSERT_EQUALS((*avi).second, "sg");
+//        ++avi;
+//        TS_ASSERT(avi != av.end());
+//        TS_ASSERT_EQUALS((*avi).first, "gender");
+//        TS_ASSERT_EQUALS((*avi).second, "m");
         ++avi;
         TS_ASSERT(avi != av.end());
-        TS_ASSERT_EQUALS((*avi).first, "gender");
-        TS_ASSERT_EQUALS((*avi).second, "m");
+        TS_ASSERT_EQUALS((*avi).first, "discard");
+        TS_ASSERT_EQUALS((*avi).second, "0");
         ++avi;
         TS_ASSERT(avi == av.end());
         TS_ASSERT(tokenIter.hasNext());
@@ -131,19 +158,29 @@ public:
             lattice.getEdgeAnnotationItem(edge).getCategory(),
             ai_blanc_subst.getCategory()
         );
-        av = aim.getValues(
+        av = lattice.getAnnotationItemManager().getValues(
                     lattice.getEdgeAnnotationItem(edge)
                     );
         avi = av.begin();
         TS_ASSERT_EQUALS((*avi).first, "base");
         TS_ASSERT_EQUALS((*avi).second, "blanc");
         ++avi;
-        TS_ASSERT_EQUALS((*avi).first, "number");
-        TS_ASSERT_EQUALS((*avi).second, "sg");
+        TS_ASSERT_EQUALS((*avi).first, "morphology");
+        TS_ASSERT_EQUALS((*avi).second, "subst:sg:m");
+//        ++avi;
+//        TS_ASSERT_EQUALS((*avi).first, "pos");
+//        TS_ASSERT_EQUALS((*avi).second, "subst");
+//        ++avi;
+//        TS_ASSERT_EQUALS((*avi).first, "number");
+//        TS_ASSERT_EQUALS((*avi).second, "sg");
+//        ++avi;
+//        TS_ASSERT(avi != av.end());
+//        TS_ASSERT_EQUALS((*avi).first, "gender");
+//        TS_ASSERT_EQUALS((*avi).second, "m");
         ++avi;
         TS_ASSERT(avi != av.end());
-        TS_ASSERT_EQUALS((*avi).first, "gender");
-        TS_ASSERT_EQUALS((*avi).second, "m");
+        TS_ASSERT_EQUALS((*avi).first, "discard");
+        TS_ASSERT_EQUALS((*avi).second, "0");
         ++avi;
         TS_ASSERT(avi == av.end());
         TS_ASSERT(tokenIter.hasNext());
@@ -152,19 +189,29 @@ public:
             lattice.getEdgeAnnotationItem(edge).getCategory(),
             ai_chat.getCategory()
         );
-        av = aim.getValues(
+        av = lattice.getAnnotationItemManager().getValues(
                     lattice.getEdgeAnnotationItem(edge)
                     );
         avi = av.begin();
         TS_ASSERT_EQUALS((*avi).first, "base");
         TS_ASSERT_EQUALS((*avi).second, "chat");
         ++avi;
-        TS_ASSERT_EQUALS((*avi).first, "number");
-        TS_ASSERT_EQUALS((*avi).second, "sg");
+        TS_ASSERT_EQUALS((*avi).first, "morphology");
+        TS_ASSERT_EQUALS((*avi).second, "subst:sg:m");
+//        ++avi;
+//        TS_ASSERT_EQUALS((*avi).first, "pos");
+//        TS_ASSERT_EQUALS((*avi).second, "subst");
+//        ++avi;
+//        TS_ASSERT_EQUALS((*avi).first, "number");
+//        TS_ASSERT_EQUALS((*avi).second, "sg");
+//        ++avi;
+//        TS_ASSERT(avi != av.end());
+//        TS_ASSERT_EQUALS((*avi).first, "gender");
+//        TS_ASSERT_EQUALS((*avi).second, "m");
         ++avi;
         TS_ASSERT(avi != av.end());
-        TS_ASSERT_EQUALS((*avi).first, "gender");
-        TS_ASSERT_EQUALS((*avi).second, "m");
+        TS_ASSERT_EQUALS((*avi).first, "discard");
+        TS_ASSERT_EQUALS((*avi).second, "0");
         ++avi;
         TS_ASSERT(avi == av.end());
         TS_ASSERT(!tokenIter.hasNext());
@@ -184,7 +231,8 @@ public:
         puddle->setTagset(tagset);
         rule_loader.setTagset(tagset);
         puddle->setTagger(tagger);
-        poleng::bonsai::puddle::RulesPtr rules = rule_loader.readFromFile(rulesFilename);
+        poleng::bonsai::puddle::RulesPtr rules =
+            rule_loader.readFromFile(rulesFilename, puddle->getLatticeWrapper());
         puddle->setRules(rules);
         TS_ASSERT_EQUALS(rules->size(), 1);
 

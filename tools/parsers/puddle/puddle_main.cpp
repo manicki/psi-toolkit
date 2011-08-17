@@ -55,7 +55,8 @@ int main(int argc, char **argv) {
 
     if (vm.count("rules")) {
         std::string rulesFilename = vm["rules"].as<std::string>();
-        poleng::bonsai::puddle::RulesPtr rules = rule_loader.readFromFile(rulesFilename);
+        poleng::bonsai::puddle::RulesPtr rules =
+            rule_loader.readFromFile(rulesFilename, puddle->getLatticeWrapper());
         if (rules->size() == 0) {
             std::cerr << "Rules not loaded. " << std::endl;
             return 1;

@@ -11,7 +11,7 @@ namespace poleng {
         namespace puddle {
 
             DeleteAction::DeleteAction(DeleteConditions aConditions, int aTokenIndex,
-                    std::string uPattern) {
+                    std::string uPattern, LatticeWrapperPtr aLatticeWrapper) {
                 //pattern = PatternPtr(new RE2(""));
                 //patternString = "";
                 tokenIndex = aTokenIndex;
@@ -19,6 +19,7 @@ namespace poleng {
                 verbose = false;
                 pattern_ = uPattern;
                 conditions = aConditions;
+                latticeWrapper = aLatticeWrapper;
             }
 
 /*DeleteAction::DeleteAction(std::string aPattern, int aTokenIndex, std::string uPattern) {
@@ -32,7 +33,7 @@ namespace poleng {
     pattern_ = uPattern;
 }*/
 
-bool DeleteAction::apply(ParseGraphPtr pg, int currentEntity,
+bool DeleteAction::apply(ParseGraphPtr pg, Lattice &lattice, int currentEntity,
         std::vector<int> matchedTokensSize) {
     int count = matchedTokensSize[tokenIndex - 1];
     if (count == 0)
@@ -41,11 +42,11 @@ bool DeleteAction::apply(ParseGraphPtr pg, int currentEntity,
         return true;
     }
 
-    if (nothingToDelete)
-    {
-//        std::cerr << "nic do delete" << std::endl;
-        return true; //returns true in order to continue other actions of the rule
-    }
+//    if (nothingToDelete)
+//    {
+////        std::cerr << "nic do delete" << std::endl;
+//        return true; //returns true in order to continue other actions of the rule
+//    }
 
     int before = 0;
     int i = 0;
@@ -55,6 +56,11 @@ bool DeleteAction::apply(ParseGraphPtr pg, int currentEntity,
     }
     while (util::getEdge(pg, currentEntity, before) == NULL) { //if there is no edge at a given position, proceed to the next vertex, as it may be a whitespace
         before ++;
+    }
+    Lattice::VertexDescriptor vertex = currentEntity + before;
+    while (latticeWrapper->getTopEdges(lattice, vertex).size() == 0) {
+        before ++;
+        vertex = currentEntity + before;
     }
 
     for (int edge_i = before; edge_i < (before + count); edge_i ++) {
@@ -81,6 +87,47 @@ bool DeleteAction::apply(ParseGraphPtr pg, int currentEntity,
                     std::string tokenMorphology = boost::get<1>(*var_it);
                     if (RE2::FullMatch(tokenMorphology, cond_it->pattern)) {
                         boost::get<2>(*var_it) = 0;
+                    }
+                }
+            }
+        }
+    }
+    for (vertex = currentEntity + before;
+            vertex < (currentEntity + before + count); vertex ++) {
+        std::list<Lattice::EdgeDescriptor> edges =
+            latticeWrapper->getTopEdges(lattice, vertex);
+        for (std::list<Lattice::EdgeDescriptor>::iterator edgeIt = edges.begin();
+                edgeIt != edges.end(); edgeIt ++) {
+            AnnotationItem annotationItem = lattice.getEdgeAnnotationItem(*edgeIt);
+            if (lattice.getAnnotationItemManager().getValue(
+                        annotationItem, "discard") == "1")
+                continue; //skip discarded edges
+
+            for (DeleteConditions::iterator cond_it = conditions.begin();
+                    cond_it != conditions.end(); cond_it ++) {
+                if (cond_it->type == BASE_CONDITION) {
+                    std::string tokenBase = lattice.getAnnotationItemManager().
+                        getValue(annotationItem, "base");
+                    if (cond_it->negation) {
+                        if (RE2::FullMatch(tokenBase, cond_it->pattern)) {
+                            lattice.getAnnotationItemManager().setValue(
+                                    annotationItem, "discard", "1");
+                            //@todo: to nie wplywa na krate, bo nie zmienia tego w krawedzi naprawde
+                        }
+                    } else {
+                        if (!RE2::FullMatch(tokenBase, cond_it->pattern)) {
+                            lattice.getAnnotationItemManager().setValue(
+                                    annotationItem, "discard", "1");
+                            //@todo: to nie wplywa na krate, bo nie zmienia tego w krawedzi naprawde
+                        }
+                    }
+                } else if (cond_it->type == MORPHOLOGY_CONDITION) {
+                    std::string tokenMorphology = lattice.getAnnotationItemManager().
+                        getValue(annotationItem, "morphology");
+                    if (!RE2::FullMatch(tokenMorphology, cond_it->pattern)) {
+                        lattice.getAnnotationItemManager().setValue(
+                                annotationItem, "discard", "1");
+                        //@todo: to nie wplywa na krate, bo nie zmienia tego w krawedzi naprawde
                     }
                 }
             }
@@ -257,10 +304,10 @@ bool DeleteAction::apply(ParseGraphPtr pg, int currentEntity,
     //return ret;
 }*/
 
-bool DeleteAction::test(ParseGraphPtr pg, int currentEntity,
-        std::vector<int> matchedTokensSize) {
+bool DeleteAction::test(ParseGraphPtr pg, Lattice &lattice,
+        int currentEntity, std::vector<int> matchedTokensSize) {
     bool ret = false;
-    nothingToDelete = false;
+    bool nothingToDelete = false;
 
     int count = matchedTokensSize[tokenIndex - 1];
     if (count == 0) {
@@ -276,6 +323,11 @@ bool DeleteAction::test(ParseGraphPtr pg, int currentEntity,
     }
     while (util::getEdge(pg, currentEntity, before) == NULL) { //if there is no edge at a given position, proceed to the next vertex, as it may be a whitespace
         before ++;
+    }
+    Lattice::VertexDescriptor vertex = currentEntity + before;
+    while (latticeWrapper->getTopEdges(lattice, vertex).size() == 0) {
+        before ++;
+        vertex = currentEntity + before;
     }
 
     bool foundToDelete = false;
@@ -319,6 +371,54 @@ bool DeleteAction::test(ParseGraphPtr pg, int currentEntity,
         if ( conditionsSatisfied) {
             foundToDelete = true;
             //@todo: i tu break?
+        }
+    }
+    for (vertex = currentEntity + before;
+            vertex < (currentEntity + before + count); vertex ++) {
+        std::list<Lattice::EdgeDescriptor> edges =
+            latticeWrapper->getTopEdges(lattice, vertex);
+        for (std::list<Lattice::EdgeDescriptor>::iterator edgeIt = edges.begin();
+                edgeIt != edges.end(); edgeIt ++) {
+            bool conditionsSatisfied = true;
+            AnnotationItem annotationItem = lattice.getEdgeAnnotationItem(*edgeIt);
+            if (lattice.getAnnotationItemManager().getValue(
+                        annotationItem, "discard") == "1")
+                continue; //skip discarded edges
+
+            for (DeleteConditions::iterator cond_it = conditions.begin();
+                    cond_it != conditions.end(); cond_it ++) {
+                bool satisfied = true;
+                if (cond_it->type == BASE_CONDITION) {
+                    std::string tokenBase = lattice.getAnnotationItemManager().
+                        getValue(annotationItem, "base");
+                    if (cond_it->negation) {
+                        if (RE2::FullMatch(tokenBase, cond_it->pattern)) {
+                            satisfied = false;
+                            break;
+                        }
+                    } else {
+                        if (!RE2::FullMatch(tokenBase, cond_it->pattern)) {
+                            satisfied = false;
+                            break;
+                        }
+                    }
+                } else if (cond_it->type == MORPHOLOGY_CONDITION) {
+                    std::string tokenMorphology = lattice.getAnnotationItemManager().
+                        getValue(annotationItem, "morphology");
+                    if (!RE2::FullMatch(tokenMorphology, cond_it->pattern)) {
+                        satisfied = false;
+                        break;
+                    }
+                }
+                if (! satisfied) {
+                    conditionsSatisfied = false;
+                    break;
+                }
+            }
+            if ( conditionsSatisfied) {
+                foundToDelete = true;
+                //@todo: i tu break?
+            }
         }
     }
 

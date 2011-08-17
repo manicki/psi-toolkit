@@ -18,12 +18,12 @@ namespace puddle
 class TransformAction : public Action
 {
     public:
-        TransformAction(std::string aGroup, int aElement, std::string aRuleName);
+        TransformAction(std::string aGroup, int aElement, std::string aRuleName, LatticeWrapperPtr aLatticeWrapper);
         ~TransformAction();
         //bool apply(Entities &entities, Edges &edges, int currentEntity, std::vector<int> matchedTokensSize);
-        bool apply(ParseGraphPtr, int currentEntity, std::vector<int> matchedTokensSize);
+        bool apply(ParseGraphPtr, Lattice &lattice, int currentEntity, std::vector<int> matchedTokensSize);
         //bool test(Entities entities, int currentEntity, std::vector<int> matchedTokensSize);
-        bool test(ParseGraphPtr, int currentEntity, std::vector<int> matchedTokensSize);
+        bool test(ParseGraphPtr, Lattice &lattice, int currentEntity, std::vector<int> matchedTokensSize);
         std::string getGroup();
         int getElement();
         void setGroup(std::string aGroup);
@@ -40,6 +40,7 @@ class TransformAction : public Action
         std::string ruleName;
         std::string type;
         bool verbose;
+        LatticeWrapperPtr latticeWrapper;
 };
 
 typedef boost::shared_ptr<TransformAction> TransformActionPtr;
