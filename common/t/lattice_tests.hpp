@@ -216,6 +216,22 @@ public:
         TS_ASSERT(!tokenIter.hasNext());
     }
 
+    void test_cutter_on_no_symbols() {
+        Lattice lattice("<a>");
+
+        BySpacesCutter cutter;
+
+        LayerTagMask symbolMask = lattice.getLayerTagManager().getMask("symbol");
+
+        lattice.runCutter(cutter, symbolMask);
+
+        LayerTagMask tokenMask = lattice.getLayerTagManager().getMask("token");
+
+        Lattice::EdgesSortedBySourceIterator tokenIter = lattice.edgesSortedBySource(tokenMask);
+
+        TS_ASSERT(!tokenIter.hasNext());
+    }
+
     void test_lemmatizer() {
         Lattice lattice;
         lattice.appendStringWithSymbols("prowokacjami");

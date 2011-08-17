@@ -106,6 +106,8 @@ public:
 
         EdgeDescriptor lastEdge() const;
 
+        bool empty() const;
+
         size_t size() const;
 
         class Builder {
