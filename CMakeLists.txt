@@ -27,6 +27,15 @@ if(USE_JAVA)
 	include_directories("${psi-toolkit_SOURCE_DIR}/common/j")
 endif(USE_JAVA)
 
+option(USE_POSTGRESQL "Compiling PostgreSQL components" OFF)
+message(STATUS "Compiling PostgreSQL components ${USE_POSTGRESQL}")
+
+if(USE_POSTGRESQL)
+        find_package(PostgreSQL REQUIRED)
+        include_directories(${PostgreSQL_INCLUDE_DIRS})
+        link_directories(${PostgreSQL_LIBRARY_DIRS})
+endif(USE_POSTGRESQL)
+
 option(USE_PUDDLE "Compiling puddle shallow parser" OFF)
 message(STATUS "Compiling puddle shallow parser ${USE_PUDDLE}")
 
