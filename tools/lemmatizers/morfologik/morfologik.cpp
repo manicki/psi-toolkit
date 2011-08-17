@@ -1,6 +1,9 @@
 #include "morfologik.hpp"
+#include "logging.hpp"
 #include <iostream>
 #include <boost/algorithm/string.hpp>
+
+
 
 std::string Morfologik::tagSeparator = "+";
 
@@ -97,7 +100,7 @@ std::multimap<std::string, std::string> Morfologik::stem(
 		text = (jstring)jenv->CallObjectMethod
 			(objForString, midStringToString, NULL);
 		ptags = jenv->GetStringUTFChars(text, NULL);
-		if (pstem == NULL) {
+		if (ptags == NULL) {
 			/* OutOfMemoryError already throw */
 		}
 
@@ -142,7 +145,7 @@ void Morfologik::initializePolishStemmer() {
 			(clsPolishStemmer, "lookup", "(Ljava/lang/CharSequence;)Ljava/util/List;");
 	}
 	else {
-		printf("clsPolishStemmer is NULL\n");	// FIXME: should be an exception
+		ERROR("The PolishStemmer class from morfologik's jar file has been not found");
 	}
 	objPolishStemmer = jenv->NewObject
 		(clsPolishStemmer, midPolishStemmerConstructor, NULL);

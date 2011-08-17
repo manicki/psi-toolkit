@@ -1,4 +1,6 @@
 #include "morfologik_tags_parser.hpp"
+#include "logging.hpp"
+
 #include <boost/assign.hpp>
 #include <boost/algorithm/string.hpp>
 
@@ -178,7 +180,10 @@ std::map<std::string, std::string> MorfologikTagsParser::parseSimple(
 				(foundAttribute->second, attributes[i]));
 		}
 		else {
-			// FIXME: it should be an exception
+			std::string message = "Attribute ";
+			message += attributes[i];
+			message += " has been not recognized in predefined Morfologik tags.";
+			WARN(message);
 		}
 	}
 	return descriptions;
