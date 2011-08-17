@@ -31,7 +31,7 @@ option(USE_PUDDLE "Compiling puddle shallow parser" OFF)
 message(STATUS "Compiling puddle shallow parser ${USE_PUDDLE}")
 
 # Sets compiler flags
-set(CMAKE_CXX_FLAGS "-g -Wall -Wno-deprecated")
+set(CMAKE_CXX_FLAGS "-g -Wall")
 
 set(DIRS common formats framework tools utf8)
 foreach(dir ${DIRS})
