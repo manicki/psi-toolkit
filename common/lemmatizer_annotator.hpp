@@ -54,6 +54,7 @@ public:
         class WorkerOutputIterator : public LemmatizerOutputIterator {
         private:
             Lattice& lattice_;
+            LayerTagCollection correctionTag_;
             LayerTagCollection normalizationTag_;
             LayerTagCollection lemmaTag_;
             LayerTagCollection lexemeTag_;
@@ -65,12 +66,28 @@ public:
             Lattice::EdgeDescriptor lastLexeme_;
 
         public:
-            WorkerOutputIterator(Lattice& lattice, Lattice::EdgeDescriptor tokenEdge)
+            WorkerOutputIterator(LayerTagCollection layerTags, Lattice& lattice, Lattice::EdgeDescriptor tokenEdge)
                 :lattice_(lattice),
-                 normalizationTag_(lattice.getLayerTagManager().createSingletonTagCollection("normalization")),
-                 lemmaTag_(lattice.getLayerTagManager().createSingletonTagCollection("lemma")),
-                 lexemeTag_(lattice.getLayerTagManager().createSingletonTagCollection("lexeme")),
-                 formTag_(lattice.getLayerTagManager().createSingletonTagCollection("form")),
+                 correctionTag_(
+                     createUnion(
+                         lattice.getLayerTagManager().createSingletonTagCollection("token,corrected"),
+                         layerTags)),
+                 normalizationTag_(
+                     createUnion(
+                         lattice.getLayerTagManager().createSingletonTagCollection("normalization"),
+                         layerTags)),
+                 lemmaTag_(
+                     createUnion(
+                         lattice.getLayerTagManager().createSingletonTagCollection("lemma"),
+                         layerTags)),
+                 lexemeTag_(
+                     createUnion(
+                         lattice.getLayerTagManager().createSingletonTagCollection("lexeme"),
+                         layerTags)),
+                 formTag_(
+                     createUnion(
+                         lattice.getLayerTagManager().createSingletonTagCollection("form"),
+                         layerTags)),
                  tokenEdge_(tokenEdge),
                  lastCorrection_(tokenEdge),
                  lastNormalization_(tokenEdge),
@@ -82,7 +99,21 @@ public:
                 const std::string& correction,
                 Lattice::Score score,
                 int ruleId) {
-                ;
+
+                Lattice::EdgeSequence::Builder seqBuilder;
+                seqBuilder.addEdge(tokenEdge_);
+
+                AnnotationItem item("word", correction);
+
+                lastCorrection_ = lastNormalization_ = lastLemma_ = lastLexeme_ =
+                    lattice_.addEdge(
+                        lattice_.getEdgeSource(tokenEdge_),
+                        lattice_.getEdgeTarget(tokenEdge_),
+                        item,
+                        correctionTag_,
+                        seqBuilder.build(),
+                        score,
+                        ruleId);
             }
 
             virtual void doAddNormalization(
@@ -95,7 +126,7 @@ public:
 
                 AnnotationItem item("word", normalization);
 
-                lastNormalization_ =
+                lastNormalization_ = lastLemma_ = lastLexeme_ =
                     lattice_.addEdge(
                         lattice_.getEdgeSource(lastCorrection_),
                         lattice_.getEdgeTarget(lastCorrection_),
@@ -117,7 +148,7 @@ public:
 
                 AnnotationItem item("word", lemma);
 
-                lastLemma_ =
+                lastLemma_ = lastLexeme_ =
                     lattice_.addEdge(
                         lattice_.getEdgeSource(lastNormalization_),
                         lattice_.getEdgeTarget(lastNormalization_),
@@ -175,14 +206,18 @@ public:
 
    private:
         virtual void doRun() {
+            L& lemmatizer = dynamic_cast<LemmatizerAnnotator&>(processor_).lemmatizer_;
+            LayerTagCollection layerTags =
+                lattice_.getLayerTagManager().createTagCollection(lemmatizer.getLayerTags());
+
             Lattice::EdgesSortedByTargetIterator edgeIterator = lattice_.edgesSortedByTarget(tokenMask_);
 
             while (edgeIterator.hasNext()) {
                 Lattice::EdgeDescriptor edge = edgeIterator.next();
 
                 if (lattice_.getAnnotationCategory(edge) == "word") {
-                    WorkerOutputIterator outputIterator(lattice_, edge);
-                    dynamic_cast<LemmatizerAnnotator&>(processor_).lemmatizer_.lemmatize(
+                    WorkerOutputIterator outputIterator(layerTags, lattice_, edge);
+                    lemmatizer.lemmatize(
                         lattice_.getAnnotationText(edge),
                         lattice_.getAnnotationItemManager(),
                         outputIterator);
