@@ -5,7 +5,7 @@ class JavaVirtualMachineTests : public CxxTest::TestSuite {
 	public:
 
 	void testSingleton() {
-		//JavaVirtualMachine::setJavaClassPath("../common/java/");
+		//JavaVirtualMachine::setJavaClassPath("../common/j");
 		JavaVirtualMachine *jvm1 = JavaVirtualMachine::Instance();
   	    JavaVirtualMachine *jvm2 = jvm1->Instance();
 
