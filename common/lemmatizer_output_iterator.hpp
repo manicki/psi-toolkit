@@ -14,17 +14,22 @@ class LemmatizerOutputIterator {
 public:
     // usually spell checking correction
     void addCorrection(
-        const std::string correction,
+        const std::string& correction,
         Lattice::Score score=0,
         int ruleId=-1);
 
     // usually truecasing
     void addNormalization(
-        const std::string normalization,
+        const std::string& normalization,
         Lattice::Score score=0,
         int ruleId=-1);
 
     void addLemma(
+        const std::string& item,
+        Lattice::Score score=0,
+        int ruleId=-1);
+
+    void addLexeme(
         const AnnotationItem& item,
         Lattice::Score score=0,
         int ruleId=-1);
@@ -38,16 +43,21 @@ public:
 
 private:
     virtual void doAddCorrection(
-        const std::string correction,
+        const std::string& correction,
         Lattice::Score score,
         int ruleId) = 0;
 
     virtual void doAddNormalization(
-        const std::string normalization,
+        const std::string& normalization,
         Lattice::Score score,
         int ruleId) = 0;
 
     virtual void doAddLemma(
+        const std::string& lemma,
+        Lattice::Score score,
+        int ruleId) = 0;
+
+    virtual void doAddLexeme(
         const AnnotationItem& item,
         Lattice::Score score,
         int ruleId) = 0;

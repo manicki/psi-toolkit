@@ -55,16 +55,19 @@ public:
         private:
             Lattice& lattice_;
             LayerTagCollection lemmaTag_;
+            LayerTagCollection lexemeTag_;
             LayerTagCollection formTag_;
             Lattice::EdgeDescriptor tokenEdge_;
             Lattice::EdgeDescriptor lastCorrection_;
             Lattice::EdgeDescriptor lastNormalization_;
             Lattice::EdgeDescriptor lastLemma_;
+            Lattice::EdgeDescriptor lastLexeme_;
 
         public:
             WorkerOutputIterator(Lattice& lattice, Lattice::EdgeDescriptor tokenEdge)
                 :lattice_(lattice),
                  lemmaTag_(lattice.getLayerTagManager().createSingletonTagCollection("lemma")),
+                 lemmaTag_(lattice.getLayerTagManager().createSingletonTagCollection("lexeme")),
                  formTag_(lattice.getLayerTagManager().createSingletonTagCollection("form")),
                  tokenEdge_(tokenEdge),
                  lastCorrection_(tokenEdge),
@@ -74,20 +77,20 @@ public:
 
         private:
             virtual void doAddCorrection(
-                const std::string correction,
+                const std::string& correction,
                 Lattice::Score score,
                 int ruleId) {
                 ;
             }
 
             virtual void doAddNormalization(
-                const std::string normalization,
+                const std::string& normalization,
                 Lattice::Score score,
                 int ruleId) {
                 ;
             }
 
-            virtual void doAddLemma(
+            virtual void doAddLexeme(
                 const AnnotationItem& item,
                 Lattice::Score score,
                 int ruleId) {
@@ -95,10 +98,10 @@ public:
                 Lattice::EdgeSequence::Builder seqBuilder;
                 seqBuilder.addEdge(lastNormalization_);
 
-                lastLemma_ =
+                lastLexeme_ =
                     lattice_.addEdge(
-                        lattice_.getEdgeSource(lastNormalization_),
-                        lattice_.getEdgeTarget(lastNormalization_),
+                        lattice_.getEdgeSource(lastLemma_),
+                        lattice_.getEdgeTarget(lastLemma_),
                         item,
                         lemmaTag_,
                         seqBuilder.build(),
