@@ -2,6 +2,7 @@
 #define FAKE_LEMMATIZER_HDR
 
 #include <string>
+#include <list>
 
 #include "annotation_item_manager.hpp"
 #include "lemmatizer_output_iterator.hpp"
@@ -17,6 +18,7 @@ public:
 
     static std::string getName();
 
+    std::list<std::string> getLayerTags();
 };
 
 #endif

@@ -22,3 +22,12 @@ void FakeLemmatizer::lemmatize(const std::string token,
 std::string FakeLemmatizer::getName() {
     return "lex-fake";
 }
+
+std::list<std::string> FakeLemmatizer::getLayerTags() {
+    std::list<std::string> layerTags;
+
+    layerTags.push_back("lex-fake");
+    layerTags.push_back("lexdb-tagset");
+
+    return layerTags;
+}
