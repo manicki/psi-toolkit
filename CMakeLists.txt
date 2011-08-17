@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 2.8)
 
-project(psi-toolkit CXX Java)
+project(psi-toolkit CXX)
 
 # Finds and includes external libraries
 set(Boost_USE_STATIC_LIBS ON)
@@ -13,6 +13,8 @@ option(USE_JAVA "Compiling Java components" OFF)
 message(STATUS "Compiling Java components ${USE_JAVA}")
 
 if(USE_JAVA)
+	enable_language(Java)
+
 	find_package(Java REQUIRED)
 	message(STATUS "Java runtime ${JAVA_RUNTIME}")
 	message(STATUS "Java compile ${JAVA_COMPILE}")
