@@ -38,7 +38,7 @@ foreach(dir ${DIRS})
 	add_subdirectory(${dir})
 endforeach(dir)
 
-set_target_properties(common framework formats-psi formats-txt formats-utt tools-tokenizers-tp psi-pipe PROPERTIES 
+set_target_properties(common framework formats-psi formats-txt formats-utt tools-tokenizers-tp psi-pipe common-test PROPERTIES 
 	COMPILE_FLAGS "-I${psi-toolkit_SOURCE_DIR}/utf8")
 
 foreach(dir ${formats_SUBDIRS})

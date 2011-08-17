@@ -1,5 +1,6 @@
 add_library(common-test
 	by_spaces_cutter.cpp
+	fake_lemmatizer.cpp
 )
 target_link_libraries(common-test common)
 

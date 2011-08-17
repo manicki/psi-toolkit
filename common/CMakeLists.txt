@@ -19,11 +19,11 @@ add_library(common
 	layer_tag_collection.cpp  
 	layer_tag_manager.cpp 
 	layer_tag_mask.cpp 
+	lemmatizer_output_iterator.cpp
 	processor.cpp 
 	processor_factory.cpp 
 	quoter.cpp 
 	reader_worker.cpp 
-	utf8_string.cpp 
 	utt_like_quoter.cpp 
 	writer_worker.cpp
 	${common-java-files}
