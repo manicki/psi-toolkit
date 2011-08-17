@@ -92,10 +92,13 @@ void PsiLatticeWriter::Worker::doRun() {
             }
             tagStr += *ti;
         }
-        outputStream_ << std::setw(20) << quoter.escape(tagStr);
+        outputStream_ << std::setw(12) << quoter.escape(tagStr);
         outputStream_ << " ";
 
-        outputStream_ << quoter.escape(annotationItem.getCategory());
+        outputStream_ << std::setw(8) << std::right << quoter.escape(annotationItem.getCategory());
+
+        outputStream_ << " ";
+        outputStream_ << std::setw(12) << std::right << quoter.escape(annotationItem.getText());
 
         Lattice::Score score = lattice_.getEdgeScore(edge);
         if (score != 0.0) {
