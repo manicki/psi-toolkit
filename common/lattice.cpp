@@ -1,8 +1,10 @@
 #include "lattice.hpp"
 
-Lattice::Lattice() { }
+Lattice::Lattice():symbolTag_(layerTagManager_.createSingletonTagCollection("symbol")) {
+}
 
-Lattice::Lattice(std::string text) {
+Lattice::Lattice(std::string text)
+ :symbolTag_(layerTagManager_.createSingletonTagCollection("symbol")) {
     appendString(text);
 }
 
@@ -25,8 +27,7 @@ void Lattice::addSymbols(VertexDescriptor startVertex, VertexDescriptor endVerte
             vd,
             vd + symbol.length(),
             AnnotationItem(symbol),
-            layerTagManager_.createSingletonTagCollection("symbol")
-        );
+            getSymbolTag_());
         vd += symbol.length();
     }
 }
@@ -87,7 +88,7 @@ Lattice::EdgeDescriptor Lattice::addEdge(
         }
 
         if (
-            tags == layerTagManager_.createSingletonTagCollection("symbol")
+            tags == getSymbolTag_()
             && from + (int) symbolLength_(from) == to
         ) {
             implicitOutEdges_.set(from, true);
@@ -277,11 +278,11 @@ const AnnotationItem Lattice::getEdgeAnnotationItem(Lattice::EdgeDescriptor edge
     return AnnotationItem(symbol);
 }
 
-const LayerTagCollection Lattice::getEdgeLayerTags(Lattice::EdgeDescriptor edge) {
+const LayerTagCollection& Lattice::getEdgeLayerTags(Lattice::EdgeDescriptor edge) const {
     if (edge.implicitIndex < 0) {
         return graph_[edge.descriptor].tagList;
     }
-    return layerTagManager_.createSingletonTagCollection("symbol");
+    return getSymbolTag_();
 }
 
 int Lattice::getEdgeBeginIndex(Lattice::EdgeDescriptor edge) const {
@@ -357,11 +358,22 @@ const std::string Lattice::getPartitionText(const Partition& partition) const {
     return getSequenceText(partition.getSequence());
 }
 
+const std::string Lattice::getAnnotationText(EdgeDescriptor edge) {
+    return getEdgeAnnotationItem(edge).getText();
+}
+
+const std::string Lattice::getAnnotationCategory(EdgeDescriptor edge) {
+    return getEdgeAnnotationItem(edge).getCategory();
+}
+
 
 void Lattice::runCutter(Cutter& cutter, LayerTagMask mask) {
     VertexDescriptor vertex = getFirstVertex();
 
     EdgeSequence sequence = getPath(vertex, mask);
+
+    if (sequence.empty())
+        return;
 
     std::string text = getSequenceText(sequence);
 
@@ -465,6 +477,9 @@ size_t Lattice::symbolLength_(int ix) const {
     return symbol.length();
 }
 
+const LayerTagCollection& Lattice::getSymbolTag_() const {
+    return symbolTag_;
+}
 
 Lattice::EdgeSequence::EdgeSequence() {
 }
@@ -483,6 +498,10 @@ Lattice::EdgeDescriptor Lattice::EdgeSequence::firstEdge() const {
 
 Lattice::EdgeDescriptor Lattice::EdgeSequence::lastEdge() const {
     return links.back();
+}
+
+bool Lattice::EdgeSequence::empty() const {
+    return links.empty();
 }
 
 size_t Lattice::EdgeSequence::size() const {
@@ -596,7 +615,7 @@ Lattice::VertexDescriptor Lattice::VertexIterator::next() {
         }
         ++vd_;
     }
-    throw NoEdgeException("Iterator has no next edges.");
+    throw NoEdgeException("Vertex iterator has no next edges.");
 }
 
 
@@ -632,7 +651,7 @@ Lattice::EdgeDescriptor Lattice::InOutEdgesIterator::next() {
     case IMPLICIT_ITER :
         break;
     }
-    throw NoEdgeException("Iterator has no next edges.");
+    throw NoEdgeException("InOutEdgesIterator has no next edges.");
 }
 
 
@@ -645,7 +664,8 @@ Lattice::SortedEdgesIterator::SortedEdgesIterator(
     mask_(mask),
     vi_(lattice)
 {
-    vi_.next();
+    if (vi_.hasNext())
+        vi_.next();
 }
 
 bool Lattice::SortedEdgesIterator::hasNext() {
@@ -663,7 +683,7 @@ Lattice::EdgeDescriptor Lattice::SortedEdgesIterator::next() {
         ei_ = getEdgesIterator_(vi_.next());
         if (ei_.hasNext()) return ei_.next();
     }
-    throw NoEdgeException("Iterator has no next edges.");
+    throw NoEdgeException("SortedEdgesIterator has no next edges.");
 }
 
 Lattice::SortedEdgesIterator::~SortedEdgesIterator() {

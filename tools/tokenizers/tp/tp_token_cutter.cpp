@@ -5,7 +5,7 @@ AnnotationItem TpTokenCutter::doCutOff(const std::string& text, size_t& position
 
     if (spacePosition == positionInText) {
         ++positionInText;
-        return AnnotationItem("' '");
+        return AnnotationItem("blank", " ");
     }
     else {
         std::string token = text.substr(positionInText,
@@ -13,9 +13,8 @@ AnnotationItem TpTokenCutter::doCutOff(const std::string& text, size_t& position
                                          std::string::npos :
                                          spacePosition - positionInText));
 
-        std::string cat = std::string("'") + token + std::string("'");
         positionInText = spacePosition;
-        return AnnotationItem(cat);
+        return AnnotationItem("word", token);
     }
 }
 

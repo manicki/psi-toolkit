@@ -1,0 +1,8 @@
+add_library(tools-lemmatizers-morfologik
+	morfologik_tags_parser.cpp
+	morfologik.cpp
+)
+target_link_libraries(tools-lemmatizers-morfologik common ${JAVA_JVM_LIBRARY})
+
+add_subdirectory(t)
+

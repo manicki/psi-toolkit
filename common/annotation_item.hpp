@@ -11,18 +11,32 @@
 class AnnotationItem {
 
 public:
-
     AnnotationItem(const std::string& category) :
         category_(category),
         attributes_(32)
     { }
 
-    AnnotationItem(const std::string & category, int size) :
+    AnnotationItem(const std::string& category, const std::string& text) :
+        category_(category),
+        text_(text),
+        attributes_(32)
+    { }
+
+    AnnotationItem(const std::string& category, int size) :
         category_(category),
         attributes_(size % 32 == 0 ? size : size + 32 - size % 32)
     { }
 
+    AnnotationItem(const std::string& category, const std::string& text, int size) :
+        category_(category),
+        text_(text),
+        attributes_(size % 32 == 0 ? size : size + 32 - size % 32)
+    { }
+
+
     std::string getCategory() const;
+
+    std::string getText() const;
 
     long getHash() const;
 
@@ -33,6 +47,7 @@ public:
 private:
 
     std::string category_;
+    std::string text_;
     std::vector<std::string> values_;
     boost::dynamic_bitset<> attributes_;
 

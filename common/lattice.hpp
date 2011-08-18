@@ -106,6 +106,8 @@ public:
 
         EdgeDescriptor lastEdge() const;
 
+        bool empty() const;
+
         size_t size() const;
 
         class Builder {
@@ -357,7 +359,7 @@ public:
     AnnotationItemManager& getAnnotationItemManager();
 
     const AnnotationItem getEdgeAnnotationItem(EdgeDescriptor edge);
-    const LayerTagCollection getEdgeLayerTags(EdgeDescriptor edge);
+    const LayerTagCollection& getEdgeLayerTags(EdgeDescriptor edge) const;
     int getEdgeBeginIndex(EdgeDescriptor edge) const;
     int getEdgeLength(EdgeDescriptor edge) const;
     bool isEdgeHidden(EdgeDescriptor edge) const;
@@ -370,6 +372,9 @@ public:
     const std::string getEdgeText(EdgeDescriptor edge) const;
     const std::string getSequenceText(const EdgeSequence& sequence) const;
     const std::string getPartitionText(const Partition& partition) const;
+
+    const std::string getAnnotationText(EdgeDescriptor edge);
+    const std::string getAnnotationCategory(EdgeDescriptor edge);
 
     void runCutter(Cutter& cutter, LayerTagMask mask);
 
@@ -409,6 +414,7 @@ private:
     VertexDescriptor priorVertex_(VertexDescriptor vertex);
 
     size_t symbolLength_(int ix) const;
+    const LayerTagCollection& getSymbolTag_() const;
 
     VertexDescriptor firstSequenceVertex_(const EdgeSequence& sequence) const;
     VertexDescriptor lastSequenceVertex_(const EdgeSequence& sequence) const;
@@ -502,6 +508,8 @@ private:
 
     VVCHash vvcHash_;
     EdgeCounterHash edgeCounterHash_;
+
+    LayerTagCollection symbolTag_;
 
 };
 
