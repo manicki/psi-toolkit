@@ -424,40 +424,40 @@ namespace poleng {
                             values.begin(); valueIt != values.end(); valueIt ++) {
                         lattice.getAnnotationItemManager().setValue(
                                 annotationItem, valueIt->first, valueIt->second);
-                        std::cerr << "ustawiam: " << valueIt->first << " na " << valueIt->second << std::endl;
+//                        std::cerr << "ustawiam: " << valueIt->first << " na " << valueIt->second << std::endl;
                     }
-                    std::cerr << "categoria: " << lattice.getAnnotationItemManager().getCategory(annotationItem) << std::endl;
+//                    std::cerr << "categoria: " << lattice.getAnnotationItemManager().getCategory(annotationItem) << std::endl;
 
                     for (std::list<Lattice::EdgeSequence>::iterator seqIt =
                             groupSequences.begin();
                             seqIt != groupSequences.end();
                             seqIt ++) {
-                        std::cerr << "partycja: ";
-                        for (Lattice::EdgeSequence::Iterator eIt = seqIt->begin();
-                                eIt != seqIt->end(); eIt ++) {
-                            std::cerr << " " << lattice.getEdgeText(*eIt);
-                            std::list< std::pair<std::string, std::string> > values666 =
-                                lattice.getAnnotationItemManager().getValues(
-                                        lattice.getEdgeAnnotationItem(*eIt) );
-                            std::cerr << "(";
-                            for (std::list< std::pair<std::string, std::string> >::iterator valueIt =
-                                    values666.begin(); valueIt != values666.end(); valueIt ++)
-                                std::cerr << ":" << valueIt->second;
-                            std::cerr << ")";
-                        }
-                        std::cerr << std::endl;
-                        std::cerr << "chce dodac to od: " << startVertex << " do: " << endVertex << std::endl;
+//                        std::cerr << "partycja: ";
+//                        for (Lattice::EdgeSequence::Iterator eIt = seqIt->begin();
+//                                eIt != seqIt->end(); eIt ++) {
+//                            std::cerr << " " << lattice.getEdgeText(*eIt);
+//                            std::list< std::pair<std::string, std::string> > values666 =
+//                                lattice.getAnnotationItemManager().getValues(
+//                                        lattice.getEdgeAnnotationItem(*eIt) );
+//                            std::cerr << "(";
+//                            for (std::list< std::pair<std::string, std::string> >::iterator valueIt =
+//                                    values666.begin(); valueIt != values666.end(); valueIt ++)
+//                                std::cerr << ":" << valueIt->second;
+//                            std::cerr << ")";
+//                        }
+//                        std::cerr << std::endl;
+//                        std::cerr << "chce dodac to od: " << startVertex << " do: " << endVertex << std::endl;
                         bool firstPartition = true;
                         Lattice::InOutEdgesIterator outEdgesIt = lattice.outEdges(
                                 startVertex, lattice.getLayerTagManager().getMask(tags));
                         if (outEdgesIt.hasNext()) {
                             Lattice::EdgeDescriptor newEdge = outEdgesIt.next();
-                            std::cerr << "dodawany pierun: " << annotationItem.getCategory() << std::endl;
-                            std::cerr << "z kratry wziety: " << lattice.getEdgeAnnotationItem(newEdge).getCategory() << std::endl;
+//                            std::cerr << "dodawany pierun: " << annotationItem.getCategory() << std::endl;
+//                            std::cerr << "z kratry wziety: " << lattice.getEdgeAnnotationItem(newEdge).getCategory() << std::endl;
                             if (annotationItem == lattice.getEdgeAnnotationItem(newEdge)) {
                                 //there is already such an edge. add another partition
                                 //@todo: to tak nie dziala. nowa partition powinno dodawac samo addEdge, ale nie robi tego. na razie jest wiec jedna partition zawsze
-                                std::cerr << "PRZED: " << lattice.getEdgePartitions(newEdge).size() << std::endl;
+                                //std::cerr << "PRZED: " << lattice.getEdgePartitions(newEdge).size() << std::endl;
 
 //                        lattice.addEdge(
 //                                startVertex,
@@ -468,12 +468,12 @@ namespace poleng {
 //                                );
 
 //                                lattice.getEdgePartitions(newEdge).push_back(*seqIt);
-                                std::cerr << "PO: " << lattice.getEdgePartitions(newEdge).size() << std::endl;
+                                //std::cerr << "PO: " << lattice.getEdgePartitions(newEdge).size() << std::endl;
                                 firstPartition = false;
                             }
                         }
                         if (firstPartition) {
-                            std::cerr << "daje nowego" << std::endl;
+//                            std::cerr << "daje nowego" << std::endl;
                             //there is no such an edge yet. add a new one
                         lattice.addEdge(
                                 startVertex,

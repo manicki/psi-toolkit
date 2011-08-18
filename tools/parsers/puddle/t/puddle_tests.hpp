@@ -217,8 +217,8 @@ public:
         TS_ASSERT(!tokenIter.hasNext());
 
         //preparing parser
-        std::string tagsetFilename = "../tools/parsers/puddle/t/files/tagset.fr";
-        std::string rulesFilename = "../tools/parsers/puddle/t/files/rules.fr";
+        std::string tagsetFilename = "tools/parsers/puddle/t/files/tagset.fr";
+        std::string rulesFilename = "tools/parsers/puddle/t/files/rules.fr";
         poleng::bonsai::puddle::TagsetLoader tagset_loader;
         poleng::bonsai::puddle::RuleLoader rule_loader;
         poleng::bonsai::puddle::TaggerPtr tagger = poleng::bonsai::puddle::TaggerPtr( new poleng::bonsai::puddle::Tagger());

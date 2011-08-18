@@ -123,24 +123,24 @@ bool GroupAction::apply(Lattice &lattice, int currentEntity,
             lattice, headVertex);
     std::list<Lattice::EdgeDescriptor> endEdges = lattice::getTopEdges(
             lattice, endVertex);
-    std::cerr << "head" << std::endl;
-    for (std::list<Lattice::EdgeDescriptor>::iterator edgeIt =
-            headEdges.begin(); edgeIt != headEdges.end(); edgeIt ++) {
-        std::cerr << lattice.getEdgeText(*edgeIt) << " " << lattice.getEdgeSource(*edgeIt) << " " << lattice.getEdgeTarget(*edgeIt) << " " << lattice.getEdgeBeginIndex(*edgeIt) << " " << lattice.getEdgeLength(*edgeIt) << std::endl;
-    }
+//    std::cerr << "head" << std::endl;
+//    for (std::list<Lattice::EdgeDescriptor>::iterator edgeIt =
+//            headEdges.begin(); edgeIt != headEdges.end(); edgeIt ++) {
+//        std::cerr << lattice.getEdgeText(*edgeIt) << " " << lattice.getEdgeSource(*edgeIt) << " " << lattice.getEdgeTarget(*edgeIt) << " " << lattice.getEdgeBeginIndex(*edgeIt) << " " << lattice.getEdgeLength(*edgeIt) << std::endl;
+//    }
     std::list<Lattice::EdgeSequence> groupPartitions =
         lattice::getEdgesRange(
             lattice, startVertex, endVertex
             );
-    std::cerr << "Partycje" << std::endl;
-    for (std::list<Lattice::EdgeSequence>::iterator partIt = groupPartitions.begin();
-            partIt != groupPartitions.end(); partIt ++) {
-        std::cerr << "!" << std::endl;
-        for (Lattice::EdgeSequence::Iterator edgeIt =
-                partIt->begin(); edgeIt != partIt->end(); edgeIt ++) {
-            std::cerr << lattice.getEdgeText(*edgeIt) << " " << lattice.getEdgeSource(*edgeIt) << " " << lattice.getEdgeTarget(*edgeIt) << " " << lattice.getEdgeBeginIndex(*edgeIt) << " " << lattice.getEdgeLength(*edgeIt) << std::endl;
-        }
-    }
+//    std::cerr << "Partycje" << std::endl;
+//    for (std::list<Lattice::EdgeSequence>::iterator partIt = groupPartitions.begin();
+//            partIt != groupPartitions.end(); partIt ++) {
+//        std::cerr << "!" << std::endl;
+//        for (Lattice::EdgeSequence::Iterator edgeIt =
+//                partIt->begin(); edgeIt != partIt->end(); edgeIt ++) {
+//            std::cerr << lattice.getEdgeText(*edgeIt) << " " << lattice.getEdgeSource(*edgeIt) << " " << lattice.getEdgeTarget(*edgeIt) << " " << lattice.getEdgeBeginIndex(*edgeIt) << " " << lattice.getEdgeLength(*edgeIt) << std::endl;
+//        }
+//    }
     lattice::addParseEdges(
             lattice,
             startEdges,

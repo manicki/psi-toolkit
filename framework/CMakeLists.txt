@@ -3,7 +3,6 @@ add_library(framework
 	main_factories_keeper.cpp
 	pipe_runner.cpp
 )
-target_link_libraries(framework tools-tokenizers-tp)
 
 foreach(dir ${formats_SUBDIRS})
 	include_directories("${psi-toolkit_SOURCE_DIR}/formats/${dir}")
