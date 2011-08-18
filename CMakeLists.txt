@@ -34,6 +34,7 @@ if(USE_POSTGRESQL)
         find_package(PostgreSQL REQUIRED)
         include_directories(${PostgreSQL_INCLUDE_DIRS})
         link_directories(${PostgreSQL_LIBRARY_DIRS})
+        set(HAVE_POSTGRESQL 1)
 endif(USE_POSTGRESQL)
 
 option(USE_PUDDLE "Compiling puddle shallow parser" OFF)
@@ -46,7 +47,7 @@ option(BONSAI_PATH "Bonsai common path file (required while using ParseGraph)" "
 message(STATUS "Bonsai common path file (required while using ParseGraph) ${BONSAI_PATH}")
 
 # Sets compiler flags
-set(CMAKE_CXX_FLAGS "-g -Wall")
+set(CMAKE_CXX_FLAGS "-g -Wall -Wundef -Wnon-virtual-dtor")
 
 set(DIRS common formats framework tools utf8)
 foreach(dir ${DIRS})
@@ -94,3 +95,6 @@ if(CXXTEST_FOUND)
         target_link_libraries(runner tools-parsers-puddle re2)
     endif(USE_PUDDLE)
 endif()
+
+configure_file(${psi-toolkit_SOURCE_DIR}/common/config.h.in ${psi-toolkit_SOURCE_DIR}/common/config.h)
+

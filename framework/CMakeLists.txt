@@ -17,6 +17,11 @@ endforeach(dir)
 add_executable(psi-pipe psi-pipe.cpp)
 target_link_libraries(psi-pipe framework ${Boost_LIBRARIES} common formats-psi formats-txt formats-utt tools-tokenizers-tp)
 
+if(USE_POSTGRESQL)
+        include_directories("${psi-toolkit_SOURCE_DIR}/tools/lemmatizers/lex_db")
+        target_link_libraries(lex-db)
+endif(USE_POSTGRESQL)
+
 install(TARGETS psi-pipe DESTINATION "${psi-toolkit_BINARY_DIR}")
 install(FILES DESTINATION "${psi-toolkit_BINARY_DIR}")
 
