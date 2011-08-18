@@ -90,12 +90,17 @@ runner_SOURCES += \
 	../tools/parsers/puddle/rule.cpp \
 	../tools/parsers/puddle/rule_matcher.cpp \
 	../tools/parsers/puddle/rule_modifier.cpp \
-	../tools/parsers/puddle/graph_writer.cpp \
-	../tools/parsers/puddle/parse_converter.cpp \
-	../tools/parsers/puddle/lattice_wrapper.cpp \
+	../tools/parsers/puddle/lattice_wrapper.cpp
+if WITH_BONSAI_PARSEGRAPH
+runner_SOURCES += \
 	@BONSAI_PATH@/ParseGraph.cpp \
 	@BONSAI_PATH@/TransferTypes.cpp \
 	@BONSAI_PATH@/TransitionInfo.cpp
+endif
+
+#	../tools/parsers/puddle/graph_writer.cpp
+#	../tools/parsers/puddle/parse_converter.cpp
+
 endif
 
 runner_CPPFLAGS = ${compiler_flags} \
@@ -173,18 +178,15 @@ puddle_SOURCES = \
     ../tools/parsers/puddle/add_action.cpp \
     ../tools/parsers/puddle/attach_action.cpp \
     ../tools/parsers/puddle/delete_action.cpp \
-    ../tools/parsers/puddle/graph_writer.cpp \
     ../tools/parsers/puddle/group_action.cpp \
     ../tools/parsers/puddle/join_action.cpp \
 	../tools/parsers/puddle/lattice_wrapper.cpp \
-    ../tools/parsers/puddle/parse_converter.cpp \
     ../tools/parsers/puddle/puddle.cpp \
 	../tools/parsers/puddle/puddle_util.cpp \
     ../tools/parsers/puddle/rule.cpp \
     ../tools/parsers/puddle/rule_loader.cpp \
     ../tools/parsers/puddle/rule_matcher.cpp \
     ../tools/parsers/puddle/rule_modifier.cpp \
-    ../tools/parsers/puddle/sentence_tagger.cpp \
     ../tools/parsers/puddle/syntok_action.cpp \
     ../tools/parsers/puddle/tagger.cpp \
     ../tools/parsers/puddle/tagset.cpp \
@@ -197,10 +199,17 @@ puddle_SOURCES = \
 	../common/layer_tag_manager.cpp \
 	../common/layer_tag_mask.cpp \
 	../common/cutter.cpp \
-	../common/lattice.cpp \
+	../common/lattice.cpp
+if WITH_BONSAI_PARSEGRAPH
+puddle_SOURCES += \
 	@BONSAI_PATH@/ParseGraph.cpp \
 	@BONSAI_PATH@/TransitionInfo.cpp \
 	@BONSAI_PATH@/TransferTypes.cpp
+endif
+
+#    ../tools/parsers/puddle/sentence_tagger.cpp
+#    ../tools/parsers/puddle/graph_writer.cpp
+#    ../tools/parsers/puddle/parse_converter.cpp
 
 puddle_CPPFLAGS = ${compiler_flags} \
 	-I../common \

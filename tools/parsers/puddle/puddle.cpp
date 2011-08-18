@@ -34,7 +34,7 @@ Puddle::Puddle()
 
     tagsetLogFilename = "";
     rulesLogFilename = "";
-    latticeWrapper = LatticeWrapperPtr( new LatticeWrapper() );
+//    latticeWrapper = LatticeWrapperPtr( new LatticeWrapper() );
 }
 
 Puddle::~Puddle()
@@ -185,12 +185,14 @@ void Puddle::setTagger(bonsai::puddle::TaggerPtr tagger_)
 //}
 
 bool Puddle::parse(Lattice &lattice) {
-    std::string sentenceString;
-    ParseGraphPtr inputGraph = latticeWrapper->readInputLattice(lattice, sentenceString);
-    ParseGraphPtr pg = ruleMatcher->applyRules(sentenceString, inputGraph, lattice);
-    latticeWrapper->addPosEdges(lattice); //@todo: to docelowo zapewne w applyRules ma sie znalezc
-    ParseGraphPtr outputGraph = latticeWrapper->readOutputLattice(lattice);
-    std::cerr << "NA KONIEC: "<< outputGraph->write_graphviz() << std::endl;
+    //ParseGraphPtr inputGraph = lattice::readInputLattice(lattice, sentenceString);
+    std::string sentenceString = lattice::readInputLattice(lattice);
+    //ParseGraphPtr pg = ruleMatcher->applyRules(sentenceString, inputGraph, lattice);
+    ruleMatcher->applyRules(sentenceString, lattice);
+//    lattice::addPosEdges(lattice); //@todo: to docelowo zapewne w applyRules ma sie znalezc
+#ifdef _WITH_BONSAI_PARSEGRAPH
+    ParseGraphPtr outputGraph = lattice::convertToBonsaiGraph(lattice);
+#endif
     return true;
     //return pg;
 }
@@ -419,9 +421,9 @@ void Puddle::logRules()
     }
 }
 
-        LatticeWrapperPtr Puddle::getLatticeWrapper() {
-            return latticeWrapper;
-        }
+//        LatticeWrapperPtr Puddle::getLatticeWrapper() {
+//            return latticeWrapper;
+//        }
 }
 
 }

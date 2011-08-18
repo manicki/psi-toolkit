@@ -11,7 +11,7 @@ namespace poleng {
         namespace puddle {
 
             DeleteAction::DeleteAction(DeleteConditions aConditions, int aTokenIndex,
-                    std::string uPattern, LatticeWrapperPtr aLatticeWrapper) {
+                    std::string uPattern) {
                 //pattern = PatternPtr(new RE2(""));
                 //patternString = "";
                 tokenIndex = aTokenIndex;
@@ -19,7 +19,7 @@ namespace poleng {
                 verbose = false;
                 pattern_ = uPattern;
                 conditions = aConditions;
-                latticeWrapper = aLatticeWrapper;
+//                latticeWrapper = aLatticeWrapper;
             }
 
 /*DeleteAction::DeleteAction(std::string aPattern, int aTokenIndex, std::string uPattern) {
@@ -33,7 +33,8 @@ namespace poleng {
     pattern_ = uPattern;
 }*/
 
-bool DeleteAction::apply(ParseGraphPtr pg, Lattice &lattice, int currentEntity,
+//bool DeleteAction::apply(ParseGraphPtr pg, Lattice &lattice, int currentEntity,
+bool DeleteAction::apply(Lattice &lattice, int currentEntity,
         std::vector<int> matchedTokensSize) {
     int count = matchedTokensSize[tokenIndex - 1];
     if (count == 0)
@@ -54,48 +55,48 @@ bool DeleteAction::apply(ParseGraphPtr pg, Lattice &lattice, int currentEntity,
         before += matchedTokensSize[i];
         i ++;
     }
-    while (util::getEdge(pg, currentEntity, before) == NULL) { //if there is no edge at a given position, proceed to the next vertex, as it may be a whitespace
-        before ++;
-    }
+//    while (util::getEdge(pg, currentEntity, before) == NULL) {
+//        before ++;
+//    }
     Lattice::VertexDescriptor vertex = currentEntity + before;
-    while (latticeWrapper->getTopEdges(lattice, vertex).size() == 0) {
+    while (lattice::getTopEdges(lattice, vertex).size() == 0) { //if there is no edge at a given position, proceed to the next vertex, as it may be a whitespace
         before ++;
         vertex = currentEntity + before;
     }
 
-    for (int edge_i = before; edge_i < (before + count); edge_i ++) {
-        TransitionInfo *edge = util::getEdge(pg, currentEntity, edge_i);
-        for (DeleteConditions::iterator cond_it = conditions.begin();
-                cond_it != conditions.end(); cond_it ++) {
-            if (cond_it->type == BASE_CONDITION) {
-                for (std::vector<PosInfo>::iterator var_it = edge->variants_.begin();
-                        var_it != edge->variants_.end(); var_it ++) {
-                    std::string tokenBase = boost::get<0>(*var_it);
-                    if (cond_it->negation) {
-                        if (!RE2::FullMatch(tokenBase, cond_it->pattern)) {
-                            boost::get<2>(*var_it) = 0;
-                        }
-                    } else {
-                        if (RE2::FullMatch(tokenBase, cond_it->pattern)) {
-                            boost::get<2>(*var_it) = 0;
-                        }
-                    }
-                }
-            } else if (cond_it->type == MORPHOLOGY_CONDITION) {
-                for (std::vector<PosInfo>::iterator var_it = edge->variants_.begin();
-                        var_it != edge->variants_.end(); var_it ++) {
-                    std::string tokenMorphology = boost::get<1>(*var_it);
-                    if (RE2::FullMatch(tokenMorphology, cond_it->pattern)) {
-                        boost::get<2>(*var_it) = 0;
-                    }
-                }
-            }
-        }
-    }
+//    for (int edge_i = before; edge_i < (before + count); edge_i ++) {
+//        TransitionInfo *edge = util::getEdge(pg, currentEntity, edge_i);
+//        for (DeleteConditions::iterator cond_it = conditions.begin();
+//                cond_it != conditions.end(); cond_it ++) {
+//            if (cond_it->type == BASE_CONDITION) {
+//                for (std::vector<PosInfo>::iterator var_it = edge->variants_.begin();
+//                        var_it != edge->variants_.end(); var_it ++) {
+//                    std::string tokenBase = boost::get<0>(*var_it);
+//                    if (cond_it->negation) {
+//                        if (!RE2::FullMatch(tokenBase, cond_it->pattern)) {
+//                            boost::get<2>(*var_it) = 0;
+//                        }
+//                    } else {
+//                        if (RE2::FullMatch(tokenBase, cond_it->pattern)) {
+//                            boost::get<2>(*var_it) = 0;
+//                        }
+//                    }
+//                }
+//            } else if (cond_it->type == MORPHOLOGY_CONDITION) {
+//                for (std::vector<PosInfo>::iterator var_it = edge->variants_.begin();
+//                        var_it != edge->variants_.end(); var_it ++) {
+//                    std::string tokenMorphology = boost::get<1>(*var_it);
+//                    if (RE2::FullMatch(tokenMorphology, cond_it->pattern)) {
+//                        boost::get<2>(*var_it) = 0;
+//                    }
+//                }
+//            }
+//        }
+//    }
     for (vertex = currentEntity + before;
             vertex < (currentEntity + before + count); vertex ++) {
         std::list<Lattice::EdgeDescriptor> edges =
-            latticeWrapper->getTopEdges(lattice, vertex);
+            lattice::getTopEdges(lattice, vertex);
         for (std::list<Lattice::EdgeDescriptor>::iterator edgeIt = edges.begin();
                 edgeIt != edges.end(); edgeIt ++) {
             AnnotationItem annotationItem = lattice.getEdgeAnnotationItem(*edgeIt);
@@ -304,7 +305,8 @@ bool DeleteAction::apply(ParseGraphPtr pg, Lattice &lattice, int currentEntity,
     //return ret;
 }*/
 
-bool DeleteAction::test(ParseGraphPtr pg, Lattice &lattice,
+//bool DeleteAction::test(ParseGraphPtr pg, Lattice &lattice,
+bool DeleteAction::test(Lattice &lattice,
         int currentEntity, std::vector<int> matchedTokensSize) {
     bool ret = false;
     bool nothingToDelete = false;
@@ -321,62 +323,62 @@ bool DeleteAction::test(ParseGraphPtr pg, Lattice &lattice,
         before += matchedTokensSize[i];
         i ++;
     }
-    while (util::getEdge(pg, currentEntity, before) == NULL) { //if there is no edge at a given position, proceed to the next vertex, as it may be a whitespace
-        before ++;
-    }
+//    while (util::getEdge(pg, currentEntity, before) == NULL) { //if there is no edge at a given position, proceed to the next vertex, as it may be a whitespace
+//        before ++;
+//    }
     Lattice::VertexDescriptor vertex = currentEntity + before;
-    while (latticeWrapper->getTopEdges(lattice, vertex).size() == 0) {
+    while (lattice::getTopEdges(lattice, vertex).size() == 0) { //if there is no edge at a given position, proceed to the next vertex, as it may be a whitespace
         before ++;
         vertex = currentEntity + before;
     }
 
     bool foundToDelete = false;
-    for (int edge_i = before; edge_i < (before + count); edge_i ++) {
-        TransitionInfo *edge = util::getEdge(pg, currentEntity, edge_i);
-        bool conditionsSatisfied = true;
-        for (DeleteConditions::iterator cond_it = conditions.begin();
-                cond_it != conditions.end(); cond_it ++) {
-            bool satisfied = true;
-            if (cond_it->type == BASE_CONDITION) {
-                for (std::vector<PosInfo>::iterator var_it = edge->variants_.begin();
-                        var_it != edge->variants_.end(); var_it ++) {
-                    std::string tokenBase = boost::get<0>(*var_it);
-                    if (cond_it->negation) {
-                        if (RE2::FullMatch(tokenBase, cond_it->pattern)) {
-                            satisfied = false;
-                            break;
-                        }
-                    } else {
-                        if (!RE2::FullMatch(tokenBase, cond_it->pattern)) {
-                            satisfied = false;
-                            break;
-                        }
-                    }
-                }
-            } else if (cond_it->type == MORPHOLOGY_CONDITION) {
-                for (std::vector<PosInfo>::iterator var_it = edge->variants_.begin();
-                        var_it != edge->variants_.end(); var_it ++) {
-                    std::string tokenMorphology = boost::get<1>(*var_it);
-                    if (!RE2::FullMatch(tokenMorphology, cond_it->pattern)) {
-                        satisfied = false;
-                        break;
-                    }
-                }
-            }
-            if (! satisfied) {
-                conditionsSatisfied = false;
-                break;
-            }
-        }
-        if ( conditionsSatisfied) {
-            foundToDelete = true;
-            //@todo: i tu break?
-        }
-    }
+//    for (int edge_i = before; edge_i < (before + count); edge_i ++) {
+//        TransitionInfo *edge = util::getEdge(pg, currentEntity, edge_i);
+//        bool conditionsSatisfied = true;
+//        for (DeleteConditions::iterator cond_it = conditions.begin();
+//                cond_it != conditions.end(); cond_it ++) {
+//            bool satisfied = true;
+//            if (cond_it->type == BASE_CONDITION) {
+//                for (std::vector<PosInfo>::iterator var_it = edge->variants_.begin();
+//                        var_it != edge->variants_.end(); var_it ++) {
+//                    std::string tokenBase = boost::get<0>(*var_it);
+//                    if (cond_it->negation) {
+//                        if (RE2::FullMatch(tokenBase, cond_it->pattern)) {
+//                            satisfied = false;
+//                            break;
+//                        }
+//                    } else {
+//                        if (!RE2::FullMatch(tokenBase, cond_it->pattern)) {
+//                            satisfied = false;
+//                            break;
+//                        }
+//                    }
+//                }
+//            } else if (cond_it->type == MORPHOLOGY_CONDITION) {
+//                for (std::vector<PosInfo>::iterator var_it = edge->variants_.begin();
+//                        var_it != edge->variants_.end(); var_it ++) {
+//                    std::string tokenMorphology = boost::get<1>(*var_it);
+//                    if (!RE2::FullMatch(tokenMorphology, cond_it->pattern)) {
+//                        satisfied = false;
+//                        break;
+//                    }
+//                }
+//            }
+//            if (! satisfied) {
+//                conditionsSatisfied = false;
+//                break;
+//            }
+//        }
+//        if ( conditionsSatisfied) {
+//            foundToDelete = true;
+//            //@todo: i tu break?
+//        }
+//    }
     for (vertex = currentEntity + before;
             vertex < (currentEntity + before + count); vertex ++) {
         std::list<Lattice::EdgeDescriptor> edges =
-            latticeWrapper->getTopEdges(lattice, vertex);
+            lattice::getTopEdges(lattice, vertex);
         for (std::list<Lattice::EdgeDescriptor>::iterator edgeIt = edges.begin();
                 edgeIt != edges.end(); edgeIt ++) {
             bool conditionsSatisfied = true;

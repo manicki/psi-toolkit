@@ -8,7 +8,7 @@
 #include "rule_loader.hpp"
 #include "rule_matcher.hpp"
 #include "rule.hpp"
-#include "graph_writer.hpp"
+//#include "graph_writer.hpp"
 //#include "TranslaticaGraph.hpp"
 #include <boost/date_time/posix_time/posix_time.hpp>
 #include <ctime>
@@ -16,7 +16,7 @@
 #include <boost/shared_ptr.hpp>
 #include "tagger.hpp"
 //#include "me_tagger.hpp"
-#include "parse_converter.hpp"
+//#include "parse_converter.hpp"
 #include "rule_modifier.hpp"
 #include "lattice_wrapper.hpp"
 
@@ -61,7 +61,7 @@ class Puddle
 //        ParseGraphPtr parse(ParseGraphPtr graph); // void parse(ParseGraphPtr &graph);
         bool parse(Lattice &lattice);
 //        std::vector<ParseGraphPtr>* getGraphs();
-        LatticeWrapperPtr getLatticeWrapper();
+//        LatticeWrapperPtr getLatticeWrapper();
 
     protected:
 //        Tagset *tagset;
@@ -90,7 +90,7 @@ class Puddle
         bool norepeats;
 
         RuleModifier *ruleModifier;
-        LatticeWrapperPtr latticeWrapper;
+//        LatticeWrapperPtr latticeWrapper;
 
 //        ParseGraphPtr graph;
 };

@@ -16,7 +16,7 @@ namespace bonsai
     namespace puddle
     {
 
-AttachAction::AttachAction(std::string aGroup, int aStart, int aEnd, int aHead, std::string aRuleName, LatticeWrapperPtr aLatticeWrapper)
+AttachAction::AttachAction(std::string aGroup, int aStart, int aEnd, int aHead, std::string aRuleName) //, LatticeWrapperPtr aLatticeWrapper)
 {
     group = aGroup;
     start = aStart;
@@ -35,7 +35,7 @@ AttachAction::AttachAction(std::string aGroup, int aStart, int aEnd, int aHead, 
     ruleName = aRuleName;
     verbose = false;
 
-    latticeWrapper = aLatticeWrapper;
+//    latticeWrapper = aLatticeWrapper;
 }
 
 AttachAction::~AttachAction()
@@ -43,8 +43,9 @@ AttachAction::~AttachAction()
 }
 
 //bool AttachAction::apply(Entities &entities, Edges &edges, int currentEntity, std::vector<int> matchedTokensSize)
-bool AttachAction::apply(ParseGraphPtr pg, Lattice &lattice,
-        int currentEntity, std::vector<int> matchedTokensSize) {
+//bool AttachAction::apply(ParseGraphPtr pg, Lattice &lattice,
+bool AttachAction::apply(Lattice &lattice, int currentEntity,
+        std::vector<int> matchedTokensSize) {
 
 //    std::cout << "Poczatek reguly: " << ruleName << std::endl;
 //    std::cout << "PRZED mam elementow: " << entities.size() << std::endl;
@@ -104,31 +105,31 @@ bool AttachAction::apply(ParseGraphPtr pg, Lattice &lattice,
         entities.insert((entities.begin() + entities.size() - 1), gr); //TODO: a nie +realStart?
 */
 
-    TransitionInfo *group = new TransitionInfo("group");
+//    TransitionInfo *group = new TransitionInfo("group");
     //std::stringstream ss;
     //ss << std::hex << Group::groupId;
     //group->setId(gr->getId()); //TODO id nadawanie!
-    group->setId( util::getNewEdgeId(pg) );
-    group->setLabel(this->group);
-
-    TransitionInfo *edgeStart = util::getEdge(pg, currentEntity, realStart);
-    TransitionInfo *edgeHead = util::getEdge(pg, currentEntity, realHead);
-    TransitionInfo *edgeEnd = util::getEdge(pg, currentEntity, realEnd);
+//    group->setId( util::getNewEdgeId(pg) );
+//    group->setLabel(this->group);
+//
+//    TransitionInfo *edgeStart = util::getEdge(pg, currentEntity, realStart);
+//    TransitionInfo *edgeHead = util::getEdge(pg, currentEntity, realHead);
+//    TransitionInfo *edgeEnd = util::getEdge(pg, currentEntity, realEnd);
     Lattice::VertexDescriptor startVertex = currentEntity + realStart;
     Lattice::VertexDescriptor headVertex = currentEntity + realHead;
     Lattice::VertexDescriptor endVertex = currentEntity + realEnd;
-    std::list<Lattice::EdgeDescriptor> startEdges = latticeWrapper->getTopEdges(
+    std::list<Lattice::EdgeDescriptor> startEdges = lattice::getTopEdges(
             lattice, startVertex);
-    std::list<Lattice::EdgeDescriptor> headEdges = latticeWrapper->getTopEdges(
+    std::list<Lattice::EdgeDescriptor> headEdges = lattice::getTopEdges(
             lattice, headVertex);
-    std::list<Lattice::EdgeDescriptor> endEdges = latticeWrapper->getTopEdges(
+    std::list<Lattice::EdgeDescriptor> endEdges = lattice::getTopEdges(
             lattice, endVertex);
-    latticeWrapper->removeParseEdges(lattice, headVertex, headVertex + 1);
+    lattice::removeParseEdges(lattice, headVertex, headVertex + 1);
     std::list<Lattice::EdgeSequence> groupPartitions =
-        latticeWrapper->getEdgesRange(
+        lattice::getEdgesRange(
                 lattice, startVertex, endVertex
                 );
-    latticeWrapper->addParseEdges(
+    lattice::addParseEdges(
             lattice,
             startEdges,
             endEdges,
@@ -136,19 +137,19 @@ bool AttachAction::apply(ParseGraphPtr pg, Lattice &lattice,
             headEdges,
             groupPartitions
             );
-    group->setStart(edgeStart->getStart());
-    group->setEnd(edgeEnd->getEnd());
-    group->setHead(edgeHead->getId());
-    group->setOrth(edgeHead->getOrth());
-    std::vector<PosInfo> headVariants = edgeHead->variants_;
-    for (std::vector<PosInfo>::iterator vit = headVariants.begin();
-            vit != headVariants.end(); vit ++) {
-        group->addMorphology(*vit);
-    }
-    //note: tu sztucznie wymuszam numerowanie od 2. glebokosc 1 maja miec krawedzie typu 'pos', ale one sa dodawane dopiero po zakonczeniu parsingu, wiec trzeba nie jako zalozyc tu, ze takowe istnieja
-    group->setDepth(edgeStart->getDepth() + 1);
-    if (group->getDepth() == 1) //note: tu nastepuje wspomniany wyzej trik
-        group->setDepth(2);
+//    group->setStart(edgeStart->getStart());
+//    group->setEnd(edgeEnd->getEnd());
+//    group->setHead(edgeHead->getId());
+//    group->setOrth(edgeHead->getOrth());
+//    std::vector<PosInfo> headVariants = edgeHead->variants_;
+//    for (std::vector<PosInfo>::iterator vit = headVariants.begin();
+//            vit != headVariants.end(); vit ++) {
+//        group->addMorphology(*vit);
+//    }
+//    //note: tu sztucznie wymuszam numerowanie od 2. glebokosc 1 maja miec krawedzie typu 'pos', ale one sa dodawane dopiero po zakonczeniu parsingu, wiec trzeba nie jako zalozyc tu, ze takowe istnieja
+//    group->setDepth(edgeStart->getDepth() + 1);
+//    if (group->getDepth() == 1) //note: tu nastepuje wspomniany wyzej trik
+//        group->setDepth(2);
     /*
     group->setHead(((Token*)(gr->getHeadToken()))->getId());
     std::string startId, endId;
@@ -332,24 +333,26 @@ bool AttachAction::apply(ParseGraphPtr pg, Lattice &lattice,
 
 //    std::cout << "PO mam elementow: " << entities.size() << std::endl;
 
-    if (edgeHead->getType() == "group") {
-        util::removeGraphEdge(pg, *edgeHead);
-        //usunac edgeHead z grafu trzeba
-        //@todo: zweryfikowac to
-    }
+//    if (edgeHead->getType() == "group") {
+//        util::removeGraphEdge(pg, *edgeHead);
+//        //usunac edgeHead z grafu trzeba
+//        //@todo: zweryfikowac to
+//    }
 
     //edges.push_back(group);
-    pg->add_edge(group->getStart(), group->getEnd(), *group);
+//    pg->add_edge(group->getStart(), group->getEnd(), *group);
 
 //    std::cout << "W akcji grupowania" << std::endl;
     return true;
 }
 
 //bool AttachAction::test(Entities entities, int currentEntity, std::vector<int> matchedTokensSize)
-bool AttachAction::test(ParseGraphPtr pg, Lattice &lattice, int currentEntity,
+//bool AttachAction::test(ParseGraphPtr pg, Lattice &lattice, int currentEntity,
+bool AttachAction::test(Lattice &lattice, int currentEntity,
         std::vector<int> matchedTokensSize) {
     //if (entities.size() < head)
-    if ( (pg->num_vertices() - 1) < head) {
+    //if ( (pg->num_vertices() - 1) < head) {
+    if ( (lattice.getLastVertex()) < head) {
         return false;
     }
     if (matchedTokensSize[head - 1] == 0)

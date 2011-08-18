@@ -4,8 +4,8 @@
 #include <string>
 #include <vector>
 
-#include "ParseGraph.hpp"
-#include "TransitionInfo.hpp"
+//#include "ParseGraph.hpp"
+//#include "TransitionInfo.hpp"
 
 #include "rule.hpp"
 //#include "entity.hpp"
@@ -28,7 +28,9 @@ namespace poleng {
                     RuleMatcher();
                     ~RuleMatcher();
                     //ParseGraphPtr applyRules(std::string &sentence, Entities &entities, Edges &lattice);
-                    ParseGraphPtr applyRules(std::string &sentenceString, ParseGraphPtr inputGraph, Lattice &lattice);
+                    //ParseGraphPtr applyRules(std::string &sentenceString, ParseGraphPtr inputGraph, Lattice &lattice);
+                    void applyRules(std::string &sentenceString,
+                            Lattice &lattice);
 
                     //void setRules(Rules aRules);
                     void setRules(RulesPtr aRules);
@@ -47,13 +49,16 @@ namespace poleng {
                     bool syntok; //@todo: do czego to jest?
 
                     //void unescapeSpecialChars(Edges &edges);
-                    void unescapeSpecialChars(ParseGraphPtr pg);
+                    //void unescapeSpecialChars(ParseGraphPtr pg, Lattice &lattice);
+                    void unescapeSpecialChars(Lattice &lattice);
                     //void addPosEdges(Edges &edges);
-                    void addPosEdges(ParseGraphPtr pg);
+                    //void addPosEdges(ParseGraphPtr pg, Lattice &lattice);
+                    void addPosEdges(Lattice &lattice);
 
                     TagsetPtr tagset;
                     //std::string generateSentencePattern(Edges &edges);
-                    std::string generateSentenceString(ParseGraphPtr pg);
+                    //std::string generateSentenceString(ParseGraphPtr pg, Lattice &lattice);
+                    std::string generateSentenceString(Lattice &lattice);
             };
 
         }

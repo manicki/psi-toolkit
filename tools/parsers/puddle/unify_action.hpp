@@ -32,14 +32,16 @@ class UnifyAction : public Action
         UnifyAction(std::vector<std::string> aUnifiedPatterns,
                 std::vector<std::string> aUnifiedAttributes,
                 std::vector<int> aTokenIndices,
-                std::vector<std::string> uAttributes,
-                LatticeWrapperPtr aLatticeWrapper);
+                std::vector<std::string> uAttributes);
+//                LatticeWrapperPtr aLatticeWrapper);
         ~UnifyAction();
         //bool apply(Entities &entities, Edges &edges, int currentEntity, std::vector<int> matchedTokensSize);
-        bool apply(ParseGraphPtr pg, Lattice &lattice, int currentEntity,
+        //bool apply(ParseGraphPtr pg, Lattice &lattice, int currentEntity,
+        bool apply(Lattice &lattice, int currentEntity,
                 std::vector<int> matchedTokensSize);
         //bool test(Entities entities, int currentEntity, std::vector<int> matchedTokensSize);
-        bool test(ParseGraphPtr pg, Lattice &lattice, int currentEntity,
+        //bool test(ParseGraphPtr pg, Lattice &lattice, int currentEntity,
+        bool test(Lattice &lattice, int currentEntity,
                 std::vector<int> matchedTokensSize);
 
         //std::vector<int> getAttributeIndexes();
@@ -81,7 +83,7 @@ class UnifyAction : public Action
         std::vector<std::string> unifiedAttributes;
         //std::map<std::string, std::vector<std::string> > unifiedValues;
 
-        LatticeWrapperPtr latticeWrapper;
+//        LatticeWrapperPtr latticeWrapper;
 };
 
 typedef boost::shared_ptr<UnifyAction> UnifyActionPtr;

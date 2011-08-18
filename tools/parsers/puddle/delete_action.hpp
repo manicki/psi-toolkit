@@ -27,14 +27,14 @@ namespace poleng {
                 public:
                     //DeleteAction(std::string aPattern, int aTokenIndex, std::string uPattern);
                     DeleteAction(DeleteConditions aConditions, int aTokenIndex,
-                            std::string uPattern, LatticeWrapperPtr aLatticeWrapper);
+                            std::string uPattern);
                     //bool apply(Entities &entities, Edges &edges, int currentEntity, std::vector<int> matchedTokensSize);
-                    bool apply(ParseGraphPtr pg, Lattice &lattice,
-                            int currentEntity,
+                    //bool apply(ParseGraphPtr pg, Lattice &lattice,
+                    bool apply(Lattice &lattice, int currentEntity,
                             std::vector<int> matchedTokensSize);
                     //bool test(Entities entities, int currentEntity, std::vector<int> matchedTokensSize);
-                    bool test(ParseGraphPtr pg, Lattice &lattice,
-                            int currentEntity,
+                    //bool test(ParseGraphPtr pg, Lattice &lattice,
+                    bool test(Lattice &lattice, int currentEntity,
                             std::vector<int> matchedTokensSize);
                     //void setPattern(std::string aPattern);
                     //std::string getPattern();
@@ -55,7 +55,7 @@ namespace poleng {
                     bool verbose;
                     std::string pattern_;
                     DeleteConditions conditions;
-                    LatticeWrapperPtr latticeWrapper;
+//                    LatticeWrapperPtr latticeWrapper;
             };
 
             typedef boost::shared_ptr<DeleteAction> DeleteActionPtr;

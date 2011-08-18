@@ -88,6 +88,23 @@ AC_ARG_WITH([puddle],
 AC_MSG_CHECKING(whether to compile puddle shallow parser)
 AS_IF([test "x$with_puddle" != "xno"],
       [
+       AC_ARG_WITH([bonsai-parsegraph],
+                   [AS_HELP_STRING([--with-bonsai-parsegraph],
+                                   [Use bonsai ParseGraph as puddle output @<:@default=no@:>@])],
+                                   [],
+                                   [with_bonsai_parsegraph=no])
+       AS_IF([test "x$with_bonsai_parsegraph" != "xno"],
+             [
+              AC_DEFINE([WITH_BONSAI_PARSEGRAPH],[1],[Enables bonsai ParseGraph support in puddle])
+              AC_MSG_RESULT(yes)
+              AC_SUBST([CPPFLAGS], ["$CPPFLAGS -D_WITH_BONSAI_PARSEGRAPH"])
+              ],
+              [
+               AC_DEFINE([WITH_BONSAI_PARSEGRAPH],[0],[Disables bonsai ParseGraph support in puddle])
+               AC_MSG_RESULT(no)
+               ]
+              )
+
        AC_ARG_WITH([bonsai-path],
                    [AS_HELP_STRING([--with-bonsai-path=dir],
                                    [Bonsai common files path (required by puddle) @<:@default=/home/user/poleng4/src/bonsai/common@:>@])],
@@ -106,6 +123,7 @@ AS_IF([test "x$with_puddle" != "xno"],
        )
 
 AM_CONDITIONAL(WITH_PUDDLE, test "x$with_puddle" == "xyes")
+AM_CONDITIONAL(WITH_BONSAI_PARSEGRAPH, test "x$with_bonsai_parsegraph" == "xyes")
 
 AC_CONFIG_FILES([Makefile])
 AC_OUTPUT

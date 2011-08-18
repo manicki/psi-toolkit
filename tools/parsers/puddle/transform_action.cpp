@@ -15,7 +15,7 @@ namespace bonsai
     namespace puddle
     {
 
-TransformAction::TransformAction(std::string aGroup, int aElement, std::string aRuleName, LatticeWrapperPtr aLatticeWrapper)
+TransformAction::TransformAction(std::string aGroup, int aElement, std::string aRuleName) //, LatticeWrapperPtr aLatticeWrapper)
 {
     group = aGroup;
     element = aElement; // - 1;
@@ -30,8 +30,9 @@ TransformAction::~TransformAction()
 }
 
 //bool TransformAction::apply(Entities &entities, Edges &edges, int currentEntity, std::vector<int> matchedTokensSize)
-bool TransformAction::apply(ParseGraphPtr pg, Lattice &lattice,
-        int currentEntity, std::vector<int> matchedTokensSize) {
+//bool TransformAction::apply(ParseGraphPtr pg, Lattice &lattice,
+bool TransformAction::apply(Lattice &lattice, int currentEntity,
+        std::vector<int> matchedTokensSize) {
 
     int before = 0;
     int i = 0;
@@ -46,23 +47,23 @@ bool TransformAction::apply(ParseGraphPtr pg, Lattice &lattice,
 //    gr->setRuleName(ruleName);
 //    gr->setGroupType(group);
 
-    TransitionInfo *edge = util::getEdge(pg, currentEntity, before);
-    edge->setLabel(group);
+//    TransitionInfo *edge = util::getEdge(pg, currentEntity, before);
+//    edge->setLabel(group);
     Lattice::VertexDescriptor startVertex = currentEntity + before; //@todo: czy te numerki tu sie kupy trzymaja trzeba sprawdzic
     Lattice::VertexDescriptor headVertex = currentEntity + before;
     Lattice::VertexDescriptor endVertex = currentEntity + before;
-    std::list<Lattice::EdgeDescriptor> startEdges = latticeWrapper->getTopEdges(
+    std::list<Lattice::EdgeDescriptor> startEdges = lattice::getTopEdges(
             lattice, startVertex);
-    std::list<Lattice::EdgeDescriptor> headEdges = latticeWrapper->getTopEdges(
+    std::list<Lattice::EdgeDescriptor> headEdges = lattice::getTopEdges(
             lattice, headVertex);
-    std::list<Lattice::EdgeDescriptor> endEdges = latticeWrapper->getTopEdges(
+    std::list<Lattice::EdgeDescriptor> endEdges = lattice::getTopEdges(
             lattice, endVertex);
-    latticeWrapper->removeParseEdges(lattice, headVertex, headVertex + 1);
+    lattice::removeParseEdges(lattice, headVertex, headVertex + 1);
     std::list<Lattice::EdgeSequence> groupPartitions =
-        latticeWrapper->getEdgesRange(
+        lattice::getEdgesRange(
                 lattice, startVertex, endVertex
                 );
-    latticeWrapper->addParseEdges(
+    lattice::addParseEdges(
             lattice,
             startEdges,
             endEdges,
@@ -95,10 +96,12 @@ bool TransformAction::apply(ParseGraphPtr pg, Lattice &lattice,
 }
 
 //bool TransformAction::test(Entities entities, int currentEntity, std::vector<int> matchedTokensSize)
-bool TransformAction::test(ParseGraphPtr pg, Lattice &lattice,
-        int currentEntity, std::vector<int> matchedTokensSize) {
+//bool TransformAction::test(ParseGraphPtr pg, Lattice &lattice,
+bool TransformAction::test(Lattice &lattice, int currentEntity,
+        std::vector<int> matchedTokensSize) {
     //if (entities.size() < element)
-    if ( (pg->num_vertices() - 1) < element ) {
+    //if ( (pg->num_vertices() - 1) < element ) {
+    if ( (lattice.getLastVertex()) < element ) {
         return false;
     }
     if (matchedTokensSize[element - 1] == 0)
@@ -116,8 +119,16 @@ bool TransformAction::test(ParseGraphPtr pg, Lattice &lattice,
     }
 
     //if (entities[currentEntity + before]->getType() != "group")
-    TransitionInfo *edge = util::getEdge(pg, currentEntity, before);
-    if (edge->getType() != "group") {
+//    TransitionInfo *edge = util::getEdge(pg, currentEntity, before);
+//    if (edge->getType() != "group") {
+    Lattice::VertexDescriptor vertex = currentEntity + before;
+    std::list<Lattice::EdgeDescriptor> edges = lattice::getTopEdges(
+            lattice, vertex);
+    if (edges.size() > 0) {
+        LayerTagCollection tags = lattice.getEdgeLayerTags(edges.front());
+        if (! lattice.getLayerTagManager().match(
+                    lattice.getLayerTagManager().getMask(tags),
+                    "group"))
         return false;
     }
     return true;

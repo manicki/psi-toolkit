@@ -22,13 +22,15 @@ class SyntokAction : public Action
         //SyntokAction(int aStart, int aEnd, std::vector<int> aTokenIndexes, std::vector<InterpretationPair> aMorphology, std::string aRuleName, std::string uMorphology);
         SyntokAction(int aStart, int aEnd, std::vector<int> aTokenIndices,
                 std::vector<std::string> aMorphology, std::string aRuleName,
-                std::string uMorphology, LatticeWrapperPtr aLatticeWrapper);
+                std::string uMorphology);
         ~SyntokAction();
         //bool apply(Entities &entities, Edges &edges, int currentEntity, std::vector<int> matchedTokensSize);
-        bool apply(ParseGraphPtr pg, Lattice &lattice, int currentEntity,
+        //bool apply(ParseGraphPtr pg, Lattice &lattice, int currentEntity,
+        bool apply(Lattice &lattice, int currentEntity,
                 std::vector<int> matchedTokensSize);
         //bool test(Entities entities, int currentEntity, std::vector<int> matchedTokensSize);
-        bool test(ParseGraphPtr pg, Lattice &lattice, int currentEntity,
+        //bool test(ParseGraphPtr pg, Lattice &lattice, int currentEntity,
+        bool test(Lattice &lattice, int currentEntity,
                 std::vector<int> matchedTokensSize);
 
         int getStart();
@@ -63,7 +65,7 @@ class SyntokAction : public Action
 
         std::string morphology_;
 
-        LatticeWrapperPtr latticeWrapper;
+//        LatticeWrapperPtr latticeWrapper;
 };
 
 typedef boost::shared_ptr<SyntokAction> SyntokActionPtr;

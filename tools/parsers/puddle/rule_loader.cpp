@@ -148,7 +148,7 @@ void RuleLoader::setTagset(TagsetPtr aTagset)
     //64: regNothingSet = boost::make_u32regex(tmpNothing);
 }
 
-RulesPtr RuleLoader::readFromFile(std::string &filename, LatticeWrapperPtr latticeWrapper)
+RulesPtr RuleLoader::readFromFile(std::string &filename) //, LatticeWrapperPtr latticeWrapper)
 {
     //boost::u32regex regComment = boost::make_u32regex("#.*");
     //boost::u32regex regWhite = boost::make_u32regex("\\s+");
@@ -223,7 +223,7 @@ RulesPtr RuleLoader::readFromFile(std::string &filename, LatticeWrapperPtr latti
                 bool repeat = false;
                 ActionsPtr actions = this->compileRuleAction(chars,
                         ruleLeftSize, ruleMatchSize, ruleRightSize, ruleName,
-                        repeat, latticeWrapper);
+                        repeat); //, latticeWrapper);
                 RulePtr rule = RulePtr( new Rule(ruleName, rulePattern,
                             ruleLeftSize, ruleMatchSize, ruleRightSize,
                             actions, tokensPatterns, tokensModifiers,
@@ -347,7 +347,7 @@ RulesPtr RuleLoader::readFromFile(std::string &filename, LatticeWrapperPtr latti
         //std::cout << "Akcje: " << chars << std::endl;
         bool repeat = false;
         ActionsPtr actions = this->compileRuleAction(chars, ruleLeftSize,
-                ruleMatchSize, ruleRightSize, ruleName, repeat, latticeWrapper);
+                ruleMatchSize, ruleRightSize, ruleName, repeat); //, latticeWrapper);
         RulePtr rule = RulePtr( new Rule(ruleName, rulePattern, ruleLeftSize,
                     ruleMatchSize, ruleRightSize, actions, tokensPatterns,
                     tokensModifiers, tokensRequired, matchedIndices, repeat,
@@ -2203,8 +2203,8 @@ std::string RuleLoader::generateTokenPatternsString(TokenPatterns tokenPatterns,
 //}
 
 ActionsPtr RuleLoader::compileRuleAction(std::string &matched, int ruleLeftSize,
-        int ruleMatchSize, int ruleRightSize, std::string ruleName, bool &repeat,
-        LatticeWrapperPtr latticeWrapper) {
+        int ruleMatchSize, int ruleRightSize, std::string ruleName, bool &repeat) {//,
+//        LatticeWrapperPtr latticeWrapper) {
 
 //    boost::u32regex regEval = boost::make_u32regex("^Eval\\s*:\\s*");
 //    boost::u32regex regGroup = boost::make_u32regex("group\\s*\\(\\s*([^\\s,]+)\\s*,\\s*(\\d+)\\s*\\)\\s*");                                         // group(XX, 1);
@@ -2290,7 +2290,7 @@ ActionsPtr RuleLoader::compileRuleAction(std::string &matched, int ruleLeftSize,
             //GroupActionPtr action = GroupActionPtr( new GroupAction(container[1], ruleLeftSize, (ruleLeftSize + ruleMatchSize - 1), boost::lexical_cast<int>(container[2]), ruleName) );
             GroupActionPtr action = GroupActionPtr( new GroupAction(
                         groupType, ruleLeftSize, (ruleLeftSize + ruleMatchSize - 1),
-                        groupHead, ruleName, latticeWrapper ) );
+                        groupHead, ruleName ) ); //, latticeWrapper ) );
             if (verbose)
                 action->setVerbose();
             actions->push_back(action);
@@ -2298,7 +2298,7 @@ ActionsPtr RuleLoader::compileRuleAction(std::string &matched, int ruleLeftSize,
             //JoinActionPtr action = JoinActionPtr( new JoinAction(container[1], ruleLeftSize, (ruleLeftSize + ruleMatchSize - 1), boost::lexical_cast<int>(container[2]), ruleName) );
             JoinActionPtr action = JoinActionPtr( new JoinAction(
                         groupType, ruleLeftSize, (ruleLeftSize + ruleMatchSize - 1),
-                        groupHead, ruleName, latticeWrapper ) );
+                        groupHead, ruleName ) ); //, latticeWrapper ) );
             if (verbose)
                 action->setVerbose();
             actions->push_back(action);
@@ -2307,13 +2307,13 @@ ActionsPtr RuleLoader::compileRuleAction(std::string &matched, int ruleLeftSize,
             //AttachActionPtr action = AttachActionPtr( new AttachAction(container[1], ruleLeftSize, (ruleLeftSize + ruleMatchSize - 1), boost::lexical_cast<int>(container[2]), ruleName) );
             AttachActionPtr action = AttachActionPtr( new AttachAction(
                         groupType, ruleLeftSize, (ruleLeftSize + ruleMatchSize - 1),
-                        groupHead, ruleName, latticeWrapper ) );
+                        groupHead, ruleName ) ); //, latticeWrapper ) );
             if (verbose)
                 action->setVerbose();
             actions->push_back(action);
         } else if (RE2::FullMatch(actionString, regTransform, &groupHead, &groupType)) {
             TransformActionPtr action = TransformActionPtr( new TransformAction(
-                        groupType, groupHead, ruleName, latticeWrapper ) );
+                        groupType, groupHead, ruleName ) ); //, latticeWrapper ) );
             if (verbose)
                 action->setVerbose();
             actions->push_back(action);
@@ -2377,7 +2377,7 @@ ActionsPtr RuleLoader::compileRuleAction(std::string &matched, int ruleLeftSize,
             //DeleteActionPtr action = DeleteActionPtr( new DeleteAction(
             //            condition, tokenIndex, uncompiled ) );
             DeleteActionPtr action = DeleteActionPtr( new DeleteAction(
-                        conditions, tokenIndex, uncompiled, latticeWrapper ) );
+                        conditions, tokenIndex, uncompiled ) ); //, latticeWrapper ) );
             if (verbose)
                 action->setVerbose();
             actions->push_back(action);
@@ -2400,8 +2400,8 @@ ActionsPtr RuleLoader::compileRuleAction(std::string &matched, int ruleLeftSize,
             compileAddInterpretation(interpretation, interpretations);
 
             AddActionPtr action = AddActionPtr( new AddAction(
-                        interpretations, base, tokenIndex, interpretation,
-                        latticeWrapper) );
+                        interpretations, base, tokenIndex, interpretation ) );
+//                        latticeWrapper) );
             if (verbose)
                 action->setVerbose();
             actions->push_back(action);
@@ -2460,8 +2460,8 @@ ActionsPtr RuleLoader::compileRuleAction(std::string &matched, int ruleLeftSize,
             //UnifyActionPtr action = UnifyActionPtr( new UnifyAction(
             //            attributes, tokens, attributes_ ) );
             UnifyActionPtr action = UnifyActionPtr( new UnifyAction(
-                        patterns, attributes, tokens, attributes_,
-                        latticeWrapper ) );
+                        patterns, attributes, tokens, attributes_ ) );
+//                        latticeWrapper ) );
             if (verbose)
                 action->setVerbose();
 
@@ -2494,7 +2494,7 @@ ActionsPtr RuleLoader::compileRuleAction(std::string &matched, int ruleLeftSize,
 
             SyntokActionPtr action = SyntokActionPtr( new SyntokAction(
                         ruleLeftSize, ruleLeftSize + ruleMatchSize - 1, tokens,
-                        interpretations, ruleName, mask, latticeWrapper ) );
+                        interpretations, ruleName, mask ) ); //, latticeWrapper ) );
             if (verbose)
                 action->setVerbose();
             if (syntok)
@@ -2858,7 +2858,7 @@ void RuleLoader::setSyntok() {
 }
 
 
-RulePtr RuleLoader::compileRule(std::string ruleString, LatticeWrapperPtr latticeWrapper)
+RulePtr RuleLoader::compileRule(std::string ruleString) //, LatticeWrapperPtr latticeWrapper)
 {
     RE2 regComment("#.*");
     RE2 regWhite("\\s+");
@@ -3001,7 +3001,7 @@ RulePtr RuleLoader::compileRule(std::string ruleString, LatticeWrapperPtr lattic
     //std::cout << "Akcje: " << chars << std::endl;
     bool repeat = false;
     ActionsPtr actions = this->compileRuleAction(chars, ruleLeftSize,
-            ruleMatchSize, ruleRightSize, ruleName, repeat, latticeWrapper);
+            ruleMatchSize, ruleRightSize, ruleName, repeat); //, latticeWrapper);
     //Rule *rule = new Rule(ruleName, rulePattern, ruleLeftSize, ruleMatchSize, ruleRightSize, *actions, tokensPatterns, tokensModifiers, tokensRequired, matchedIndexes, repeat, rulePatternLeft, rulePatternMatch, rulePatternRight);
     RulePtr rule = RulePtr( new Rule(ruleName, rulePattern, ruleLeftSize,
                 ruleMatchSize, ruleRightSize, actions, tokensPatterns,
@@ -3013,8 +3013,8 @@ RulePtr RuleLoader::compileRule(std::string ruleString, LatticeWrapperPtr lattic
     return rule;
 }
 
-ActionPtr RuleLoader::compileAction(std::string actionString, RulePtr rule,
-        LatticeWrapperPtr latticeWrapper) {
+ActionPtr RuleLoader::compileAction(std::string actionString, RulePtr rule) {
+//        LatticeWrapperPtr latticeWrapper) {
 //    boost::u32regex regEval = boost::make_u32regex("^Eval\\s*:\\s*");
 //    boost::u32regex regGroup = boost::make_u32regex("group\\s*\\(\\s*([^\\s,]+)\\s*,\\s*(\\d+)\\s*\\)\\s*");                                         // group(XX, 1);
 //    //boost::regex regDelete("delete\\s*\\(\\s*([^\\s!~\"]+)\\s*([!~]?~)\\s*\"([^\\s\",]+)\"\\s*,\\s*(\\d+)\\s*\\)\\s*");    //delete(pos!~"X", 1)
@@ -3076,7 +3076,7 @@ ActionPtr RuleLoader::compileAction(std::string actionString, RulePtr rule,
             action = GroupActionPtr( new GroupAction(groupType,
                         rule->getLeftCount(),
                         (rule->getLeftCount() + rule->getMatchCount() - 1),
-                        groupHead, rule->getName(), latticeWrapper) );
+                        groupHead, rule->getName() ) ); //, latticeWrapper) );
             if (verbose)
                 action->setVerbose();
         }
@@ -3084,7 +3084,7 @@ ActionPtr RuleLoader::compileAction(std::string actionString, RulePtr rule,
             action = JoinActionPtr( new JoinAction(groupType,
                         rule->getLeftCount(),
                         (rule->getLeftCount() + rule->getMatchCount() - 1),
-                        groupHead, rule->getName(), latticeWrapper) );
+                        groupHead, rule->getName() ) );//, latticeWrapper) );
             if (verbose)
                 action->setVerbose();
         }
@@ -3092,13 +3092,13 @@ ActionPtr RuleLoader::compileAction(std::string actionString, RulePtr rule,
             action = AttachActionPtr(new AttachAction(groupType,
                         rule->getLeftCount(),
                         (rule->getLeftCount() + rule->getMatchCount() - 1),
-                        groupHead, rule->getName(), latticeWrapper) );
+                        groupHead, rule->getName() ) );//, latticeWrapper) );
             if (verbose)
                 action->setVerbose();
         }
         else if (RE2::FullMatch(actionString, regTransform, &groupHead, &groupType)) {
             action = TransformActionPtr( new TransformAction(groupType,
-                        groupHead, rule->getName(), latticeWrapper) );
+                        groupHead, rule->getName() ) );//, latticeWrapper) );
             if (verbose)
                 action->setVerbose();
         }
@@ -3130,7 +3130,7 @@ ActionPtr RuleLoader::compileAction(std::string actionString, RulePtr rule,
             //condition = orth + "<" + condition;
 
             //action = DeleteActionPtr( new DeleteAction(condition, tokenIndex, uncompiled) );
-            action = DeleteActionPtr( new DeleteAction(conditions, tokenIndex, uncompiled, latticeWrapper) );
+            action = DeleteActionPtr( new DeleteAction(conditions, tokenIndex, uncompiled ) );//, latticeWrapper) );
             if (verbose)
                 action->setVerbose();
  //           std::cout << "Usun interpretacje: " << container[4] << " pod warunkiem, ze: " << container[1] << " " << container[2] << " " << container[3] << std::endl;
@@ -3150,7 +3150,7 @@ ActionPtr RuleLoader::compileAction(std::string actionString, RulePtr rule,
             //std::string interpretation = container[1];
             compileAddInterpretation(interpretation, interpretations);
 
-            action = AddActionPtr( new AddAction(interpretations, base, tokenIndex, interpretation, latticeWrapper) );
+            action = AddActionPtr( new AddAction(interpretations, base, tokenIndex, interpretation ) );//, latticeWrapper) );
             if (verbose)
                 action->setVerbose();
 
@@ -3206,9 +3206,7 @@ ActionPtr RuleLoader::compileAction(std::string actionString, RulePtr rule,
 
             //action = UnifyActionPtr( new UnifyAction(attributes, tokens, attributes_) );
             action = UnifyActionPtr(
-                    new UnifyAction(patterns, attributes, tokens, attributes_,
-                        latticeWrapper)
-                    );
+                    new UnifyAction(patterns, attributes, tokens, attributes_ ) );
             if (verbose)
                 action->setVerbose();
 
@@ -3228,7 +3226,7 @@ ActionPtr RuleLoader::compileAction(std::string actionString, RulePtr rule,
             std::vector<std::string> interpretations;
             compileAddInterpretation(mask, interpretations);
 
-            action = SyntokActionPtr( new SyntokAction(rule->getLeftCount(), rule->getLeftCount() + rule->getMatchCount() - 1, tokens, interpretations, rule->getName(), mask, latticeWrapper) );
+            action = SyntokActionPtr( new SyntokAction(rule->getLeftCount(), rule->getLeftCount() + rule->getMatchCount() - 1, tokens, interpretations, rule->getName(), mask ) );//, latticeWrapper) );
             if (verbose)
                 action->setVerbose();
             if (syntok)

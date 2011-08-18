@@ -123,7 +123,8 @@ Rule::~Rule()
 }
 
 //bool Rule::apply(std::string &sentence, Entities &entities, Edges &edges, int currentEntity)
-bool Rule::apply(std::string &sentence, ParseGraphPtr pg, Lattice &lattice, int currentEntity) {
+//bool Rule::apply(std::string &sentence, ParseGraphPtr pg, Lattice &lattice, int currentEntity) {
+bool Rule::apply(std::string &sentence, Lattice &lattice, int currentEntity) {
     bool ret = false;
     Actions::iterator i = actions->begin();
     while (i != actions->end())
@@ -132,7 +133,8 @@ bool Rule::apply(std::string &sentence, ParseGraphPtr pg, Lattice &lattice, int 
 //
 //        std::cerr << "akcja: " << (*i)->getType() << std::endl;
         //if ((*i)->apply(entities, edges, currentEntity, matchedTokensSize))
-        if ((*i)->apply(pg, lattice, currentEntity, matchedTokensSize)) {
+        //if ((*i)->apply(pg, lattice, currentEntity, matchedTokensSize)) {
+        if ((*i)->apply(lattice, currentEntity, matchedTokensSize)) {
             //@todo: wylaczam generowanie tego napisu w tym miejscu. po wszystkim zrobi to rulematcher
 /*            sentence = "";
   //          if (beforeMatch != "")
@@ -275,7 +277,8 @@ int Rule::matchPattern(std::string &sentenceString, int matchNumber, std::string
 }
 
 //bool Rule::test(std::string &sentence, Entities &entities, int currentEntity)
-bool Rule::test(std::string &sentenceString, ParseGraphPtr pg, int currentEntity) {
+//bool Rule::test(std::string &sentenceString, ParseGraphPtr pg, int currentEntity) {
+bool Rule::test(std::string &sentenceString, Lattice &lattice, int currentEntity) {
 //    std::cerr << "testuje regule: " << name << std::endl;
 //    std::cerr << "ten luj: " << match[0] << std::endl;
     ///std::string::const_iterator start = sentence.begin();
@@ -465,8 +468,8 @@ bool Rule::test(std::string &sentenceString, ParseGraphPtr pg, int currentEntity
     {
 //        Action *act = new Action(*ia);
         //if ((*ia)->test(entities, currentEntity, matchedTokensSize) == false)
-        if ((*ia)->test(pg, currentEntity, matchedTokensSize) == false)
-        {
+        //if ((*ia)->test(pg, currentEntity, matchedTokensSize) == false)
+        if ((*ia)->test(lattice, currentEntity, matchedTokensSize) == false) {
             int limit;
             if (tokensModifiers.at(leftCount + matchCount - 1) == "+" || tokensModifiers.at(leftCount + matchCount - 1) == "")
                 limit = 1;

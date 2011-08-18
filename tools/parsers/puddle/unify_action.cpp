@@ -12,8 +12,8 @@ namespace bonsai
 
 UnifyAction::UnifyAction(std::vector<std::string> aUnifiedPatterns,
         std::vector<std::string> aUnifiedAttributes,
-        std::vector<int> aTokenIndices, std::vector<std::string> uAttributes,
-        LatticeWrapperPtr aLatticeWrapper) {
+        std::vector<int> aTokenIndices, std::vector<std::string> uAttributes) {
+//        LatticeWrapperPtr aLatticeWrapper) {
     nullAgreement = true; //@todo: to ma byc parametrem parsera
 
     //baseMask = "";
@@ -30,7 +30,7 @@ UnifyAction::UnifyAction(std::vector<std::string> aUnifiedPatterns,
     unifiedAttributes = aUnifiedAttributes;
     unifiedPatterns = aUnifiedPatterns;
 
-    latticeWrapper = aLatticeWrapper;
+//    latticeWrapper = aLatticeWrapper;
 }
 
 /*UnifyAction::UnifyAction(std::vector<int> aAttributeIndexes, std::vector<int> aTokenIndexes, std::vector<std::string> uAttributes)
@@ -61,7 +61,8 @@ UnifyAction::~UnifyAction()
     //elete attributes_;
 }
 
-bool UnifyAction::apply(ParseGraphPtr pg, Lattice &lattice, int currentEntity,
+//bool UnifyAction::apply(ParseGraphPtr pg, Lattice &lattice, int currentEntity,
+bool UnifyAction::apply(Lattice &lattice, int currentEntity,
         std::vector<int> matchedTokensSize) {
 
    // std::vector<std::string>::iterator attribute_it = unifiedAttributes.begin();
@@ -84,7 +85,7 @@ bool UnifyAction::apply(ParseGraphPtr pg, Lattice &lattice, int currentEntity,
             }
 
             Lattice::VertexDescriptor vertex = currentEntity + before;
-            while (latticeWrapper->getTopEdges(lattice, vertex).size() == 0) {
+            while (lattice::getTopEdges(lattice, vertex).size() == 0) {
                 before ++;
                 vertex = currentEntity + before;
             }
@@ -92,7 +93,7 @@ bool UnifyAction::apply(ParseGraphPtr pg, Lattice &lattice, int currentEntity,
             for (vertex = currentEntity + before;
                     vertex < (currentEntity + before + count); vertex ++) {
                 std::list<Lattice::EdgeDescriptor> edges =
-                    latticeWrapper->getTopEdges(lattice, vertex);
+                    lattice::getTopEdges(lattice, vertex);
                 std::set<std::string> values;
                 //                TransitionInfo *edge = util::getEdge(pg, currentEntity, edge_i);
                 //                for (std::vector<PosInfo>::iterator var_it =
@@ -151,7 +152,7 @@ bool UnifyAction::apply(ParseGraphPtr pg, Lattice &lattice, int currentEntity,
                     i ++;
                 }
                 Lattice::VertexDescriptor vertex = currentEntity + before;
-                while (latticeWrapper->getTopEdges(lattice, vertex).size() == 0) {
+                while (lattice::getTopEdges(lattice, vertex).size() == 0) {
                     before ++;
                     vertex = currentEntity + before;
                 }
@@ -159,7 +160,7 @@ bool UnifyAction::apply(ParseGraphPtr pg, Lattice &lattice, int currentEntity,
                 for (vertex = currentEntity + before;
                         vertex < (currentEntity + before + count); vertex ++) {
                     std::list<Lattice::EdgeDescriptor> edges =
-                        latticeWrapper->getTopEdges(lattice, vertex);
+                        lattice::getTopEdges(lattice, vertex);
                     for (std::list<Lattice::EdgeDescriptor>::iterator edgeIt =
                             edges.begin();
                             edgeIt != edges.end(); edgeIt ++) {
@@ -667,7 +668,8 @@ bool UnifyAction::apply(ParseGraphPtr pg, Lattice &lattice, int currentEntity,
     return ret;
 }*/
 
-bool UnifyAction::test(ParseGraphPtr pg, Lattice &lattice, int currentEntity,
+//bool UnifyAction::test(ParseGraphPtr pg, Lattice &lattice, int currentEntity,
+bool UnifyAction::test(Lattice &lattice, int currentEntity,
         std::vector<int> matchedTokensSize) {
 
     //unifiedValues.clear();
@@ -695,7 +697,7 @@ bool UnifyAction::test(ParseGraphPtr pg, Lattice &lattice, int currentEntity,
             }
 
             Lattice::VertexDescriptor vertex = currentEntity + before;
-            while (latticeWrapper->getTopEdges(lattice, vertex).size() == 0) {
+            while (lattice::getTopEdges(lattice, vertex).size() == 0) {
                 before ++;
                 vertex = currentEntity + before;
             }
@@ -704,7 +706,7 @@ bool UnifyAction::test(ParseGraphPtr pg, Lattice &lattice, int currentEntity,
                     vertex < (currentEntity + before + count); vertex ++) {
                 //TransitionInfo *edge = util::getEdge(pg, currentEntity, edge_i);
                 std::list<Lattice::EdgeDescriptor> edges =
-                    latticeWrapper->getTopEdges(lattice, vertex);
+                    lattice::getTopEdges(lattice, vertex);
                 bool allValuesNull = true;
                 std::set<std::string> values;
                 for (std::list<Lattice::EdgeDescriptor>::iterator edgeIt =

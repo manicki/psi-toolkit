@@ -2,12 +2,17 @@
 #define PUDDLE_LATTICE_WRAPPER_H__
 
 #include "lattice.hpp"
-#include "ParseGraph.hpp"
 #include "tagset.hpp"
+#ifdef _WITH_BONSAI_PARSEGRAPH
+#include "ParseGraph.hpp"
+#endif
+#include <iostream>
 
 namespace poleng {
     namespace bonsai {
         namespace puddle {
+
+            namespace lattice {
 
             class EdgeNonTop {
                 private:
@@ -36,12 +41,13 @@ namespace poleng {
             };
 
 
-            class LatticeWrapper {
-                public:
-                    LatticeWrapper(); //TagsetPtr tagset);
-                    ParseGraphPtr readInputLattice(Lattice &lattice,
-                            std::string &sentenceString);
-                    ParseGraphPtr readOutputLattice(Lattice &lattice);
+            //class LatticeWrapper {
+            //    public:
+            //        LatticeWrapper(); //TagsetPtr tagset);
+            std::string readInputLattice(Lattice &lattice);
+#ifdef _WITH_BONSAI_PARSEGRAPH
+                    ParseGraphPtr convertToBonsaiGraph(Lattice &lattice);
+#endif
                     std::list<Lattice::EdgeDescriptor> getTopEdges(Lattice &lattice,
                             Lattice::VertexDescriptor start, LayerTagMask mask);
                     std::list<Lattice::EdgeDescriptor> getTopEdges(Lattice &lattice,
@@ -76,16 +82,17 @@ namespace poleng {
                     void removeParseEdges(Lattice &lattice,
                             Lattice::VertexDescriptor start,
                             Lattice::VertexDescriptor end);
-                    void addPosEdges(Lattice &lattice);
-                private:
+//                    void addPosEdges(Lattice &lattice);
+//                private:
                     //AnnotationItemManager annotationItemManager;
                     //void initAnnotationItemManager(TagsetPtr tagset);
 //                    bool isNonTop(std::list<Lattice::EdgeDescriptor> nontopEdges,
 //                            const Lattice::EdgeDescriptor &value);
-            };
+            //};
 
 
-            typedef boost::shared_ptr<LatticeWrapper> LatticeWrapperPtr;
+            //typedef boost::shared_ptr<LatticeWrapper> LatticeWrapperPtr;
+            }
         }
     }
 }

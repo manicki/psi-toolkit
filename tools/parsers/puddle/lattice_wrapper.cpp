@@ -6,15 +6,27 @@ namespace poleng {
     namespace bonsai {
         namespace puddle {
 
-            LatticeWrapper::LatticeWrapper() { //TagsetPtr tagset) {
- //               initAnnotationItemManager(tagset);
-            }
+            namespace lattice {
 
-            ParseGraphPtr LatticeWrapper::readInputLattice(Lattice &lattice,
-                    std::string &sentenceString) {
-                ParseGraphPtr pg = ParseGraphPtr(new ParseGraph());
+//            LatticeWrapper::LatticeWrapper() { //TagsetPtr tagset) {
+// //               initAnnotationItemManager(tagset);
+//            }
 
-                std::map<int, TransitionInfo*> edgesMap;
+                    struct SentenceToken {
+                        std::string orth;
+                        std::string category;
+                        int start;
+                        int end;
+                        std::vector<std::string> baseForms;
+                        std::vector<std::string> morphology;
+                    };
+            //ParseGraphPtr LatticeWrapper::readInputLattice(Lattice &lattice,
+                std::string readInputLattice(Lattice &lattice) {
+                    std::string sentenceString = "";
+//                ParseGraphPtr pg = ParseGraphPtr(new ParseGraph());
+
+//                std::map<int, TransitionInfo*> edgesMap;
+                std::map<int, SentenceToken> edgesMap;
 
                 LayerTagCollection token_tag
                     = lattice.getLayerTagManager().createSingletonTagCollection("token");
@@ -57,21 +69,31 @@ namespace poleng {
                     //if (morphology != "")
                     //    morphoString += ":" + morphology;
                     //PosInfo pi(base, morphoString, 1);
-                    PosInfo pi(base, morphology, 1);
+//                    PosInfo pi(base, morphology, 1);
 
-                    std::map<int, TransitionInfo*>::iterator edgesMapIt =
+//                    std::map<int, TransitionInfo*>::iterator edgesMapIt =
+                    std::map<int, SentenceToken>::iterator edgesMapIt =
                         edgesMap.find(start);
                     if (edgesMapIt != edgesMap.end()) {
-                        edgesMapIt->second->addMorphology(pi);
+                        edgesMapIt->second.baseForms.push_back(base);
+                        edgesMapIt->second.morphology.push_back(morphology);
                     } else {
-                        TransitionInfo *edge = new TransitionInfo("token");
-                        edge->setStart(start);
-                        edge->setEnd(end);
-                        edge->setDepth(0);
-                        edge->setLabel(category);
-                        edge->setOrth(orth);
-                        edge->addMorphology(pi);
-                        edgesMap.insert(std::pair<int, TransitionInfo*>(
+                        SentenceToken edge;
+                        edge.orth = orth;
+                        edge.category = category;
+                        edge.start = start;
+                        edge.end = end;
+                        edge.baseForms.push_back(base);
+                        edge.morphology.push_back(morphology);
+//                        TransitionInfo *edge = new TransitionInfo("token");
+//                        edge->setStart(start);
+//                        edge->setEnd(end);
+//                        edge->setDepth(0);
+//                        edge->setLabel(category);
+//                        edge->setOrth(orth);
+//                        edge->addMorphology(pi);
+                        //edgesMap.insert(std::pair<int, TransitionInfo*>(
+                        edgesMap.insert(std::pair<int, SentenceToken>(
                                     start, edge));
                     }
 
@@ -81,29 +103,41 @@ namespace poleng {
                 int end = 0;
                 std::stringstream ss;
                 ss << "<<s<" << start << "<" << start << "<sb<>";
-                for (std::map<int, TransitionInfo*>::iterator edgesMapIt =
+                //for (std::map<int, TransitionInfo*>::iterator edgesMapIt =
+                for (std::map<int, SentenceToken>::iterator edgesMapIt =
                         edgesMap.begin();
                         edgesMapIt != edgesMap.end(); edgesMapIt ++) {
-                    start = edgesMapIt->second->getStart();
-                    end = edgesMapIt->second->getEnd();
-                    pg->add_edge(start, end, *(edgesMapIt->second));
+                    start = edgesMapIt->second.start;
+                    end = edgesMapIt->second.end;
+//                    pg->add_edge(start, end, *(edgesMapIt->second));
                     ss << "<<t" << "<" << start << "<" << end << "<" <<
-                        "TOKEN" << "<" << edgesMapIt->second->getOrth();
-                    std::vector<PosInfo> vars = edgesMapIt->second->variants_;
-                    for (std::vector<PosInfo>::iterator varIt = vars.begin();
-                            varIt != vars.end(); varIt ++ )
-                        ss << "<" << boost::get<0>(*varIt) << "<"
-                            << boost::get<1>(*varIt);
+                        "TOKEN" << "<" << edgesMapIt->second.orth;
+                    std::vector<std::string>::iterator baseIt =
+                        edgesMapIt->second.baseForms.begin();
+                    std::vector<std::string>::iterator morphIt =
+                        edgesMapIt->second.morphology.begin();
+                    while (baseIt != edgesMapIt->second.baseForms.end()) {
+                        ss << "<" << *baseIt << "<" << *morphIt;
+                        baseIt ++;
+                        morphIt ++;
+                    }
+//                    std::vector<PosInfo> vars = edgesMapIt->second->variants_;
+//                    for (std::vector<PosInfo>::iterator varIt = vars.begin();
+//                            varIt != vars.end(); varIt ++ )
+//                        ss << "<" << boost::get<0>(*varIt) << "<"
+//                            << boost::get<1>(*varIt);
                     ss << ">";
                 }
                 ss << "<<s<" << end << "<" << end << "<se<>";
                 sentenceString = ss.str();
 
-                std::cerr << "TAKI LUJ: "<< pg->write_graphviz() << std::endl;
-                return pg;
+//                std::cerr << "TAKI LUJ: "<< pg->write_graphviz() << std::endl;
+                return sentenceString;;
             }
 
-            ParseGraphPtr LatticeWrapper::readOutputLattice(Lattice &lattice) {
+#ifdef _WITH_BONSAI_PARSEGRAPH
+            //ParseGraphPtr LatticeWrapper::readOutputLattice(Lattice &lattice) {
+            ParseGraphPtr convertToBonsaiGraph(Lattice &lattice) {
                 ParseGraphPtr pg = ParseGraphPtr(new ParseGraph());
 
                 std::multimap<int, TransitionInfo*> edgesMap;
@@ -212,7 +246,7 @@ namespace poleng {
 
                 return pg;
             }
-
+#endif
 
 //            void LatticeWrapper::initAnnotationItemManager(TagsetPtr tagset) {
 //                AnnotationItem ai("base");
@@ -226,7 +260,8 @@ namespace poleng {
 //                }
 //            }
 
-            std::list<Lattice::EdgeDescriptor> LatticeWrapper::getTopEdges(
+            //std::list<Lattice::EdgeDescriptor> LatticeWrapper::getTopEdges(
+            std::list<Lattice::EdgeDescriptor> getTopEdges(
                     Lattice &lattice, Lattice::VertexDescriptor start) {
                 LayerTagMask mask = lattice.getLayerTagManager().getMask(
                         createUnion(
@@ -252,7 +287,8 @@ namespace poleng {
 //                return false;
 //            }
 
-            std::list<Lattice::EdgeDescriptor> LatticeWrapper::getTopEdges(
+            //std::list<Lattice::EdgeDescriptor> LatticeWrapper::getTopEdges(
+            std::list<Lattice::EdgeDescriptor> getTopEdges(
                     Lattice &lattice, Lattice::VertexDescriptor start,
                     LayerTagMask mask) {
                 std::list<Lattice::EdgeDescriptor> edges;
@@ -283,7 +319,8 @@ namespace poleng {
                 return edges;
             }
 
-            std::list<Lattice::EdgeSequence> LatticeWrapper::getEdgesRange(Lattice &lattice,
+            //std::list<Lattice::EdgeSequence> LatticeWrapper::getEdgesRange(Lattice &lattice,
+            std::list<Lattice::EdgeSequence> getEdgesRange(Lattice &lattice,
                     Lattice::VertexDescriptor start,
                     Lattice::VertexDescriptor end,
                     LayerTagMask mask) {
@@ -346,7 +383,8 @@ namespace poleng {
 //                return ranges;
 //            }
 //
-            std::list<Lattice::EdgeSequence> LatticeWrapper::getEdgesRange(Lattice &lattice,
+            //std::list<Lattice::EdgeSequence> LatticeWrapper::getEdgesRange(Lattice &lattice,
+            std::list<Lattice::EdgeSequence> getEdgesRange(Lattice &lattice,
                     Lattice::VertexDescriptor start,
                     Lattice::VertexDescriptor end) {
                 LayerTagMask mask = lattice.getLayerTagManager().getMask(
@@ -361,7 +399,8 @@ namespace poleng {
                 return getEdgesRange(lattice, start, end, mask);
             }
 
-            void LatticeWrapper::addParseEdges(Lattice &lattice,
+            //void LatticeWrapper::addParseEdges(Lattice &lattice,
+            void addParseEdges(Lattice &lattice,
                     std::list<Lattice::EdgeDescriptor> startEdges,
                     std::list<Lattice::EdgeDescriptor> endEdges,
                     std::string &parseCategory,
@@ -449,7 +488,8 @@ namespace poleng {
                 }
             }
 
-            void LatticeWrapper::addSyntokEdges(Lattice &lattice,
+            //void LatticeWrapper::addSyntokEdges(Lattice &lattice,
+            void addSyntokEdges(Lattice &lattice,
                     std::list<Lattice::EdgeDescriptor> startEdges,
                     std::list<Lattice::EdgeDescriptor> endEdges,
                     std::string &syntokCategory,
@@ -499,7 +539,8 @@ namespace poleng {
 
             }
 
-            void LatticeWrapper::addNewVariantEdges(Lattice &lattice,
+            //void LatticeWrapper::addNewVariantEdges(Lattice &lattice,
+            void addNewVariantEdges(Lattice &lattice,
                     Lattice::EdgeDescriptor edge,
                     std::vector<std::string> baseForms,
                     std::vector<std::string> morphology) {
@@ -547,7 +588,8 @@ namespace poleng {
                 }
             }
 
-            void LatticeWrapper::removeParseEdges(Lattice &lattice,
+            //void LatticeWrapper::removeParseEdges(Lattice &lattice,
+            void removeParseEdges(Lattice &lattice,
                     Lattice::VertexDescriptor start,
                     Lattice::VertexDescriptor end ) {
                 LayerTagMask mask = lattice.getLayerTagManager().getMask(
@@ -572,7 +614,8 @@ namespace poleng {
                 }
             }
 
-            void LatticeWrapper::addPosEdges(Lattice &lattice) {
+            //void LatticeWrapper::addPosEdges(Lattice &lattice) {
+/*            void addPosEdges(Lattice &lattice) {
                 LayerTagMask mask = lattice.getLayerTagManager().getMask(
                             lattice.getLayerTagManager().
                             createSingletonTagCollection("lemma") //@todo: czy "token"?
@@ -629,7 +672,7 @@ namespace poleng {
                                 );
                     }
                 }
-            }
+            }*/
 
 //
 //            void LatticeWrapper::addParseEdge(Lattice &lattice,
@@ -652,6 +695,8 @@ namespace poleng {
 //                }
 //
 //            }
+
+            }
 
         }
     }

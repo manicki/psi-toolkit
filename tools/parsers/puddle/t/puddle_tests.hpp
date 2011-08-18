@@ -232,7 +232,7 @@ public:
         rule_loader.setTagset(tagset);
         puddle->setTagger(tagger);
         poleng::bonsai::puddle::RulesPtr rules =
-            rule_loader.readFromFile(rulesFilename, puddle->getLatticeWrapper());
+            rule_loader.readFromFile(rulesFilename);//, puddle->getLatticeWrapper());
         puddle->setRules(rules);
         TS_ASSERT_EQUALS(rules->size(), 1);
 

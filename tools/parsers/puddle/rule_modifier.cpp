@@ -17,10 +17,10 @@ RuleModifier::~RuleModifier()
 {
 }
 
-void RuleModifier::addRule(std::string ruleString,
-        LatticeWrapperPtr latticeWrapper)
+void RuleModifier::addRule(std::string ruleString)//,
+//        LatticeWrapperPtr latticeWrapper)
 {
-    RulePtr rule = ruleCompiler->compileRule(ruleString, latticeWrapper);
+    RulePtr rule = ruleCompiler->compileRule(ruleString);//, latticeWrapper);
     rules->push_back(rule);
 }
 
@@ -75,13 +75,13 @@ void RuleModifier::addAction(int ruleIndex, ActionPtr action)
     }
 }
 
-void RuleModifier::addAction(int ruleIndex, std::string actionString,
-        LatticeWrapperPtr latticeWrapper)
+void RuleModifier::addAction(int ruleIndex, std::string actionString)//,
+//        LatticeWrapperPtr latticeWrapper)
 {
     if (ruleIndex < rules->size())
     {
         ActionPtr action = ruleCompiler->compileAction(actionString,
-                rules->at(ruleIndex), latticeWrapper);
+                rules->at(ruleIndex));//, latticeWrapper);
         rules->at(ruleIndex)->addAction(action);
     }
 }

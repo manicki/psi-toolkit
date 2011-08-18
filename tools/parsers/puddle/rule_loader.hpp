@@ -42,7 +42,7 @@ class RuleLoader {
         ~RuleLoader();
 
         void setTagset(TagsetPtr aTagset);
-        RulesPtr readFromFile(std::string &filename, LatticeWrapperPtr latticeWrapper);
+        RulesPtr readFromFile(std::string &filename); //, LatticeWrapperPtr latticeWrapper);
 //        void test();
 
 //        void logRulesToFile(std::string &filename);
@@ -50,9 +50,9 @@ class RuleLoader {
         void setVerbose();
         void setSyntok();
 
-        RulePtr compileRule(std::string ruleString, LatticeWrapperPtr latticeWrapper);
-        ActionPtr compileAction(std::string actionString, RulePtr rule,
-               LatticeWrapperPtr latticeWrapper);
+        RulePtr compileRule(std::string ruleString); //, LatticeWrapperPtr latticeWrapper);
+        ActionPtr compileAction(std::string actionString, RulePtr rule);
+//               LatticeWrapperPtr latticeWrapper);
 
         std::string compileRulePattern(std::string &matched, int &size,
                 std::vector<std::string> &tokensPatterns,
@@ -69,7 +69,7 @@ class RuleLoader {
         //std::string compileRuleMatch(std::string &matched, int &size, std::vector<string> &tokensPatterns, std::vector<string> &tokensModifiers, std::vector<bool> &tokensRequired, std::vector<int> &matchedIndexes, int &bracketCount);
         ActionsPtr compileRuleAction(std::string &matched, int ruleLeftCount,
                 int ruleMatchCount, int ruleRightCount, std::string ruleName,
-                bool &repeat, LatticeWrapperPtr latticeWrapper);
+                bool &repeat); //, LatticeWrapperPtr latticeWrapper);
 
         int countTokens(std::string &matched);
         std::string getToken(std::string &matched, std::string &before);
