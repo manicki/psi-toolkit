@@ -23,7 +23,7 @@ public:
     std::list<std::string> getLayerTags();
 
 private:
-    pqxx::connection data;
+    pqxx::connection connection_;
 };
 
 
