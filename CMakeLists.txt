@@ -56,8 +56,15 @@ foreach(dir ${DIRS})
 	add_subdirectory(${dir})
 endforeach(dir)
 
-set_target_properties(common framework formats-psi formats-txt formats-utt tools-tokenizers-tp psi-pipe common-test PROPERTIES
+set(TARGETS common framework formats-psi formats-txt formats-utt tools-tokenizers-tp psi-pipe common-test)
+
+if(USE_POSTGRESQL)
+        set(TARGETS ${TARGETS} lex-db)
+endif(USE_POSTGRESQL)
+
+set_target_properties(${TARGETS} PROPERTIES
 	COMPILE_FLAGS "-I${psi-toolkit_SOURCE_DIR}/utf8")
+
 if(USE_PUDDLE)
 set_target_properties(tools-parsers-puddle PROPERTIES
 	COMPILE_FLAGS "-I${psi-toolkit_SOURCE_DIR}/utf8")
