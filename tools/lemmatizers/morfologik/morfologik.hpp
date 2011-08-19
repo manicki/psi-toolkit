@@ -15,7 +15,7 @@ class Morfologik {
 public:
 
 	Morfologik();
-	std::string getName();
+	static std::string getName();
 	std::list<std::string> getLayerTags();
 
 	void lemmatize(

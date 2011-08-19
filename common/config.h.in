@@ -1,1 +1,2 @@
 #cmakedefine01 HAVE_POSTGRESQL
+#cmakedefine01 HAVE_JAVA

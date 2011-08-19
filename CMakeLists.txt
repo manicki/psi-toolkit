@@ -25,6 +25,8 @@ if(USE_JAVA)
 
 	include_directories(${JAVA_INCLUDE_PATH})
 	include_directories("${psi-toolkit_SOURCE_DIR}/common/j")
+
+	set(HAVE_JAVA 1)
 endif(USE_JAVA)
 
 option(USE_POSTGRESQL "Compiling PostgreSQL components" OFF)
@@ -89,22 +91,28 @@ if(CXXTEST_FOUND)
 	include_directories(${CXXTEST_INCLUDE_DIR})
 	enable_testing()
 
-	CXXTEST_ADD_TEST(runner runner.cpp ${morfologik-t} ${common-t} ${puddle-t})
-	target_link_libraries(runner
-		${Boost_LIBRARIES}
-		common common-test
-		formats-psi formats-txt formats-utt 
-    	tools-lemmatizers-morfologik
-	)
+	set(TESTS ${common-t})
+	set(T-TARGETS common common-test formats-psi formats-txt formats-utt)
 
 	if(USE_JAVA)
-		target_link_libraries(runner tools-lemmatizers-morfologik)
+		set(TESTS ${TESTS} ${morfologik-t})		
+		set(T-TARGETS ${T-TARGETS} tools-lemmatizers-morfologik)
 	endif(USE_JAVA)
+
+	if(USE_PUDDLE)
+		set(TESTS ${TESTS} ${puddle-t})		
+		set(T-TARGETS ${T-TARGETS} tools-parsers-puddle re2)
+	endif(USE_PUDDLE)
+
+	CXXTEST_ADD_TEST(runner runner.cpp ${TESTS})
+	target_link_libraries(runner
+		${Boost_LIBRARIES}
+		${T-TARGETS}
+	)
 
     if(USE_PUDDLE)
         include_directories("${psi-toolkit_SOURCE_DIR}/tools/parsers/puddle")
         #   link_directories("${psi-toolkit_BINARY_DIR}/tools/parsers/puddle")
-        target_link_libraries(runner tools-parsers-puddle re2)
     endif(USE_PUDDLE)
 endif()
 

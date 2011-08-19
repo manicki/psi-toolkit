@@ -9,6 +9,9 @@
 #if HAVE_POSTGRESQL
 #include "lex_db_lemmatizer.hpp"
 #endif
+#if HAVE_JAVA
+#include "morfologik.hpp"
+#endif
 
 MainFactoriesKeeper::MainFactoriesKeeper() {
     keeper_.takeProcessorFactory(new TxtLatticeReader::Factory());
@@ -16,6 +19,9 @@ MainFactoriesKeeper::MainFactoriesKeeper() {
     keeper_.takeProcessorFactory(new TpTokenizer::Factory());
 #if HAVE_POSTGRESQL
     keeper_.takeProcessorFactory(new LemmatizerAnnotator<LexDbLemmatizer>::Factory());
+#endif
+#if HAVE_JAVA
+	  keeper_.takeProcessorFactory(new LemmatizerAnnotator<Morfologik>::Factory());
 #endif
 }
 
