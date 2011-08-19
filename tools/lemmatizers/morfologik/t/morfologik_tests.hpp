@@ -70,7 +70,15 @@ public:
             TS_ASSERT_EQUALS(prowokacjamiItem.getCategory(), "subst");
             TS_ASSERT_EQUALS(prowokacjamiItem.getText(), "prowokacja_subst");
 
-//			AnnotationItemManager annItmMng = lattice.getAnnotationItemManager();
+			AnnotationItemManager annItmMng = lattice.getAnnotationItemManager();
+			std::list<std::pair<std::string, std::string> > lexemeValues = 
+				annItmMng.getValues(prowokacjamiItem);
+
+			TS_ASSERT_EQUALS((int)lexemeValues.size(), 1);
+			std::list<std::pair<std::string, std::string> >::iterator valItr = lexemeValues.begin();
+			
+			TS_ASSERT_EQUALS(valItr->first, "gender");
+			TS_ASSERT_EQUALS(valItr->second, "f");
 
             TS_ASSERT(!lemmaIter.hasNext());
         }
@@ -80,11 +88,28 @@ public:
             Lattice::EdgesSortedByTargetIterator formIter = lattice.edgesSortedByTarget(formMask_);
 
             TS_ASSERT(formIter.hasNext());
+
             Lattice::EdgeDescriptor prowokacjamiForm = formIter.next();
             AnnotationItem prowokacjamiItem = lattice.getEdgeAnnotationItem(prowokacjamiForm);
 
             TS_ASSERT_EQUALS(prowokacjamiItem.getCategory(), "subst");
             TS_ASSERT_EQUALS(prowokacjamiItem.getText(), "prowokacja_subst");
+
+			AnnotationItemManager annItmMng = lattice.getAnnotationItemManager();
+			std::list<std::pair<std::string, std::string> > formValues = 
+				annItmMng.getValues(prowokacjamiItem);
+
+			TS_ASSERT_EQUALS((int)formValues.size(), 3);
+			std::list<std::pair<std::string, std::string> >::iterator valItr = formValues.begin();
+		
+			TS_ASSERT_EQUALS(valItr->first, "gender");
+			TS_ASSERT_EQUALS(valItr->second, "f")
+			valItr++;	
+			TS_ASSERT_EQUALS(valItr->first, "case");
+			TS_ASSERT_EQUALS(valItr->second, "inst");
+			valItr++;
+			TS_ASSERT_EQUALS(valItr->first, "number");
+			TS_ASSERT_EQUALS(valItr->second, "pl");
 
             TS_ASSERT(!formIter.hasNext());
         }

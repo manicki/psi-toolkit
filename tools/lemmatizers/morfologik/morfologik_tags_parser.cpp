@@ -89,15 +89,13 @@ std::vector<std::map<std::string, std::string> > MorfologikTagsParser::getFormAt
 	std::map<std::string, std::string> rawDescription;
 
 	rawDescription = parseSimple(tag, complexAttributeCounter); 
-
 	removeLexemeAttributes(rawDescription);
 
 	if (complexAttributeCounter == 0) {
 		allDescriptions.insert(allDescriptions.begin(), rawDescription);
 		return allDescriptions;
 	}
-	allDescriptions = expandDescriptions
-		(rawDescription, complexAttributeCounter);
+	allDescriptions = expandDescriptions(rawDescription, complexAttributeCounter);
 
 	return allDescriptions;	
 }
@@ -106,11 +104,9 @@ void MorfologikTagsParser::removeLexemeAttributes(
 	std::map<std::string, std::string> & description
 ) {
 	std::string pos = description["pos"];
-	
+
 	std::multimap<std::string, std::string>::iterator it;
-	for (it = lexemeTags.equal_range(pos).first; 
-		it != lexemeTags.equal_range(pos).second; 
-		++it) {
+	for (it = lexemeTags.equal_range(pos).first; it != lexemeTags.equal_range(pos).second; it++) {
 		description.erase(it->second);
 	}
 	description.erase("pos");
