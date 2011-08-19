@@ -40,7 +40,7 @@ option(USE_PUDDLE "Compiling puddle shallow parser" OFF)
 message(STATUS "Compiling puddle shallow parser ${USE_PUDDLE}")
 
 # Sets compiler flags
-set(CMAKE_CXX_FLAGS "-g -Wall")
+set(CMAKE_CXX_FLAGS "-g -Wall -Wno-deprecated")
 
 set(DIRS common formats framework tools utf8)
 foreach(dir ${DIRS})
@@ -49,7 +49,7 @@ foreach(dir ${DIRS})
 	add_subdirectory(${dir})
 endforeach(dir)
 
-set_target_properties(common framework formats-psi formats-txt formats-utt tools-tokenizers-tp psi-pipe common-test PROPERTIES 
+set_target_properties(common framework formats-psi formats-txt formats-utt tools-tokenizers-tp tools-lemmatizers-morfologik psi-pipe common-test PROPERTIES 
 	COMPILE_FLAGS "-I${psi-toolkit_SOURCE_DIR}/utf8")
 
 foreach(dir ${formats_SUBDIRS})
@@ -67,6 +67,7 @@ if(CXXTEST_FOUND)
 		${Boost_LIBRARIES} 
 		common common-test
 		formats-psi formats-txt formats-utt 
+    tools-lemmatizers-morfologik
 	)
 
 	if(USE_JAVA)

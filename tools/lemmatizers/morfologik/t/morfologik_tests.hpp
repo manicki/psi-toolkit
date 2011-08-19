@@ -1,79 +1,96 @@
 #include "../morfologik.hpp"
+#include "../../common/t/by_spaces_cutter.hpp"
+
+#include "lemmatizer_annotator.hpp"
 
 class MorfologikTests : public CxxTest::TestSuite {
 
 public:
-	void testSingularStems() {
-		AnnotationItemManager annMng;
-		Morfologik morf(annMng);
-		std::multimap<std::string, std::string> stems = morf.stem("dziecku");
-	
+	void testSimpleStem() {
+		Morfologik morf;
+
+		std::vector<std::string> stems = morf.simpleStem("dziecku");
 		TS_ASSERT_EQUALS((int)stems.size(), 1);
 
-		std::multimap<std::string, std::string>::iterator stem = 
-			stems.begin();
-
-		TS_ASSERT_EQUALS(stem->first, "dziecko");
-		TS_ASSERT_DIFFERS(stem->second, "");
+		std::vector<std::string>::iterator s = stems.begin();
+		TS_ASSERT_EQUALS(*s, "dziecko");
 	}
 
 	void testUnrecognizedWord() {
-		AnnotationItemManager annMng;
-		Morfologik morf(annMng);
-		std::multimap<std::string, std::string> stems = morf.stem("Dziecko");
-	
+		Morfologik morf;
+
+		std::vector<std::string> stems = morf.simpleStem("Dziecko");	
 		TS_ASSERT_EQUALS((int)stems.size(), 0);
 	}
 
-	void testMultipleStems() {
-		AnnotationItemManager annMng;
-		Morfologik morf(annMng);
-		std::multimap<std::string, std::string> stems = morf.stem("mam");
+	void testStems() {
+		Morfologik morf;
 
-		TS_ASSERT_EQUALS((int)stems.size(), 3);
-
-		std::multimap<std::string, std::string>::iterator stem = stems.begin();
-
-		TS_ASSERT_EQUALS(stem->first, "mama");
-		TS_ASSERT_EQUALS((++stem)->first, "mamić");
-		TS_ASSERT_EQUALS((++stem)->first, "mieć");
-	}
-
-	void testSplitTags() {
-		AnnotationItemManager annMng;
-		Morfologik morf(annMng);
-		std::multimap<std::string, std::string> stems = morf.stem("jakie");
-
+		std::multimap<std::string, std::vector<std::string> > stems = 
+			morf.stem("jeden");
 		TS_ASSERT_EQUALS((int)stems.size(), 2);
 
-		std::multimap<std::string, std::string>::iterator stem = stems.begin();
+		std::multimap<std::string, std::vector<std::string> >::iterator i =
+			stems.begin();
 
-		TS_ASSERT_EQUALS(stem->first, "jaki");
-		TS_ASSERT_EQUALS((++stem)->first, "jaki");
+		std::string s1 = i->first;
+		std::vector<std::string> v1 = i->second;
+		i++;
+		std::string s2 = i->first;
+		std::vector<std::string> v2 = i->second;
+
+		TS_ASSERT_EQUALS(s1, s2);
+		TS_ASSERT_DIFFERS((int)v1.size(), (int)v2.size());
+		TS_ASSERT_DIFFERS(v1, v2);
 	}
 
-	void testAnnotationItemCreation() {
-		AnnotationItemManager annMng;
-		Morfologik morf(annMng);
+	void testLexemeLevel() {
+	
+		Lattice lattice;
+        lattice.appendStringWithSymbols("prowokacjami");
 
-		std::string word = "winne";
-		std::list<AnnotationItem> stems = morf.stems(word);
-		annMng = morf.annotationManager;
+        BySpacesCutter cutter;
+        LayerTagMask symbolMask = lattice.getLayerTagManager().getMask("symbol");
 
-		TS_ASSERT_EQUALS((int)stems.size(), 18);
+        lattice.runCutter(cutter, symbolMask);
 
-		std::list<AnnotationItem>::iterator annItm;
-		for (annItm = stems.begin(); annItm != stems.end(); annItm++) {
-			std::string cat = annMng.getCategory(*annItm);
-			
-			TS_ASSERT(word.compare(0,3,cat,0,3) == 0);
+        LemmatizerAnnotator<Morfologik> annotator;
+        annotator.annotate(lattice);
 
-			std::list< std::pair<std::string, std::string> > values =
-				annMng.getValues(*annItm);
+        // now checking
+        {
+            LayerTagMask lemmaMask_ = lattice.getLayerTagManager().getMask("lexeme");
+            Lattice::EdgesSortedByTargetIterator lemmaIter = lattice.edgesSortedByTarget(lemmaMask_);
 
-			TS_ASSERT((int)values.size() > 3);
-		}
+            TS_ASSERT(lemmaIter.hasNext());
+
+            Lattice::EdgeDescriptor prowokacjamiLemma = lemmaIter.next();
+            AnnotationItem prowokacjamiItem = lattice.getEdgeAnnotationItem(prowokacjamiLemma);
+
+            TS_ASSERT_EQUALS(prowokacjamiItem.getCategory(), "subst");
+            TS_ASSERT_EQUALS(prowokacjamiItem.getText(), "prowokacja_subst");
+
+//			AnnotationItemManager annItmMng = lattice.getAnnotationItemManager();
+
+            TS_ASSERT(!lemmaIter.hasNext());
+        }
+
+        {
+            LayerTagMask formMask_ = lattice.getLayerTagManager().getMask("form");
+            Lattice::EdgesSortedByTargetIterator formIter = lattice.edgesSortedByTarget(formMask_);
+
+            TS_ASSERT(formIter.hasNext());
+            Lattice::EdgeDescriptor prowokacjamiForm = formIter.next();
+            AnnotationItem prowokacjamiItem = lattice.getEdgeAnnotationItem(prowokacjamiForm);
+
+            TS_ASSERT_EQUALS(prowokacjamiItem.getCategory(), "subst");
+            TS_ASSERT_EQUALS(prowokacjamiItem.getText(), "prowokacja_subst");
+
+            TS_ASSERT(!formIter.hasNext());
+        }
+
 	}
+
 
 };
 
