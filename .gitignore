@@ -3,3 +3,4 @@
 *.class
 classjava.stamp
 psi-pipe
+common/config.h

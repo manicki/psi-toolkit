@@ -14,7 +14,7 @@ namespace bonsai
 //SyntokAction::SyntokAction(int aStart, int aEnd, std::vector<int> aTokenIndexes, std::vector<InterpretationPair> aMorphology, std::string aRuleName, std::string uMorphology)
 SyntokAction::SyntokAction(int aStart, int aEnd, std::vector<int> aTokenIndices,
         std::vector<std::string> aMorphology, std::string aRuleName,
-        std::string uMorphology) {
+        std::string uMorphology) { //, LatticeWrapperPtr aLatticeWrapper) {
     type = "syntok";
     start = aStart;
     end = aEnd;
@@ -28,6 +28,8 @@ SyntokAction::SyntokAction(int aStart, int aEnd, std::vector<int> aTokenIndices,
     morphology.insert(morphology.begin(), aMorphology.begin(), aMorphology.end());// = new std::vector<InterpretationPair>(aMorphology);
 
     morphology_ = uMorphology;
+
+//    latticeWrapper = aLatticeWrapper;
 }
 
 SyntokAction::~SyntokAction()
@@ -41,7 +43,8 @@ SyntokAction::~SyntokAction()
 //1. ustalenie skad zaczynamy
 //2. zebranie scalonych form bazowych
 //3. wstawienie nowej krawedzi typu token albo grup (w zaleznosci od przelacznika) NOWOSC: wczesniej bylo, ze albo dawaj krawedz group albo nic. teraz musi byc krawedz ,jak graf to jedyna struktura. ewentualnei mozna dac na koniec opcje, wywal syntoki z grafu, przeliczyc reszte grafu
-bool SyntokAction::apply(ParseGraphPtr pg, int currentEntity,
+//bool SyntokAction::apply(ParseGraphPtr pg, Lattice &lattice, int currentEntity,
+bool SyntokAction::apply(Lattice &lattice, int currentEntity,
         std::vector<int> matchedTokensSize) {
     int realStart = 0;// start;
     int realEnd = 0;//start;
@@ -61,31 +64,102 @@ bool SyntokAction::apply(ParseGraphPtr pg, int currentEntity,
     //gets the base forms of all matched tokens. permutes those forms
     //in order to create a list of concatenated base forms.
     //those forms become the base forms of the added syntok
-    std::vector<std::string> base_forms; //concatenated base forms container
-    std::string concatenatedOrth = "";
-    for (int edge_i = realStart; edge_i <= realEnd; edge_i ++) { //to ma byc < realEnd czy <= realEnd
-        TransitionInfo *edge = util::getEdge(pg, currentEntity, edge_i);
-        if (concatenatedOrth != "")
-            concatenatedOrth += " ";
-        concatenatedOrth += edge->getOrth();
+//    std::vector<std::string> base_forms; //concatenated base forms container
+//    std::string concatenatedOrth = "";
+//    for (int edge_i = realStart; edge_i <= realEnd; edge_i ++) { //to ma byc < realEnd czy <= realEnd
+//        TransitionInfo *edge = util::getEdge(pg, currentEntity, edge_i);
+//        if (concatenatedOrth != "")
+//            concatenatedOrth += " ";
+//        concatenatedOrth += edge->getOrth();
+//
+//        for (std::vector<PosInfo>::iterator var_it = edge->variants_.begin();
+//                var_it != edge->variants_.end(); var_it ++) {
+//            std::string base = boost::get<0>(*var_it);
+//            if (base_forms.size() > 0) {
+//                std::vector<std::string> base_forms_tmp;
+//                for (std::vector<std::string>::iterator conc_it = base_forms.begin();
+//                        conc_it != base_forms.end(); conc_it ++) {
+//                    std::string concatenated = *conc_it + " " + base;
+//                    base_forms_tmp.push_back(concatenated);
+//                }
+//                base_forms.clear();
+//                base_forms.assign( base_forms_tmp.begin(),
+//                                   base_forms_tmp.end() );
+//            } else {
+//                base_forms.push_back(base);
+//            }
+//        }
+//    }
+    Lattice::VertexDescriptor startVertex = currentEntity + realStart;
+    Lattice::VertexDescriptor endVertex = currentEntity + realEnd;
+    std::list<Lattice::EdgeDescriptor> startEdges = lattice::getTopEdges(
+            lattice, startVertex);
+    std::list<Lattice::EdgeDescriptor> endEdges = lattice::getTopEdges(
+            lattice, endVertex);
+    std::vector<std::string> baseForms;
+    std::list<Lattice::EdgeSequence> edgeSequences =
+        lattice::getEdgesRange(
+                lattice, startVertex, endVertex
+                );
+    for (std::list<Lattice::EdgeSequence>::iterator sequenceIt =
+            edgeSequences.begin();
+            sequenceIt != edgeSequences.end();
+            sequenceIt ++) {
+        for (Lattice::EdgeSequence::Iterator edgeIt = sequenceIt->begin();
+                edgeIt != sequenceIt->end();
+                edgeIt ++) {
+            AnnotationItem ai = lattice.getEdgeAnnotationItem(*edgeIt);
+            if (lattice.getAnnotationItemManager().getValue(
+                    ai, "discard") == "1")
+                continue;
 
-        for (std::vector<PosInfo>::iterator var_it = edge->variants_.begin();
-                var_it != edge->variants_.end(); var_it ++) {
-            std::string base = boost::get<0>(*var_it);
-            if (base_forms.size() > 0) {
-                std::vector<std::string> base_forms_tmp;
-                for (std::vector<std::string>::iterator conc_it = base_forms.begin();
-                        conc_it != base_forms.end(); conc_it ++) {
-                    std::string concatenated = *conc_it + " " + base;
-                    base_forms_tmp.push_back(concatenated);
+            std::string base = lattice.getAnnotationItemManager().getValue(
+                    ai, "base");
+
+            if (baseForms.size() > 0) {
+                std::vector<std::string> tmpBaseForms;
+                for (std::vector<std::string>::iterator concIt =
+                        baseForms.begin();
+                        concIt != baseForms.end();
+                        concIt ++) {
+                    std::string concatenated = *concIt + " " + base;
+                    tmpBaseForms.push_back(concatenated);
                 }
-                base_forms.clear();
-                base_forms.assign( base_forms_tmp.begin(),
-                                   base_forms_tmp.end() );
+                baseForms.clear();
+                baseForms.assign( tmpBaseForms.begin(), tmpBaseForms.end());
             } else {
-                base_forms.push_back(base);
+                baseForms.push_back(base);
             }
         }
+    }
+    std::string concatenatedOrth = lattice.getSequenceText(edgeSequences.front());
+    std::string syntokCategory;
+    if (syntok) {
+        syntokCategory = "SYNTOK";
+        LayerTagCollection tags =
+            lattice.getLayerTagManager().createSingletonTagCollection("parse");
+        lattice::addSyntokEdges(
+                lattice,
+                startEdges,
+                endEdges,
+                syntokCategory,
+                baseForms,
+                morphology,
+                edgeSequences,
+                tags);
+    } else {
+        syntokCategory = concatenatedOrth;
+        LayerTagCollection tags =
+            lattice.getLayerTagManager().createSingletonTagCollection("lemma");
+        lattice::addSyntokEdges(
+                lattice,
+                startEdges,
+                endEdges,
+                syntokCategory,
+                baseForms,
+                morphology,
+                edgeSequences,
+                tags);
     }
 /*    std::vector<std::string> concatenated;// = new std::vector<StringPtr>;
     std::vector<int>::iterator ie = tokenIndexes.begin();
@@ -199,21 +273,21 @@ bool SyntokAction::apply(ParseGraphPtr pg, int currentEntity,
     //if (syntok) {
         //TransitionInfo *wd = new TransitionInfo("token"); //byl word, co mi to zmieni?
         //TransitionInfo *wd = new TransitionInfo("group"); //byl word, co mi to zmieni?
-        TransitionInfo *syntok = new TransitionInfo("group");
-        //if 'syntok' flag set adds a "group" edge with the label "SYNTOK"
-        if (! syntok) {
-            //otherwise adds a 'token' edge with the label made of concatenated orth forms of the constituing edges
-            syntok->setType("token");
-        }
-        //wd->setId(syntok->getId());
-        //wd->setLabel(*(syntok->getOrth()));
-        syntok->setId( util::getNewEdgeId(pg) );
-        if (syntok) {
-            syntok->setLabel("SYNTOK");
-        } else {
-            syntok->setLabel(concatenatedOrth);
-        }
-        syntok->setOrth(concatenatedOrth);
+//        TransitionInfo *syntok = new TransitionInfo("group");
+//        //if 'syntok' flag set adds a "group" edge with the label "SYNTOK"
+//        if (! syntok) {
+//            //otherwise adds a 'token' edge with the label made of concatenated orth forms of the constituing edges
+//            syntok->setType("token");
+//        }
+//        //wd->setId(syntok->getId());
+//        //wd->setLabel(*(syntok->getOrth()));
+//        syntok->setId( util::getNewEdgeId(pg) );
+//        if (syntok) {
+//            syntok->setLabel("SYNTOK");
+//        } else {
+//            syntok->setLabel(concatenatedOrth);
+//        }
+//        syntok->setOrth(concatenatedOrth);
         //std::istringstream iss;// = new std::istringstream;
 
         //iss.str (word->contents[0]->getId());
@@ -236,26 +310,26 @@ bool SyntokAction::apply(ParseGraphPtr pg, int currentEntity,
         //wd->setEnd(num2);
 //        std::cerr << "ustawiam koniec na: " << (num2 + 1) << std::endl;
         //delete iss2;
-        TransitionInfo *edgeStart = util::getEdge(pg, currentEntity, realStart);
-        TransitionInfo *edgeEnd = util::getEdge(pg, currentEntity, realEnd);
-        syntok->setStart(edgeStart->getStart());
-        syntok->setEnd(edgeEnd->getEnd());
-        syntok->setDepth(edgeStart->getDepth() + 1);
-        if (syntok) {
-            //note: tu sztucznie wymuszam numerowanie od 2. glebokosc 1 maja miec krawedzie typu 'pos', ale one sa dodawane dopiero po zakonczeniu parsingu, wiec trzeba nie jako zalozyc tu, ze takowe istnieja
-            if (syntok->getDepth() == 1) //note: tu nastepuje wspomniany wyzej trik
-                syntok->setDepth(2);
-        }
-
-        //for (std::vector<std::string>::iterator conc = concatenated.begin(); conc != concatenated.end(); conc ++)
-        for (std::vector<std::string>::iterator base_it = base_forms.begin();
-                base_it != base_forms.end(); base_it ++) {
-            //for (std::vector<InterpretationPair>::iterator morpho_it = morphology.begin();
-            for (std::vector<std::string>::iterator morpho_it = morphology.begin();
-                    morpho_it != morphology.end(); morpho_it ++) {
-                syntok->addMorphology(PosInfo(*base_it, *morpho_it, 1));
-            }
-        }
+//        TransitionInfo *edgeStart = util::getEdge(pg, currentEntity, realStart);
+//        TransitionInfo *edgeEnd = util::getEdge(pg, currentEntity, realEnd);
+//        syntok->setStart(edgeStart->getStart());
+//        syntok->setEnd(edgeEnd->getEnd());
+//        syntok->setDepth(edgeStart->getDepth() + 1);
+//        if (syntok) {
+//            //note: tu sztucznie wymuszam numerowanie od 2. glebokosc 1 maja miec krawedzie typu 'pos', ale one sa dodawane dopiero po zakonczeniu parsingu, wiec trzeba nie jako zalozyc tu, ze takowe istnieja
+//            if (syntok->getDepth() == 1) //note: tu nastepuje wspomniany wyzej trik
+//                syntok->setDepth(2);
+//        }
+//
+//        //for (std::vector<std::string>::iterator conc = concatenated.begin(); conc != concatenated.end(); conc ++)
+//        for (std::vector<std::string>::iterator base_it = base_forms.begin();
+//                base_it != base_forms.end(); base_it ++) {
+//            //for (std::vector<InterpretationPair>::iterator morpho_it = morphology.begin();
+//            for (std::vector<std::string>::iterator morpho_it = morphology.begin();
+//                    morpho_it != morphology.end(); morpho_it ++) {
+//                syntok->addMorphology(PosInfo(*base_it, *morpho_it, 1));
+//            }
+//        }
 
 /*        Edges::iterator e = edges.begin();
         int max = 1;
@@ -274,7 +348,7 @@ bool SyntokAction::apply(ParseGraphPtr pg, int currentEntity,
         wd->setDepth(2);*/
 
         //edges.push_back(wd);
-        pg->add_edge( syntok->getStart(), syntok->getEnd(), *syntok);
+//        pg->add_edge( syntok->getStart(), syntok->getEnd(), *syntok);
     /*} else {
         //NEW: adds a 'token' edge with the label made of concatenated orth forms of the constituing edges
         //old version below in comment - to be deleted
@@ -319,7 +393,8 @@ bool SyntokAction::apply(ParseGraphPtr pg, int currentEntity,
 }
 
 //bool SyntokAction::test(Entities entities, int currentEntity, std::vector<int> matchedTokensSize)
-bool SyntokAction::test(ParseGraphPtr pg, int currentEntity,
+//bool SyntokAction::test(ParseGraphPtr pg, Lattice &lattice, int currentEntity,
+bool SyntokAction::test(Lattice &lattice, int currentEntity,
         std::vector<int> matchedTokensSize) {
     //int sum = 0;
     for (std::vector<int>::iterator i = matchedTokensSize.begin();

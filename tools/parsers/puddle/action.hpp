@@ -8,13 +8,13 @@
 
 #include "puddle_types.hpp"
 //#include "entity.hpp"
-#include "TransitionInfo.hpp"
+//#include "TransitionInfo.hpp"
 //#include "TransitionGraph.hpp"
 #include <string>
 #include <vector>
 #include <boost/shared_ptr.hpp>
 #include "puddle_util.hpp"
-#include "lattice.hpp"
+#include "lattice_wrapper.hpp"
 
 namespace poleng
 {
@@ -31,10 +31,13 @@ class Action
 {
     public:
         Action() { type = "abstract"; verbose = false; }
+        virtual ~Action() {}
         //virtual bool test(Entities entities, int currentEntity, std::vector<int> matchedTokensSize); //tu nie bedzie to na napisie wykonywane, tylko na tych obiektach?
-        virtual bool test(ParseGraphPtr pg, int currentEntity, std::vector<int> matchedTokensSize); //tu nie bedzie to na napisie wykonywane, tylko na tych obiektach?
+        //virtual bool test(ParseGraphPtr pg, int currentEntity, std::vector<int> matchedTokensSize); //tu nie bedzie to na napisie wykonywane, tylko na tych obiektach?
+        virtual bool test(Lattice &lattice, int currentEntity, std::vector<int> matchedTokensSize); //tu nie bedzie to na napisie wykonywane, tylko na tych obiektach?
         //virtual bool apply(Entities &entities, Edges &edges, int currentEntity, std::vector<int> matchedTokensSize); //jw
-        virtual bool apply(ParseGraphPtr pg, Lattice &lattice, int currentEntity, std::vector<int> matchedTokensSize); //jw
+        //virtual bool apply(ParseGraphPtr pg, Lattice &lattice, int currentEntity, std::vector<int> matchedTokensSize); //jw
+        virtual bool apply(Lattice &lattice, int currentEntity, std::vector<int> matchedTokensSize); //jw
         virtual std::string getType() { return type; }
         void setType(std::string aType); //@todo: a to czemu nie virtual
 
@@ -43,6 +46,7 @@ class Action
     private:
         std::string type;
         bool verbose;
+//        LatticeWrapperPtr latticeWrapper;
 
         //std::vector<std::string> arguments;
 

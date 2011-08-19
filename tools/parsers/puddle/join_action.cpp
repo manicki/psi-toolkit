@@ -16,7 +16,7 @@ namespace bonsai
     namespace puddle
     {
 
-JoinAction::JoinAction(std::string aGroup, int aStart, int aEnd, int aHead, std::string aRuleName)
+JoinAction::JoinAction(std::string aGroup, int aStart, int aEnd, int aHead, std::string aRuleName) //, LatticeWrapperPtr aLatticeWrapper)
 {
     group = aGroup;
     start = aStart;
@@ -34,6 +34,8 @@ JoinAction::JoinAction(std::string aGroup, int aStart, int aEnd, int aHead, std:
     type = "join";
     ruleName = aRuleName;
     verbose = false;
+
+//    latticeWrapper = aLatticeWrapper;
 }
 
 JoinAction::~JoinAction()
@@ -41,7 +43,8 @@ JoinAction::~JoinAction()
 }
 
 //bool JoinAction::apply(Entities &entities, Edges &edges, int currentEntity, std::vector<int> matchedTokensSize)
-bool JoinAction::apply(ParseGraphPtr pg, int currentEntity,
+//bool JoinAction::apply(ParseGraphPtr pg, Lattice &lattice, int currentEntity,
+bool JoinAction::apply(Lattice &lattice, int currentEntity,
         std::vector<int> matchedTokensSize) {
 
 //    std::cout << "Poczatek reguly: " << ruleName << std::endl;
@@ -113,29 +116,51 @@ bool JoinAction::apply(ParseGraphPtr pg, int currentEntity,
 //            }
 //        }
 
-    TransitionInfo *group = new TransitionInfo("group");
+//    TransitionInfo *group = new TransitionInfo("group");
     //std::stringstream ss;
     //ss << std::hex << Group::groupId;
     //group->setId(gr->getId()); //TODO id nadawanie!
-    group->setId( util::getNewEdgeId(pg) );
-    group->setLabel(this->group);
+//    group->setId( util::getNewEdgeId(pg) );
+//    group->setLabel(this->group);
 
-    TransitionInfo *edgeStart = util::getEdge(pg, currentEntity, realStart);
-    TransitionInfo *edgeHead = util::getEdge(pg, currentEntity, realHead);
-    TransitionInfo *edgeEnd = util::getEdge(pg, currentEntity, realEnd);
-    group->setStart(edgeStart->getStart());
-    group->setEnd(edgeEnd->getEnd());
-    group->setHead(edgeHead->getId());
-    group->setOrth(edgeHead->getOrth());
-    std::vector<PosInfo> headVariants = edgeHead->variants_;
-    for (std::vector<PosInfo>::iterator vit = headVariants.begin();
-            vit != headVariants.end(); vit ++) {
-        group->addMorphology(*vit);
-    }
-    //note: tu sztucznie wymuszam numerowanie od 2. glebokosc 1 maja miec krawedzie typu 'pos', ale one sa dodawane dopiero po zakonczeniu parsingu, wiec trzeba nie jako zalozyc tu, ze takowe istnieja
-    group->setDepth(edgeStart->getDepth() + 1);
-    if (group->getDepth() == 1) //note: tu nastepuje wspomniany wyzej trik
-        group->setDepth(2);
+//    TransitionInfo *edgeStart = util::getEdge(pg, currentEntity, realStart);
+//    TransitionInfo *edgeHead = util::getEdge(pg, currentEntity, realHead);
+//    TransitionInfo *edgeEnd = util::getEdge(pg, currentEntity, realEnd);
+    Lattice::VertexDescriptor startVertex = currentEntity + realStart;
+    Lattice::VertexDescriptor headVertex = currentEntity + realHead;
+    Lattice::VertexDescriptor endVertex = currentEntity + realEnd;
+    std::list<Lattice::EdgeDescriptor> startEdges = lattice::getTopEdges(
+            lattice, startVertex);
+    std::list<Lattice::EdgeDescriptor> headEdges = lattice::getTopEdges(
+            lattice, headVertex);
+    std::list<Lattice::EdgeDescriptor> endEdges = lattice::getTopEdges(
+            lattice, endVertex);
+    lattice::removeParseEdges(lattice, startVertex, endVertex); //@todo: nie jestem przekonany, czy to jest dobre miejsce. addParseEdges moze sie wowczas nie powiesc. z drugiej strony, jak krawedzie nie sa usuniete tylko discarded, to moze sie nic nie stac. co tylko z groupPartitions? nie powinno byc generowane po usunieciu?
+    std::list<Lattice::EdgeSequence> groupPartitions =
+        lattice::getEdgesRange(
+                lattice, startVertex, endVertex
+                );
+    lattice::addParseEdges(
+            lattice,
+            startEdges,
+            endEdges,
+            this->group,
+            headEdges,
+            groupPartitions
+            );
+//    group->setStart(edgeStart->getStart());
+//    group->setEnd(edgeEnd->getEnd());
+//    group->setHead(edgeHead->getId());
+//    group->setOrth(edgeHead->getOrth());
+//    std::vector<PosInfo> headVariants = edgeHead->variants_;
+//    for (std::vector<PosInfo>::iterator vit = headVariants.begin();
+//            vit != headVariants.end(); vit ++) {
+//        group->addMorphology(*vit);
+//    }
+//    //note: tu sztucznie wymuszam numerowanie od 2. glebokosc 1 maja miec krawedzie typu 'pos', ale one sa dodawane dopiero po zakonczeniu parsingu, wiec trzeba nie jako zalozyc tu, ze takowe istnieja
+//    group->setDepth(edgeStart->getDepth() + 1);
+//    if (group->getDepth() == 1) //note: tu nastepuje wspomniany wyzej trik
+//        group->setDepth(2);
     /*
     group->setHead(((Token*)(gr->getHeadToken()))->getId());
     std::string startId, endId;
@@ -324,24 +349,27 @@ bool JoinAction::apply(ParseGraphPtr pg, int currentEntity,
 
 //    std::cout << "PO mam elementow: " << entities.size() << std::endl;
 
-    if (edgeStart->getType() == "group") {
-        util::removeGraphEdge(pg, *edgeStart);
-        //usunac edgeHead z grafu trzeba
-        //@todo: zweryfikowac to
-    }
+//    if (edgeStart->getType() == "group") {
+//        util::removeGraphEdge(pg, *edgeStart);
+//        //usunac edgeHead z grafu trzeba
+//        //@todo: zweryfikowac to
+//    }
+    //@todo: startEdges chcemy usunac typu parse z wierzchu pierwsza
 
     //edges.push_back(group);
-    pg->add_edge(group->getStart(), group->getEnd(), *group);
+//    pg->add_edge(group->getStart(), group->getEnd(), *group);
 
 //    std::cout << "W akcji grupowania" << std::endl;
     return true;
 }
 
 //bool JoinAction::test(Entities entities, int currentEntity, std::vector<int> matchedTokensSize)
-bool JoinAction::test(ParseGraphPtr pg, int currentEntity,
+//bool JoinAction::test(ParseGraphPtr pg, Lattice &lattice, int currentEntity,
+bool JoinAction::test(Lattice &lattice, int currentEntity,
         std::vector<int> matchedTokensSize) {
     //if (entities.size() < head)
-    if ( (pg->num_vertices() - 1) < head ) {
+    //if ( (pg->num_vertices() - 1) < head ) {
+    if ( (lattice.getLastVertex()) < head ) {
         return false;
     }
     if (matchedTokensSize[head - 1] == 0)

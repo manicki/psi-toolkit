@@ -5,6 +5,7 @@
 #include "annotator_factory.hpp"
 #include "lattice_worker.hpp"
 #include "layer_tag_collection.hpp"
+#include "lemmatizer_output_iterator.hpp"
 
 template<typename L>
 class LemmatizerAnnotator : public Annotator {

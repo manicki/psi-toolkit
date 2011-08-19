@@ -16,7 +16,7 @@ class RuleModifier
     public:
         RuleModifier();
         ~RuleModifier();
-        void addRule(std::string ruleString);
+        void addRule(std::string ruleString);//, LatticeWrapperPtr latticeWrapper);
         void addRule(RulePtr rule);
         void deleteRule(int index);
         void moveRule(int from, int to);
@@ -27,6 +27,7 @@ class RuleModifier
 
         void addAction(int ruleIndex, ActionPtr action);
         void addAction(int ruleIndex, std::string actionString);
+//                LatticeWrapperPtr latticeWrapper);
         void deleteAction(int ruleIndex, int actionIndex);
 
         void setRepeat(int ruleIndex);

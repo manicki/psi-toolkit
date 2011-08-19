@@ -1,6 +1,14 @@
 #ifndef LEX_DB_LEMMATIZER_HDR
 #define LEX_DB_LEMMATIZER_HDR
 
+#include <string>
+#include <list>
+
+#include <pqxx/connection>
+
+#include "annotation_item_manager.hpp"
+#include "lemmatizer_output_iterator.hpp"
+
 class LexDbLemmatizer {
 
 public:
@@ -13,6 +21,9 @@ public:
     static std::string getName();
 
     std::list<std::string> getLayerTags();
+
+private:
+    pqxx::connection connection_;
 };
 
 

@@ -5,7 +5,7 @@
 #include "utf8.h"
 #include <string>
 #include <boost/shared_ptr.hpp>
-#include "ParseGraph.hpp"
+//#include "ParseGraph.hpp"
 
 namespace poleng {
 

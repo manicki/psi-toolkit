@@ -8,7 +8,7 @@
 #include "rule_loader.hpp"
 #include "rule_matcher.hpp"
 #include "rule.hpp"
-#include "graph_writer.hpp"
+//#include "graph_writer.hpp"
 //#include "TranslaticaGraph.hpp"
 #include <boost/date_time/posix_time/posix_time.hpp>
 #include <ctime>
@@ -16,7 +16,7 @@
 #include <boost/shared_ptr.hpp>
 #include "tagger.hpp"
 //#include "me_tagger.hpp"
-#include "parse_converter.hpp"
+//#include "parse_converter.hpp"
 #include "rule_modifier.hpp"
 #include "lattice_wrapper.hpp"
 
@@ -33,8 +33,8 @@ class Puddle
 {
     public:
         Puddle();
-        ~Puddle();
-        virtual void setTagset(bonsai::puddle::TagsetPtr tagset_);
+        virtual ~Puddle();
+        virtual void setTagset(bonsai::puddle::TagsetPtr tagset_); //@todo: po kiego te funkcje sa wirtualne?
         //bool loadTagset(std::string filename);
         //bool loadTagset(std::string filename, std::string descFilename);
         virtual void setRules(bonsai::puddle::RulesPtr rules_);
@@ -42,9 +42,9 @@ class Puddle
         void setTagger(bonsai::puddle::TaggerPtr tagger_);
         //bool loadRules(std::string filename);
 //        bool parseFile(std::string filename);
-        void parseStdin();
+//        void parseStdin(); //@todo: parseStdin tez moze byc, ale chyba w innej postaci (nie klasa puddle?)
         //bool parseTranslatica(zsyntree *syntree);
-        bool writeGraph(std::string filename);
+//        bool writeGraph(std::string filename);
 //        bool writeXmlOutput(std::string filename);
 //        bool initTagger(std::string filename);
 //        void setStdoutOutput() { this->xmlWriter->setStdoutOutput(); }
@@ -54,11 +54,14 @@ class Puddle
         void setRulesLogFile(std::string filename);
         void logTagset();
         void logRules();
-        ParseGraphPtr parseString(std::string line);
-        ParseGraphPtr parseTaggedString(std::string line);
-        ParseGraphPtr parse(ParseGraphPtr graph); // void parse(ParseGraphPtr &graph);
-        ParseGraphPtr parse(Lattice &lattice);
+        //@todo: parseString, parseTaggedString mogą wrócić, tylko kwestia taggera/lematyzatora pozostaje. sama lattice zen da sie zrobic.
+        //@todo: czy parse ma zwracac nowa lattice czy dodawac do wejscioewj to jest juz kwestia do przemyslenia
+//        ParseGraphPtr parseString(std::string line);
+//        ParseGraphPtr parseTaggedString(std::string line);
+//        ParseGraphPtr parse(ParseGraphPtr graph); // void parse(ParseGraphPtr &graph);
+        bool parse(Lattice &lattice);
 //        std::vector<ParseGraphPtr>* getGraphs();
+//        LatticeWrapperPtr getLatticeWrapper();
 
     protected:
 //        Tagset *tagset;
@@ -67,8 +70,8 @@ class Puddle
         RulesPtr rules;
         RuleMatcher *ruleMatcher;
 //        XmlParser *xmlParser;
-        GraphWriter *graphWriter;
-        ParseConverter *parseConverter;
+//        GraphWriter *graphWriter;
+//        ParseConverter *parseConverter;
 //        XmlWriter *xmlWriter;
 //        Tagger *tagger;
 //        Rules *rules;
@@ -87,7 +90,7 @@ class Puddle
         bool norepeats;
 
         RuleModifier *ruleModifier;
-        LatticeWrapper *latticeWrapper;
+//        LatticeWrapperPtr latticeWrapper;
 
 //        ParseGraphPtr graph;
 };

@@ -9,7 +9,7 @@
 
 //#include "utf8_converter.hpp"
 
-#include "TransitionInfo.hpp"
+//#include "TransitionInfo.hpp"
 //#include "entity.hpp"
 #include "action.hpp"
 #include "group_action.hpp"
@@ -50,9 +50,11 @@ class Rule
         ~Rule();
 
         //bool test(std::string &sentence, Entities &entities, int currentEntity);
-        bool test(std::string &sentenceString, ParseGraphPtr pg, int currentEntity);
+        //bool test(std::string &sentenceString, ParseGraphPtr pg, int currentEntity);
+        bool test(std::string &sentenceString, Lattice &lattice, int currentEntity);
         //bool apply(std::string &sentence, Entities &entities, Edges &edges, int currentEntity);
-        bool apply(std::string &sentenceString, ParseGraphPtr pg, Lattice &lattice, int currentEntity);
+        //bool apply(std::string &sentenceString, ParseGraphPtr pg, Lattice &lattice, int currentEntity);
+        bool apply(std::string &sentenceString, Lattice &lattice, int currentEntity);
 
         std::string getName();
         PatternPtr getPattern();
@@ -93,7 +95,7 @@ class Rule
 
     private:
         std::string name;
-        std::vector<TransitionInfo> elements;
+//        std::vector<TransitionInfo> elements;
         PatternPtr pattern;
         NegativePatterns negativePatterns;
         std::string compiled;

@@ -1,6 +1,6 @@
 #include "lex_db_lemmatizer.hpp"
 
-LexDbLemmatizer::LexDbLemmatizer() {
+LexDbLemmatizer::LexDbLemmatizer():connection_("dbname=ude") {
 }
 
 void LexDbLemmatizer::lemmatize(const std::string token,

@@ -21,9 +21,13 @@ class JoinAction : public Action
         JoinAction(std::string aGroup, int aStart, int aEnd, int aHead, std::string aRuleName);
         ~JoinAction();
         //bool apply(Entities &entities, Edges &edges, int currentEntity, std::vector<int> matchedTokensSize);
-        bool apply(ParseGraphPtr, int currentEntity, std::vector<int> matchedTokensSize);
+        //bool apply(ParseGraphPtr, Lattice &lattice, int currentEntity, std::vector<int> matchedTokensSize);
+        bool apply(Lattice &lattice, int currentEntity,
+                std::vector<int> matchedTokensSize);
         //bool test(Entities entities, int currentEntity, std::vector<int> matchedTokensSize);
-        bool test(ParseGraphPtr, int currentEntity, std::vector<int> matchedTokensSize);
+        //bool test(ParseGraphPtr, Lattice &lattice, int currentEntity, std::vector<int> matchedTokensSize);
+        bool test(Lattice &lattice, int currentEntity,
+                std::vector<int> matchedTokensSize);
         std::string getGroup();
         int getHead();
         void setGroup(std::string aGroup);
@@ -45,6 +49,7 @@ class JoinAction : public Action
         std::string ruleName;
         std::string type;
         bool verbose;
+//        LatticeWrapperPtr latticeWrapper;
 };
 
 typedef boost::shared_ptr<JoinAction> JoinActionPtr;

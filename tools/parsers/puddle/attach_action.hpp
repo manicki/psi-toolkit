@@ -21,9 +21,11 @@ class AttachAction : public Action
         AttachAction(std::string aGroup, int aStart, int aEnd, int aHead, std::string aRuleName);
         ~AttachAction();
         //bool apply(Entities &entities, Edges &edges, int currentEntity, std::vector<int> matchedTokensSize);
-        bool apply(ParseGraphPtr pg, int currentEntity, std::vector<int> matchedTokensSize);
+        //bool apply(ParseGraphPtr pg, Lattice &lattice, int currentEntity, std::vector<int> matchedTokensSize);
+        bool apply(Lattice &lattice, int currentEntity, std::vector<int> matchedTokensSize);
         //bool test(Entities entities, int currentEntity, std::vector<int> matchedTokensSize);
-        bool test(ParseGraphPtr pg, int currentEntity, std::vector<int> matchedTokensSize);
+        //bool test(ParseGraphPtr pg, Lattice &lattice, int currentEntity, std::vector<int> matchedTokensSize);
+        bool test(Lattice &lattice, int currentEntity, std::vector<int> matchedTokensSize);
         std::string getGroup();
         int getHead();
         void setGroup(std::string aGroup);
@@ -45,6 +47,7 @@ class AttachAction : public Action
         std::string ruleName;
         std::string type;
         bool verbose;
+//        LatticeWrapperPtr latticeWrapper;
 };
 
 typedef boost::shared_ptr<AttachAction> AttachActionPtr;

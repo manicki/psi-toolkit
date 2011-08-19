@@ -1,7 +1,7 @@
 #ifndef PUDDLETAGGER_H__
 #define PUDDLETAGGER_H__
 
-#include "TransitionInfo.hpp"
+//#include "TransitionInfo.hpp"
 //#include "entity.hpp"
 //#include "token.hpp"
 //#include "group.hpp"
@@ -39,11 +39,11 @@ class Tagger
         ~Tagger();
         void loadDictionary(std::string &filename);
         //std::string tagSentence(std::string sentence, Entities &entities, Edges &edges);
-        std::string tagSentence(std::string sentence, ParseGraphPtr inputGraph);
+//        std::string tagSentence(std::string sentence, ParseGraphPtr inputGraph); //@todo: wylaczam tymczasowo to pierunstwo
         //std::string getReadable(Entities entities); //@todo: funkcje 'readable' sa tymczasowo wylaczone. patrz uwaga w pliku cpp
         //std::string tagSentenceReadable(std::string sentence, Entities &entities, Edges &edges);
         //std::string processInput(std::string &sentence, Entities &entities, Edges &edges);
-        std::string processInput(std::string &sentence, ParseGraphPtr inputGraph);
+//        std::string processInput(std::string &sentence, ParseGraphPtr inputGraph); //@todo: wylaczam tymczasowo to pierunstwo
 
         void setTagset(TagsetPtr aTagset);
 

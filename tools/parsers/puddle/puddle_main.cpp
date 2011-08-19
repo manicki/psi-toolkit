@@ -55,7 +55,8 @@ int main(int argc, char **argv) {
 
     if (vm.count("rules")) {
         std::string rulesFilename = vm["rules"].as<std::string>();
-        poleng::bonsai::puddle::RulesPtr rules = rule_loader.readFromFile(rulesFilename);
+        poleng::bonsai::puddle::RulesPtr rules =
+            rule_loader.readFromFile(rulesFilename);//, puddle->getLatticeWrapper());
         if (rules->size() == 0) {
             std::cerr << "Rules not loaded. " << std::endl;
             return 1;
@@ -78,8 +79,9 @@ int main(int argc, char **argv) {
 
     std::string line;
     while (getline(std::cin, line)) {
-        poleng::bonsai::ParseGraphPtr pg = puddle->parseTaggedString(line);
-        std::cerr << pg->write_graphviz();
+        //@todo: robic krate z line i do puddle'a
+        //poleng::bonsai::ParseGraphPtr pg = puddle->parseTaggedString(line);
+        //std::cerr << pg->write_graphviz();
     }
 //delete puddle;
 

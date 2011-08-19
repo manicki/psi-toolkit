@@ -1,3 +1,11 @@
+if(USE_BONSAI_PARSEGRAPH)
+	set(common-bonsai-files
+        ${BONSAI_PATH}/ParseGraph.cpp
+        ${BONSAI_PATH}/TransitionInfo.cpp
+        ${BONSAI_PATH}/TransferTypes.cpp
+	)
+endif(USE_BONSAI_PARSEGRAPH)
+
 add_library(tools-parsers-puddle
 	puddle.cpp
 	tagset_loader.cpp
@@ -17,9 +25,8 @@ add_library(tools-parsers-puddle
 	rule.cpp
 	rule_matcher.cpp
 	rule_modifier.cpp
-	graph_writer.cpp
-	parse_converter.cpp
-	lattice_wrapper.cpp	
+	lattice_wrapper.cpp
+    ${common-bonsai-files}
 )
 target_link_libraries(tools-parsers-puddle ${Boost_LIBRARIES} common)
 
