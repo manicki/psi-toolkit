@@ -3,6 +3,9 @@
 
 #include <string>
 #include <list>
+
+#include <pqxx/connection>
+
 #include "annotation_item_manager.hpp"
 #include "lemmatizer_output_iterator.hpp"
 
@@ -18,6 +21,9 @@ public:
     static std::string getName();
 
     std::list<std::string> getLayerTags();
+
+private:
+    pqxx::connection data;
 };
 
 
