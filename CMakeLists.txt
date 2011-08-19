@@ -56,10 +56,11 @@ foreach(dir ${DIRS})
 	add_subdirectory(${dir})
 endforeach(dir)
 
-<<<<<<< HEAD
-set_target_properties(common framework formats-psi formats-txt formats-utt tools-tokenizers-tp tools-lemmatizers-morfologik psi-pipe common-test PROPERTIES 
-=======
 set(TARGETS common framework formats-psi formats-txt formats-utt tools-tokenizers-tp psi-pipe common-test)
+
+if(USE_JAVA)
+	set(TARGETS ${TARGETS} tools-lemmatizers-morfologik)
+endif(USE_JAVA)
 
 if(USE_POSTGRESQL)
         set(TARGETS ${TARGETS} lex-db)
@@ -70,7 +71,6 @@ set_target_properties(${TARGETS} PROPERTIES
 
 if(USE_PUDDLE)
 set_target_properties(tools-parsers-puddle PROPERTIES
->>>>>>> b34c1e1fb40daa39b34f899c497115c13ced7480
 	COMPILE_FLAGS "-I${psi-toolkit_SOURCE_DIR}/utf8")
 if(USE_BONSAI_PARSEGRAPH)
 set_target_properties(tools-parsers-puddle PROPERTIES
@@ -93,12 +93,8 @@ if(CXXTEST_FOUND)
 	target_link_libraries(runner
 		${Boost_LIBRARIES}
 		common common-test
-<<<<<<< HEAD
 		formats-psi formats-txt formats-utt 
-    tools-lemmatizers-morfologik
-=======
-		formats-psi formats-txt formats-utt
->>>>>>> b34c1e1fb40daa39b34f899c497115c13ced7480
+    	tools-lemmatizers-morfologik
 	)
 
 	if(USE_JAVA)
