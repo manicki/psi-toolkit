@@ -52,7 +52,7 @@ private:
     boost::dynamic_bitset<> attributes_;
 
     size_t resize_(size_t size);
-
+    bool areAttributesTheSame_(const AnnotationItem& other) const;
 };
 
 #endif

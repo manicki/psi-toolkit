@@ -150,11 +150,9 @@ Lattice::EdgeDescriptor Lattice::addEdge(
             }
             return EdgeDescriptor(result.first);
         }
-
     }
 
-    throw NoEdgeException("No edge added.");
-
+    return (insertResult.first)->second;
 }
 
 Lattice::InOutEdgesIterator Lattice::outEdges(

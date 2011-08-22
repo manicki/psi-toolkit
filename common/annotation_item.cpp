@@ -1,7 +1,10 @@
 #include "annotation_item.hpp"
 
 bool AnnotationItem::operator==(const AnnotationItem& other) const {
-    return getCategory() == other.getCategory();
+    return
+        getCategory() == other.getCategory()
+        && getText() == other.getText()
+        && areAttributesTheSame_(other);
 }
 
 std::string AnnotationItem::getCategory() const {
@@ -36,3 +39,25 @@ size_t AnnotationItem::resize_(size_t size) {
     return attributes_.size();
 }
 
+bool AnnotationItem::areAttributesTheSame_(const AnnotationItem& other) const {
+    size_t smallerSize = values_.size();
+    size_t largerSize  = other.values_.size();
+    const std::vector<std::string>* largerVector = &(other.values_);
+
+    if (smallerSize > largerSize) {
+        smallerSize = other.values_.size();
+        largerSize  = values_.size();
+        largerVector = &values_;
+    }
+
+   for (size_t i = 0; i < smallerSize; ++i)
+       if (values_[i] != other.values_[i])
+           return false;
+
+
+   for (size_t i = smallerSize; i < largerSize; ++i)
+       if (!(*largerVector)[i].empty())
+           return false;
+
+   return true;
+}
