@@ -27,6 +27,7 @@ if(USE_JAVA)
 	message(STATUS "You may need to set LD_LIBRARY_PATH=${LD_LIBPATH} to run installed software")
 
 	include_directories(${JAVA_INCLUDE_PATH})
+	include_directories(${JAVA_INCLUDE_PATH}/linux)
 	include_directories("${psi-toolkit_SOURCE_DIR}/common/j")
 
 	set(HAVE_JAVA 1)
