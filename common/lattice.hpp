@@ -189,6 +189,8 @@ public:
     private:
         Lattice& lattice_;
         VertexDescriptor vd_;
+
+        void nextRealVertex_();
     };
 
     class InOutEdgesIterator {
