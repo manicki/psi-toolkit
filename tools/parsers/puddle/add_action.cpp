@@ -79,8 +79,12 @@ bool AddAction::apply(Lattice &lattice, int currentEntity,
 //        }
 //    }
 
-    Lattice::VertexDescriptor startVertex = currentEntity + before;
-    Lattice::VertexDescriptor endVertex = currentEntity + (before + count) - 1;
+    //Lattice::VertexDescriptor startVertex = currentEntity + before;
+    //Lattice::VertexDescriptor endVertex = currentEntity + (before + count) - 1;
+    int offset = currentEntity + before;
+    Lattice::VertexDescriptor startVertex = lattice::getVertex(lattice, offset);
+    Lattice::VertexDescriptor endVertex = lattice::getVertex(lattice,
+            (offset + count) - 1);
 //    std::cerr << "od: " << startVertex << " do: " << endVertex << std::endl;
     std::list<Lattice::EdgeSequence> edgeSequences = lattice::getEdgesRange(
             lattice, startVertex, endVertex);
@@ -381,8 +385,12 @@ bool AddAction::test(Lattice &lattice, int currentEntity,
 //            }
 //        }
 //    }
-    Lattice::VertexDescriptor startVertex = currentEntity + before;
-    Lattice::VertexDescriptor endVertex = currentEntity + (before + count);
+    //Lattice::VertexDescriptor startVertex = currentEntity + before;
+    //Lattice::VertexDescriptor endVertex = currentEntity + (before + count);
+    int offset = currentEntity + before;
+    Lattice::VertexDescriptor startVertex = lattice::getVertex(lattice, offset);
+    Lattice::VertexDescriptor endVertex = lattice::getVertex(lattice,
+            (offset + count) - 1);
     std::list<Lattice::EdgeSequence> edgeSequences = lattice::getEdgesRange(
             lattice, startVertex, endVertex);
     for (std::list<Lattice::EdgeSequence>::iterator sequenceIt = edgeSequences.begin();

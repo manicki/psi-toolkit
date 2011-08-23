@@ -84,14 +84,21 @@ bool UnifyAction::apply(Lattice &lattice, int currentEntity,
                 i ++;
             }
 
-            Lattice::VertexDescriptor vertex = currentEntity + before;
+            //Lattice::VertexDescriptor vertex = currentEntity + before;
+            Lattice::VertexDescriptor vertex = lattice::getVertex(lattice,
+                    currentEntity + before);
+            //@todo: czy to sprawdzenie jest nadal konieczne? ta funkcja getVertex nie robi czegos takiego?
             while (lattice::getTopEdges(lattice, vertex).size() == 0) {
                 before ++;
                 vertex = currentEntity + before;
             }
 
-            for (vertex = currentEntity + before;
-                    vertex < (currentEntity + before + count); vertex ++) {
+            int offset = currentEntity + before;
+            int vertexI = 0;
+            //for (vertex = currentEntity + before;
+            //        vertex < (currentEntity + before + count); vertex ++) {
+            while (vertexI < count) {
+                vertex = lattice::getVertex(lattice, offset + vertexI);
                 std::list<Lattice::EdgeDescriptor> edges =
                     lattice::getTopEdges(lattice, vertex);
                 std::set<std::string> values;
@@ -135,6 +142,7 @@ bool UnifyAction::apply(Lattice &lattice, int currentEntity,
                         }
                     }
                 }
+                vertexI ++;
             }
             }
 
@@ -151,14 +159,21 @@ bool UnifyAction::apply(Lattice &lattice, int currentEntity,
                     before += matchedTokensSize[i];
                     i ++;
                 }
-                Lattice::VertexDescriptor vertex = currentEntity + before;
+                //Lattice::VertexDescriptor vertex = currentEntity + before;
+                Lattice::VertexDescriptor vertex = lattice::getVertex(lattice,
+                        currentEntity + before);
+                //@todo: czy to sprawdzenie jest nadal konieczne? ta funkcja getVertex nie robi czegos takiego?
                 while (lattice::getTopEdges(lattice, vertex).size() == 0) {
                     before ++;
                     vertex = currentEntity + before;
                 }
 
-                for (vertex = currentEntity + before;
-                        vertex < (currentEntity + before + count); vertex ++) {
+                int offset = currentEntity + before;
+                int vertexI = 0;
+                //for (vertex = currentEntity + before;
+                //        vertex < (currentEntity + before + count); vertex ++) {
+                while (vertexI < count) {
+                    vertex = lattice::getVertex(lattice, offset + vertexI);
                     std::list<Lattice::EdgeDescriptor> edges =
                         lattice::getTopEdges(lattice, vertex);
                     for (std::list<Lattice::EdgeDescriptor>::iterator edgeIt =
@@ -181,13 +196,10 @@ bool UnifyAction::apply(Lattice &lattice, int currentEntity,
                                 //discard the edge
                                 lattice.getAnnotationItemManager().setValue(annotationItem,
                                         "discard", "1");
-                                std::cerr << "robie discard dla: " <<
-                                    morphology << " od " <<
-                                    lattice.getAnnotationItemManager().getValue(annotationItem, "base")
-                                    << std::endl;
                             }
                         }
                     }
+                    vertexI ++;
                 }
 
                 //attribute_it ++;
@@ -676,7 +688,6 @@ bool UnifyAction::apply(Lattice &lattice, int currentEntity,
 bool UnifyAction::test(Lattice &lattice, int currentEntity,
         std::vector<int> matchedTokensSize) {
 
-    std::cerr << "przyszlo" << std::endl;
     //unifiedValues.clear();
     bool toApply = true;
     std::vector<std::string>::iterator attribute_it = unifiedAttributes.begin();
@@ -701,14 +712,21 @@ bool UnifyAction::test(Lattice &lattice, int currentEntity,
                 i ++;
             }
 
-            Lattice::VertexDescriptor vertex = currentEntity + before;
+            //Lattice::VertexDescriptor vertex = currentEntity + before;
+            Lattice::VertexDescriptor vertex = lattice::getVertex(lattice,
+                    currentEntity + before);
+            //@todo: czy to sprawdzenie jest nadal konieczne? ta funkcja getVertex nie robi czegos takiego?
             while (lattice::getTopEdges(lattice, vertex).size() == 0) {
                 before ++;
                 vertex = currentEntity + before;
             }
 
-            for (vertex = currentEntity + before;
-                    vertex < (currentEntity + before + count); vertex ++) {
+            int offset = currentEntity + before;
+            int vertexI = 0;
+            //for (vertex = currentEntity + before;
+            //        vertex < (currentEntity + before + count); vertex ++) {
+            while (vertexI < count) {
+                vertex = lattice::getVertex(lattice, offset + vertexI);
                 //TransitionInfo *edge = util::getEdge(pg, currentEntity, edge_i);
                 std::list<Lattice::EdgeDescriptor> edges =
                     lattice::getTopEdges(lattice, vertex);
@@ -757,6 +775,7 @@ bool UnifyAction::test(Lattice &lattice, int currentEntity,
                 if (allValuesNull && (! wasAllNulls)) {
                     wasAllNulls = true;
                 }
+                vertexI ++;
             }
 
         }
@@ -779,7 +798,6 @@ bool UnifyAction::test(Lattice &lattice, int currentEntity,
 //        }
         attribute_it ++;
     }
-        std::cerr << "to apply: " << (toApply ? " true" : " false") << std::endl;
     return toApply;
 //    bool toApply = true;
 //    std::vector<std::string>::iterator attribute_it = unifiedAttributes.begin();

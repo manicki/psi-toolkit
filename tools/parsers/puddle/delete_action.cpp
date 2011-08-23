@@ -58,7 +58,9 @@ bool DeleteAction::apply(Lattice &lattice, int currentEntity,
 //    while (util::getEdge(pg, currentEntity, before) == NULL) {
 //        before ++;
 //    }
-    Lattice::VertexDescriptor vertex = currentEntity + before;
+    Lattice::VertexDescriptor vertex = lattice::getVertex(lattice,
+            currentEntity + before);
+    //@todo: czy to sprawdzenie jest nadal konieczne? ta funkcja getVertex nie robi czegos takiego?
     while (lattice::getTopEdges(lattice, vertex).size() == 0) { //if there is no edge at a given position, proceed to the next vertex, as it may be a whitespace
         before ++;
         vertex = currentEntity + before;
@@ -93,8 +95,17 @@ bool DeleteAction::apply(Lattice &lattice, int currentEntity,
 //            }
 //        }
 //    }
-    for (vertex = currentEntity + before;
-            vertex < (currentEntity + before + count); vertex ++) {
+    int offset = currentEntity + before;
+//    Lattice::VertexDescriptor lastVertex = lattice::getVertex(
+//            lattice, offset + count);
+    int vertexI = 0;
+//    std::cerr << "last vertex: " << lastVertex << std::endl;
+    //while (vertex = lattice::getVertex(lattice, offset + vertexI)
+    //        < lastVertex) {
+    while (vertexI < count) {
+        vertex = lattice::getVertex(lattice, offset + vertexI);
+    //for (vertex = lattice::getVertex(lattice, currentEntity + before);
+    //        vertex < (currentEntity + before + count); vertex ++) {
         std::list<Lattice::EdgeDescriptor> edges =
             lattice::getTopEdges(lattice, vertex);
         for (std::list<Lattice::EdgeDescriptor>::iterator edgeIt = edges.begin();
@@ -133,6 +144,7 @@ bool DeleteAction::apply(Lattice &lattice, int currentEntity,
                 }
             }
         }
+        vertexI ++;
     }
 
     return true;
@@ -326,7 +338,10 @@ bool DeleteAction::test(Lattice &lattice,
 //    while (util::getEdge(pg, currentEntity, before) == NULL) { //if there is no edge at a given position, proceed to the next vertex, as it may be a whitespace
 //        before ++;
 //    }
-    Lattice::VertexDescriptor vertex = currentEntity + before;
+    //Lattice::VertexDescriptor vertex = currentEntity + before;
+    Lattice::VertexDescriptor vertex = lattice::getVertex(lattice,
+            currentEntity + before);
+    //@todo: czy to sprawdzenie jest nadal konieczne? ta funkcja getVertex nie robi czegos takiego?
     while (lattice::getTopEdges(lattice, vertex).size() == 0) { //if there is no edge at a given position, proceed to the next vertex, as it may be a whitespace
         before ++;
         vertex = currentEntity + before;
@@ -375,8 +390,12 @@ bool DeleteAction::test(Lattice &lattice,
 //            //@todo: i tu break?
 //        }
 //    }
-    for (vertex = currentEntity + before;
-            vertex < (currentEntity + before + count); vertex ++) {
+    int offset = currentEntity + before;
+    int vertexI = 0;
+    //for (vertex = currentEntity + before;
+    //        vertex < (currentEntity + before + count); vertex ++) {
+    while (vertexI < count) {
+        vertex = lattice::getVertex(lattice, offset + vertexI);
         std::list<Lattice::EdgeDescriptor> edges =
             lattice::getTopEdges(lattice, vertex);
         for (std::list<Lattice::EdgeDescriptor>::iterator edgeIt = edges.begin();
@@ -422,6 +441,7 @@ bool DeleteAction::test(Lattice &lattice,
                 //@todo: i tu break?
             }
         }
+        vertexI ++;
     }
 
     if (foundToDelete) {
