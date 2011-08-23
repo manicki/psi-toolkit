@@ -332,12 +332,16 @@ namespace poleng {
                         edge = edgeIt.next();
                     vertex = lattice.getEdgeBeginIndex(edge) +
                         lattice.getEdgeLength(edge);
+                    if (vertex == lattice.getLastVertex())
+                        return lattice.getLastVertex();
                     edgePosition ++;
                 }
                 Lattice::InOutEdgesIterator edgeIt =
                     lattice.outEdges(vertex, mask);
                 while (! edgeIt.hasNext()) {
                     vertex ++;
+                    if (vertex >= lattice.getLastVertex())
+                        return lattice.getLastVertex();
                     edgeIt = lattice.outEdges(vertex, mask);
                 }
                 return vertex;
@@ -521,6 +525,8 @@ namespace poleng {
                                 annotationItem, valueIt->first, valueIt->second);
 //                        std::cerr << "ustawiam: " << valueIt->first << " na " << valueIt->second << std::endl;
                     }
+                    lattice.getAnnotationItemManager().setValue(annotationItem, "orth",
+                            lattice.getEdgeText(*edgeIt));
 //                    std::cerr << "categoria: " << lattice.getAnnotationItemManager().getCategory(annotationItem) << std::endl;
 
                     for (std::list<Lattice::EdgeSequence>::iterator seqIt =
@@ -597,6 +603,7 @@ namespace poleng {
                     std::list<Lattice::EdgeDescriptor> startEdges,
                     std::list<Lattice::EdgeDescriptor> endEdges,
                     std::string &syntokCategory,
+                    std::string &concatenatedOrth,
                     std::vector<std::string> baseForms,
                     std::vector<std::string> morphology,
                     std::list<Lattice::EdgeSequence> edgeSequences,
@@ -624,6 +631,9 @@ namespace poleng {
                                 annotationItem, "morphology", *morphIt);
                         lattice.getAnnotationItemManager().setValue(
                                 annotationItem, "discard", "0");
+                        if (syntokCategory != concatenatedOrth) //adding parse edge 'SYNTOK'
+                            lattice.getAnnotationItemManager().setValue(
+                                    annotationItem, "orth", concatenatedOrth);
 
                         for (std::list<Lattice::EdgeSequence>::iterator sequenceIt =
                                 edgeSequences.begin();

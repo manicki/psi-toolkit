@@ -590,11 +590,19 @@ std::string RuleMatcher::generateSentenceString(Lattice &lattice) {
         if (lattice.getLayerTagManager().match(mask, "parse")) {
             ss << "<" << lattice.getAnnotationItemManager().
                 getCategory(annotationItem);
+            std::string orth = lattice.getAnnotationItemManager().
+                getValue(annotationItem, "orth");
+            if (orth != "") {
+            ss << "<" << orth;
+            } else {
+                ss << "<" << lattice.getAnnotationItemManager().
+                getCategory(annotationItem);
+            }
         } else {
             ss << "<" << "TOKEN";
+            ss << "<" << lattice.getAnnotationItemManager().
+                getCategory(annotationItem); //@todo: trzeba poprawic ustawianie orth dla krawedzi 'parse'
         }
-        ss << "<" << lattice.getAnnotationItemManager().
-            getCategory(annotationItem); //@todo: trzeba poprawic ustawianie orth dla krawedzi 'parse'
         for (std::list<Lattice::EdgeDescriptor>::iterator edgeIt = edges.begin();
                 edgeIt != edges.end(); edgeIt ++) {
             AnnotationItem ai = lattice.getEdgeAnnotationItem(*edgeIt);

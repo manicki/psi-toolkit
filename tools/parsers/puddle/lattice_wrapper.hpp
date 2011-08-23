@@ -75,6 +75,7 @@ namespace poleng {
                             std::list<Lattice::EdgeDescriptor> startEdges,
                             std::list<Lattice::EdgeDescriptor> endEdges,
                             std::string &syntokCategory,
+                            std::string &concatenatedOrth,
                             std::vector<std::string> baseForms,
                             std::vector<std::string> morphology,
                             std::list<Lattice::EdgeSequence> edgeSequences,

@@ -901,7 +901,7 @@ public:
         lattice.getAnnotationItemManager().setValue(ai_ananas_sg, "discard", "0");
         lattice.addEdge(pre_ananas, post_ananas, ai_ananas_sg, lemma_tag, ananas_lemma_builder.build());
         AnnotationItem ai_ananas_pl("ananas");
-        lattice.getAnnotationItemManager().setValue(ai_ananas_pl, "base", "ananas"); //@todo: tu problem, bo dla niego identyczne sa morphology jak sie zaczynaja od tej samej litery czy podciagu. nie moga byc wiec dwie interpretacje 'subst'. poki co radzimy se tak
+        lattice.getAnnotationItemManager().setValue(ai_ananas_pl, "base", "ananas");
         lattice.getAnnotationItemManager().setValue(ai_ananas_pl, "morphology", "subst:pl:m");
         lattice.getAnnotationItemManager().setValue(ai_ananas_pl, "discard", "0");
         lattice.addEdge(pre_ananas, post_ananas, ai_ananas_pl, lemma_tag, ananas_lemma_builder.build());
@@ -973,6 +973,10 @@ public:
         TS_ASSERT_EQUALS((*avi).first, "discard");
         TS_ASSERT_EQUALS((*avi).second, "0");
         ++avi;
+        TS_ASSERT(avi != av.end());
+        TS_ASSERT_EQUALS((*avi).first, "orth");
+        TS_ASSERT_EQUALS((*avi).second, "ananas");
+        ++avi;
         TS_ASSERT(avi == av.end());
         TS_ASSERT(parseIter.hasNext());
         edge = parseIter.next();
@@ -1001,6 +1005,10 @@ public:
         TS_ASSERT(avi != av.end());
         TS_ASSERT_EQUALS((*avi).first, "discard");
         TS_ASSERT_EQUALS((*avi).second, "0");
+        ++avi;
+        TS_ASSERT(avi != av.end());
+        TS_ASSERT_EQUALS((*avi).first, "orth");
+        TS_ASSERT_EQUALS((*avi).second, "ananas");
         ++avi;
         TS_ASSERT(avi == av.end());
         TS_ASSERT(parseIter.hasNext());
@@ -1209,6 +1217,10 @@ public:
 //        TS_ASSERT_EQUALS((*avi).first, "discard");
 //        TS_ASSERT_EQUALS((*avi).second, "1");
 //        ++avi;
+//        TS_ASSERT(avi != av.end());
+//        TS_ASSERT_EQUALS((*avi).first, "orth");
+//        TS_ASSERT_EQUALS((*avi).second, "ananas");
+//        ++avi;
 //        TS_ASSERT(avi == av.end());
 //        TS_ASSERT(parseIter.hasNext());
 //        edge = parseIter.next();
@@ -1237,6 +1249,10 @@ public:
 //        TS_ASSERT(avi != av.end());
 //        TS_ASSERT_EQUALS((*avi).first, "discard");
 //        TS_ASSERT_EQUALS((*avi).second, "0");
+//        ++avi;
+//        TS_ASSERT(avi != av.end());
+//        TS_ASSERT_EQUALS((*avi).first, "orth");
+//        TS_ASSERT_EQUALS((*avi).second, "ananas");
 //        ++avi;
 //        TS_ASSERT(avi == av.end());
 //        TS_ASSERT(parseIter.hasNext());
@@ -1280,6 +1296,10 @@ public:
 //        TS_ASSERT(avi != av.end());
 //        TS_ASSERT_EQUALS((*avi).first, "discard");
 //        TS_ASSERT_EQUALS((*avi).second, "1");
+//        ++avi;
+//        TS_ASSERT(avi != av.end());
+//        TS_ASSERT_EQUALS((*avi).first, "orth");
+//        TS_ASSERT_EQUALS((*avi).second, "noirs");
 //        ++avi;
 //        TS_ASSERT(avi == av.end());
 //        TS_ASSERT(parseIter.hasNext());
@@ -1436,6 +1456,10 @@ public:
 //        TS_ASSERT_EQUALS((*avi).first, "discard");
 //        TS_ASSERT_EQUALS((*avi).second, "1");
 //        ++avi;
+//        TS_ASSERT(avi != av.end());
+//        TS_ASSERT_EQUALS((*avi).first, "orth");
+//        TS_ASSERT_EQUALS((*avi).second, "ananas");
+//        ++avi;
 //        TS_ASSERT(avi == av.end());
 //        TS_ASSERT(parseIter.hasNext());
 //        edge = parseIter.next();
@@ -1464,6 +1488,10 @@ public:
 //        TS_ASSERT(avi != av.end());
 //        TS_ASSERT_EQUALS((*avi).first, "discard");
 //        TS_ASSERT_EQUALS((*avi).second, "0");
+//        ++avi;
+//        TS_ASSERT(avi != av.end());
+//        TS_ASSERT_EQUALS((*avi).first, "orth");
+//        TS_ASSERT_EQUALS((*avi).second, "ananas");
 //        ++avi;
 //        TS_ASSERT(avi == av.end());
 //        TS_ASSERT(parseIter.hasNext());
@@ -1507,6 +1535,10 @@ public:
 //        TS_ASSERT(avi != av.end());
 //        TS_ASSERT_EQUALS((*avi).first, "discard");
 //        TS_ASSERT_EQUALS((*avi).second, "0");
+//        ++avi;
+//        TS_ASSERT(avi != av.end());
+//        TS_ASSERT_EQUALS((*avi).first, "orth");
+//        TS_ASSERT_EQUALS((*avi).second, "noirs");
 //        ++avi;
 //        TS_ASSERT(avi == av.end());
 //        TS_ASSERT(parseIter.hasNext());
@@ -1655,6 +1687,10 @@ public:
 //        TS_ASSERT_EQUALS((*avi).first, "discard");
 //        TS_ASSERT_EQUALS((*avi).second, "1");
 //        ++avi;
+//        TS_ASSERT(avi != av.end());
+//        TS_ASSERT_EQUALS((*avi).first, "orth");
+//        TS_ASSERT_EQUALS((*avi).second, "ananas");
+//        ++avi;
 //        TS_ASSERT(avi == av.end());
 //        TS_ASSERT(parseIter.hasNext());
 //        edge = parseIter.next();
@@ -1683,6 +1719,10 @@ public:
 //        TS_ASSERT(avi != av.end());
 //        TS_ASSERT_EQUALS((*avi).first, "discard");
 //        TS_ASSERT_EQUALS((*avi).second, "0");
+//        ++avi;
+//        TS_ASSERT(avi != av.end());
+//        TS_ASSERT_EQUALS((*avi).first, "orth");
+//        TS_ASSERT_EQUALS((*avi).second, "ananas");
 //        ++avi;
 //        TS_ASSERT(avi == av.end());
 //        TS_ASSERT(parseIter.hasNext());
