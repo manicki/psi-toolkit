@@ -49,9 +49,12 @@ bool TransformAction::apply(Lattice &lattice, int currentEntity,
 
 //    TransitionInfo *edge = util::getEdge(pg, currentEntity, before);
 //    edge->setLabel(group);
-    Lattice::VertexDescriptor startVertex = currentEntity + before; //@todo: czy te numerki tu sie kupy trzymaja trzeba sprawdzic
-    Lattice::VertexDescriptor headVertex = currentEntity + before;
-    Lattice::VertexDescriptor endVertex = currentEntity + before;
+    Lattice::VertexDescriptor startVertex = lattice::getVertex(
+            lattice, currentEntity + before); //@todo: czy te numerki tu sie kupy trzymaja trzeba sprawdzic
+    Lattice::VertexDescriptor headVertex = lattice::getVertex(
+            lattice, currentEntity + before);
+    Lattice::VertexDescriptor endVertex = lattice::getVertex(
+            lattice, currentEntity + before);
     std::list<Lattice::EdgeDescriptor> startEdges = lattice::getTopEdges(
             lattice, startVertex);
     std::list<Lattice::EdgeDescriptor> headEdges = lattice::getTopEdges(
@@ -121,14 +124,22 @@ bool TransformAction::test(Lattice &lattice, int currentEntity,
     //if (entities[currentEntity + before]->getType() != "group")
 //    TransitionInfo *edge = util::getEdge(pg, currentEntity, before);
 //    if (edge->getType() != "group") {
-    Lattice::VertexDescriptor vertex = currentEntity + before;
+    //Lattice::VertexDescriptor vertex = currentEntity + before;
+    Lattice::VertexDescriptor vertex = lattice::getVertex(lattice,
+            currentEntity + before);
+    //@todo: czy to sprawdzenie jest nadal konieczne? ta funkcja getVertex nie robi czegos takiego?
+    while (lattice::getTopEdges(lattice, vertex).size() == 0) { //if there is no edge at a given position, proceed to the next vertex, as it may be a whitespace
+        before ++;
+        vertex = currentEntity + before;
+    }
+
     std::list<Lattice::EdgeDescriptor> edges = lattice::getTopEdges(
             lattice, vertex);
     if (edges.size() > 0) {
         LayerTagCollection tags = lattice.getEdgeLayerTags(edges.front());
         if (! lattice.getLayerTagManager().match(
                     lattice.getLayerTagManager().getMask(tags),
-                    "group"))
+                    "parse"))
         return false;
     }
     return true;
