@@ -597,7 +597,7 @@ bool Lattice::VertexIterator::hasNext() {
         ) {
             return true;
         }
-        ++vd_;
+        nextRealVertex_();
     }
     return false;
 }
@@ -609,13 +609,21 @@ Lattice::VertexDescriptor Lattice::VertexIterator::next() {
             || lattice_.implicitOutEdges_[vd_]
             || (vd_ > 0 && lattice_.implicitOutEdges_[lattice_.priorVertex_(vd_)])
         ) {
-            return vd_++;
+            Lattice::VertexDescriptor returnedVertexDescriptor = vd_;
+            nextRealVertex_();
+            return returnedVertexDescriptor;
         }
-        ++vd_;
+        nextRealVertex_();
     }
     throw NoEdgeException("Vertex iterator has no next edges.");
 }
 
+void Lattice::VertexIterator::nextRealVertex_() {
+    if (vd_ < (int)lattice_.allText_.length())
+        vd_ += lattice_.symbolLength_((int)vd_);
+    else
+        ++vd_;
+}
 
 
 bool Lattice::InOutEdgesIterator::hasNext() {

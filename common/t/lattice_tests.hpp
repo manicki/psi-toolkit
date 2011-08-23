@@ -156,6 +156,21 @@ public:
 
     }
 
+    void testVertexIterator() {
+        Lattice lattice;
+        lattice.appendStringWithSymbols("żeś");
+
+        Lattice::VertexIterator iter(lattice);
+
+        size_t count = 0;
+        while (iter.hasNext()) {
+            iter.next();
+            ++count;
+        }
+
+        TS_ASSERT_EQUALS(count, 4U);
+    }
+
     void test_get_path() {
         Lattice lattice;
         lattice.appendStringWithSymbols("ćma zielona");
