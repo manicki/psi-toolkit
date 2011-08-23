@@ -286,11 +286,11 @@ public:
 
             TS_ASSERT_EQUALS(
                 lattice.getVertexRawCharIndex(lattice.getEdgeSource(prowokacjamiLemma)),
-                0);
+                0U);
 
             TS_ASSERT_EQUALS(
                 lattice.getVertexRawCharIndex(lattice.getEdgeTarget(prowokacjamiLemma)),
-                12);
+                12U);
 
             TS_ASSERT(!lemmaIter.hasNext());
         }
