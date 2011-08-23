@@ -19,6 +19,7 @@ namespace poleng {
                         int end;
                         std::vector<std::string> baseForms;
                         std::vector<std::string> morphology;
+                        std::string type;
                     };
             //ParseGraphPtr LatticeWrapper::readInputLattice(Lattice &lattice,
                 std::string readInputLattice(Lattice &lattice) {
@@ -44,6 +45,17 @@ namespace poleng {
                     lattice.edgesSortedBySource(mask);
                 while (edgeIterator.hasNext()) {
                     Lattice::EdgeDescriptor edge = edgeIterator.next();
+                    LayerTagCollection tags = lattice.getEdgeLayerTags(edge);
+                    std::list<std::string> tagNames =
+                        lattice.getLayerTagManager().getTagNames(tags);
+                    bool isParse = false;
+                    for (std::list<std::string>::iterator tagIt = tagNames.begin();
+                            tagIt != tagNames.end(); tagIt ++) {
+                        if (*tagIt == "parse") {
+                            isParse = true;
+                            break;
+                        }
+                    }
                     int start = lattice.getEdgeBeginIndex(edge);
                     int end = start + lattice.getEdgeLength(edge);
                     std::string orth = lattice.getEdgeText(edge);
@@ -81,8 +93,24 @@ namespace poleng {
                     std::map<int, SentenceToken>::iterator edgesMapIt =
                         edgesMap.find(start);
                     if (edgesMapIt != edgesMap.end()) {
-                        edgesMapIt->second.baseForms.push_back(base);
-                        edgesMapIt->second.morphology.push_back(morphology);
+                        if (isParse) {
+                            if (edgesMapIt->second.type == "parse") {
+                                edgesMapIt->second.baseForms.push_back(base);
+                                edgesMapIt->second.morphology.push_back(morphology);
+                            } else {
+                                edgesMapIt->second.baseForms.clear();
+                                edgesMapIt->second.morphology.clear();
+                                edgesMapIt->second.type = "parse";
+                                edgesMapIt->second.category = category;
+                                edgesMapIt->second.baseForms.push_back(base);
+                                edgesMapIt->second.morphology.push_back(morphology);
+                            }
+                        } else {
+                            if (edgesMapIt->second.type == "lemma") {
+                                edgesMapIt->second.baseForms.push_back(base);
+                                edgesMapIt->second.morphology.push_back(morphology);
+                            }
+                        }
                     } else {
                         SentenceToken edge;
                         edge.orth = orth;
@@ -91,6 +119,10 @@ namespace poleng {
                         edge.end = end;
                         edge.baseForms.push_back(base);
                         edge.morphology.push_back(morphology);
+                        if (isParse)
+                            edge.type = "parse";
+                        else
+                            edge.type = "lemma";
 //                        TransitionInfo *edge = new TransitionInfo("token");
 //                        edge->setStart(start);
 //                        edge->setEnd(end);
@@ -115,9 +147,19 @@ namespace poleng {
                         edgesMapIt != edgesMap.end(); edgesMapIt ++) {
                     start = edgesMapIt->second.start;
                     end = edgesMapIt->second.end;
+                    std::string type = edgesMapIt->second.type;
 //                    pg->add_edge(start, end, *(edgesMapIt->second));
-                    ss << "<<t" << "<" << start << "<" << end << "<" <<
-                        "TOKEN" << "<" << edgesMapIt->second.orth;
+                    ss << "<<";
+                    if (type == "lemma")
+                        ss << "t";
+                    else
+                        ss << "g";
+                    ss << "<" << start << "<" << end << "<";
+                    if (type == "lemma")
+                        ss << "TOKEN";
+                    else
+                        ss << edgesMapIt->second.category;
+                    ss << "<" << edgesMapIt->second.orth;
                     std::vector<std::string>::iterator baseIt =
                         edgesMapIt->second.baseForms.begin();
                     std::vector<std::string>::iterator morphIt =
@@ -253,6 +295,35 @@ namespace poleng {
                 return pg;
             }
 #endif
+
+            /*
+             * returns start vertex descriptor for the edgeIndex-th edge in the lattice
+             */
+            Lattice::VertexDescriptor getVertex(Lattice &lattice,
+                    int edgeIndex) {
+                LayerTagMask mask = lattice.getLayerTagManager().getMask(
+                        createUnion(
+                            lattice.getLayerTagManager().
+                            createSingletonTagCollection("lemma")
+                            ,
+                            lattice.getLayerTagManager().
+                            createSingletonTagCollection("parse")
+                            )
+                        );
+                return getVertex(lattice, edgeIndex, mask);
+            }
+
+            Lattice::VertexDescriptor getVertex(Lattice &lattice,
+                    int edgeIndex, LayerTagMask mask) {
+                Lattice::VertexDescriptor vertex = 0;
+                int edgePosition = 0;
+                while (edgePosition < edgeIndex) {
+                    Lattice::InOutEdgesIterator edgeIt =
+                        lattice.outEdges(vertex, mask);
+                    edgePosition ++;
+                }
+                return vertex;
+            }
 
 //            void LatticeWrapper::initAnnotationItemManager(TagsetPtr tagset) {
 //                AnnotationItem ai("base");

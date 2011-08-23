@@ -7,6 +7,7 @@
 #include "ParseGraph.hpp"
 #endif
 #include <iostream>
+#include <sstream>
 
 namespace poleng {
     namespace bonsai {
@@ -48,6 +49,10 @@ namespace poleng {
 #ifdef _WITH_BONSAI_PARSEGRAPH
                     ParseGraphPtr convertToBonsaiGraph(Lattice &lattice);
 #endif
+                    Lattice::VertexDescriptor getVertex(Lattice &lattice,
+                            int edgeIndex, LayerTagMask mask);
+                    Lattice::VertexDescriptor getVertex(Lattice &lattice,
+                            int edgeIndex);
                     std::list<Lattice::EdgeDescriptor> getTopEdges(Lattice &lattice,
                             Lattice::VertexDescriptor start, LayerTagMask mask);
                     std::list<Lattice::EdgeDescriptor> getTopEdges(Lattice &lattice,
