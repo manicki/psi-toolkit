@@ -74,6 +74,11 @@ endif(USE_POSTGRESQL)
 set_target_properties(${TARGETS} PROPERTIES
 	COMPILE_FLAGS "-I${psi-toolkit_SOURCE_DIR}/utf8")
 
+#if(USE_JAVA)
+#	set_target_properties(psi-pipe PROPERTIES
+#		COMPILE_FLAGS "-I${psi-toolkit_SOURCE_DIR}/utf8 -I${psi-toolkit_SOURCE_DIR}/common")
+#endif(USE_JAVA)
+
 if(USE_PUDDLE)
 set_target_properties(tools-parsers-puddle PROPERTIES
 	COMPILE_FLAGS "-I${psi-toolkit_SOURCE_DIR}/utf8")
