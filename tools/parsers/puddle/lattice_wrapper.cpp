@@ -188,7 +188,7 @@ namespace poleng {
             ParseGraphPtr convertToBonsaiGraph(Lattice &lattice) {
                 ParseGraphPtr pg = ParseGraphPtr(new ParseGraph());
 
-                std::multimap<int, TransitionInfo*> edgesMap;
+                std::multimap<std::pair<int, int>, TransitionInfo*> edgesMap;
                 std::map<int, int> depthsMap;
 
                 LayerTagMask mask = lattice.getLayerTagManager().getMask(
@@ -240,13 +240,15 @@ namespace poleng {
                     //PosInfo pi(base, morphoString, 1);
                     PosInfo pi(base, morphology, 1);
 
+                    std::pair<int, int> edgeCoord(start, end);
+
                     std::map<int, int>::iterator depthsMapIt =
                         depthsMap.find(start);
                     if (depthsMapIt != depthsMap.end()) {
                         std::pair<
-                            std::map<int, TransitionInfo*>::iterator,
-                            std::map<int, TransitionInfo*>::iterator
-                                > edgesMapIt = edgesMap.equal_range(start);
+                            std::map<std::pair<int, int>, TransitionInfo*>::iterator,
+                            std::map<std::pair<int, int>, TransitionInfo*>::iterator
+                                > edgesMapIt = edgesMap.equal_range(edgeCoord);
                         int max_depth = 0;
                         while (edgesMapIt.first != edgesMapIt.second) {
                             if (edgesMapIt.first->second->getDepth() > max_depth)
@@ -266,8 +268,8 @@ namespace poleng {
                             edge->setLabel(category);
                             edge->setOrth(orth);
                             edge->addMorphology(pi);
-                            edgesMap.insert(std::pair<int, TransitionInfo*>(
-                                        start, edge));
+                            edgesMap.insert(std::pair<std::pair<int, int>, TransitionInfo*>(
+                                        edgeCoord, edge));
                             depthsMap.insert(std::pair<int, int>(start, max_depth + 1));
                         }
                     } else {
@@ -278,13 +280,13 @@ namespace poleng {
                         edge->setLabel(category);
                         edge->setOrth(orth);
                         edge->addMorphology(pi);
-                        edgesMap.insert(std::pair<int, TransitionInfo*>(
-                                    start, edge));
+                        edgesMap.insert(std::pair<std::pair<int, int>, TransitionInfo*>(
+                                    edgeCoord, edge));
                         depthsMap.insert(std::pair<int, int>(start, 0));
                     }
 
                 }
-                for (std::map<int, TransitionInfo*>::iterator edgesMapIt =
+                for (std::map<std::pair<int, int>, TransitionInfo*>::iterator edgesMapIt =
                         edgesMap.begin();
                         edgesMapIt != edgesMap.end(); edgesMapIt ++) {
                     int start = edgesMapIt->second->getStart();
@@ -320,7 +322,23 @@ namespace poleng {
                 while (edgePosition < edgeIndex) {
                     Lattice::InOutEdgesIterator edgeIt =
                         lattice.outEdges(vertex, mask);
+                    if (! edgeIt.hasNext()) {
+                        vertex ++;
+                        continue;
+                    }
+
+                    Lattice::EdgeDescriptor edge;
+                    while (edgeIt.hasNext())
+                        edge = edgeIt.next();
+                    vertex = lattice.getEdgeBeginIndex(edge) +
+                        lattice.getEdgeLength(edge);
                     edgePosition ++;
+                }
+                Lattice::InOutEdgesIterator edgeIt =
+                    lattice.outEdges(vertex, mask);
+                while (! edgeIt.hasNext()) {
+                    vertex ++;
+                    edgeIt = lattice.outEdges(vertex, mask);
                 }
                 return vertex;
             }
@@ -529,6 +547,10 @@ namespace poleng {
                                 startVertex, lattice.getLayerTagManager().getMask(tags));
                         while (outEdgesIt.hasNext()) {
                             Lattice::EdgeDescriptor newEdge = outEdgesIt.next();
+                            Lattice::VertexDescriptor readEnd = startVertex +
+                                lattice.getEdgeLength(newEdge);
+                            if (readEnd != endVertex)
+                                continue;
 //                            std::cerr << "dodawany pierun: " << annotationItem.getCategory() << std::endl;
 //                            std::cerr << "z kratry wziety: " << lattice.getEdgeAnnotationItem(newEdge).getCategory() << std::endl;
                             //if (annotationItem == lattice.getEdgeAnnotationItem(newEdge)) {

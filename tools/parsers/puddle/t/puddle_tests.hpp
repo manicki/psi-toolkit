@@ -217,8 +217,8 @@ public:
         TS_ASSERT(!tokenIter.hasNext());
 
         //preparing parser
-        std::string tagsetFilename = "tools/parsers/puddle/t/files/tagset.fr";
-        std::string rulesFilename = "tools/parsers/puddle/t/files/rules.fr";
+        std::string tagsetFilename = ROOT_DIR "tools/parsers/puddle/t/files/tagset.fr";
+        std::string rulesFilename = ROOT_DIR "tools/parsers/puddle/t/files/rules.fr";
         poleng::bonsai::puddle::TagsetLoader tagset_loader;
         poleng::bonsai::puddle::RuleLoader rule_loader;
         poleng::bonsai::puddle::TaggerPtr tagger = poleng::bonsai::puddle::TaggerPtr( new poleng::bonsai::puddle::Tagger());
@@ -314,8 +314,8 @@ public:
 //        lattice.addEdge(pre_noirs, post_noirs, ai_noirs_subst, lemma_tag, noirs_lemma_builder.build());
 //
 //        //preparing parser
-//        std::string tagsetFilename = "tools/parsers/puddle/t/files/tagset.fr";
-//        std::string rulesFilename = "tools/parsers/puddle/t/files/rules_unify.fr";
+//        std::string tagsetFilename = ROOT_DIR "tools/parsers/puddle/t/files/tagset.fr";
+//        std::string rulesFilename = ROOT_DIR "tools/parsers/puddle/t/files/rules_unify.fr";
 //        poleng::bonsai::puddle::TagsetLoader tagset_loader;
 //        poleng::bonsai::puddle::RuleLoader rule_loader;
 //        poleng::bonsai::puddle::TaggerPtr tagger = poleng::bonsai::puddle::TaggerPtr( new poleng::bonsai::puddle::Tagger());
@@ -501,8 +501,8 @@ public:
 //        lattice.addEdge(pre_noirs, post_noirs, ai_noirs_subst, lemma_tag, noirs_lemma_builder.build());
 //
 //        //preparing parser
-//        std::string tagsetFilename = "tools/parsers/puddle/t/files/tagset.fr";
-//        std::string rulesFilename = "tools/parsers/puddle/t/files/rules_delete.fr";
+//        std::string tagsetFilename = ROOT_DIR "tools/parsers/puddle/t/files/tagset.fr";
+//        std::string rulesFilename = ROOT_DIR "tools/parsers/puddle/t/files/rules_delete.fr";
 //        poleng::bonsai::puddle::TagsetLoader tagset_loader;
 //        poleng::bonsai::puddle::RuleLoader rule_loader;
 //        poleng::bonsai::puddle::TaggerPtr tagger = poleng::bonsai::puddle::TaggerPtr( new poleng::bonsai::puddle::Tagger());
@@ -688,8 +688,8 @@ public:
         lattice.addEdge(pre_noirs, post_noirs, ai_noirs_subst, lemma_tag, noirs_lemma_builder.build());
 
         //preparing parser
-        std::string tagsetFilename = "tools/parsers/puddle/t/files/tagset.fr";
-        std::string rulesFilename = "tools/parsers/puddle/t/files/rules_add.fr";
+        std::string tagsetFilename = ROOT_DIR "tools/parsers/puddle/t/files/tagset.fr";
+        std::string rulesFilename = ROOT_DIR "tools/parsers/puddle/t/files/rules_add.fr";
         poleng::bonsai::puddle::TagsetLoader tagset_loader;
         poleng::bonsai::puddle::RuleLoader rule_loader;
         poleng::bonsai::puddle::TaggerPtr tagger = poleng::bonsai::puddle::TaggerPtr( new poleng::bonsai::puddle::Tagger());
@@ -920,8 +920,8 @@ public:
         lattice.addEdge(pre_noirs, post_noirs, ai_noirs_subst, lemma_tag, noirs_lemma_builder.build());
 
         //preparing parser
-        std::string tagsetFilename = "tools/parsers/puddle/t/files/tagset.fr";
-        std::string rulesFilename = "tools/parsers/puddle/t/files/rules_group.fr";
+        std::string tagsetFilename = ROOT_DIR "tools/parsers/puddle/t/files/tagset.fr";
+        std::string rulesFilename = ROOT_DIR "tools/parsers/puddle/t/files/rules_group.fr";
         poleng::bonsai::puddle::TagsetLoader tagset_loader;
         poleng::bonsai::puddle::RuleLoader rule_loader;
         poleng::bonsai::puddle::TaggerPtr tagger = poleng::bonsai::puddle::TaggerPtr( new poleng::bonsai::puddle::Tagger());
@@ -1116,8 +1116,8 @@ public:
 //        lattice.addEdge(pre_noirs, post_noirs, ai_ap, parse_tag, ap_builder.build());
 //
 //        //preparing parser
-//        std::string tagsetFilename = "tools/parsers/puddle/t/files/tagset.fr";
-//        std::string rulesFilename = "tools/parsers/puddle/t/files/rules_join.fr";
+//        std::string tagsetFilename = ROOT_DIR "tools/parsers/puddle/t/files/tagset.fr";
+//        std::string rulesFilename = ROOT_DIR "tools/parsers/puddle/t/files/rules_join.fr";
 //        poleng::bonsai::puddle::TagsetLoader tagset_loader;
 //        poleng::bonsai::puddle::RuleLoader rule_loader;
 //        poleng::bonsai::puddle::TaggerPtr tagger = poleng::bonsai::puddle::TaggerPtr( new poleng::bonsai::puddle::Tagger());
