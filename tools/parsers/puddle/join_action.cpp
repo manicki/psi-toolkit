@@ -126,9 +126,12 @@ bool JoinAction::apply(Lattice &lattice, int currentEntity,
 //    TransitionInfo *edgeStart = util::getEdge(pg, currentEntity, realStart);
 //    TransitionInfo *edgeHead = util::getEdge(pg, currentEntity, realHead);
 //    TransitionInfo *edgeEnd = util::getEdge(pg, currentEntity, realEnd);
-    Lattice::VertexDescriptor startVertex = currentEntity + realStart;
-    Lattice::VertexDescriptor headVertex = currentEntity + realHead;
-    Lattice::VertexDescriptor endVertex = currentEntity + realEnd;
+    Lattice::VertexDescriptor startVertex = lattice::getVertex(
+            lattice, currentEntity + realStart);
+    Lattice::VertexDescriptor headVertex = lattice::getVertex(
+            lattice, currentEntity + realHead);
+    Lattice::VertexDescriptor endVertex = lattice::getVertex(
+            lattice, currentEntity + realEnd);
     std::list<Lattice::EdgeDescriptor> startEdges = lattice::getTopEdges(
             lattice, startVertex);
     std::list<Lattice::EdgeDescriptor> headEdges = lattice::getTopEdges(

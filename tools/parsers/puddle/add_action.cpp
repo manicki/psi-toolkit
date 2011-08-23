@@ -81,7 +81,7 @@ bool AddAction::apply(Lattice &lattice, int currentEntity,
 
     Lattice::VertexDescriptor startVertex = currentEntity + before;
     Lattice::VertexDescriptor endVertex = currentEntity + (before + count) - 1;
-    std::cerr << "od: " << startVertex << " do: " << endVertex << std::endl;
+//    std::cerr << "od: " << startVertex << " do: " << endVertex << std::endl;
     std::list<Lattice::EdgeSequence> edgeSequences = lattice::getEdgesRange(
             lattice, startVertex, endVertex);
     for (std::list<Lattice::EdgeSequence>::iterator sequenceIt = edgeSequences.begin();
@@ -89,10 +89,6 @@ bool AddAction::apply(Lattice &lattice, int currentEntity,
         for (Lattice::EdgeSequence::Iterator edgeIt = sequenceIt->begin();
                 edgeIt != sequenceIt->end(); edgeIt ++) {
             AnnotationItem ai = lattice.getEdgeAnnotationItem(*edgeIt);
-                std::cerr << "KRAWEDZ W AKCJI: " <<
-                lattice.getAnnotationItemManager().
-                    getValue(ai, "base")
-                    << std::endl;
             if (lattice.getAnnotationItemManager().getValue(ai, "discard") == "1")
                 continue; //skip discarded interpretations
             if (! allBaseForms) {

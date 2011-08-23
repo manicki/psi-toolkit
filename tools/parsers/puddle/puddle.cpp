@@ -187,7 +187,7 @@ void Puddle::setTagger(bonsai::puddle::TaggerPtr tagger_)
 bool Puddle::parse(Lattice &lattice) {
     //ParseGraphPtr inputGraph = lattice::readInputLattice(lattice, sentenceString);
     std::string sentenceString = lattice::readInputLattice(lattice);
-    std::cerr << "jest sentence string" << std::endl;
+//    std::cerr << "jest sentence string" << std::endl;
     //ParseGraphPtr pg = ruleMatcher->applyRules(sentenceString, inputGraph, lattice);
     ruleMatcher->applyRules(sentenceString, lattice);
 //    lattice::addPosEdges(lattice); //@todo: to docelowo zapewne w applyRules ma sie znalezc

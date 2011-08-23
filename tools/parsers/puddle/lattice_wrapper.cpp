@@ -179,7 +179,7 @@ namespace poleng {
                 ss << "<<s<" << end << "<" << end << "<se<>";
                 sentenceString = ss.str();
 
-                std::cerr << "TAKI LUJ: "<< ss.str() << std::endl;
+//                std::cerr << "TAKI LUJ: "<< ss.str() << std::endl;
                 return sentenceString;;
             }
 
@@ -405,7 +405,6 @@ namespace poleng {
 //                std::list<VertexDescriptor> vertexStack;
                 Lattice::VertexDescriptor vertex = start;
                 while (vertex <= end) {
-                    std::cerr << "HOPA: " << vertex << std::endl;
                     std::list<Lattice::EdgeDescriptor> edges = getTopEdges(lattice,
                             vertex, mask);
                     if (edges.size() == 0) {
@@ -502,7 +501,7 @@ namespace poleng {
                             values.begin(); valueIt != values.end(); valueIt ++) {
                         lattice.getAnnotationItemManager().setValue(
                                 annotationItem, valueIt->first, valueIt->second);
-                        std::cerr << "ustawiam: " << valueIt->first << " na " << valueIt->second << std::endl;
+//                        std::cerr << "ustawiam: " << valueIt->first << " na " << valueIt->second << std::endl;
                     }
 //                    std::cerr << "categoria: " << lattice.getAnnotationItemManager().getCategory(annotationItem) << std::endl;
 
@@ -554,7 +553,7 @@ namespace poleng {
                             }
                         }
                         if (firstPartition) {
-                            std::cerr << "daje nowego" << std::endl;
+//                            std::cerr << "daje nowego" << std::endl;
                             //there is no such an edge yet. add a new one
                         lattice.addEdge(
                                 startVertex,
@@ -564,7 +563,7 @@ namespace poleng {
                                 *seqIt
                                 );
                         } else {
-                            std::cerr << "nie daje nowego" << std::endl;
+//                            std::cerr << "nie daje nowego" << std::endl;
                         }
 
                     }
@@ -628,7 +627,7 @@ namespace poleng {
                     std::vector<std::string> baseForms,
                     std::vector<std::string> morphology) {
 
-                std::cerr << "dodaje nowe" << std::endl;
+//                std::cerr << "dodaje nowe" << std::endl;
                 Lattice::VertexDescriptor startVertex =
                     lattice.getEdgeBeginIndex(edge);
                 Lattice::VertexDescriptor endVertex =
@@ -640,8 +639,8 @@ namespace poleng {
                     lattice.getEdgePartitions(edge);
                 Lattice::Score score = lattice.getEdgeScore(edge);
 
-                std::cerr << "baseforms: " << baseForms.size() << std::endl;
-                std::cerr << "morphology: " << morphology.size() << std::endl;
+//                std::cerr << "baseforms: " << baseForms.size() << std::endl;
+//                std::cerr << "morphology: " << morphology.size() << std::endl;
 
                 for (std::vector<std::string>::iterator baseIt =
                         baseForms.begin();
@@ -657,7 +656,7 @@ namespace poleng {
                                 annotationItem, "morphology", *morphIt);
                         lattice.getAnnotationItemManager().setValue(
                                 annotationItem, "discard", "0");
-                        std::cerr << "bedzie dorzucane: " << *baseIt << " " << *morphIt << std::endl;
+//                        std::cerr << "bedzie dorzucane: " << *baseIt << " " << *morphIt << std::endl;
 
                         for (std::list<Lattice::Partition>::iterator partIt =
                                 partitions.begin();
