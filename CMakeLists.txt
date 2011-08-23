@@ -23,6 +23,9 @@ if(USE_JAVA)
 	message(STATUS "JVM library ${JAVA_JVM_LIBRARY}")
 	message(STATUS "JNI path ${JAVA_INCLUDE_PATH}")
 
+	string(REGEX REPLACE "(.*)/libjvm.so" "\\1" LD_LIBPATH ${JAVA_JVM_LIBRARY})
+	message(STATUS "You may need to set LD_LIBRARY_PATH=${LD_LIBPATH} to run installed software")
+
 	include_directories(${JAVA_INCLUDE_PATH})
 	include_directories("${psi-toolkit_SOURCE_DIR}/common/j")
 
