@@ -1,0 +1,4 @@
+
+Rule "attach test"
+Match: [type=NP] [type=AP];
+Eval: attach(NP, 1);

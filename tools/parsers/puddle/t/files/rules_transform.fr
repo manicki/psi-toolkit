@@ -1,0 +1,4 @@
+
+Rule "transform test"
+Match: [type=NP];
+Eval: transform(1, XP);

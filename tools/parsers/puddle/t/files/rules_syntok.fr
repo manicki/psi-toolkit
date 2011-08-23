@@ -1,0 +1,4 @@
+
+Rule "syntok test"
+Match: [orth~"coup"] [orth~"d'"] [orth~"état"];
+Eval: syntok("subst:sg:m");

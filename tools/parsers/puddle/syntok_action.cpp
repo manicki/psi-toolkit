@@ -48,7 +48,7 @@ bool SyntokAction::apply(Lattice &lattice, int currentEntity,
         std::vector<int> matchedTokensSize) {
     int realStart = 0;// start;
     int realEnd = 0;//start;
-    int i = 0;
+    size_t i = 0;
     while (i < matchedTokensSize.size())
     {
         if (i < start)
@@ -90,8 +90,10 @@ bool SyntokAction::apply(Lattice &lattice, int currentEntity,
 //            }
 //        }
 //    }
-    Lattice::VertexDescriptor startVertex = currentEntity + realStart;
-    Lattice::VertexDescriptor endVertex = currentEntity + realEnd;
+    Lattice::VertexDescriptor startVertex = lattice::getVertex(
+            lattice, currentEntity + realStart);
+    Lattice::VertexDescriptor endVertex = lattice::getVertex(
+            lattice, currentEntity + realEnd);
     std::list<Lattice::EdgeDescriptor> startEdges = lattice::getTopEdges(
             lattice, startVertex);
     std::list<Lattice::EdgeDescriptor> endEdges = lattice::getTopEdges(
@@ -105,6 +107,8 @@ bool SyntokAction::apply(Lattice &lattice, int currentEntity,
             edgeSequences.begin();
             sequenceIt != edgeSequences.end();
             sequenceIt ++) {
+        std::string baseForm = "";
+        int index = lattice.getEdgeBeginIndex(sequenceIt->firstEdge());
         for (Lattice::EdgeSequence::Iterator edgeIt = sequenceIt->begin();
                 edgeIt != sequenceIt->end();
                 edgeIt ++) {
@@ -116,23 +120,42 @@ bool SyntokAction::apply(Lattice &lattice, int currentEntity,
             std::string base = lattice.getAnnotationItemManager().getValue(
                     ai, "base");
 
-            if (baseForms.size() > 0) {
-                std::vector<std::string> tmpBaseForms;
-                for (std::vector<std::string>::iterator concIt =
-                        baseForms.begin();
-                        concIt != baseForms.end();
-                        concIt ++) {
-                    std::string concatenated = *concIt + " " + base;
-                    tmpBaseForms.push_back(concatenated);
-                }
-                baseForms.clear();
-                baseForms.assign( tmpBaseForms.begin(), tmpBaseForms.end());
-            } else {
-                baseForms.push_back(base);
+            if (index != lattice.getEdgeBeginIndex(*edgeIt)) {
+                baseForm += " ";
+                index ++;
             }
+            baseForm += base;
+            index += lattice.getEdgeLength(*edgeIt);
+//            if (baseForms.size() > 0) {
+//                std::vector<std::string> tmpBaseForms;
+//                for (std::vector<std::string>::iterator concIt =
+//                        baseForms.begin();
+//                        concIt != baseForms.end();
+//                        concIt ++) {
+//                    std::string concatenated = *concIt + " " + base;
+//                    tmpBaseForms.push_back(concatenated);
+//                }
+//                baseForms.clear();
+//                baseForms.assign( tmpBaseForms.begin(), tmpBaseForms.end());
+//            } else {
+//                baseForms.push_back(base);
+//            }
         }
+        baseForms.push_back(baseForm);
     }
-    std::string concatenatedOrth = lattice.getSequenceText(edgeSequences.front());
+    std::string concatenatedOrth = "";
+    int index = lattice.getEdgeBeginIndex(edgeSequences.front().firstEdge());
+    for (Lattice::EdgeSequence::Iterator edgeIt = edgeSequences.front().begin();
+            edgeIt != edgeSequences.front().end();
+            edgeIt ++) {
+        if (index != lattice.getEdgeBeginIndex(*edgeIt)) {
+            concatenatedOrth += " ";
+            index ++;
+        }
+        concatenatedOrth += lattice.getEdgeText(*edgeIt);
+        index += lattice.getEdgeLength(*edgeIt);
+    }
+    //std::string concatenatedOrth = lattice.getSequenceText(edgeSequences.front());
     std::string syntokCategory;
     if (syntok) {
         syntokCategory = "SYNTOK";
