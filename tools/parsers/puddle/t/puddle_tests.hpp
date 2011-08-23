@@ -234,7 +234,7 @@ public:
         poleng::bonsai::puddle::RulesPtr rules =
             rule_loader.readFromFile(rulesFilename);//, puddle->getLatticeWrapper());
         puddle->setRules(rules);
-        TS_ASSERT_EQUALS(rules->size(), 1);
+        TS_ASSERT_EQUALS(rules->size(), (size_t) 1);
 
         //parsing
         TS_ASSERT(puddle->parse(lattice));
@@ -331,7 +331,7 @@ public:
 //        poleng::bonsai::puddle::RulesPtr rules =
 //            rule_loader.readFromFile(rulesFilename);
 //        puddle->setRules(rules);
-//        TS_ASSERT_EQUALS(rules->size(), 1);
+//        TS_ASSERT_EQUALS(rules->size(), (size_t) 1);
 //
 //        //parsing
 //        TS_ASSERT(puddle->parse(lattice));
@@ -518,7 +518,7 @@ public:
 //        poleng::bonsai::puddle::RulesPtr rules =
 //            rule_loader.readFromFile(rulesFilename);
 //        puddle->setRules(rules);
-//        TS_ASSERT_EQUALS(rules->size(), 1);
+//        TS_ASSERT_EQUALS(rules->size(), (size_t) 1);
 //
 //        //parsing
 //        TS_ASSERT(puddle->parse(lattice));
@@ -705,7 +705,7 @@ public:
         poleng::bonsai::puddle::RulesPtr rules =
             rule_loader.readFromFile(rulesFilename);
         puddle->setRules(rules);
-        TS_ASSERT_EQUALS(rules->size(), 1);
+        TS_ASSERT_EQUALS(rules->size(), (size_t) 1);
 
         //parsing
         TS_ASSERT(puddle->parse(lattice));
@@ -937,7 +937,7 @@ public:
         poleng::bonsai::puddle::RulesPtr rules =
             rule_loader.readFromFile(rulesFilename);
         puddle->setRules(rules);
-        TS_ASSERT_EQUALS(rules->size(), 1);
+        TS_ASSERT_EQUALS(rules->size(), (size_t) 1);
 
         //parsing
         TS_ASSERT(puddle->parse(lattice));
@@ -1181,7 +1181,7 @@ public:
 //        poleng::bonsai::puddle::RulesPtr rules =
 //            rule_loader.readFromFile(rulesFilename);
 //        puddle->setRules(rules);
-//        TS_ASSERT_EQUALS(rules->size(), 1);
+//        TS_ASSERT_EQUALS(rules->size(), (size_t) 1);
 //
 //        //parsing
 //        TS_ASSERT(puddle->parse(lattice));
@@ -1420,7 +1420,7 @@ public:
 //        poleng::bonsai::puddle::RulesPtr rules =
 //            rule_loader.readFromFile(rulesFilename);
 //        puddle->setRules(rules);
-//        TS_ASSERT_EQUALS(rules->size(), 1);
+//        TS_ASSERT_EQUALS(rules->size(), (size_t) 1);
 //
 //        //parsing
 //        TS_ASSERT(puddle->parse(lattice));
@@ -1651,7 +1651,7 @@ public:
 //        poleng::bonsai::puddle::RulesPtr rules =
 //            rule_loader.readFromFile(rulesFilename);
 //        puddle->setRules(rules);
-//        TS_ASSERT_EQUALS(rules->size(), 1);
+//        TS_ASSERT_EQUALS(rules->size(), (size_t) 1);
 //
 //        //parsing
 //        TS_ASSERT(puddle->parse(lattice));
@@ -1878,7 +1878,7 @@ public:
         poleng::bonsai::puddle::RulesPtr rules =
             rule_loader.readFromFile(rulesFilename);
         puddle->setRules(rules);
-        TS_ASSERT_EQUALS(rules->size(), 1);
+        TS_ASSERT_EQUALS(rules->size(), (size_t) 1);
 
         //parsing
         TS_ASSERT(puddle->parse(lattice));
