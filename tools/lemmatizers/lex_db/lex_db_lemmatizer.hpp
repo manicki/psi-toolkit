@@ -24,6 +24,10 @@ public:
 
 private:
     pqxx::connection connection_;
+
+    void parseSinflection_(const std::string& sinflection,
+                           std::string& partOfSpeech,
+                           std::string& flags);
 };
 
 

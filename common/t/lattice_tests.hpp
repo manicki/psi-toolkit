@@ -284,6 +284,14 @@ public:
             TS_ASSERT_EQUALS(prowokacjamiItem.getCategory(), "R");
             TS_ASSERT_EQUALS(prowokacjamiItem.getText(), "prowokacja_R");
 
+            TS_ASSERT_EQUALS(
+                lattice.getVertexRawCharIndex(lattice.getEdgeSource(prowokacjamiLemma)),
+                0U);
+
+            TS_ASSERT_EQUALS(
+                lattice.getVertexRawCharIndex(lattice.getEdgeTarget(prowokacjamiLemma)),
+                12U);
+
             TS_ASSERT(!lemmaIter.hasNext());
         }
 
