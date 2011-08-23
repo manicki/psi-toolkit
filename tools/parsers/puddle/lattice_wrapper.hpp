@@ -89,6 +89,9 @@ namespace poleng {
 //                    bool isNonTop(std::list<Lattice::EdgeDescriptor> nontopEdges,
 //                            const Lattice::EdgeDescriptor &value);
             //};
+                    bool areAnnotationItemsEqual(Lattice &lattice,
+                            AnnotationItem a,
+                            AnnotationItem b);
 
 
             //typedef boost::shared_ptr<LatticeWrapper> LatticeWrapperPtr;

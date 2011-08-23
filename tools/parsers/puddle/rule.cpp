@@ -175,8 +175,8 @@ int Rule::matchPattern(std::string &sentenceString, int matchNumber, std::string
     std::string before = "";
 //    std::cerr << "macz namber: " << matchNumber << std::endl;
 
-//    std::cerr << "ZDANIE: " << sentenceString << std::endl;
-//    std::cerr << "REGULA: " << compiled << std::endl;
+    std::cerr << "ZDANIE: " << sentenceString << std::endl;
+    std::cerr << "REGULA: " << compiled << std::endl;
 //    std::map<std::string, int> groups_map = pattern->NamedCapturingGroups();
 //    std::cerr << "NGRUP:  " << groups_map.size() << std::endl;
 //    for (std::map<std::string, int>::iterator buc = groups_map.begin();

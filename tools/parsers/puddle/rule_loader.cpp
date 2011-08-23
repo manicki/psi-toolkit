@@ -2063,7 +2063,8 @@ std::string RuleLoader::generateTokenPatternsString(TokenPatterns tokenPatterns,
                 if (morphoPattern != "") {
                     morphoPattern += "(:[^:<>]+)*";
                 } else {
-                    morphoPattern = "[^:<>]+";
+                    if (partIt != patternIt->parts.begin()) //if not the first part = not the part of speech
+                        morphoPattern = "[^:<>]+";
                 }
                 if (partIt->negative) {
                     if (partIt == patternIt->parts.begin() ) //first part = part of speech
@@ -2107,8 +2108,14 @@ std::string RuleLoader::generateTokenPatternsString(TokenPatterns tokenPatterns,
         ss << pattern;
     }
     std::string result = ss.str();
-    if (tokenPatterns.size() == 1)
+    if (tokenPatterns.size() == 1) {
         result = "(" + result + ")";
+        //make (<[^<>]+<[^<>]+)* of the (<[^<>]+<[^<>]+) pattern
+        //without the final asterisk, the pattern would only match tokens
+        //with single interpretations
+        if (result == "(<[^<>]+<[^<>]+)")
+            result += "*";
+    }
     return result;
 //    Interpretations::iterator i = interps.begin();
 //    while (i != interps.end())
@@ -2226,7 +2233,7 @@ ActionsPtr RuleLoader::compileRuleAction(std::string &matched, int ruleLeftSize,
     //boost::regex regDelete("delete\\s*\\(\\s*([^\\s!~\"]+)\\s*([!~]?~)\\s*\"([^\\s\",]+)\"\\s*,\\s*(\\d+)\\s*\\)\\s*");
     //delete(pos!~"adj", 1)
     RE2 regDelete("delete\\s*\\(\\s*([^,]+)\\s*,\\s*(\\d+)\\s*\\)\\s*");
-    //add("adj:sg:m", 1);
+    //add("adj:sg:m", "new_base", 1);
     RE2 regAdd("add\\s*\\(\\s*\"([^\\s\",]+)\"\\s*,\\s*((\"[^\\s\",]+\")|(base))\\s*,\\s*(\\d+)\\s*\\)\\s*");
     //unify(gender number case, 1, 2, 3);
     RE2 regUnify("unify\\s*\\(\\s*([^,]+)\\s*((,\\s*(\\d+)\\s*)+)\\)\\s*");
@@ -2281,7 +2288,7 @@ ActionsPtr RuleLoader::compileRuleAction(std::string &matched, int ruleLeftSize,
         std::string baseString;
         std::string interpretation;
         std::string mask;
-        int slot1, slot2; //@todo: typy!
+        std::string slot1, slot2; //@todo: typy!
         //if (boost::u32regex_match(actionString, container, regRepeat)) {
         if (RE2::FullMatch(actionString, regRepeat)) {
             repeat = true;
@@ -2448,11 +2455,12 @@ ActionsPtr RuleLoader::compileRuleAction(std::string &matched, int ruleLeftSize,
             boost::split(tokensVector, toks, boost::is_any_of(tokenSeparator));
             for (std::vector<std::string>::iterator tit = tokensVector.begin();
                     tit != tokensVector.end(); tit ++) {
+                std::string tokenString = boost::algorithm::trim_copy(*tit);
             //boost::u32regex_token_iterator<std::string::iterator> t(toks.begin(), toks.end(), regTokenSeparator, -1);
             //boost::u32regex_token_iterator<std::string::iterator> u;
             //while (t != u) {
-                if (*tit != "") {
-                    tokens.push_back(boost::lexical_cast<int>(*tit));
+                if (tokenString != "") {
+                    tokens.push_back(boost::lexical_cast<int>(tokenString));
                 }
             //    t ++;
             }

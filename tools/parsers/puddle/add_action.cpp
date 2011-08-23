@@ -80,7 +80,8 @@ bool AddAction::apply(Lattice &lattice, int currentEntity,
 //    }
 
     Lattice::VertexDescriptor startVertex = currentEntity + before;
-    Lattice::VertexDescriptor endVertex = currentEntity + (before + count);
+    Lattice::VertexDescriptor endVertex = currentEntity + (before + count) - 1;
+    std::cerr << "od: " << startVertex << " do: " << endVertex << std::endl;
     std::list<Lattice::EdgeSequence> edgeSequences = lattice::getEdgesRange(
             lattice, startVertex, endVertex);
     for (std::list<Lattice::EdgeSequence>::iterator sequenceIt = edgeSequences.begin();
@@ -88,6 +89,10 @@ bool AddAction::apply(Lattice &lattice, int currentEntity,
         for (Lattice::EdgeSequence::Iterator edgeIt = sequenceIt->begin();
                 edgeIt != sequenceIt->end(); edgeIt ++) {
             AnnotationItem ai = lattice.getEdgeAnnotationItem(*edgeIt);
+                std::cerr << "KRAWEDZ W AKCJI: " <<
+                lattice.getAnnotationItemManager().
+                    getValue(ai, "base")
+                    << std::endl;
             if (lattice.getAnnotationItemManager().getValue(ai, "discard") == "1")
                 continue; //skip discarded interpretations
             if (! allBaseForms) {
@@ -104,6 +109,10 @@ bool AddAction::apply(Lattice &lattice, int currentEntity,
                         baseForms, interpretations);
             }
         }
+            if (! allBaseForms) {
+                break;
+                //when base form is explicitly given, take the orth form of the edge an go to the next vertex
+            }
     }
 
 /*    for (int entIndex = before; entIndex < (before + count); entIndex ++)
@@ -397,7 +406,7 @@ bool AddAction::test(Lattice &lattice, int currentEntity,
                 interpretations.begin();
                 morph_it != interpretations.end();
                 morph_it ++) {
-            if (lattice.getAnnotationItemManager().getValue(ai, "base") !=
+            if (lattice.getAnnotationItemManager().getValue(ai, "base") ==
                     *morph_it) {
                 interpretationFound = true;
                 break;

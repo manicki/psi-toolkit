@@ -181,6 +181,10 @@ bool UnifyAction::apply(Lattice &lattice, int currentEntity,
                                 //discard the edge
                                 lattice.getAnnotationItemManager().setValue(annotationItem,
                                         "discard", "1");
+                                std::cerr << "robie discard dla: " <<
+                                    morphology << " od " <<
+                                    lattice.getAnnotationItemManager().getValue(annotationItem, "base")
+                                    << std::endl;
                             }
                         }
                     }
@@ -672,6 +676,7 @@ bool UnifyAction::apply(Lattice &lattice, int currentEntity,
 bool UnifyAction::test(Lattice &lattice, int currentEntity,
         std::vector<int> matchedTokensSize) {
 
+    std::cerr << "przyszlo" << std::endl;
     //unifiedValues.clear();
     bool toApply = true;
     std::vector<std::string>::iterator attribute_it = unifiedAttributes.begin();
@@ -774,6 +779,7 @@ bool UnifyAction::test(Lattice &lattice, int currentEntity,
 //        }
         attribute_it ++;
     }
+        std::cerr << "to apply: " << (toApply ? " true" : " false") << std::endl;
     return toApply;
 //    bool toApply = true;
 //    std::vector<std::string>::iterator attribute_it = unifiedAttributes.begin();

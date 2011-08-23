@@ -34,7 +34,7 @@ void RuleMatcher::setRules(RulesPtr aRules) {
 //ParseGraphPtr RuleMatcher::applyRules(std::string &sentenceString, ParseGraphPtr inputGraph, Lattice &lattice)
 void RuleMatcher::applyRules(std::string &sentenceString,
         Lattice &lattice) {
-//    std::cerr << "ZDANIE!" << std::endl;
+    std::cerr << "ZDANIE!" << std::endl;
     //trzeba jechać po kolei tokenami ze zdania - zdanie to nie bedzie string, tylko obiekt: co najmniej wektor tokenow (elementow tych od grafu) oraz napis bedacy tym 'skompilowanym' ciagiem
     //dla pierwszego tokena, dla drugiego, etc, zrob: ...
     //
@@ -45,14 +45,14 @@ void RuleMatcher::applyRules(std::string &sentenceString,
     //int currentEntity = 0;
     //while (1)
     //{
-    bool anything = false;
+    //bool anything = false;
 
     Rules::iterator ir = rules->begin();
 
     while (ir != rules->end())
     //for (Rules::iterator ir = rules.begin(); ir != rules.end(); ir ++)
     {
-//        std::cerr << "Regula: " << (*ir)->getName() << std::endl;
+        std::cerr << "Regula: " << (*ir)->getName() << std::endl;
         int currentMatch = 0;
         int currentEntity;
         bool first_match = true;
@@ -78,7 +78,7 @@ void RuleMatcher::applyRules(std::string &sentenceString,
             }
             first_match = false;
                     prev_before = before;
-//                std::cerr << "Pasuje!" << std::endl;
+                std::cerr << "Pasuje!" << std::endl;
 //       std::cerr << "Zdanie: " << sentence << std::endl;
         bool structureChanged = false;
         //int currentEntity = 0;
@@ -95,9 +95,9 @@ void RuleMatcher::applyRules(std::string &sentenceString,
                 if ((*ir)->apply(sentenceString, lattice, currentEntity)) {
                     //sentence = generateSentencePattern(lattice);
                     //sentenceString = generateSentenceString(inputGraph, lattice);
+                    std::cerr << "SENT PRZED: " << oldSentenceString << std::endl;
                     sentenceString = generateSentenceString(lattice);
-                    //std::cerr << "SENT PRZED: " << oldSentenceString << std::endl;
-                    //std::cerr << "SENT PO:    " << sentenceString << std::endl;
+                    std::cerr << "SENT PO:    " << sentenceString << std::endl;
                     //TU: na nowo zrobic sentence
 //                    prev_before = before;
 //                    std::cerr << "zaaplikowany" << std::endl;
@@ -119,16 +119,20 @@ void RuleMatcher::applyRules(std::string &sentenceString,
             continue;
         }
         }
+        std::cerr << "koniec reguly" << std::endl;
         ir ++;
     }
 
+    std::cerr << "reguly zrobione" << std::endl;
     //unescapeSpecialChars(lattice);
     //unescapeSpecialChars(inputGraph, lattice);
     unescapeSpecialChars(lattice);
+    std::cerr << "spec-znaki wyrzucone" << std::endl;
 
     //addPosEdges(lattice);
     //addPosEdges(inputGraph, lattice);
     addPosEdges(lattice);
+    std::cerr << "pos krawedzie dodane" << std::endl;
 
     //@todo: dorobic robienie tych ponizszych paru sztuczek tez na latice
 
@@ -326,7 +330,8 @@ void RuleMatcher::addPosEdges(Lattice &lattice) {
             createSingletonTagCollection("lemma") //@todo: czy "token"?
             );
 
-    std::multimap<Lattice::EdgeDescriptor, std::string> posEdgesMap;
+    //std::multimap<Lattice::EdgeDescriptor, std::string> posEdgesMap;
+    std::multimap<Lattice::VertexDescriptor, std::string> posEdgesMap;
     Lattice::EdgesSortedBySourceIterator edgeIterator =
         lattice.edgesSortedBySource(mask);
     while (edgeIterator.hasNext()) {
@@ -346,10 +351,12 @@ void RuleMatcher::addPosEdges(Lattice &lattice) {
         //                            partOfSpeech = avi->second;
         //                    }
         std::pair<
-            std::multimap<Lattice::EdgeDescriptor, std::string>::iterator,
-            std::multimap<Lattice::EdgeDescriptor, std::string>::iterator
+            //std::multimap<Lattice::EdgeDescriptor, std::string>::iterator,
+            //std::multimap<Lattice::EdgeDescriptor, std::string>::iterator
+            std::multimap<Lattice::VertexDescriptor, std::string>::iterator,
+            std::multimap<Lattice::VertexDescriptor, std::string>::iterator
                 > posEdgesMapIt =
-                posEdgesMap.equal_range(edge);
+                posEdgesMap.equal_range(start);
         bool alreadyAdded = false;
         if (posEdgesMapIt.first != posEdgesMapIt.second) {
             while (posEdgesMapIt.first != posEdgesMapIt.second) {
@@ -375,6 +382,8 @@ void RuleMatcher::addPosEdges(Lattice &lattice) {
                     //                                0.0, //@todo: jaki tu score?
                     seqBuilder.build()
                     );
+            posEdgesMap.insert(std::pair< Lattice::VertexDescriptor, std::string>(
+                        start, partOfSpeech));
         }
     }
 

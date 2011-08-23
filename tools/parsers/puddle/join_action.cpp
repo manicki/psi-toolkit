@@ -140,6 +140,7 @@ bool JoinAction::apply(Lattice &lattice, int currentEntity,
         lattice::getEdgesRange(
                 lattice, startVertex, endVertex
                 );
+    std::cerr << "join od " << startVertex << " do " << endVertex << " z glowa w: " << headVertex << std::endl;
     lattice::addParseEdges(
             lattice,
             startEdges,
