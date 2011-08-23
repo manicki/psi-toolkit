@@ -11,6 +11,7 @@
 #include <map>
 #include <fstream>
 #include <sstream>
+#include <boost/serialization/string.hpp>
 #include <boost/serialization/map.hpp>
 #include <boost/archive/text_iarchive.hpp>
 //#include <boost/regex.hpp>
