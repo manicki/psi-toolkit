@@ -1,2 +1,3 @@
 #cmakedefine01 HAVE_POSTGRESQL
 #cmakedefine01 HAVE_JAVA
+#define ROOT_DIR "../"

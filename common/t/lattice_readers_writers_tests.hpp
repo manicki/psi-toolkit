@@ -4,6 +4,7 @@
 #include "psi_lattice_writer.hpp"
 #include "utt_lattice_reader.hpp"
 
+#include "config.h"
 
 class LatticeReadersWritersTests : public CxxTest::TestSuite {
 
@@ -210,7 +211,7 @@ public:
 
         std::string line;
         std::string contents;
-        std::ifstream s("../formats/psi/t/files/pl_sample_simple.txt");
+        std::ifstream s(ROOT_DIR "formats/psi/t/files/pl_sample_simple.txt");
         while (getline(s, line)) {
             contents += line;
             contents += "\n";
@@ -343,7 +344,7 @@ public:
 
         std::string line;
         std::string contents;
-        std::ifstream s("../formats/psi/t/files/pl_sample_nocomments.txt");
+        std::ifstream s(ROOT_DIR "formats/psi/t/files/pl_sample_nocomments.txt");
         while (getline(s, line)) {
             contents += line;
             contents += "\n";
@@ -357,7 +358,7 @@ public:
         Lattice lattice("");
         LatticeReader * reader = new PsiLatticeReader();
 
-        reader->readIntoLattice("../formats/psi/t/files/pl_sample.txt", lattice);
+        reader->readIntoLattice(ROOT_DIR "formats/psi/t/files/pl_sample.txt", lattice);
 
         delete reader;
     }
