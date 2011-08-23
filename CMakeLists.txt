@@ -51,7 +51,7 @@ message(STATUS "Bonsai common path file (required while using ParseGraph) ${BONS
 # Sets compiler flags
 set(CMAKE_CXX_FLAGS "-g -Wall -Wundef -Wnon-virtual-dtor")
 
-set(DIRS common formats framework tools utf8)
+set(DIRS common formats tools framework utf8)
 foreach(dir ${DIRS})
 	include_directories("${psi-toolkit_SOURCE_DIR}/${dir}")
 	link_directories("${psi-toolkit_BINARY_DIR}/${dir}")
@@ -95,12 +95,12 @@ if(CXXTEST_FOUND)
 	set(T-TARGETS common common-test formats-psi formats-txt formats-utt)
 
 	if(USE_JAVA)
-		set(TESTS ${TESTS} ${morfologik-t})		
+		set(TESTS ${TESTS} ${morfologik-t})
 		set(T-TARGETS ${T-TARGETS} tools-lemmatizers-morfologik)
 	endif(USE_JAVA)
 
 	if(USE_PUDDLE)
-		set(TESTS ${TESTS} ${puddle-t})		
+		set(TESTS ${TESTS} ${puddle-t})
 		set(T-TARGETS ${T-TARGETS} tools-parsers-puddle re2)
 	endif(USE_PUDDLE)
 
