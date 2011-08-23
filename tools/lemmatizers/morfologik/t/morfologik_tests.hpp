@@ -117,5 +117,50 @@ public:
 	}
 
 
+	void testManyLexemes() {
+	
+		Lattice lattice;
+        lattice.appendStringWithSymbols("mam");
+
+        BySpacesCutter cutter;
+        LayerTagMask symbolMask = lattice.getLayerTagManager().getMask("symbol");
+
+        lattice.runCutter(cutter, symbolMask);
+
+        LemmatizerAnnotator<Morfologik> annotator;
+        annotator.annotate(lattice);
+
+        // now checking
+        {
+            LayerTagMask lemmaMask_ = lattice.getLayerTagManager().getMask("lexeme");
+            Lattice::EdgesSortedByTargetIterator lemmaIter = lattice.edgesSortedByTarget(lemmaMask_);
+
+            TS_ASSERT(lemmaIter.hasNext());
+
+            Lattice::EdgeDescriptor lemma = lemmaIter.next();
+            AnnotationItem item = lattice.getEdgeAnnotationItem(lemma);
+
+            TS_ASSERT_EQUALS(item.getCategory(), "subst");
+            TS_ASSERT_EQUALS(item.getText(), "mama_subst");
+
+            TS_ASSERT(lemmaIter.hasNext());
+
+            lemma = lemmaIter.next();
+            item = lattice.getEdgeAnnotationItem(lemma);
+
+            TS_ASSERT_EQUALS(item.getCategory(), "verb");
+            TS_ASSERT_EQUALS(item.getText(), "mamić_verb");
+            TS_ASSERT(lemmaIter.hasNext());
+
+            lemma = lemmaIter.next();
+            item = lattice.getEdgeAnnotationItem(lemma);
+
+            TS_ASSERT_EQUALS(item.getCategory(), "verb");
+            TS_ASSERT_EQUALS(item.getText(), "mieć_verb");
+
+            TS_ASSERT(!lemmaIter.hasNext());
+        }
+	}
+
 };
 
