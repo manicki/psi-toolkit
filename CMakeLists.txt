@@ -42,7 +42,7 @@ if(USE_POSTGRESQL)
         set(HAVE_POSTGRESQL 1)
 endif(USE_POSTGRESQL)
 
-option(USE_PUDDLE "Compiling puddle shallow parser" OFF)
+option(USE_PUDDLE "Compiling puddle shallow parser" ON)
 message(STATUS "Compiling puddle shallow parser ${USE_PUDDLE}")
 
 option(USE_BONSAI_PARSEGRAPH "Using bonsai ParseGraph with puddle shallow parser" OFF)
