@@ -50,6 +50,10 @@ Lattice::VertexDescriptor Lattice::getLastVertex() {
     return allText_.length();
 }
 
+size_t Lattice::getVertexRawCharIndex(VertexDescriptor vd) {
+    return size_t(vd);
+}
+
 Lattice::EdgeDescriptor Lattice::addEdge(
     VertexDescriptor from,
     VertexDescriptor to,
@@ -290,6 +294,13 @@ int Lattice::getEdgeBeginIndex(Lattice::EdgeDescriptor edge) const {
     return edge.implicitIndex;
 }
 
+int Lattice::getEdgeEndIndex(Lattice::EdgeDescriptor edge) const {
+    if (edge.implicitIndex < 0) {
+        return graph_[boost::target(edge.descriptor, graph_)].index;
+    }
+    return edge.implicitIndex;
+}
+
 int Lattice::getEdgeLength(Lattice::EdgeDescriptor edge) const {
     if (edge.implicitIndex < 0) {
         return graph_[boost::target(edge.descriptor, graph_)].index
@@ -318,7 +329,7 @@ Lattice::Score Lattice::getEdgeScore(Lattice::EdgeDescriptor edge) const {
 
 Lattice::VertexDescriptor Lattice::getEdgeSource(EdgeDescriptor edge) const {
     if (edge.implicitIndex < 0) {
-        return VertexDescriptor(boost::source(edge.descriptor, graph_));
+        return VertexDescriptor(graph_[boost::source(edge.descriptor, graph_)].index);
     }
 
     return VertexDescriptor(edge.implicitIndex);
@@ -326,7 +337,7 @@ Lattice::VertexDescriptor Lattice::getEdgeSource(EdgeDescriptor edge) const {
 
 Lattice::VertexDescriptor Lattice::getEdgeTarget(EdgeDescriptor edge) const {
     if (edge.implicitIndex < 0) {
-        return VertexDescriptor(boost::target(edge.descriptor, graph_));
+        return VertexDescriptor(graph_[boost::target(edge.descriptor, graph_)].index);
     }
 
     return VertexDescriptor(edge.implicitIndex + symbolLength_(edge.implicitIndex));

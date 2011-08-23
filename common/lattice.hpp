@@ -307,6 +307,8 @@ public:
      */
     VertexDescriptor getLastVertex();
 
+    size_t getVertexRawCharIndex(VertexDescriptor vd);
+
     /**
      * Adds an edge from vertex `from` to vertex `to` with `annonation_item`
      * and `tags` as layer tags. The partition of the edge into subedges
@@ -363,6 +365,7 @@ public:
     const AnnotationItem getEdgeAnnotationItem(EdgeDescriptor edge);
     const LayerTagCollection& getEdgeLayerTags(EdgeDescriptor edge) const;
     int getEdgeBeginIndex(EdgeDescriptor edge) const;
+    int getEdgeEndIndex(EdgeDescriptor edge) const;
     int getEdgeLength(EdgeDescriptor edge) const;
     bool isEdgeHidden(EdgeDescriptor edge) const;
     std::list<Partition> getEdgePartitions(EdgeDescriptor edge);
