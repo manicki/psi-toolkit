@@ -13,7 +13,7 @@ void LexDbLemmatizer::lemmatize(const std::string token,
 
     pqxx::result tuples =
         transaction.exec(
-            "SELECT canon,name,getposprefix(sinflection),M.morphology"
+            "SELECT canon,name,sinflection,M.morphology"
             " FROM forms F, lexemes L, morphologies M"
             " WHERE F.lexeme_sn = L.lexeme_sn AND M.morphology_no = F.morphology_no"
             " AND (discard is null OR discard = 0)"
@@ -25,7 +25,7 @@ void LexDbLemmatizer::lemmatize(const std::string token,
 
     static pqxx::result::tuple::size_type CANON_INDEX = 0;
     static pqxx::result::tuple::size_type NAME_INDEX = 1;
-    static pqxx::result::tuple::size_type PART_OF_SPEECH_INDEX = 2;
+    static pqxx::result::tuple::size_type SINFLECTION_INDEX = 2;
     static pqxx::result::tuple::size_type MORPHOLOGY_INDEX = 3;
 
     for (pqxx::result::const_iterator iter = tuples.begin();
@@ -42,21 +42,40 @@ void LexDbLemmatizer::lemmatize(const std::string token,
         if (tuple[NAME_INDEX].c_str() != currentLexeme) {
             currentLexeme = tuple[NAME_INDEX].c_str();
 
+            std::string partOfSpeech;
+            std::string flags;
+
+            parseSinflection_(tuple[SINFLECTION_INDEX].c_str(),
+                              partOfSpeech,
+                              flags);
+
             AnnotationItem lexeme(
-                tuple[PART_OF_SPEECH_INDEX].c_str(),
+                partOfSpeech,
                 currentLexeme);
+
+            annotationItemManager.setValue(lexeme, "flags", flags);
 
             outputIterator.addLexeme(lexeme);
         }
 
-        AnnotationItem form(
-            tuple[PART_OF_SPEECH_INDEX].c_str(),
-            currentLexeme);
+        {
+            std::string partOfSpeech;
+            std::string flags;
 
-        annotationItemManager.setValue(form, "morpho", tuple[MORPHOLOGY_INDEX].c_str());
+            parseSinflection_(tuple[SINFLECTION_INDEX].c_str(),
+                              partOfSpeech,
+                              flags);
 
-        outputIterator.addForm(form);
+            AnnotationItem form(
+                partOfSpeech,
+                currentLexeme);
 
+            annotationItemManager.setValue(form, "flags", flags);
+
+            annotationItemManager.setValue(form, "morpho", tuple[MORPHOLOGY_INDEX].c_str());
+
+            outputIterator.addForm(form);
+        }
     }
 }
 
@@ -71,4 +90,20 @@ std::list<std::string> LexDbLemmatizer::getLayerTags() {
     layerTags.push_back("lexdb-tagset");
 
     return layerTags;
+}
+
+void LexDbLemmatizer::parseSinflection_(const std::string& sinflection,
+                                        std::string& partOfSpeech,
+                                        std::string& flags) {
+    size_t i = sinflection.rfind(':');
+    if(i != std::string::npos)
+    {
+        partOfSpeech = sinflection.substr(0,i);
+        flags = sinflection.substr(i+1);
+    }
+    else {
+        partOfSpeech = sinflection;
+        flags = "";
+    }
+
 }
