@@ -745,7 +745,7 @@ public:
                     );
         avi = av.begin();
         TS_ASSERT_EQUALS((*avi).first, "base");
-        TS_ASSERT_EQUALS((*avi).second, "ananas"); //@todo: poprawic to
+        TS_ASSERT_EQUALS((*avi).second, "ananas");
         ++avi;
         TS_ASSERT_EQUALS((*avi).first, "morphology");
         TS_ASSERT_EQUALS((*avi).second, "subst:pl:m");
@@ -950,6 +950,14 @@ public:
             lattice.getEdgeAnnotationItem(edge).getCategory(),
             "NP"
         );
+        TS_ASSERT_EQUALS(
+            lattice.getEdgeBeginIndex(edge),
+            0
+        );
+        TS_ASSERT_EQUALS(
+            lattice.getEdgeLength(edge),
+            12
+        );
         std::list< std::pair<std::string, std::string> > av
             = lattice.getAnnotationItemManager().getValues(
                     lattice.getEdgeAnnotationItem(edge)
@@ -972,12 +980,20 @@ public:
             lattice.getEdgeAnnotationItem(edge).getCategory(),
             "NP"
         );
+        TS_ASSERT_EQUALS(
+            lattice.getEdgeBeginIndex(edge),
+            0
+        );
+        TS_ASSERT_EQUALS(
+            lattice.getEdgeLength(edge),
+            12
+        );
         av = lattice.getAnnotationItemManager().getValues(
                     lattice.getEdgeAnnotationItem(edge)
                     );
         avi = av.begin();
         TS_ASSERT_EQUALS((*avi).first, "base");
-        TS_ASSERT_EQUALS((*avi).second, "ananas"); //@todo: poprawic to
+        TS_ASSERT_EQUALS((*avi).second, "ananas");
         ++avi;
         TS_ASSERT_EQUALS((*avi).first, "morphology");
         TS_ASSERT_EQUALS((*avi).second, "subst:pl:m");
@@ -993,6 +1009,14 @@ public:
             lattice.getEdgeAnnotationItem(edge).getCategory(),
             "subst"
         );
+        TS_ASSERT_EQUALS(
+            lattice.getEdgeBeginIndex(edge),
+            0
+        );
+        TS_ASSERT_EQUALS(
+            lattice.getEdgeLength(edge),
+            6
+        );
         av = lattice.getAnnotationItemManager().getValues(
                     lattice.getEdgeAnnotationItem(edge)
                     );
@@ -1007,6 +1031,14 @@ public:
             lattice.getEdgeAnnotationItem(edge).getCategory(),
             "adj"
         );
+        TS_ASSERT_EQUALS(
+            lattice.getEdgeBeginIndex(edge),
+            7
+        );
+        TS_ASSERT_EQUALS(
+            lattice.getEdgeLength(edge),
+            5
+        );
         av = lattice.getAnnotationItemManager().getValues(
                     lattice.getEdgeAnnotationItem(edge)
                     );
@@ -1020,6 +1052,14 @@ public:
         TS_ASSERT_EQUALS(
             lattice.getEdgeAnnotationItem(edge).getCategory(),
             "subst"
+        );
+        TS_ASSERT_EQUALS(
+            lattice.getEdgeBeginIndex(edge),
+            7
+        );
+        TS_ASSERT_EQUALS(
+            lattice.getEdgeLength(edge),
+            5
         );
         av = lattice.getAnnotationItemManager().getValues(
                 lattice.getEdgeAnnotationItem(edge)
@@ -1146,6 +1186,14 @@ public:
 //            lattice.getEdgeAnnotationItem(edge).getCategory(),
 //            "NP"
 //        );
+//        TS_ASSERT_EQUALS(
+//            lattice.getEdgeBeginIndex(edge),
+//            0
+//        );
+//        TS_ASSERT_EQUALS(
+//            lattice.getEdgeLength(edge),
+//            6
+//        );
 //        std::list< std::pair<std::string, std::string> > av
 //            = lattice.getAnnotationItemManager().getValues(
 //                    lattice.getEdgeAnnotationItem(edge)
@@ -1167,6 +1215,14 @@ public:
 //        TS_ASSERT_EQUALS(
 //            lattice.getEdgeAnnotationItem(edge).getCategory(),
 //            "NP"
+//        );
+//        TS_ASSERT_EQUALS(
+//            lattice.getEdgeBeginIndex(edge),
+//            0
+//        );
+//        TS_ASSERT_EQUALS(
+//            lattice.getEdgeLength(edge),
+//            12
 //        );
 //        av = lattice.getAnnotationItemManager().getValues(
 //                    lattice.getEdgeAnnotationItem(edge)
@@ -1202,6 +1258,14 @@ public:
 //        TS_ASSERT_EQUALS(
 //            lattice.getEdgeAnnotationItem(edge).getCategory(),
 //            "AP"
+//        );
+//        TS_ASSERT_EQUALS(
+//            lattice.getEdgeBeginIndex(edge),
+//            7
+//        );
+//        TS_ASSERT_EQUALS(
+//            lattice.getEdgeLength(edge),
+//            5
 //        );
 //        av = lattice.getAnnotationItemManager().getValues(
 //                    lattice.getEdgeAnnotationItem(edge)
