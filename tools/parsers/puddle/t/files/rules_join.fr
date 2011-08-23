@@ -1,0 +1,4 @@
+
+Rule "join test"
+Match: [type=NP] [type=AP];
+Eval: join(NP, 1);

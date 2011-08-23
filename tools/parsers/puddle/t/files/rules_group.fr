@@ -1,0 +1,4 @@
+
+Rule "group test"
+Match: [pos~"subst"] [pos~"adj"];
+Eval: group(NP, 1);

@@ -1,0 +1,5 @@
+
+Rule "delete test"
+Match: [orth~"ananas"] [orth~"noirs"];
+Eval:  delete(number~"sg", 1);
+       delete(pos!~"adj", 2);

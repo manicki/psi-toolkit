@@ -1,0 +1,4 @@
+
+Rule "unify test"
+Match: [pos~"subst"] [pos~"adj"];
+Eval: unify(number, 1, 2);

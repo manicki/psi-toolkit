@@ -1,0 +1,5 @@
+
+Rule "add test"
+Match: [base~"ananas"];
+Eval:  add("adj:sg:m", "ananas", 1);
+       add("adj:pl:m", "ananas", 1);
