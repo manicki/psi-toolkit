@@ -10,7 +10,7 @@ std::string PsiLatticeWriter::getFormatName() {
 }
 
 LatticeWriter* PsiLatticeWriter::Factory::doCreateLatticeWriter(
-    const boost::program_options::variables_map& options) {
+    const boost::program_options::variables_map&) {
     return new PsiLatticeWriter();
 }
 

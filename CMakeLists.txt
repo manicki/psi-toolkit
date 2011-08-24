@@ -53,7 +53,7 @@ option(BONSAI_PATH "Bonsai common path file (required while using ParseGraph)" "
 message(STATUS "Bonsai common path file (required while using ParseGraph) ${BONSAI_PATH}")
 
 # Sets compiler flags
-set(CMAKE_CXX_FLAGS "-g -Wall -Wundef -Wnon-virtual-dtor")
+set(CMAKE_CXX_FLAGS "-g -Wall -Wundef -Wnon-virtual-dtor -Wextra")
 
 set(DIRS common formats tools framework utf8)
 foreach(dir ${DIRS})

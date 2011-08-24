@@ -1,6 +1,6 @@
 #include "fake_lemmatizer.hpp"
 
-FakeLemmatizer::FakeLemmatizer(const boost::program_options::variables_map& options) {
+FakeLemmatizer::FakeLemmatizer(const boost::program_options::variables_map&) {
 }
 
 void FakeLemmatizer::lemmatize(const std::string token,
