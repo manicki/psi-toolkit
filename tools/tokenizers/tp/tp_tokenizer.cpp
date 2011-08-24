@@ -5,7 +5,7 @@
 
 
 Annotator* TpTokenizer::Factory::doCreateAnnotator(
-    const boost::program_options::variables_map& options) {
+    const boost::program_options::variables_map&) {
     return new TpTokenizer();
 }
 
