@@ -108,13 +108,13 @@ boost::program_options::variables_map PipeRunner::parseOptions_(
     const std::list<std::string>& processorArgs = pipelineElement.processorArgs;
 
     int argc = processorArgs.size() + 1;
-    boost::scoped_array<const char*> argv(new const char* [argc + 1]);
+    boost::scoped_array<char*> argv(new char* [argc + 1]);
 
     size_t i = 1;
     for(std::list<std::string>::const_iterator iter = processorArgs.begin();
         iter != processorArgs.end();
         ++iter,++i)
-        argv[i] = (*iter).c_str();
+        argv[i] = const_cast<char*>((*iter).c_str()); //trick necessary because of Boost 1.42 bug
     argv[argc] = 0;
 
     boost::program_options::variables_map options;
