@@ -88,6 +88,7 @@ set_target_properties(tools-parsers-puddle PROPERTIES
     COMPILE_FLAGS "-I${psi-toolkit_SOURCE_DIR}/utf8 -I${BONSAI_PATH} -D_WITH_BONSAI_PARSEGRAPH")
 #   message(STATUS "flagi ${CMAKE_CXX_FLAGS}")
 endif(USE_BONSAI_PARSEGRAPH)
+    set(HAVE_PUDDLE 1)
 endif(USE_PUDDLE)
 
 foreach(dir ${formats_SUBDIRS})
