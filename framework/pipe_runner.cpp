@@ -3,6 +3,8 @@
 #include <iostream>
 #include <list>
 #include <boost/scoped_ptr.hpp>
+#include <boost/scoped_array.hpp>
+#include <boost/program_options/parsers.hpp>
 
 #include "main_factories_keeper.hpp"
 
@@ -15,8 +17,9 @@ int PipeRunner::run() {
 
     std::list<PipelineElementSpecification>::iterator it = pipelineSpecification_.elements.begin();
 
-    LatticeReaderFactory& readerFactory = getReaderFactory_(*it);
     boost::program_options::variables_map options;
+
+    LatticeReaderFactory& readerFactory = getReaderFactory_(*it);
     boost::scoped_ptr<LatticeReader> reader(readerFactory.createLatticeReader(options));
 
     reader->readIntoLattice(std::cin, lattice);
@@ -29,11 +32,16 @@ int PipeRunner::run() {
         if (isLastElement_(it, pipelineSpecification_)) {
             LatticeWriterFactory& writerFactory = getWriterFactory_(*it);
             boost::scoped_ptr<LatticeWriter> writer(writerFactory.createLatticeWriter(options));
+
             writer->writeLattice(lattice, std::cout);
         }
         else {
             AnnotatorFactory& annotatorFactory = getAnnotatorFactory_(*it);
+            boost::program_options::variables_map options
+                = parseOptions_(annotatorFactory.optionsHandled(), *it);
+
             boost::scoped_ptr<Annotator> annotator(annotatorFactory.createAnnotator(options));
+
             annotator->annotate(lattice);
         }
     }
@@ -93,4 +101,27 @@ bool PipeRunner::isLastElement_(
     return it == pipelineSpecification.elements.end();
 }
 
+boost::program_options::variables_map PipeRunner::parseOptions_(
+    const boost::program_options::options_description& optionsDescription,
+    const PipelineElementSpecification& pipelineElement) {
 
+    const std::list<std::string>& processorArgs = pipelineElement.processorArgs;
+
+    int argc = processorArgs.size() + 1;
+    boost::scoped_array<const char*> argv(new const char* [argc + 1]);
+
+    size_t i = 1;
+    for(std::list<std::string>::const_iterator iter = processorArgs.begin();
+        iter != processorArgs.end();
+        ++iter,++i)
+        argv[i] = (*iter).c_str();
+    argv[argc] = 0;
+
+    boost::program_options::variables_map options;
+    boost::program_options::store(
+        boost::program_options::parse_command_line(argc, argv.get(),
+                                                   optionsDescription), options);
+    boost::program_options::notify(options);
+
+    return options;
+}

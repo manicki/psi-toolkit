@@ -7,7 +7,8 @@ class MorfologikTests : public CxxTest::TestSuite {
 
 public:
 	void testSimpleStem() {
-		Morfologik morf;
+            boost::program_options::variables_map noOptions;
+            Morfologik morf(noOptions);
 
 		std::vector<std::string> stems = morf.simpleStem("dziecku");
 		TS_ASSERT_EQUALS((int)stems.size(), 1);
@@ -17,16 +18,18 @@ public:
 	}
 
 	void testUnrecognizedWord() {
-		Morfologik morf;
+            boost::program_options::variables_map noOptions;
+            Morfologik morf(noOptions);
 
-		std::vector<std::string> stems = morf.simpleStem("Dziecko");	
+		std::vector<std::string> stems = morf.simpleStem("Dziecko");
 		TS_ASSERT_EQUALS((int)stems.size(), 0);
 	}
 
 	void testStems() {
-		Morfologik morf;
+            boost::program_options::variables_map noOptions;
+            Morfologik morf(noOptions);
 
-		std::multimap<std::string, std::vector<std::string> > stems = 
+		std::multimap<std::string, std::vector<std::string> > stems =
 			morf.stem("jeden");
 		TS_ASSERT_EQUALS((int)stems.size(), 2);
 
@@ -45,7 +48,7 @@ public:
 	}
 
 	void testLexemeLevel() {
-	
+
 		Lattice lattice;
         lattice.appendStringWithSymbols("prowokacjami");
 
@@ -54,7 +57,8 @@ public:
 
         lattice.runCutter(cutter, symbolMask);
 
-        LemmatizerAnnotator<Morfologik> annotator;
+        boost::program_options::variables_map noOptions;
+        LemmatizerAnnotator<Morfologik> annotator(noOptions);
         annotator.annotate(lattice);
 
         // now checking
@@ -71,12 +75,12 @@ public:
             TS_ASSERT_EQUALS(prowokacjamiItem.getText(), "prowokacja_subst");
 
 			AnnotationItemManager annItmMng = lattice.getAnnotationItemManager();
-			std::list<std::pair<std::string, std::string> > lexemeValues = 
+			std::list<std::pair<std::string, std::string> > lexemeValues =
 				annItmMng.getValues(prowokacjamiItem);
 
 			TS_ASSERT_EQUALS((int)lexemeValues.size(), 1);
 			std::list<std::pair<std::string, std::string> >::iterator valItr = lexemeValues.begin();
-			
+
 			TS_ASSERT_EQUALS(valItr->first, "gender");
 			TS_ASSERT_EQUALS(valItr->second, "f");
 
@@ -96,15 +100,15 @@ public:
             TS_ASSERT_EQUALS(prowokacjamiItem.getText(), "prowokacja_subst");
 
 			AnnotationItemManager annItmMng = lattice.getAnnotationItemManager();
-			std::list<std::pair<std::string, std::string> > formValues = 
+			std::list<std::pair<std::string, std::string> > formValues =
 				annItmMng.getValues(prowokacjamiItem);
 
 			TS_ASSERT_EQUALS((int)formValues.size(), 3);
 			std::list<std::pair<std::string, std::string> >::iterator valItr = formValues.begin();
-		
+
 			TS_ASSERT_EQUALS(valItr->first, "gender");
 			TS_ASSERT_EQUALS(valItr->second, "f")
-			valItr++;	
+			valItr++;
 			TS_ASSERT_EQUALS(valItr->first, "case");
 			TS_ASSERT_EQUALS(valItr->second, "inst");
 			valItr++;
@@ -118,7 +122,7 @@ public:
 
 
 	void testManyLexemes() {
-	
+
 		Lattice lattice;
         lattice.appendStringWithSymbols("mam");
 
@@ -127,7 +131,8 @@ public:
 
         lattice.runCutter(cutter, symbolMask);
 
-        LemmatizerAnnotator<Morfologik> annotator;
+        boost::program_options::variables_map noOptions;
+        LemmatizerAnnotator<Morfologik> annotator(noOptions);
         annotator.annotate(lattice);
 
         // now checking

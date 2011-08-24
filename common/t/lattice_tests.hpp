@@ -267,7 +267,8 @@ public:
 
         lattice.runCutter(cutter, symbolMask);
 
-        LemmatizerAnnotator<FakeLemmatizer> annotator;
+        boost::program_options::variables_map noOptions;
+        LemmatizerAnnotator<FakeLemmatizer> annotator(noOptions);
 
         annotator.annotate(lattice);
 

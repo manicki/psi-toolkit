@@ -1,9 +1,16 @@
 #include "lex_db_lemmatizer.hpp"
 
 #include <pqxx/transaction>
+#include <boost/program_options.hpp>
 
-LexDbLemmatizer::LexDbLemmatizer():connection_("dbname=upl-copy") {
+#include "logging.hpp"
+
+LexDbLemmatizer::LexDbLemmatizer(const boost::program_options::variables_map& options)
+ :connection_("dbname=upl-copy") {
     connection_.set_client_encoding("UTF8");
+
+    std::string dbName = options["db-name"].as<std::string>();
+    DEBUG("LEXDB" << dbName);
 }
 
 void LexDbLemmatizer::lemmatize(const std::string token,
@@ -79,6 +86,16 @@ void LexDbLemmatizer::lemmatize(const std::string token,
     }
 }
 
+boost::program_options::options_description LexDbLemmatizer::optionsHandled() {
+    boost::program_options::options_description desc;
+
+    desc.add_options()
+        ("db-name", boost::program_options::value<std::string>(), "database name")
+        ;
+
+    return desc;
+}
+
 std::string LexDbLemmatizer::getName() {
     return "lex-db";
 }
@@ -107,3 +124,4 @@ void LexDbLemmatizer::parseSinflection_(const std::string& sinflection,
     }
 
 }
+

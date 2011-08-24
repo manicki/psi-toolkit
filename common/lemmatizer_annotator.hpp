@@ -15,16 +15,20 @@ private:
 
 public:
 
+    LemmatizerAnnotator(const boost::program_options::variables_map& options)
+        :lemmatizer_(options) {
+    }
+
     class Factory : public AnnotatorFactory {
     private:
         virtual Annotator* doCreateAnnotator(
             const boost::program_options::variables_map& options) {
 
-            return new LemmatizerAnnotator<L>();
+            return new LemmatizerAnnotator<L>(options);
         }
 
         virtual boost::program_options::options_description doOptionsHandled() {
-            return boost::program_options::options_description();
+            return L::optionsHandled();
         }
 
         virtual std::string doGetName() {

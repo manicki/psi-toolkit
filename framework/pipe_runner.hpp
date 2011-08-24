@@ -29,8 +29,11 @@ private:
         std::list<PipelineElementSpecification>::iterator it,
         PipelineSpecification& pipelineSpecification);
 
-    static const std::string PIPELINE_SEPARATOR;
+    boost::program_options::variables_map parseOptions_(
+        const boost::program_options::options_description& optionsDescription,
+        const PipelineElementSpecification& pipelineElement);
 
+    static const std::string PIPELINE_SEPARATOR;
 };
 
 #endif

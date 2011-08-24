@@ -6,7 +6,7 @@
 
 std::string Morfologik::tagSeparator = "+";
 
-Morfologik::Morfologik() {
+Morfologik::Morfologik(const boost::program_options::variables_map& options) {
 	jenv = NULL;
 	level = 3;
 
@@ -29,14 +29,14 @@ std::list<std::string> Morfologik::getLayerTags() {
 	layerTags.push_back("morfologik");
 	layerTags.push_back("morfologik-tagset");
 
-	return layerTags;	
+	return layerTags;
 }
 
 void Morfologik::setLevel(int lvl) {
 	level = lvl;
 }
 
-void Morfologik::lemmatize(const std::string & word, 
+void Morfologik::lemmatize(const std::string & word,
 	AnnotationItemManager & manager, LemmatizerOutputIterator & iterator
 ) {
 	annotationManager = &manager;
@@ -53,6 +53,12 @@ void Morfologik::lemmatize(const std::string & word,
 		default:
 			stemsOnFormLevel(word, iterator);
 	}
+}
+
+boost::program_options::options_description Morfologik::optionsHandled() {
+    boost::program_options::options_description desc;
+
+    return desc;
 }
 
 void Morfologik::stemsOnLemmaLevel(
@@ -76,7 +82,7 @@ void Morfologik::stemsOnLexemeLevel(
 	const std::string & word, LemmatizerOutputIterator & outputIterator
 ) {
 
-	std::multimap<std::string, std::vector<std::string> > stems = 
+	std::multimap<std::string, std::vector<std::string> > stems =
 		stem(word);
 
 	std::set<std::string> lemmas = getLemmasFromStems(stems);
@@ -85,7 +91,7 @@ void Morfologik::stemsOnLexemeLevel(
 	for (lem = lemmas.begin(); lem != lemmas.end(); lem++) {
 		outputIterator.addLemma(*lem);
 
-		std::vector<std::string> lexemeTags = 
+		std::vector<std::string> lexemeTags =
 			getLexemeTagsFromStems(stems, *lem);
 		std::vector<std::string>::iterator lxt;
 
@@ -100,7 +106,7 @@ std::set<std::string> Morfologik::getLemmasFromStems(
 	std::multimap<std::string, std::vector<std::string> > stems
 ) {
 	std::set<std::string> lemmas;
-	
+
 	std::multimap<std::string, std::vector<std::string> >::iterator s;
 	for (s = stems.begin(); s != stems.end(); s++) {
 		lemmas.insert(lemmas.end(), s->first);
@@ -129,19 +135,19 @@ std::vector<std::string> Morfologik::getLexemeTagsFromStems(
 }
 
 AnnotationItem Morfologik::createLexemeAnnotation(
-	const std::string & stem, std::string & tag 
+	const std::string & stem, std::string & tag
 ) {
 
-	std::map<std::string, std::string> attributes = 
+	std::map<std::string, std::string> attributes =
 		tagsParser.getLexemeAttributes(tag);
-	std::map<std::string, std::string>::iterator atr;	
+	std::map<std::string, std::string>::iterator atr;
 
 	std::string partOfSpeech = attributes["pos"];
 	std::string wordId = stem + "_" + partOfSpeech;
 	attributes.erase("pos");
 
 	AnnotationItem lexeme(partOfSpeech, wordId);
-	
+
 	for (atr = attributes.begin(); atr != attributes.end(); atr++) {
 		annotationManager->setValue(lexeme, atr->first, atr->second);
 	}
@@ -152,7 +158,7 @@ void Morfologik::stemsOnFormLevel(
 	const std::string & word, LemmatizerOutputIterator & outputIterator
 ){
 
-	std::multimap<std::string, std::vector<std::string> > stems = 
+	std::multimap<std::string, std::vector<std::string> > stems =
 		stem(word);
 
 	std::set<std::string> lemmas = getLemmasFromStems(stems);
@@ -176,7 +182,7 @@ void Morfologik::stemsOnFormLevel(
 
 			for (tag = tags.begin(); tag != tags.end(); tag++) {
 
-				std::vector<std::map<std::string, std::string> > forms = 
+				std::vector<std::map<std::string, std::string> > forms =
 					tagsParser.getFormAttributes(*tag);
 				std::vector<std::map<std::string, std::string> >::iterator frm;
 
@@ -195,7 +201,7 @@ AnnotationItem Morfologik::createFormAnnotation(
 ) {
 
 	AnnotationItem formItem = lexemeItem;
-	
+
 	std::map<std::string, std::string>::iterator atr;
 	for (atr = attributes.begin(); atr != attributes.end(); atr++) {
 		annotationManager->setValue(lexemeItem, atr->first, atr->second);
@@ -205,7 +211,7 @@ AnnotationItem Morfologik::createFormAnnotation(
 
 std::vector<std::string> Morfologik::simpleStem(const std::string & word) {
 
-	jstring jword = jenv->NewStringUTF(word.c_str());	
+	jstring jword = jenv->NewStringUTF(word.c_str());
 	jobject objList = (jobject)jenv->CallObjectMethod
 		(objPolishStemmer, midPolishStemmerLookup, jword);
 	jenv->DeleteLocalRef(jword);
@@ -222,7 +228,7 @@ std::vector<std::string> Morfologik::simpleStem(const std::string & word) {
 		pstem = getStemByJNI(objWordData);
 		result.insert(result.begin(), pstem);
 	}
-	
+
 	jenv->DeleteLocalRef(objList);
 	jenv->DeleteLocalRef(objWordData);
 	return result;
@@ -232,7 +238,7 @@ std::multimap<std::string, std::vector<std::string> > Morfologik::stem(
 	const std::string & word
 ) {
 
-	jstring jword = jenv->NewStringUTF(word.c_str());	
+	jstring jword = jenv->NewStringUTF(word.c_str());
 	jobject objList = (jobject)jenv->CallObjectMethod
 		(objPolishStemmer, midPolishStemmerLookup, jword);
 	jenv->DeleteLocalRef(jword);
@@ -257,7 +263,7 @@ std::multimap<std::string, std::vector<std::string> > Morfologik::stem(
 		result.insert(std::pair<std::string, std::vector<std::string> >
 			(pstem, tags) );
 	}
-	
+
 	jenv->DeleteLocalRef(objList);
 	jenv->DeleteLocalRef(objWordData);
 	return result;
@@ -290,7 +296,7 @@ const char* Morfologik::getTagsByJNI(jobject objWordData) {
 	jstring text = (jstring)jenv->CallObjectMethod
 		(objForString, midStringToString, NULL);
 	ptags = jenv->GetStringUTFChars(text, NULL);
-	
+
 	if (ptags == NULL) {
 		// OutOfMemoryError already throw
 	}

@@ -1,6 +1,9 @@
 #ifndef MORFOLOGIK_HDR
 #define MORFOLOGIK_HDR
 
+#include <boost/program_options/options_description.hpp>
+#include <boost/program_options/variables_map.hpp>
+
 #include "java_virtual_machine.hpp"
 #include "morfologik_tags_parser.hpp"
 #include "annotation_item_manager.hpp"
@@ -11,24 +14,26 @@
 #include <set>
 
 class Morfologik {
-	
+
 public:
 
-	Morfologik();
+	Morfologik(const boost::program_options::variables_map& options);
 	static std::string getName();
 	std::list<std::string> getLayerTags();
 
 	void lemmatize(
-		const std::string & word, 
-		AnnotationItemManager & manager, 
+		const std::string & word,
+		AnnotationItemManager & manager,
 		LemmatizerOutputIterator & iterator
 	);
+
+    static boost::program_options::options_description optionsHandled();
 
 	/**
 	 * Sets the word processing level, default 0.
 	 * @param level
 	 * 	Word processing level:
-	 * 	0 - does nothing because word correction and normalization are 
+	 * 	0 - does nothing because word correction and normalization are
 	 * 		inavailable in Morfologik tool
 	 * 	1 - finds lemma, i.e. only the grammatical class is storing
 	 * 	2 - adds lexems
@@ -36,7 +41,7 @@ public:
 	 */
 	void setLevel(int);
 
-	friend class MorfologikTests; 
+	friend class MorfologikTests;
 
 protected:
 
@@ -45,7 +50,7 @@ protected:
 	 * @param word
 	 * 	A string containing word to stem.
 	 * @return
-	 * 	A multimap object with stem-tags pairs. Each stem may have more than 
+	 * 	A multimap object with stem-tags pairs. Each stem may have more than
 	 * 	one tag (in Morfologik tags are separated by plus sign).
 	 * @see simpleStem()
 	 */
@@ -83,7 +88,7 @@ private:
 		std::multimap<std::string, std::vector<std::string> > stems
 	);
 	std::vector<std::string> getLexemeTagsFromStems(
-		std::multimap<std::string, std::vector<std::string> > & stems, 
+		std::multimap<std::string, std::vector<std::string> > & stems,
 		const std::string & lemma
 	);
 
