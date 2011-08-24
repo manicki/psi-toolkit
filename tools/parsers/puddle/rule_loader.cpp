@@ -478,7 +478,7 @@ std::string RuleLoader::compileRulePattern(std::string &matched, int &size,
     if (matched != "")
         compiledMatch += compileNonTokens(matched);
 
-    int i = 0;
+    size_t i = 0;
     int mindex = bracketCount;
 //    if (matchedIndexes.size() == 0)
 //        mindex = 0;
@@ -636,7 +636,7 @@ std::string RuleLoader::getToken(std::string &matched, std::string &before)
 {
     int brackets = 0;
     std::string s = "";
-    int start = matched.find("[");
+    size_t start = matched.find("[");
     if (start == std::string::npos)
     {
         //std::cerr << "Illegal matching definition: " << matched << std::endl;
@@ -644,7 +644,7 @@ std::string RuleLoader::getToken(std::string &matched, std::string &before)
     }
 
     bool found = false;
-    int i = start;
+    size_t i = start;
     while (i < matched.size())
     {
         if (matched[i] == '[')
@@ -755,7 +755,7 @@ int RuleLoader::countTokens(std::string &matched)
     int parenthesis = 0;
     int brackets = 0;
     std::string s = "";
-    int i = 0;
+    size_t i = 0;
     if (matched == "sb" || matched == "se" || matched == "ns" || matched == "!sb" || matched == "!se" || matched == "!ns")
         return 1;
 
@@ -913,12 +913,12 @@ std::string RuleLoader::compileToken(std::string &token,
         else
         {
             //aa
-            int begin = token.find("[");
-            int end = token.find("]", begin + 1);
-            int cite = token.find("\"", begin + 1);
+            size_t begin = token.find("[");
+            size_t end = token.find("]", begin + 1);
+            size_t cite = token.find("\"", begin + 1);
             if (cite > 0)
             {
-                int begin2 = token.find("[", begin + 1);
+                size_t begin2 = token.find("[", begin + 1);
                 if (begin2 > cite)
                 {
                     cite = token.find("\"", cite + 1);
@@ -1104,10 +1104,10 @@ std::string RuleLoader::getKey(std::string &token) {
 
 std::string RuleLoader::getValue(std::string &token)
 {
-    int start_pos = token.find_first_not_of(" "); //skip spaces at the begining
+    size_t start_pos = token.find_first_not_of(" "); //skip spaces at the begining
     if (start_pos == std::string::npos)
         start_pos = 0;
-    int end_pos = start_pos;
+//    int end_pos = start_pos;
     int quotes = 0;
     bool icase = false;
     utf8iterator begin(token.begin() + start_pos, token.begin(), token.end());
@@ -1479,8 +1479,8 @@ bool RuleLoader::compileBaseCondition(std::string &comparisonOperator,
 
     if (value.find_first_of(".|*+?") != std::string::npos){
         std::string tmpVal = "";
-        int idx = 0;
-        int pos;
+        size_t idx = 0;
+        size_t pos;
         while ((pos = value.find(".", idx)) != std::string::npos) {
             if (pos > 0)
                 if (value[pos - 1] == '\\')
@@ -1986,8 +1986,8 @@ std::string RuleLoader::compileOrthCondition(std::string &comparisonOperator,
     if (value.find_first_of(".|*+?") != std::string::npos)
     {
         std::string tmpVal = "";
-        int idx = 0;
-        int pos;
+        size_t idx = 0;
+        size_t pos;
         while ((pos = value.find(".", idx)) != std::string::npos)
         {
             if (pos > 0)

@@ -263,7 +263,7 @@ void Tagset::readFromFile (std::string &filename) {
         left.push_back(p->first);
         std::string mapped_pos = boost::lexical_cast<std::string>(posMappings[p->first]);
         std::string initRight = mapped_pos;
-        int i = 0;
+        size_t i = 0;
         while (i < attrList.size()) {
             initRight += boost::lexical_cast<std::string>("0");
             i ++;
@@ -610,7 +610,7 @@ std::string Tagset::getAttributeAtIndex(std::string &pos, int index)
         return "";
     }
     std::vector<std::string> attributes = POSs[pos];
-    if (index < attributes.size())
+    if ( (size_t)index < attributes.size())
     {
         std::string attr = attributes[index];
         if ((attr[0] == '[') && (attr[attr.length() - 1] == ']'))

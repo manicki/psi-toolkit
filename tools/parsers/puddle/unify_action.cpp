@@ -695,7 +695,7 @@ bool UnifyAction::test(Lattice &lattice, int currentEntity,
             pattern_it != unifiedPatterns.end(); pattern_it ++) {
 
         bool wasAllNulls = false;
-        bool wasNotNull = false;
+//        bool wasNotNull = false;
 
         std::set<std::string> refValues;
         for (std::vector<int>::iterator index_it = tokenIndices.begin();
@@ -758,7 +758,7 @@ bool UnifyAction::test(Lattice &lattice, int currentEntity,
                     }
                 }
                 if (values.size() > 0) {
-                    wasNotNull = true;
+//                    wasNotNull = true;
                     if (refValues.size() == 0) {
                         refValues.insert(values.begin(), values.end());
                     } else {

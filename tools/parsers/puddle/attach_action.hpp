@@ -42,8 +42,8 @@ class AttachAction : public Action
         void setVerbose() { verbose = true; }
     private:
         std::string group;
-        int head;
-        int start, end;
+        size_t head;
+        size_t start, end;
         std::string ruleName;
         std::string type;
         bool verbose;

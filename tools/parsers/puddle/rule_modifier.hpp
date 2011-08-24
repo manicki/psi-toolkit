@@ -18,24 +18,24 @@ class RuleModifier
         ~RuleModifier();
         void addRule(std::string ruleString);//, LatticeWrapperPtr latticeWrapper);
         void addRule(RulePtr rule);
-        void deleteRule(int index);
-        void moveRule(int from, int to);
+        void deleteRule(size_t index);
+        void moveRule(size_t from, size_t to);
 
         void setRules(RulesPtr aRules);
         void setRuleCompiler(RuleLoader *aRuleCompiler);
         RulesPtr getRules();
 
-        void addAction(int ruleIndex, ActionPtr action);
-        void addAction(int ruleIndex, std::string actionString);
+        void addAction(size_t ruleIndex, ActionPtr action);
+        void addAction(size_t ruleIndex, std::string actionString);
 //                LatticeWrapperPtr latticeWrapper);
-        void deleteAction(int ruleIndex, int actionIndex);
+        void deleteAction(size_t ruleIndex, size_t actionIndex);
 
-        void setRepeat(int ruleIndex);
-        void unsetRepeat(int ruleIndex);
+        void setRepeat(size_t ruleIndex);
+        void unsetRepeat(size_t ruleIndex);
 
-        void setMatch(int ruleIndex, std::string match);
-        void setLeftContext(int ruleIndex, std::string context);
-        void setRightContext(int ruleIndex, std::string context);
+        void setMatch(size_t ruleIndex, std::string match);
+        void setLeftContext(size_t ruleIndex, std::string context);
+        void setRightContext(size_t ruleIndex, std::string context);
 
     private:
 

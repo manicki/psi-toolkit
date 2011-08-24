@@ -669,7 +669,7 @@ namespace poleng {
                 LayerTagCollection tags = lattice.getEdgeLayerTags(edge);
                 std::list<Lattice::Partition> partitions =
                     lattice.getEdgePartitions(edge);
-                Lattice::Score score = lattice.getEdgeScore(edge);
+                //Lattice::Score score = lattice.getEdgeScore(edge);
 
 //                std::cerr << "baseforms: " << baseForms.size() << std::endl;
 //                std::cerr << "morphology: " << morphology.size() << std::endl;

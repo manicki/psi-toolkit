@@ -56,7 +56,7 @@ class SyntokAction : public Action
         std::vector<int> tokenIndices;
         //std::vector<InterpretationPair> morphology;
         std::vector<std::string> morphology;
-        int start, end;
+        size_t start, end;
 
         std::string ruleName;
         std::string type;

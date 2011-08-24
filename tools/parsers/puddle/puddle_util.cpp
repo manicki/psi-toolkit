@@ -24,7 +24,7 @@ namespace poleng {
                  */
                 std::string unescapeSpecialChars(std::string &s) {
                     std::string r = s;
-                    int pos = 0;
+                    size_t pos = 0;
 
                     //left parenthesis
                     pos = r.find("&#40;");

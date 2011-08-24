@@ -501,7 +501,7 @@ bool Rule::test(std::string &sentenceString, Lattice &lattice, int currentEntity
 //@todo: a tego nie zamienimy na jakies zliczenie ile jest ciagow <<[tgs] w dopasowaniu?
 int Rule::countEntities(std::string matched)
 {
-    int i = 0;
+    size_t i = 0;
     int p = 0;
     int brackets = 0;
 
@@ -709,7 +709,7 @@ void Rule::addAction(ActionPtr action)
     actions->push_back(action);
 }
 
-void Rule::deleteAction(int index)
+void Rule::deleteAction(size_t index)
 {
     if (index < actions->size())
         actions->erase(actions->begin() + index);

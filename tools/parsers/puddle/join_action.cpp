@@ -53,7 +53,7 @@ bool JoinAction::apply(Lattice &lattice, int currentEntity,
     int realStart = 0;// start;
     int realEnd = 0;//start;
     int realHead = 0;//start;
-    int i = 0;
+    size_t i = 0;
     while (i < matchedTokensSize.size())
     {
         if (i < start)
@@ -372,7 +372,7 @@ bool JoinAction::test(Lattice &lattice, int currentEntity,
         std::vector<int> matchedTokensSize) {
     //if (entities.size() < head)
     //if ( (pg->num_vertices() - 1) < head ) {
-    if ( (lattice.getLastVertex()) < head ) {
+    if ( ( (size_t) lattice.getLastVertex() ) < head ) {
         return false;
     }
     if (matchedTokensSize[head - 1] == 0)

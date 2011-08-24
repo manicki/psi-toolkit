@@ -29,7 +29,7 @@ void RuleModifier::addRule(RulePtr rule)
     rules->push_back(rule);
 }
 
-void RuleModifier::deleteRule(int index)
+void RuleModifier::deleteRule(size_t index)
 {
     if (index < rules->size())
     {
@@ -37,7 +37,7 @@ void RuleModifier::deleteRule(int index)
     }
 }
 
-void RuleModifier::moveRule(int from, int to)
+void RuleModifier::moveRule(size_t from, size_t to)
 {
     RulePtr tmp = rules->at(from);
     int from_ = 0;
@@ -67,7 +67,7 @@ RulesPtr RuleModifier::getRules()
     return rules;
 }
 
-void RuleModifier::addAction(int ruleIndex, ActionPtr action)
+void RuleModifier::addAction(size_t ruleIndex, ActionPtr action)
 {
     if (ruleIndex < rules->size())
     {
@@ -75,7 +75,7 @@ void RuleModifier::addAction(int ruleIndex, ActionPtr action)
     }
 }
 
-void RuleModifier::addAction(int ruleIndex, std::string actionString)//,
+void RuleModifier::addAction(size_t ruleIndex, std::string actionString)//,
 //        LatticeWrapperPtr latticeWrapper)
 {
     if (ruleIndex < rules->size())
@@ -86,7 +86,7 @@ void RuleModifier::addAction(int ruleIndex, std::string actionString)//,
     }
 }
 
-void RuleModifier::deleteAction(int ruleIndex, int actionIndex)
+void RuleModifier::deleteAction(size_t ruleIndex, size_t actionIndex)
 {
     if (ruleIndex < rules->size())
     {
@@ -94,7 +94,7 @@ void RuleModifier::deleteAction(int ruleIndex, int actionIndex)
     }
 }
 
-void RuleModifier::setRepeat(int ruleIndex)
+void RuleModifier::setRepeat(size_t ruleIndex)
 {
     if (ruleIndex < rules->size())
     {
@@ -102,7 +102,7 @@ void RuleModifier::setRepeat(int ruleIndex)
     }
 }
 
-void RuleModifier::unsetRepeat(int ruleIndex)
+void RuleModifier::unsetRepeat(size_t ruleIndex)
 {
     if (ruleIndex < rules->size())
     {
@@ -110,7 +110,7 @@ void RuleModifier::unsetRepeat(int ruleIndex)
     }
 }
 
-void RuleModifier::setMatch(int ruleIndex, std::string match)
+void RuleModifier::setMatch(size_t ruleIndex, std::string match)
 {
     if (ruleIndex < rules->size())
     {
@@ -149,7 +149,7 @@ void RuleModifier::setMatch(int ruleIndex, std::string match)
     }
 }
 
-void RuleModifier::setLeftContext(int ruleIndex, std::string context)
+void RuleModifier::setLeftContext(size_t ruleIndex, std::string context)
 {
     if (ruleIndex < rules->size())
     {
@@ -185,7 +185,7 @@ void RuleModifier::setLeftContext(int ruleIndex, std::string context)
     }
 }
 
-void RuleModifier::setRightContext(int ruleIndex, std::string context)
+void RuleModifier::setRightContext(size_t ruleIndex, std::string context)
 {
     if (ruleIndex < rules->size())
     {

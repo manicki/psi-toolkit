@@ -321,7 +321,7 @@ bool DeleteAction::apply(Lattice &lattice, int currentEntity,
 bool DeleteAction::test(Lattice &lattice,
         int currentEntity, std::vector<int> matchedTokensSize) {
     bool ret = false;
-    bool nothingToDelete = false;
+    //bool nothingToDelete = false;
 
     int count = matchedTokensSize[tokenIndex - 1];
     if (count == 0) {
@@ -447,7 +447,7 @@ bool DeleteAction::test(Lattice &lattice,
     if (foundToDelete) {
         ret = true;
     } else {
-        nothingToDelete = true;
+        //nothingToDelete = true;
         ret = true;
     }
 

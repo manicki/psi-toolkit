@@ -88,7 +88,7 @@ class Rule
         int matchPattern(std::string &sentence, int matchNumber, std::string &beforeMatched);
 
         void addAction(ActionPtr action);
-        void deleteAction(int index);
+        void deleteAction(size_t index);
 
         std::string makeReadable();
         std::string log();
