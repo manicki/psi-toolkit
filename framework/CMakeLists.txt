@@ -18,8 +18,8 @@ add_executable(psi-pipe psi-pipe.cpp)
 target_link_libraries(psi-pipe framework ${Boost_LIBRARIES} common formats-psi formats-txt formats-utt tools-tokenizers-tp)
 
 if(USE_JAVA)
-	include_directories("${psi-toolkit_SOURCE_DIR}/tools/lemamtizers/morfologik")
-	link_directories("${psi-toolkit_BINARY_DIR}/tools/lemamtizers/morfologik")
+	include_directories("${psi-toolkit_SOURCE_DIR}/tools/lemmatizers/morfologik")
+	link_directories("${psi-toolkit_BINARY_DIR}/tools/lemmatizers/morfologik")
 	target_link_libraries(psi-pipe tools-lemmatizers-morfologik)
 endif(USE_JAVA)
 
@@ -28,6 +28,12 @@ if(USE_POSTGRESQL)
 	link_directories("${psi-toolkit_BINARY_DIR}/tools/lemmatizers/lex_db")
         target_link_libraries(psi-pipe lex-db)
 endif(USE_POSTGRESQL)
+
+if(USE_PUDDLE)
+    include_directories("${psi-toolkit_SOURCE_DIR}/tools/parsers/puddle")
+	link_directories("${psi-toolkit_BINARY_DIR}/tools/parsers/puddle")
+    target_link_libraries(psi-pipe tools-parsers-puddle re2)
+endif(USE_PUDDLE)
 
 install(TARGETS psi-pipe DESTINATION "${psi-toolkit_BINARY_DIR}")
 install(FILES DESTINATION "${psi-toolkit_BINARY_DIR}")
