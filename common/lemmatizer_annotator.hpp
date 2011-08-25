@@ -189,11 +189,11 @@ public:
                 int ruleId) {
 
                 Lattice::EdgeSequence::Builder seqBuilder;
-                seqBuilder.addEdge(lastLemma_);
+                seqBuilder.addEdge(lastLexeme_);
 
                 lattice_.addEdge(
-                    lattice_.getEdgeSource(lastNormalization_),
-                    lattice_.getEdgeTarget(lastNormalization_),
+                    lattice_.getEdgeSource(lastLexeme_),
+                    lattice_.getEdgeTarget(lastLexeme_),
                     item,
                     formTag_,
                     seqBuilder.build(),
