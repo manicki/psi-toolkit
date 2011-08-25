@@ -1,0 +1,743 @@
+
+Rule "faire face"
+Match:  [orth~~"faire"/i] [orth~~"face"/i];
+Eval:   syntok("verb:inf");
+
+Rule "compound"
+Match: [orth~"à"/i] [orth~"cet"/i] [orth~"égard"/i];
+Eval:   syntok("adv");
+
+Rule "compoud"
+Match: [orth~"aujourd'"/i] [orth~"hui"/i];
+Eval:   syntok("adv");
+
+Rule "compound"
+Match: [orth~~"à"/i] [orth~~"condition"/i] [orth~~"de"/i];
+Eval: syntok("prep");
+
+Rule "à l' égard du"
+Match: [orth~~"à"/i] [orth~~"l'"/i] [orth~~"égard"/i] [orth~~"du"/i];
+Eval: syntok("prep");
+
+Rule "à l' envers"
+Match: [orth~~"à"/i] [orth~~"l'"/i] [orth~~"envers"/i];
+Eval: syntok("adv");
+
+Rule "à l' inverse"
+Match: [orth~~"à"/i] [orth~~"l'"/i] [orth~~"inverse"/i];
+Eval: syntok("adv");
+
+Rule "à la fois"
+Match: [orth~~"à"/i] [orth~~"la"/i] [orth~~"fois"/i];
+Eval: syntok("adv");
+
+Rule "à la tête du"
+Match: [orth~~"à"/i] [orth~~"la"/i] [orth~~"tête"/i] [orth~~"du"/i];
+Eval: syntok("prep");
+
+Rule "À partir de"
+Match: [orth~~"À"/i] [orth~~"partir"/i] [orth~~"de"/i];
+Eval: syntok("prep");
+
+Rule "à partir des"
+Match: [orth~~"à"/i] [orth~~"partir"/i] [orth~~"des"/i];
+Eval: syntok("prep");
+
+Rule "à plusieurs reprises"
+Match: [orth~~"à"/i] [orth~~"plusieurs"/i] [orth~~"reprises"/i];
+Eval: syntok("adv");
+
+Rule "a priori"
+Match: [orth~~"a"/i] [orth~~"priori"/i];
+Eval: syntok("adv");
+
+Rule "à terme"
+Match: [orth~~"à"/i] [orth~~"terme"/i];
+Eval: syntok("adv");
+
+Rule "à tout prix"
+Match: [orth~~"à"/i] [orth~~"tout"/i] [orth~~"prix"/i];
+Eval: syntok("adv");
+
+Rule "à venir"
+Match: [orth~~"à"/i] [orth~~"venir"/i];
+Eval: syntok("adv");
+
+Rule "alors même que"
+Match: [orth~~"alors"/i] [orth~~"même"/i] [orth~~"que"/i];
+Eval: syntok("conj");
+
+Rule "alors que"
+Match: [orth~~"alors"/i] [orth~~"que"/i];
+Eval: syntok("conj");
+
+Rule "au contraire"
+Match: [orth~~"au"/i] [orth~~"contraire"/i];
+Eval: syntok("adv");
+
+Rule "au grand complet"
+Match: [orth~~"au"/i] [orth~~"grand"/i] [orth~~"complet"/i];
+Eval: syntok("adv");
+
+Rule "au niveau du"
+Match: [orth~~"au"/i] [orth~~"niveau"/i] [orth~~"du"/i];
+Eval: syntok("prep");
+
+Rule "au profit du"
+Match: [orth~~"au"/i] [orth~~"profit"/i] [orth~~"du"/i];
+Eval: syntok("prep");
+
+Rule "aujourd' hui"
+Match: [orth~~"aujourd'"/i] [orth~~"hui"/i];
+Eval: syntok("adv");
+
+Rule "autour de"
+Match: [orth~~"autour"/i] [orth~~"de"/i];
+Eval: syntok("prep");
+
+Rule "avant de"
+Match: [orth~~"avant"/i] [orth~~"de"/i];
+Eval: syntok("prep");
+
+Rule "avant que"
+Match: [orth~~"avant"/i] [orth~~"que"/i];
+Eval: syntok("conj");
+
+Rule "avoir du mal"
+Match: [orth~~"avoir"/i] [orth~~"du"/i] [orth~~"mal"/i];
+Eval: syntok("verb:inf");
+
+Rule "avoir le dernier mot"
+Match: [orth~~"avoir"/i] [orth~~"le"/i] [orth~~"dernier"/i] [orth~~"mot"/i];
+Eval: syntok("verb:inf");
+
+Rule "avons besoin"
+Match: [orth~~"avons"/i] [orth~~"besoin"/i];
+Eval: syntok("verb:ind:fin:pri:pl");
+
+Rule "bel et bien"
+Match: [orth~~"bel"/i] [orth~~"et"/i] [orth~~"bien"/i];
+Eval: syntok("adv");
+
+Rule "bien sûr"
+Match: [orth~~"bien"/i] [orth~~"sûr"/i];
+Eval: syntok("adv");
+
+Rule "chaque fois que"
+Match: [orth~~"chaque"/i] [orth~~"fois"/i] [orth~~"que"/i];
+Eval: syntok("conj");
+
+Rule "comme quoi"
+Match: [orth~~"comme"/i] [orth~~"quoi"/i];
+Eval: syntok("conj");
+
+Rule "Compte tenu des"
+Match: [orth~~"Compte"/i] [orth~~"tenu"/i] [orth~~"des"/i];
+Eval: syntok("prep");
+
+Rule "d' abord"
+Match: [orth~~"d'"/i] [orth~~"abord"/i];
+Eval: syntok("adv");
+
+Rule "d' autre part"
+Match: [orth~~"d'"/i] [orth~~"autre"/i] [orth~~"part"/i];
+Eval: syntok("adv");
+
+Rule "d' ores et déjà"
+Match: [orth~~"d'"/i] [orth~~"ores"/i] [orth~~"et"/i] [orth~~"déjà"/i];
+Eval: syntok("adv");
+
+Rule "d' une part"
+Match: [orth~~"d'"/i] [orth~~"une"/i] [orth~~"part"/i];
+Eval: syntok("adv");
+
+Rule "dans le cadre du"
+Match: [orth~~"dans"/i] [orth~~"le"/i] [orth~~"cadre"/i] [orth~~"du"/i];
+Eval: syntok("prep");
+
+Rule "dans le prolongement de"
+Match: [orth~~"dans"/i] [orth~~"le"/i] [orth~~"prolongement"/i] [orth~~"de"/i];
+Eval: syntok("prep");
+
+Rule "de nouveau"
+Match: [orth~~"de"/i] [orth~~"nouveau"/i];
+Eval: syntok("adv");
+
+Rule "de plus en plus"
+Match: [orth~~"de"/i] [orth~~"plus"/i] [orth~~"en"/i] [orth~~"plus"/i];
+Eval: syntok("adv");
+
+Rule "de qualité"
+Match: [orth~~"de"/i] [orth~~"qualité"/i];
+Eval: syntok("adv");
+
+Rule "devant le fait accompli"
+Match: [orth~~"devant"/i] [orth~~"le"/i] [orth~~"fait"/i] [orth~~"accompli"/i];
+Eval: syntok("adv");
+
+Rule "Du coup"
+Match: [orth~~"Du"/i] [orth~~"coup"/i];
+Eval: syntok("adv");
+
+Rule "du pareil au même"
+Match: [orth~~"du"/i] [orth~~"pareil"/i] [orth~~"au"/i] [orth~~"même"/i];
+Eval: syntok("adv");
+
+Rule "en dehors de"
+Match: [orth~~"en"/i] [orth~~"dehors"/i] [orth~~"de"/i];
+Eval: syntok("prep");
+
+Rule "En fait"
+Match: [orth~~"En"/i] [orth~~"fait"/i];
+Eval: syntok("adv");
+
+Rule "en faveur des"
+Match: [orth~~"en"/i] [orth~~"faveur"/i] [orth~~"des"/i];
+Eval: syntok("prep");
+
+Rule "en fin de"
+Match: [orth~~"en"/i] [orth~~"fin"/i] [orth~~"de"/i];
+Eval: syntok("prep");
+
+Rule "en particulier"
+Match: [orth~~"en"/i] [orth~~"particulier"/i];
+Eval: syntok("adv");
+
+Rule "en partie"
+Match: [orth~~"en"/i] [orth~~"partie"/i];
+Eval: syntok("adv");
+
+Rule "en plus"
+Match: [orth~~"en"/i] [orth~~"plus"/i];
+Eval: syntok("adv");
+
+Rule "en raison de"
+Match: [orth~~"en"/i] [orth~~"raison"/i] [orth~~"de"/i];
+Eval: syntok("prep");
+
+Rule "en substance"
+Match: [orth~~"en"/i] [orth~~"substance"/i];
+Eval: syntok("adv");
+
+Rule "eu lieu"
+Match: [orth~~"eu"/i] [orth~~"lieu"/i];
+Eval: syntok("ppas:sg:m");
+
+Rule "face à"
+Match: [orth~~"face"/i] [orth~~"à"/i];
+Eval: syntok("prep");
+
+Rule "plus"
+Match: [orth~~"beaucoup"/i] [orth~~"plus"/i];
+Eval: syntok("adv");
+
+###########################################
+
+Rule "face au"
+Match: [orth~~"face"/i] [orth~~"au"/i];
+Eval: syntok("prep");
+
+Rule "faire appel"
+Match: [orth~~"faire"/i] [orth~~"appel"/i];
+Eval: syntok("verb:inf");
+
+Rule "hors de"
+Match: [orth~~"hors"/i] [orth~~"de"/i];
+Eval: syntok("prep");
+
+Rule "jusqu' à"
+Match: [orth~~"jusqu'"/i] [orth~~"à"/i];
+Eval: syntok("prep");
+
+Rule "jusqu' au"
+Match: [orth~~"jusqu'"/i] [orth~~"au"/i];
+Eval: syntok("prep");
+
+Rule "la plupart"
+Match: [orth~~"la"/i] [orth~~"plupart"/i];
+Eval: syntok("adv");
+
+# Rule "lors du"
+# Match: [base~"lors"/i] [base~"de|du"/i];
+# Eval: syntok("prep");
+
+Rule "mettre en oeuvre"
+Match: [orth~~"mettre"/i] [orth~~"en"/i] [orth~~"oeuvre"/i];
+Eval: syntok("verb:inf");
+
+Rule "mis en garde"
+Match: [orth~~"mis"/i] [orth~~"en"/i] [orth~~"garde"/i];
+Eval: syntok("ppas:sg:m");
+
+Rule "mise en scène"
+Match: [orth~~"mise"/i] [orth~~"en"/i] [orth~~"scène"/i];
+Eval: syntok("ppas:sg:m");
+
+Rule "par exemple"
+Match: [orth~~"par"/i] [orth~~"exemple"/i];
+Eval: syntok("adv");
+
+#Rule "par l' intermédiaire de"
+#Match: [orth~~"par"/i] [orth~~"l'"/i] [orth~~"intermédiaire"/i] [orth~~"de"/i];
+#Eval: syntok("prep");
+
+Rule "par la suite"
+Match: [orth~~"par"/i] [orth~~"la"/i] [orth~~"suite"/i];
+Eval: syntok("adv");
+
+Rule "par rapport à"
+Match: [orth~~"par"/i] [orth~~"rapport"/i] [orth~~"à"/i];
+Eval: syntok("prep");
+
+Rule "par rapport au"
+Match: [orth~~"par"/i] [orth~~"rapport"/i] [orth~~"au"/i];
+Eval: syntok("prep");
+
+Rule "parce qu'"
+Match: [orth~~"parce"/i] [orth~~"qu'"/i];
+Eval: syntok("conj");
+
+Rule "parce que"
+Match: [orth~~"parce"/i] [orth~~"que"/i];
+Eval: syntok("conj");
+
+Rule "plus que"
+Match: [orth~~"plus"/i] [orth~~"que"/i];
+Eval: syntok("adv");
+
+Rule "pour la première fois"
+Match: [orth~~"pour"/i] [orth~~"la"/i] [orth~~"première"/i] [orth~~"fois"/i];
+Eval: syntok("adv");
+
+Rule "pour le moment"
+Match: [orth~~"pour"/i] [orth~~"le"/i] [orth~~"moment"/i];
+Eval: syntok("adv");
+
+Rule "quant à"
+Match: [orth~~"quant"/i] [orth~~"à"/i];
+Eval: syntok("prep");
+
+Rule "remonté à la surface"
+Match: [orth~~"remonté"/i] [orth~~"à"/i] [orth~~"la"/i] [orth~~"surface"/i];
+Eval: syntok("ppas:sg:m");
+
+Rule "sans doute"
+Match: [orth~~"sans"/i] [orth~~"doute"/i];
+Eval: syntok("adv");
+
+Rule "si nécessaire"
+Match: [orth~~"si"/i] [orth~~"nécessaire"/i];
+Eval: syntok("adv");
+
+Rule "sur ce point"
+Match: [orth~~"sur"/i] [orth~~"ce"/i] [orth~~"point"/i];
+Eval: syntok("adv");
+
+Rule "tenant compte"
+Match: [orth~~"tenant"/i] [orth~~"compte"/i];
+Eval: syntok("pcon");
+
+Rule "tenir compte"
+Match: [orth~~"tenir"/i] [orth~~"compte"/i];
+Eval: syntok("verb:inf");
+
+Rule "tourne le dos"
+Match: [orth~~"tourne"/i] [orth~~"le"/i] [orth~~"dos"/i];
+Eval: syntok("verb:ind:fin:ter:sg");
+
+Rule "un peu"
+Match: [orth~~"un"/i] [orth~~"peu"/i];
+Eval: syntok("adv");
+
+Rule "vu rouge"
+Match: [orth~~"vu"/i] [orth~~"rouge"/i];
+Eval: syntok("ppas:sg:m");
+#
+#####################################3
+
+Rule "état membre"
+Match: [base~"état"] [base~"membre"];
+Eval:  syntok("subst");
+
+Rule "premier ministre"
+Match: [base~"premier"] [base~"ministre"];
+Eval:  syntok("subst");
+
+Rule "Mr X"
+Match: [orth~"(mr|mrs|ms)"/i] ([pos~"name"]|[pos~"subst"])+;
+Eval:  syntok("name");
+
+Rule "DATE"
+Match:  [pos~"det"]? [base~"(lundi|mardi|mercredi|jeudi|vendredi|samedi|dimanche)"]? [base~"(soir|matin|midi|après-midi|nuit)"]? [orth~"\d+(er|eme)?"] [base~"(janvier|février|mars|avril|mai|juin|juillet|août|septembre|octobre|novembre|décembre)"] [orth~"(18|19|20)\d\d"]?;
+Eval:   group(NP, 5);
+
+Rule "DATE"
+Match:  [orth~"\d+(e|er|eme)?"]? [base~"(janvier|février|mars|avril|mai|juin|juillet|août|septembre|octobre|novembre|décembre)"] [orth~"(18|19|20)\d\d"];
+Eval:   group(NP, 3);
+
+Rule "DATE"
+Left:   [pos~"prep"];
+Match:  [orth~"(18|19|20)\d\d"];
+Eval:   group(NP, 2);
+
+Rule "DATE"
+Match:  [orth~"(18|19|20)\d\d"];
+Right:   [pos!~"subst|name"];
+Eval:   group(NP, 1);
+
+Rule "Ordinal"
+Match: [orth~"\d+(e|er|eme|\.)"];
+Eval:  add("det", base, 1);
+       delete(pos!~"det" ,1);
+
+
+##############################################3
+
+Rule "VN: General VN"
+Match:  ([pos~"(perspron|posspron)"]|[base~"le"])* [base~"ne"]? [base~"y"]? [base~"avoir"] [pos~"adv"]* [pos~"ppas"] [pos~"adv"]* ([pos~"verb" && mood~"inf"]|[pos~"ppas"]);
+Eval:   group(VN, 4);
+
+Rule "VN: General VN"
+Match:  ([pos~"(perspron|posspron)"]|[base~"le"])* [base~"ne"]? [base~"y"]? [base~"faire"] [pos~"adv"]* ([pos~"verb" && mood~"inf"]|[pos~"ppas"]);
+Eval:   group(VN, 4);
+
+Rule "VN: General VN"
+Match:  ([pos~"(perspron|posspron)"]|[base~"le"])* [base~"ne"]? [base~"y"]? [orth~"(se|s')"/i]? [pos~"verb"] [pos~"postpron"]* ([base~"(et|out)"]? [pos~"(adv|advneg)"]? [pos~"ppas"])*;
+Eval:   group(VN, 5);
+
+Rule "VN: present participle"
+Match:  ([pos~"perspron"])* [pos~"advneg"]? [pos~"pcon"];
+Eval:   group(VN, 3);
+
+Rule "VN: past participle"
+Match:  ([pos~"perspron"])+ [pos~"advneg"]? [pos~"ppas"];
+Eval:   group(VN, 3);
+
+Rule "AP1: general AP"
+Left:	[pos~"(subst|name)"];
+Match:  [pos~"(adv|advneg)"]* [pos~"adj|card"] [pos~"(adv|advneg)"]*;
+Eval:   group(AP, 3);
+
+Rule "AP2: general AP"
+Left:	[type="AP"];
+Match:  [pos~"adv"]* [pos~"adj|card"] [pos~"adv"]*;
+Eval:   group(AP, 3);
+
+Rule "AP2: general AP"
+Left:	[type="AP"] [base~","];
+Match:  [pos~"adv"]* [pos~"adj|card"] [pos~"adv"]*;
+Eval:   unify(number gender, 1, 4);
+        group(AP, 4);
+
+Rule "AP2: coord AP"
+Left:   ([type="AP"]|[type="COORD" && head=[pos~"adj|card"]]);
+Match:  ([base~","]|[base~"(et|ou)"]) [type="AP"];
+Eval:   unify(number gender, 1, 3);
+        group(COORD, 3);
+
+Rule "AP with quotes"
+Match:  [orth~"\""] [type="AP"] [orth~"\""];
+Eval:   group(AP, 2);
+
+# LEVEL 1 - BEGIN
+
+Rule "VPinf L1"
+Match: ([orth~"de|d'"/i]|[pos~"prep"])? ([pos~"neg"] [pos~"advneg"])? [type="VN" && head=[mood~"inf"]] [pos~"adv"]*;
+Eval: group(VPinf, 3);
+
+Rule "NP L1"
+Match:  ([pos~"det" && orth!~"des"/i]|[pos~"card"])* [pos~"adv"]* [pos~"adj"]* ([pos~"subst"]|[pos~"name"]) ([type="AP"])*;
+Eval:   group(NP, 4);
+
+Rule "NP L1"
+Match:  [pos~"(adv|advneg)"]? [pos~"det" && orth!~"des"/i]? [pos~"pron|posspron|perspron|relpron|intpron"] [pos~"adv"]?;
+Eval:   group(NP, 3);
+
+# de - begin
+
+Rule "NP + NE"
+Match:  [type="NP" && head=[pos!~"(pron|relpron|det|posspron|perspron)"]] [type="NP" && head=[pos~"(name|card)"]]+;
+Eval:   attach(NP, 1);
+
+Rule "PP de 1"
+Match:  [pos~"adv" && base!~".*ment"]? [orth~"(de|des|du|d')"/i]  [type="NP"];
+Right:  ([base~"et"]?  [orth!~"de|des|du|d'"] | se | [type="VN"] | [pos~"interp"] );
+Eval:   group(PP, 2);
+
+Rule "PP: et de PP"
+Left:   ([type="PP"]|[type="COORD" && head=[orth~"(de|du|des|d')"]]);
+Match:  ([base~","]|[base~"(et|ou)"]) [type="PP"];
+Eval:   group(COORD, 3);
+
+Rule "PP: PP COORD"
+Match:  [type="PP"] [type="COORD" && head=[orth~"(de|des|du|d')"]]+;
+Eval:   attach(PP, 1);
+
+Rule "NP + de 1"
+Match:  [type="NP" && head=[pos~"(subst|name|pron)"]] [base~","]? [type="PP"];
+Eval:   attach(NP, 1);
+
+Rule "NP with quotes"
+Match:  [base~"\""] [type="NP"] [base~"\""];
+Eval:   group(NP, 2);
+
+Rule "PP de 2"
+Match:  [pos~"adv" && base!~".*ment"]? [orth~"(de|des|du|d')"/i] [type="NP"];
+Right:  ([base~"et"]? [orth!~"(de|des|du|d')"/i] | [type="VN"] | [pos~"interp"] | se );
+Eval:   group(PP, 2);
+
+Rule "PP: et de PP"
+Left:   ([type="PP"]|[type="COORD" && head=[orth~"(de|du|des|d')"/i]]);
+Match:  ([base~","]|[base~"(et|ou)"]) [type="PP"];
+Eval:   group(COORD, 3);
+
+Rule "PP: PP COORD"
+Match:  [type="PP"] [type="COORD" && head=[orth~"(de|des|du|d')"/i]]+;
+Eval:   attach(PP, 1);
+
+Rule "NP + de 2"
+Match:  [type="NP" && head=[pos~"(subst|name|pron|perspron)"]] [base~","]? [type="PP"];
+Eval:   attach(NP, 1);
+
+Rule "NP with quotes"
+Match:  [base~"\""] [type="NP"] [base~"\""];
+Eval:   group(NP, 2);
+
+Rule "PP de 3"
+Match:  [pos~"adv" && base!~".*ment"]? [orth~"(de|des|du|d')"/i] [type="NP"];
+Right:  ([base~"et"]? [orth!~"(de|des|du|d')"/i] | [type="VN"] | [pos~"interp"] | se );
+Eval:   group(PP, 2);
+
+Rule "NP + de 3"
+Match:  [type="NP" && head=[pos~"(subst|name|pron|perspron)"]] [base~","]? [type="PP"];
+Eval:   attach(NP, 1);
+
+Rule "PP de (backup)"
+Match:  [pos~"adv" && base!~".*ment"]? [orth~"(de|des|du|d')"/i] [type="NP"] ([pos~"adv"]? [orth~"(de|des|du|d')"/i] [type="NP"])*;
+Eval:   group(PP, 2);
+
+Rule "NP + de (backup)"
+Match:  [type="NP" && head=[pos~"(subst|name)"]] [base~","]? [type="PP"];
+Eval:   attach(NP, 1);
+
+Rule "NP with quotes"
+Match:  [base~"\""] [type="NP"] [base~"\""];
+Eval:   join(NP, 2);
+
+Rule "NP with par"
+Match:  [base~"\("] [type="NP"] [base~"\)"];
+Eval:   join(NP, 2);
+
+Rule "NE + NE"
+Match:  [type="NP" && head=[pos~"(name|card)"]] [type="NP" && head=[pos~"(name|card)"]]+;
+Eval:   join(NP, 1);
+
+Rule "NP + NE"
+Match:  [type="NP" && head=[pos!~"(pron|relpron|det|posspron|perspron)"]] [type="NP" && head=[pos~"name"]]+;
+Eval:   attach(NP, 1);
+
+# de - end
+
+Rule "NP L1: coord NP"
+Left:   ([type="NP"]|[type="COORD" && head=[pos~"subst"]]);
+Match:  [base~"(et|ou)"] [type="NP"];
+Eval:   unify(number, 1, 3);
+        group(COORD, 3);
+
+Rule "NP: NP COORD"
+Match:  [type="NP"] [type="COORD" && head=[pos~"(subst|name)"]]+;
+Eval:   unify(number, 1 , 2);
+        attach(NP, 1);
+
+Rule "PP L1"
+Match:  ([pos~"prep"]|[base~"de"])+ [type="NP"];
+Eval:   group(PP, 1);
+
+Rule "AP1: general AP"
+Match:  [pos~"adv" && base!~".*ment"]* [pos~"adj"] [pos~"adv"]* ;
+Eval:   group(AP, 2);
+
+Rule "AP with quotes"
+Match:  [base~"\""] [type="AP"] [base~"\""];
+Eval:   group(AP, 2);
+
+Rule "PP: de + AP";
+Match:  ([pos~"prep"]|[base~"de"])+ [type~"AP"];
+Eval:   group(PP, 1);
+
+## LEVEL 2 - BEGIN
+
+Rule "VPinf L2: "
+Match: [type="VPinf"] ([type="NP" && head=[pos~"(name|subst)"]]|[type="PP"]|[type="AP"])+;
+Eval:  attach(VPinf, 1);
+
+Rule "VPpart L2: "
+Match: ([orth~"de|d'"/i]|[pos~"prep"]|[pos~"pron|perspron"])? [pos~"adv"]? ([pos~"(ppas|pcon)"]|[type="VN" head=[pos~"(pcon|ppas)"]]) ([type="NP" && head=[pos!~"relpron"]]|[type="PP"]|[type="AP"]|[type="VPinf"]|[type="VPpart"])*;
+Eval:  group(VPpart, 3);
+
+Rule "VPinf L2: "
+Match: [type="VPinf"] ([type="NP" && head=[pos!~"relpron"]]|[type="PP"]|[type="AP"]|[type="VPpart"])+;
+Eval:  attach(VPinf, 1);
+
+Rule "NP L2"
+Match:  [type="NP" && head=[pos~"(subst|name)"]] ([type="AP"]|[type="VPinf"]|[type="VPpart"]|[type="PP"])+;
+Eval:   attach(NP, 1);
+
+Rule "PP L2"
+Match:  ([pos~"prep"]|[orth~"(de|des|du|d')"/i])+ [pos~"det"]* ([type="NP"|[type="PP"]);
+Eval:   group(PP, 1);
+
+Rule "NP with quotes"
+Match:  ([pos~"det"]|[pos~"card"])? [pos~"(adv|advneg)"]* ([pos~"(adj|pron)"])*  [base~"\""] [type="NP"] [base~"\""];
+Eval:   group(NP, 5);
+
+Rule "NP: det AP";
+Match:  [pos~"det"]+ [type="AP"]+;
+Eval:   attach(NP, 2);
+
+Rule "NP: det";
+Match:  [pos~"det"]+;
+Eval:   group(NP, 1);
+
+Rule "come ..."
+Match:  [base~"comme"] ([type="NP"]|[type="PP"]);
+Eval:   group(PP, 1);
+
+Rule "NP + VPinf"
+Match:  [type="NP" && head=[pos!~"pron|relpron|det|posspron|perspron"]] ([type="VPinf"]|[type="VPpart"])+;
+Eval:   attach(NP, 1);
+
+Rule "AP + VPinf"
+Match:  [type="AP"] ([type="VPinf"]|[type="VPpart"])+;
+Eval:   attach(AP, 1);
+
+Rule "Coord"
+Match:  ([base~"(et|ou|ni)" && pos~"conj"]) ([type="NP" && head=[pos!~"(pron|relpron|det|posspron|perspron)"]]|[type="PP"]|[type="VPinf"]|[type="VPpart"]|[type="AP"]);
+Eval:   group(COORD, 2);
+
+Rule "NP + Coord(NP)"
+Match:  [type=NP] [type="COORD"]+;
+Right:  [pos!~"relpron"];
+Eval:   attach(NP, 1);
+
+Rule "PP + Coord(PP)"
+Match:  [type=PP] [type="COORD" && head=[pos~"prep"]]+;
+Right:  [pos!~"relpron"];
+Eval:   attach(PP, 1);
+
+# LEVEL 3 - BEGIN
+
+Rule "VPinf L3"
+Match:  [type="VPinf"] ([type="NP" && head=[pos!~"relpron"]]|[type="PP"]|[type="VPpart"]|[type="AP"]|[type="VPinf"])+;
+Eval:   attach(VPinf, 1);
+
+Rule "NP L3"
+Match:  [type="NP" && head=[pos~"(subst|name)"]] ([type=AP]|[type="VPinf"]|[type="VPpart"]|[type="PP"]|[type="COORD"])+;
+Eval:   attach(NP, 1);
+
+Rule "PP L3"
+Match:  ([pos~"prep"]|[orth~"(de|des|du|d')"])+ [type="NP"];
+Eval:   group(PP, 1);
+
+Rule "PP L3"
+Match:  [type="PP"] ([type="VPpart"]|[type="COORD"])+;
+Eval:   attach(PP, 1);
+
+Rule "AdvP: general AdvP"
+Match:  [pos~"(adv|advneg)"] [pos~"adv"]+;
+Eval:   group(AdP, 2);
+
+Rule "SRel L1"
+Match:  [base~","]? [base~"comme"]? ([pos~"relpron"]|[type="NP" && head=[pos~"relpron"]]) [pos~"adv|advneg"]* [type="NP"]? ([pos~"adv"]|[pos~"advneg"]|[type="AdP"])* [type="VN"] ([pos~"adv"]|[pos~"advneg"]|[type="AdP"])* ([type="VPinf"]|[type="AP"]|[type="VPpart"]|[type="PP"]|[type="NP"])*;
+Eval:   group(Srel, 3);
+
+Rule "Ssub L1"
+Match:  [base~","]? ([pos~"csub"]|[base~"si"]|[base~"comme"]|[base~"que" && pos~"conj"]) [type="NP"]? ([pos~"adv"]|[pos~"advneg"]|[type="AdP"])*  [type="VN"] ([pos~"adv"]|[pos~"advneg"]|[type="AdP"])*  ([type="VPinf"]|[type="AP"]|[type="VPpart"]|[type="PP"]|[type="NP"])*;
+Eval:   group(Ssub, 5);
+
+
+Rule "NP L3.1"
+Match:  [type="NP"] ([type=AP]|[type="VPpart"]|[type="Srel"]|[type="COORD"])+;
+Eval:   attach(NP, 1);
+
+Rule "VPinf L2: "
+Match: [type="VPinf"] ([base~","]? ([type="NP" && head=[pos!~"relpron"]]|[type="PP"]|[type="AP"]|[type="Srel"]|[type="Ssub"]))+;
+Eval:  attach(VPinf, 1);
+
+Rule "VPpart L2: "
+Match: [type="VPpart"] ([base~","]? ([type="Srel"]|[type="VPinf"]|[type="Ssub"]))+;
+Eval:  attach(VPpart, 1);
+
+
+Rule "NP L3.1"
+Match:  [type="NP"] ([type=AP]|[type="VPpart"]|[type="Srel"]|[type="COORD"])+;
+Eval:   attach(NP, 1);
+
+Rule "NP L3.2"
+Match:  [type="NP" && head=[pos!~"adj"]] ([type="PP"])+;
+Eval:   attach(NP, 1);
+
+Rule "NP L3.3"
+Match:  [type="AP"]+ [type="NP"];
+Eval:   join(NP, 2);
+
+Rule "PP L3"
+Match:  [type="PP"] ([type="VPpart"]|[type="COORD"]|[type="Srel"])+;
+Eval:   attach(PP, 1);
+
+Rule "AP L3"
+Match:  [type="AP"] ([type="AdP"]|[type="PP"]|[type="COORD"])+;
+Eval:   attach(AP, 1)
+
+Rule "Coord"
+Match:  [base~"mais"] [base~","]? ([type="NP"]|[type="PP"]) ([pos~"adv"]|[pos~"advneg"]|[type="AdP"])* [type="VN"] ([pos~"adv"]|[pos~"advneg"]|[type="AdP"])* ([base~","]? ([type="VPinf"]|[type="AP"]|[type="VPpart"]|[type="PP"]|[type="NP"]))*;
+Eval:   group(COORD, 5);
+
+Rule "Coord"
+Match:  [base~","]? [base~"et|ou"] [type="Ssub"];
+Eval:   group(COORD, 3);
+
+##### for translating #####
+
+
+#Rule "SENT"
+#Left:   sb;
+#Match:  ([type="NP"]|[type="PP"])* ([pos~"adv"]|[pos~"advneg"]|[type="AdP"])* [type="VN"] ([pos~"adv"]|[pos~"advneg"]|[type="AdP"])* ( [base~","]? ([type="NP"]|[type="PP"]|[type="VPinf"]|[type="VPpart"]) )* [pos~"interp"]?;
+#Right:  se;
+#Eval:   group(Ssub, 4);
+#
+#
+#Rule "SENT"
+#Left:   sb;
+#Match: ([pos~".*"]|[type="AP"]|[type="AdP"]|[type="COORD"]|[type="NP"]|[type="PP"]|[type="Srel"]|[type="Ssub"]|[type="Sint"]|[type="VN"]|[type="VPinf"]|[type="VPpart"])+;
+#Right:  se;
+#Eval:   group(Ssub, 2);
+
+
+Rule "Ssub L1"
+Left:   [base~"(,|:|;)"]
+Match:  ([pos!~"interp"]|[type="AP"]|[type="AdP"]|[type="COORD"]|[type="NP"]|[type="PP"]|[type="Srel"]|[type="Ssub"]|[type="Sint"]|[type="VN"]|[type="VPinf"]|[type="VPpart"])*  [type="VN"] ([pos!~"interp"]|[type="AP"]|[type="AdP"]|[type="COORD"]|[type="NP"]|[type="PP"]|[type="Srel"]|[type="Ssub"]|[type="Sint"]|[type="VN"]|[type="VPinf"]|[type="VPpart"])+;
+Right:  ([base~"(,|:|;|.)"] | [type="COORD"]|[type="Ssub"]|[type="Srel"]);
+Eval:   group(Ssub, 3);
+
+Rule "Ssub L1"
+Left:   [base~"(,|:|;)"]
+Match:  ([pos!~"interp"]|[type="AP"]|[type="AdP"]|[type="COORD"]|[type="NP"]|[type="PP"]|[type="Srel"]|[type="Ssub"]|[type="Sint"]|[type="VN"]|[type="VPinf"]|[type="VPpart"])+  [type="VN"] ([pos!~"interp"]|[type="AP"]|[type="AdP"]|[type="COORD"]|[type="NP"]|[type="PP"]|[type="Srel"]|[type="Ssub"]|[type="Sint"]|[type="VN"]|[type="VPinf"]|[type="VPpart"])*;
+Right:  ([base~"(,|:|;|.)"] | [type="COORD"]|[type="Ssub"]|[type="Srel"]);
+Eval:   group(Ssub, 3);
+
+Rule "SENT"
+Left:   sb;
+Match:  ([type="NP"]|[type="PP"])* ([pos~"adv"]|[pos~"advneg"]|[type="AdP"])* [type="VN"] ([pos~"adv"]|[pos~"advneg"]|[type="AdP"])* ( [base~","]? ([type="NP"]|[type="PP"]|[type="VPinf"]|[type="VPpart"]) )* [pos~"interp"]?;
+Right:  se;
+Eval:   group(Ssub, 4);
+
+
+Rule "SENT"
+Left:   sb;
+Match: ([pos~".*"]|[type="AP"]|[type="AdP"]|[type="COORD"]|[type="VN"]|[type="NP"]|[type="PP"]|[type="Srel"]|[type="Ssub"]|[type="VPinf"]|[type="VPpart"])* [type="VN"] ([pos~".*"]|[type="AP"]|[type="AdP"]|[type="COORD"]|[type="NP"]|[type="PP"]|[type="Srel"]|[type="VN"]|[type="Ssub"]|[type="VPinf"]|[type="VPpart"])*;
+Right:  se;
+Eval:   group(Ssub, 3);
+
+##### for translating #####
+
