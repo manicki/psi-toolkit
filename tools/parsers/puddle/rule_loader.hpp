@@ -89,7 +89,9 @@ class RuleLoader {
         bool compileAttributeCondition(std::string &key,
                 std::string &comparisonOperator, std::string &value,
                 TokenPatterns &tokenPatterns);
-        std::string compileOrthCondition(std::string &comparisonOperator, std::string &value, bool icase);
+        std::string compileOrthCondition(std::string &comparisonOperator,
+                std::string &value, bool icase,
+                NegativePatternStrings &negativePatterns);
         //std::string interpretationsToString(Interpretations interps);
         std::string generateTokenPatternsString(TokenPatterns tokenPatterns,
                 NegativePatternStrings &negativePatterns);
