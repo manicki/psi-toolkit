@@ -403,5 +403,51 @@ public:
 
     }
 
+    void testEdgesTagsCombining() {
+        //preparing lattice
+        Lattice lattice("ananas");
+        lattice.addSymbols(lattice.getFirstVertex(), lattice.getLastVertex());
+        LayerTagCollection raw_tag
+            = lattice.getLayerTagManager().createSingletonTagCollection("symbol");
+        LayerTagCollection token_tag
+            = lattice.getLayerTagManager().createSingletonTagCollection("token");
+        LayerTagCollection lemma_tag
+            = lattice.getLayerTagManager().createSingletonTagCollection("lemma");
+        LayerTagMask rawMask = lattice.getLayerTagManager().getMask(raw_tag);
+        LayerTagMask tokenMask = lattice.getLayerTagManager().getMask(token_tag);
+        LayerTagMask lemmaMask = lattice.getLayerTagManager().getMask(lemma_tag);
+        LayerTagMask tokenOrLemmaMask = createUnion(tokenMask, lemmaMask);
+
+        Lattice::VertexDescriptor pre_ananas = lattice.getFirstVertex();
+        Lattice::VertexDescriptor post_ananas = lattice.getVertexForRawCharIndex(6);
+
+        AnnotationItem word_token("word");
+        AnnotationItem blank_token("blank");
+
+        Lattice::EdgeSequence::Builder ananas_builder;
+        for (int i = 0; i < 6; i ++) {
+            ananas_builder.addEdge(lattice.firstOutEdge(
+                        lattice.getVertexForRawCharIndex(i),
+                        rawMask
+                        ));
+        }
+        lattice.addEdge(pre_ananas, post_ananas, word_token, token_tag, ananas_builder.build());
+        lattice.addEdge(pre_ananas, post_ananas, word_token, lemma_tag, ananas_builder.build());
+
+        Lattice::EdgeDescriptor edge;
+        Lattice::EdgesSortedBySourceIterator tokenIter = lattice.edgesSortedBySource(tokenOrLemmaMask);
+        TS_ASSERT(tokenIter.hasNext());
+        edge = tokenIter.next();
+        std::list<std::string> tagNames
+            = lattice.getLayerTagManager().getTagNames(lattice.getEdgeLayerTags(edge));
+        TS_ASSERT_EQUALS(tagNames.size(), 2);
+        std::list<std::string>::iterator tni = tagNames.begin();
+        TS_ASSERT_EQUALS(*tni, "token");
+        ++tni;
+        TS_ASSERT(tni != tagNames.end());
+        TS_ASSERT_EQUALS(*tni, "lemma");
+
+    }
+
 
 };
