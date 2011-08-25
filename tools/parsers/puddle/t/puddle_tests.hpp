@@ -238,6 +238,8 @@ public:
 
         //parsing
         TS_ASSERT(puddle->parse(lattice));
+
+        delete puddle;
     }
 
 //    void testPuddleUnify() {
@@ -425,6 +427,7 @@ public:
 //        TS_ASSERT(avi == av.end());
 //        TS_ASSERT(!tokenIter.hasNext());
 //
+//        delete puddle
 //    }
 
 //    void testPuddleDelete() {
@@ -612,6 +615,7 @@ public:
 //        TS_ASSERT(avi == av.end());
 //        TS_ASSERT(!tokenIter.hasNext());
 //
+//        delete puddle;
 //    }
 
     void testPuddleAdd() {
@@ -841,6 +845,7 @@ public:
         TS_ASSERT(avi == av.end());
         TS_ASSERT(!tokenIter.hasNext());
 
+        delete puddle;
     }
 
     void testPuddleGroup() {
@@ -1079,6 +1084,7 @@ public:
         TS_ASSERT( avi == av.end() );
         TS_ASSERT(!parseIter.hasNext());
 
+        delete puddle;
     }
 
 //    void testPuddleJoin() {
@@ -1318,6 +1324,7 @@ public:
 //        TS_ASSERT( avi == av.end() );
 //        TS_ASSERT(!parseIter.hasNext());
 //
+//        delete puddle;
 //    }
 
 //    void testPuddleAttach() {
@@ -1557,6 +1564,7 @@ public:
 //        TS_ASSERT( avi == av.end() );
 //        TS_ASSERT(!parseIter.hasNext());
 //
+//        delete puddle;
 //    }
 
 //    void testPuddleTransform() {
@@ -1755,6 +1763,7 @@ public:
 //        TS_ASSERT( avi == av.end() );
 //        TS_ASSERT(!parseIter.hasNext());
 //
+//        delete puddle;
 //    }
 
     void testPuddleSyntok() {
@@ -2178,6 +2187,7 @@ public:
         TS_ASSERT(avi == av.end());
         TS_ASSERT(!parseIter.hasNext());
 
+        delete puddle;
     }
 
 };

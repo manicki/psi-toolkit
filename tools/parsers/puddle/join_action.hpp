@@ -26,7 +26,7 @@ class JoinAction : public Action
                 std::vector<int> matchedTokensSize);
         //bool test(Entities entities, int currentEntity, std::vector<int> matchedTokensSize);
         //bool test(ParseGraphPtr, Lattice &lattice, int currentEntity, std::vector<int> matchedTokensSize);
-        bool test(Lattice &lattice, int currentEntity,
+        bool test(Lattice &lattice, int,
                 std::vector<int> matchedTokensSize);
         std::string getGroup();
         int getHead();

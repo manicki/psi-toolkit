@@ -10,6 +10,114 @@ namespace bonsai
 namespace puddle
 {
 
+    Annotator* Puddle::Factory::doCreateAnnotator(
+            const boost::program_options::variables_map& options) {
+
+        TagsetLoader tagset_loader;
+        RuleLoader rule_loader;
+        //@todo: tu laduje reguly i tagset
+        TagsetPtr tagset;
+        if (options.count("tagset")) {
+            std::string tagsetFilename = options["tagset"].as<std::string>();
+            tagset = tagset_loader.load(tagsetFilename);
+            if (tagset->size() == 0) {
+                std::cerr << "Tagset not loaded." << std::endl;
+                //@todo: wyjatek
+            //    return 1;
+            }
+            //tagger->setTagset(tagset);
+            //parser.logTagset();
+            rule_loader.setTagset(tagset);
+        } else {
+            std::cerr << "Tagset not loaded." << std::endl;
+            //return 1;
+            //@todo: wyjatek
+        }
+
+        RulesPtr rules;
+        if (options.count("rules")) {
+            std::string rulesFilename = options["rules"].as<std::string>();
+            rules = rule_loader.readFromFile(rulesFilename);
+            if (rules->size() == 0) {
+                std::cerr << "Rules not loaded. " << std::endl;
+                //return 1;
+                //@todo: wyjatek
+            }
+            //parser.logRules();
+        } else {
+            std::cerr << "Rules not loaded." << std::endl;
+            //return 1;
+            //@todo: wyjatek
+        }
+        Puddle *puddle = new Puddle(tagset, rules);
+
+        return puddle;
+    }
+
+    boost::program_options::options_description Puddle::Factory::doOptionsHandled() {
+        boost::program_options::options_description desc("Options");
+        desc.add_options()
+            ("file,f", boost::program_options::value<std::string>(), "input XML file")
+            ("tagset,t", boost::program_options::value<std::string>(), "tagset file")
+            ("description", boost::program_options::value<std::string>(), "description file")
+            ("rules,r", boost::program_options::value<std::string>(), "rules file")
+            ("dictionary,d", boost::program_options::value<std::string>(), "inflected forms dictionary")
+            ("model,m", boost::program_options::value<std::string>(), "Input model for tagging")
+            ("verbose", "talks a lot on stderr")
+            ("constituents", "constituents only")
+            ("tagged", "pre-tagged input text")
+            ("no-syntok", "do not include syntok in output")
+            ("dot", "dot graph only")
+            ("tagset-log", boost::program_options::value<std::string>(), "tagset log file path")
+            ("rules-log", boost::program_options::value<std::string>(), "rules log file path")
+            ("help", "prints this information")
+            ;
+        return desc;
+    }
+
+    std::string Puddle::Factory::doGetName() {
+        return "puddle";
+    }
+
+    std::list<std::list<std::string> > Puddle::Factory::doRequiredLayerTags() {
+        return std::list<std::list<std::string> >();
+    }
+
+    std::list<std::list<std::string> > Puddle::Factory::doOptionalLayerTags() {
+        return std::list<std::list<std::string> >();
+    }
+
+    std::list<std::string> Puddle::Factory::doProvidedLayerTags() {
+        std::list<std::string> layerTags;
+        layerTags.push_back("parse");
+        return layerTags;
+    }
+
+    LatticeWorker* Puddle::doCreateLatticeWorker(Lattice& lattice) {
+        return new Worker(*this, lattice);
+    }
+
+    Puddle::Worker::Worker(Puddle& processor, Lattice& lattice):
+        LatticeWorker(lattice), processor_(processor) {
+            //@todo: tu robi obiekt puddle
+        }
+
+    void Puddle::Worker::doRun() {
+        std::cerr << "JADE" << std::endl;
+
+    //    LayerTagMask symbolMask = lattice_.getLayerTagManager().getMask("symbol");
+
+        processor_.parse(lattice_);
+    //    TpTokenCutter tokenCutter;
+
+     //   lattice_.runCutter(tokenCutter, symbolMask);
+    }
+
+    std::string Puddle::doInfo() {
+        return "puddle shallow parser";
+    }
+
+
 Puddle::Puddle()
 {
 //    ruleCompiler = new RuleCompiler;
@@ -35,6 +143,28 @@ Puddle::Puddle()
     tagsetLogFilename = "";
     rulesLogFilename = "";
 //    latticeWrapper = LatticeWrapperPtr( new LatticeWrapper() );
+}
+
+Puddle::Puddle(TagsetPtr tagset_, RulesPtr rules_) {//,
+        //const boost::program_options::variables_map& options) {
+    ruleMatcher = new RuleMatcher;
+    syntok = true;
+    verbose = false;
+    norepeats = false;
+
+    describe = false;
+
+    ruleModifier = new RuleModifier;
+
+    tagsetLogFilename = "";
+    rulesLogFilename = "";
+
+    this->tagset = tagset_;
+    describe = tagset_->containsDesc();
+    ruleMatcher->setTagset(tagset_);
+
+    this->rules = rules_;
+    ruleMatcher->setRules(rules_);
 }
 
 Puddle::~Puddle()

@@ -66,9 +66,6 @@ int main(int argc, char **argv) {
             std::cerr << (*ir)->log();
             std::cerr << std::endl;
         }
-        std::cerr << "global: " << std::locale().name() << std::endl;
-        std::cerr << "classic: " << std::locale::classic().name() << std::endl;
-        std::cerr << "pref: " << std::locale("").name() << std::endl;
         puddle->setRules(rules);
         //parser.logRules();
     } else {

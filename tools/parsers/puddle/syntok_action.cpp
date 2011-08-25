@@ -419,7 +419,7 @@ bool SyntokAction::apply(Lattice &lattice, int currentEntity,
 
 //bool SyntokAction::test(Entities entities, int currentEntity, std::vector<int> matchedTokensSize)
 //bool SyntokAction::test(ParseGraphPtr pg, Lattice &lattice, int currentEntity,
-bool SyntokAction::test(Lattice &lattice, int currentEntity,
+bool SyntokAction::test(Lattice &, int,
         std::vector<int> matchedTokensSize) {
     //int sum = 0;
     for (std::vector<int>::iterator i = matchedTokensSize.begin();

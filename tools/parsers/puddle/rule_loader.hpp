@@ -37,7 +37,7 @@ typedef std::vector<TokenPattern> TokenPatterns;
 
 class RuleLoader {
     public:
-        RuleLoader();
+        RuleLoader();//const boost::program_options::variables_map& options);
 //        RuleLoader(std::string &filename);
         ~RuleLoader();
 
@@ -47,7 +47,7 @@ class RuleLoader {
 
 //        void logRulesToFile(std::string &filename);
 
-        void setVerbose();
+        void setVerbose(); //@todo: te do wyrzutu chyba
         void setSyntok();
 
         RulePtr compileRule(std::string ruleString); //, LatticeWrapperPtr latticeWrapper);
@@ -128,7 +128,7 @@ class RuleLoader {
         PatternPtr regRPar;
         PatternPtr regAlt, regPlus, regAsterisk, regOpt;
 
-        void initProperties();
+        void initProperties();//const boost::program_options::variables_map& options);
         void initPatterns();
 };
 

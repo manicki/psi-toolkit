@@ -19,6 +19,10 @@
 //#include "parse_converter.hpp"
 #include "rule_modifier.hpp"
 #include "lattice_wrapper.hpp"
+#include "tagset_loader.hpp"
+
+#include "annotator.hpp"
+#include "annotator_factory.hpp"
 
 namespace poleng
 {
@@ -29,10 +33,26 @@ namespace bonsai
 namespace puddle
 {
 
-class Puddle
-{
+class Puddle : public Annotator {
     public:
+        class Factory : public AnnotatorFactory {
+            virtual Annotator* doCreateAnnotator(
+                    const boost::program_options::variables_map& options);
+
+            virtual boost::program_options::options_description doOptionsHandled();
+
+            virtual std::string doGetName();
+
+            virtual std::list<std::list<std::string> > doRequiredLayerTags();
+
+            virtual std::list<std::list<std::string> > doOptionalLayerTags();
+
+            virtual std::list<std::string> doProvidedLayerTags();
+        };
+
         Puddle();
+        Puddle(TagsetPtr tagset_, RulesPtr rules_);//,
+                //const boost::program_options::variables_map& options);
         virtual ~Puddle();
         virtual void setTagset(bonsai::puddle::TagsetPtr tagset_); //@todo: po kiego te funkcje sa wirtualne?
         //bool loadTagset(std::string filename);
@@ -93,6 +113,19 @@ class Puddle
 //        LatticeWrapperPtr latticeWrapper;
 
 //        ParseGraphPtr graph;
+    private:
+        class Worker : public LatticeWorker {
+            public:
+                Worker(Puddle& processor, Lattice& lattice);
+            private:
+                virtual void doRun();
+                Puddle& processor_;
+        };
+
+        virtual LatticeWorker* doCreateLatticeWorker(Lattice& lattice);
+
+        virtual std::string doInfo();
+
 };
 
 typedef boost::shared_ptr<Puddle> PuddlePtr;

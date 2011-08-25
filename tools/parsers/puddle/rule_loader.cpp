@@ -28,13 +28,13 @@ namespace bonsai
     namespace puddle
     {
 
-RuleLoader::RuleLoader() {
+RuleLoader::RuleLoader() {//const boost::program_options::variables_map& options) {
 //    tagset = new Tagset;
 //    rules = new Rules;
 //    rules->clear();
     rules = RulesPtr( new Rules());
 
-    initProperties();
+    initProperties();//options);
     initPatterns();
 //    verbose = false;
 //
@@ -2210,7 +2210,7 @@ std::string RuleLoader::generateTokenPatternsString(TokenPatterns tokenPatterns,
 //}
 
 ActionsPtr RuleLoader::compileRuleAction(std::string &matched, int ruleLeftSize,
-        int ruleMatchSize, int ruleRightSize, std::string ruleName, bool &repeat) {//,
+        int ruleMatchSize, int, std::string ruleName, bool &repeat) {//,
 //        LatticeWrapperPtr latticeWrapper) {
 
 //    boost::u32regex regEval = boost::make_u32regex("^Eval\\s*:\\s*");

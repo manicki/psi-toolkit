@@ -368,7 +368,7 @@ bool JoinAction::apply(Lattice &lattice, int currentEntity,
 
 //bool JoinAction::test(Entities entities, int currentEntity, std::vector<int> matchedTokensSize)
 //bool JoinAction::test(ParseGraphPtr pg, Lattice &lattice, int currentEntity,
-bool JoinAction::test(Lattice &lattice, int currentEntity,
+bool JoinAction::test(Lattice &lattice, int,
         std::vector<int> matchedTokensSize) {
     //if (entities.size() < head)
     //if ( (pg->num_vertices() - 1) < head ) {

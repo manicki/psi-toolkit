@@ -12,6 +12,9 @@
 #if HAVE_JAVA
 #include "morfologik.hpp"
 #endif
+#if HAVE_PUDDLE
+#include "puddle.hpp"
+#endif
 
 MainFactoriesKeeper::MainFactoriesKeeper() {
     keeper_.takeProcessorFactory(new TxtLatticeReader::Factory());
@@ -22,6 +25,9 @@ MainFactoriesKeeper::MainFactoriesKeeper() {
 #endif
 #if HAVE_JAVA
 	  keeper_.takeProcessorFactory(new LemmatizerAnnotator<Morfologik>::Factory());
+#endif
+#if HAVE_PUDDLE
+      keeper_.takeProcessorFactory(new poleng::bonsai::puddle::Puddle::Factory());
 #endif
 }
 

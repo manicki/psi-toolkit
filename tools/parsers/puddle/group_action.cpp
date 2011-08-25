@@ -324,11 +324,11 @@ bool GroupAction::apply(Lattice &lattice, int currentEntity,
 
 //bool GroupAction::test(Entities entities, int currentEntity, std::vector<int> matchedTokensSize)
 //bool GroupAction::test(ParseGraphPtr pg, Lattice &lattice, int currentEntity,
-bool GroupAction::test(Lattice &lattice, int currentEntity,
+bool GroupAction::test(Lattice &lattice, int,
         std::vector<int> matchedTokensSize) {
     //if (entities.size() < head)
     //if ( (pg->num_vertices() - 1) < head) { //the last vertex is only the 'in-vertex', so it is not taken into consideration
-    if ( (lattice.getLastVertex()) < head) {
+    if ( ( (size_t) lattice.getLastVertex() ) < head) {
         return false;
     }
     if (matchedTokensSize[head - 1] == 0)

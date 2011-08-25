@@ -25,7 +25,7 @@ class AttachAction : public Action
         bool apply(Lattice &lattice, int currentEntity, std::vector<int> matchedTokensSize);
         //bool test(Entities entities, int currentEntity, std::vector<int> matchedTokensSize);
         //bool test(ParseGraphPtr pg, Lattice &lattice, int currentEntity, std::vector<int> matchedTokensSize);
-        bool test(Lattice &lattice, int currentEntity, std::vector<int> matchedTokensSize);
+        bool test(Lattice &lattice, int, std::vector<int> matchedTokensSize);
         std::string getGroup();
         int getHead();
         void setGroup(std::string aGroup);

@@ -30,8 +30,7 @@ class SyntokAction : public Action
                 std::vector<int> matchedTokensSize);
         //bool test(Entities entities, int currentEntity, std::vector<int> matchedTokensSize);
         //bool test(ParseGraphPtr pg, Lattice &lattice, int currentEntity,
-        bool test(Lattice &lattice, int currentEntity,
-                std::vector<int> matchedTokensSize);
+        bool test(Lattice&, int, std::vector<int> matchedTokensSize);
 
         int getStart();
         void setStart(int aStart);

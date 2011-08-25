@@ -34,10 +34,10 @@ class Action
         virtual ~Action() {}
         //virtual bool test(Entities entities, int currentEntity, std::vector<int> matchedTokensSize); //tu nie bedzie to na napisie wykonywane, tylko na tych obiektach?
         //virtual bool test(ParseGraphPtr pg, int currentEntity, std::vector<int> matchedTokensSize); //tu nie bedzie to na napisie wykonywane, tylko na tych obiektach?
-        virtual bool test(Lattice &lattice, int currentEntity, std::vector<int> matchedTokensSize); //tu nie bedzie to na napisie wykonywane, tylko na tych obiektach?
+        virtual bool test(Lattice&, int, std::vector<int>); //tu nie bedzie to na napisie wykonywane, tylko na tych obiektach?
         //virtual bool apply(Entities &entities, Edges &edges, int currentEntity, std::vector<int> matchedTokensSize); //jw
         //virtual bool apply(ParseGraphPtr pg, Lattice &lattice, int currentEntity, std::vector<int> matchedTokensSize); //jw
-        virtual bool apply(Lattice &lattice, int currentEntity, std::vector<int> matchedTokensSize); //jw
+        virtual bool apply(Lattice&, int, std::vector<int>); //jw
         virtual std::string getType() { return type; }
         void setType(std::string aType); //@todo: a to czemu nie virtual
 

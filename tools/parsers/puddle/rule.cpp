@@ -124,7 +124,7 @@ Rule::~Rule()
 
 //bool Rule::apply(std::string &sentence, Entities &entities, Edges &edges, int currentEntity)
 //bool Rule::apply(std::string &sentence, ParseGraphPtr pg, Lattice &lattice, int currentEntity) {
-bool Rule::apply(std::string &sentence, Lattice &lattice, int currentEntity) {
+bool Rule::apply(std::string &, Lattice &lattice, int currentEntity) {
     bool ret = false;
     Actions::iterator i = actions->begin();
     while (i != actions->end())
@@ -232,8 +232,10 @@ int Rule::matchPattern(std::string &sentenceString, int matchNumber, std::string
                 }
             }
 
-            if (matching == "")
+            if (matching == "") {
+                delete[] matched;
                 return -1;
+            }
             beforeMatched = before;
 //            std::cerr << "jedynka: " << matched[1] << std::endl;
 //            std::cout << "dwojka: " << matched[3] << std::endl;
@@ -248,6 +250,7 @@ int Rule::matchPattern(std::string &sentenceString, int matchNumber, std::string
 //            std::cerr << "Alternatywnie zwracam: " << getPatternStart(before) << std::endl;
             int r = getPatternStart(before); // + 1; //@todo: ten +1 wynika ze sposobu numerowania? w kazdym razie tak jest, zeby bylo w akcjach potem dokadlnie tak, jak wczesniej bylo. moze to sie uda zmienic po wymienieniu calosci
             //return countEntities(before);
+            delete[] matched;
             return r;
         }
         else {
@@ -258,6 +261,7 @@ int Rule::matchPattern(std::string &sentenceString, int matchNumber, std::string
     }
     catch (std::exception &e) {
         std::cerr << "jakis wyjatek zlapalem: " << e.what() << std::endl;
+        delete[] matched;
         return -1;
     }
 //    std::cout << "juz nie pasuje ta regula" << std::endl;
@@ -278,7 +282,7 @@ int Rule::matchPattern(std::string &sentenceString, int matchNumber, std::string
 
 //bool Rule::test(std::string &sentence, Entities &entities, int currentEntity)
 //bool Rule::test(std::string &sentenceString, ParseGraphPtr pg, int currentEntity) {
-bool Rule::test(std::string &sentenceString, Lattice &lattice, int currentEntity) {
+bool Rule::test(std::string &, Lattice &lattice, int currentEntity) {
 //    std::cerr << "testuje regule: " << name << std::endl;
 //    std::cerr << "ten luj: " << match[0] << std::endl;
     ///std::string::const_iterator start = sentence.begin();
