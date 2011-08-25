@@ -11,7 +11,7 @@ public:
 
     bool isSome();
 
-    bool isAny();
+    bool isAny() const;
 
     /**
      * method for compatibility with boost::bimap

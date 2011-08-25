@@ -1,5 +1,7 @@
 #include <iostream>
 
+#include <boost/scoped_ptr.hpp>
+
 #include "psi_lattice_reader.hpp"
 #include "psi_lattice_writer.hpp"
 #include "utt_lattice_reader.hpp"
@@ -204,7 +206,7 @@ public:
             lattice.addEdge(pre_kota, post_kota, word_token, token_tag, kota_builder.build());
         }
 
-        LatticeWriter * writer = new PsiLatticeWriter();
+        boost::scoped_ptr<LatticeWriter> writer(new PsiLatticeWriter());
 
         std::ostringstream osstr;
         writer->writeLattice(lattice, osstr);
@@ -334,8 +336,7 @@ public:
 
         lattice.addEdge(postMa, preKota, aiNbsp, rawTag);
 
-
-        LatticeWriter * writer = new PsiLatticeWriter();
+        boost::scoped_ptr<LatticeWriter> writer(new PsiLatticeWriter());
 
         // writer->writeLattice(lattice, std::cout);
 
@@ -356,11 +357,10 @@ public:
     void testPsiLatticeReader() {
 
         Lattice lattice("");
-        LatticeReader * reader = new PsiLatticeReader();
+
+        boost::scoped_ptr<LatticeReader> reader(new PsiLatticeReader());
 
         reader->readIntoLattice(ROOT_DIR "formats/psi/t/files/pl_sample.txt", lattice);
-
-        delete reader;
     }
 
 };
