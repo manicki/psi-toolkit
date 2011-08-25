@@ -109,14 +109,14 @@ bool DeleteAction::apply(Lattice &lattice, int currentEntity,
         std::list<Lattice::EdgeDescriptor> edges =
             lattice::getTopEdges(lattice, vertex);
         for (std::list<Lattice::EdgeDescriptor>::iterator edgeIt = edges.begin();
-                edgeIt != edges.end(); edgeIt ++) {
+                edgeIt != edges.end(); ++ edgeIt) {
             AnnotationItem annotationItem = lattice.getEdgeAnnotationItem(*edgeIt);
             if (lattice.getAnnotationItemManager().getValue(
                         annotationItem, "discard") == "1")
                 continue; //skip discarded edges
 
             for (DeleteConditions::iterator cond_it = conditions.begin();
-                    cond_it != conditions.end(); cond_it ++) {
+                    cond_it != conditions.end(); ++ cond_it) {
                 if (cond_it->type == BASE_CONDITION) {
                     std::string tokenBase = lattice.getAnnotationItemManager().
                         getValue(annotationItem, "base");
@@ -399,7 +399,7 @@ bool DeleteAction::test(Lattice &lattice,
         std::list<Lattice::EdgeDescriptor> edges =
             lattice::getTopEdges(lattice, vertex);
         for (std::list<Lattice::EdgeDescriptor>::iterator edgeIt = edges.begin();
-                edgeIt != edges.end(); edgeIt ++) {
+                edgeIt != edges.end(); ++ edgeIt) {
             bool conditionsSatisfied = true;
             AnnotationItem annotationItem = lattice.getEdgeAnnotationItem(*edgeIt);
             if (lattice.getAnnotationItemManager().getValue(
@@ -407,7 +407,7 @@ bool DeleteAction::test(Lattice &lattice,
                 continue; //skip discarded edges
 
             for (DeleteConditions::iterator cond_it = conditions.begin();
-                    cond_it != conditions.end(); cond_it ++) {
+                    cond_it != conditions.end(); ++ cond_it) {
                 bool satisfied = true;
                 if (cond_it->type == BASE_CONDITION) {
                     std::string tokenBase = lattice.getAnnotationItemManager().

@@ -89,9 +89,9 @@ bool AddAction::apply(Lattice &lattice, int currentEntity,
     std::list<Lattice::EdgeSequence> edgeSequences = lattice::getEdgesRange(
             lattice, startVertex, endVertex);
     for (std::list<Lattice::EdgeSequence>::iterator sequenceIt = edgeSequences.begin();
-            sequenceIt != edgeSequences.end(); sequenceIt ++) {
+            sequenceIt != edgeSequences.end(); ++ sequenceIt) {
         for (Lattice::EdgeSequence::Iterator edgeIt = sequenceIt->begin();
-                edgeIt != sequenceIt->end(); edgeIt ++) {
+                edgeIt != sequenceIt->end(); ++ edgeIt) {
             AnnotationItem ai = lattice.getEdgeAnnotationItem(*edgeIt);
             if (lattice.getAnnotationItemManager().getValue(ai, "discard") == "1")
                 continue; //skip discarded interpretations
@@ -394,9 +394,9 @@ bool AddAction::test(Lattice &lattice, int currentEntity,
     std::list<Lattice::EdgeSequence> edgeSequences = lattice::getEdgesRange(
             lattice, startVertex, endVertex);
     for (std::list<Lattice::EdgeSequence>::iterator sequenceIt = edgeSequences.begin();
-            sequenceIt != edgeSequences.end(); sequenceIt ++) {
+            sequenceIt != edgeSequences.end(); ++ sequenceIt) {
     for (Lattice::EdgeSequence::Iterator edgeIt = sequenceIt->begin();
-            edgeIt != sequenceIt->end(); edgeIt ++) {
+            edgeIt != sequenceIt->end(); ++ edgeIt) {
         AnnotationItem ai = lattice.getEdgeAnnotationItem(*edgeIt);
         if (lattice.getAnnotationItemManager().getValue(ai, "discard") == "1")
             continue; //skip discarded interpretations
@@ -409,7 +409,7 @@ bool AddAction::test(Lattice &lattice, int currentEntity,
         for (std::vector<std::string>::iterator morph_it =
                 interpretations.begin();
                 morph_it != interpretations.end();
-                morph_it ++) {
+                ++ morph_it) {
             if (lattice.getAnnotationItemManager().getValue(ai, "base") ==
                     *morph_it) {
                 interpretationFound = true;

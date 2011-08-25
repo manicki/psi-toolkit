@@ -51,7 +51,7 @@ namespace bonsai {
                 Outcome best_tag = "empty";
                 double best_prob = 0;
 
-                for(std::vector<std::string>::iterator it = amb.begin(); it != amb.end(); it++) {
+                for(std::vector<std::string>::iterator it = amb.begin(); it != amb.end(); ++ it) {
                     std::string tag   = it->substr( 0, n );
                     std::string lemma = it->substr( n );
 
@@ -68,7 +68,7 @@ namespace bonsai {
                 open_classes = tagset->getOpenClasses();
             }
 
-            if( open_classes.size() > 0 ) {
+            if( ! open_classes.empty() ) {
 
                 BOOST_FOREACH( std::string pos, open_classes ) {
                     char pos_char = tagset->mapPos( pos );
@@ -184,7 +184,7 @@ namespace bonsai {
             Tagger::processInput(tagged, tagged_entities, tagged_edges);
 
             std::stringstream plainstream;
-            for(Entities::iterator it = tagged_entities.begin(); it != tagged_entities.end(); it++) {
+            for(Entities::iterator it = tagged_entities.begin(); it != tagged_entities.end(); ++ it) {
                 if((*it)->getType() == "token")
                     plainstream << ((Token*)(*it))->getOrth() << " ";
             }
@@ -215,14 +215,14 @@ namespace bonsai {
                 }
             }
 
-            for(bonsai::puddle::Entities::iterator ent_it = tagged_entities.begin(); ent_it != tagged_entities.end(); ent_it++)
+            for(bonsai::puddle::Entities::iterator ent_it = tagged_entities.begin(); ent_it != tagged_entities.end(); ++ ent_it)
                 delete *ent_it;
-            for(bonsai::Edges::iterator edg_it = tagged_edges.begin(); edg_it != tagged_edges.end(); edg_it++)
+            for(bonsai::Edges::iterator edg_it = tagged_edges.begin(); edg_it != tagged_edges.end(); ++ edg_it)
                 delete *edg_it;
 
-            for(bonsai::puddle::Entities::iterator ent_it = plain_entities.begin(); ent_it != plain_entities.end(); ent_it++)
+            for(bonsai::puddle::Entities::iterator ent_it = plain_entities.begin(); ent_it != plain_entities.end(); ++ ent_it)
                 delete *ent_it;
-            for(bonsai::Edges::iterator edg_it = plain_edges.begin(); edg_it != plain_edges.end(); edg_it++)
+            for(bonsai::Edges::iterator edg_it = plain_edges.begin(); edg_it != plain_edges.end(); ++ edg_it)
                 delete *edg_it;
 
         }
@@ -249,7 +249,7 @@ namespace bonsai {
 
             Context context;
 
-            int sentence_length = sentence.size();
+            //int sentence_length = sentence.size();
             Token* curr_tok = (Token*)sentence[curr_index];
             std::string curr_orth = curr_tok->getOrth();
 
@@ -257,7 +257,7 @@ namespace bonsai {
             context.push_back( Feature( "curr_word_length=" + boost::lexical_cast<std::string>( curr_orth.size() ) ) );
 
             std::vector<std::string> amb = curr_tok->getCompiledInterpretations();
-            for(std::vector<std::string>::iterator it = amb.begin(); it != amb.end(); it++) {
+            for(std::vector<std::string>::iterator it = amb.begin(); it != amb.end(); ++ it) {
                 std::string tag = it->substr(0,n);
                 std::string lemma = it->substr(n);
 
@@ -301,7 +301,7 @@ namespace bonsai {
 
                 if(pindex > 0) {
                     std::vector<std::string> prev_amb = prev_tok->getCompiledInterpretations();
-                    for(std::vector<std::string>::iterator it = prev_amb.begin(); it != prev_amb.end(); it++) {
+                    for(std::vector<std::string>::iterator it = prev_amb.begin(); it != prev_amb.end(); ++ it) {
                         std::stringstream tag, lemma;
                         tag << "prev" << i << "_has_tag=" << it->substr(0,n);
                         lemma << "prev" << i << "_has_lemma=" << it->substr(n);
@@ -329,7 +329,7 @@ namespace bonsai {
 
                 if(nindex < sentence.size() - 1) {
                     std::vector<std::string> next_amb = next_tok->getCompiledInterpretations();
-                    for(std::vector<std::string>::iterator it = next_amb.begin(); it != next_amb.end(); it++) {
+                    for(std::vector<std::string>::iterator it = next_amb.begin(); it != next_amb.end(); ++ it) {
                         std::stringstream tag, lemma;
                         tag << "next" << i << "_has_tag=" << it->substr(0,n);
                         lemma << "next" << i << "_has_lemma=" << it->substr(n);

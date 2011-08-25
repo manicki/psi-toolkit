@@ -33,7 +33,11 @@ Rule::Rule()
     match_ = "";
     right_ = "";
 
-    match_set = false;
+    leftCount = 0;
+    matchCount = 0;
+    rightCount = 0;
+//    match_set = false;
+//    match = NULL;
 }
 
 Rule::Rule( std::string aName, std::string aCompiled, int aLeftCount,
@@ -75,11 +79,12 @@ Rule::Rule( std::string aName, std::string aCompiled, int aLeftCount,
 //    matchedIndexes = aMatchedIndexes;
     matchedTokensSize.assign(tokensPatterns.size(), 0);
 //    matchedTokensSize.assign(tokensPatterns.size(), 0);
-    match_set = false;
+//    match_set = false;
+//    match = NULL;
 
     for (NegativePatternStrings::iterator negPatIt =
             aNegativePatterns.begin(); negPatIt != aNegativePatterns.end();
-            negPatIt ++ ) {
+            ++ negPatIt) {
         PatternPtr negativePattern = PatternPtr(new RE2( negPatIt->second ));
         negativePatterns.insert(std::pair<std::string, PatternPtr>(
                     negPatIt->first, negativePattern) );
@@ -119,7 +124,7 @@ Rule::~Rule()
 //    delete matchedTokensSize;
 //    delete matchedIndexes;
   //  delete pattern;
-    delete[] match;
+//    delete[] match;
 }
 
 //bool Rule::apply(std::string &sentence, Entities &entities, Edges &edges, int currentEntity)
@@ -148,18 +153,20 @@ bool Rule::apply(std::string &, Lattice &lattice, int currentEntity) {
 //            std::cout << "Sentencja po zmianie: " << sentence << std::endl;*/
             ret = true;
         }
-        i ++;
+        ++ i;
     }
 //    std::cout << "wychodze z reguly z wartoscia: " << (ret ? "tru" : "fols") << std::endl;
     return ret;
 }
 
-int Rule::matchPattern(std::string &sentenceString, int matchNumber, std::string &beforeMatched) {
+int Rule::matchPattern(std::string &sentenceString, int matchNumber,
+        std::string &beforeMatched, std::vector<re2::StringPiece> &match) {
     //std::string::const_iterator start = sentence.begin();
     //std::string::const_iterator end = sentence.end();
     //boost::match_results<std::string::const_iterator> matched;
 
     int matchCount = 0;
+    match.clear();
     //boost::match_flag_type flags = boost::match_default | boost::match_not_dot_newline | boost::match_not_dot_null;
     //std::string before;
 
@@ -196,22 +203,24 @@ int Rule::matchPattern(std::string &sentenceString, int matchNumber, std::string
         start = prefix_len + 1;
         //flags |= boost::match_prev_avail;
         //flags |= boost::match_not_bob;
+        std::string matching = "";
         if (matchCount == matchNumber) {
             matching = matched[0].as_string();
 
             //match = matched; //@todo: co to w okole jest?
-            if (match_set) {
-                delete[] match;
-            }
-            match = new re2::StringPiece[num_groups];
+//            if (match_set) {
+//                delete[] match;
+//            }
+//            match = new re2::StringPiece[num_groups];
             for (int i = 0; i < num_groups; i ++)
-                match[i] = matched[i];
+                //match[i] = matched[i];
+                match.push_back(matched[i]);
 
-            if (namedGroups.size() > 0) {
+            if (! namedGroups.empty()) {
                 bool negPatternMatched = false;
                 for (std::map<std::string, int>::iterator namedGroupIt =
                         namedGroups.begin(); namedGroupIt != namedGroups.end();
-                        namedGroupIt ++) {
+                        ++ namedGroupIt) {
                     std::string groupName = namedGroupIt->first;
                     int groupIndex = namedGroupIt->second;
                     NegativePatterns::iterator negPatternIt =
@@ -282,7 +291,8 @@ int Rule::matchPattern(std::string &sentenceString, int matchNumber, std::string
 
 //bool Rule::test(std::string &sentence, Entities &entities, int currentEntity)
 //bool Rule::test(std::string &sentenceString, ParseGraphPtr pg, int currentEntity) {
-bool Rule::test(std::string &, Lattice &lattice, int currentEntity) {
+bool Rule::test(std::string &, Lattice &lattice, int currentEntity,
+        std::vector<re2::StringPiece> &match) {
 //    std::cerr << "testuje regule: " << name << std::endl;
 //    std::cerr << "ten luj: " << match[0] << std::endl;
     ///std::string::const_iterator start = sentence.begin();
@@ -441,7 +451,7 @@ bool Rule::test(std::string &, Lattice &lattice, int currentEntity) {
 //            }
 //        }
         i ++;
-        it ++;
+        ++ it;
     }
     if (j == 0)
     {
@@ -491,7 +501,7 @@ bool Rule::test(std::string &, Lattice &lattice, int currentEntity) {
         }
 //        delete *act;
 
-        ia ++;
+        ++ ia;
     }
 
 //    if (ret)
@@ -734,7 +744,7 @@ std::string Rule::makeReadable()
         ss << right_ << std::endl;
     }
     ss << "Eval: ";
-    for (Actions::iterator a = actions->begin(); a != actions->end(); a ++)
+    for (Actions::iterator a = actions->begin(); a != actions->end(); ++ a)
     {
         if ((*a)->getType() == "delete")
             ss << "delete(" << (boost::dynamic_pointer_cast<DeleteAction>(*a))->getUPattern() << ", " << (boost::dynamic_pointer_cast<DeleteAction>(*a))->getTokenIndex() << ");" << std::endl;
@@ -753,13 +763,13 @@ std::string Rule::makeReadable()
             std::vector<std::string> attributes = (boost::dynamic_pointer_cast<UnifyAction>(*a))->getUAttributes();
             std::vector<int> indices = (boost::dynamic_pointer_cast<UnifyAction>(*a))->getTokenIndices();
 
-            for (std::vector<std::string>::iterator it = attributes.begin(); it != attributes.end(); it ++)
+            for (std::vector<std::string>::iterator it = attributes.begin(); it != attributes.end(); ++ it)
             {
                 if (it != attributes.begin())
                     ss << " ";
                 ss << *it;
             }
-            for (std::vector<int>::iterator it = indices.begin(); it != indices.end(); it ++)
+            for (std::vector<int>::iterator it = indices.begin(); it != indices.end(); ++ it)
                 ss << ", " << *it;
             ss << ");" << std::endl;
         }
@@ -796,7 +806,7 @@ std::string Rule::log()
     if (this->getRepeat())
         ss << "Allows repeating" << std::endl;
     ActionsPtr actions = this->getActions();
-    for (Actions::iterator a = actions->begin(); a != actions->end(); a ++)
+    for (Actions::iterator a = actions->begin(); a != actions->end(); ++ a)
     {
         if ((*a)->getType() == "delete")
             //ss << "Delete " << (boost::dynamic_pointer_cast<DeleteAction>(*a))->getTokenIndex() << " " << (boost::dynamic_pointer_cast<DeleteAction>(*a))->getPattern() << std::endl;
@@ -815,7 +825,7 @@ std::string Rule::log()
                 ss << "Add " << (boost::dynamic_pointer_cast<AddAction>(*a))->getTokenIndex()
                     << " " << *it << (boost::dynamic_pointer_cast<AddAction>(*a))->getBase()
                     << std::endl;
-                it ++;
+                ++ it;
             }
         }
         else if ((*a)->getType() == "group")
@@ -831,7 +841,7 @@ std::string Rule::log()
             while (it != tokenIndices.end())
             {
                 ss << *it;
-                it ++;
+                ++ it;
                 if (it != tokenIndices.end())
                     ss << ", ";
             }

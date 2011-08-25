@@ -51,7 +51,8 @@ class Rule
 
         //bool test(std::string &sentence, Entities &entities, int currentEntity);
         //bool test(std::string &sentenceString, ParseGraphPtr pg, int currentEntity);
-        bool test(std::string &sentenceString, Lattice &lattice, int currentEntity);
+        bool test(std::string &sentenceString, Lattice &lattice,
+                int currentEntity, std::vector<re2::StringPiece> &match);
         //bool apply(std::string &sentence, Entities &entities, Edges &edges, int currentEntity);
         //bool apply(std::string &sentenceString, ParseGraphPtr pg, Lattice &lattice, int currentEntity);
         bool apply(std::string &sentenceString, Lattice &lattice, int currentEntity);
@@ -85,7 +86,8 @@ class Rule
         void setTokensRequired(std::vector<bool> aTokensRequired);
         void setMatchedIndices(std::vector<int> aMatchedIndices);
 
-        int matchPattern(std::string &sentence, int matchNumber, std::string &beforeMatched);
+        int matchPattern(std::string &sentence, int matchNumber,
+                std::string &beforeMatched, std::vector<re2::StringPiece> &match);
 
         void addAction(ActionPtr action);
         void deleteAction(size_t index);
@@ -106,9 +108,9 @@ class Rule
         int countEntities(std::string matched);
 
         //boost::match_results<std::string::const_iterator> match;
-        re2::StringPiece *match;
-        bool match_set; //note: to jest nowosc, przy zmianie biblioteki wyr. reg. - moze nie byc to konieczne koniec koncow
-        std::string matching;
+//        re2::StringPiece *match;
+//        bool match_set; //note: to jest nowosc, przy zmianie biblioteki wyr. reg. - moze nie byc to konieczne koniec koncow
+        //std::string matching;
 
         std::vector<std::string> tokensPatterns;
         std::vector<std::string> tokensModifiers;

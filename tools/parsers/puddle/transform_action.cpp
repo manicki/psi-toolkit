@@ -135,7 +135,7 @@ bool TransformAction::test(Lattice &lattice, int currentEntity,
 
     std::list<Lattice::EdgeDescriptor> edges = lattice::getTopEdges(
             lattice, vertex);
-    if (edges.size() > 0) {
+    if (! edges.empty()) {
         LayerTagCollection tags = lattice.getEdgeLayerTags(edges.front());
         if (! lattice.getLayerTagManager().match(
                     lattice.getLayerTagManager().getMask(tags),

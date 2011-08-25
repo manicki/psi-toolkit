@@ -25,6 +25,7 @@ namespace bonsai
 Tagset::Tagset()
 {
     desc_terminals = false;
+    desc_nonterminals = false;
     desc_separator = "#";
 }
 
@@ -35,6 +36,7 @@ Tagset::~Tagset()
 Tagset::Tagset(std::string &filename)
 {
     desc_terminals = false;
+    desc_nonterminals = false;
     desc_separator = "#";
     readFromFile(filename);
 }
@@ -139,7 +141,7 @@ void Tagset::readFromFile (std::string &filename) {
                 //std::cout << "Wartosci: " << std::endl;
                 //while (i != j)
                 for (std::vector<std::string>::iterator val_it = valuesVector.begin();
-                        val_it != valuesVector.end(); val_it ++) {
+                        val_it != valuesVector.end(); ++ val_it) {
                     //attrValues.push_back(*i);
                     std::string value = boost::algorithm::trim_copy(*val_it);
                     attrValues.push_back(value);
@@ -162,7 +164,7 @@ void Tagset::readFromFile (std::string &filename) {
                         mapped = 'a';
                     if (mapped == '{')
                         mapped = '0';
-                    val ++;
+                    ++ val;
                 }
                 attrMappings.insert(std::pair<std::string, std::map<std::string, char> >(attrName, mappings));
                 //std::cout << "Wartosci: " << what[2] << std::endl;
@@ -198,7 +200,7 @@ void Tagset::readFromFile (std::string &filename) {
                     //boost::regex regOptional( "\\[([^\\s\\[\\]]+)\\]" );
                     //while (i != j)
                     for (std::vector<std::string>::iterator val_it = valuesVector.begin();
-                            val_it != valuesVector.end(); val_it ++) {
+                            val_it != valuesVector.end(); ++ val_it) {
                         std::string attribute = boost::algorithm::trim_copy(*val_it);
                        //if (boost::regex_search(attribute, what, regOptional))
                        //     attribute = what[1];
@@ -230,7 +232,7 @@ void Tagset::readFromFile (std::string &filename) {
                 boost::split(valuesVector, line, boost::is_any_of(whiteChars));
                 //while (i != j)
                 for (std::vector<std::string>::iterator val_it = valuesVector.begin();
-                        val_it != valuesVector.end(); val_it ++) {
+                        val_it != valuesVector.end(); ++ val_it) {
                     std::string val = boost::algorithm::trim_copy(*val_it);
                     std::string class_name = val;
                     std::map<std::string, char>::iterator it = posMappings.find(class_name);
@@ -302,9 +304,9 @@ void Tagset::readFromFile (std::string &filename) {
                 while (val != attrs.end())
                 {
                     newLeft.push_back((*l + ":" + *val));
-                    val ++;
+                    ++ val;
                 }
-                l ++;
+                ++ l;
             }
             int position = -1;
             std::vector<std::string>::iterator j;
@@ -318,7 +320,7 @@ void Tagset::readFromFile (std::string &filename) {
                     break;
                 }
                 c ++;
-                j ++;
+                ++ j;
             }
             if (position == -1)
             {
@@ -336,9 +338,9 @@ void Tagset::readFromFile (std::string &filename) {
                     std::string newR = *r;
                     newR[position + 1] = mappings[*val];
                     newRight.push_back(newR);
-                    val ++;
+                    ++ val;
                 }
-                r ++;
+                ++ r;
             }
             //if (optional)
             //{
@@ -360,7 +362,7 @@ void Tagset::readFromFile (std::string &filename) {
                 right.insert(right.end(), newRight.begin(), newRight.end());
             }
 
-            attrIt++;
+            ++ attrIt;
         }
 
         std::vector<std::string>::iterator tmp;
@@ -373,12 +375,12 @@ void Tagset::readFromFile (std::string &filename) {
             morphologyMappings.insert(std::pair<std::string, std::string>(*tmp, *tmpR));
             mapped_morphs.push_back(*tmpR);
         //    std::cout << *tmp << "\t" << *tmpR << std::endl;
-            tmp ++;
-            tmpR ++;
+            ++ tmp;
+            ++ tmpR;
         }
         mapped_morphologies_by_pos.insert(std::pair<std::string, std::vector<std::string> >(mapped_pos , mapped_morphs));
 
-        p ++;
+        ++ p;
     }
 
     tagsetFile.close();
@@ -395,7 +397,7 @@ std::string Tagset::log() {
     i = morphologyMappings.begin();
     while (i != morphologyMappings.end()) {
         ss << i->first << "\t" << i->second << std::endl;
-        i ++;
+        ++ i;
     }
 
     return ss.str();
@@ -404,8 +406,7 @@ std::string Tagset::log() {
 bool Tagset::checkAttribute(std::string &attribute)
 {
     bool ret = false;
-    std::vector<std::string>::iterator i;
-    i = attrList.begin();
+    std::vector<std::string>::iterator i = attrList.begin();
     while (i != attrList.end())
     {
         if (*i == attribute)
@@ -413,7 +414,7 @@ bool Tagset::checkAttribute(std::string &attribute)
             ret = true;
             break;
         }
-        i ++;
+        ++ i;
     }
     return ret;
 }
@@ -438,7 +439,7 @@ bool Tagset::checkAttribute(std::string &pos, std::string &attribute)
                 ret = true;
                 break;
             }
-            i ++;
+            ++ i;
         }
     }
     return ret;
@@ -470,7 +471,7 @@ bool Tagset::checkAttributeValue(std::string &attribute, std::string &value)
                 ret = true;
                 break;
             }
-            i ++;
+            ++ i;
         }
     }
     return ret;
@@ -486,7 +487,7 @@ std::string Tagset::mapMorphology(std::string &morphology)
 
 std::string Tagset::unmapMorphology(std::string &mapped)
 {
-    for (std::map<std::string, std::string>::iterator it = morphologyMappings.begin(); it != morphologyMappings.end(); it ++)
+    for (std::map<std::string, std::string>::iterator it = morphologyMappings.begin(); it != morphologyMappings.end(); ++ it)
     {
         if (it->second == mapped)
             return it->first;
@@ -523,7 +524,7 @@ std::pair<char, int> Tagset::mapAttributeValue(std::string &attribute, std::stri
                     break;
                 }
                 c ++;
-                i ++;
+                ++ i;
             }
             if ((mapping != '\0') && (position > -1))
                 return std::pair<char, int>(mapping, position);
@@ -557,7 +558,7 @@ std::vector<char> Tagset::mapPosMatching(std::string &regexp) { //@todo: obsluga
         //if (boost::regex_match(i->first, regPos))
         if (RE2::FullMatch(i->first, regPos))
             matching.push_back(i->second);
-        i ++;
+        ++ i;
     }
     return matching;
 }
@@ -577,7 +578,7 @@ std::vector<char> Tagset::mapAttributeValuesMatching(std::string &attribute, std
             //if (boost::regex_match(i->first, regAttr))
             if (RE2::FullMatch(i->first, regAttr))
                 matching.push_back(i->second);
-            i ++;
+            ++ i;
         }
     }
 
@@ -586,8 +587,7 @@ std::vector<char> Tagset::mapAttributeValuesMatching(std::string &attribute, std
 
 int Tagset::getAttributeIndex(std::string &attribute)
 {
-    std::vector<std::string>::iterator i;
-    i = attrList.begin();
+    std::vector<std::string>::iterator i = attrList.begin();
     int index = 0;
     int ret = -1;
     while (i != attrList.end())
@@ -598,7 +598,7 @@ int Tagset::getAttributeIndex(std::string &attribute)
             break;
         }
         index ++;
-        i ++;
+        ++ i;
     }
     return ret;
 }
@@ -719,7 +719,7 @@ void Tagset::readDescFromFile(std::string &filename) //@todo: zlaczyc dwie metod
                     boost::split(valuesVector, values, boost::is_any_of(whiteChars));
                     //while (i != j)
                     for (std::vector<std::string>::iterator val_it = valuesVector.begin();
-                            val_it != valuesVector.end(); val_it ++) {
+                            val_it != valuesVector.end(); ++ val_it) {
                         std::string val = boost::algorithm::trim_copy(*val_it);
                         if (val == "orth")
                             desc_order.push_back(DESC_ORTH);
@@ -771,7 +771,7 @@ void Tagset::readDescFromFile(std::string &filename) //@todo: zlaczyc dwie metod
 
             }
         }
-        desc_include_pos = includepos;
+//        desc_include_pos = includepos;
 
         if (posflag)
         {
@@ -804,7 +804,7 @@ void Tagset::readDescFromFile(std::string &filename) //@todo: zlaczyc dwie metod
                 }
                 //while (i != j)
                 for (std::vector<std::string>::iterator val_it = valuesVector.begin();
-                        val_it != valuesVector.end(); val_it ++) {
+                        val_it != valuesVector.end(); ++ val_it) {
                     std::string val = boost::algorithm::trim_copy(*val_it);
                     std::map<std::string, std::vector<std::string> >::iterator q = attributes.find(val);
                     if (q == attributes.end())
@@ -814,7 +814,7 @@ void Tagset::readDescFromFile(std::string &filename) //@todo: zlaczyc dwie metod
                         continue;
                     }
                     std::string pattern = "";
-                    for (std::vector<std::string>::iterator it = q->second.begin(); it != q->second.end(); it ++)
+                    for (std::vector<std::string>::iterator it = q->second.begin(); it != q->second.end(); ++ it)
                     {
                         if (pattern != "")
                             pattern += "|";
@@ -848,7 +848,7 @@ void Tagset::readDescFromFile(std::string &filename) //@todo: zlaczyc dwie metod
 
                 //while (i != j)
                 for (std::vector<std::string>::iterator val_it = valuesVector.begin();
-                        val_it != valuesVector.end(); val_it ++) {
+                        val_it != valuesVector.end(); ++ val_it) {
                     std::string val = boost::algorithm::trim_copy(*val_it);
                     std::map<std::string, std::vector<std::string> >::iterator p =
                         attributes.find(val);
@@ -860,7 +860,7 @@ void Tagset::readDescFromFile(std::string &filename) //@todo: zlaczyc dwie metod
 
                     std::string pattern = "";
                     for (std::vector<std::string>::iterator it = p->second.begin();
-                            it != p->second.end(); it ++) {
+                            it != p->second.end(); ++ it) {
                         if (pattern != "")
                             pattern += "|";
                         pattern += *it;
@@ -884,7 +884,7 @@ void Tagset::readDescFromFile(std::string &filename) //@todo: zlaczyc dwie metod
 }
 
 bool Tagset::containsDesc() {
-    return (token_description.size() > 0);
+    return (! token_description.empty());
 }
 
 std::vector<std::string> Tagset::getGroupDesc(std::string group) {
@@ -939,7 +939,7 @@ std::map<std::string, std::string> Tagset::getAttributes(std::string morphologyS
     std::vector<std::string> attrs;
     //while (i != j)
     for (std::vector<std::string>::iterator val_it = valuesVector.begin();
-            val_it != valuesVector.end(); val_it ++) {
+            val_it != valuesVector.end(); ++ val_it) {
         std::string val = boost::algorithm::trim_copy(*val_it);
         if (pos == "")
         {
@@ -951,7 +951,7 @@ std::map<std::string, std::string> Tagset::getAttributes(std::string morphologyS
         }
         else
         {
-            if (attrs.size() == 0)
+            if (attrs.empty())
             {
                 std::map<std::string, std::vector<std::string> >::iterator pi = POSs.find(pos);
                 attrs = pi->second;
@@ -972,7 +972,7 @@ std::map<std::string, std::string> Tagset::getAttributes(std::string morphologyS
                 else
                 {
                     attribute_start ++;
-                    ai ++;
+                    ++ ai;
                 }
             }
         }
@@ -985,7 +985,7 @@ std::map<std::string, std::string> Tagset::getAttributes(std::string morphologyS
     return results;
 }
 
-std::vector<std::string> Tagset::getOpenClasses()
+const std::vector<std::string> Tagset::getOpenClasses()
 {
     return open_classes;
 }
@@ -1009,7 +1009,7 @@ std::vector<std::string> Tagset::getMappedMorphologies(std::string mapped_pos)
             std::vector<std::string> result;
             for (std::map<std::string,
                     std::vector<std::string> >::iterator pos_it = POSs.begin();
-                    pos_it != POSs.end(); pos_it ++) {
+                    pos_it != POSs.end(); ++ pos_it) {
                 if (RE2::FullMatch(pos_it->first, reg))
                     result.push_back(pos_it->first);
             }
@@ -1021,7 +1021,7 @@ std::vector<std::string> Tagset::getMappedMorphologies(std::string mapped_pos)
             std::vector<std::string> result;
             for (std::map<std::string,
                     std::vector<std::string> >::iterator pos_it = POSs.begin();
-                    pos_it != POSs.end(); pos_it ++) {
+                    pos_it != POSs.end(); ++ pos_it) {
                 if (!RE2::FullMatch(pos_it->first, reg))
                     result.push_back(pos_it->first);
             }
@@ -1032,7 +1032,7 @@ std::vector<std::string> Tagset::getMappedMorphologies(std::string mapped_pos)
             std::vector<std::string> result;
             for (std::map<std::string,
                     std::vector<std::string> >::iterator pos_it = POSs.begin();
-                    pos_it != POSs.end(); pos_it ++) {
+                    pos_it != POSs.end(); ++ pos_it) {
                 if (pos_it->first != pos)
                     result.push_back(pos_it->first);
             }
@@ -1048,7 +1048,7 @@ std::vector<std::string> Tagset::getMappedMorphologies(std::string mapped_pos)
             if (attr_it != attributes.end()) {
                 std::vector<std::string> values = attr_it->second;
                 for (std::vector<std::string>::iterator val_it = values.begin();
-                        val_it != values.end(); val_it ++) {
+                        val_it != values.end(); ++ val_it) {
                     if (RE2::FullMatch(*val_it, reg))
                         result.push_back(*val_it);
                 }
@@ -1065,7 +1065,7 @@ std::vector<std::string> Tagset::getMappedMorphologies(std::string mapped_pos)
             if (attr_it != attributes.end()) {
                 std::vector<std::string> values = attr_it->second;
                 for (std::vector<std::string>::iterator val_it = values.begin();
-                        val_it != values.end(); val_it ++) {
+                        val_it != values.end(); ++ val_it) {
                     if (!RE2::FullMatch(*val_it, reg))
                         result.push_back(*val_it);
                 }
@@ -1081,7 +1081,7 @@ std::vector<std::string> Tagset::getMappedMorphologies(std::string mapped_pos)
             if (attr_it != attributes.end()) {
                 std::vector<std::string> values = attr_it->second;
                 for (std::vector<std::string>::iterator val_it = values.begin();
-                        val_it != values.end(); val_it ++) {
+                        val_it != values.end(); ++ val_it) {
                     if (*val_it != value)
                         result.push_back(*val_it);
                 }
@@ -1092,7 +1092,7 @@ std::vector<std::string> Tagset::getMappedMorphologies(std::string mapped_pos)
         std::vector<std::string> Tagset::getAttributes() {
             std::vector<std::string> result;
             for (std::map<std::string, std::vector<std::string> >::iterator it =
-                    attributes.begin(); it != attributes.end(); it ++)
+                    attributes.begin(); it != attributes.end(); ++ it)
                 result.push_back(it->first);
             return result;
         }
@@ -1100,7 +1100,7 @@ std::vector<std::string> Tagset::getMappedMorphologies(std::string mapped_pos)
         std::vector<std::string> Tagset::getPartsOfSpeech() {
             std::vector<std::string> result;
             for (std::map<std::string, std::vector<std::string> >::iterator it =
-                    POSs.begin(); it != POSs.end(); it ++)
+                    POSs.begin(); it != POSs.end(); ++ it)
                 result.push_back(it->first);
             return result;
         }

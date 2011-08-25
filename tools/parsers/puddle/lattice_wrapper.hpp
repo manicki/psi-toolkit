@@ -24,7 +24,7 @@ namespace poleng {
                     bool operator() (const Lattice::EdgeDescriptor &value) {
                         for (std::list<Lattice::EdgeDescriptor>::iterator it =
                                 nontopEdges.begin(); it != nontopEdges.end();
-                                it ++) {
+                                ++ it) {
                             //if (*it == value)
                             if (! ((*it < value) || (value < *it)) )
                                 return true;

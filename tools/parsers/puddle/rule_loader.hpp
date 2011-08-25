@@ -63,7 +63,7 @@ class RuleLoader {
 
     private:
         TagsetPtr tagset;
-        int numAttributes;
+//        int numAttributes;
         std::string compileNonTokens(std::string &matched);
         std::string compileRuleName(std::string matched);
         //std::string compileRuleMatch(std::string &matched, int &size, std::vector<string> &tokensPatterns, std::vector<string> &tokensModifiers, std::vector<bool> &tokensRequired, std::vector<int> &matchedIndexes, int &bracketCount);

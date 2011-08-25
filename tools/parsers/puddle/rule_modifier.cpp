@@ -11,6 +11,7 @@ namespace bonsai
 
 RuleModifier::RuleModifier()
 {
+    ruleCompiler = NULL;
 }
 
 RuleModifier::~RuleModifier()

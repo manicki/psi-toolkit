@@ -106,12 +106,12 @@ bool SyntokAction::apply(Lattice &lattice, int currentEntity,
     for (std::list<Lattice::EdgeSequence>::iterator sequenceIt =
             edgeSequences.begin();
             sequenceIt != edgeSequences.end();
-            sequenceIt ++) {
+            ++ sequenceIt) {
         std::string baseForm = "";
         int index = lattice.getEdgeBeginIndex(sequenceIt->firstEdge());
         for (Lattice::EdgeSequence::Iterator edgeIt = sequenceIt->begin();
                 edgeIt != sequenceIt->end();
-                edgeIt ++) {
+                ++ edgeIt) {
             AnnotationItem ai = lattice.getEdgeAnnotationItem(*edgeIt);
             if (lattice.getAnnotationItemManager().getValue(
                     ai, "discard") == "1")
@@ -147,7 +147,7 @@ bool SyntokAction::apply(Lattice &lattice, int currentEntity,
     int index = lattice.getEdgeBeginIndex(edgeSequences.front().firstEdge());
     for (Lattice::EdgeSequence::Iterator edgeIt = edgeSequences.front().begin();
             edgeIt != edgeSequences.front().end();
-            edgeIt ++) {
+            ++ edgeIt) {
         if (index != lattice.getEdgeBeginIndex(*edgeIt)) {
             concatenatedOrth += " ";
             index ++;

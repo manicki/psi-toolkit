@@ -39,7 +39,7 @@ std::string ParseConverter::convert(ParseGraph graph)
         std::vector<std::pair<int, std::string> >::iterator it = edgeStack.end();
         while (it != edgeStack.begin())
         {
-            it --;
+            -- it;
             if (it->first == i)
             {
                 ss << "</" << it->second << ">" << std::endl;
@@ -64,7 +64,7 @@ std::string ParseConverter::convert(ParseGraph graph)
                         tokenBefore = true;
                         break;
                     }
-                j ++;
+                ++ j;
             }
 
             if (tokenBefore)
@@ -79,7 +79,7 @@ std::string ParseConverter::convert(ParseGraph graph)
     std::vector<ParseGraph::Edge>::iterator ei = edges.end();
     while (ei != edges.begin())
     {
-        ei --;
+        -- ei;
 
      //   if (index[target(e, *g)] <= index[end]) {
             if (map[*ei].getType() == "token")
@@ -90,7 +90,7 @@ std::string ParseConverter::convert(ParseGraph graph)
                     << " id=\"" << map[*ei].getId() << "\">"
                     << std::endl;
                 ss << "<orth>" << map[*ei].getLabel() << "</orth>" << std::endl;
-                for (std::vector<PosInfo>::iterator var = map[*ei].variants_.begin(); var != map[*ei].variants_.end(); var ++)
+                for (std::vector<PosInfo>::iterator var = map[*ei].variants_.begin(); var != map[*ei].variants_.end(); ++ var)
                 {
                     ss << "<lex";
                     if (!boost::get<2>(*var))
@@ -134,7 +134,7 @@ std::string ParseConverter::convert(ParseGraph graph)
     std::vector<std::pair<int, std::string> >::iterator it = edgeStack.end();
     while (it != edgeStack.begin())
     {
-        it --;
+        -- it;
         if (it->first == i)
         {
             ss << "</" << it->second << ">" << std::endl;
@@ -181,12 +181,12 @@ void ParseConverter::addDescription(ParseGraphPtr pg)
                     PosInfo pi = *it;
                     if (!boost::get<2>(pi))
                     {
-                        it ++;
+                        ++ it;
                         continue;
                     }
                     std::string desc = "";
                     std::string desc_non_orth;
-                    for (std::vector<int>::iterator d = tagset->desc_order.begin(); d != tagset->desc_order.end(); d ++)
+                    for (std::vector<int>::iterator d = tagset->desc_order.begin(); d != tagset->desc_order.end(); ++ d)
                     {
                         if (*d == DESC_BASE)
                         {
@@ -208,9 +208,9 @@ void ParseConverter::addDescription(ParseGraphPtr pg)
                             std::string morpho = boost::get<1>(pi);
                             std::string pos = morpho.substr(0, morpho.find(":"));
                             std::vector<std::string> desc_ = tagset->getTokenDesc(pos);
-                            if (desc_.size() > 0)
+                            if (! desc_.empty())
                             {
-                                for (std::vector<std::string>::iterator d = desc_.begin(); d != desc_.end(); d ++)
+                                for (std::vector<std::string>::iterator d = desc_.begin(); d != desc_.end(); ++ d)
                                 {
                                     RE2 reg(*d);
                                     std::string what;
@@ -269,7 +269,7 @@ void ParseConverter::addDescription(ParseGraphPtr pg)
                 //TODO sprawdzic czy nie ma typ swojego desc, jak ma to wziac, jak nie, to brac z glowy!
                 std::vector<std::string> grdesc = tagset->getGroupDesc(map[e].getLabel());
                 std::string desc = "";
-                if (grdesc.size() > 0)
+                if (! grdesc.empty())
                 {
                     std::vector<PosInfo>::iterator it = map[e].variants_.begin();
                     while (it != map[e].variants_.end())
@@ -277,12 +277,12 @@ void ParseConverter::addDescription(ParseGraphPtr pg)
                         PosInfo pi = *it;
                         if (!boost::get<2>(pi))
                         {
-                            it ++;
+                            ++ it;
                             continue;
                         }
                     std::string morpho = boost::get<1>(pi);
 
-                    for (std::vector<std::string>::iterator d = grdesc.begin(); d != grdesc.end(); d ++)
+                    for (std::vector<std::string>::iterator d = grdesc.begin(); d != grdesc.end(); ++ d)
                     {
                         RE2 reg(*d);
                         std::string what;

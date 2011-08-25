@@ -61,7 +61,7 @@ int main(int argc, char **argv) {
             std::cerr << "Rules not loaded. " << std::endl;
             return 1;
         }
-        for (poleng::bonsai::puddle::Rules::iterator ir = rules->begin(); ir != rules->end(); ir ++)
+        for (poleng::bonsai::puddle::Rules::iterator ir = rules->begin(); ir != rules->end(); ++ ir)
         {
             std::cerr << (*ir)->log();
             std::cerr << std::endl;

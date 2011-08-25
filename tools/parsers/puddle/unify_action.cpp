@@ -67,11 +67,11 @@ bool UnifyAction::apply(Lattice &lattice, int currentEntity,
 
    // std::vector<std::string>::iterator attribute_it = unifiedAttributes.begin();
     for (std::vector<std::string>::iterator pattern_it = unifiedPatterns.begin();
-            pattern_it != unifiedPatterns.end(); pattern_it ++) {
+            pattern_it != unifiedPatterns.end(); ++ pattern_it) {
 
         std::set<std::string> refValues;
         for (std::vector<int>::iterator index_it = tokenIndices.begin();
-                index_it != tokenIndices.end(); index_it ++) {
+                index_it != tokenIndices.end(); ++ index_it) {
 
             int count = matchedTokensSize[*index_it - 1];
             if (count == 0) {
@@ -112,7 +112,7 @@ bool UnifyAction::apply(Lattice &lattice, int currentEntity,
                 //                    std::string morphology = boost::get<1>(*var_it);
                 for (std::list<Lattice::EdgeDescriptor>::iterator edgeIt =
                         edges.begin();
-                        edgeIt != edges.end(); edgeIt ++) {
+                        edgeIt != edges.end(); ++ edgeIt) {
                     AnnotationItem annotationItem =
                         lattice.getEdgeAnnotationItem(*edgeIt);
                     if (lattice.getAnnotationItemManager().getValue(
@@ -127,8 +127,8 @@ bool UnifyAction::apply(Lattice &lattice, int currentEntity,
                         values.insert(value);
                     }
 
-                    if (values.size() > 0) {
-                        if (refValues.size() == 0) {
+                    if (! values.empty()) {
+                        if (refValues.empty()) {
                             refValues.insert(values.begin(), values.end());
                         } else {
                             std::set<std::string> intersection;
@@ -147,7 +147,7 @@ bool UnifyAction::apply(Lattice &lattice, int currentEntity,
             }
 
             for (std::vector<int>::iterator index_it = tokenIndices.begin();
-                    index_it != tokenIndices.end(); index_it ++) {
+                    index_it != tokenIndices.end(); ++ index_it) {
 
                 int count = matchedTokensSize[*index_it - 1];
                 if (count == 0) {
@@ -163,7 +163,7 @@ bool UnifyAction::apply(Lattice &lattice, int currentEntity,
                 Lattice::VertexDescriptor vertex = lattice::getVertex(lattice,
                         currentEntity + before);
                 //@todo: czy to sprawdzenie jest nadal konieczne? ta funkcja getVertex nie robi czegos takiego?
-                while (lattice::getTopEdges(lattice, vertex).size() == 0) {
+                while (lattice::getTopEdges(lattice, vertex).empty()) {
                     before ++;
                     vertex = currentEntity + before;
                 }
@@ -178,7 +178,7 @@ bool UnifyAction::apply(Lattice &lattice, int currentEntity,
                         lattice::getTopEdges(lattice, vertex);
                     for (std::list<Lattice::EdgeDescriptor>::iterator edgeIt =
                             edges.begin();
-                            edgeIt != edges.end(); edgeIt ++) {
+                            edgeIt != edges.end(); ++ edgeIt) {
                         AnnotationItem annotationItem =
                             lattice.getEdgeAnnotationItem(*edgeIt);
                         if (lattice.getAnnotationItemManager().getValue(
@@ -692,14 +692,14 @@ bool UnifyAction::test(Lattice &lattice, int currentEntity,
     bool toApply = true;
     std::vector<std::string>::iterator attribute_it = unifiedAttributes.begin();
     for (std::vector<std::string>::iterator pattern_it = unifiedPatterns.begin();
-            pattern_it != unifiedPatterns.end(); pattern_it ++) {
+            pattern_it != unifiedPatterns.end(); ++ pattern_it) {
 
         bool wasAllNulls = false;
 //        bool wasNotNull = false;
 
         std::set<std::string> refValues;
         for (std::vector<int>::iterator index_it = tokenIndices.begin();
-                index_it != tokenIndices.end(); index_it ++) {
+                index_it != tokenIndices.end(); ++ index_it) {
 
             int count = matchedTokensSize[*index_it - 1];
             if (count == 0) {
@@ -734,7 +734,7 @@ bool UnifyAction::test(Lattice &lattice, int currentEntity,
                 std::set<std::string> values;
                 for (std::list<Lattice::EdgeDescriptor>::iterator edgeIt =
                         edges.begin();
-                        edgeIt != edges.end(); edgeIt ++) {
+                        edgeIt != edges.end(); ++ edgeIt) {
                     AnnotationItem annotationItem =
                         lattice.getEdgeAnnotationItem(*edgeIt);
                     if (lattice.getAnnotationItemManager().getValue(
@@ -757,9 +757,9 @@ bool UnifyAction::test(Lattice &lattice, int currentEntity,
                         values.insert(value);
                     }
                 }
-                if (values.size() > 0) {
+                if (! values.empty()) {
 //                    wasNotNull = true;
-                    if (refValues.size() == 0) {
+                    if (refValues.empty()) {
                         refValues.insert(values.begin(), values.end());
                     } else {
                         std::set<std::string> intersection;
@@ -779,7 +779,7 @@ bool UnifyAction::test(Lattice &lattice, int currentEntity,
             }
 
         }
-        if (refValues.size() > 0) { //there are some common values of the attribute
+        if (! refValues.empty()) { //there are some common values of the attribute
             if (wasAllNulls) { //there is a token with no value of the attribute defined
                 if (! nullAgreement)
                     toApply = false; //cannot apply
@@ -796,7 +796,7 @@ bool UnifyAction::test(Lattice &lattice, int currentEntity,
 //                        *attribute_it, attributeUnifiedValues
 //                        ));
 //        }
-        attribute_it ++;
+        ++ attribute_it;
     }
     return toApply;
 //    bool toApply = true;

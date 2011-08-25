@@ -135,6 +135,7 @@ Puddle::Puddle()
     syntok = true;
     verbose = false;
     norepeats = false;
+    disamb = true;
 
     describe = false;
 
@@ -151,6 +152,7 @@ Puddle::Puddle(TagsetPtr tagset_, RulesPtr rules_) {//,
     syntok = true;
     verbose = false;
     norepeats = false;
+    disamb = true; //@todo: do czego jest ta zmienna?
 
     describe = false;
 

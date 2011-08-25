@@ -58,9 +58,11 @@ void RuleMatcher::applyRules(std::string &sentenceString,
         bool first_match = true;
         std::string before = "";
         std::string prev_before = "";
+        std::vector<re2::StringPiece> match;
         //@todo: przerobic to tak, zeby nie bylo miliard razy dopasowywane ten lancuch, tylko zeby go dopasowac tyle razy ile pasuje i odpowiednio odpalac reguly tam, gdzie pasuja
         //while ((currentEntity = (*ir)->matchPattern(sentence, currentMatch, before)) > -1)
-        while ((currentEntity = (*ir)->matchPattern(sentenceString, currentMatch, before)) > -1)
+        while ( (currentEntity = (*ir)->matchPattern(sentenceString,
+                        currentMatch, before, match) ) > -1 )
         {
             currentMatch ++;
 
@@ -88,7 +90,7 @@ void RuleMatcher::applyRules(std::string &sentenceString,
         std::string oldSentenceString = sentenceString;
         //if ((*ir)->test(sentence, entities, currentEntity))
         //if ((*ir)->test(sentenceString, inputGraph, currentEntity))
-        if ((*ir)->test(sentenceString, lattice, currentEntity)) {
+        if ( (*ir)->test(sentenceString, lattice, currentEntity, match) ) {
 //                std::cerr << "test zdany" << std::endl;
                 //if ((*ir)->apply(sentence, entities, lattice, currentEntity))
                 //if ((*ir)->apply(sentenceString, inputGraph, lattice, currentEntity))
@@ -120,7 +122,7 @@ void RuleMatcher::applyRules(std::string &sentenceString,
         }
         }
 //        std::cerr << "koniec reguly" << std::endl;
-        ir ++;
+        ++ ir;
     }
 
 //    std::cerr << "reguly zrobione" << std::endl;
@@ -567,7 +569,7 @@ std::string RuleMatcher::generateSentenceString(Lattice &lattice) {
         std::list<Lattice::EdgeDescriptor> edges = lattice::getTopEdges(
                 lattice, vertex);
 
-        if (edges.size() == 0) {
+        if (edges.empty()) {
             vertex ++;
             continue;
         }
@@ -604,7 +606,7 @@ std::string RuleMatcher::generateSentenceString(Lattice &lattice) {
                 getCategory(annotationItem); //@todo: trzeba poprawic ustawianie orth dla krawedzi 'parse'
         }
         for (std::list<Lattice::EdgeDescriptor>::iterator edgeIt = edges.begin();
-                edgeIt != edges.end(); edgeIt ++) {
+                edgeIt != edges.end(); ++ edgeIt) {
             AnnotationItem ai = lattice.getEdgeAnnotationItem(*edgeIt);
             if (lattice.getAnnotationItemManager().getValue(ai, "discard") == "1")
                 continue; //skip discarded edges

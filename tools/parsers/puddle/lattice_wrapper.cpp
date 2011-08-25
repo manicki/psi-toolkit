@@ -50,7 +50,7 @@ namespace poleng {
                         lattice.getLayerTagManager().getTagNames(tags);
                     bool isParse = false;
                     for (std::list<std::string>::iterator tagIt = tagNames.begin();
-                            tagIt != tagNames.end(); tagIt ++) {
+                            tagIt != tagNames.end(); ++ tagIt) {
                         if (*tagIt == "parse") {
                             isParse = true;
                             break;
@@ -144,7 +144,7 @@ namespace poleng {
                 //for (std::map<int, TransitionInfo*>::iterator edgesMapIt =
                 for (std::map<int, SentenceToken>::iterator edgesMapIt =
                         edgesMap.begin();
-                        edgesMapIt != edgesMap.end(); edgesMapIt ++) {
+                        edgesMapIt != edgesMap.end(); ++ edgesMapIt) {
                     start = edgesMapIt->second.start;
                     end = edgesMapIt->second.end;
                     std::string type = edgesMapIt->second.type;
@@ -166,8 +166,8 @@ namespace poleng {
                         edgesMapIt->second.morphology.begin();
                     while (baseIt != edgesMapIt->second.baseForms.end()) {
                         ss << "<" << *baseIt << "<" << *morphIt;
-                        baseIt ++;
-                        morphIt ++;
+                        ++ baseIt;
+                        ++ morphIt;
                     }
 //                    std::vector<PosInfo> vars = edgesMapIt->second->variants_;
 //                    for (std::vector<PosInfo>::iterator varIt = vars.begin();
@@ -288,7 +288,7 @@ namespace poleng {
                 }
                 for (std::map<std::pair<int, int>, TransitionInfo*>::iterator edgesMapIt =
                         edgesMap.begin();
-                        edgesMapIt != edgesMap.end(); edgesMapIt ++) {
+                        edgesMapIt != edgesMap.end(); ++ edgesMapIt) {
                     int start = edgesMapIt->second->getStart();
                     int end = edgesMapIt->second->getEnd();
                     pg->add_edge(start, end, *(edgesMapIt->second));
@@ -406,7 +406,7 @@ namespace poleng {
                         lattice.getEdgePartitions(edge);
                     for (std::list<Lattice::Partition>::iterator partIt =
                             partitions.begin();
-                            partIt != partitions.end(); partIt ++) {
+                            partIt != partitions.end(); ++ partIt) {
                         nontopEdges.insert(nontopEdges.end(),
                                 partIt->begin(),
                                 partIt->end()
@@ -429,20 +429,20 @@ namespace poleng {
                 while (vertex <= end) {
                     std::list<Lattice::EdgeDescriptor> edges = getTopEdges(lattice,
                             vertex, mask);
-                    if (edges.size() == 0) {
+                    if (edges.empty()) {
                         vertex ++;
                         continue;
                     }
                     std::list<Lattice::EdgeSequence> tmpRanges;
-                    if (ranges.size() > 0) {
+                    if (! ranges.empty()) {
                         for (std::list<Lattice::EdgeDescriptor>::iterator edgeIt =
-                                edges.begin(); edgeIt != edges.end(); edgeIt ++) {
+                                edges.begin(); edgeIt != edges.end(); ++ edgeIt) {
                             for (std::list<Lattice::EdgeSequence>::iterator seqIt =
-                                    ranges.begin(); seqIt != ranges.end(); seqIt ++) {
+                                    ranges.begin(); seqIt != ranges.end(); ++ seqIt) {
                                 Lattice::EdgeSequence::Builder rangeBuilder;
                                     for (Lattice::EdgeSequence::Iterator rangeIt =
                                             seqIt->begin(); rangeIt != seqIt->end();
-                                            rangeIt ++ )
+                                            ++ rangeIt)
                                         rangeBuilder.addEdge(*rangeIt);
                                 rangeBuilder.addEdge(*edgeIt);
                                 tmpRanges.push_back(rangeBuilder.build());
@@ -450,7 +450,7 @@ namespace poleng {
                         }
                     } else {
                         for (std::list<Lattice::EdgeDescriptor>::iterator edgeIt =
-                                edges.begin(); edgeIt != edges.end(); edgeIt ++) {
+                                edges.begin(); edgeIt != edges.end(); ++ edgeIt) {
                             Lattice::EdgeSequence::Builder rangeBuilder;
                             rangeBuilder.addEdge(*edgeIt);
                             tmpRanges.push_back(rangeBuilder.build());
@@ -505,7 +505,7 @@ namespace poleng {
                     std::string &parseCategory,
                     std::list<Lattice::EdgeDescriptor> headEdges,
                     std::list<Lattice::EdgeSequence> groupSequences,
-                    Lattice::Score score) {
+                    Lattice::Score) {
                 Lattice::VertexDescriptor startVertex =
                     lattice.getEdgeBeginIndex(startEdges.front());
                 Lattice::VertexDescriptor endVertex =
@@ -514,13 +514,13 @@ namespace poleng {
                 LayerTagCollection tags =
                     lattice.getLayerTagManager().createSingletonTagCollection("parse");
                 for (std::list<Lattice::EdgeDescriptor>::iterator edgeIt =
-                        headEdges.begin(); edgeIt != headEdges.end(); edgeIt ++) {
+                        headEdges.begin(); edgeIt != headEdges.end(); ++ edgeIt) {
                     AnnotationItem annotationItem(parseCategory);
                     std::list< std::pair<std::string, std::string> > values =
                         lattice.getAnnotationItemManager().getValues(
                                 lattice.getEdgeAnnotationItem(*edgeIt) );
                     for (std::list< std::pair<std::string, std::string> >::iterator valueIt =
-                            values.begin(); valueIt != values.end(); valueIt ++) {
+                            values.begin(); valueIt != values.end(); ++ valueIt) {
                         lattice.getAnnotationItemManager().setValue(
                                 annotationItem, valueIt->first, valueIt->second);
 //                        std::cerr << "ustawiam: " << valueIt->first << " na " << valueIt->second << std::endl;
@@ -532,7 +532,7 @@ namespace poleng {
                     for (std::list<Lattice::EdgeSequence>::iterator seqIt =
                             groupSequences.begin();
                             seqIt != groupSequences.end();
-                            seqIt ++) {
+                            ++ seqIt) {
 //                        std::cerr << "partycja: ";
 //                        for (Lattice::EdgeSequence::Iterator eIt = seqIt->begin();
 //                                eIt != seqIt->end(); eIt ++) {
@@ -608,7 +608,7 @@ namespace poleng {
                     std::vector<std::string> morphology,
                     std::list<Lattice::EdgeSequence> edgeSequences,
                     LayerTagCollection tags,
-                    Lattice::Score score) {
+                    Lattice::Score) {
 
                 Lattice::VertexDescriptor startVertex =
                     lattice.getEdgeBeginIndex(startEdges.front());
@@ -618,11 +618,11 @@ namespace poleng {
 
                 for (std::vector<std::string>::iterator baseIt =
                         baseForms.begin();
-                        baseIt != baseForms.end(); baseIt ++) {
+                        baseIt != baseForms.end(); ++ baseIt) {
                     for (std::vector<std::string>::iterator morphIt =
                             morphology.begin();
                             morphIt != morphology.end();
-                            morphIt ++) {
+                            ++ morphIt) {
                         AnnotationItem annotationItem(syntokCategory);
 
                         lattice.getAnnotationItemManager().setValue(
@@ -638,7 +638,7 @@ namespace poleng {
                         for (std::list<Lattice::EdgeSequence>::iterator sequenceIt =
                                 edgeSequences.begin();
                                 sequenceIt != edgeSequences.end();
-                                sequenceIt ++) {
+                                ++ sequenceIt) {
 
                             lattice.addEdge(
                                     startVertex,
@@ -677,11 +677,11 @@ namespace poleng {
                 for (std::vector<std::string>::iterator baseIt =
                         baseForms.begin();
                         baseIt != baseForms.end();
-                        baseIt ++) {
+                        ++ baseIt) {
                     for (std::vector<std::string>::iterator morphIt =
                             morphology.begin();
                             morphIt != morphology.end();
-                            morphIt ++) {
+                            ++ morphIt) {
                         lattice.getAnnotationItemManager().setValue(
                                 annotationItem, "base", *baseIt);
                         lattice.getAnnotationItemManager().setValue(
@@ -693,7 +693,7 @@ namespace poleng {
                         for (std::list<Lattice::Partition>::iterator partIt =
                                 partitions.begin();
                                 partIt != partitions.end();
-                                partIt ++) {
+                                ++ partIt) {
                             Lattice::EdgeSequence sequence = partIt->getSequence();
                             lattice.addEdge(
                                     startVertex,
@@ -719,12 +719,12 @@ namespace poleng {
                 while (vertex <= end) {
                     std::list<Lattice::EdgeDescriptor> edges = getTopEdges(
                             lattice, vertex, mask);
-                    if (edges.size() == 0) {
+                    if (edges.empty()) {
                         vertex ++;
                         continue;
                     }
                     for (std::list<Lattice::EdgeDescriptor>::iterator edgeIt =
-                            edges.begin(); edgeIt != edges.end(); edgeIt ++) {
+                            edges.begin(); edgeIt != edges.end(); ++ edgeIt) {
                         AnnotationItem ai = lattice.getEdgeAnnotationItem(*edgeIt);
                         lattice.getAnnotationItemManager().setValue(
                                 ai, "discard", "1");
@@ -835,8 +835,8 @@ namespace poleng {
                         return false;
                     if (avi->second != bvi->second)
                         return false;
-                    avi ++;
-                    bvi ++;
+                    ++ avi;
+                    ++ bvi;
                 }
                 return true;
             }

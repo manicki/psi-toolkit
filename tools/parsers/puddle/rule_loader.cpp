@@ -124,7 +124,7 @@ void RuleLoader::setTagset(TagsetPtr aTagset)
     //delete tagset;
     //tagset = new Tagset(aTagset);
     tagset = aTagset;
-    numAttributes = tagset->getNumberOfAttributes();
+//    numAttributes = tagset->getNumberOfAttributes();
     //baseMask.assign(numAttributes + 3, ".");
 //    baseMask.assign(numAttributes + 3, "[^<>]");
     //baseIndex = numAttributes + 1;
@@ -1324,7 +1324,7 @@ bool RuleLoader::compilePosCondition(std::string &comparisonOperator,
     std::string posString;
     if (value.find_first_of(".|*+?[]") != std::string::npos) {
         std::vector<std::string> values = tagset->getPosMatching(value);
-        if (values.size() == 0) {
+        if (values.empty()) {
             std::cerr << "No parts of speech identifiers matching regular expression: \"" << value << "\"." << std::endl;
             return false;
         }
@@ -1348,7 +1348,7 @@ bool RuleLoader::compilePosCondition(std::string &comparisonOperator,
     }
     if (comparisonOperator == "~~") {
         for (TokenPatterns::iterator patternIt = tokenPatterns.begin();
-                patternIt != tokenPatterns.end(); patternIt ++) {
+                patternIt != tokenPatterns.end(); ++ patternIt) {
             patternIt->parts.at(0).condition = posString;
             patternIt->parts.at(0).negative = false;
         }
@@ -1385,7 +1385,7 @@ bool RuleLoader::compilePosCondition(std::string &comparisonOperator,
 //        }
     } else if (comparisonOperator == "!~") {
         for (TokenPatterns::iterator patternIt = tokenPatterns.begin();
-                patternIt != tokenPatterns.end(); patternIt ++) {
+                patternIt != tokenPatterns.end(); ++ patternIt) {
             patternIt->parts.at(0).condition = posString;
             patternIt->parts.at(0).negative = true;
         }
@@ -1515,7 +1515,7 @@ bool RuleLoader::compileBaseCondition(std::string &comparisonOperator,
 
     if (comparisonOperator == "~~") {
         for (TokenPatterns::iterator patternIt = tokenPatterns.begin();
-                patternIt != tokenPatterns.end(); patternIt ++) {
+                patternIt != tokenPatterns.end(); ++ patternIt) {
             patternIt->base.condition = value;
             patternIt->base.negative = false;
         }
@@ -1552,7 +1552,7 @@ bool RuleLoader::compileBaseCondition(std::string &comparisonOperator,
 //        }
     } else if (comparisonOperator == "!~") {
         for (TokenPatterns::iterator patternIt = tokenPatterns.begin();
-                patternIt != tokenPatterns.end(); patternIt ++) {
+                patternIt != tokenPatterns.end(); ++ patternIt) {
             patternIt->base.condition = value;
             patternIt->base.negative = true;
         }
@@ -1744,7 +1744,7 @@ bool RuleLoader::compileAttributeCondition(std::string &key,
         std::vector<std::string> values =
             tagset->getAttributeValuesMatching(key, value);
         //std::vector<char> values = tagset->mapAttributeValuesMatching(key, value);
-        if (values.size() == 0) {
+        if (values.empty()) {
             std::cerr << "No values of " << key <<
                 " matching regular expression: '" << value << "'." << std::endl;
             return false;
@@ -1778,7 +1778,7 @@ bool RuleLoader::compileAttributeCondition(std::string &key,
     }
     if (comparisonOperator == "~~") {
         for (TokenPatterns::iterator patternIt = tokenPatterns.begin();
-                patternIt != tokenPatterns.end(); patternIt ++) {
+                patternIt != tokenPatterns.end(); ++ patternIt) {
             patternIt->parts.at(attributeIndex).condition = attributeString;
             patternIt->parts.at(attributeIndex).negative = false;
         }
@@ -1816,7 +1816,7 @@ bool RuleLoader::compileAttributeCondition(std::string &key,
     }
     else if (comparisonOperator == "!~") {
         for (TokenPatterns::iterator patternIt = tokenPatterns.begin();
-                patternIt != tokenPatterns.end(); patternIt ++) {
+                patternIt != tokenPatterns.end(); ++ patternIt) {
             patternIt->parts.at(attributeIndex).condition = attributeString;
             patternIt->parts.at(attributeIndex).negative = true;
         }
@@ -2034,7 +2034,7 @@ std::string RuleLoader::generateTokenPatternsString(TokenPatterns tokenPatterns,
     //std::string result = "";
     std::stringstream ss;
     for (TokenPatterns::iterator patternIt = tokenPatterns.begin();
-            patternIt != tokenPatterns.end(); patternIt ++) {
+            patternIt != tokenPatterns.end(); ++ patternIt) {
         std::string basePattern = "[^<>]+";
         std::string morphoPattern = "";
         std::string pattern = "";
@@ -2058,7 +2058,7 @@ std::string RuleLoader::generateTokenPatternsString(TokenPatterns tokenPatterns,
         }
         for (std::vector<TokenPatternPart>::iterator partIt =
                 patternIt->parts.begin();
-                partIt != patternIt->parts.end(); partIt ++) {
+                partIt != patternIt->parts.end(); ++ partIt) {
             if (partIt->condition != "") {
                 if (morphoPattern != "") {
                     morphoPattern += "(:[^:<>]+)*";
@@ -2273,7 +2273,7 @@ ActionsPtr RuleLoader::compileRuleAction(std::string &matched, int ruleLeftSize,
 //    boost::u32regex_token_iterator<std::string::iterator> j;
 //    while (i != j)
     for (std::vector<std::string>::iterator asit = actionStrings.begin();
-            asit != actionStrings.end(); asit ++) {
+            asit != actionStrings.end(); ++ asit) {
         //std::string actionString = *i;
         std::string actionString = boost::algorithm::trim_copy(*asit);
         if ((actionString == "") || (RE2::FullMatch(actionString, regWhite)))
@@ -2428,7 +2428,7 @@ ActionsPtr RuleLoader::compileRuleAction(std::string &matched, int ruleLeftSize,
             std::vector<std::string> attributesVector;
             boost::split(attributesVector, attrs, boost::is_any_of(" "));
             for (std::vector<std::string>::iterator ait = attributesVector.begin();
-                    ait != attributesVector.end(); ait ++) {
+                    ait != attributesVector.end(); ++ ait) {
             //boost::u32regex_token_iterator<std::string::iterator> a(attrs.begin(), attrs.end(), regWhite, -1);
             //boost::u32regex_token_iterator<std::string::iterator> b;
             //while (a != b) {
@@ -2454,7 +2454,7 @@ ActionsPtr RuleLoader::compileRuleAction(std::string &matched, int ruleLeftSize,
             std::vector<std::string> tokensVector;
             boost::split(tokensVector, toks, boost::is_any_of(tokenSeparator));
             for (std::vector<std::string>::iterator tit = tokensVector.begin();
-                    tit != tokensVector.end(); tit ++) {
+                    tit != tokensVector.end(); ++ tit) {
                 std::string tokenString = boost::algorithm::trim_copy(*tit);
             //boost::u32regex_token_iterator<std::string::iterator> t(toks.begin(), toks.end(), regTokenSeparator, -1);
             //boost::u32regex_token_iterator<std::string::iterator> u;
@@ -2532,7 +2532,7 @@ bool RuleLoader::compileDeleteCondition(std::string &key,
                 values = tagset->getPosMatching(value);
             else
                 values = tagset->getPosNotMatching(value);
-            if (values.size() == 0) {
+            if (values.empty()) {
                 std::cerr << "No parts of speech identifiers matching the regular expression: \"" << value << "\"." << std::endl;
                 return false;
             }
@@ -2559,7 +2559,7 @@ bool RuleLoader::compileDeleteCondition(std::string &key,
                 values = tagset->getAttributeValuesMatching(key, value);
             else
                 values = tagset->getAttributeValuesNotMatching(key, value);
-            if (values.size() == 0) {
+            if (values.empty()) {
                 std::cerr << "No values of " << key << " matching the regular expression: \"" << value << "\"." << std::endl;
                 return false;
             }
@@ -2747,7 +2747,7 @@ bool RuleLoader::compileAddInterpretation(std::string &pattern,
     std::vector<std::string> morphologies;
     //while (i != j)
     for (std::vector<std::string>::iterator it = partsVector.begin();
-            it != partsVector.end(); it ++) {
+            it != partsVector.end(); ++ it) {
         std::string value = *it;
         if (index == 0)
         {
@@ -2813,9 +2813,9 @@ bool RuleLoader::compileAddInterpretation(std::string &pattern,
                 while (o != morphologies.end())
                 {
                     newMorphologies.push_back(*o + ":" + *v);
-                    o ++;
+                    ++ o;
                 }
-                v ++;
+                ++ v;
             }
             morphologies = newMorphologies;
 
@@ -2828,7 +2828,7 @@ bool RuleLoader::compileAddInterpretation(std::string &pattern,
     //@todo: czy to powyzej to jest jest optymalnie zrobione?
 
     for (std::vector<std::string>::iterator m = morphologies.begin();
-            m != morphologies.end(); m ++) {
+            m != morphologies.end(); ++ m) {
         std::string mapped = tagset->mapMorphology(*m);
         if (mapped != "") {
             interpretations.push_back(*m);
@@ -2901,7 +2901,7 @@ RulePtr RuleLoader::compileRule(std::string ruleString) //, LatticeWrapperPtr la
     boost::split(linesVector, ruleString, boost::is_any_of(lineSep));
     //while (i != j)
     for (std::vector<std::string>::iterator line_it = linesVector.begin();
-            line_it != linesVector.end(); line_it ++) {
+            line_it != linesVector.end(); ++ line_it) {
         std::string line = *line_it;
 
         //line = boost::u32regex_replace(line, regComment, "", boost::match_default | boost::format_sed);
@@ -3180,7 +3180,7 @@ ActionPtr RuleLoader::compileAction(std::string actionString, RulePtr rule) {
             //boost::u32regex_token_iterator<std::string::iterator> b;
             //while (a != b)
             for (std::vector<std::string>::iterator attr_it = attributesVector.begin();
-                    attr_it != attributesVector.end(); attr_it ++) {
+                    attr_it != attributesVector.end(); ++ attr_it) {
                 std::string aa = boost::trim_copy(*attr_it);
                 if (tagset->checkAttribute(aa)) {
                     //attributes.push_back(tagset->getAttributeIndex(aa));
@@ -3205,7 +3205,7 @@ ActionPtr RuleLoader::compileAction(std::string actionString, RulePtr rule) {
             //boost::u32regex_token_iterator<std::string::iterator> u;
             //while (t != u)
             for (std::vector<std::string>::iterator tok_it = tokensVector.begin();
-                    tok_it != tokensVector.end(); tok_it ++) {
+                    tok_it != tokensVector.end(); ++ tok_it) {
                 if (*tok_it != "") {
                     tokens.push_back(boost::lexical_cast<int>(*tok_it));
                 }

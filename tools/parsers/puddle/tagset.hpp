@@ -51,14 +51,14 @@ class Tagset
         bool containsDesc();
         bool desc_terminals;
         bool desc_nonterminals;
-        bool desc_include_pos;
+//        bool desc_include_pos;
         std::vector<int> desc_order;
         std::string desc_separator;
         std::vector<std::string> getGroupDesc(std::string group);
         std::vector<std::string> getTokenDesc(std::string pos);
         std::map<std::string, std::string> getAttributes(std::string morphologyString, bool buffer = false);
 
-        std::vector<std::string> getOpenClasses();
+        const std::vector<std::string> getOpenClasses();
         std::vector<std::string> getMappedMorphologies(std::string mapped_pos);
 
         std::vector<std::string> getPosMatching(std::string regexp);
@@ -89,7 +89,7 @@ class Tagset
 
         std::vector<std::string> open_classes;
 
-        bool verbose;
+//        bool verbose;
 };
 
 typedef boost::shared_ptr<Tagset> TagsetPtr;
