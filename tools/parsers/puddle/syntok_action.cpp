@@ -423,7 +423,7 @@ bool SyntokAction::test(Lattice &, int,
         std::vector<int> matchedTokensSize) {
     //int sum = 0;
     for (std::vector<int>::iterator i = matchedTokensSize.begin();
-            i != matchedTokensSize.end(); i ++) {
+            i != matchedTokensSize.end(); ++ i) {
         if (*i > 0)
             return true;
     }

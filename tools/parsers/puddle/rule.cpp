@@ -266,6 +266,7 @@ int Rule::matchPattern(std::string &sentenceString, int matchNumber,
             before += matched[0].as_string();
         }
         matchCount ++;
+        delete[] matched;
     }
     }
     catch (std::exception &e) {
@@ -284,7 +285,6 @@ int Rule::matchPattern(std::string &sentenceString, int matchNumber,
 //        std::cout << "Tyle razy dopasowalem: " << matchCount << " regule: " << name << std::endl;
 //    }
 
-    delete[] matched;
 
     return -1;
 }

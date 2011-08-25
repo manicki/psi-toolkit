@@ -985,8 +985,7 @@ std::map<std::string, std::string> Tagset::getAttributes(std::string morphologyS
     return results;
 }
 
-const std::vector<std::string> Tagset::getOpenClasses()
-{
+std::vector<std::string> Tagset::getOpenClasses() const {
     return open_classes;
 }
 

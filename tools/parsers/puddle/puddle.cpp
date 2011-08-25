@@ -546,7 +546,7 @@ void Puddle::logRules()
     if (rulesLogFilename != "")
     {
         std::ofstream logfile(rulesLogFilename.c_str());
-        for (Rules::iterator ir = rules->begin(); ir != rules->end(); ir ++)
+        for (Rules::iterator ir = rules->begin(); ir != rules->end(); ++ ir)
         {
             logfile << (*ir)->log();
             logfile << std::endl;
