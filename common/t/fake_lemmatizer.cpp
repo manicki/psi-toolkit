@@ -3,7 +3,7 @@
 FakeLemmatizer::FakeLemmatizer(const boost::program_options::variables_map&) {
 }
 
-void FakeLemmatizer::lemmatize(const std::string token,
+void FakeLemmatizer::lemmatize(const std::string& token,
                                AnnotationItemManager& annotationItemManager,
                                LemmatizerOutputIterator& outputIterator) {
     if (token == "prowokacjami") {

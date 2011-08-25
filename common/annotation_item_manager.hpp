@@ -16,7 +16,7 @@ public:
 
     std::string getValue(AnnotationItem & annotationItem, std::string attribute);
 
-    std::string getCategory(AnnotationItem & annotationItem) {
+    std::string getCategory(AnnotationItem & annotationItem) const {
         return annotationItem.category_;
     }
 

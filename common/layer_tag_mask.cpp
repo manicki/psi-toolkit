@@ -8,7 +8,7 @@ bool LayerTagMask::isSome() {
     return any_ || tags_.isNonempty();
 }
 
-bool LayerTagMask::isAny() {
+bool LayerTagMask::isAny() const {
     return any_;
 }
 

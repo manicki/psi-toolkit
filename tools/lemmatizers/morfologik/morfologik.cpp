@@ -72,7 +72,7 @@ void Morfologik::stemsOnLemmaLevel(
 	i = unique(stems.begin(), stems.end());
 	stems.resize(i - stems.begin() );
 
-	for (i = stems.begin(); i != stems.end(); i++) {
+	for (i = stems.begin(); i != stems.end(); ++i) {
 		std::string stem = *i;
 		outputIterator.addLemma(stem);
 	}
@@ -88,14 +88,14 @@ void Morfologik::stemsOnLexemeLevel(
 	std::set<std::string> lemmas = getLemmasFromStems(stems);
 	std::set<std::string>::iterator lem;
 
-	for (lem = lemmas.begin(); lem != lemmas.end(); lem++) {
+	for (lem = lemmas.begin(); lem != lemmas.end(); ++lem) {
 		outputIterator.addLemma(*lem);
 
 		std::vector<std::string> lexemeTags =
 			getLexemeTagsFromStems(stems, *lem);
 		std::vector<std::string>::iterator lxt;
 
-		for (lxt = lexemeTags.begin(); lxt != lexemeTags.end(); lxt++) {
+		for (lxt = lexemeTags.begin(); lxt != lexemeTags.end(); ++lxt) {
 			AnnotationItem lexItem = createLexemeAnnotation(*lem, *lxt);
 			outputIterator.addLexeme(lexItem);
 		}
@@ -108,7 +108,7 @@ std::set<std::string> Morfologik::getLemmasFromStems(
 	std::set<std::string> lemmas;
 
 	std::multimap<std::string, std::vector<std::string> >::iterator s;
-	for (s = stems.begin(); s != stems.end(); s++) {
+	for (s = stems.begin(); s != stems.end(); ++s) {
 		lemmas.insert(lemmas.end(), s->first);
 	}
 
@@ -123,7 +123,7 @@ std::vector<std::string> Morfologik::getLexemeTagsFromStems(
 	std::vector<std::string>::iterator t;
 
 	std::multimap<std::string, std::vector<std::string> >::iterator s;
-	for (s = stems.begin(); s != stems.end(); s++) {
+	for (s = stems.begin(); s != stems.end(); ++s) {
 
 		if (s->first == lemma) {
 			t = (s->second).begin();
@@ -148,7 +148,7 @@ AnnotationItem Morfologik::createLexemeAnnotation(
 
 	AnnotationItem lexeme(partOfSpeech, wordId);
 
-	for (atr = attributes.begin(); atr != attributes.end(); atr++) {
+	for (atr = attributes.begin(); atr != attributes.end(); ++atr) {
 		annotationManager->setValue(lexeme, atr->first, atr->second);
 	}
 	return lexeme;
@@ -164,7 +164,7 @@ void Morfologik::stemsOnFormLevel(
 	std::set<std::string> lemmas = getLemmasFromStems(stems);
 	std::set<std::string>::iterator lem;
 
-	for (lem = lemmas.begin(); lem != lemmas.end(); lem++) {
+	for (lem = lemmas.begin(); lem != lemmas.end(); ++lem) {
 
 		outputIterator.addLemma(*lem);
 
@@ -180,13 +180,13 @@ void Morfologik::stemsOnFormLevel(
 			AnnotationItem lexItm = createLexemeAnnotation(*lem, *tag);
 			outputIterator.addLexeme(lexItm);
 
-			for (tag = tags.begin(); tag != tags.end(); tag++) {
+			for (tag = tags.begin(); tag != tags.end(); ++tag) {
 
 				std::vector<std::map<std::string, std::string> > forms =
 					tagsParser.getFormAttributes(*tag);
 				std::vector<std::map<std::string, std::string> >::iterator frm;
 
-				for (frm = forms.begin(); frm != forms.end(); frm++) {
+				for (frm = forms.begin(); frm != forms.end(); ++frm) {
 					AnnotationItem frmItm = createFormAnnotation(lexItm, *frm);
 					outputIterator.addForm(frmItm);
 				}
@@ -203,7 +203,7 @@ AnnotationItem Morfologik::createFormAnnotation(
 	AnnotationItem formItem = lexemeItem;
 
 	std::map<std::string, std::string>::iterator atr;
-	for (atr = attributes.begin(); atr != attributes.end(); atr++) {
+	for (atr = attributes.begin(); atr != attributes.end(); ++atr) {
 		annotationManager->setValue(lexemeItem, atr->first, atr->second);
 	}
 	return lexemeItem;
@@ -221,7 +221,7 @@ std::vector<std::string> Morfologik::simpleStem(const std::string & word) {
 	const char *pstem = NULL;
 	std::vector<std::string> result;
 
-	for (int i = 0; i < stemsCount; i++) {
+	for (int i = 0; i < stemsCount; ++i) {
 		objWordData = (jobject)jenv->CallObjectMethod
 			(objList, midListGetElement, (jint)i);
 
@@ -251,7 +251,7 @@ std::multimap<std::string, std::vector<std::string> > Morfologik::stem(
 	std::multimap<std::string, std::vector<std::string> > result;
 	std::vector<std::string> tags;
 
-	for (int i = 0; i < stemsCount; i++) {
+	for (int i = 0; i < stemsCount; ++i) {
 		objWordData = (jobject)jenv->CallObjectMethod
 			(objList, midListGetElement, (jint)i);
 

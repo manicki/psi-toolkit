@@ -13,7 +13,7 @@ LexDbLemmatizer::LexDbLemmatizer(const boost::program_options::variables_map& op
     DEBUG("LEXDB" << dbName);
 }
 
-void LexDbLemmatizer::lemmatize(const std::string token,
+void LexDbLemmatizer::lemmatize(const std::string& token,
                                AnnotationItemManager& annotationItemManager,
                                LemmatizerOutputIterator& outputIterator) {
     pqxx::work transaction(connection_);
