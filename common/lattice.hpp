@@ -436,21 +436,18 @@ private:
         unsigned int operator()(
             const std::pair<
                 std::pair<VertexDescriptor, VertexDescriptor>,
-                std::pair<AnnotationItem, LayerTagCollection>
+                AnnotationItem
             >& k
         ) const {
 #ifdef __VS__
             return HASH_WRAPPER_FULL_HASH_TRAITS<int>().operator()(int(k.first.first))
                 ^ HASH_WRAPPER_FULL_HASH_TRAITS<int>().operator()(int(k.first.second))
                 ^ HASH_WRAPPER_FULL_HASH_TRAITS<long>().operator()(
-                    k.second.first.getHash())
-                ^ HASH_WRAPPER_FULL_HASH_TRAITS<unsigned long>().operator()(
-                    k.second.second.getHash());
+                    k.second.getHash());
 #else
             return (int(k.first.first) << 8)
                 ^ int(k.first.second)
-                ^ (int(k.second.first.getHash()) << 16)
-                ^ (int(k.second.second.getHash()) << 24);
+                ^ (int(k.second.getHash()) << 16);
 #endif
         }
 
@@ -458,11 +455,11 @@ private:
         bool operator()(
             const std::pair<
                 std::pair<VertexDescriptor, VertexDescriptor>,
-                std::pair<AnnotationItem, LayerTagCollection>
+                AnnotationItem
             >& a,
             const std::pair<
                 std::pair<VertexDescriptor, VertexDescriptor>,
-                std::pair<AnnotationItem, LayerTagCollection>
+                AnnotationItem
             >& b
         ) const {
             return a != b;
@@ -499,7 +496,7 @@ private:
     typedef HashWrapper3<
         std::pair<
             std::pair<VertexDescriptor, VertexDescriptor>,
-            std::pair<AnnotationItem, LayerTagCollection>
+            AnnotationItem
         >,
         EdgeDescriptor,
         HashFun

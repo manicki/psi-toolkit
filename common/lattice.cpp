@@ -70,20 +70,51 @@ Lattice::EdgeDescriptor Lattice::addEdge(
 
     std::pair<
         std::pair<VertexDescriptor, VertexDescriptor>,
-        std::pair<AnnotationItem, LayerTagCollection>
-    > hkey(vpair, std::pair<AnnotationItem, LayerTagCollection>(annotationItem, tags));
+        AnnotationItem
+    > hkey(vpair, annotationItem);
 
     std::pair<VVCHash::iterator, bool> insertResult(vvcHash_.insert(
         std::pair<
             std::pair<
                 std::pair<VertexDescriptor, VertexDescriptor>,
-                std::pair<AnnotationItem, LayerTagCollection>
+                AnnotationItem
             >,
             EdgeDescriptor
         >(hkey, EdgeDescriptor())
     ));
 
+    bool needToAddEdge = false;
+
+    if (!insertResult.second) {
+        EdgeDescriptor edge = (insertResult.first)->second;
+        LayerTagCollection oldTags = getEdgeLayerTags(edge);
+        Score oldScore = getEdgeScore(edge);
+        if (tags != oldTags) {
+            tags = createUnion(oldTags, tags);
+            if (edge.implicitIndex < 0) {
+                graph_[edge.descriptor].tagList = tags;
+            } else {
+                implicitOutEdges_.set(from, false);
+                edge.implicitIndex = -1;
+                needToAddEdge = true;
+            }
+        }
+        if (score > oldScore) {
+            if (edge.implicitIndex < 0) {
+                graph_[edge.descriptor].score = score;
+            } else {
+                implicitOutEdges_.set(from, false);
+                edge.implicitIndex = -1;
+                needToAddEdge = true;
+            }
+        }
+    }
+
     if (insertResult.second) {
+        needToAddEdge = true;
+    }
+
+    if (needToAddEdge) {
 
         if (!edgeCounterHash_[vpair]) {
             edgeCounterHash_[vpair] = 1;
@@ -96,6 +127,7 @@ Lattice::EdgeDescriptor Lattice::addEdge(
             && from + (int) symbolLength_(from) == to
         ) {
             implicitOutEdges_.set(from, true);
+            (insertResult.first)->second = EdgeDescriptor(from);
             return EdgeDescriptor(from);
         }
 
@@ -152,8 +184,10 @@ Lattice::EdgeDescriptor Lattice::addEdge(
             for (VertexDescriptor vd = from; vd < to; ++vd) {
                 hiddenImplicitOutEdges_[vd] = true;
             }
+            (insertResult.first)->second = EdgeDescriptor(result.first);
             return EdgeDescriptor(result.first);
         }
+
     }
 
     return (insertResult.first)->second;
@@ -298,7 +332,7 @@ int Lattice::getEdgeEndIndex(Lattice::EdgeDescriptor edge) const {
     if (edge.implicitIndex < 0) {
         return graph_[boost::target(edge.descriptor, graph_)].index;
     }
-    return edge.implicitIndex;
+    return edge.implicitIndex + symbolLength_(edge.implicitIndex);
 }
 
 int Lattice::getEdgeLength(Lattice::EdgeDescriptor edge) const {

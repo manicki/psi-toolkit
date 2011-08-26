@@ -124,15 +124,15 @@ public:
 
     void testPsiLatticeWriterSimple() {
 
-        Lattice lattice("Ala ma kota");
+        Lattice lattice("Ala ma słonia");
         lattice.addSymbols(lattice.getFirstVertex(), lattice.getLastVertex());
 
         Lattice::VertexDescriptor pre_ala = lattice.getFirstVertex();
         Lattice::VertexDescriptor post_ala = lattice.getVertexForRawCharIndex(3);
         Lattice::VertexDescriptor pre_ma = lattice.getVertexForRawCharIndex(4);
         Lattice::VertexDescriptor post_ma = lattice.getVertexForRawCharIndex(6);
-        Lattice::VertexDescriptor pre_kota = lattice.getVertexForRawCharIndex(7);
-        Lattice::VertexDescriptor post_kota = lattice.getLastVertex();
+        Lattice::VertexDescriptor pre_slonia = lattice.getVertexForRawCharIndex(7);
+        Lattice::VertexDescriptor post_slonia = lattice.getLastVertex();
 
         LayerTagCollection
             raw_tag = lattice.getLayerTagManager().createSingletonTagCollection("symbol");
@@ -186,24 +186,30 @@ public:
             second_blank_builder.addEdge(lattice.firstOutEdge(
                                 lattice.getVertexForRawCharIndex(6),
                                 rawMask));
-            lattice.addEdge(post_ma, pre_kota, blank_token, token_tag, second_blank_builder.build());
+            lattice.addEdge(post_ma, pre_slonia, blank_token, token_tag, second_blank_builder.build());
         }
 
         {
-            Lattice::EdgeSequence::Builder kota_builder;
-            kota_builder.addEdge(lattice.firstOutEdge(
+            Lattice::EdgeSequence::Builder slonia_builder;
+            slonia_builder.addEdge(lattice.firstOutEdge(
                                 lattice.getVertexForRawCharIndex(7),
                                 rawMask));
-            kota_builder.addEdge(lattice.firstOutEdge(
+            slonia_builder.addEdge(lattice.firstOutEdge(
                                 lattice.getVertexForRawCharIndex(8),
                                 rawMask));
-            kota_builder.addEdge(lattice.firstOutEdge(
-                                lattice.getVertexForRawCharIndex(9),
-                                rawMask));
-            kota_builder.addEdge(lattice.firstOutEdge(
+            slonia_builder.addEdge(lattice.firstOutEdge(
                                 lattice.getVertexForRawCharIndex(10),
                                 rawMask));
-            lattice.addEdge(pre_kota, post_kota, word_token, token_tag, kota_builder.build());
+            slonia_builder.addEdge(lattice.firstOutEdge(
+                                lattice.getVertexForRawCharIndex(11),
+                                rawMask));
+            slonia_builder.addEdge(lattice.firstOutEdge(
+                                lattice.getVertexForRawCharIndex(12),
+                                rawMask));
+            slonia_builder.addEdge(lattice.firstOutEdge(
+                                lattice.getVertexForRawCharIndex(13),
+                                rawMask));
+            lattice.addEdge(pre_slonia, post_slonia, word_token, token_tag, slonia_builder.build());
         }
 
         boost::scoped_ptr<LatticeWriter> writer(new PsiLatticeWriter());

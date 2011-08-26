@@ -16,6 +16,10 @@ bool LayerTagCollection::operator==(const LayerTagCollection& other) const {
     return v_ == other.v_;
 }
 
+bool LayerTagCollection::operator!=(const LayerTagCollection& other) const {
+    return v_ != other.v_;
+}
+
 unsigned long LayerTagCollection::getHash() const {
     return v_.to_ulong();
 }
