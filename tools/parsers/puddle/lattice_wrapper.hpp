@@ -8,6 +8,7 @@
 #endif
 #include <iostream>
 #include <sstream>
+#include <boost/lexical_cast.hpp>
 
 namespace poleng {
     namespace bonsai {
