@@ -491,10 +491,10 @@ public:
             = lattice.getLayerTagManager().getTagNames(lattice.getEdgeLayerTags(edge));
         TS_ASSERT_EQUALS(tagNames.size(), 2);
         std::list<std::string>::iterator tni = tagNames.begin();
-        TS_ASSERT_EQUALS(*tni, "token");
+        TS_ASSERT_EQUALS(*tni, "lemma");
         ++tni;
         TS_ASSERT(tni != tagNames.end());
-        TS_ASSERT_EQUALS(*tni, "lemma");
+        TS_ASSERT_EQUALS(*tni, "token");
 
     }
 

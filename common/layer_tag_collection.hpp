@@ -33,6 +33,8 @@ public:
 
     bool operator==(const LayerTagCollection& other) const;
 
+    bool operator!=(const LayerTagCollection& other) const;
+
     /**
      * method for compatibility with HashWrapper3
      */
