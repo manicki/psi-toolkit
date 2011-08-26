@@ -952,18 +952,18 @@ Eval:  add("CONJ:phrase",  base, 1);
 
 Rule "to"
 Match: [base~"to"] [pos~"R|P|ZP|IBR|ICZ|LP" && orth!~"ma"];
-Eval:  unify(gender number case, 1, 2);     
+Eval:  unify(gender number case, 1, 2);
        #delete(pos~"ZRw",1);
 
 Rule "to2"
 Match: [pos~"R|P|ZP|IBR|ICZ|LP" && orth!~"ma"] [base~"to"];
-Eval:  unify(gender number case, 1, 2);     
+Eval:  unify(gender number case, 1, 2);
        delete(pos~"ZRw",2);
 
 Rule "to3"
 Match: [base~"to" && pos~"ZRw"];
 Eval:  delete(pos!~"ZRw",1);
-       
+
 Rule "zostanie"
 Match: [base~"zostać"];
 Eval:  delete(pos!~"C|BZK",1);
@@ -1015,8 +1015,8 @@ Match: [base~"jako"] [base~"taki"];
 Eval:         delete(pos!~"CONJ",1);
        delete(pos!~"ZP",2);
       group(AP, 2);
- 
-       
+
+
 Rule "H1: Helper Rule"
 Match: [pos~"PR"] [pos~"R"];
 Eval:  unify(case, 1, 2);
@@ -1040,12 +1040,12 @@ Eval:  unify(case gender number, 1, 2);
 Rule "który"
 Match: [pos~"ZP" && base~"któr.*"];
 #Right: [pos!~"R"];
-Eval:  group(NP, 1); 
+Eval:  group(NP, 1);
 
 Rule "jaki"
 Match: [pos~"ZP" && base~"jaki.*"];
 #Right: [pos!~"R"];
-Eval:  group(NP, 1); 
+Eval:  group(NP, 1);
 
 Rule "brutto"
 Match: [base~"brutto"];
@@ -1081,21 +1081,21 @@ Eval:  delete(pos!~"PR",1);
 Rule "NE1.1: Naive named entity - starts with a capital letter and consists of several unknown items"
 #Match: [pos~"ign" && orth~"\p{Lu}{1}[\p{L}{1}\'\-\/\.\d]*"] [pos~"ign"]*;
 #Match: [pos~"ign" && orth~"[[:Lu:]][[[:L*:]]\'\-\/\.\d]*"] [pos~"ign"]*;
-Match: [pos~"ign" && orth~"[[:Lu:]][[:L*:]\.\d\'\-\/]*"] [pos~"ign"]*;
+Match: [pos~"ign" && orth~"\p{Lu}[\p{L}\.\d\'\-\/]*"] [pos~"ign"]*;
 Eval:  group(NE, 1);
 
 Rule "NE1.2: Naive named entity - surrounded by quotes and consists of unknown items"
-Left:  [base~"\""]; 
+Left:  [base~"\""];
 Match: [pos~"ign"]+ ;
 Right: [base~"\""];
 Eval:  group(NE, 2);
 
 Rule "DATE1: Date with month names and optional 'r.' (eg. 13 listopada 2008 r.)"
-Match: [base~"\d?\d"] [base~"styczeń|luty|marzec|kwieceń|maj|czerwiec|lipiec|sierpień|wrzesień|październik|listopad|grudzień"] [base~"\d\d\d\d"] [base~"r\.?|rok"]?; 
+Match: [base~"\d?\d"] [base~"styczeń|luty|marzec|kwieceń|maj|czerwiec|lipiec|sierpień|wrzesień|październik|listopad|grudzień"] [base~"\d\d\d\d"] [base~"r\.?|rok"]?;
 Eval:  group(DATE, 2);
 
 Rule "DATE2: Simple numerical date (eg. 13.11.2008)"
-Match: [base~"\d?\d\.\d?\d\.(\d\d)?\d\d"]; 
+Match: [base~"\d?\d\.\d?\d\.(\d\d)?\d\d"];
 Eval:  group(DATE, 1);
 
 Rule "TIME1: Simple time (e.g. 12:01)"
@@ -1120,25 +1120,25 @@ Eval:  group(NUM, 2);
 
 Rule "NUM3.1: Single letters surrounded by ')'"
 #Match: [base~"\("] [base~"\p{L*}"] [base~"\)"];
-Match: [base~"\("] [base~"[[:L*:]]"] [base~"\)"];
+Match: [base~"\("] [base~"\p{L}"] [base~"\)"];
 Eval:  group(NUM, 2);
 
 Rule "NUM3.2: Single letters followed by ')'"
 #Match: [base~"\p{L*}"] [base~"\)"];
-Match: [base~"[[:L*:]]"] [base~"\)"];
+Match: [base~"\p{L}"] [base~"\)"];
 Eval:  group(NUM, 1);
 
 Rule "NUM5: Conjunction of numerical phrases"
 Match: [type=NUM] (([pos~"CONJ"]|[base~","]) [type=NUM])+ ;
 Eval:  group(NUM, 1);
-       
+
 Rule "NE2: Named entity surrounded by quotes"
 Match: [base~"\""] [type=NE] [base~"\""];
 Eval:  group(NE, 2);
 
 Rule "NE3: Named entity surrounded by parenthesis"
 #Match: [base~"\("] ([type=NE]|[orth~"\p{Lu}+"]) [base~"\)"];
-Match: [base~"\("] ([type=NE]|[orth~"[[:Lu:]]+"]) [base~"\)"];
+Match: [base~"\("] ([type=NE]|[orth~"p\{Lu}+"]) [base~"\)"];
 Eval:  group(NE, 2);
 
 Rule "NE4: Conjunction of named entities"
@@ -1146,7 +1146,7 @@ Match: [type=NE] ([pos~"CONJ"]? [type=NE])+ ;
 Eval:  group(NE, 1);
 
 ###### adjective rules #####
-                            
+
 Rule "AP1.1: Adverb + at least 1 adjective"
 Match: [pos~"PS"]* ([pos~"P"] | [pos~"LP"] | [pos~"ZP" && orth!~"ma"]) ([pos~"P"] | [pos~"LP"] | [pos~"ZP" && orth!~"ma"])+;
 Eval:  unify(case gender number, 2, 3);
@@ -1167,7 +1167,7 @@ Eval:  unify(case gender number, 2, 3);
        delete(pos!~"P|LP|ZP", 2);
        delete(pos!~"P|LP|ZP", 3);
        group(AP, 2);
-              
+
 Rule "AP2.1: Participle as adjective (after noun)"
 #Left:  (([pos~"R"] ([pos~"P"]|[pos~"ZP"]|[pos~"LP"])*)|[type=NP]);
 Left:  (([pos~"R"] [pos~"P|ZP|LP" && orth!~"ma"]*)|[type=NP]);
@@ -1221,13 +1221,13 @@ Match: [type=AP] [pos~"R"];
 Eval:  unify(case gender number, 1, 2);
        delete(pos!~"R", 2);
        group(NP, 2);
-       
+
 #Rule "NP1.3.1: Adjective phrase + gerund"
 #Match: [type=AP] [pos~"R|ODS"];
 #Eval:  unify(case gender number, 1, 2), ;
 #       delete(pos!~"R|ODS", 2);
 #       group(NP, 2);
-       
+
 Rule "NP2.1: Adjective phrase + gerund + adjective phrase"
 Match: [type=AP] [pos~"ODS"] [pos~"ZRs"]? [type=AP];
 Eval:  unify(case gender number, 1, 2, 4);
@@ -1245,7 +1245,7 @@ Match: [type=AP] [pos~"ODS"] [pos~"ZRs"]?;
 Eval:  unify(case gender number, 1, 2);
        delete(pos!~"ODS", 2);
        group(NP, 2);
-       
+
 Rule "NP3.1: Single noun"
 Match: [pos~"R"];
 Eval:  delete(pos!~"R", 1);
@@ -1278,11 +1278,11 @@ Rule "NP6: Pronoun as noun phrase"
 Match: [pos~"ZR[won]"];
 Eval:         delete(pos!~"ZR.+", 1);
       group(NP, 1);
- 
+
 #Rule "NP7: Single adjective as noun phrase"
 #Match: [pos~~"P"];
 #Eval:  group(NP, 1);
-       
+
 ###### Combining tokens and phrases #####
 
 Rule "NP+NUM1.1: Numerical phrase as apposition (after noun phrase)"
@@ -1371,7 +1371,7 @@ Eval:  group(CPP, 2);
 Rule "PP3: Prepositional phrase + conjunctional prepositional phrase"
 Match: [type=PP] [type=CPP]+;
 Eval:  group(PP, 1);
-       
+
 ####### Higher order noun phrases 2 #####
 
 Rule "NP11: Noun phrase (no pronoun) + prepositional attribute"
@@ -1425,7 +1425,7 @@ Eval:         delete(pos!~"ICZ|IBR|IPW|IPU", 2);
       delete(pos!~"PS", 1);
        delete(case~"nom", 4);
       group(IP, 2);
- 
+
 #Rule "IP1: imiesłow czynny lub bierny + fraza rzeczownikowy / fraza przyimkowa"
 #Left:  [pos!~"BZK"];
 #Match: [pos~"PS"]? [pos~"IBR|ICZ"] [pos~"ZRs"]? ([type=NP]|[type=PP]|[pos~"PS" && base!~"nie"])+;
@@ -1465,13 +1465,13 @@ Eval:  group(VP, 2);
 Rule "VP2: General verbal phrase"
 Match: [pos~"PS" && base!~"może"]* ([pos~"C"]|[pos~"BZK"]|[pos~"BZS"]|[pos~"WIN"]|[pos~"pred"]) [pos~"PS"]* [base~"się"]? (([pos~"PS"]*|[type=PP]?) ([pos~"C"]|[pos~"BZK"]|[pos~"BZS"]|[pos~"WIN"]|[pos~"pred"]) [pos~"PS"]* [base~"się"]?)*;
 Eval:  group(VP, 2);
-       
+
 ##### Glue rules 2 ######
 
 Rule "G1: Series of non-verbal phrases"
 Match: ([type=NP && head=[pos!~"ZR.+"]] | [type=CNP] | [type=NE] | [type=PP] | [type=CPP] | [type=IP]) ([type=NP && head=[pos!~"ZR.+"]] | [type=CNP]| [type=NE]  | [type=PP] | [type=CPP] | [type=IP])+;
-Eval: group(SNP, 1);       
-       
+Eval: group(SNP, 1);
+
 ##### Sentence rules #####
 
 Rule "S1.1: Normal sentence (obligatory noun group before verb phrase)"

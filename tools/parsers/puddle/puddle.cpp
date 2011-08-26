@@ -29,9 +29,9 @@ namespace puddle
             //parser.logTagset();
             rule_loader.setTagset(tagset);
         } else {
-            std::cerr << "Tagset not loaded." << std::endl;
-            //return 1;
-            //@todo: wyjatek
+            std::cerr << "Tagset not given." << std::endl;
+        //    //return 1;
+        //    //@todo: wyjatek
         }
 
         RulesPtr rules;
@@ -45,7 +45,7 @@ namespace puddle
             }
             //parser.logRules();
         } else {
-            std::cerr << "Rules not loaded." << std::endl;
+            std::cerr << "Rules not given." << std::endl;
             //return 1;
             //@todo: wyjatek
         }
@@ -57,20 +57,8 @@ namespace puddle
     boost::program_options::options_description Puddle::Factory::doOptionsHandled() {
         boost::program_options::options_description desc("Options");
         desc.add_options()
-            ("file,f", boost::program_options::value<std::string>(), "input XML file")
-            ("tagset,t", boost::program_options::value<std::string>(), "tagset file")
-            ("description", boost::program_options::value<std::string>(), "description file")
-            ("rules,r", boost::program_options::value<std::string>(), "rules file")
-            ("dictionary,d", boost::program_options::value<std::string>(), "inflected forms dictionary")
-            ("model,m", boost::program_options::value<std::string>(), "Input model for tagging")
-            ("verbose", "talks a lot on stderr")
-            ("constituents", "constituents only")
-            ("tagged", "pre-tagged input text")
-            ("no-syntok", "do not include syntok in output")
-            ("dot", "dot graph only")
-            ("tagset-log", boost::program_options::value<std::string>(), "tagset log file path")
-            ("rules-log", boost::program_options::value<std::string>(), "rules log file path")
-            ("help", "prints this information")
+            ("tagset", boost::program_options::value<std::string>(), "tagset file")
+            ("rules", boost::program_options::value<std::string>(), "rules file")
             ;
         return desc;
     }
@@ -103,7 +91,6 @@ namespace puddle
         }
 
     void Puddle::Worker::doRun() {
-        std::cerr << "JADE" << std::endl;
 
     //    LayerTagMask symbolMask = lattice_.getLayerTagManager().getMask("symbol");
 

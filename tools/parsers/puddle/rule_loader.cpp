@@ -978,7 +978,7 @@ std::string RuleLoader::compileToken(std::string &token,
         }
         else if (key == "orth")
         {
-            orth = compileOrthCondition(compOperator, value, icase);
+            orth = compileOrthCondition(compOperator, value, icase, negativePatterns);
             if (orth == "")
             {
                 std::cerr << "EROR!" << std::endl;
@@ -1466,8 +1466,8 @@ bool RuleLoader::compileBaseCondition(std::string &comparisonOperator,
     RE2::GlobalReplace(&value, *regAmp, "\\&amp;");
     RE2::GlobalReplace(&value, *regLt, "\\&lt;");
     RE2::GlobalReplace(&value, *regGt, "\\&gt;");
-    RE2::GlobalReplace(&value, *regLPar, "\\&lpar;");
-    RE2::GlobalReplace(&value, *regRPar, "\\&rpar;");
+    RE2::GlobalReplace(&value, *regLPar, "&#40;");
+    RE2::GlobalReplace(&value, *regRPar, "&#41;");
     RE2::GlobalReplace(&value, *regAlt, "\\&bar;");
     RE2::GlobalReplace(&value, *regPlus, "\\&plus;");
     RE2::GlobalReplace(&value, *regAsterisk, "\\&astr;");
@@ -1910,7 +1910,7 @@ bool RuleLoader::compileAttributeCondition(std::string &key,
 }*/
 
 std::string RuleLoader::compileOrthCondition(std::string &comparisonOperator,
-        std::string &value, bool icase) {
+        std::string &value, bool icase, NegativePatternStrings &negativePatterns) {
 //    value = boost::regex_replace(value, regAmp, "\\&amp;", boost::match_default | boost::format_sed);
 //    value = boost::regex_replace(value, regLt, "\\&lt;", boost::match_default | boost::format_sed);
 //    value = boost::regex_replace(value, regGt, "\\&gt;", boost::match_default | boost::format_sed);
@@ -1923,8 +1923,8 @@ std::string RuleLoader::compileOrthCondition(std::string &comparisonOperator,
     RE2::GlobalReplace(&value, *regAmp, "\\&amp;");
     RE2::GlobalReplace(&value, *regLt, "\\&lt;");
     RE2::GlobalReplace(&value, *regGt, "\\&gt;");
-    RE2::GlobalReplace(&value, *regLPar, "\\&lpar;");
-    RE2::GlobalReplace(&value, *regRPar, "\\&rpar;");
+    RE2::GlobalReplace(&value, *regLPar, "&#40;"); //@todo: koniecznie to zrobic tu i w compileBaseCondition we wszystkich miejscach, przeniesc to do funkcji typu util::Escape i dorobic w ruleMatcher funkcje unescape
+    RE2::GlobalReplace(&value, *regRPar, "&#41;");
     RE2::GlobalReplace(&value, *regAlt, "\\&bar;");
     RE2::GlobalReplace(&value, *regPlus, "\\&plus;");
     RE2::GlobalReplace(&value, *regAsterisk, "\\&astr;");
@@ -2019,8 +2019,22 @@ std::string RuleLoader::compileOrthCondition(std::string &comparisonOperator,
     std::string result;
     if ((comparisonOperator == "~") || (comparisonOperator == "~~"))
         result = value;
-    else if (comparisonOperator == "!~")
-        result = "(?!" + value + ")[^<>]+";
+    else if (comparisonOperator == "!~") {
+        result = "(?P<";
+        std::string negativePatternName = "neg";
+        negativePatternName += boost::lexical_cast<std::string>(
+                negativePatterns.size() );
+        result += negativePatternName;
+        result += ">";
+        result += "[^<>]+";
+        result += ")";
+        negativePatterns.insert(
+                std::pair<std::string, std::string>(
+                    negativePatternName, value
+                    ) );
+
+//        result = "(?!" + value + ")[^<>]+";
+    }
     else
     {
         std::cerr << "Unknown comparison operator: " << comparisonOperator << "." << std::endl;
