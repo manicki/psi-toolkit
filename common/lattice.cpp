@@ -152,6 +152,7 @@ Lattice::EdgeDescriptor Lattice::addEdge(
             for (VertexDescriptor vd = from; vd < to; ++vd) {
                 hiddenImplicitOutEdges_[vd] = true;
             }
+            (insertResult.first)->second = EdgeDescriptor(result.first);
             return EdgeDescriptor(result.first);
         }
     }
