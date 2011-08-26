@@ -72,7 +72,8 @@ bool TransformAction::apply(Lattice &lattice, int currentEntity,
             endEdges,
             this->group,
             headEdges,
-            groupPartitions
+            groupPartitions,
+            element - 1
             );
 /*    Edges::iterator e = edges.begin();
     int index = -1;

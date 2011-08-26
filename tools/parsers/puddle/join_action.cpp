@@ -149,7 +149,8 @@ bool JoinAction::apply(Lattice &lattice, int currentEntity,
             endEdges,
             this->group,
             headEdges,
-            groupPartitions
+            groupPartitions,
+            head - 1
             );
 //    group->setStart(edgeStart->getStart());
 //    group->setEnd(edgeEnd->getEnd());

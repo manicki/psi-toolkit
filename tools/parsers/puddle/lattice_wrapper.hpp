@@ -70,6 +70,7 @@ namespace poleng {
                             std::string &parseCategory,
                             std::list<Lattice::EdgeDescriptor> headEdges,
                             std::list<Lattice::EdgeSequence> groupSequences,
+                            int headEdgeIndex,
                             Lattice::Score score = 0.0);
                     void addSyntokEdges(Lattice &lattice,
                             std::list<Lattice::EdgeDescriptor> startEdges,
@@ -88,8 +89,19 @@ namespace poleng {
                     void removeParseEdges(Lattice &lattice,
                             Lattice::VertexDescriptor start,
                             Lattice::VertexDescriptor end);
+                    std::string getBase(Lattice &lattice,
+                            Lattice::EdgeDescriptor edge);
+                    std::string getPartOfSpeech(Lattice &lattice,
+                            Lattice::EdgeDescriptor edge);
+                    bool isParseEdge(Lattice &lattice,
+                            Lattice::EdgeDescriptor edge);
+                    Lattice::EdgeDescriptor getLexemeEdge(
+                            Lattice &lattice, Lattice::EdgeDescriptor edge);
+                    Lattice::EdgeDescriptor getLemmaEdge(
+                            Lattice &lattice, Lattice::EdgeDescriptor edge);
+
 //                    void addPosEdges(Lattice &lattice);
-//                private:
+//                private:edge)
                     //AnnotationItemManager annotationItemManager;
                     //void initAnnotationItemManager(TagsetPtr tagset);
 //                    bool isNonTop(std::list<Lattice::EdgeDescriptor> nontopEdges,

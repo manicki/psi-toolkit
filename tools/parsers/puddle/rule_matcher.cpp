@@ -133,7 +133,7 @@ void RuleMatcher::applyRules(std::string &sentenceString,
 
     //addPosEdges(lattice);
     //addPosEdges(inputGraph, lattice);
-    addPosEdges(lattice);
+//    addPosEdges(lattice);
 //    std::cerr << "pos krawedzie dodane" << std::endl;
 
     //@todo: dorobic robienie tych ponizszych paru sztuczek tez na latice
@@ -329,7 +329,7 @@ void RuleMatcher::addPosEdges(Lattice &lattice) {
     //Edges posEdges;
     LayerTagMask mask = lattice.getLayerTagManager().getMask(
             lattice.getLayerTagManager().
-            createSingletonTagCollection("lemma") //@todo: czy "token"?
+            createSingletonTagCollection("form") //@todo: czy "token"?
             );
 
     //std::multimap<Lattice::EdgeDescriptor, std::string> posEdgesMap;
@@ -340,10 +340,14 @@ void RuleMatcher::addPosEdges(Lattice &lattice) {
         Lattice::EdgeDescriptor edge = edgeIterator.next();
         int start = lattice.getEdgeBeginIndex(edge);
         int end = start + lattice.getEdgeLength(edge);
-        AnnotationItem ai = lattice.getEdgeAnnotationItem(edge);
-        std::string morphology =
-            lattice.getAnnotationItemManager().getValue(ai, "morphology");
-        std::string partOfSpeech = morphology.substr(0, morphology.find(":"));
+        AnnotationItem annotationItem = lattice.getEdgeAnnotationItem(edge);
+        if (lattice.getAnnotationItemManager().getValue(annotationItem,
+                    "discard") == "1")
+            continue; //skip discarded forms
+        //std::string morphology =
+        //    lattice.getAnnotationItemManager().getValue(ai, "morphology");
+        //std::string partOfSpeech = morphology.substr(0, morphology.find(":"));
+        std::string partOfSpeech = lattice::getPartOfSpeech(lattice, edge);
         //                    std::list< std::pair<std::string, std::string> > av
         //                        = lattice.getAnnotationItemManager().getValues(ai);
         //                    for (std::list< std::pair<std::string, std::string> >
@@ -373,6 +377,7 @@ void RuleMatcher::addPosEdges(Lattice &lattice) {
         if (! alreadyAdded) {
             AnnotationItem ai(partOfSpeech);
             lattice.getAnnotationItemManager().setValue(ai, "discard", "0");
+            lattice.getAnnotationItemManager().setValue(ai, "head", "0");
             Lattice::EdgeSequence::Builder seqBuilder;
             seqBuilder.addEdge(edge);
             lattice.addEdge(
@@ -578,7 +583,7 @@ std::string RuleMatcher::generateSentenceString(Lattice &lattice) {
 
         LayerTagCollection tags = lattice.getEdgeLayerTags(edge);
         LayerTagMask mask = lattice.getLayerTagManager().getMask(tags);
-        if (lattice.getLayerTagManager().match(mask, "lemma")) {
+        if (lattice.getLayerTagManager().match(mask, "form")) {
             ss << "<<t";
         } else {
             ss << "<<g";
@@ -602,18 +607,24 @@ std::string RuleMatcher::generateSentenceString(Lattice &lattice) {
             }
         } else {
             ss << "<" << "TOKEN";
-            ss << "<" << lattice.getAnnotationItemManager().
-                getCategory(annotationItem); //@todo: trzeba poprawic ustawianie orth dla krawedzi 'parse'
+            ss << "<" << //lattice.getAnnotationItemManager().
+                //getCategory(annotationItem); //@todo: trzeba poprawic ustawianie orth dla krawedzi 'parse'
+                lattice.getEdgeText(edge);
         }
         for (std::list<Lattice::EdgeDescriptor>::iterator edgeIt = edges.begin();
                 edgeIt != edges.end(); ++ edgeIt) {
             AnnotationItem ai = lattice.getEdgeAnnotationItem(*edgeIt);
             if (lattice.getAnnotationItemManager().getValue(ai, "discard") == "1")
                 continue; //skip discarded edges
-            std::string base = lattice.getAnnotationItemManager().getValue(
-                    ai, "base");
-            std::string morphology = lattice.getAnnotationItemManager().getValue(
-                    ai, "morphology");
+            std::string base = lattice::getBase(lattice, *edgeIt); //@todo: nie bedzie dzialalo dla krawedzi 'parse'
+                //lattice.getAnnotationItemManager().getValue(
+                    //ai, "base");
+            std::string partOfSpeech = lattice::getPartOfSpeech(lattice, *edgeIt); //@todo: nie bedzie dzialalo dla krawedzi 'parse'
+            std::string morpho = lattice.getAnnotationItemManager().getValue(
+                    ai, "morpho");
+            std::string morphology = partOfSpeech;
+            if (morpho != "")
+                morphology += ":" + morpho;
             ss << "<";
             //ss << mapped;
             ss << base;

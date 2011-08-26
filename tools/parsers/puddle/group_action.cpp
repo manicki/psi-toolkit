@@ -48,7 +48,7 @@ GroupAction::~GroupAction()
 bool GroupAction::apply(Lattice &lattice, int currentEntity,
         std::vector<int> matchedTokensSize) {
 
-//    std::cerr << "grupe robie: " << group << "; current entity: " << currentEntity << std::endl;
+//    std::cerr << "grupe robie: " << group << "; current entity: " << currentEntity << "; glowa: " << head <<  std::endl;
 //    std::cout << "Poczatek reguly: " << ruleName << std::endl;
 //    std::cout << "PRZED mam elementow: " << entities.size() << std::endl;
 
@@ -150,7 +150,8 @@ bool GroupAction::apply(Lattice &lattice, int currentEntity,
             endEdges,
             this->group,
             headEdges,
-            groupPartitions
+            groupPartitions,
+            head - 1
             );
 
 //    TransitionInfo *edgeHead = util::getEdge(pg, currentEntity, realHead);
