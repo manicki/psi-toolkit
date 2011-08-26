@@ -484,9 +484,9 @@ public:
         lattice.addEdge(pre_ananas, post_ananas, word_token, lemma_tag, ananas_builder.build());
 
         Lattice::EdgeDescriptor edge;
-        Lattice::EdgesSortedBySourceIterator tokenIter = lattice.edgesSortedBySource(tokenOrLemmaMask);
-        TS_ASSERT(tokenIter.hasNext());
-        edge = tokenIter.next();
+        Lattice::EdgesSortedBySourceIterator tokenOrLemmaIter = lattice.edgesSortedBySource(tokenOrLemmaMask);
+        TS_ASSERT(tokenOrLemmaIter.hasNext());
+        edge = tokenOrLemmaIter.next();
         std::list<std::string> tagNames
             = lattice.getLayerTagManager().getTagNames(lattice.getEdgeLayerTags(edge));
         TS_ASSERT_EQUALS(tagNames.size(), (size_t) 2);
@@ -495,7 +495,47 @@ public:
         ++tni;
         TS_ASSERT(tni != tagNames.end());
         TS_ASSERT_EQUALS(*tni, "token");
+    }
 
+    void testEdgesScoresCombining() {
+        //preparing lattice
+        Lattice lattice("ananas");
+        lattice.addSymbols(lattice.getFirstVertex(), lattice.getLastVertex());
+        LayerTagCollection raw_tag
+            = lattice.getLayerTagManager().createSingletonTagCollection("symbol");
+        LayerTagCollection token_tag
+            = lattice.getLayerTagManager().createSingletonTagCollection("token");
+        LayerTagMask rawMask = lattice.getLayerTagManager().getMask(raw_tag);
+        LayerTagMask tokenMask = lattice.getLayerTagManager().getMask(token_tag);
+
+        Lattice::VertexDescriptor pre_ananas = lattice.getFirstVertex();
+        Lattice::VertexDescriptor post_ananas = lattice.getVertexForRawCharIndex(6);
+
+        AnnotationItem word_token("word");
+        AnnotationItem blank_token("blank");
+
+        Lattice::EdgeSequence::Builder ananas_builder;
+        for (int i = 0; i < 6; i ++) {
+            ananas_builder.addEdge(lattice.firstOutEdge(
+                        lattice.getVertexForRawCharIndex(i),
+                        rawMask
+                        ));
+        }
+
+        lattice.addEdge(pre_ananas, post_ananas, word_token, token_tag, ananas_builder.build(), -8.0);
+        Lattice::EdgesSortedBySourceIterator tokenIter1(lattice.edgesSortedBySource(tokenMask));
+        TS_ASSERT(tokenIter1.hasNext());
+        TS_ASSERT_EQUALS(lattice.getEdgeScore(tokenIter1.next()), -8.0);
+
+        lattice.addEdge(pre_ananas, post_ananas, word_token, token_tag, ananas_builder.build(), -2.0);
+        Lattice::EdgesSortedBySourceIterator tokenIter2(lattice.edgesSortedBySource(tokenMask));
+        TS_ASSERT(tokenIter2.hasNext());
+        TS_ASSERT_EQUALS(lattice.getEdgeScore(tokenIter2.next()), -2.0);
+
+        lattice.addEdge(pre_ananas, post_ananas, word_token, token_tag, ananas_builder.build(), -4.0);
+        Lattice::EdgesSortedBySourceIterator tokenIter3(lattice.edgesSortedBySource(tokenMask));
+        TS_ASSERT(tokenIter3.hasNext());
+        TS_ASSERT_EQUALS(lattice.getEdgeScore(tokenIter3.next()), -2.0);
     }
 
 
