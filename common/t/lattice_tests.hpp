@@ -435,7 +435,7 @@ public:
         edge = rawIter.next();
         std::list<std::string> tagNames
             = lattice.getLayerTagManager().getTagNames(lattice.getEdgeLayerTags(edge));
-        TS_ASSERT_EQUALS(tagNames.size(), 1);
+        TS_ASSERT_EQUALS(tagNames.size(), (size_t) 1);
         std::list<std::string>::iterator tni = tagNames.begin();
         TS_ASSERT_EQUALS(*tni, "symbol");
         ++tni;
@@ -445,7 +445,7 @@ public:
         TS_ASSERT(tokenIter.hasNext());
         edge = tokenIter.next();
         tagNames = lattice.getLayerTagManager().getTagNames(lattice.getEdgeLayerTags(edge));
-        TS_ASSERT_EQUALS(tagNames.size(), 1);
+        TS_ASSERT_EQUALS(tagNames.size(), (size_t) 1);
         tni = tagNames.begin();
         TS_ASSERT_EQUALS(*tni, "token");
         ++tni;
@@ -489,7 +489,7 @@ public:
         edge = tokenIter.next();
         std::list<std::string> tagNames
             = lattice.getLayerTagManager().getTagNames(lattice.getEdgeLayerTags(edge));
-        TS_ASSERT_EQUALS(tagNames.size(), 2);
+        TS_ASSERT_EQUALS(tagNames.size(), (size_t) 2);
         std::list<std::string>::iterator tni = tagNames.begin();
         TS_ASSERT_EQUALS(*tni, "lemma");
         ++tni;
