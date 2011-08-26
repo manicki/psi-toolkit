@@ -2,4 +2,4 @@
 02 0003 01 _            token                     blank
 03 0004 02 ma           token                     word,type=word
 04 0006 01 _            token                     blank
-05 0007 04 kota         token                     word,type=word
+05 0007 04 słonia       token                     word,type=word
