@@ -198,9 +198,6 @@ public:
                                 lattice.getVertexForRawCharIndex(8),
                                 rawMask));
             slonia_builder.addEdge(lattice.firstOutEdge(
-                                lattice.getVertexForRawCharIndex(9),
-                                rawMask));
-            slonia_builder.addEdge(lattice.firstOutEdge(
                                 lattice.getVertexForRawCharIndex(10),
                                 rawMask));
             slonia_builder.addEdge(lattice.firstOutEdge(
@@ -208,6 +205,9 @@ public:
                                 rawMask));
             slonia_builder.addEdge(lattice.firstOutEdge(
                                 lattice.getVertexForRawCharIndex(12),
+                                rawMask));
+            slonia_builder.addEdge(lattice.firstOutEdge(
+                                lattice.getVertexForRawCharIndex(13),
                                 rawMask));
             lattice.addEdge(pre_slonia, post_slonia, word_token, token_tag, slonia_builder.build());
         }
