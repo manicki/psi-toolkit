@@ -342,6 +342,15 @@ public:
 
         lattice.addEdge(postMa, preKota, aiNbsp, rawTag);
 
+        {
+            Lattice::EdgeSequence::Builder nbspBlankBuilder;
+            nbspBlankBuilder.addEdge(lattice.firstOutEdge(
+                                     lattice.getVertexForRawCharIndex(6),
+                                     rawMask));
+
+            lattice.addEdge(postMa, preKota, aiBlank, tokenTag, nbspBlankBuilder.build());
+        }
+
         boost::scoped_ptr<LatticeWriter> writer(new PsiLatticeWriter());
 
         // writer->writeLattice(lattice, std::cout);
