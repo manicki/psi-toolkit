@@ -76,7 +76,6 @@ void PsiLatticeWriter::Worker::doRun() {
 
         outputStream_ << std::left << std::setfill(' ');
         const AnnotationItem& annotationItem = lattice_.getEdgeAnnotationItem(edge);
-        // outputStream_ << std::setw(12) << quoter.escape(lattice_.getEdgeText(edge));
         std::string edgeText = quoter.escape(lattice_.getEdgeText(edge));
         outputStream_ << edgeText;
         for (int i = utf8::distance(edgeText.begin(), edgeText.end()); i < 12; ++i) {
