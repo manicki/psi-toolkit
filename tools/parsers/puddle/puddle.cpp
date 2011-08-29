@@ -310,7 +310,7 @@ bool Puddle::parse(Lattice &lattice) {
     //ParseGraphPtr pg = ruleMatcher->applyRules(sentenceString, inputGraph, lattice);
     ruleMatcher->applyRules(sentenceString, lattice);
 //    lattice::addPosEdges(lattice); //@todo: to docelowo zapewne w applyRules ma sie znalezc
-#ifdef _WITH_BONSAI_PARSEGRAPH
+#if _WITH_BONSAI_PARSEGRAPH
     ParseGraphPtr outputGraph = lattice::convertToBonsaiGraph(lattice);
     std::cerr << outputGraph->write_graphviz() << std::endl;
 #endif

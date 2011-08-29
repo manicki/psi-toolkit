@@ -3,7 +3,7 @@
 
 #include "lattice.hpp"
 #include "tagset.hpp"
-#ifdef _WITH_BONSAI_PARSEGRAPH
+#if _WITH_BONSAI_PARSEGRAPH
 #include "ParseGraph.hpp"
 #endif
 #include <iostream>
@@ -47,7 +47,7 @@ namespace poleng {
             //    public:
             //        LatticeWrapper(); //TagsetPtr tagset);
             std::string readInputLattice(Lattice &lattice);
-#ifdef _WITH_BONSAI_PARSEGRAPH
+#if _WITH_BONSAI_PARSEGRAPH
                     ParseGraphPtr convertToBonsaiGraph(Lattice &lattice);
 #endif
                     Lattice::VertexDescriptor getVertex(Lattice &lattice,

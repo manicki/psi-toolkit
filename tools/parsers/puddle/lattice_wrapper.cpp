@@ -185,7 +185,7 @@ namespace poleng {
                 return sentenceString;;
             }
 
-#ifdef _WITH_BONSAI_PARSEGRAPH
+#if _WITH_BONSAI_PARSEGRAPH
             //ParseGraphPtr LatticeWrapper::readOutputLattice(Lattice &lattice) {
             ParseGraphPtr convertToBonsaiGraph(Lattice &lattice) {
                 ParseGraphPtr pg = ParseGraphPtr(new ParseGraph());
@@ -302,17 +302,8 @@ namespace poleng {
                                     std::map<std::pair<int, int>, TransitionInfo*>::iterator,
                                     std::map<std::pair<int, int>, TransitionInfo*>::iterator
                                         > edgesMapIt = edgesMap.equal_range(edgeCoord);
-                                while (edgesMapIt.first != edgesMapIt.second) {
-                                    if (edgesMapIt.first->second->getDepth() > max_depth)
-                                        max_depth = edgesMapIt.first->second->getDepth();
-
-                                    if (edgesMapIt.first->second->getLabel() == category) {
-                                        edgesMapIt.first->second->addMorphology(pi);
-                                        break;
-                                    }
-                                    edgesMapIt.first ++;
-                                }
-                            } else {
+                                if (edgesMapIt.first == edgesMapIt.second) {
+                                    max_depth = depthsMapIt->second + 1;
                                     TransitionInfo *edge = new TransitionInfo("group");
                                     edge->setStart(start);
                                     edge->setEnd(end);
@@ -323,10 +314,48 @@ namespace poleng {
                                     edgesMap.insert(std::pair<std::pair<int, int>, TransitionInfo*>(
                                                 edgeCoord, edge));
                                     depthsMap.insert(std::pair<int, int>(start, max_depth));
+                                } else {
+                                    bool groupFound = false;
+                                    while (edgesMapIt.first != edgesMapIt.second) {
+                                        if (edgesMapIt.first->second->getDepth() > max_depth) //@todo: po co tu szukanie tego max_depth?
+                                            max_depth = edgesMapIt.first->second->getDepth();
+
+                                        if (edgesMapIt.first->second->getLabel() == category) { //@todo: do czego ta morfologia jest naprawde doczepiana?
+                                            edgesMapIt.first->second->addMorphology(pi);
+                                            groupFound = true;
+                                            break;
+                                        }
+                                        edgesMapIt.first ++;
+                                    }
+                                    if (! groupFound) {
+                                        max_depth = depthsMapIt->second + 1;
+                                        TransitionInfo *edge = new TransitionInfo("group");
+                                        edge->setStart(start);
+                                        edge->setEnd(end);
+                                        edge->setDepth(max_depth + 2);
+                                        edge->setLabel(category);
+                                        edge->setOrth(orth);
+                                        edge->addMorphology(pi);
+                                        edgesMap.insert(std::pair<std::pair<int, int>, TransitionInfo*>(
+                                                    edgeCoord, edge));
+                                        depthsMap.insert(std::pair<int, int>(start, max_depth));
+                                    }
+                                }
+                            } else {
+                                TransitionInfo *edge = new TransitionInfo("group");
+                                edge->setStart(start);
+                                edge->setEnd(end);
+                                edge->setDepth(max_depth + 2);
+                                edge->setLabel(category);
+                                edge->setOrth(orth);
+                                edge->addMorphology(pi);
+                                edgesMap.insert(std::pair<std::pair<int, int>, TransitionInfo*>(
+                                            edgeCoord, edge));
+                                depthsMap.insert(std::pair<int, int>(start, max_depth));
                             }
 
                         }
-//                    std::cerr << "dokladam: " << "type: " << type << " " << orth << " " << base << " " << morphology << " " << category << std::endl;
+//                    std::cerr << "dokladam: " << "type: " << type << " " << orth << " " << base << " " << morphology << " " << category << " od: " << start << " do: " << end <<  std::endl;
                     } else {
                         std::pair<
                             std::map<std::pair<int, int>, TransitionInfo*>::iterator,
