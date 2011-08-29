@@ -1,7 +1,9 @@
 #include "lattice.hpp"
 
-Lattice::Lattice():symbolTag_(layerTagManager_.createSingletonTagCollection("symbol")) {
-}
+Lattice::Lattice() :
+    symbolTag_(layerTagManager_.createSingletonTagCollection("symbol")),
+    nLooseVertices_(0)
+{ }
 
 Lattice::Lattice(std::string text)
  :symbolTag_(layerTagManager_.createSingletonTagCollection("symbol")) {
@@ -39,6 +41,21 @@ void Lattice::appendStringWithSymbols(std::string text) {
     Lattice::VertexDescriptor joinPoint = getLastVertex();
     appendString(text);
     addSymbols(joinPoint, getLastVertex());
+}
+
+Lattice::VertexDescriptor Lattice::addLooseVertex() {
+    ++nLooseVertices_;
+    Graph::vertex_descriptor vertex = boost::add_vertex(VertexEntry(-nLooseVertices_), graph_);
+    vertices_[-nLooseVertices_] = vertex;
+    for (size_t i = 0; i < indexedTagCollections_.size(); ++i) {
+        graph_[vertex].outEdgesIndex.push_back(
+            std::list<EdgeDescriptorWrapperToFoolBoost146OrGnu461>()
+        );
+        graph_[vertex].inEdgesIndex.push_back(
+            std::list<EdgeDescriptorWrapperToFoolBoost146OrGnu461>()
+        );
+    }
+    return -nLooseVertices_;
 }
 
 Lattice::VertexDescriptor Lattice::getVertexForRawCharIndex(int ix) {

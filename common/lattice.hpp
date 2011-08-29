@@ -292,6 +292,8 @@ public:
 
     void appendStringWithSymbols(std::string text);
 
+    VertexDescriptor addLooseVertex();
+
     /**
      * Gets the vertex for ix-th character of text
      */
@@ -408,6 +410,8 @@ private:
     boost::dynamic_bitset<> hiddenImplicitOutEdges_;
 
     std::map<int, Graph::vertex_descriptor> vertices_;
+
+    int nLooseVertices_;
 
     typedef boost::bimap<LayerTagCollection,int> TagCollectionsBimap;
     typedef TagCollectionsBimap::value_type TagCollectionsBimapItem;
