@@ -38,7 +38,7 @@ public:
 
 		std::string s1 = i->first;
 		std::vector<std::string> v1 = i->second;
-		i++;
+		++i;
 		std::string s2 = i->first;
 		std::vector<std::string> v2 = i->second;
 
@@ -108,10 +108,10 @@ public:
 
 			TS_ASSERT_EQUALS(valItr->first, "gender");
 			TS_ASSERT_EQUALS(valItr->second, "f")
-			valItr++;
+			++valItr;
 			TS_ASSERT_EQUALS(valItr->first, "case");
 			TS_ASSERT_EQUALS(valItr->second, "inst");
-			valItr++;
+			++valItr;
 			TS_ASSERT_EQUALS(valItr->first, "number");
 			TS_ASSERT_EQUALS(valItr->second, "pl");
 
