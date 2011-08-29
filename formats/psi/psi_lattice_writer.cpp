@@ -69,14 +69,16 @@ void PsiLatticeWriter::Worker::doRun() {
         outputStream_ << std::right << std::setfill('0');
         outputStream_ << std::setw(2) << ordinal;
         outputStream_ << " ";
-        outputStream_ << std::setw(4) << lattice_.getEdgeBeginIndex(edge);
+
+        outputStream_ << std::setw(4);
+        outputStream_ << lattice_.getEdgeBeginIndex(edge);
         outputStream_ << " ";
+
         outputStream_ << std::setw(2) << lattice_.getEdgeLength(edge);
         outputStream_ << " ";
 
         outputStream_ << std::left << std::setfill(' ');
         const AnnotationItem& annotationItem = lattice_.getEdgeAnnotationItem(edge);
-        // outputStream_ << std::setw(12) << quoter.escape(lattice_.getEdgeText(edge));
         std::string edgeText = quoter.escape(lattice_.getEdgeText(edge));
         outputStream_ << edgeText;
         for (int i = utf8::distance(edgeText.begin(), edgeText.end()); i < 12; ++i) {
@@ -125,6 +127,11 @@ void PsiLatticeWriter::Worker::doRun() {
         }
         outputStream_ << quoter.escape(avStr);
 
+        bool isDefaultPartition = (
+            lattice_.getEdgeLayerTags(edge)
+                == lattice_.getLayerTagManager().createSingletonTagCollection("symbol")
+        );
+        bool partitionBeginning = false;
         std::list<Lattice::Partition> partitions = lattice_.getEdgePartitions(edge);
         std::string partStr = "";
         for (
@@ -132,23 +139,48 @@ void PsiLatticeWriter::Worker::doRun() {
             pi != partitions.end();
             ++pi
         ) {
+            if (partStr != "") {
+                partStr += ",";
+            }
             std::stringstream linkSs;
+            partitionBeginning = true;
             for (
                 Lattice::Partition::Iterator ei = (*pi).begin();
                 ei != (*pi).end();
                 ++ei
             ) {
-                std::map<Lattice::EdgeDescriptor, int>::iterator mi = edgeOrdinalMap.find(*ei);
-                if (mi != edgeOrdinalMap.end()) {
-                    if (linkSs.str() != "") {
-                        linkSs << "-";
+                if (partitionBeginning) {
+                    if (
+                        lattice_.getEdgeLayerTags(*ei)
+                            == lattice_.getLayerTagManager().createSingletonTagCollection("symbol")
+                    ) {
+                        isDefaultPartition = true;
                     }
+                    partitionBeginning = false;
+                } else {
+                    if (
+                        lattice_.getEdgeLayerTags(*ei)
+                            != lattice_.getLayerTagManager().createSingletonTagCollection("symbol")
+                    ) {
+                        isDefaultPartition = false;
+                    }
+                    linkSs << "-";
+                }
+                std::map<Lattice::EdgeDescriptor, int>::iterator mi = edgeOrdinalMap.find(*ei);
+                if (mi == edgeOrdinalMap.end()) {
+                    if (
+                        lattice_.getEdgeLayerTags(*ei)
+                            != lattice_.getLayerTagManager().createSingletonTagCollection("symbol")
+                    ) {
+                        linkSs << "?";
+                    }
+                } else {
                     linkSs << (*mi).second;
                 }
             }
             partStr += linkSs.str();
         }
-        if (partStr != "") {
+        if (!isDefaultPartition) {
             outputStream_ << "[" << partStr << "]";
         }
 

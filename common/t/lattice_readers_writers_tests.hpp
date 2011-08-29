@@ -336,13 +336,34 @@ public:
             lattice.addEdge(preMa, postMa, aiMa, tokenTag, maBuilder.build());
         }
 
-        Lattice::VertexDescriptor preKota = lattice.getVertexForRawCharIndex(12);
+        Lattice::VertexDescriptor preMarkup = lattice.getVertexForRawCharIndex(12);
 
         AnnotationItem aiNbsp("' ");
 
-        lattice.addEdge(postMa, preKota, aiNbsp, rawTag);
+        lattice.addEdge(postMa, preMarkup, aiNbsp, rawTag);
+
+        {
+            Lattice::EdgeSequence::Builder nbspBlankBuilder;
+            nbspBlankBuilder.addEdge(lattice.firstOutEdge(
+                                     lattice.getVertexForRawCharIndex(6),
+                                     rawMask));
+
+            lattice.addEdge(postMa, preMarkup, aiBlank, tokenTag, nbspBlankBuilder.build());
+        }
 
         boost::scoped_ptr<LatticeWriter> writer(new PsiLatticeWriter());
+
+        Lattice::VertexDescriptor preKota = lattice.getVertexForRawCharIndex(15);
+
+        AnnotationItem aiOpen("open");
+
+        std::list<std::string> markupHtmlStr;
+        markupHtmlStr.push_back("markup");
+        markupHtmlStr.push_back("html");
+        LayerTagCollection
+            markupHtmlTag = lattice.getLayerTagManager().createTagCollection(markupHtmlStr);
+
+        lattice.addEdge(preMarkup, preKota, aiOpen, markupHtmlTag);
 
         // writer->writeLattice(lattice, std::cout);
 

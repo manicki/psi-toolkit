@@ -292,6 +292,8 @@ public:
 
     void appendStringWithSymbols(std::string text);
 
+    VertexDescriptor addLooseVertex();
+
     /**
      * Gets the vertex for ix-th character of text
      */
@@ -409,6 +411,8 @@ private:
 
     std::map<int, Graph::vertex_descriptor> vertices_;
 
+    int nLooseVertices_;
+
     typedef boost::bimap<LayerTagCollection,int> TagCollectionsBimap;
     typedef TagCollectionsBimap::value_type TagCollectionsBimapItem;
     typedef TagCollectionsBimap::left_map::const_iterator TagCollectionsBimapLeftIterator;
@@ -429,6 +433,8 @@ private:
     EdgeSequence cutSequenceByTextLength_(const EdgeSequence& partition,
                                           EdgeSequence::Iterator& sequenceIterator,
                                           int length);
+
+    bool isLoose_(VertexDescriptor vd) const;
 
     struct HashFun {
         HASH_WRAPPER_EXTRA_STUFF
