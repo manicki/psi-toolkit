@@ -125,6 +125,11 @@ void PsiLatticeWriter::Worker::doRun() {
         }
         outputStream_ << quoter.escape(avStr);
 
+        bool isDefaultPartition = (
+            lattice_.getEdgeLayerTags(edge)
+                == lattice_.getLayerTagManager().createSingletonTagCollection("symbol")
+        );
+        bool partitionBeginning = false;
         std::list<Lattice::Partition> partitions = lattice_.getEdgePartitions(edge);
         std::string partStr = "";
         for (
@@ -132,23 +137,48 @@ void PsiLatticeWriter::Worker::doRun() {
             pi != partitions.end();
             ++pi
         ) {
+            if (partStr != "") {
+                partStr += ",";
+            }
             std::stringstream linkSs;
+            partitionBeginning = true;
             for (
                 Lattice::Partition::Iterator ei = (*pi).begin();
                 ei != (*pi).end();
                 ++ei
             ) {
-                std::map<Lattice::EdgeDescriptor, int>::iterator mi = edgeOrdinalMap.find(*ei);
-                if (mi != edgeOrdinalMap.end()) {
-                    if (linkSs.str() != "") {
-                        linkSs << "-";
+                if (partitionBeginning) {
+                    if (
+                        lattice_.getEdgeLayerTags(*ei)
+                            == lattice_.getLayerTagManager().createSingletonTagCollection("symbol")
+                    ) {
+                        isDefaultPartition = true;
                     }
+                    partitionBeginning = false;
+                } else {
+                    if (
+                        lattice_.getEdgeLayerTags(*ei)
+                            != lattice_.getLayerTagManager().createSingletonTagCollection("symbol")
+                    ) {
+                        isDefaultPartition = false;
+                    }
+                    linkSs << "-";
+                }
+                std::map<Lattice::EdgeDescriptor, int>::iterator mi = edgeOrdinalMap.find(*ei);
+                if (mi == edgeOrdinalMap.end()) {
+                    if (
+                        lattice_.getEdgeLayerTags(*ei)
+                            != lattice_.getLayerTagManager().createSingletonTagCollection("symbol")
+                    ) {
+                        linkSs << "?";
+                    }
+                } else {
                     linkSs << (*mi).second;
                 }
             }
             partStr += linkSs.str();
         }
-        if (partStr != "") {
+        if (!isDefaultPartition) {
             outputStream_ << "[" << partStr << "]";
         }
 
