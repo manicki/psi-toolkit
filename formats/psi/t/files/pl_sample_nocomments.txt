@@ -5,3 +5,4 @@
 05 0004 02 ma           token                     'ma',type=word
 06 0006 06 &nbsp;       symbol                    '_
 07 0006 06 &nbsp;       token                     '_',type=blank[6]
+08 0012 03 <b>          html,markup               open[]
