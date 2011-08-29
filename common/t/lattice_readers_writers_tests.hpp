@@ -365,7 +365,7 @@ public:
 
         lattice.addEdge(preMarkup, preKota, aiOpen, markupHtmlTag);
 
-        writer->writeLattice(lattice, std::cout);
+        // writer->writeLattice(lattice, std::cout);
 
         std::ostringstream osstr;
         writer->writeLattice(lattice, osstr);
