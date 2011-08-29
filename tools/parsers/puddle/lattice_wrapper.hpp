@@ -1,6 +1,8 @@
 #ifndef PUDDLE_LATTICE_WRAPPER_H__
 #define PUDDLE_LATTICE_WRAPPER_H__
 
+#include "config.h"
+
 #include "lattice.hpp"
 #include "tagset.hpp"
 #if _WITH_BONSAI_PARSEGRAPH

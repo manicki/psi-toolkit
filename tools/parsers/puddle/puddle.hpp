@@ -1,6 +1,8 @@
 #ifndef PARSER_H__
 #define PARSER_H__
 
+#include "config.h"
+
 //#include "TransitionGraph.hpp"
 //#include "../common/ParseGraph.hpp"
 //#include "XmlParser.hpp"
