@@ -1,0 +1,65 @@
+
+Readers
+=======
+
+Lattice readers
+---------------
+
+Lattice readers and readers of output of various NLP tools:
+
+* psi-reader
+* psi-xml-reader - PSI wrapped in XML (with some edges
+  realized as XML elements?)
+* utt-reader
+* Macaon toolkit (http://www.aclweb.org/anthology/P11-4015)
+
+(all these should work on istream).
+
+Text documents in various formats
+
+* txt-reader
+* HTML
+* HTML5?
+* XHTML and XML in general
+* deformatters described as in Apertium (http://wiki.apertium.org/wiki/Format_handling)
+  with some enhancements (title, headers, inserts e.g. alt attribute, enumerations)
+* (all these working on istream? lattice?)
+* DOC (with antiword??)
+* PDF (with some external library)
+
+Formats for parallel texts:
+* .po
+* TMX (as a special case of XML)
+
+Sometimes the language is defined in some formats.
+
+Language recognition
+====================
+
+- n-grams
+- dictionary methods http://www.muni.cz/research/publications/829305/
+
+tokenization needed?
+
+multiple-language texts?
+
+
+Multithreading
+==============
+
+Boost Thread http://www.boost.org/doc/libs/1_47_0/doc/html/thread.html
+
+Marking how far each processor got (what about readers?) - vertex, no new incoming
+edges into this vertex or its predecessors. How to wait?
+
+End of lattice state?
+
+Pipeline
+========
+
+"Forgetting" the beginning of a lattice to keep memory usage low
+
+
+
+
+
