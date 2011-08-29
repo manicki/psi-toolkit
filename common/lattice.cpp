@@ -17,6 +17,9 @@ void Lattice::appendString(std::string text) {
 }
 
 void Lattice::addSymbols(VertexDescriptor startVertex, VertexDescriptor endVertex) {
+    if (isLoose_(startVertex) || isLoose_(endVertex)) {
+        throw WrongVertexException("Cannot add default symbol edges between loose vertices.");
+    }
     std::string::iterator iter = allText_.begin() + startVertex;
     std::string::iterator end = allText_.begin() + endVertex;
     VertexDescriptor vd = startVertex;
@@ -181,8 +184,10 @@ Lattice::EdgeDescriptor Lattice::addEdge(
                     graph_[boost_to].inEdgesIndex[i].push_back(result.first);
                 }
             }
-            for (VertexDescriptor vd = from; vd < to; ++vd) {
-                hiddenImplicitOutEdges_[vd] = true;
+            if (!isLoose_(from) && !isLoose_(to)) {
+                for (VertexDescriptor vd = from; vd < to; ++vd) {
+                    hiddenImplicitOutEdges_[vd] = true;
+                }
             }
             (insertResult.first)->second = EdgeDescriptor(result.first);
             return EdgeDescriptor(result.first);

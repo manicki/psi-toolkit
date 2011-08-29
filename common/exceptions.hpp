@@ -28,6 +28,12 @@ public:
 };
 
 
+class WrongVertexException : public Exception {
+public:
+    WrongVertexException(std::string message) : Exception(message) { }
+};
+
+
 class FileFormatException : public Exception {
 public:
     FileFormatException(std::string message) : Exception(message) { }

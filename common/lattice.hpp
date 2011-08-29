@@ -430,6 +430,8 @@ private:
                                           EdgeSequence::Iterator& sequenceIterator,
                                           int length);
 
+    bool isLoose_(VertexDescriptor vd) const { return vd < 0; }
+
     struct HashFun {
         HASH_WRAPPER_EXTRA_STUFF
 
