@@ -232,7 +232,12 @@ Lattice::InOutEdgesIterator Lattice::inEdges(
     if (vertex < 1) {
         return InOutEdgesIterator();
     }
-    VertexDescriptor priorVertex = priorVertex_(vertex);
+    VertexDescriptor priorVertex;
+    if (isLoose_(vertex)) {
+        priorVertex = -1; // Variable unused because all loose vertices have explicit in-edges.
+    } else {
+        priorVertex = priorVertex_(vertex);
+    }
     std::map<int, Graph::vertex_descriptor>::iterator iter = vertices_.find(vertex);
     if (iter == vertices_.end()) {
         return Lattice::InOutEdgesIterator(
@@ -342,6 +347,9 @@ int Lattice::getEdgeEndIndex(Lattice::EdgeDescriptor edge) const {
 
 int Lattice::getEdgeLength(Lattice::EdgeDescriptor edge) const {
     if (edge.implicitIndex < 0) {
+        if (isLoose_(getEdgeSource(edge)) || isLoose_(getEdgeTarget(edge))) {
+            throw WrongVertexException("Edges linking loose vertices have no well-defined length");
+        }
         return graph_[boost::target(edge.descriptor, graph_)].index
             - graph_[boost::source(edge.descriptor, graph_)].index;
     }
@@ -507,8 +515,11 @@ int Lattice::addTagCollectionIndex_(LayerTagCollection tags) {
 }
 
 Lattice::VertexDescriptor Lattice::priorVertex_(Lattice::VertexDescriptor vertex) {
-    if (vertex < 1) {
+    if (vertex == 0) {
         throw NoVertexException("Beginning vertex has no prior vertex.");
+    }
+    if (vertex < 0) {
+        throw NoVertexException("Loose vertices have no prior vertex.");
     }
     std::string::iterator begin = allText_.begin();
     std::string::iterator iter = begin + vertex;
@@ -635,6 +646,10 @@ Lattice::EdgeSequence Lattice::cutSequenceByTextLength_(const EdgeSequence& sequ
         sequenceBuilder.addEdge(*sequenceIterator);
 
     return sequenceBuilder.build();
+}
+
+bool Lattice::isLoose_(Lattice::VertexDescriptor vd) const {
+    return vd < 0;
 }
 
 
