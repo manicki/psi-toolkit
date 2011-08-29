@@ -1,8 +1,8 @@
 #include "lattice.hpp"
 
 Lattice::Lattice() :
-    symbolTag_(layerTagManager_.createSingletonTagCollection("symbol")),
-    nLooseVertices_(0)
+    nLooseVertices_(0),
+    symbolTag_(layerTagManager_.createSingletonTagCollection("symbol"))
 { }
 
 Lattice::Lattice(std::string text)
