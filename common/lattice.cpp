@@ -5,8 +5,10 @@ Lattice::Lattice() :
     symbolTag_(layerTagManager_.createSingletonTagCollection("symbol"))
 { }
 
-Lattice::Lattice(std::string text)
- :symbolTag_(layerTagManager_.createSingletonTagCollection("symbol")) {
+Lattice::Lattice(std::string text) :
+    nLooseVertices_(0),
+    symbolTag_(layerTagManager_.createSingletonTagCollection("symbol"))
+{
     appendString(text);
 }
 
@@ -127,6 +129,13 @@ Lattice::EdgeDescriptor Lattice::addEdge(
                 edge.implicitIndex = -1;
                 needToAddEdge = true;
             }
+        }
+        if (edge.implicitIndex < 0) {
+            graph_[edge.descriptor].partitions.push_back(Partition(tags, sequence, score, ruleId));
+        } else {
+            implicitOutEdges_.set(from, false);
+            edge.implicitIndex = -1;
+            needToAddEdge = true;
         }
     }
 
