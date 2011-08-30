@@ -183,7 +183,7 @@ public:
 
     class VertexIterator {
     public:
-        VertexIterator(Lattice& lattice) : lattice_(lattice), vd_(0) { }
+        VertexIterator(Lattice& lattice);
         bool hasNext();
         VertexDescriptor next();
     private:

@@ -697,6 +697,12 @@ Lattice::EdgeSequence Lattice::cutSequenceByTextLength_(const EdgeSequence& sequ
 }
 
 
+Lattice::VertexIterator::VertexIterator(Lattice& lattice) : lattice_(lattice), vd_(0) {
+    if (lattice_.nLooseVertices_ > 0) {
+        throw WrongVertexException("Iterating over loose vertices not implemented yet.");
+    }
+}
+
 bool Lattice::VertexIterator::hasNext() {
     while (vd_ <= (int)lattice_.allText_.length()) {
         if (
