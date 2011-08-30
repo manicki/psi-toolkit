@@ -491,8 +491,7 @@ void Puddle::setFlag (std::string flag)
     }
 }
 
-bool Puddle::getFlag (std::string flag)
-{
+bool Puddle::getFlag (std::string flag) const {
     if (flag == "syntok")
         return syntok;
     else if (flag == "verbose")

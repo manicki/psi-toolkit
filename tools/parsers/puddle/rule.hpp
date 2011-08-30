@@ -57,14 +57,14 @@ class Rule
         //bool apply(std::string &sentenceString, ParseGraphPtr pg, Lattice &lattice, int currentEntity);
         bool apply(std::string &sentenceString, Lattice &lattice, int currentEntity);
 
-        std::string getName();
-        PatternPtr getPattern();
-        int getLeftCount();
-        int getMatchCount();
-        int getRightCount();
-        std::string getCompiled();
-        ActionsPtr getActions();
-        bool getRepeat();
+        std::string getName() const;
+        PatternPtr getPattern() const;
+        int getLeftCount() const;
+        int getMatchCount() const;
+        int getRightCount() const;
+        std::string getCompiled() const;
+        ActionsPtr getActions() const;
+        bool getRepeat() const;
 
         void setName(std::string aName);
         void setPattern(std::string aCompiled);
@@ -77,9 +77,9 @@ class Rule
         void setMatch(std::string aMatch);
         void setLeft(std::string aLeft);
         void setRight(std::string aRight);
-        std::string getMatch();
-        std::string getLeft();
-        std::string getRight();
+        std::string getMatch() const;
+        std::string getLeft() const;
+        std::string getRight() const;
 
         void setTokensPatterns(std::vector<std::string> aTokensPatterns);
         void setTokensModifiers(std::vector<std::string> aTokensModifiers);

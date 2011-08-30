@@ -118,8 +118,14 @@ bool UnifyAction::apply(Lattice &lattice, int currentEntity,
                     if (lattice.getAnnotationItemManager().getValue(
                                 annotationItem, "discard") == "1")
                         continue; //skip discarded edges
-                    std::string morphology = lattice.getAnnotationItemManager().
-                        getValue(annotationItem, "morphology");
+                    //std::string morphology = lattice.getAnnotationItemManager().
+                    //    getValue(annotationItem, "morphology");
+                    std::string morphology =
+                        lattice::getPartOfSpeech(lattice, *edgeIt);
+                    std::string morpho = lattice.getAnnotationItemManager().
+                        getValue(annotationItem, "morpho");
+                    if (morpho != "")
+                        morphology += ":" + morpho;
 
                     std::string slot;
                     std::string value;
@@ -184,8 +190,14 @@ bool UnifyAction::apply(Lattice &lattice, int currentEntity,
                         if (lattice.getAnnotationItemManager().getValue(
                                     annotationItem, "discard") == "1")
                             continue; //skip discarded edges
-                        std::string morphology = lattice.getAnnotationItemManager().
+                        //std::string morphology = lattice.getAnnotationItemManager().
+                        //    getValue(annotationItem, "morphology");
+                        std::string morphology =
+                            lattice::getPartOfSpeech(lattice, *edgeIt);
+                        std::string morpho = lattice.getAnnotationItemManager().
                             getValue(annotationItem, "morphology");
+                        if (morpho != "")
+                            morphology += ":" + morpho;
 
                         std::string slot;
                         std::string value;
@@ -747,8 +759,14 @@ bool UnifyAction::test(Lattice &lattice, int currentEntity,
                 //    if (! boost::get<2>(*var_it) )
                 //        continue;
                     //std::string morphology = boost::get<1>(*var_it);
-                    std::string morphology = lattice.getAnnotationItemManager().
-                        getValue(annotationItem, "morphology");
+                    //std::string morphology = lattice.getAnnotationItemManager().
+                    //    getValue(annotationItem, "morphology");
+                    std::string morphology =
+                        lattice::getPartOfSpeech(lattice, *edgeIt);
+                    std::string morpho = lattice.getAnnotationItemManager().
+                        getValue(annotationItem, "morpho");
+                    if (morpho != "")
+                        morphology += ":" + morpho;
 
                     std::string slot;
                     std::string value;
@@ -1413,7 +1431,7 @@ bool UnifyAction::test(Lattice &lattice, int currentEntity,
 //    //attributeIndexes = &aAttributeIndexes;
 //}
 
-std::vector<std::string> UnifyAction::getPatterns() {
+std::vector<std::string> UnifyAction::getPatterns() const {
     return unifiedPatterns;
 }
 
@@ -1421,7 +1439,7 @@ void UnifyAction::setPatterns(std::vector<std::string> aPatterns) {
     unifiedPatterns = aPatterns;
 }
 
-std::vector<std::string> UnifyAction::getAttributes() {
+std::vector<std::string> UnifyAction::getAttributes() const {
     return unifiedAttributes;
 }
 
@@ -1429,7 +1447,7 @@ void UnifyAction::setAttributes(std::vector<std::string> aAttributes) {
     unifiedAttributes = aAttributes;
 }
 
-std::vector<int> UnifyAction::getTokenIndices() {
+std::vector<int> UnifyAction::getTokenIndices() const {
     return tokenIndices;
 }
 
@@ -1445,7 +1463,7 @@ void UnifyAction::setTokenIndices(std::vector<int> aTokenIndices) {
 //    maskLength = baseMask.length();
 //}
 
-std::vector<std::string> UnifyAction::getUAttributes() {
+std::vector<std::string> UnifyAction::getUAttributes() const {
     return attributes_;
 }
 

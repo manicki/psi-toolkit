@@ -240,6 +240,10 @@ public:
             lattice.getVertexForRawCharIndex(12),
             lattice.getVertexForRawCharIndex(12)
         );
+        // lattice.addSymbols(
+            // lattice.getVertexForRawCharIndex(15),
+            // lattice.getVertexForRawCharIndex(18)
+        // );
 
 
         Lattice::VertexDescriptor preAla = lattice.getFirstVertex();
@@ -351,8 +355,6 @@ public:
             lattice.addEdge(postMa, preMarkup, aiBlank, tokenTag, nbspBlankBuilder.build());
         }
 
-        boost::scoped_ptr<LatticeWriter> writer(new PsiLatticeWriter());
-
         Lattice::VertexDescriptor preKota = lattice.getVertexForRawCharIndex(15);
 
         AnnotationItem aiOpen("open");
@@ -364,6 +366,58 @@ public:
             markupHtmlTag = lattice.getLayerTagManager().createTagCollection(markupHtmlStr);
 
         lattice.addEdge(preMarkup, preKota, aiOpen, markupHtmlTag);
+/*
+        Lattice::VertexDescriptor postKota = lattice.getVertexForRawCharIndex(18);
+
+        AnnotationItem aiKta("'kta'");
+        lattice.getAnnotationItemManager().setValue(aiKta, "type", "word");
+
+        {
+            Lattice::EdgeSequence::Builder ktaBuilder;
+            ktaBuilder.addEdge(lattice.firstOutEdge(
+                                  lattice.getVertexForRawCharIndex(15),
+                                  rawMask));
+            ktaBuilder.addEdge(lattice.firstOutEdge(
+                                  lattice.getVertexForRawCharIndex(16),
+                                  rawMask));
+            ktaBuilder.addEdge(lattice.firstOutEdge(
+                                  lattice.getVertexForRawCharIndex(17),
+                                  rawMask));
+            lattice.addEdge(preKota, postKota, aiKta, tokenTag, ktaBuilder.build());
+        }
+
+        AnnotationItem aiK("'k");
+        Lattice::VertexDescriptor vdKO = lattice.addLooseVertex();
+        Lattice::EdgeDescriptor edgeCorrectedK = lattice.addEdge(preKota, vdKO, aiK, rawTag);
+
+        AnnotationItem aiO("'o");
+        Lattice::VertexDescriptor midKota = lattice.getVertexForRawCharIndex(16);
+        Lattice::EdgeDescriptor edgeCorrectedO = lattice.addEdge(vdKO, midKota, aiO, rawTag);
+
+        AnnotationItem aiKota("'kota'");
+        lattice.getAnnotationItemManager().setValue(aiKota, "type", "word");
+
+        std::list<std::string> tokenCorrectorStr;
+        tokenCorrectorStr.push_back("token");
+        tokenCorrectorStr.push_back("corrector");
+        LayerTagCollection
+            tokenCorrectorTag = lattice.getLayerTagManager().createTagCollection(tokenCorrectorStr);
+
+        {
+            Lattice::EdgeSequence::Builder kotaBuilder;
+            kotaBuilder.addEdge(edgeCorrectedK);
+            kotaBuilder.addEdge(edgeCorrectedO);
+            kotaBuilder.addEdge(lattice.firstOutEdge(
+                                  lattice.getVertexForRawCharIndex(16),
+                                  rawMask));
+            kotaBuilder.addEdge(lattice.firstOutEdge(
+                                  lattice.getVertexForRawCharIndex(17),
+                                  rawMask));
+            lattice.addEdge(preKota, postKota, aiKota, tokenCorrectorTag, kotaBuilder.build());
+        }
+*/
+
+        boost::scoped_ptr<LatticeWriter> writer(new PsiLatticeWriter());
 
         // writer->writeLattice(lattice, std::cout);
 

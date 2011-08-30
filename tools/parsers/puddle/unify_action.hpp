@@ -46,14 +46,14 @@ class UnifyAction : public Action
 
         //std::vector<int> getAttributeIndexes();
         //void setAttributeIndexes(std::vector<int> aAttributeIndexes);
-        std::vector<std::string> getPatterns();
+        std::vector<std::string> getPatterns() const;
         void setPatterns(std::vector<std::string> aPatterns);
-        std::vector<std::string> getAttributes();
+        std::vector<std::string> getAttributes() const;
         void setAttributes(std::vector<std::string> aAttributes);
-        std::vector<int> getTokenIndices();
+        std::vector<int> getTokenIndices() const;
         void setTokenIndices(std::vector<int> aTokenIndices);
 
-        std::vector<std::string> getUAttributes();
+        std::vector<std::string> getUAttributes() const;
 
         //void setBaseMask(std::string aBaseMask);
 

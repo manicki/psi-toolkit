@@ -28,11 +28,11 @@ class TransformAction : public Action
         //bool test(ParseGraphPtr, Lattice &lattice, int currentEntity, std::vector<int> matchedTokensSize);
         bool test(Lattice &lattice, int currentEntity,
                 std::vector<int> matchedTokensSize);
-        std::string getGroup();
-        int getElement();
+        std::string getGroup() const;
+        int getElement() const;
         void setGroup(std::string aGroup);
         void setElement(int aElement);
-        std::string getRuleName();
+        std::string getRuleName() const;
         void setRuleName(std::string aRuleName);
 
         std::string getType() { return type;}

@@ -569,38 +569,31 @@ int Rule::countEntities(std::string matched)
 //    return i;
 }
 
-std::string Rule::getName()
-{
+std::string Rule::getName() const {
     return name;
 }
 
-PatternPtr Rule::getPattern()
-{
+PatternPtr Rule::getPattern() const {
     return pattern;
 }
 
-std::string Rule::getCompiled()
-{
+std::string Rule::getCompiled() const {
     return compiled;
 }
 
-int Rule::getLeftCount()
-{
+int Rule::getLeftCount() const {
     return leftCount;
 }
 
-int Rule::getMatchCount()
-{
+int Rule::getMatchCount() const {
     return matchCount;
 }
 
-int Rule::getRightCount()
-{
+int Rule::getRightCount() const {
     return rightCount;
 }
 
-ActionsPtr Rule::getActions()
-{
+ActionsPtr Rule::getActions() const {
     return actions;
 }
 
@@ -646,8 +639,7 @@ void Rule::setRepeat(bool aRepeat)
     repeat = aRepeat;
 }
 
-bool Rule::getRepeat()
-{
+bool Rule::getRepeat() const {
     return repeat;
 }
 
@@ -703,18 +695,15 @@ void Rule::setMatchedIndices(std::vector<int> aMatchedIndices)
 //    matchedIndexes = new std::vector<int>(aMatchedIndexes);
 }
 
-std::string Rule::getMatch()
-{
+std::string Rule::getMatch() const {
     return match_;
 }
 
-std::string Rule::getLeft()
-{
+std::string Rule::getLeft() const {
     return left_;
 }
 
-std::string Rule::getRight()
-{
+std::string Rule::getRight() const {
     return right_;
 }
 

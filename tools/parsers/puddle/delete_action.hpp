@@ -38,10 +38,10 @@ namespace poleng {
                             std::vector<int> matchedTokensSize);
                     //void setPattern(std::string aPattern);
                     //std::string getPattern();
-                    std::string getUPattern();
-                    int getTokenIndex();
+                    std::string getUPattern() const;
+                    int getTokenIndex() const;
                     void setTokenIndex(int aTokenIndex);
-                    DeleteConditions getConditions();
+                    DeleteConditions getConditions() const;
 
                     std::string getType() { return type; }
                     void setVerbose() { verbose = true; }

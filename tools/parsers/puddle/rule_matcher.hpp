@@ -50,7 +50,7 @@ namespace poleng {
 
                     //void unescapeSpecialChars(Edges &edges);
                     //void unescapeSpecialChars(ParseGraphPtr pg, Lattice &lattice);
-                    void unescapeSpecialChars(Lattice &lattice);
+                    void unescapeSpecialChars(Lattice &lattice) const; //@todo: const bo ta funkcja na razie nic nie robi, a cppcheck pokazuje bledy
                     //void addPosEdges(Edges &edges);
                     //void addPosEdges(ParseGraphPtr pg, Lattice &lattice);
                     void addPosEdges(Lattice &lattice);

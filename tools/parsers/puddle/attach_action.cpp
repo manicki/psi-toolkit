@@ -367,13 +367,11 @@ bool AttachAction::test(Lattice &lattice, int,
     return true;
 }
 
-std::string AttachAction::getGroup()
-{
+std::string AttachAction::getGroup() const {
     return group;
 }
 
-int AttachAction::getHead()
-{
+int AttachAction::getHead() const {
     return head;
     //return (head + 1);
 }
@@ -388,8 +386,7 @@ void AttachAction::setHead(int aHead)
     head = aHead; // - 1;
 }
 
-int AttachAction::getStart()
-{
+int AttachAction::getStart() const {
     return start;
 }
 
@@ -398,8 +395,7 @@ void AttachAction::setStart(int aStart)
     start = aStart;
 }
 
-int AttachAction::getEnd()
-{
+int AttachAction::getEnd() const {
     return end;
 }
 
@@ -408,8 +404,7 @@ void AttachAction::setEnd(int aEnd)
     end = aEnd;
 }
 
-std::string AttachAction::getRuleName()
-{
+std::string AttachAction::getRuleName() const {
     return ruleName;
 }
 

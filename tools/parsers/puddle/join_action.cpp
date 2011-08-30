@@ -384,13 +384,11 @@ bool JoinAction::test(Lattice &lattice, int,
     return true;
 }
 
-std::string JoinAction::getGroup()
-{
+std::string JoinAction::getGroup() const {
     return group;
 }
 
-int JoinAction::getHead()
-{
+int JoinAction::getHead() const {
     return head;
     //return (head + 1);
 }
@@ -405,8 +403,7 @@ void JoinAction::setHead(int aHead)
     head = aHead; // - 1;
 }
 
-int JoinAction::getStart()
-{
+int JoinAction::getStart() const {
     return start;
 }
 
@@ -415,8 +412,7 @@ void JoinAction::setStart(int aStart)
     start = aStart;
 }
 
-int JoinAction::getEnd()
-{
+int JoinAction::getEnd() const {
     return end;
 }
 
@@ -425,8 +421,7 @@ void JoinAction::setEnd(int aEnd)
     end = aEnd;
 }
 
-std::string JoinAction::getRuleName()
-{
+std::string JoinAction::getRuleName() const {
     return ruleName;
 }
 

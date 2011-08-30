@@ -118,8 +118,9 @@ bool DeleteAction::apply(Lattice &lattice, int currentEntity,
             for (DeleteConditions::iterator cond_it = conditions.begin();
                     cond_it != conditions.end(); ++ cond_it) {
                 if (cond_it->type == BASE_CONDITION) {
-                    std::string tokenBase = lattice.getAnnotationItemManager().
-                        getValue(annotationItem, "base");
+                    std::string tokenBase = lattice::getBase(lattice, *edgeIt);
+                    //std::string tokenBase = lattice.getAnnotationItemManager().
+                    //    getValue(annotationItem, "base");
                     if (cond_it->negation) {
                         if (RE2::FullMatch(tokenBase, cond_it->pattern)) {
                             lattice.getAnnotationItemManager().setValue(
@@ -134,8 +135,14 @@ bool DeleteAction::apply(Lattice &lattice, int currentEntity,
                         }
                     }
                 } else if (cond_it->type == MORPHOLOGY_CONDITION) {
-                    std::string tokenMorphology = lattice.getAnnotationItemManager().
-                        getValue(annotationItem, "morphology");
+//                    std::string tokenMorphology = lattice.getAnnotationItemManager().
+//                        getValue(annotationItem, "morpho");
+                    std::string tokenMorphology =
+                        lattice::getPartOfSpeech(lattice, *edgeIt);
+                    std::string morpho = lattice.getAnnotationItemManager().
+                        getValue(annotationItem, "morpho");
+                    if (morpho != "")
+                        tokenMorphology += ":" + morpho;
                     if (!RE2::FullMatch(tokenMorphology, cond_it->pattern)) {
                         lattice.getAnnotationItemManager().setValue(
                                 annotationItem, "discard", "1");
@@ -588,11 +595,11 @@ bool DeleteAction::test(Lattice &lattice,
 ////    return pattern.str();
 //}
 
-DeleteConditions DeleteAction::getConditions() {
+DeleteConditions DeleteAction::getConditions() const {
     return conditions;
 }
 
-int DeleteAction::getTokenIndex() {
+int DeleteAction::getTokenIndex() const {
     return tokenIndex;
 }
 
@@ -600,7 +607,7 @@ void DeleteAction::setTokenIndex(int aTokenIndex) {
     tokenIndex = aTokenIndex;
 }
 
-std::string DeleteAction::getUPattern() {
+std::string DeleteAction::getUPattern() const {
     return pattern_;
 }
 

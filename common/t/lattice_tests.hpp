@@ -538,5 +538,41 @@ public:
         TS_ASSERT_EQUALS(lattice.getEdgeScore(tokenIter3.next()), -2.0);
     }
 
+    void testLooseVertices() {
+        //preparing lattice
+        Lattice lattice("abc");
+        lattice.addSymbols(lattice.getFirstVertex(), lattice.getLastVertex());
+        LayerTagCollection token_tag
+            = lattice.getLayerTagManager().createSingletonTagCollection("token");
+        LayerTagMask tokenMask = lattice.getLayerTagManager().getMask(token_tag);
+
+        Lattice::VertexDescriptor vertexPre = lattice.getVertexForRawCharIndex(1);
+        Lattice::VertexDescriptor vertexPost = lattice.getVertexForRawCharIndex(2);
+        Lattice::VertexDescriptor vertexLoose = lattice.addLooseVertex();
+
+        AnnotationItem tokenX("x");
+        AnnotationItem tokenY("y");
+
+        lattice.addEdge(vertexPre, vertexLoose, tokenX, token_tag);
+
+        Lattice::InOutEdgesIterator eiPreOut = lattice.outEdges(vertexPre, tokenMask);
+        TS_ASSERT(eiPreOut.hasNext());
+        TS_ASSERT_EQUALS(lattice.getEdgeAnnotationItem(eiPreOut.next()).getCategory(), "x");
+
+        Lattice::InOutEdgesIterator eiLooseIn = lattice.inEdges(vertexLoose, tokenMask);
+        TS_ASSERT(eiLooseIn.hasNext());
+        TS_ASSERT_EQUALS(lattice.getEdgeAnnotationItem(eiLooseIn.next()).getCategory(), "x");
+
+        lattice.addEdge(vertexLoose, vertexPost, tokenY, token_tag);
+
+        Lattice::InOutEdgesIterator eiLooseOut = lattice.outEdges(vertexLoose, tokenMask);
+        TS_ASSERT(eiLooseOut.hasNext());
+        TS_ASSERT_EQUALS(lattice.getEdgeAnnotationItem(eiLooseOut.next()).getCategory(), "y");
+
+        Lattice::InOutEdgesIterator eiPostIn = lattice.inEdges(vertexPost, tokenMask);
+        TS_ASSERT(eiPostIn.hasNext());
+        TS_ASSERT_EQUALS(lattice.getEdgeAnnotationItem(eiPostIn.next()).getCategory(), "y");
+    }
+
 
 };

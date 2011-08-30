@@ -21,7 +21,7 @@ void Lattice::appendString(std::string text) {
 }
 
 void Lattice::addSymbols(VertexDescriptor startVertex, VertexDescriptor endVertex) {
-    if (isLoose_(startVertex) || isLoose_(endVertex)) {
+    if (isLooseVertex(startVertex) || isLooseVertex(endVertex)) {
         throw WrongVertexException("Cannot add default symbol edges between loose vertices.");
     }
     std::string::iterator iter = allText_.begin() + startVertex;
@@ -61,14 +61,20 @@ Lattice::VertexDescriptor Lattice::addLooseVertex() {
 }
 
 Lattice::VertexDescriptor Lattice::getVertexForRawCharIndex(int ix) {
+    if (ix < 0) {
+        throw NoVertexException("Raw char index below zero is incorrect.");
+    }
+    if (ix > int(allText_.length())) {
+        throw NoVertexException("Raw char index above text length is incorrect.");
+    }
     return ix;
 }
 
-Lattice::VertexDescriptor Lattice::getFirstVertex() {
+Lattice::VertexDescriptor Lattice::getFirstVertex() const {
     return 0;
 }
 
-Lattice::VertexDescriptor Lattice::getLastVertex() {
+Lattice::VertexDescriptor Lattice::getLastVertex() const {
     return allText_.length();
 }
 
@@ -107,7 +113,9 @@ Lattice::EdgeDescriptor Lattice::addEdge(
 
     bool needToAddEdge = false;
 
-    if (!insertResult.second) {
+    if (insertResult.second) {
+        needToAddEdge = true;
+    } else {
         EdgeDescriptor edge = (insertResult.first)->second;
         LayerTagCollection oldTags = getEdgeLayerTags(edge);
         Score oldScore = getEdgeScore(edge);
@@ -139,10 +147,6 @@ Lattice::EdgeDescriptor Lattice::addEdge(
         }
     }
 
-    if (insertResult.second) {
-        needToAddEdge = true;
-    }
-
     if (needToAddEdge) {
 
         if (!edgeCounterHash_[vpair]) {
@@ -152,7 +156,9 @@ Lattice::EdgeDescriptor Lattice::addEdge(
         }
 
         if (
-            tags == getSymbolTag_()
+            !isLooseVertex(from)
+            && !isLooseVertex(to)
+            && tags == getSymbolTag_()
             && from + (int) symbolLength_(from) == to
         ) {
             implicitOutEdges_.set(from, true);
@@ -210,7 +216,7 @@ Lattice::EdgeDescriptor Lattice::addEdge(
                     graph_[boost_to].inEdgesIndex[i].push_back(result.first);
                 }
             }
-            if (!isLoose_(from) && !isLoose_(to)) {
+            if (!isLooseVertex(from) && !isLooseVertex(to)) {
                 for (VertexDescriptor vd = from; vd < to; ++vd) {
                     hiddenImplicitOutEdges_[vd] = true;
                 }
@@ -255,11 +261,11 @@ Lattice::InOutEdgesIterator Lattice::inEdges(
     Lattice::VertexDescriptor vertex,
     LayerTagMask mask
 ) {
-    if (vertex < 1) {
+    if (vertex == 0) {
         return InOutEdgesIterator();
     }
     VertexDescriptor priorVertex;
-    if (isLoose_(vertex)) {
+    if (isLooseVertex(vertex)) {
         priorVertex = -1; // Variable unused because all loose vertices have explicit in-edges.
     } else {
         priorVertex = priorVertex_(vertex);
@@ -373,7 +379,7 @@ int Lattice::getEdgeEndIndex(Lattice::EdgeDescriptor edge) const {
 
 int Lattice::getEdgeLength(Lattice::EdgeDescriptor edge) const {
     if (edge.implicitIndex < 0) {
-        if (isLoose_(getEdgeSource(edge)) || isLoose_(getEdgeTarget(edge))) {
+        if (isLooseVertex(getEdgeSource(edge)) || isLooseVertex(getEdgeTarget(edge))) {
             throw WrongVertexException("Edges linking loose vertices have no well-defined length");
         }
         return graph_[boost::target(edge.descriptor, graph_)].index
@@ -386,7 +392,7 @@ bool Lattice::isEdgeHidden(Lattice::EdgeDescriptor edge) const {
     return edge.implicitIndex > -1 && hiddenImplicitOutEdges_[edge.implicitIndex];
 }
 
-std::list<Lattice::Partition> Lattice::getEdgePartitions(Lattice::EdgeDescriptor edge) {
+std::list<Lattice::Partition> Lattice::getEdgePartitions(Lattice::EdgeDescriptor edge) const {
     if (edge.implicitIndex < 0) {
         return graph_[edge.descriptor].partitions;
     }
@@ -422,6 +428,9 @@ const std::string& Lattice::getAllText() const {
 }
 
 const std::string Lattice::getEdgeText(EdgeDescriptor edge) const {
+    if (isLooseVertex(getEdgeSource(edge)) || isLooseVertex(getEdgeTarget(edge))) {
+        return "@"; // temporarily for edges with loose vertices
+    }
     return allText_.substr(getEdgeBeginIndex(edge), getEdgeLength(edge));
 }
 
@@ -504,6 +513,17 @@ Lattice::EdgeSequence Lattice::getPath(VertexDescriptor& vertex, LayerTagMask ma
     } while(nextVertexFound);
 
     return pathBuilder.build();
+}
+
+bool Lattice::isLooseVertex(Lattice::VertexDescriptor vd) const {
+    return vd < 0;
+}
+
+int Lattice::getLooseVertexIndex(VertexDescriptor vd) const {
+    if (vd > -1) {
+        throw WrongVertexException("Cannot get loose vertex index for a non-loose vertex");
+    }
+    return -1-vd;
 }
 
 int Lattice::addTagCollectionIndex_(LayerTagCollection tags) {
@@ -674,10 +694,12 @@ Lattice::EdgeSequence Lattice::cutSequenceByTextLength_(const EdgeSequence& sequ
     return sequenceBuilder.build();
 }
 
-bool Lattice::isLoose_(Lattice::VertexDescriptor vd) const {
-    return vd < 0;
-}
 
+Lattice::VertexIterator::VertexIterator(Lattice& lattice) : lattice_(lattice), vd_(0) {
+    if (lattice_.nLooseVertices_ > 0) {
+        throw WrongVertexException("Iterating over loose vertices not implemented yet.");
+    }
+}
 
 bool Lattice::VertexIterator::hasNext() {
     while (vd_ <= (int)lattice_.allText_.length()) {

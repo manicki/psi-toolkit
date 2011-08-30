@@ -283,7 +283,7 @@ void RuleMatcher::applyRules(std::string &sentenceString,
 
 //void RuleMatcher::unescapeSpecialChars(Edges &edges) {
 //void RuleMatcher::unescapeSpecialChars(ParseGraphPtr pg, Lattice &lattice) {
-void RuleMatcher::unescapeSpecialChars(Lattice &) {
+void RuleMatcher::unescapeSpecialChars(Lattice &) const {
 
     //@todo: dorobic te ponizsze rzeczy na Lattice, jak juz bedzie rzeczywiscie mozna zmieniac krawedzie
 
