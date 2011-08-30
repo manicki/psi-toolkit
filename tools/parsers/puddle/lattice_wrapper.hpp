@@ -102,6 +102,26 @@ namespace poleng {
                             Lattice &lattice, Lattice::EdgeDescriptor edge);
                     Lattice::EdgeDescriptor getLemmaEdge(
                             Lattice &lattice, Lattice::EdgeDescriptor edge);
+                    bool matchLemmaEdge(Lattice &lattice,
+                            Lattice::VertexDescriptor vertex,
+                            std::string lemma);
+                    bool matchLexemeEdge(Lattice &lattice,
+                            Lattice::VertexDescriptor vertex,
+                            std::string partOfSpeech, std::string lexeme);
+                    bool matchEdge(Lattice &lattice,
+                            Lattice::VertexDescriptor vertex,
+                            LayerTagMask mask,
+                            std::string category, std::string text);
+                    Lattice::EdgeDescriptor getLemmaEdge(Lattice &lattice,
+                            Lattice::VertexDescriptor vertex,
+                            std::string lemma);
+                    Lattice::EdgeDescriptor getLexemeEdge(Lattice &lattice,
+                            Lattice::VertexDescriptor vertex,
+                            std::string partOfSpeech, std::string lexeme);
+                    Lattice::EdgeDescriptor getEdge(Lattice &lattice,
+                            Lattice::VertexDescriptor vertex,
+                            LayerTagMask mask,
+                            std::string category, std::string text);
 
 //                    void addPosEdges(Lattice &lattice);
 //                private:edge)

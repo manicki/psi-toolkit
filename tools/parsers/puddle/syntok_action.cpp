@@ -175,7 +175,7 @@ bool SyntokAction::apply(Lattice &lattice, int currentEntity,
     } else {
         syntokCategory = concatenatedOrth;
         LayerTagCollection tags =
-            lattice.getLayerTagManager().createSingletonTagCollection("lemma");
+            lattice.getLayerTagManager().createSingletonTagCollection("form");
         lattice::addSyntokEdges(
                 lattice,
                 startEdges,
