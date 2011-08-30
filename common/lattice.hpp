@@ -302,12 +302,12 @@ public:
     /**
      * Gets the first vertex (the same as getVertexForRawCharIndex(0))
      */
-    VertexDescriptor getFirstVertex();
+    VertexDescriptor getFirstVertex() const;
 
      /**
      * Gets the last vertex
      */
-    VertexDescriptor getLastVertex();
+    VertexDescriptor getLastVertex() const;
 
     size_t getVertexRawCharIndex(VertexDescriptor vd);
 
@@ -370,7 +370,7 @@ public:
     int getEdgeEndIndex(EdgeDescriptor edge) const;
     int getEdgeLength(EdgeDescriptor edge) const;
     bool isEdgeHidden(EdgeDescriptor edge) const;
-    std::list<Partition> getEdgePartitions(EdgeDescriptor edge);
+    std::list<Partition> getEdgePartitions(EdgeDescriptor edge) const;
     Score getEdgeScore(EdgeDescriptor edge) const;
     VertexDescriptor getEdgeSource(EdgeDescriptor edge) const;
     VertexDescriptor getEdgeTarget(EdgeDescriptor edge) const;

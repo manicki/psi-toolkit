@@ -70,11 +70,11 @@ Lattice::VertexDescriptor Lattice::getVertexForRawCharIndex(int ix) {
     return ix;
 }
 
-Lattice::VertexDescriptor Lattice::getFirstVertex() {
+Lattice::VertexDescriptor Lattice::getFirstVertex() const {
     return 0;
 }
 
-Lattice::VertexDescriptor Lattice::getLastVertex() {
+Lattice::VertexDescriptor Lattice::getLastVertex() const {
     return allText_.length();
 }
 
@@ -394,7 +394,7 @@ bool Lattice::isEdgeHidden(Lattice::EdgeDescriptor edge) const {
     return edge.implicitIndex > -1 && hiddenImplicitOutEdges_[edge.implicitIndex];
 }
 
-std::list<Lattice::Partition> Lattice::getEdgePartitions(Lattice::EdgeDescriptor edge) {
+std::list<Lattice::Partition> Lattice::getEdgePartitions(Lattice::EdgeDescriptor edge) const {
     if (edge.implicitIndex < 0) {
         return graph_[edge.descriptor].partitions;
     }
