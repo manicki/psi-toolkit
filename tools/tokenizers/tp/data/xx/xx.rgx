@@ -1,0 +1,81 @@
+# Copyright (C) 2007-2011 Poleng Sp. z o.o.
+
+# This file is part of Translatica tokenization rules.
+
+# Translatica tokenization rules can be redistributed and/or modified
+# under the terms of the GNU Lesser General Public Licence as
+# published by the Free Software Foundation.
+
+@rule main_regex/main_regex := .+
+
+#definicje
+
+@def cyfra [0-9]
+@def litera [a-zA-Z]
+@def litDuza [A-Z]
+@def litCyfra [a-zA-Z0-9]
+@def litCyfSpMysl [a-zA-Z0-9_-]
+@def litSpMysl [a-zA-Z_-]
+@def greckie [Ii]{0,3}[XxVv]?[Ii]{0,3}
+
+@ifndef  NO_SPACES_IN_NONBLANK_TOKENS
+	@def liczbaSpKr (?:[0-9]{1,3}(?:[\.\ ][0-9]{3})+|[0-9]+)
+	@def sepOpc (?:-|\s)?
+@else
+	@def liczbaSpKr (?:[0-9]{1,3}(?:[\.][0-9]{3})+|[0-9]+)
+	@def sepOpc -?
+@endif
+
+@def _godz (?:[0-6]?[0-9]|2[0-4])(?:[\.:,][0-6]?[0-9]){1,2}(?!\d)
+@def liczbaZmPrzec liczbaSpKr,cyfra+(?:\(cyfra\))?
+
+#reguły
+
+@rule blank/B := [\ \n\r\t\f\p{Z}]+
+@rule text/T := (?:[\p{L}\p{M}~\@\#\$%\^\&\*\/\\\-\+_]|'(?=[\p{L}\p{M}]))+
+@rule punct/I := [!\?]+|[\.,;:\p{P}]
+@rule tags/X := (?:[<>=]?[<=]<?|[>=]?[<=>]>?)
+
+@ifndef  NO_SPACES_IN_NONBLANK_TOKENS
+	@rule punct_sp/I := (?:\ \-\ )
+@endif
+
+@rule int/X := [+-]? liczbaSpKr (?:-liczbaSpKr)* (?=$|\P{N}) 			#int lub zakres intów
+
+@rule symb/X :=  (?:(?:liczbaSpKr \.)*| liczbaSpKr) litera+ (?:-?cyfra)+ (?:-?cyfra+|litera+)*
+
+@rule iso/X := ISO\ ? cyfra+ (?:[-:]cyfra+)*
+
+@rule path/X := (litera:[\/\\])? litCyfSpMysl+ ([\\\/]litCyfSpMysl+)* \.litCyfSpMysl+(?!\.?(?:\d|\p{L}))
+
+@rule pargf/X := (?: (?:cyfra litera? )+ | (?:litera (?=\.|\d) cyfra* )+| [IiXxVvLlCcMm]+)
+					(?:\. (:? (?:cyfra litera? )+ | (?:litera (?=\.|\d) cyfra* )+|[IiXxVvLlCcMm]+ ))* (?=\.)(?!\.\p{N})
+
+@rule revsymb/X := (?:liczbaSpKr \.)+ litDuza (?!\d|\p{L})
+@rule addr/X := (?:litera+:\/\/)? litSpMysl+ (?:\.(?:litCyfSpMysl)+)+ (?:\?[^\ ])?
+@rule float/X := [+-]? liczbaZmPrzec (?:-liczbaZmPrzec)* 	#float lub zakres float
+
+#trzeba je zdefiniować w plikach dla konkretnych języków
+
+MULTI
+ABBREV
+
+@rule mail/X := [a-zA-Z0-9_\.-] + \@litCyfSpMysl + (?:\.(?:litCyfSpMysl)+)+
+@rule url/X := litera+:\/\/[^\ \)]+
+@rule entity/X := &\#?litCyfra+;
+@rule hour/X := _godz (?:-_godz)? (?!(?:\.[\p{L}\d])|(?:\p{L}+\d))
+@rule date/X := \d{4}[-\.]\d{1,2}[-\.]\d{1,2} | \d{1,2}[-\.](?:greckie|\d{1,2})[-\.]\d{4} | \d{1,2}[-\.]\d{1,2}[-\.]\d{1,2} (?!\.\d) | \d{4}r.
+@rule tel/X := (?:
+					(?: (?:\+|00) sepOpc \d{2,3} sepOpc)?   								#międzynarodowy
+					(?: (?: (?:(?:\d|\+) sepOpc)?  \d{1,2} sepOpc) | (?: \( (?:(?:\d|\+) sepOpc)? \d{1,2} \) sepOpc) ) 	#krajowy
+				)?
+				(?:(?:\d{3} (?: sepOpc \d\d){2}) | (?:(?:\d\d sepOpc){2} \d{3}) | \d{6} )	#lokalny
+				(?!\d|-)
+
+@ifndef  NO_SPACES_IN_NONBLANK_TOKENS #konto bankowe liczone ze spacjami
+	@rule acc/X := (?:cyfra{4})(:?\s cyfra{4})+(:?\s cyfra{1,3})*(?!\d|\.|-)
+@endif
+@rule numAndLett/T := cyfra+ \- \p{L}{3,}
+@rule perc/X := [+-]? liczbaSpKr%
+@rule fperc/X := [+-]? liczbaZmPrzec%
+

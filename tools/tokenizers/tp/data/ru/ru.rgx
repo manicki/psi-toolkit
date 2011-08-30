@@ -1,0 +1,11 @@
+# Copyright (C) 2007-2011 Poleng Sp. z o.o.
+
+# This file is part of Translatica tokenization rules.
+
+# Translatica tokenization rules can be redistributed and/or modified
+# under the terms of the GNU Lesser General Public Licence as
+# published by the Free Software Foundation.
+
+@def MULTI ""
+@def ABBREV \@include "abbrev_ru"
+@include "common"
