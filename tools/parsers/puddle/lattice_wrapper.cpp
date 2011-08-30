@@ -31,7 +31,7 @@ namespace poleng {
 
                 LayerTagCollection form_tag
                     = lattice.getLayerTagManager().createSingletonTagCollection("form");
-                LayerTagMask lemmaMask = lattice.getLayerTagManager().getMask(form_tag);
+                LayerTagMask formMask = lattice.getLayerTagManager().getMask(form_tag);
                 LayerTagCollection parse_tag
                     = lattice.getLayerTagManager().createSingletonTagCollection("parse");
                 LayerTagMask parseMask = lattice.getLayerTagManager().getMask(parse_tag);
@@ -721,11 +721,27 @@ namespace poleng {
                 for (std::vector<std::string>::iterator baseIt =
                         baseForms.begin();
                         baseIt != baseForms.end(); ++ baseIt) {
+
+                    Lattice::EdgeDescriptor lemmaEdge;
+                    if (! matchLemmaEdge(lattice, startVertex, *baseIt)) {
+                        LayerTagCollection token_tag
+                            = lattice.getLayerTagManager().createSingletonTagCollection("token");
+                        LayerTagMask tokenMask = lattice.getLayerTagManager().getMask(token_tag);
+                        Lattice::EdgeSequence::Builder lemmaBuilder;
+                        lemmaBuilder.addEdge(lattice.firstOutEdge(startVertex, tokenMask));
+                        AnnotationItem aiLemma("word", *baseIt);
+                        LayerTagCollection tagsLemma = lattice.getLayerTagManager().
+                            createSingletonTagCollection("lemma");
+                        lemmaEdge = lattice.addEdge(
+                                startVertex, endVertex, aiLemma, tagsLemma, lemmaBuilder.build()
+                                );
+                    } else
+                        lemmaEdge = getLemmaEdge(lattice, startVertex, *baseIt);
+
                     for (std::vector<std::string>::iterator morphIt =
                             morphology.begin();
                             morphIt != morphology.end();
                             ++ morphIt) {
-                        AnnotationItem annotationItem(syntokCategory);
 
                         std::string morphology = *morphIt;
                         size_t delimPos = morphology.find(":");
@@ -734,32 +750,63 @@ namespace poleng {
                         if ( (delimPos != std::string::npos) &&
                                 (delimPos < morphology.size()) )
                             morpho = morphology.substr(delimPos + 1, std::string::npos);
+                        std::string lexeme = *baseIt + "_" + partOfSpeech;
+
+                        Lattice::EdgeDescriptor lexemeEdge;
+                        if (! matchLexemeEdge(lattice, startVertex,
+                                    partOfSpeech, lexeme)) {
+                            Lattice::EdgeSequence::Builder lexemeBuilder;
+                            lexemeBuilder.addEdge(lemmaEdge);
+                            AnnotationItem aiLexeme(partOfSpeech, lexeme);
+                            LayerTagCollection tagsLexeme = lattice.getLayerTagManager().
+                                createSingletonTagCollection("lexeme");
+                            lexemeEdge = lattice.addEdge(
+                                    startVertex, endVertex, aiLexeme, tagsLexeme, lexemeBuilder.build()
+                                    );
+                        } else
+                            lexemeEdge = getLexemeEdge(lattice, startVertex,
+                                    partOfSpeech, lexeme);
+
 //                        lattice.getAnnotationItemManager().setValue(
 //                                annotationItem, "base", *baseIt);
-                        lattice.getAnnotationItemManager().setValue(
-                                annotationItem, "morpho", morpho);
-                        lattice.getAnnotationItemManager().setValue(
-                                annotationItem, "discard", "0");
                         if (syntokCategory != concatenatedOrth) { //adding parse edge 'SYNTOK'
+                            AnnotationItem annotationItem(syntokCategory);
+                            lattice.getAnnotationItemManager().setValue(
+                                    annotationItem, "morpho", morpho);
+                            lattice.getAnnotationItemManager().setValue(
+                                    annotationItem, "discard", "0");
                             lattice.getAnnotationItemManager().setValue(
                                     annotationItem, "orth", concatenatedOrth);
                             lattice.getAnnotationItemManager().setValue(
                                     annotationItem, "head", "0"); //@todo: czy tego tu inaczej jakos nie trzeba zrobic
+
+                            for (std::list<Lattice::EdgeSequence>::iterator sequenceIt =
+                                    edgeSequences.begin();
+                                    sequenceIt != edgeSequences.end();
+                                    ++ sequenceIt) {
+
+                                lattice.addEdge(
+                                        startVertex,
+                                        endVertex,
+                                        annotationItem,
+                                        tags,
+                                        *sequenceIt
+                                        );
+                            }
+
+                        } else { //adding 'form' edge
+                            Lattice::EdgeSequence::Builder formBuilder;
+                            formBuilder.addEdge(lexemeEdge);
+                            AnnotationItem annotationItem(partOfSpeech, lexeme);
+                            lattice.getAnnotationItemManager().setValue(
+                                    annotationItem, "morpho", morpho);
+                            lattice.getAnnotationItemManager().setValue(
+                                    annotationItem, "discard", "0");
+
+                            lattice.addEdge(startVertex, endVertex, annotationItem,
+                                    tags, formBuilder.build());
                         }
 
-                        for (std::list<Lattice::EdgeSequence>::iterator sequenceIt =
-                                edgeSequences.begin();
-                                sequenceIt != edgeSequences.end();
-                                ++ sequenceIt) {
-
-                            lattice.addEdge(
-                                    startVertex,
-                                    endVertex,
-                                    annotationItem,
-                                    tags,
-                                    *sequenceIt
-                                    );
-                        }
                     }
                 }
 
@@ -779,8 +826,8 @@ namespace poleng {
                 AnnotationItem annotationItem =
                     lattice.getEdgeAnnotationItem(edge);
                 LayerTagCollection tags = lattice.getEdgeLayerTags(edge);
-                std::list<Lattice::Partition> partitions =
-                    lattice.getEdgePartitions(edge);
+//                std::list<Lattice::Partition> partitions =
+//                    lattice.getEdgePartitions(edge);
                 //Lattice::Score score = lattice.getEdgeScore(edge);
 
 //                std::cerr << "baseforms: " << baseForms.size() << std::endl;
@@ -790,31 +837,80 @@ namespace poleng {
                         baseForms.begin();
                         baseIt != baseForms.end();
                         ++ baseIt) {
+                    Lattice::EdgeDescriptor lemmaEdge;
+                    if (! matchLemmaEdge(lattice, startVertex, *baseIt)) {
+                        LayerTagCollection token_tag
+                            = lattice.getLayerTagManager().createSingletonTagCollection("token");
+                        LayerTagMask tokenMask = lattice.getLayerTagManager().getMask(token_tag);
+                        Lattice::EdgeSequence::Builder lemmaBuilder;
+                        lemmaBuilder.addEdge(lattice.firstOutEdge(startVertex, tokenMask));
+                        AnnotationItem aiLemma("word", *baseIt);
+                        LayerTagCollection tagsLemma = lattice.getLayerTagManager().
+                            createSingletonTagCollection("lemma");
+                        lemmaEdge = lattice.addEdge(
+                                startVertex, endVertex, aiLemma, tagsLemma, lemmaBuilder.build()
+                                );
+                    } else
+                        lemmaEdge = getLemmaEdge(lattice, startVertex, *baseIt);
+
                     for (std::vector<std::string>::iterator morphIt =
                             morphology.begin();
                             morphIt != morphology.end();
                             ++ morphIt) {
-                        lattice.getAnnotationItemManager().setValue(
-                                annotationItem, "base", *baseIt);
-                        lattice.getAnnotationItemManager().setValue(
-                                annotationItem, "morphology", *morphIt);
-                        lattice.getAnnotationItemManager().setValue(
-                                annotationItem, "discard", "0");
+                        //lattice.getAnnotationItemManager().setValue(
+                        //        annotationItem, "base", *baseIt);
+                        //lattice.getAnnotationItemManager().setValue(
+                        //        annotationItem, "morphology", *morphIt);
+                        //lattice.getAnnotationItemManager().setValue(
+                        //        annotationItem, "discard", "0");
+                        std::string morpho;
+                        size_t delimPos = morphIt->find(":");
+                        std::string partOfSpeech = morphIt->substr(0, delimPos);
+                        if (delimPos != std::string::npos)
+                            morpho = morphIt->substr(delimPos + 1, std::string::npos);
+                        std::string lexeme = *baseIt + "_" + partOfSpeech;
+
+                        Lattice::EdgeDescriptor lexemeEdge;
+                        if (! matchLexemeEdge(lattice, startVertex,
+                                    partOfSpeech, lexeme)) {
+                            Lattice::EdgeSequence::Builder lexemeBuilder;
+                            lexemeBuilder.addEdge(lemmaEdge);
+                            AnnotationItem aiLexeme(partOfSpeech, lexeme);
+                            LayerTagCollection tagsLexeme = lattice.getLayerTagManager().
+                                createSingletonTagCollection("lexeme");
+                            lexemeEdge = lattice.addEdge(
+                                    startVertex, endVertex, aiLexeme, tagsLexeme, lexemeBuilder.build()
+                                    );
+                        } else
+                            lexemeEdge = getLexemeEdge(lattice, startVertex,
+                                    partOfSpeech, lexeme);
 //                        std::cerr << "bedzie dorzucane: " << *baseIt << " " << *morphIt << std::endl;
 
-                        for (std::list<Lattice::Partition>::iterator partIt =
-                                partitions.begin();
-                                partIt != partitions.end();
-                                ++ partIt) {
-                            Lattice::EdgeSequence sequence = partIt->getSequence();
-                            lattice.addEdge(
-                                    startVertex,
-                                    endVertex,
-                                    annotationItem,
-                                    tags,
-                                    sequence
-                                    );
-                        }
+                        Lattice::EdgeSequence::Builder formBuilder;
+                        formBuilder.addEdge(lexemeEdge);
+                        AnnotationItem annotationItem(partOfSpeech, lexeme);
+//                        LayerTagCollection tags = lattice.getLayerTagManager().
+//                                createSingletonTagCollection("form");
+                        lattice.getAnnotationItemManager().setValue(
+                                annotationItem, "morpho", morpho);
+                        lattice.getAnnotationItemManager().setValue(
+                                annotationItem, "discard", "0");
+
+                        lattice.addEdge(startVertex, endVertex, annotationItem,
+                                tags, formBuilder.build());
+//                        for (std::list<Lattice::Partition>::iterator partIt =
+//                                partitions.begin();
+//                                partIt != partitions.end();
+//                                ++ partIt) {
+//                            Lattice::EdgeSequence sequence = partIt->getSequence();
+//                            lattice.addEdge(
+//                                    startVertex,
+//                                    endVertex,
+//                                    annotationItem,
+//                                    tags,
+//                                    sequence
+//                                    );
+//                        }
                     }
                 }
             }
@@ -1176,6 +1272,81 @@ namespace poleng {
                 }
                 Lattice::EdgeDescriptor emptyEdge;
                 return emptyEdge;
+            }
+
+            bool matchLemmaEdge(Lattice &lattice,
+                    Lattice::VertexDescriptor vertex,
+                    std::string lemma) {
+                LayerTagCollection lemmaTag
+                    = lattice.getLayerTagManager().createSingletonTagCollection("lemma");
+                LayerTagMask lemmaMask = lattice.getLayerTagManager().getMask(lemmaTag);
+                return matchEdge(lattice, vertex, lemmaMask, "word", lemma);
+            }
+
+            bool matchLexemeEdge(Lattice &lattice,
+                    Lattice::VertexDescriptor vertex,
+                    std::string partOfSpeech, std::string lexeme) {
+                LayerTagCollection lexemeTag
+                    = lattice.getLayerTagManager().createSingletonTagCollection("lexeme");
+                LayerTagMask lexemeMask = lattice.getLayerTagManager().getMask(lexemeTag);
+                return matchEdge(lattice, vertex, lexemeMask,
+                        partOfSpeech, lexeme);
+            }
+
+            bool matchEdge(Lattice &lattice,
+                    Lattice::VertexDescriptor vertex,
+                    LayerTagMask mask,
+                    std::string category, std::string text) {
+                Lattice::InOutEdgesIterator edgeIt =
+                    lattice.outEdges(vertex, mask);
+                while (edgeIt.hasNext()) {
+                    Lattice::EdgeDescriptor edge = edgeIt.next();
+                    AnnotationItem annotationItem =
+                        lattice.getEdgeAnnotationItem(edge);
+                    if (annotationItem.getCategory() == category
+                            && annotationItem.getText() == text) {
+                        return true;
+                    }
+                }
+                return false;
+            }
+
+            Lattice::EdgeDescriptor getLemmaEdge(Lattice &lattice,
+                    Lattice::VertexDescriptor vertex,
+                    std::string lemma) {
+                LayerTagCollection lemmaTag
+                    = lattice.getLayerTagManager().createSingletonTagCollection("lemma");
+                LayerTagMask lemmaMask = lattice.getLayerTagManager().getMask(lemmaTag);
+                return getEdge(lattice, vertex, lemmaMask, "word", lemma);
+            }
+
+            Lattice::EdgeDescriptor getLexemeEdge(Lattice &lattice,
+                    Lattice::VertexDescriptor vertex,
+                    std::string partOfSpeech, std::string lexeme) {
+                LayerTagCollection lexemeTag
+                    = lattice.getLayerTagManager().createSingletonTagCollection("lexeme");
+                LayerTagMask lexemeMask = lattice.getLayerTagManager().getMask(lexemeTag);
+                return getEdge(lattice, vertex, lexemeMask,
+                        partOfSpeech, lexeme);
+            }
+
+            Lattice::EdgeDescriptor getEdge(Lattice &lattice,
+                    Lattice::VertexDescriptor vertex,
+                    LayerTagMask mask,
+                    std::string category, std::string text) {
+                Lattice::InOutEdgesIterator edgeIt =
+                    lattice.outEdges(vertex, mask);
+                while (edgeIt.hasNext()) {
+                    Lattice::EdgeDescriptor edge = edgeIt.next();
+                    AnnotationItem annotationItem =
+                        lattice.getEdgeAnnotationItem(edge);
+                    if (annotationItem.getCategory() == category
+                            && annotationItem.getText() == text) {
+                        return edge;
+                    }
+                }
+                Lattice::EdgeDescriptor edge; //@todo
+                return edge;
             }
 
             }

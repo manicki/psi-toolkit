@@ -102,8 +102,9 @@ bool AddAction::apply(Lattice &lattice, int currentEntity,
                         baseForms, interpretations);
             } else {
                 std::vector<std::string> baseForms;
-                std::string baseForm = lattice.getAnnotationItemManager().
-                    getValue(ai, "base");
+//                std::string baseForm = lattice.getAnnotationItemManager().
+//                    getValue(ai, "base");
+                std::string baseForm = lattice::getBase(lattice, *edgeIt);
                 baseForms.push_back(baseForm);
                 lattice::addNewVariantEdges(lattice, *edgeIt,
                         baseForms, interpretations);
@@ -400,9 +401,11 @@ bool AddAction::test(Lattice &lattice, int currentEntity,
         AnnotationItem ai = lattice.getEdgeAnnotationItem(*edgeIt);
         if (lattice.getAnnotationItemManager().getValue(ai, "discard") == "1")
             continue; //skip discarded interpretations
+        std::string edgeBase = lattice::getBase(lattice, *edgeIt);
         if (! allBaseForms) {
-            if (lattice.getAnnotationItemManager().getValue(ai, "base") !=
-                    base)
+            //if (lattice.getAnnotationItemManager().getValue(ai, "base") !=
+            //        base)
+            if (edgeBase != base)
                 continue; //take the next variant
         }
         bool interpretationFound = false;
@@ -410,8 +413,9 @@ bool AddAction::test(Lattice &lattice, int currentEntity,
                 interpretations.begin();
                 morph_it != interpretations.end();
                 ++ morph_it) {
-            if (lattice.getAnnotationItemManager().getValue(ai, "base") ==
-                    *morph_it) {
+            //if (lattice.getAnnotationItemManager().getValue(ai, "base") ==
+            //        *morph_it) {
+            if (edgeBase == *morph_it) {
                 interpretationFound = true;
                 break;
             }
