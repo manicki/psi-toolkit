@@ -727,10 +727,17 @@ namespace poleng {
                             ++ morphIt) {
                         AnnotationItem annotationItem(syntokCategory);
 
+                        std::string morphology = *morphIt;
+                        size_t delimPos = morphology.find(":");
+                        std::string partOfSpeech = morphology.substr(0, delimPos);
+                        std::string morpho = "";
+                        if ( (delimPos != std::string::npos) &&
+                                (delimPos < morphology.size()) )
+                            morpho = morphology.substr(delimPos + 1, std::string::npos);
+//                        lattice.getAnnotationItemManager().setValue(
+//                                annotationItem, "base", *baseIt);
                         lattice.getAnnotationItemManager().setValue(
-                                annotationItem, "base", *baseIt);
-                        lattice.getAnnotationItemManager().setValue(
-                                annotationItem, "morphology", *morphIt);
+                                annotationItem, "morpho", morpho);
                         lattice.getAnnotationItemManager().setValue(
                                 annotationItem, "discard", "0");
                         if (syntokCategory != concatenatedOrth) { //adding parse edge 'SYNTOK'

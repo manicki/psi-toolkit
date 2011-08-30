@@ -117,8 +117,9 @@ bool SyntokAction::apply(Lattice &lattice, int currentEntity,
                     ai, "discard") == "1")
                 continue;
 
-            std::string base = lattice.getAnnotationItemManager().getValue(
-                    ai, "base");
+            //std::string base = lattice.getAnnotationItemManager().getValue(
+            //        ai, "base");
+            std::string base = lattice::getBase(lattice, *edgeIt);
 
             if (index != lattice.getEdgeBeginIndex(*edgeIt)) {
                 baseForm += " ";
@@ -430,8 +431,7 @@ bool SyntokAction::test(Lattice &, int,
     return false;
 }
 
-int SyntokAction::getStart()
-{
+int SyntokAction::getStart() const {
     return start;
 }
 
@@ -440,8 +440,7 @@ void SyntokAction::setStart(int aStart)
     start = aStart;
 }
 
-int SyntokAction::getEnd()
-{
+int SyntokAction::getEnd() const {
     return end;
 }
 
@@ -451,7 +450,7 @@ void SyntokAction::setEnd(int aEnd)
 }
 
 //std::vector<InterpretationPair> SyntokAction::getMorphology()
-std::vector<std::string> SyntokAction::getMorphology() {
+std::vector<std::string> SyntokAction::getMorphology() const {
     return morphology;
 }
 
@@ -461,8 +460,7 @@ void SyntokAction::setMorphology(std::vector<std::string> aMorphology) {
     //morphology = &aMorphology;
 }
 
-std::vector<int> SyntokAction::getTokenIndices()
-{
+std::vector<int> SyntokAction::getTokenIndices() const {
     return tokenIndices;
 }
 
@@ -474,8 +472,7 @@ void SyntokAction::setTokenIndices(std::vector<int> aTokenIndices)
     //tokenIndexes = &aTokenIndexes;
 }
 
-std::string SyntokAction::getRuleName()
-{
+std::string SyntokAction::getRuleName() const {
     return ruleName;
 }
 
@@ -484,8 +481,7 @@ void SyntokAction::setRuleName(std::string aRuleName)
     ruleName = aRuleName;
 }
 
-std::string SyntokAction::getUMorphology()
-{
+std::string SyntokAction::getUMorphology() const {
     return morphology_;
 }
 

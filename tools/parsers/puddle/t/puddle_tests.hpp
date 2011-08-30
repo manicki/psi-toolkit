@@ -494,194 +494,200 @@ public:
 ////        delete puddle
 ////    }
 //
-////    void testPuddleDelete() {
-////        //preparing lattice
-////        Lattice lattice("ananas noirs");
-////        lattice.addSymbols(lattice.getFirstVertex(), lattice.getLastVertex());
-////        LayerTagCollection raw_tag
-////            = lattice.getLayerTagManager().createSingletonTagCollection("symbol");
-////        LayerTagCollection token_tag
-////            = lattice.getLayerTagManager().createSingletonTagCollection("token");
-////        LayerTagCollection lemma_tag
-////            = lattice.getLayerTagManager().createSingletonTagCollection("lemma");
-////        LayerTagMask rawMask = lattice.getLayerTagManager().getMask(raw_tag);
-////        LayerTagMask tokenMask = lattice.getLayerTagManager().getMask(token_tag);
-////        LayerTagMask lemmaMask = lattice.getLayerTagManager().getMask(lemma_tag);
-////
-////        Lattice::VertexDescriptor pre_ananas = lattice.getFirstVertex();
-////        Lattice::VertexDescriptor post_ananas = lattice.getVertexForRawCharIndex(6);
-////        Lattice::VertexDescriptor pre_noirs = lattice.getVertexForRawCharIndex(7);
-////        Lattice::VertexDescriptor post_noirs = lattice.getLastVertex();
-////
-////        AnnotationItem word_token("word");
-////        AnnotationItem blank_token("blank");
-////
-////        Lattice::EdgeSequence::Builder ananas_builder;
-////        for (int i = 0; i < 6; i ++) {
-////            ananas_builder.addEdge(lattice.firstOutEdge(
-////                        lattice.getVertexForRawCharIndex(i),
-////                        rawMask
-////                        ));
-////        }
-////        lattice.addEdge(pre_ananas, post_ananas, word_token, token_tag, ananas_builder.build());
-////
-////        Lattice::EdgeSequence::Builder blank_builder;
-////        blank_builder.addEdge(lattice.firstOutEdge(
-////            lattice.getVertexForRawCharIndex(6),
-////            rawMask
-////        ));
-////        lattice.addEdge(post_ananas, pre_noirs, blank_token, token_tag, blank_builder.build());
-////        Lattice::EdgeSequence::Builder noirs_builder;
-////        for (int i = 7; i < 12; i ++) {
-////            noirs_builder.addEdge(lattice.firstOutEdge(
-////                        lattice.getVertexForRawCharIndex(i),
-////                        rawMask
-////                        )
-////                    );
-////        }
-////        lattice.addEdge(pre_noirs, post_noirs, word_token, token_tag, noirs_builder.build());
-////
-////        Lattice::EdgeSequence::Builder ananas_lemma_builder;
-////        ananas_lemma_builder.addEdge(lattice.firstOutEdge(lattice.getVertexForRawCharIndex(0), tokenMask));
-////        AnnotationItem ai_ananas_sg("ananas");
-////        lattice.getAnnotationItemManager().setValue(ai_ananas_sg, "base", "ananas");
-////        lattice.getAnnotationItemManager().setValue(ai_ananas_sg, "morphology", "subst:sg:m");
-////        lattice.getAnnotationItemManager().setValue(ai_ananas_sg, "discard", "0");
-////        lattice.addEdge(pre_ananas, post_ananas, ai_ananas_sg, lemma_tag, ananas_lemma_builder.build());
-////        AnnotationItem ai_ananas_pl("ananas");
-////        lattice.getAnnotationItemManager().setValue(ai_ananas_pl, "base", "ananas"); //@todo: tu problem, bo dla niego identyczne sa morphology jak sie zaczynaja od tej samej litery czy podciagu. nie moga byc wiec dwie interpretacje 'subst'. poki co radzimy se tak
-////        lattice.getAnnotationItemManager().setValue(ai_ananas_pl, "morphology", "subst:pl:m");
-////        lattice.getAnnotationItemManager().setValue(ai_ananas_pl, "discard", "0");
-////        lattice.addEdge(pre_ananas, post_ananas, ai_ananas_pl, lemma_tag, ananas_lemma_builder.build());
-////
-////        Lattice::EdgeSequence::Builder noirs_lemma_builder;
-////        noirs_lemma_builder.addEdge(lattice.firstOutEdge(lattice.getVertexForRawCharIndex(7), tokenMask));
-////        AnnotationItem ai_noirs_adj("noirs");
-////        lattice.getAnnotationItemManager().setValue(ai_noirs_adj, "base", "noir");
-////        lattice.getAnnotationItemManager().setValue(ai_noirs_adj, "morphology", "adj:pl:m");
-////        lattice.getAnnotationItemManager().setValue(ai_noirs_adj, "discard", "0");
-////        lattice.addEdge(pre_noirs, post_noirs, ai_noirs_adj, lemma_tag, noirs_lemma_builder.build());
-////        AnnotationItem ai_noirs_subst("noirs");
-////        lattice.getAnnotationItemManager().setValue(ai_noirs_subst, "base", "noir");
-////        lattice.getAnnotationItemManager().setValue(ai_noirs_subst, "morphology", "subst:pl:m");
-////        lattice.getAnnotationItemManager().setValue(ai_noirs_subst, "discard", "0");
-////        lattice.addEdge(pre_noirs, post_noirs, ai_noirs_subst, lemma_tag, noirs_lemma_builder.build());
-////
-////        //preparing parser
-////        std::string tagsetFilename = ROOT_DIR "tools/parsers/puddle/t/files/tagset.fr";
-////        std::string rulesFilename = ROOT_DIR "tools/parsers/puddle/t/files/rules_delete.fr";
-////        poleng::bonsai::puddle::TagsetLoader tagset_loader;
-////        poleng::bonsai::puddle::RuleLoader rule_loader;
-////        poleng::bonsai::puddle::TaggerPtr tagger = poleng::bonsai::puddle::TaggerPtr( new poleng::bonsai::puddle::Tagger());
-////
-////        poleng::bonsai::puddle::Puddle *puddle = new poleng::bonsai::puddle::Puddle();
-////
-////        poleng::bonsai::puddle::TagsetPtr tagset;
-////        tagset = tagset_loader.load(tagsetFilename);
-////        tagger->setTagset(tagset);
-////        puddle->setTagset(tagset);
-////        rule_loader.setTagset(tagset);
-////        puddle->setTagger(tagger);
-////        poleng::bonsai::puddle::RulesPtr rules =
-////            rule_loader.readFromFile(rulesFilename);
-////        puddle->setRules(rules);
-////        TS_ASSERT_EQUALS(rules->size(), (size_t) 1);
-////
-////        //parsing
-////        TS_ASSERT(puddle->parse(lattice));
-////
-////        Lattice::EdgeDescriptor edge;
-////        Lattice::EdgesSortedBySourceIterator tokenIter = lattice.edgesSortedBySource(lemmaMask);
-////        TS_ASSERT(tokenIter.hasNext());
-////        edge = tokenIter.next();
-////        TS_ASSERT_EQUALS(
-////            lattice.getEdgeAnnotationItem(edge).getCategory(),
-////            ai_ananas_sg.getCategory()
-////        );
-////        std::list< std::pair<std::string, std::string> > av
-////            = lattice.getAnnotationItemManager().getValues(
-////                    lattice.getEdgeAnnotationItem(edge)
-////                    );
-////        std::list< std::pair<std::string, std::string> >::iterator avi = av.begin();
-////        TS_ASSERT_EQUALS((*avi).first, "base");
-////        TS_ASSERT_EQUALS((*avi).second, "ananas");
-////        ++avi;
-////        TS_ASSERT_EQUALS((*avi).first, "morphology");
-////        TS_ASSERT_EQUALS((*avi).second, "subst:sg:m");
-////        ++avi;
-////        TS_ASSERT(avi != av.end());
-////        TS_ASSERT_EQUALS((*avi).first, "discard");
-////        TS_ASSERT_EQUALS((*avi).second, "1"); //deleted
-////        ++avi;
-////        TS_ASSERT(avi == av.end());
-////        TS_ASSERT(tokenIter.hasNext());
-////        edge = tokenIter.next();
-////        TS_ASSERT_EQUALS(
-////            lattice.getEdgeAnnotationItem(edge).getCategory(),
-////            ai_ananas_pl.getCategory()
-////        );
-////        av = lattice.getAnnotationItemManager().getValues(
-////                    lattice.getEdgeAnnotationItem(edge)
-////                    );
-////        avi = av.begin();
-////        TS_ASSERT_EQUALS((*avi).first, "base");
-////        TS_ASSERT_EQUALS((*avi).second, "ananas"); //@todo: poprawic to
-////        ++avi;
-////        TS_ASSERT_EQUALS((*avi).first, "morphology");
-////        TS_ASSERT_EQUALS((*avi).second, "subst:pl:m");
-////        ++avi;
-////        TS_ASSERT(avi != av.end());
-////        TS_ASSERT_EQUALS((*avi).first, "discard");
-////        TS_ASSERT_EQUALS((*avi).second, "0");
-////        ++avi;
-////        TS_ASSERT(avi == av.end());
-////        TS_ASSERT(tokenIter.hasNext());
-////        edge = tokenIter.next();
-////        TS_ASSERT_EQUALS(
-////            lattice.getEdgeAnnotationItem(edge).getCategory(),
-////            ai_noirs_adj.getCategory()
-////        );
-////        av = lattice.getAnnotationItemManager().getValues(
-////                    lattice.getEdgeAnnotationItem(edge)
-////                    );
-////        avi = av.begin();
-////        TS_ASSERT_EQUALS((*avi).first, "base");
-////        TS_ASSERT_EQUALS((*avi).second, "noir");
-////        ++avi;
-////        TS_ASSERT_EQUALS((*avi).first, "morphology");
-////        TS_ASSERT_EQUALS((*avi).second, "adj:pl:m");
-////        ++avi;
-////        TS_ASSERT(avi != av.end());
-////        TS_ASSERT_EQUALS((*avi).first, "discard");
-////        TS_ASSERT_EQUALS((*avi).second, "0");
-////        ++avi;
-////        TS_ASSERT(avi == av.end());
-////        TS_ASSERT(tokenIter.hasNext());
-////        edge = tokenIter.next();
-////        TS_ASSERT_EQUALS(
-////            lattice.getEdgeAnnotationItem(edge).getCategory(),
-////            ai_noirs_subst.getCategory()
-////        );
-////        av = lattice.getAnnotationItemManager().getValues(
-////                    lattice.getEdgeAnnotationItem(edge)
-////                    );
-////        avi = av.begin();
-////        TS_ASSERT_EQUALS((*avi).first, "base");
-////        TS_ASSERT_EQUALS((*avi).second, "noir");
-////        ++avi;
-////        TS_ASSERT_EQUALS((*avi).first, "morphology");
-////        TS_ASSERT_EQUALS((*avi).second, "subst:pl:m");
-////        ++avi;
-////        TS_ASSERT(avi != av.end());
-////        TS_ASSERT_EQUALS((*avi).first, "discard");
-////        TS_ASSERT_EQUALS((*avi).second, "1"); //deleted
-////        ++avi;
-////        TS_ASSERT(avi == av.end());
-////        TS_ASSERT(!tokenIter.hasNext());
-////
-////        delete puddle;
-////    }
+//    void testPuddleDelete() {
+//        //preparing lattice
+//        Lattice lattice("ananas noirs");
+//        lattice.addSymbols(lattice.getFirstVertex(), lattice.getLastVertex());
+//        LayerTagCollection raw_tag
+//            = lattice.getLayerTagManager().createSingletonTagCollection("symbol");
+//        LayerTagCollection token_tag
+//            = lattice.getLayerTagManager().createSingletonTagCollection("token");
+//        LayerTagCollection lemma_tag
+//            = lattice.getLayerTagManager().createSingletonTagCollection("lemma");
+//        LayerTagCollection lexeme_tag
+//            = lattice.getLayerTagManager().createSingletonTagCollection("lexeme");
+//        LayerTagCollection form_tag
+//            = lattice.getLayerTagManager().createSingletonTagCollection("form");
+//        LayerTagMask rawMask = lattice.getLayerTagManager().getMask(raw_tag);
+//        LayerTagMask tokenMask = lattice.getLayerTagManager().getMask(token_tag);
+//        LayerTagMask lemmaMask = lattice.getLayerTagManager().getMask(lemma_tag);
+//        LayerTagMask lexemeMask = lattice.getLayerTagManager().getMask(lexeme_tag);
+//        LayerTagMask formMask = lattice.getLayerTagManager().getMask(form_tag);
 //
+//        Lattice::VertexDescriptor pre_ananas = lattice.getFirstVertex();
+//        Lattice::VertexDescriptor post_ananas = lattice.getVertexForRawCharIndex(6);
+//        Lattice::VertexDescriptor pre_noirs = lattice.getVertexForRawCharIndex(7);
+//        Lattice::VertexDescriptor post_noirs = lattice.getLastVertex();
+//
+//        AnnotationItem word_token("word");
+//        AnnotationItem blank_token("blank");
+//
+//        Lattice::EdgeSequence::Builder ananas_builder;
+//        for (int i = 0; i < 6; i ++) {
+//            ananas_builder.addEdge(lattice.firstOutEdge(
+//                        lattice.getVertexForRawCharIndex(i),
+//                        rawMask
+//                        ));
+//        }
+//        lattice.addEdge(pre_ananas, post_ananas, word_token, token_tag, ananas_builder.build());
+//
+//        Lattice::EdgeSequence::Builder blank_builder;
+//        blank_builder.addEdge(lattice.firstOutEdge(
+//            lattice.getVertexForRawCharIndex(6),
+//            rawMask
+//        ));
+//        lattice.addEdge(post_ananas, pre_noirs, blank_token, token_tag, blank_builder.build());
+//        Lattice::EdgeSequence::Builder noirs_builder;
+//        for (int i = 7; i < 12; i ++) {
+//            noirs_builder.addEdge(lattice.firstOutEdge(
+//                        lattice.getVertexForRawCharIndex(i),
+//                        rawMask
+//                        )
+//                    );
+//        }
+//        lattice.addEdge(pre_noirs, post_noirs, word_token, token_tag, noirs_builder.build());
+//
+//        Lattice::EdgeSequence::Builder ananas_lemma_builder;
+//        ananas_lemma_builder.addEdge(lattice.firstOutEdge(lattice.getVertexForRawCharIndex(0), tokenMask));
+//        AnnotationItem ai_ananas_lemma("word", "ananas");
+//        lattice.getAnnotationItemManager().setValue(ai_ananas_sg, "base", "ananas");
+//        lattice.getAnnotationItemManager().setValue(ai_ananas_sg, "morphology", "subst:sg:m");
+//        lattice.getAnnotationItemManager().setValue(ai_ananas_sg, "discard", "0");
+//        lattice.addEdge(pre_ananas, post_ananas, ai_ananas_sg, lemma_tag, ananas_lemma_builder.build());
+//        AnnotationItem ai_ananas_pl("ananas");
+//        lattice.getAnnotationItemManager().setValue(ai_ananas_pl, "base", "ananas"); //@todo: tu problem, bo dla niego identyczne sa morphology jak sie zaczynaja od tej samej litery czy podciagu. nie moga byc wiec dwie interpretacje 'subst'. poki co radzimy se tak
+//        lattice.getAnnotationItemManager().setValue(ai_ananas_pl, "morphology", "subst:pl:m");
+//        lattice.getAnnotationItemManager().setValue(ai_ananas_pl, "discard", "0");
+//        lattice.addEdge(pre_ananas, post_ananas, ai_ananas_pl, lemma_tag, ananas_lemma_builder.build());
+//
+//        Lattice::EdgeSequence::Builder noirs_lemma_builder;
+//        noirs_lemma_builder.addEdge(lattice.firstOutEdge(lattice.getVertexForRawCharIndex(7), tokenMask));
+//        AnnotationItem ai_noirs_adj("noirs");
+//        lattice.getAnnotationItemManager().setValue(ai_noirs_adj, "base", "noir");
+//        lattice.getAnnotationItemManager().setValue(ai_noirs_adj, "morphology", "adj:pl:m");
+//        lattice.getAnnotationItemManager().setValue(ai_noirs_adj, "discard", "0");
+//        lattice.addEdge(pre_noirs, post_noirs, ai_noirs_adj, lemma_tag, noirs_lemma_builder.build());
+//        AnnotationItem ai_noirs_subst("noirs");
+//        lattice.getAnnotationItemManager().setValue(ai_noirs_subst, "base", "noir");
+//        lattice.getAnnotationItemManager().setValue(ai_noirs_subst, "morphology", "subst:pl:m");
+//        lattice.getAnnotationItemManager().setValue(ai_noirs_subst, "discard", "0");
+//        lattice.addEdge(pre_noirs, post_noirs, ai_noirs_subst, lemma_tag, noirs_lemma_builder.build());
+//
+//        //preparing parser
+//        std::string tagsetFilename = ROOT_DIR "tools/parsers/puddle/t/files/tagset.fr";
+//        std::string rulesFilename = ROOT_DIR "tools/parsers/puddle/t/files/rules_delete.fr";
+//        poleng::bonsai::puddle::TagsetLoader tagset_loader;
+//        poleng::bonsai::puddle::RuleLoader rule_loader;
+//        poleng::bonsai::puddle::TaggerPtr tagger = poleng::bonsai::puddle::TaggerPtr( new poleng::bonsai::puddle::Tagger());
+//
+//        poleng::bonsai::puddle::Puddle *puddle = new poleng::bonsai::puddle::Puddle();
+//
+//        poleng::bonsai::puddle::TagsetPtr tagset;
+//        tagset = tagset_loader.load(tagsetFilename);
+//        tagger->setTagset(tagset);
+//        puddle->setTagset(tagset);
+//        rule_loader.setTagset(tagset);
+//        puddle->setTagger(tagger);
+//        poleng::bonsai::puddle::RulesPtr rules =
+//            rule_loader.readFromFile(rulesFilename);
+//        puddle->setRules(rules);
+//        TS_ASSERT_EQUALS(rules->size(), (size_t) 1);
+//
+//        //parsing
+//        TS_ASSERT(puddle->parse(lattice));
+//
+//        Lattice::EdgeDescriptor edge;
+//        Lattice::EdgesSortedBySourceIterator tokenIter = lattice.edgesSortedBySource(lemmaMask);
+//        TS_ASSERT(tokenIter.hasNext());
+//        edge = tokenIter.next();
+//        TS_ASSERT_EQUALS(
+//            lattice.getEdgeAnnotationItem(edge).getCategory(),
+//            ai_ananas_sg.getCategory()
+//        );
+//        std::list< std::pair<std::string, std::string> > av
+//            = lattice.getAnnotationItemManager().getValues(
+//                    lattice.getEdgeAnnotationItem(edge)
+//                    );
+//        std::list< std::pair<std::string, std::string> >::iterator avi = av.begin();
+//        TS_ASSERT_EQUALS((*avi).first, "base");
+//        TS_ASSERT_EQUALS((*avi).second, "ananas");
+//        ++avi;
+//        TS_ASSERT_EQUALS((*avi).first, "morphology");
+//        TS_ASSERT_EQUALS((*avi).second, "subst:sg:m");
+//        ++avi;
+//        TS_ASSERT(avi != av.end());
+//        TS_ASSERT_EQUALS((*avi).first, "discard");
+//        TS_ASSERT_EQUALS((*avi).second, "1"); //deleted
+//        ++avi;
+//        TS_ASSERT(avi == av.end());
+//        TS_ASSERT(tokenIter.hasNext());
+//        edge = tokenIter.next();
+//        TS_ASSERT_EQUALS(
+//            lattice.getEdgeAnnotationItem(edge).getCategory(),
+//            ai_ananas_pl.getCategory()
+//        );
+//        av = lattice.getAnnotationItemManager().getValues(
+//                    lattice.getEdgeAnnotationItem(edge)
+//                    );
+//        avi = av.begin();
+//        TS_ASSERT_EQUALS((*avi).first, "base");
+//        TS_ASSERT_EQUALS((*avi).second, "ananas"); //@todo: poprawic to
+//        ++avi;
+//        TS_ASSERT_EQUALS((*avi).first, "morphology");
+//        TS_ASSERT_EQUALS((*avi).second, "subst:pl:m");
+//        ++avi;
+//        TS_ASSERT(avi != av.end());
+//        TS_ASSERT_EQUALS((*avi).first, "discard");
+//        TS_ASSERT_EQUALS((*avi).second, "0");
+//        ++avi;
+//        TS_ASSERT(avi == av.end());
+//        TS_ASSERT(tokenIter.hasNext());
+//        edge = tokenIter.next();
+//        TS_ASSERT_EQUALS(
+//            lattice.getEdgeAnnotationItem(edge).getCategory(),
+//            ai_noirs_adj.getCategory()
+//        );
+//        av = lattice.getAnnotationItemManager().getValues(
+//                    lattice.getEdgeAnnotationItem(edge)
+//                    );
+//        avi = av.begin();
+//        TS_ASSERT_EQUALS((*avi).first, "base");
+//        TS_ASSERT_EQUALS((*avi).second, "noir");
+//        ++avi;
+//        TS_ASSERT_EQUALS((*avi).first, "morphology");
+//        TS_ASSERT_EQUALS((*avi).second, "adj:pl:m");
+//        ++avi;
+//        TS_ASSERT(avi != av.end());
+//        TS_ASSERT_EQUALS((*avi).first, "discard");
+//        TS_ASSERT_EQUALS((*avi).second, "0");
+//        ++avi;
+//        TS_ASSERT(avi == av.end());
+//        TS_ASSERT(tokenIter.hasNext());
+//        edge = tokenIter.next();
+//        TS_ASSERT_EQUALS(
+//            lattice.getEdgeAnnotationItem(edge).getCategory(),
+//            ai_noirs_subst.getCategory()
+//        );
+//        av = lattice.getAnnotationItemManager().getValues(
+//                    lattice.getEdgeAnnotationItem(edge)
+//                    );
+//        avi = av.begin();
+//        TS_ASSERT_EQUALS((*avi).first, "base");
+//        TS_ASSERT_EQUALS((*avi).second, "noir");
+//        ++avi;
+//        TS_ASSERT_EQUALS((*avi).first, "morphology");
+//        TS_ASSERT_EQUALS((*avi).second, "subst:pl:m");
+//        ++avi;
+//        TS_ASSERT(avi != av.end());
+//        TS_ASSERT_EQUALS((*avi).first, "discard");
+//        TS_ASSERT_EQUALS((*avi).second, "1"); //deleted
+//        ++avi;
+//        TS_ASSERT(avi == av.end());
+//        TS_ASSERT(!tokenIter.hasNext());
+//
+//        delete puddle;
+//    }
+
 //    void testPuddleAdd() {
 //        //preparing lattice
 //        Lattice lattice("ananas noirs");
@@ -1976,7 +1982,7 @@ public:
 //        Lattice::InOutEdgesIterator dLexemeEdgeIt =
 //            lattice.outEdges(lattice.getVertexForRawCharIndex(5), lexemeMask);
 //        while (dLexemeEdgeIt.hasNext()) {
-//            Lattice::EdgeDescriptor edge = dLemmaEdgeIt.next();
+//            Lattice::EdgeDescriptor edge = dLexemeEdgeIt.next();
 //            std::string category = lattice.getEdgeAnnotationItem(edge).getCategory();
 //            if (category == "prep")
 //                d__form_builder.addEdge(edge);
@@ -2006,6 +2012,7 @@ public:
 //        lattice.getAnnotationItemManager().setValue(ai_de_form_f, "discard", "0");
 //        lattice.addEdge(pre_d, post_d, ai_de_form_f, form_tag, de_form_builder.build());
 //
+//        std::cerr << "formy sa" << std::endl;
 //        Lattice::EdgeSequence::Builder etat_lemma_builder;
 //        etat_lemma_builder.addEdge(lattice.firstOutEdge(lattice.getVertexForRawCharIndex(7), tokenMask));
 //        AnnotationItem ai_etat_lemma("word", "état");
@@ -2021,6 +2028,7 @@ public:
 //        lattice.getAnnotationItemManager().setValue(ai_etat_form, "discard", "0");
 //        lattice.addEdge(post_d, post_etat, ai_etat_form, form_tag, etat_form_builder.build());
 //
+//        std::cerr << "etaty sa" << std::endl;
 //        //preparing parser
 //        std::string tagsetFilename = ROOT_DIR "tools/parsers/puddle/t/files/tagset.fr";
 //        std::string rulesFilename = ROOT_DIR "tools/parsers/puddle/t/files/rules_syntok.fr";

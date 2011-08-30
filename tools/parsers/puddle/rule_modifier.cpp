@@ -63,8 +63,7 @@ void RuleModifier::setRuleCompiler(RuleLoader *aRuleCompiler)
     ruleCompiler = aRuleCompiler;
 }
 
-RulesPtr RuleModifier::getRules()
-{
+RulesPtr RuleModifier::getRules() const {
     return rules;
 }
 

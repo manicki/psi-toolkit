@@ -32,22 +32,22 @@ class SyntokAction : public Action
         //bool test(ParseGraphPtr pg, Lattice &lattice, int currentEntity,
         bool test(Lattice&, int, std::vector<int> matchedTokensSize);
 
-        int getStart();
+        int getStart() const;
         void setStart(int aStart);
-        int getEnd();
+        int getEnd() const;
         void setEnd(int aEnd);
         //std::vector<InterpretationPair> getMorphology();
         //void setMorphology(std::vector<InterpretationPair> aMorphology);
-        std::vector<std::string> getMorphology();
+        std::vector<std::string> getMorphology() const;
         void setMorphology(std::vector<std::string> aMorphology);
-        std::vector<int> getTokenIndices();
+        std::vector<int> getTokenIndices() const;
         void setTokenIndices(std::vector<int> aTokenIndices);
-        std::string getRuleName();
+        std::string getRuleName() const;
         void setRuleName(std::string aRuleName);
 
         std::string getType() { return type; }
 
-        std::string getUMorphology();
+        std::string getUMorphology() const;
 
         void setVerbose() { verbose = true; }
         void setSyntok() { syntok = true; }

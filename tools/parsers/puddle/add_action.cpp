@@ -593,7 +593,7 @@ void AddAction::setInterpretations(std::vector<std::string> aInterpretations) {
             aInterpretations.end());
 }
 
-std::vector<std::string> AddAction::getInterpretations() {
+std::vector<std::string> AddAction::getInterpretations() const {
     return interpretations;
 }
 
@@ -602,8 +602,7 @@ void AddAction::setBase(std::string aBase)
     base = aBase;
 }
 
-std::string AddAction::getBase()
-{
+std::string AddAction::getBase() const {
     return base;
 }
 
@@ -612,13 +611,11 @@ void AddAction::setTokenIndex(int aTokenIndex)
     tokenIndex = aTokenIndex;
 }
 
-int AddAction::getTokenIndex()
-{
+int AddAction::getTokenIndex() const {
     return tokenIndex;
 }
 
-std::string AddAction::getUInterpretation()
-{
+std::string AddAction::getUInterpretation() const {
     return interpretation_;
 }
 

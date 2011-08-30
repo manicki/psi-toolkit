@@ -588,11 +588,11 @@ bool DeleteAction::test(Lattice &lattice,
 ////    return pattern.str();
 //}
 
-DeleteConditions DeleteAction::getConditions() {
+DeleteConditions DeleteAction::getConditions() const {
     return conditions;
 }
 
-int DeleteAction::getTokenIndex() {
+int DeleteAction::getTokenIndex() const {
     return tokenIndex;
 }
 
@@ -600,7 +600,7 @@ void DeleteAction::setTokenIndex(int aTokenIndex) {
     tokenIndex = aTokenIndex;
 }
 
-std::string DeleteAction::getUPattern() {
+std::string DeleteAction::getUPattern() const {
     return pattern_;
 }
 

@@ -29,15 +29,15 @@ class GroupAction : public Action
         //bool test(ParseGraphPtr pg, Lattice &lattice, int currentEntity, std::vector<int> matchedTokensSize);
         bool test(Lattice &lattice, int,
                 std::vector<int> matchedTokensSize);
-        std::string getGroup();
-        unsigned int getHead();
+        std::string getGroup() const;
+        unsigned int getHead() const;
         void setGroup(std::string aGroup);
         void setHead(unsigned int aHead);
-        unsigned int getStart();
+        unsigned int getStart() const;
         void setStart(unsigned int aStart);
-        unsigned int getEnd();
+        unsigned int getEnd() const;
         void setEnd(unsigned int aEnd);
-        std::string getRuleName();
+        std::string getRuleName() const;
         void setRuleName(std::string aRuleName);
 
         std::string getType() { return type;}

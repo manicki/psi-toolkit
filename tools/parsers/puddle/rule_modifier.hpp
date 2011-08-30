@@ -23,7 +23,7 @@ class RuleModifier
 
         void setRules(RulesPtr aRules);
         void setRuleCompiler(RuleLoader *aRuleCompiler);
-        RulesPtr getRules();
+        RulesPtr getRules() const;
 
         void addAction(size_t ruleIndex, ActionPtr action);
         void addAction(size_t ruleIndex, std::string actionString);

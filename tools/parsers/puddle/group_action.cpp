@@ -341,13 +341,11 @@ bool GroupAction::test(Lattice &lattice, int,
     return true;
 }
 
-std::string GroupAction::getGroup()
-{
+std::string GroupAction::getGroup() const {
     return group;
 }
 
-unsigned int GroupAction::getHead()
-{
+unsigned int GroupAction::getHead() const {
     return head;
     //return (head + 1);
 }
@@ -362,8 +360,7 @@ void GroupAction::setHead(unsigned int aHead)
     head = aHead; // - 1;
 }
 
-unsigned int GroupAction::getStart()
-{
+unsigned int GroupAction::getStart() const {
     return start;
 }
 
@@ -372,8 +369,7 @@ void GroupAction::setStart(unsigned int aStart)
     start = aStart;
 }
 
-unsigned int GroupAction::getEnd()
-{
+unsigned int GroupAction::getEnd() const {
     return end;
 }
 
@@ -382,8 +378,7 @@ void GroupAction::setEnd(unsigned int aEnd)
     end = aEnd;
 }
 
-std::string GroupAction::getRuleName()
-{
+std::string GroupAction::getRuleName() const {
     return ruleName;
 }
 

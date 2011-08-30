@@ -34,12 +34,12 @@ class AddAction : public Action
         //void setInterpretations(std::vector<InterpretationPair> aInterpretations);
         //std::vector<InterpretationPair> getInterpretations();
         void setInterpretations(std::vector<std::string> aInterpretations);
-        std::vector<std::string> getInterpretations();
+        std::vector<std::string> getInterpretations() const;
         void setBase(std::string aBase);
-        std::string getBase();
+        std::string getBase() const;
         void setTokenIndex(int aTokenIndex);
-        int getTokenIndex();
-        std::string getUInterpretation();
+        int getTokenIndex() const;
+        std::string getUInterpretation() const;
 
         std::string getType() { return type;}
 

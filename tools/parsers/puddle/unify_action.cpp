@@ -1413,7 +1413,7 @@ bool UnifyAction::test(Lattice &lattice, int currentEntity,
 //    //attributeIndexes = &aAttributeIndexes;
 //}
 
-std::vector<std::string> UnifyAction::getPatterns() {
+std::vector<std::string> UnifyAction::getPatterns() const {
     return unifiedPatterns;
 }
 
@@ -1421,7 +1421,7 @@ void UnifyAction::setPatterns(std::vector<std::string> aPatterns) {
     unifiedPatterns = aPatterns;
 }
 
-std::vector<std::string> UnifyAction::getAttributes() {
+std::vector<std::string> UnifyAction::getAttributes() const {
     return unifiedAttributes;
 }
 
@@ -1429,7 +1429,7 @@ void UnifyAction::setAttributes(std::vector<std::string> aAttributes) {
     unifiedAttributes = aAttributes;
 }
 
-std::vector<int> UnifyAction::getTokenIndices() {
+std::vector<int> UnifyAction::getTokenIndices() const {
     return tokenIndices;
 }
 
@@ -1445,7 +1445,7 @@ void UnifyAction::setTokenIndices(std::vector<int> aTokenIndices) {
 //    maskLength = baseMask.length();
 //}
 
-std::vector<std::string> UnifyAction::getUAttributes() {
+std::vector<std::string> UnifyAction::getUAttributes() const {
     return attributes_;
 }
 

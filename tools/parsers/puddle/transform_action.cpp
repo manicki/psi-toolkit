@@ -146,13 +146,11 @@ bool TransformAction::test(Lattice &lattice, int currentEntity,
     return true;
 }
 
-std::string TransformAction::getGroup()
-{
+std::string TransformAction::getGroup() const {
     return group;
 }
 
-int TransformAction::getElement()
-{
+int TransformAction::getElement() const {
     return element;
     //return (head + 1);
 }
@@ -167,8 +165,7 @@ void TransformAction::setElement(int aElement)
     element = aElement; // - 1;
 }
 
-std::string TransformAction::getRuleName()
-{
+std::string TransformAction::getRuleName() const {
     return ruleName;
 }
 

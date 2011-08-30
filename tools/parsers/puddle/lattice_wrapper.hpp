@@ -39,7 +39,7 @@ namespace poleng {
             class EdgeUnique {
                 public:
                     bool operator() (const Lattice::EdgeDescriptor &first,
-                            const Lattice::EdgeDescriptor &second) {
+                            const Lattice::EdgeDescriptor &second) const {
                         return (! ((first < second) || (second < first)) );
                     }
             };

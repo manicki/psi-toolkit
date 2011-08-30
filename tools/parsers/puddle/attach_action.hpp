@@ -26,15 +26,15 @@ class AttachAction : public Action
         //bool test(Entities entities, int currentEntity, std::vector<int> matchedTokensSize);
         //bool test(ParseGraphPtr pg, Lattice &lattice, int currentEntity, std::vector<int> matchedTokensSize);
         bool test(Lattice &lattice, int, std::vector<int> matchedTokensSize);
-        std::string getGroup();
-        int getHead();
+        std::string getGroup() const;
+        int getHead() const;
         void setGroup(std::string aGroup);
         void setHead(int aHead);
-        int getStart();
+        int getStart() const;
         void setStart(int aStart);
-        int getEnd();
+        int getEnd() const;
         void setEnd(int aEnd);
-        std::string getRuleName();
+        std::string getRuleName() const;
         void setRuleName(std::string aRuleName);
 
         std::string getType() { return type;}
