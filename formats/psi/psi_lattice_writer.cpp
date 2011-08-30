@@ -66,15 +66,34 @@ void PsiLatticeWriter::Worker::doRun() {
 
         edgeOrdinalMap[edge] = ordinal;
 
-        outputStream_ << std::right << std::setfill('0');
-        outputStream_ << std::setw(2) << ordinal;
+        outputStream_ << std::right << std::setfill('0') << std::setw(2);
+        outputStream_ << ordinal;
         outputStream_ << " ";
 
-        outputStream_ << std::setw(4);
-        outputStream_ << lattice_.getEdgeBeginIndex(edge);
+        Lattice::VertexDescriptor source = lattice_.getEdgeSource(edge);
+        if (lattice_.isLooseVertex(source)) {
+            outputStream_ << "@";
+            outputStream_ << std::left << std::setfill(' ') << std::setw(3);
+            outputStream_ << lattice_.getLooseVertexIndex(source);
+        } else {
+            outputStream_ << std::right << std::setfill('0') << std::setw(4);
+            outputStream_ << lattice_.getVertexRawCharIndex(source);
+        }
         outputStream_ << " ";
 
-        outputStream_ << std::setw(2) << lattice_.getEdgeLength(edge);
+        Lattice::VertexDescriptor target = lattice_.getEdgeTarget(edge);
+        if (lattice_.isLooseVertex(target)) {
+            outputStream_ << "*@";
+            outputStream_ << std::left << std::setfill(' ') << std::setw(2);
+            outputStream_ << lattice_.getLooseVertexIndex(target);
+        } else if (lattice_.isLooseVertex(source)) {
+            outputStream_ << "*";
+            outputStream_ << std::right << std::setfill('0') << std::setw(4);
+            outputStream_ << lattice_.getVertexRawCharIndex(target);
+        } else {
+            outputStream_ << std::right << std::setfill('0') << std::setw(2);
+            outputStream_ << lattice_.getEdgeLength(edge);
+        }
         outputStream_ << " ";
 
         outputStream_ << std::left << std::setfill(' ');

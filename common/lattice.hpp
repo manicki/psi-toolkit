@@ -395,6 +395,10 @@ public:
      */
     Lattice::EdgeSequence getPath(VertexDescriptor& vertex, LayerTagMask mask);
 
+    bool isLooseVertex(VertexDescriptor vd) const;
+
+    int getLooseVertexIndex(VertexDescriptor vd) const;
+
 private:
 
     Graph graph_;
@@ -433,8 +437,6 @@ private:
     EdgeSequence cutSequenceByTextLength_(const EdgeSequence& partition,
                                           EdgeSequence::Iterator& sequenceIterator,
                                           int length);
-
-    bool isLoose_(VertexDescriptor vd) const;
 
     struct HashFun {
         HASH_WRAPPER_EXTRA_STUFF
