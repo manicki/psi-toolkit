@@ -71,7 +71,7 @@ class Puddle : public Annotator {
 //        bool initTagger(std::string filename);
 //        void setStdoutOutput() { this->xmlWriter->setStdoutOutput(); }
         void setFlag(std::string flag);
-        bool getFlag(std::string flag);
+        bool getFlag(std::string flag) const;
         void setTagsetLogFile(std::string filename);
         void setRulesLogFile(std::string filename);
         void logTagset();
