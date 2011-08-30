@@ -152,7 +152,9 @@ Lattice::EdgeDescriptor Lattice::addEdge(
         }
 
         if (
-            tags == getSymbolTag_()
+            !isLooseVertex(from)
+            && !isLooseVertex(to)
+            && tags == getSymbolTag_()
             && from + (int) symbolLength_(from) == to
         ) {
             implicitOutEdges_.set(from, true);
