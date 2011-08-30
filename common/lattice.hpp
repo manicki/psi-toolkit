@@ -183,7 +183,7 @@ public:
 
     class VertexIterator {
     public:
-        VertexIterator(Lattice& lattice) : lattice_(lattice), vd_(0) { }
+        VertexIterator(Lattice& lattice);
         bool hasNext();
         VertexDescriptor next();
     private:
@@ -302,12 +302,12 @@ public:
     /**
      * Gets the first vertex (the same as getVertexForRawCharIndex(0))
      */
-    VertexDescriptor getFirstVertex();
+    VertexDescriptor getFirstVertex() const;
 
      /**
      * Gets the last vertex
      */
-    VertexDescriptor getLastVertex();
+    VertexDescriptor getLastVertex() const;
 
     size_t getVertexRawCharIndex(VertexDescriptor vd);
 
@@ -370,7 +370,7 @@ public:
     int getEdgeEndIndex(EdgeDescriptor edge) const;
     int getEdgeLength(EdgeDescriptor edge) const;
     bool isEdgeHidden(EdgeDescriptor edge) const;
-    std::list<Partition> getEdgePartitions(EdgeDescriptor edge);
+    std::list<Partition> getEdgePartitions(EdgeDescriptor edge) const;
     Score getEdgeScore(EdgeDescriptor edge) const;
     VertexDescriptor getEdgeSource(EdgeDescriptor edge) const;
     VertexDescriptor getEdgeTarget(EdgeDescriptor edge) const;
@@ -394,6 +394,10 @@ public:
      * one is chosen (the last one with the higher score).
      */
     Lattice::EdgeSequence getPath(VertexDescriptor& vertex, LayerTagMask mask);
+
+    bool isLooseVertex(VertexDescriptor vd) const;
+
+    int getLooseVertexIndex(VertexDescriptor vd) const;
 
 private:
 
@@ -433,8 +437,6 @@ private:
     EdgeSequence cutSequenceByTextLength_(const EdgeSequence& partition,
                                           EdgeSequence::Iterator& sequenceIterator,
                                           int length);
-
-    bool isLoose_(VertexDescriptor vd) const;
 
     struct HashFun {
         HASH_WRAPPER_EXTRA_STUFF
