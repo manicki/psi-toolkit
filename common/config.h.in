@@ -2,4 +2,4 @@
 #cmakedefine01 HAVE_JAVA
 #cmakedefine01 HAVE_PUDDLE
 #define ROOT_DIR "../"
-#define _WITH_BONSAI_PARSEGRAPH 0
+#cmakedefine01 _WITH_BONSAI_PARSEGRAPH

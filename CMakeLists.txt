@@ -83,11 +83,11 @@ set_target_properties(${TARGETS} PROPERTIES
 if(USE_PUDDLE)
 set_target_properties(tools-parsers-puddle PROPERTIES
 	COMPILE_FLAGS "-I${psi-toolkit_SOURCE_DIR}/utf8")
-if(USE_BONSAI_PARSEGRAPH)
-set_target_properties(tools-parsers-puddle PROPERTIES
-    COMPILE_FLAGS "-I${psi-toolkit_SOURCE_DIR}/utf8 -I${BONSAI_PATH} -D_WITH_BONSAI_PARSEGRAPH")
-#   message(STATUS "flagi ${CMAKE_CXX_FLAGS}")
-endif(USE_BONSAI_PARSEGRAPH)
+    if(USE_BONSAI_PARSEGRAPH)
+        set_target_properties(tools-parsers-puddle PROPERTIES
+        COMPILE_FLAGS "-I${psi-toolkit_SOURCE_DIR}/utf8 -I${BONSAI_PATH}")
+        set(_WITH_BONSAI_PARSEGRAPH 1)
+    endif(USE_BONSAI_PARSEGRAPH)
     set(HAVE_PUDDLE 1)
 endif(USE_PUDDLE)
 
@@ -122,6 +122,9 @@ if(CXXTEST_FOUND)
 
     if(USE_PUDDLE)
         include_directories("${psi-toolkit_SOURCE_DIR}/tools/parsers/puddle")
+        if(USE_BONSAI_PARSEGRAPH)
+            include_directories(${BONSAI_PATH})
+        endif(USE_BONSAI_PARSEGRAPH)
         #   link_directories("${psi-toolkit_BINARY_DIR}/tools/parsers/puddle")
     endif(USE_PUDDLE)
 endif()
