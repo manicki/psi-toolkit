@@ -64,7 +64,7 @@ Lattice::VertexDescriptor Lattice::getVertexForRawCharIndex(int ix) {
     if (ix < 0) {
         throw NoVertexException("Raw char index below zero is incorrect.");
     }
-    if (ix > allText_.length()) {
+    if (ix > int(allText_.length())) {
         throw NoVertexException("Raw char index above text length is incorrect.");
     }
     return ix;
