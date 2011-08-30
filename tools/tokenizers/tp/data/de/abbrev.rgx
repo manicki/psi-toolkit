@@ -1,0 +1,40 @@
+# Copyright (C) 2007-2011 Poleng Sp. z o.o.
+
+# This file is part of Translatica tokenization rules.
+
+# Translatica tokenization rules can be redistributed and/or modified
+# under the terms of the GNU Lesser General Public Licence as
+# published by the Free Software Foundation.
+
+@rule abbrev1/T := <<END_OF_ABB
+					Abb Abf abg Abh abk Abs Abw Adir  adj
+					Adr  adv Afr Ag agg Aggr Ahg Anh aisl
+					akad Akk Alg allg alph altgr Am Amp amtl
+					Amtsbl An anat anerk Anf Anfr Ang angekl
+					Angel Angest angew Ank  anl Anm ann anon
+					Anord Anp ANr Ans Ansch anschl Anschr Anspr
+					Antiq Antr Antw Anz Apart apl App  apr Aq Arbf
+					Arbg Arbn Arch arr Art Asp Ass Assist ASt Astrol
+					astron asym asymp At Atl Atm Attr Aufb Aufbew
+					Aufg Aufkl Aufl Ausg ausschl Az Änd Äq ärztl ästh äth
+END_OF_ABB
+
+@rule abbrev2/T :=  <<END_OF_ABB
+					Ba Bd beil bes Betr bez Bhf Bil Bl brosch Bsp
+					bspw bzgl bzw ca DDr desgl dgl Dr Dres dt dtsch
+					dto Dtz Dtzd ebd Ed ehem eig eigtl einschl entspr
+					erg al etc ev evtl exkl Expl Exz Fa ff Forts
+					Fr frdl Frhr Frl frz Gbf geb Gebr gegr geh gek Ges
+					gesch Geschw gest Gew gez ggf Hbf hg hl Hr Hrn Hrsg
+					Hs id Ing Inh inkl Jb Jg Jh jr jun Kap kart kath kfm
+					kgl Kl Komp Kr Kto led lfd Lfg Lfrg lt Ltn luth math
+					Mill möbl Ms Mskr mtl MwSt Mz Nachf Nchf nachm Nds Nr No
+END_OF_ABB
+
+@rule abbrev3/T := <<END_OF_ABB
+					Obb op Pfd Pkt pp ppa Pfr Prof Prov ps rk rd Rel resp
+					Rhld Sa sen Spk sog spec St Skt St Std Str stud Tel
+					Tsd urspr usf usw v Verf Vf verh Verl vers verw vgl
+					vorm Vors wtf Wwe Wz zz zzt Ztg Ztr Ztschr zus zw zzgl z\.B d\.h
+END_OF_ABB
+
