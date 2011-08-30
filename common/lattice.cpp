@@ -113,7 +113,9 @@ Lattice::EdgeDescriptor Lattice::addEdge(
 
     bool needToAddEdge = false;
 
-    if (!insertResult.second) {
+    if (insertResult.second) {
+        needToAddEdge = true;
+    } else {
         EdgeDescriptor edge = (insertResult.first)->second;
         LayerTagCollection oldTags = getEdgeLayerTags(edge);
         Score oldScore = getEdgeScore(edge);
@@ -143,10 +145,6 @@ Lattice::EdgeDescriptor Lattice::addEdge(
             edge.implicitIndex = -1;
             needToAddEdge = true;
         }
-    }
-
-    if (insertResult.second) {
-        needToAddEdge = true;
     }
 
     if (needToAddEdge) {
@@ -263,7 +261,7 @@ Lattice::InOutEdgesIterator Lattice::inEdges(
     Lattice::VertexDescriptor vertex,
     LayerTagMask mask
 ) {
-    if (vertex < 1) {
+    if (vertex == 0) {
         return InOutEdgesIterator();
     }
     VertexDescriptor priorVertex;
