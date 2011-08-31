@@ -1,0 +1,65 @@
+{
+    memcpy overlap in re2
+    Memcheck:Overlap
+    fun:memcpy
+    obj:/usr/lib/libre2.so.0.0.0
+    obj:/usr/lib/libre2.so.0.0.0
+    obj:/usr/lib/libre2.so.0.0.0
+    obj:/usr/lib/libre2.so.0.0.0
+    obj:/usr/lib/libre2.so.0.0.0
+    obj:/usr/lib/libre2.so.0.0.0
+    fun:_ZNK3re23RE25MatchERKNS_11StringPieceEiiNS0_6AnchorEPS1_i
+    obj:/usr/lib/libre2.so.0.0.0
+    fun:_ZNK3re217VariadicFunction2IbRKNS_11StringPieceERKNS_3RE2ENS4_3ArgEXadL_ZNS4_10FullMatchNES3_S6_PKPKS7_iEEEclES3_S6_
+    fun:_ZN6poleng6bonsai6puddle6Tagset12readFromFileERSs
+    fun:_ZN6poleng6bonsai6puddle12TagsetLoader4loadESs
+}
+{
+    memcpy overlap in re2 replace
+    Memcheck:Overlap
+    fun:memcpy
+    fun:_ZNSs9_M_mutateEmmm
+    fun:_ZNSs15_M_replace_safeEmmPKcm
+    fun:_ZNSs7replaceEmmPKcm
+    fun:_ZN3re23RE27ReplaceEPSsRKS0_RKNS_11StringPieceE
+    fun:_ZN6poleng6bonsai6puddle10RuleLoader17compileRuleActionERSsiiiSsRb
+    fun:_ZN6poleng6bonsai6puddle10RuleLoader12readFromFileERSs
+    fun:_ZN11PuddleTests10testPuddleEv
+    fun:_ZN38TestDescription_PuddleTests_testPuddle7runTestEv
+    fun:_ZN7CxxTest19RealTestDescription3runEv
+    fun:_ZN7CxxTest10TestRunner7runTestERNS_15TestDescriptionE
+    fun:_ZN7CxxTest10TestRunner8runSuiteERNS_16SuiteDescriptionE
+}
+{
+    memcpy overlap in re2
+    Memcheck:Overlap
+    fun:memcpy
+    obj:/usr/lib/libre2.so.0.0.0
+    obj:/usr/lib/libre2.so.0.0.0
+    obj:/usr/lib/libre2.so.0.0.0
+    obj:/usr/lib/libre2.so.0.0.0
+    obj:/usr/lib/libre2.so.0.0.0
+    obj:/usr/lib/libre2.so.0.0.0
+    obj:/usr/lib/libre2.so.0.0.0
+    fun:_ZNK3re23RE25MatchERKNS_11StringPieceEiiNS0_6AnchorEPS1_i
+    fun:_ZN6poleng6bonsai6puddle4Rule12matchPatternERSsiS3_RSt6vectorIN3re211StringPieceESaIS6_EE
+    fun:_ZN6poleng6bonsai6puddle11RuleMatcher10applyRulesERSsR7Lattice
+    fun:_ZN6poleng6bonsai6puddle6Puddle5parseER7Lattice
+}
+{
+    memcpy overlap in re2
+    Memcheck:Overlap
+    fun:memcpy
+    obj:/usr/lib/libre2.so.0.0.0
+    obj:/usr/lib/libre2.so.0.0.0
+    obj:/usr/lib/libre2.so.0.0.0
+    obj:/usr/lib/libre2.so.0.0.0
+    obj:/usr/lib/libre2.so.0.0.0
+    obj:/usr/lib/libre2.so.0.0.0
+    obj:/usr/lib/libre2.so.0.0.0
+    fun:_ZNK3re23RE25MatchERKNS_11StringPieceEiiNS0_6AnchorEPS1_i
+    obj:/usr/lib/libre2.so.0.0.0
+    fun:_ZNK3re217VariadicFunction2IbRKNS_11StringPieceERKNS_3RE2ENS4_3ArgEXadL_ZNS4_13PartialMatchNES3_S6_PKPKS7_iEEEclES3_S6_RS8_
+    fun:_ZN6poleng6bonsai6puddle4Rule15getPatternStartERSs
+}
+
