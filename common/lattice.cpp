@@ -574,14 +574,6 @@ Lattice::VertexDescriptor Lattice::priorVertex_(Lattice::VertexDescriptor vertex
     return vertex - symbol.length();
 }
 
-void Lattice::orderLooseVertices_() {
-    for (int i = 0; i <= allText_.length(); ++i) {
-        if (lattice_.vertices_.find(i) != lattice_.vertices_.end()) {
-            //TODO
-        }
-    }
-}
-
 size_t Lattice::symbolLength_(int ix) const {
     std::string::const_iterator iter = allText_.begin() + ix;
     std::string::const_iterator end = allText_.end();
@@ -703,13 +695,49 @@ Lattice::EdgeSequence Lattice::cutSequenceByTextLength_(const EdgeSequence& sequ
 }
 
 
-Lattice::VertexIterator::VertexIterator(Lattice& lattice) : lattice_(lattice), vd_(0) {
-    if (lattice_.nLooseVertices_ > 0) {
-        throw WrongVertexException("Iterating over loose vertices not implemented yet.");
+
+inline bool compareSecond_(
+    std::pair<int, int> p1,
+    std::pair<int, int> p2
+) {
+    return p1.second < p2.second;
+}
+
+
+
+Lattice::VertexIterator::VertexIterator(Lattice& lattice) :
+    lattice_(lattice),
+    vd_(0),
+    withLooseVertices_(lattice.nLooseVertices_ > 0)
+{
+    if (lattice.nLooseVertices_ > 0) {
+        std::vector<Graph::vertex_descriptor> vertexContainer;
+        boost::topological_sort(lattice_.graph_, std::back_inserter(vertexContainer));
+        for (
+            std::vector<Graph::vertex_descriptor>::iterator vi = vertexContainer.begin();
+            vi != vertexContainer.end();
+            ++vi
+        ) {
+            iterContainer_.push_back(
+                std::pair<Lattice::VertexDescriptor, int>(lattice.graph_[*vi].index, f_(*vi))
+            );
+        }
+        VertexDescriptor vd = 0;
+        while (vd <= int(lattice.allText_.length())) {
+            if (lattice.vertices_.find(vd) == lattice.vertices_.end()) {
+                iterContainer_.push_back(std::pair<Lattice::VertexDescriptor, int>(vd, vd));
+            }
+            vd += lattice_.symbolLength_((int)vd);
+        }
+        std::stable_sort(iterContainer_.begin(), iterContainer_.end(), compareSecond_);
+        ici_ = iterContainer_.begin();
     }
 }
 
 bool Lattice::VertexIterator::hasNext() {
+    if (withLooseVertices_) {
+        return ici_ != iterContainer_.end();
+    }
     while (vd_ <= (int)lattice_.allText_.length()) {
         if (
             lattice_.vertices_.find(vd_) != lattice_.vertices_.end()
@@ -724,6 +752,9 @@ bool Lattice::VertexIterator::hasNext() {
 }
 
 Lattice::VertexDescriptor Lattice::VertexIterator::next() {
+    if (withLooseVertices_) {
+        return (*(ici_++)).first;
+    }
     while (vd_ <= (int)lattice_.allText_.length()) {
         if (
             lattice_.vertices_.find(vd_) != lattice_.vertices_.end()
@@ -745,6 +776,24 @@ void Lattice::VertexIterator::nextRealVertex_() {
     else
         ++vd_;
 }
+
+int Lattice::VertexIterator::f_(Graph::vertex_descriptor vd) {
+    int index = lattice_.graph_[vd].index;
+    if (index > -1) {
+        return index;
+    }
+    std::pair<Graph::in_edge_iterator, Graph::in_edge_iterator> ieir
+        = boost::in_edges(vd, lattice_.graph_);
+    int maxIndex = -1;
+    for (Graph::in_edge_iterator iei = ieir.first; iei != ieir.second; ++iei) {
+        index = f_(boost::source(*iei, lattice_.graph_));
+        if (index > maxIndex) {
+            maxIndex = index;
+        }
+    }
+    return maxIndex;
+}
+
 
 
 bool Lattice::InOutEdgesIterator::hasNext() {

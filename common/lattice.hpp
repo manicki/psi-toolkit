@@ -10,6 +10,7 @@
 #include <boost/dynamic_bitset.hpp>
 
 #include <boost/graph/adjacency_list.hpp>
+#include <boost/graph/topological_sort.hpp>
 
 #include "utf8.h"
 
@@ -189,8 +190,13 @@ public:
     private:
         Lattice& lattice_;
         VertexDescriptor vd_;
+        bool withLooseVertices_;
+        std::vector< std::pair<Lattice::VertexDescriptor, int> > iterContainer_;
+        std::vector< std::pair<Lattice::VertexDescriptor, int> >::iterator ici_;
 
         void nextRealVertex_();
+
+        int f_(Graph::vertex_descriptor vertex);
     };
 
     class InOutEdgesIterator {
@@ -425,11 +431,6 @@ private:
     int addTagCollectionIndex_(LayerTagCollection tags);
 
     VertexDescriptor priorVertex_(VertexDescriptor vertex);
-
-    /**
-     * orders loose vertices by finding their reachability from non-loose vertices
-     */
-    void orderLooseVertices_();
 
     size_t symbolLength_(int ix) const;
     const LayerTagCollection& getSymbolTag_() const;
