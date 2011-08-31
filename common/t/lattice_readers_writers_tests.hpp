@@ -237,13 +237,9 @@ public:
             lattice.getVertexForRawCharIndex(6)
         );
         lattice.addSymbols(
-            lattice.getVertexForRawCharIndex(12),
-            lattice.getVertexForRawCharIndex(12)
+            lattice.getVertexForRawCharIndex(15),
+            lattice.getVertexForRawCharIndex(18)
         );
-        // lattice.addSymbols(
-            // lattice.getVertexForRawCharIndex(15),
-            // lattice.getVertexForRawCharIndex(18)
-        // );
 
 
         Lattice::VertexDescriptor preAla = lattice.getFirstVertex();
@@ -366,7 +362,7 @@ public:
             markupHtmlTag = lattice.getLayerTagManager().createTagCollection(markupHtmlStr);
 
         lattice.addEdge(preMarkup, preKota, aiOpen, markupHtmlTag);
-/*
+
         Lattice::VertexDescriptor postKota = lattice.getVertexForRawCharIndex(18);
 
         AnnotationItem aiKta("'kta'");
@@ -389,7 +385,7 @@ public:
         AnnotationItem aiK("'k");
         Lattice::VertexDescriptor vdKO = lattice.addLooseVertex();
         Lattice::EdgeDescriptor edgeCorrectedK = lattice.addEdge(preKota, vdKO, aiK, rawTag);
-
+/*
         AnnotationItem aiO("'o");
         Lattice::VertexDescriptor midKota = lattice.getVertexForRawCharIndex(16);
         Lattice::EdgeDescriptor edgeCorrectedO = lattice.addEdge(vdKO, midKota, aiO, rawTag);
@@ -419,7 +415,7 @@ public:
 
         boost::scoped_ptr<LatticeWriter> writer(new PsiLatticeWriter());
 
-        // writer->writeLattice(lattice, std::cout);
+        writer->writeLattice(lattice, std::cout);
 
         std::ostringstream osstr;
         writer->writeLattice(lattice, osstr);
