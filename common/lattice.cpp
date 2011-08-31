@@ -711,10 +711,10 @@ Lattice::VertexIterator::VertexIterator(Lattice& lattice) :
     withLooseVertices_(lattice.nLooseVertices_ > 0)
 {
     if (lattice.nLooseVertices_ > 0) {
-        std::vector<Graph::vertex_descriptor> vertexContainer;
-        boost::topological_sort(lattice_.graph_, std::back_inserter(vertexContainer));
+        std::list<Graph::vertex_descriptor> vertexContainer;
+        boost::topological_sort(lattice_.graph_, std::front_inserter(vertexContainer));
         for (
-            std::vector<Graph::vertex_descriptor>::iterator vi = vertexContainer.begin();
+            std::list<Graph::vertex_descriptor>::iterator vi = vertexContainer.begin();
             vi != vertexContainer.end();
             ++vi
         ) {
@@ -728,6 +728,9 @@ Lattice::VertexIterator::VertexIterator(Lattice& lattice) :
                 iterContainer_.push_back(std::pair<Lattice::VertexDescriptor, int>(vd, vd));
             }
             vd += lattice_.symbolLength_((int)vd);
+        }
+        if (lattice.vertices_.find(vd) == lattice.vertices_.end()) {
+            iterContainer_.push_back(std::pair<Lattice::VertexDescriptor, int>(vd, vd));
         }
         std::stable_sort(iterContainer_.begin(), iterContainer_.end(), compareSecond_);
         ici_ = iterContainer_.begin();
