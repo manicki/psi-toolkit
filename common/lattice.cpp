@@ -723,7 +723,7 @@ Lattice::VertexIterator::VertexIterator(Lattice& lattice) :
             );
         }
         VertexDescriptor vd = 0;
-        while (vd <= int(lattice.allText_.length())) {
+        while (vd < int(lattice.allText_.length())) {
             if (lattice.vertices_.find(vd) == lattice.vertices_.end()) {
                 iterContainer_.push_back(std::pair<Lattice::VertexDescriptor, int>(vd, vd));
             }

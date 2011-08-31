@@ -574,5 +574,38 @@ public:
         TS_ASSERT_EQUALS(lattice.getEdgeAnnotationItem(eiPostIn.next()).getCategory(), "y");
     }
 
+    void testVertexIteratorAdvanced() {
+        //preparing lattice
+        Lattice lattice("abc");
+        lattice.addSymbols(lattice.getFirstVertex(), lattice.getLastVertex());
+        LayerTagCollection token_tag
+            = lattice.getLayerTagManager().createSingletonTagCollection("token");
+        LayerTagMask tokenMask = lattice.getLayerTagManager().getMask(token_tag);
+
+        Lattice::VertexDescriptor vertexPre = lattice.getVertexForRawCharIndex(1);
+        Lattice::VertexDescriptor vertexPost = lattice.getVertexForRawCharIndex(2);
+        Lattice::VertexDescriptor vertexLoose = lattice.addLooseVertex();
+
+        AnnotationItem tokenX("x");
+        AnnotationItem tokenY("y");
+
+        lattice.addEdge(vertexPre, vertexLoose, tokenX, token_tag);
+
+        lattice.addEdge(vertexLoose, vertexPost, tokenY, token_tag);
+
+        Lattice::VertexIterator iter(lattice);
+        TS_ASSERT(iter.hasNext());
+        TS_ASSERT_EQUALS(iter.next(), lattice.getFirstVertex());
+        TS_ASSERT(iter.hasNext());
+        TS_ASSERT_EQUALS(iter.next(), vertexPre);
+        TS_ASSERT(iter.hasNext());
+        TS_ASSERT_EQUALS(iter.next(), vertexLoose);
+        TS_ASSERT(iter.hasNext());
+        TS_ASSERT_EQUALS(iter.next(), vertexPost);
+        TS_ASSERT(iter.hasNext());
+        TS_ASSERT_EQUALS(iter.next(), lattice.getLastVertex());
+        TS_ASSERT(!iter.hasNext());
+    }
+
 
 };
