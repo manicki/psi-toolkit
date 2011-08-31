@@ -574,6 +574,14 @@ Lattice::VertexDescriptor Lattice::priorVertex_(Lattice::VertexDescriptor vertex
     return vertex - symbol.length();
 }
 
+void Lattice::orderLooseVertices_() {
+    for (int i = 0; i <= allText_.length(); ++i) {
+        if (lattice_.vertices_.find(i) != lattice_.vertices_.end()) {
+            //TODO
+        }
+    }
+}
+
 size_t Lattice::symbolLength_(int ix) const {
     std::string::const_iterator iter = allText_.begin() + ix;
     std::string::const_iterator end = allText_.end();

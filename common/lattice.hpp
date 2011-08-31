@@ -426,6 +426,11 @@ private:
 
     VertexDescriptor priorVertex_(VertexDescriptor vertex);
 
+    /**
+     * orders loose vertices by finding their reachability from non-loose vertices
+     */
+    void orderLooseVertices_();
+
     size_t symbolLength_(int ix) const;
     const LayerTagCollection& getSymbolTag_() const;
 
