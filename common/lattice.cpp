@@ -756,7 +756,7 @@ bool Lattice::VertexIterator::hasNext() {
 
 Lattice::VertexDescriptor Lattice::VertexIterator::next() {
     if (withLooseVertices_) {
-        return (*(ici_++)).first;
+        if (ici_ != iterContainer_.end()) return (*(ici_++)).first;
     }
     while (vd_ <= (int)lattice_.allText_.length()) {
         if (
