@@ -231,7 +231,7 @@ public:
 
     void testPsiLatticeWriterAdvanced() {
 
-        Lattice lattice("Ala ma&nbsp;<b>kta</b>");
+        Lattice lattice("Ala ma&nbsp;<b>kta</b>.");
         lattice.addSymbols(
             lattice.getFirstVertex(),
             lattice.getVertexForRawCharIndex(6)
@@ -239,6 +239,10 @@ public:
         lattice.addSymbols(
             lattice.getVertexForRawCharIndex(15),
             lattice.getVertexForRawCharIndex(18)
+        );
+        lattice.addSymbols(
+            lattice.getVertexForRawCharIndex(22),
+            lattice.getVertexForRawCharIndex(23)
         );
 
 
@@ -303,7 +307,8 @@ public:
         Lattice::EdgeSequence::Builder rzeczownikBuilder;
         rzeczownikBuilder.addEdge(edgeAlaLemma);
 
-        lattice.addEdge(preAla, postAla, aiRzeczownik, parseGobioTag, rzeczownikBuilder.build());
+        Lattice::EdgeDescriptor edgeRzeczownik
+            = lattice.addEdge(preAla, postAla, aiRzeczownik, parseGobioTag, rzeczownikBuilder.build());
 
 
         Lattice::VertexDescriptor preMa = lattice.getVertexForRawCharIndex(4);
@@ -311,30 +316,30 @@ public:
         AnnotationItem aiBlank("' '");
         lattice.getAnnotationItemManager().setValue(aiBlank, "type", "blank");
 
-        {
-            Lattice::EdgeSequence::Builder blankBuilder;
-            blankBuilder.addEdge(lattice.firstOutEdge(
-                                     lattice.getVertexForRawCharIndex(3),
-                                     rawMask));
+        Lattice::EdgeSequence::Builder blankBuilder;
+        blankBuilder.addEdge(lattice.firstOutEdge(
+                                 lattice.getVertexForRawCharIndex(3),
+                                 rawMask));
 
-            lattice.addEdge(postAla, preMa, aiBlank, tokenTag, blankBuilder.build());
-        }
+        Lattice::EdgeDescriptor edgeBlank
+            = lattice.addEdge(postAla, preMa, aiBlank, tokenTag, blankBuilder.build());
+
 
         Lattice::VertexDescriptor postMa = lattice.getVertexForRawCharIndex(6);
 
         AnnotationItem aiMa("'ma'");
         lattice.getAnnotationItemManager().setValue(aiMa, "type", "word");
 
-        {
-            Lattice::EdgeSequence::Builder maBuilder;
-            maBuilder.addEdge(lattice.firstOutEdge(
-                                  lattice.getVertexForRawCharIndex(4),
-                                  rawMask));
-            maBuilder.addEdge(lattice.firstOutEdge(
-                                  lattice.getVertexForRawCharIndex(5),
-                                  rawMask));
-            lattice.addEdge(preMa, postMa, aiMa, tokenTag, maBuilder.build());
-        }
+        Lattice::EdgeSequence::Builder maBuilder;
+        maBuilder.addEdge(lattice.firstOutEdge(
+                              lattice.getVertexForRawCharIndex(4),
+                              rawMask));
+        maBuilder.addEdge(lattice.firstOutEdge(
+                              lattice.getVertexForRawCharIndex(5),
+                              rawMask));
+        Lattice::EdgeDescriptor edgeMa
+            = lattice.addEdge(preMa, postMa, aiMa, tokenTag, maBuilder.build());
+
 
         Lattice::VertexDescriptor preMarkup = lattice.getVertexForRawCharIndex(12);
 
@@ -342,14 +347,14 @@ public:
 
         lattice.addEdge(postMa, preMarkup, aiNbsp, rawTag);
 
-        {
-            Lattice::EdgeSequence::Builder nbspBlankBuilder;
-            nbspBlankBuilder.addEdge(lattice.firstOutEdge(
-                                     lattice.getVertexForRawCharIndex(6),
-                                     rawMask));
+        Lattice::EdgeSequence::Builder nbspBlankBuilder;
+        nbspBlankBuilder.addEdge(lattice.firstOutEdge(
+                                 lattice.getVertexForRawCharIndex(6),
+                                 rawMask));
 
-            lattice.addEdge(postMa, preMarkup, aiBlank, tokenTag, nbspBlankBuilder.build());
-        }
+        Lattice::EdgeDescriptor edgeNbsp
+            = lattice.addEdge(postMa, preMarkup, aiBlank, tokenTag, nbspBlankBuilder.build());
+
 
         Lattice::VertexDescriptor preKota = lattice.getVertexForRawCharIndex(15);
 
@@ -361,7 +366,9 @@ public:
         LayerTagCollection
             markupHtmlTag = lattice.getLayerTagManager().createTagCollection(markupHtmlStr);
 
-        lattice.addEdge(preMarkup, preKota, aiOpen, markupHtmlTag);
+        Lattice::EdgeDescriptor edgeMarkupOpen
+            = lattice.addEdge(preMarkup, preKota, aiOpen, markupHtmlTag);
+
 
         Lattice::VertexDescriptor postKota = lattice.getVertexForRawCharIndex(18);
 
@@ -382,13 +389,16 @@ public:
             lattice.addEdge(preKota, postKota, aiKta, tokenTag, ktaBuilder.build());
         }
 
+
         AnnotationItem aiK("'k", "k");
         Lattice::VertexDescriptor vdKO = lattice.addLooseVertex();
         Lattice::EdgeDescriptor edgeCorrectedK = lattice.addEdge(preKota, vdKO, aiK, rawTag);
 
+
         AnnotationItem aiO("'o", "o");
         Lattice::VertexDescriptor midKota = lattice.getVertexForRawCharIndex(16);
         Lattice::EdgeDescriptor edgeCorrectedO = lattice.addEdge(vdKO, midKota, aiO, rawTag);
+
 
         AnnotationItem aiKota("'kota'", "kota");
         lattice.getAnnotationItemManager().setValue(aiKota, "type", "word");
@@ -399,18 +409,102 @@ public:
         LayerTagCollection
             tokenCorrectorTag = lattice.getLayerTagManager().createTagCollection(tokenCorrectorStr);
 
-        {
-            Lattice::EdgeSequence::Builder kotaBuilder;
-            kotaBuilder.addEdge(edgeCorrectedK);
-            kotaBuilder.addEdge(edgeCorrectedO);
-            kotaBuilder.addEdge(lattice.firstOutEdge(
-                                  lattice.getVertexForRawCharIndex(16),
-                                  rawMask));
-            kotaBuilder.addEdge(lattice.firstOutEdge(
-                                  lattice.getVertexForRawCharIndex(17),
-                                  rawMask));
-            lattice.addEdge(preKota, postKota, aiKota, tokenCorrectorTag, kotaBuilder.build());
-        }
+        Lattice::EdgeSequence::Builder kotaBuilder;
+        kotaBuilder.addEdge(edgeCorrectedK);
+        kotaBuilder.addEdge(edgeCorrectedO);
+        kotaBuilder.addEdge(lattice.firstOutEdge(
+                              lattice.getVertexForRawCharIndex(16),
+                              rawMask));
+        kotaBuilder.addEdge(lattice.firstOutEdge(
+                              lattice.getVertexForRawCharIndex(17),
+                              rawMask));
+        Lattice::EdgeDescriptor edgeKota
+            = lattice.addEdge(preKota, postKota, aiKota, tokenCorrectorTag, kotaBuilder.build());
+
+
+        AnnotationItem aiFrazaRzecz("fraza_rzeczownikowa");
+        lattice.getAnnotationItemManager().setValue(aiFrazaRzecz, "R", "2");
+        lattice.getAnnotationItemManager().setValue(aiFrazaRzecz, "L", "1");
+        lattice.getAnnotationItemManager().setValue(aiFrazaRzecz, "P", "dop");
+
+        Lattice::EdgeSequence::Builder frazaRzeczBuilder;
+        frazaRzeczBuilder.addEdge(edgeKota);
+
+        Lattice::EdgeDescriptor edgeFrazaRzecz
+            = lattice.addEdge(preKota, postKota, aiFrazaRzecz, parseGobioTag, frazaRzeczBuilder.build());
+
+
+        Lattice::VertexDescriptor postMarkup = lattice.getVertexForRawCharIndex(22);
+
+        AnnotationItem aiClose("close");
+
+        Lattice::EdgeDescriptor edgeMarkupClose
+            = lattice.addEdge(postKota, postMarkup, aiClose, markupHtmlTag);
+
+
+        Lattice::EdgeSequence::Builder frazaRzecz2Builder;
+        frazaRzecz2Builder.addEdge(edgeMarkupOpen);
+        frazaRzecz2Builder.addEdge(edgeFrazaRzecz);
+        frazaRzecz2Builder.addEdge(edgeMarkupClose);
+
+        Lattice::EdgeDescriptor edgeFrazaRzecz2
+            = lattice.addEdge(preMarkup, postMarkup, aiFrazaRzecz, parseGobioTag, frazaRzecz2Builder.build());
+
+
+        AnnotationItem aiFrazaCzas("fraza_czasownikowa");
+        lattice.getAnnotationItemManager().setValue(aiFrazaCzas, "C", "teraźniejszy");
+        lattice.getAnnotationItemManager().setValue(aiFrazaCzas, "O", "3");
+        lattice.getAnnotationItemManager().setValue(aiFrazaCzas, "L", "1");
+
+        Lattice::EdgeSequence::Builder frazaCzasBuilder;
+        frazaCzasBuilder.addEdge(edgeMa);
+        frazaCzasBuilder.addEdge(edgeNbsp);
+        frazaCzasBuilder.addEdge(edgeFrazaRzecz2);
+
+        Lattice::EdgeDescriptor edgeFrazaCzas
+            = lattice.addEdge(preMa, postMarkup, aiFrazaCzas, parseGobioTag, frazaCzasBuilder.build());
+
+
+        AnnotationItem aiPelnaFrCzas("pełna_fraza_czasownikowa");
+        lattice.getAnnotationItemManager().setValue(aiPelnaFrCzas, "C", "teraźniejszy");
+
+        Lattice::EdgeSequence::Builder pelnaFrCzasBuilder;
+        pelnaFrCzasBuilder.addEdge(edgeRzeczownik);
+        pelnaFrCzasBuilder.addEdge(edgeBlank);
+        pelnaFrCzasBuilder.addEdge(edgeFrazaCzas);
+
+        Lattice::EdgeDescriptor edgePelnaFrCzas
+            = lattice.addEdge(preAla, postMarkup, aiPelnaFrCzas, parseGobioTag, pelnaFrCzasBuilder.build(), -0.342);
+
+
+        Lattice::VertexDescriptor postStop = lattice.getVertexForRawCharIndex(23);
+
+        AnnotationItem aiStop("'.'");
+        lattice.getAnnotationItemManager().setValue(aiStop, "type", "punct");
+
+        Lattice::EdgeSequence::Builder stopBuilder;
+        stopBuilder.addEdge(lattice.firstOutEdge(
+                              lattice.getVertexForRawCharIndex(22),
+                              rawMask));
+        Lattice::EdgeDescriptor edgeStop
+            = lattice.addEdge(postMarkup, postStop, aiStop, tokenTag, stopBuilder.build());
+
+
+        LayerTagCollection
+            splitterTag = lattice.getLayerTagManager().createSingletonTagCollection("splitter");
+
+        AnnotationItem aiSentence("sentence");
+
+        lattice.addEdge(preAla, postStop, aiSentence, splitterTag);
+
+
+        AnnotationItem aiZdanie("zdanie");
+
+        Lattice::EdgeSequence::Builder zdanieBuilder;
+        zdanieBuilder.addEdge(edgePelnaFrCzas);
+        zdanieBuilder.addEdge(edgeStop);
+
+        lattice.addEdge(preAla, postStop, aiZdanie, parseGobioTag, zdanieBuilder.build());
 
 
         boost::scoped_ptr<LatticeWriter> writer(new PsiLatticeWriter());
