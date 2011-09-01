@@ -581,7 +581,27 @@ int Lattice::getLooseVertexIndex(VertexDescriptor vd) const {
 }
 
 void Lattice::correctionInsert(VertexDescriptor here, std::string text) {
-
+    VertexDescriptor from = here;
+    VertexDescriptor to;
+    std::string::iterator iter = text.begin();
+    std::string::iterator end = text.end();
+    while (iter != end) {
+        to = addLooseVertex();
+        std::string symbol;
+        utf8::append(utf8::next(iter, end), std::back_inserter(symbol));
+        addEdge(
+            from,
+            to,
+            AnnotationItem("'"+symbol, symbol),
+            getSymbolTag_());
+        from = to;
+    }
+    try {
+        EdgeDescriptor nextEdge
+            = firstOutEdge(here, getLayerTagManager().getMask(getSymbolTag_()));
+        addEdge(to, getEdgeTarget(nextEdge), getEdgeAnnotationItem(nextEdge), getSymbolTag_());
+    } catch (NoEdgeException) {
+    }
 }
 
 void Lattice::correctionErase(VertexDescriptor from, VertexDescriptor to) {
@@ -601,7 +621,7 @@ void Lattice::correctionErase(VertexDescriptor from, VertexDescriptor to) {
 }
 
 void Lattice::correctionReplace(VertexDescriptor from, VertexDescriptor to, std::string text) {
-
+    //TODO
 }
 
 
