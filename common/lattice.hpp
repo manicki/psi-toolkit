@@ -10,6 +10,7 @@
 #include <boost/dynamic_bitset.hpp>
 
 #include <boost/graph/adjacency_list.hpp>
+#include <boost/graph/topological_sort.hpp>
 
 #include "utf8.h"
 
@@ -189,8 +190,13 @@ public:
     private:
         Lattice& lattice_;
         VertexDescriptor vd_;
+        bool withLooseVertices_;
+        std::vector< std::pair<Lattice::VertexDescriptor, int> > iterContainer_;
+        std::vector< std::pair<Lattice::VertexDescriptor, int> >::iterator ici_;
 
         void nextRealVertex_();
+
+        int f_(Graph::vertex_descriptor vertex);
     };
 
     class InOutEdgesIterator {
@@ -412,6 +418,8 @@ private:
     boost::dynamic_bitset<> implicitOutEdges_;
 
     boost::dynamic_bitset<> hiddenImplicitOutEdges_;
+
+    boost::dynamic_bitset<> visibleImplicitOutEdges_;
 
     std::map<int, Graph::vertex_descriptor> vertices_;
 
