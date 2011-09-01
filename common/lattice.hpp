@@ -419,6 +419,8 @@ private:
 
     boost::dynamic_bitset<> hiddenImplicitOutEdges_;
 
+    boost::dynamic_bitset<> visibleImplicitOutEdges_;
+
     std::map<int, Graph::vertex_descriptor> vertices_;
 
     int nLooseVertices_;

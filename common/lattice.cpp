@@ -18,6 +18,7 @@ void Lattice::appendString(std::string text) {
     allText_ += text;
     implicitOutEdges_.resize(allText_.length() + 1);
     hiddenImplicitOutEdges_.resize(allText_.length() + 1);
+    visibleImplicitOutEdges_.resize(allText_.length() + 1);
 }
 
 void Lattice::addSymbols(VertexDescriptor startVertex, VertexDescriptor endVertex) {
@@ -164,6 +165,30 @@ Lattice::EdgeDescriptor Lattice::addEdge(
             implicitOutEdges_.set(from, true);
             (insertResult.first)->second = EdgeDescriptor(from);
             return EdgeDescriptor(from);
+        }
+
+        if (
+            !isLooseVertex(from)
+            && isLooseVertex(to)
+            && tags == getSymbolTag_()
+        ) {
+            try {
+                EdgeDescriptor ed = firstOutEdge(from, getLayerTagManager().getMask(getSymbolTag_()));
+                visibleImplicitOutEdges_[from] = true;
+            } catch (NoEdgeException) {
+            }
+        }
+
+        if (
+            isLooseVertex(from)
+            && !isLooseVertex(to)
+            && tags == getSymbolTag_()
+        ) {
+            try {
+                EdgeDescriptor ed = firstInEdge(to, getLayerTagManager().getMask(getSymbolTag_()));
+                visibleImplicitOutEdges_[getEdgeSource(ed)] = true;
+            } catch (NoEdgeException) {
+            }
         }
 
         Graph::vertex_descriptor boost_from;
@@ -416,7 +441,9 @@ int Lattice::getEdgeLength(Lattice::EdgeDescriptor edge) const {
 }
 
 bool Lattice::isEdgeHidden(Lattice::EdgeDescriptor edge) const {
-    return edge.implicitIndex > -1 && hiddenImplicitOutEdges_[edge.implicitIndex];
+    return edge.implicitIndex > -1
+        && hiddenImplicitOutEdges_[edge.implicitIndex]
+        && !visibleImplicitOutEdges_[edge.implicitIndex];
 }
 
 std::list<Lattice::Partition> Lattice::getEdgePartitions(Lattice::EdgeDescriptor edge) const {
