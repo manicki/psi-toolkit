@@ -103,7 +103,7 @@ void PsiLatticeWriter::Worker::doRun() {
         const AnnotationItem& annotationItem = lattice_.getEdgeAnnotationItem(edge);
         std::string edgeText;
         if (lattice_.isLooseVertex(source) || lattice_.isLooseVertex(target)) {
-            edgeText = quoter.escape(annotationItem.getCategory());
+            edgeText = quoter.escape(annotationItem.getText());
         } else {
             edgeText = quoter.escape(lattice_.getEdgeText(edge));
         }
