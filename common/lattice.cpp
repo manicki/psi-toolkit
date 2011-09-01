@@ -234,63 +234,90 @@ Lattice::InOutEdgesIterator Lattice::outEdges(
     Lattice::VertexDescriptor vertex,
     LayerTagMask mask
 ) {
-    std::map<int, Graph::vertex_descriptor>::iterator iter = vertices_.find(vertex);
-    if (iter == vertices_.end()) {
+    if (isLooseVertex(vertex)) {
+        Graph::vertex_descriptor boost_vertex = vertices_[vertex];
+        if (mask.isAny()) {
+            return Lattice::InOutEdgesIterator(
+                boost::out_edges(boost_vertex, graph_),
+                -1
+            );
+        }
+        int ix = addTagCollectionIndex_(layerTagManager_.createTagCollection(mask));
         return Lattice::InOutEdgesIterator(
+            graph_[boost_vertex].outEdgesIndex[ix].begin(),
+            graph_[boost_vertex].outEdgesIndex[ix].end(),
+            -1
+        );
+    } else {
+        std::map<int, Graph::vertex_descriptor>::iterator iter = vertices_.find(vertex);
+        if (iter == vertices_.end()) {
+            return Lattice::InOutEdgesIterator(
+                (layerTagManager_.match(mask, "symbol") && implicitOutEdges_[vertex]) ?
+                    vertex : -1
+            );
+        }
+        Graph::vertex_descriptor boost_vertex = (*iter).second;
+        if (mask.isAny()) {
+            return Lattice::InOutEdgesIterator(
+                boost::out_edges(boost_vertex, graph_),
+                implicitOutEdges_[vertex] ? vertex : -1
+            );
+        }
+        int ix = addTagCollectionIndex_(layerTagManager_.createTagCollection(mask));
+        return Lattice::InOutEdgesIterator(
+            graph_[boost_vertex].outEdgesIndex[ix].begin(),
+            graph_[boost_vertex].outEdgesIndex[ix].end(),
             (layerTagManager_.match(mask, "symbol") && implicitOutEdges_[vertex]) ?
                 vertex : -1
         );
     }
-    Graph::vertex_descriptor boost_vertex = (*iter).second;
-    if (mask.isAny()) {
-        return Lattice::InOutEdgesIterator(
-            boost::out_edges(boost_vertex, graph_),
-            implicitOutEdges_[vertex] ? vertex : -1
-        );
-    }
-    int ix = addTagCollectionIndex_(layerTagManager_.createTagCollection(mask));
-    return Lattice::InOutEdgesIterator(
-        graph_[boost_vertex].outEdgesIndex[ix].begin(),
-        graph_[boost_vertex].outEdgesIndex[ix].end(),
-        (layerTagManager_.match(mask, "symbol") && implicitOutEdges_[vertex]) ?
-            vertex : -1
-    );
 }
 
 Lattice::InOutEdgesIterator Lattice::inEdges(
     Lattice::VertexDescriptor vertex,
     LayerTagMask mask
 ) {
-    if (vertex == 0) {
-        return InOutEdgesIterator();
-    }
-    VertexDescriptor priorVertex;
     if (isLooseVertex(vertex)) {
-        priorVertex = -1; // Variable unused because all loose vertices have explicit in-edges.
-    } else {
-        priorVertex = priorVertex_(vertex);
-    }
-    std::map<int, Graph::vertex_descriptor>::iterator iter = vertices_.find(vertex);
-    if (iter == vertices_.end()) {
+        Graph::vertex_descriptor boost_vertex = vertices_[vertex];
+        if (mask.isAny()) {
+            return Lattice::InOutEdgesIterator(
+                boost::in_edges(boost_vertex, graph_),
+                -1
+            );
+        }
+        int ix = addTagCollectionIndex_(layerTagManager_.createTagCollection(mask));
         return Lattice::InOutEdgesIterator(
+            graph_[boost_vertex].inEdgesIndex[ix].begin(),
+            graph_[boost_vertex].inEdgesIndex[ix].end(),
+            -1
+        );
+    } else {
+        if (vertex == 0) {
+            return InOutEdgesIterator();
+        }
+        VertexDescriptor priorVertex = priorVertex_(vertex);
+        std::map<int, Graph::vertex_descriptor>::iterator iter = vertices_.find(vertex);
+        if (iter == vertices_.end()) {
+            return Lattice::InOutEdgesIterator(
+                (layerTagManager_.match(mask, "symbol") && implicitOutEdges_[priorVertex]) ?
+                    priorVertex : -1
+            );
+        }
+        Graph::vertex_descriptor boost_vertex = (*iter).second;
+        if (mask.isAny()) {
+            return Lattice::InOutEdgesIterator(
+                boost::in_edges(boost_vertex, graph_),
+                implicitOutEdges_[priorVertex] ? priorVertex : -1
+            );
+        }
+        int ix = addTagCollectionIndex_(layerTagManager_.createTagCollection(mask));
+        return Lattice::InOutEdgesIterator(
+            graph_[boost_vertex].inEdgesIndex[ix].begin(),
+            graph_[boost_vertex].inEdgesIndex[ix].end(),
             (layerTagManager_.match(mask, "symbol") && implicitOutEdges_[priorVertex]) ?
                 priorVertex : -1
         );
     }
-    Graph::vertex_descriptor boost_vertex = (*iter).second;
-    if (mask.isAny()) {
-        return Lattice::InOutEdgesIterator(
-            boost::in_edges(boost_vertex, graph_),
-            implicitOutEdges_[priorVertex] ? priorVertex : -1
-        );
-    }
-    int ix = addTagCollectionIndex_(layerTagManager_.createTagCollection(mask));
-    return Lattice::InOutEdgesIterator(
-        graph_[boost_vertex].inEdgesIndex[ix].begin(),
-        graph_[boost_vertex].inEdgesIndex[ix].end(),
-        (layerTagManager_.match(mask, "symbol") && implicitOutEdges_[priorVertex]) ?
-            priorVertex : -1
-    );
 }
 
 Lattice::InOutEdgesIterator Lattice::allOutEdges(
