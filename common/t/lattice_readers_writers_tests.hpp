@@ -365,7 +365,7 @@ public:
 
         Lattice::VertexDescriptor postKota = lattice.getVertexForRawCharIndex(18);
 
-        AnnotationItem aiKta("'kta'");
+        AnnotationItem aiKta("'kta'", "kta");
         lattice.getAnnotationItemManager().setValue(aiKta, "type", "word");
 
         {
@@ -382,15 +382,15 @@ public:
             lattice.addEdge(preKota, postKota, aiKta, tokenTag, ktaBuilder.build());
         }
 
-        AnnotationItem aiK("'k");
+        AnnotationItem aiK("'k", "k");
         Lattice::VertexDescriptor vdKO = lattice.addLooseVertex();
         Lattice::EdgeDescriptor edgeCorrectedK = lattice.addEdge(preKota, vdKO, aiK, rawTag);
 
-        AnnotationItem aiO("'o");
+        AnnotationItem aiO("'o", "o");
         Lattice::VertexDescriptor midKota = lattice.getVertexForRawCharIndex(16);
         Lattice::EdgeDescriptor edgeCorrectedO = lattice.addEdge(vdKO, midKota, aiO, rawTag);
 
-        AnnotationItem aiKota("'kota'");
+        AnnotationItem aiKota("'kota'", "kota");
         lattice.getAnnotationItemManager().setValue(aiKota, "type", "word");
 
         std::list<std::string> tokenCorrectorStr;
