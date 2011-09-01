@@ -8,6 +8,12 @@ WriterWorker::WriterWorker(std::ostream& outputStream, Lattice& lattice):
 WriterWorker::~WriterWorker() {
 }
 
+unsigned int WriterWorker::alignOutput_(std::string output) {
+    outputStream_ << output;
+    currentPos_ += utf8::distance(output.begin(), output.end());
+    return currentPos_;
+}
+
 unsigned int WriterWorker::alignOutput_(std::string output, unsigned int pos, char padChar) {
     outputStream_ << output;
     currentPos_ += utf8::distance(output.begin(), output.end());
@@ -32,5 +38,11 @@ unsigned int WriterWorker::alignOutput_(unsigned int output, unsigned int pos, c
     }
     outputStream_ << output;
     currentPos_ += numDigits;
+    return currentPos_;
+}
+
+unsigned int WriterWorker::alignOutputNewline_() {
+    outputStream_ << std::endl;
+    currentPos_ = 0;
     return currentPos_;
 }
