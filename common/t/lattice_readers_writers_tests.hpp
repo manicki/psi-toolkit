@@ -237,13 +237,9 @@ public:
             lattice.getVertexForRawCharIndex(6)
         );
         lattice.addSymbols(
-            lattice.getVertexForRawCharIndex(12),
-            lattice.getVertexForRawCharIndex(12)
+            lattice.getVertexForRawCharIndex(15),
+            lattice.getVertexForRawCharIndex(18)
         );
-        // lattice.addSymbols(
-            // lattice.getVertexForRawCharIndex(15),
-            // lattice.getVertexForRawCharIndex(18)
-        // );
 
 
         Lattice::VertexDescriptor preAla = lattice.getFirstVertex();
@@ -366,7 +362,7 @@ public:
             markupHtmlTag = lattice.getLayerTagManager().createTagCollection(markupHtmlStr);
 
         lattice.addEdge(preMarkup, preKota, aiOpen, markupHtmlTag);
-/*
+
         Lattice::VertexDescriptor postKota = lattice.getVertexForRawCharIndex(18);
 
         AnnotationItem aiKta("'kta'");
@@ -393,7 +389,7 @@ public:
         AnnotationItem aiO("'o");
         Lattice::VertexDescriptor midKota = lattice.getVertexForRawCharIndex(16);
         Lattice::EdgeDescriptor edgeCorrectedO = lattice.addEdge(vdKO, midKota, aiO, rawTag);
-
+/*
         AnnotationItem aiKota("'kota'");
         lattice.getAnnotationItemManager().setValue(aiKota, "type", "word");
 
