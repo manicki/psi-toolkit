@@ -187,7 +187,7 @@ int Rule::matchPattern(std::string &sentenceString, int matchNumber,
     }
     StringPiece sentence_str(sentenceString);
     StringPiece orig_str(sentenceString);
-    int start = 0;
+//    int start = 0;
 //    int end = sentence_str.size();
     std::string before = "";
 //    std::cerr << "macz namber: " << matchNumber << std::endl;
