@@ -580,6 +580,32 @@ int Lattice::getLooseVertexIndex(VertexDescriptor vd) const {
     return -1-vd;
 }
 
+void Lattice::correctionInsert(VertexDescriptor here, std::string text) {
+
+}
+
+void Lattice::correctionErase(VertexDescriptor from, VertexDescriptor to) {
+    try {
+        EdgeDescriptor nextEdge
+            = firstOutEdge(to, getLayerTagManager().getMask(getSymbolTag_()));
+        addEdge(from, getEdgeTarget(nextEdge), getEdgeAnnotationItem(nextEdge), getSymbolTag_());
+    } catch (NoEdgeException) {
+        try {
+            EdgeDescriptor prevEdge
+                = firstOutEdge(to, getLayerTagManager().getMask(getSymbolTag_()));
+            addEdge(getEdgeSource(prevEdge), to, getEdgeAnnotationItem(prevEdge), getSymbolTag_());
+        } catch (NoEdgeException) {
+            throw WrongVertexException("Cannot erase the selected text range.");
+        }
+    }
+}
+
+void Lattice::correctionReplace(VertexDescriptor from, VertexDescriptor to, std::string text) {
+
+}
+
+
+
 int Lattice::addTagCollectionIndex_(LayerTagCollection tags) {
     TagCollectionsBimapLeftIterator li = indexedTagCollections_.left.find(tags);
     if (li != indexedTagCollections_.left.end()) {
