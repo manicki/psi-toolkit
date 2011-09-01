@@ -43,7 +43,7 @@ if(USE_POSTGRESQL)
         set(HAVE_POSTGRESQL 1)
 endif(USE_POSTGRESQL)
 
-option(WITH_RE2 "Using RE2 regular expression library" OFF)
+option(WITH_RE2 "Using RE2 regular expression library" ON)
 message(STATUS "Using RE2 regular expression library ${WITH_RE2}")
 
 if(WITH_RE2)
