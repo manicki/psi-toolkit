@@ -89,7 +89,7 @@
 
 # That's the token with the spelling mistake, "[15-]" means that
 # edge 15 should be used and then the implicit `symbol` edges follow.
-16 0015 04 kta        token                'kta',type=word[15-]
+16 0015 03 kta        token                'kta',type=word[15-]
 
 # and now the fork, 'k must be given twice, because edges with the same
 # beginning and the end are forbidden in PSI lattices.

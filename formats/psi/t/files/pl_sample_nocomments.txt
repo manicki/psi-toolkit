@@ -6,3 +6,6 @@
 06 0006 06 &nbsp;       symbol                    '_
 07 0006 06 &nbsp;       token                     '_',type=blank
 08 0012 03 <b>          html,markup               open[]
+09 0015 *@0  'k           symbol                    'k
+10 @0   *0016 'o           symbol                    'o
+11 0015 03 kta          token                     'kta',type=word

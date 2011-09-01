@@ -385,11 +385,11 @@ public:
         AnnotationItem aiK("'k");
         Lattice::VertexDescriptor vdKO = lattice.addLooseVertex();
         Lattice::EdgeDescriptor edgeCorrectedK = lattice.addEdge(preKota, vdKO, aiK, rawTag);
-/*
+
         AnnotationItem aiO("'o");
         Lattice::VertexDescriptor midKota = lattice.getVertexForRawCharIndex(16);
         Lattice::EdgeDescriptor edgeCorrectedO = lattice.addEdge(vdKO, midKota, aiO, rawTag);
-
+/*
         AnnotationItem aiKota("'kota'");
         lattice.getAnnotationItemManager().setValue(aiKota, "type", "word");
 
@@ -415,7 +415,7 @@ public:
 
         boost::scoped_ptr<LatticeWriter> writer(new PsiLatticeWriter());
 
-        writer->writeLattice(lattice, std::cout);
+        // writer->writeLattice(lattice, std::cout);
 
         std::ostringstream osstr;
         writer->writeLattice(lattice, osstr);
