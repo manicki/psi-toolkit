@@ -9,3 +9,4 @@
 09 0015 *@0   'k           symbol                            'k
 10 @0   *0016 'o           symbol                            'o
 11 0015 03    kta          token                             'kta',type=word
+12 0015 03    kta          corrector,token                   'kota',type=word

@@ -389,7 +389,7 @@ public:
         AnnotationItem aiO("'o");
         Lattice::VertexDescriptor midKota = lattice.getVertexForRawCharIndex(16);
         Lattice::EdgeDescriptor edgeCorrectedO = lattice.addEdge(vdKO, midKota, aiO, rawTag);
-/*
+
         AnnotationItem aiKota("'kota'");
         lattice.getAnnotationItemManager().setValue(aiKota, "type", "word");
 
@@ -411,7 +411,7 @@ public:
                                   rawMask));
             lattice.addEdge(preKota, postKota, aiKota, tokenCorrectorTag, kotaBuilder.build());
         }
-*/
+
 
         boost::scoped_ptr<LatticeWriter> writer(new PsiLatticeWriter());
 
