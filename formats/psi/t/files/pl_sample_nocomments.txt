@@ -11,3 +11,11 @@
 11 @0   *0016 o            symbol                o           'o
 12 0015 03    kta          token                 kta         'kta',type=word[10--]
 13 0015 03    kta          corrector,token       kota        'kota',type=word[9-11--]
+14 0015 03    kta          gobio,parse                       fraza\_rzeczownikowa,R=2,L=1,P=dop[13]
+15 0018 04    </b>         html,markup                       close[]
+16 0012 10    <b>kta</b>   gobio,parse                       fraza\_rzeczownikowa,R=2,L=1,P=dop[8-14-15]
+17 0004 18    ma&nbs.../b> gobio,parse                       fraza\_czasownikowa,L=1,C=teraźniejszy,O=3[5-7-16]
+18 0000 22    Ala_ma.../b> gobio,parse                       pełna\_fraza\_czasownikowa<-0.342>,C=teraźniejszy[3-4-17]
+19 0022 01    .            token                             '.',type=punct
+20 0000 23    Ala_ma...b>. splitter                          sentence[]
+21 0000 23    Ala_ma...b>. gobio,parse                       zdanie[18-19]

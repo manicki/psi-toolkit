@@ -107,7 +107,14 @@ void PsiLatticeWriter::Worker::doRun() {
         } else {
             edgeText = quoter.escape(lattice_.getEdgeText(edge));
         }
-        alignOutput_(edgeText, alignments[3]);
+        int edgeTextLength = utf8::distance(edgeText.begin(), edgeText.end());
+        if (edgeTextLength > alignments[3] - alignments[2]) {
+            alignOutput_(edgeText.substr(0,alignments[3] - alignments[2] - 7));
+            alignOutput_("...");
+            alignOutput_(edgeText.substr(edgeTextLength - 3), alignments[3]);
+        } else {
+            alignOutput_(edgeText, alignments[3]);
+        }
         alignOutput_(" ");
 
         std::string tagStr = "";

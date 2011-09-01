@@ -99,7 +99,7 @@
 # referred to rather than the edge length.
 17 0015 *@0 k         symbol               'k
 18 @0   *0016 o       symbol               'o
-19 0015 04 kta        token,corrector      'kota',type=word[17-18-]
+19 0015 03 kta        token,corrector      'kota',type=word[17-18-]
 20 0015 03 kta        lemma,poleng-tagset  kot,pos=R:2,morpho=MżDP[19]
 21 0015 03 kta        lemma,poleng-tagset  kot,pos=R:2,morpho=MżBP[19]
 22 0015 03 kta        parse,gobio          rzeczownik,R=2,L=1,P=dop[20]
