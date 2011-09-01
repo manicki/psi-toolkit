@@ -43,6 +43,20 @@ if(USE_POSTGRESQL)
         set(HAVE_POSTGRESQL 1)
 endif(USE_POSTGRESQL)
 
+option(WITH_RE2 "Using RE2 regular expression library" OFF)
+message(STATUS "Using RE2 regular expression library ${WITH_RE2}")
+
+if(WITH_RE2)
+    set(HAVE_RE2 1)
+endif(WITH_RE2)
+
+option(WITH_PCRE "Using PCRE regular expression library" OFF)
+message(STATUS "Using PCRE regular expression library ${WITH_PCRE}")
+
+if(WITH_PCRE)
+    set(HAVE_PCRE 1)
+endif(WITH_PCRE)
+
 option(USE_PUDDLE "Compiling puddle shallow parser" ON)
 message(STATUS "Compiling puddle shallow parser ${USE_PUDDLE}")
 

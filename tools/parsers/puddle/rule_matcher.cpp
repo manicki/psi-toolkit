@@ -58,7 +58,8 @@ void RuleMatcher::applyRules(std::string &sentenceString,
         bool first_match = true;
         std::string before = "";
         std::string prev_before = "";
-        std::vector<re2::StringPiece> match;
+        //std::vector<re2::StringPiece> match;
+        std::vector<StringPiece> match;
         //@todo: przerobic to tak, zeby nie bylo miliard razy dopasowywane ten lancuch, tylko zeby go dopasowac tyle razy ile pasuje i odpowiednio odpalac reguly tam, gdzie pasuja
         //while ((currentEntity = (*ir)->matchPattern(sentence, currentMatch, before)) > -1)
         while ( (currentEntity = (*ir)->matchPattern(sentenceString,

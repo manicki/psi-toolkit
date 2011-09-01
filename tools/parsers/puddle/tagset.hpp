@@ -6,6 +6,7 @@
 #include <vector>
 
 #include <boost/shared_ptr.hpp>
+#include "puddle_types.hpp"
 
 //using namespace puddle;
 

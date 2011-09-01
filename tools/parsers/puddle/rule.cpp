@@ -85,7 +85,7 @@ Rule::Rule( std::string aName, std::string aCompiled, int aLeftCount,
     for (NegativePatternStrings::iterator negPatIt =
             aNegativePatterns.begin(); negPatIt != aNegativePatterns.end();
             ++ negPatIt) {
-        PatternPtr negativePattern = PatternPtr(new RE2( negPatIt->second ));
+        PatternPtr negativePattern = PatternPtr(new Pattern( negPatIt->second ));
         negativePatterns.insert(std::pair<std::string, PatternPtr>(
                     negPatIt->first, negativePattern) );
     }
@@ -160,25 +160,35 @@ bool Rule::apply(std::string &, Lattice &lattice, int currentEntity) {
 }
 
 int Rule::matchPattern(std::string &sentenceString, int matchNumber,
-        std::string &beforeMatched, std::vector<re2::StringPiece> &match) {
+        //std::string &beforeMatched, std::vector<re2::StringPiece> &match) {
+        std::string &beforeMatched, std::vector<StringPiece> &match) {
     //std::string::const_iterator start = sentence.begin();
     //std::string::const_iterator end = sentence.end();
     //boost::match_results<std::string::const_iterator> matched;
 
     int matchCount = 0;
-    match.clear();
+//    match.clear();
     //boost::match_flag_type flags = boost::match_default | boost::match_not_dot_newline | boost::match_not_dot_null;
     //std::string before;
 
     //std::string pieklo = "(<<t<[^<>]+<[^<>]+(<[^<>]+)*(<..(?i:[^<>]*[ßåàâçéèêëîïôûùüÿ][^<>]*))(<[^<>]+)*>)";
     //RE2 regPattern(pieklo);
     //RE2::Anchor anchor = RE2::UNANCHORED; // @todo: do czego to jest?
-    int num_groups = pattern->NumberOfCapturingGroups() + 1;
+    int num_groups = pattern->NumberOfCapturingGroups();// + 1;
     std::map<std::string, int> namedGroups = pattern->NamedCapturingGroups();
-    re2::StringPiece* matched = new re2::StringPiece[num_groups];
-    re2::StringPiece sentence_str(sentenceString);
+    //re2::StringPiece* matched = new re2::StringPiece[num_groups];
+    //re2::StringPiece sentence_str(sentenceString);
+    //StringPiece* matched = new StringPiece[num_groups];
+    StringPiece* matchedS = new StringPiece[num_groups];
+    RegExp::Arg** matched = new RegExp::Arg*[num_groups]; //@todo: jak zadziala to zmienic na samo Arg
+    for (int argIt = 0; argIt < num_groups; argIt ++) {
+        matched[argIt] = new RegExp::Arg;
+        *matched[argIt] = &matchedS[argIt];
+    }
+    StringPiece sentence_str(sentenceString);
+    StringPiece orig_str(sentenceString);
     int start = 0;
-    int end = sentence_str.size();
+//    int end = sentence_str.size();
     std::string before = "";
 //    std::cerr << "macz namber: " << matchNumber << std::endl;
 
@@ -192,10 +202,12 @@ int Rule::matchPattern(std::string &sentenceString, int matchNumber,
 //        std::cout << "Zdanie: " << sentence << std::endl;
 //    std::cerr << "wzorzec reguly felernyj" << compiled << std::endl;
     try {
-    while ( pattern->Match( sentence_str, start, end,
-                            RE2::UNANCHORED, matched, num_groups ) ) { // @todo: tu nie bedzie chyba while tylko if, skoro bedzie parametrem odkad szukac, a nie ktore ogolnie dopasowanie ma byc wziete na warsztat
+    //while ( pattern->Match( sentence_str, start, end,
+    //                        RE2::UNANCHORED, matched, num_groups ) ) { // @todo: tu nie bedzie chyba while tylko if, skoro bedzie parametrem odkad szukac, a nie ktore ogolnie dopasowanie ma byc wziete na warsztat
+    while ( RegExp::FindAndConsumeN( &sentence_str, *pattern, matched, num_groups ) ) { // @todo: tu nie bedzie chyba while tylko if, skoro bedzie parametrem odkad szukac, a nie ktore ogolnie dopasowanie ma byc wziete na warsztat
     //while (boost::u32regex_search(start, end, matched, *pattern, flags)) {
-        int prefix_len = matched[0].begin() - sentence_str.begin();
+        //int prefix_len = matchedS[0].begin() - sentence_str.begin();
+        int prefix_len = matchedS[0].begin() - orig_str.begin();
         std::string prefix = sentenceString.substr(0, prefix_len); //@todo: czy od start do prefix_len?
         //before += matched.prefix(); //before + matched.prefix();
         before += prefix;
@@ -205,16 +217,17 @@ int Rule::matchPattern(std::string &sentenceString, int matchNumber,
         //flags |= boost::match_not_bob;
         std::string matching = "";
         if (matchCount == matchNumber) {
-            matching = matched[0].as_string();
+            matching = matchedS[0].as_string();
 
             //match = matched; //@todo: co to w okole jest?
 //            if (match_set) {
 //                delete[] match;
 //            }
 //            match = new re2::StringPiece[num_groups];
-            for (int i = 0; i < num_groups; i ++)
+            for (int i = 0; i < num_groups; i ++) {
                 //match[i] = matched[i];
-                match.push_back(matched[i]);
+                match.push_back(matchedS[i]);
+            }
 
             if (! namedGroups.empty()) {
                 bool negPatternMatched = false;
@@ -226,9 +239,9 @@ int Rule::matchPattern(std::string &sentenceString, int matchNumber,
                     NegativePatterns::iterator negPatternIt =
                         negativePatterns.find(groupName);
                     if (negPatternIt != negativePatterns.end()) {
-                        std::string submatch = matched[groupIndex].as_string();
+                        std::string submatch = matchedS[groupIndex].as_string();
 //                        std::cerr << "SUBMATCH: " << submatch << std::endl;
-                        if (RE2::FullMatch(submatch, *(negPatternIt->second) )) {
+                        if (RegExp::FullMatch(submatch, *(negPatternIt->second) )) {
                             negPatternMatched = true;
 //                            std::cerr << "PASUJE A NIE POWINIEN: " << negPatternIt->second->pattern() << std::endl;
                             break;
@@ -236,12 +249,15 @@ int Rule::matchPattern(std::string &sentenceString, int matchNumber,
                     }
                 }
                 if (negPatternMatched) {
-                    before += matched[0].as_string();
+                    before += matchedS[0].as_string();
                     continue;
                 }
             }
 
             if (matching == "") {
+                delete[] matchedS;
+                for (int argIt = 0; argIt < num_groups; argIt ++)
+                    delete matched[argIt];
                 delete[] matched;
                 return -1;
             }
@@ -254,25 +270,34 @@ int Rule::matchPattern(std::string &sentenceString, int matchNumber,
 //            std::cerr << "Dopasowane: " << matching << std::endl;
 //            std::cout << "Przed: " << before << std::endl;
 //            std::cout << "Zdanie: " << sentenceString << std::endl;
-////            std::cerr << "before: " << before << std::endl;
+//            std::cerr << "before: " << before << std::endl;
 //            std::cerr << "Zwracam: " << countEntities(before) << std::endl;
 //            std::cerr << "Alternatywnie zwracam: " << getPatternStart(before) << std::endl;
             int r = getPatternStart(before); // + 1; //@todo: ten +1 wynika ze sposobu numerowania? w kazdym razie tak jest, zeby bylo w akcjach potem dokadlnie tak, jak wczesniej bylo. moze to sie uda zmienic po wymienieniu calosci
             //return countEntities(before);
+            delete[] matchedS;
+            for (int argIt = 0; argIt < num_groups; argIt ++)
+                delete matched[argIt];
             delete[] matched;
             return r;
         }
         else {
-            before += matched[0].as_string();
+            before += matchedS[0].as_string();
         }
         matchCount ++;
     }
     }
     catch (std::exception &e) {
         std::cerr << "jakis wyjatek zlapalem: " << e.what() << std::endl;
+        delete[] matchedS;
+        for (int argIt = 0; argIt < num_groups; argIt ++)
+            delete matched[argIt];
         delete[] matched;
         return -1;
     }
+    delete[] matchedS;
+    for (int argIt = 0; argIt < num_groups; argIt ++)
+        delete matched[argIt];
     delete[] matched;
 //    std::cout << "juz nie pasuje ta regula" << std::endl;
 
@@ -292,7 +317,8 @@ int Rule::matchPattern(std::string &sentenceString, int matchNumber,
 //bool Rule::test(std::string &sentence, Entities &entities, int currentEntity)
 //bool Rule::test(std::string &sentenceString, ParseGraphPtr pg, int currentEntity) {
 bool Rule::test(std::string &, Lattice &lattice, int currentEntity,
-        std::vector<re2::StringPiece> &match) {
+        //std::vector<re2::StringPiece> &match) {
+        std::vector<StringPiece> &match) {
 //    std::cerr << "testuje regule: " << name << std::endl;
 //    std::cerr << "ten luj: " << match[0] << std::endl;
     ///std::string::const_iterator start = sentence.begin();
@@ -388,7 +414,6 @@ bool Rule::test(std::string &, Lattice &lattice, int currentEntity,
     {
 //        std::cerr << "Numerex: " << *it << std::endl;
 //        std::cerr << "a dwojka: " << match[0] << std::endl;
-//        std::cerr << "i: " << i << "; Macz: " << match[*it] << std::endl;
         std::string part = match[*it].as_string();
         if ((part == "") && (tokensRequired[i]))
         {
@@ -608,7 +633,7 @@ void Rule::setPattern(std::string aCompiled)
     //pattern = new Pattern;
 
     //*pattern = boost::make_u32regex(aCompiled.c_str(), boost::regex::perl);
-    pattern = PatternPtr(new RE2(aCompiled));
+    pattern = PatternPtr(new Pattern(aCompiled));
     //*pattern = boost::make_u32regex(utf8converter::ToUtf8(utf8converter::FromUtf8(aCompiled)));
     //64: *pattern = boost::make_u32regex(aCompiled);
     compiled = aCompiled;
@@ -896,9 +921,9 @@ std::string Rule::log()
         int Rule::getPatternStart(std::string &beforePattern) {
             int r = -1;
 
-            RE2 regPatternInfo("<<[tsg]<\\d+<(\\d+)[^>]+>$"); //syntoki jakas inna literke jeszcze mialy?
+            Pattern regPatternInfo("<<[tsg]<\\d+<(\\d+)[^>]+>$"); //syntoki jakas inna literke jeszcze mialy?
             int end;
-            if (RE2::PartialMatch(beforePattern, regPatternInfo, &end)) {
+            if (RegExp::PartialMatch(beforePattern, regPatternInfo, &end)) {
                 r = end;
             }
 

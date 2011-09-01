@@ -11,6 +11,7 @@
 
 //#include "TransitionInfo.hpp"
 //#include "entity.hpp"
+#include "regexp.hpp"
 #include "action.hpp"
 #include "group_action.hpp"
 #include "delete_action.hpp"
@@ -87,7 +88,8 @@ class Rule
         void setMatchedIndices(std::vector<int> aMatchedIndices);
 
         int matchPattern(std::string &sentence, int matchNumber,
-                std::string &beforeMatched, std::vector<re2::StringPiece> &match);
+                //std::string &beforeMatched, std::vector<re2::StringPiece> &match);
+                std::string &beforeMatched, std::vector<StringPiece> &match);
 
         void addAction(ActionPtr action);
         void deleteAction(size_t index);

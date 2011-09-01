@@ -1,5 +1,7 @@
 #cmakedefine01 HAVE_POSTGRESQL
 #cmakedefine01 HAVE_JAVA
+#cmakedefine01 HAVE_RE2
+#cmakedefine01 HAVE_PCRE
 #cmakedefine01 HAVE_PUDDLE
 #define ROOT_DIR "../"
 #cmakedefine01 _WITH_BONSAI_PARSEGRAPH
