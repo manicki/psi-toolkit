@@ -607,7 +607,7 @@ public:
         TS_ASSERT(!iter.hasNext());
     }
 
-    void testCorrections() {
+    void testCorrectionErase() {
         //preparing lattice
         Lattice lattice("cear");
         lattice.addSymbols(lattice.getFirstVertex(), lattice.getLastVertex());
@@ -615,6 +615,45 @@ public:
         lattice.correctionErase(
             lattice.getVertexForRawCharIndex(1),
             lattice.getVertexForRawCharIndex(2)
+        );
+
+        LayerTagCollection
+            raw_tag = lattice.getLayerTagManager().createSingletonTagCollection("symbol");
+        LayerTagMask rawMask = lattice.getLayerTagManager().getMask(raw_tag);
+
+        boost::scoped_ptr<LatticeWriter> writer(new PsiLatticeWriter());
+
+        writer->writeLattice(lattice, std::cout);
+    }
+
+    void testCorrectionInsert() {
+        //preparing lattice
+        Lattice lattice("cear");
+        lattice.addSymbols(lattice.getFirstVertex(), lattice.getLastVertex());
+
+        lattice.correctionInsert(
+            lattice.getVertexForRawCharIndex(2),
+            "z"
+        );
+
+        LayerTagCollection
+            raw_tag = lattice.getLayerTagManager().createSingletonTagCollection("symbol");
+        LayerTagMask rawMask = lattice.getLayerTagManager().getMask(raw_tag);
+
+        boost::scoped_ptr<LatticeWriter> writer(new PsiLatticeWriter());
+
+        writer->writeLattice(lattice, std::cout);
+    }
+
+    void testCorrectionReplace() {
+        //preparing lattice
+        Lattice lattice("cear");
+        lattice.addSymbols(lattice.getFirstVertex(), lattice.getLastVertex());
+
+        lattice.correctionReplace(
+            lattice.getVertexForRawCharIndex(1),
+            lattice.getVertexForRawCharIndex(2),
+            "z"
         );
 
         LayerTagCollection
