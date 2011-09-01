@@ -122,13 +122,15 @@ bool DeleteAction::apply(Lattice &lattice, int currentEntity,
                     //std::string tokenBase = lattice.getAnnotationItemManager().
                     //    getValue(annotationItem, "base");
                     if (cond_it->negation) {
-                        if (RE2::FullMatch(tokenBase, cond_it->pattern)) {
+                        //if (RE2::FullMatch(tokenBase, cond_it->pattern)) {
+                        if (RegExp::FullMatch(tokenBase, cond_it->pattern)) {
                             lattice.getAnnotationItemManager().setValue(
                                     annotationItem, "discard", "1");
                             //@todo: to nie wplywa na krate, bo nie zmienia tego w krawedzi naprawde
                         }
                     } else {
-                        if (!RE2::FullMatch(tokenBase, cond_it->pattern)) {
+                        //if (!RE2::FullMatch(tokenBase, cond_it->pattern)) {
+                        if (!RegExp::FullMatch(tokenBase, cond_it->pattern)) {
                             lattice.getAnnotationItemManager().setValue(
                                     annotationItem, "discard", "1");
                             //@todo: to nie wplywa na krate, bo nie zmienia tego w krawedzi naprawde
@@ -143,7 +145,8 @@ bool DeleteAction::apply(Lattice &lattice, int currentEntity,
                         getValue(annotationItem, "morpho");
                     if (morpho != "")
                         tokenMorphology += ":" + morpho;
-                    if (!RE2::FullMatch(tokenMorphology, cond_it->pattern)) {
+                    //if (!RE2::FullMatch(tokenMorphology, cond_it->pattern)) {
+                    if (!RegExp::FullMatch(tokenMorphology, cond_it->pattern)) {
                         lattice.getAnnotationItemManager().setValue(
                                 annotationItem, "discard", "1");
                         //@todo: to nie wplywa na krate, bo nie zmienia tego w krawedzi naprawde
@@ -420,12 +423,14 @@ bool DeleteAction::test(Lattice &lattice,
                     std::string tokenBase = lattice.getAnnotationItemManager().
                         getValue(annotationItem, "base");
                     if (cond_it->negation) {
-                        if (RE2::FullMatch(tokenBase, cond_it->pattern)) {
+                        //if (RE2::FullMatch(tokenBase, cond_it->pattern)) {
+                        if (RegExp::FullMatch(tokenBase, cond_it->pattern)) {
                             satisfied = false;
                             break;
                         }
                     } else {
-                        if (!RE2::FullMatch(tokenBase, cond_it->pattern)) {
+                        //if (!RE2::FullMatch(tokenBase, cond_it->pattern)) {
+                        if (!RegExp::FullMatch(tokenBase, cond_it->pattern)) {
                             satisfied = false;
                             break;
                         }
@@ -433,7 +438,8 @@ bool DeleteAction::test(Lattice &lattice,
                 } else if (cond_it->type == MORPHOLOGY_CONDITION) {
                     std::string tokenMorphology = lattice.getAnnotationItemManager().
                         getValue(annotationItem, "morphology");
-                    if (!RE2::FullMatch(tokenMorphology, cond_it->pattern)) {
+                    //if (!RE2::FullMatch(tokenMorphology, cond_it->pattern)) {
+                    if (!RegExp::FullMatch(tokenMorphology, cond_it->pattern)) {
                         satisfied = false;
                         break;
                     }

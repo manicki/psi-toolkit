@@ -17,21 +17,21 @@ Tagger::Tagger()
     data = new std::map<std::string, std::string>;
 
     //regSeparator = PatternPtr(new RE2("\\s+"));
-    regDigit = PatternPtr(new RE2("\\d+(\\.\\d+)?"));
-    regPunct = PatternPtr(new RE2("[\\.,;:!\\?<>&\\-\\(\\)\\[\\]\"`'\\+\\*\\|~]+"));
+    regDigit = PatternPtr(new Pattern("\\d+(\\.\\d+)?"));
+    regPunct = PatternPtr(new Pattern("[\\.,;:!\\?<>&\\-\\(\\)\\[\\]\"`'\\+\\*\\|~]+"));
     interpSeparator = ";";
 //    regEscAmp = "(&amp;)";
 //    regEscLt = "(&lt;)";
 //    regEscGt = "(&gt;)";
-    regAmp = PatternPtr(new RE2("&"));
-    regLt = PatternPtr(new RE2("<"));
-    regGt = PatternPtr(new RE2(">"));
-    regLPar = PatternPtr(new RE2("\\("));
-    regRPar = PatternPtr(new RE2("\\)"));
-    regAlt = PatternPtr(new RE2("\\|"));
-    regPlus = PatternPtr(new RE2("\\+"));
-    regAsterisk = PatternPtr(new RE2("\\*"));
-    regOpt = PatternPtr(new RE2("\\?"));
+    regAmp = PatternPtr(new Pattern("&"));
+    regLt = PatternPtr(new Pattern("<"));
+    regGt = PatternPtr(new Pattern(">"));
+    regLPar = PatternPtr(new Pattern("\\("));
+    regRPar = PatternPtr(new Pattern("\\)"));
+    regAlt = PatternPtr(new Pattern("\\|"));
+    regPlus = PatternPtr(new Pattern("\\+"));
+    regAsterisk = PatternPtr(new Pattern("\\*"));
+    regOpt = PatternPtr(new Pattern("\\?"));
 
 //    regEscLPar = "&lpar;";
 //    regEscRPar = "&rpar;";

@@ -57,10 +57,10 @@ void Tagset::readFromFile (std::string &filename) {
     //boost::regex regComment( "#.*" );
     //boost::regex regWhite( "\\s+" );
     //boost::regex regOpenClasses( "\\s*[^\\s]+(\\s\\s*[^\\s]+\\s*)*\\s*" );
-    RE2 regKeyVal( "\\s*([^\\s]+)\\s*=\\s*([^\\s].*[^\\s#])?\\s*(#.*)?" );
-    RE2 regComment( "#.*" );
-    RE2 regWhite( "\\s+" );
-    RE2 regOpenClasses( "\\s*[^\\s]+(\\s\\s*[^\\s]+\\s*)*\\s*" );
+    Pattern regKeyVal( "\\s*([^\\s]+)\\s*=\\s*([^\\s].*[^\\s#])?\\s*(#.*)?" );
+    Pattern regComment( "#.*" );
+    Pattern regWhite( "\\s+" );
+    Pattern regOpenClasses( "\\s*[^\\s]+(\\s\\s*[^\\s]+\\s*)*\\s*" );
     std::string whiteChars(" \t\n");
 
     //std::vector<std::string> attrList;
@@ -81,7 +81,7 @@ void Tagset::readFromFile (std::string &filename) {
         if (line == "")
             continue;
         //if (boost::regex_match(line, regWhite))
-        if (RE2::FullMatch(line, regWhite))
+        if (RegExp::FullMatch(line, regWhite))
             continue;
 
 
@@ -110,16 +110,16 @@ void Tagset::readFromFile (std::string &filename) {
         }
 
         //if (boost::regex_match(line, regComment))
-        if (RE2::FullMatch(line, regComment))
+        if (RegExp::FullMatch(line, regComment))
             continue;
 
         //line = boost::regex_replace(line, regComment, "", boost::match_default | boost::format_sed);
-        RE2::Replace(&line, regComment, "");
+        RegExp::Replace(&line, regComment, "");
         std::string key_;
         std::string value_;
         //boost::smatch what;
         //if (boost::regex_match(line, what, regKeyVal))
-        if (RE2::FullMatch(line, regKeyVal, &key_, &value_)) {
+        if (RegExp::FullMatch(line, regKeyVal, &key_, &value_)) {
             if (attr) {
                 //std::cout << "Atrybut: " << what[1] << std::endl;
                 std::string attrName = key_;
@@ -224,7 +224,7 @@ void Tagset::readFromFile (std::string &filename) {
 
             }
         }
-        else if (RE2::FullMatch(line, regOpenClasses)) {
+        else if (RegExp::FullMatch(line, regOpenClasses)) {
             if (open) {
                 //boost::sregex_token_iterator i (line.begin(), line.end(), regWhite, -1);
                 //boost::sregex_token_iterator j;
@@ -254,7 +254,7 @@ void Tagset::readFromFile (std::string &filename) {
 
     //////// start generowania
     //boost::u32regex regOptional = boost::make_u32regex( "\\[([^\\s\\[\\]]+)\\]" );
-    RE2 regOptional( "\\[([^\\s\\[\\]]+)\\]" );
+    Pattern regOptional( "\\[([^\\s\\[\\]]+)\\]" );
     //boost::smatch wh;
 
     std::map<std::string, std::vector<std::string> >::iterator p;
@@ -286,7 +286,7 @@ void Tagset::readFromFile (std::string &filename) {
             std::string attribute = *attrIt;
             std::string attribute_;
             //if (boost::u32regex_search(attribute, wh, regOptional))
-            if (RE2::FullMatch(attribute, regOptional, &attribute_)) //@todo: tu ma byc fullmatch, partialmatch a moze w ogole cos innego w zastepstwie tego search?
+            if (RegExp::FullMatch(attribute, regOptional, &attribute_)) //@todo: tu ma byc fullmatch, partialmatch a moze w ogole cos innego w zastepstwie tego search?
             {
                 //attribute = wh[1];
                 attribute = attribute_;
@@ -549,14 +549,14 @@ int Tagset::size()
 
 std::vector<char> Tagset::mapPosMatching(std::string &regexp) { //@todo: obsluga ladna sytuacji, ze wyrazenie regularne jest bledne (nie jest wyrazeniem regularnym)
     //boost::regex regPos (regexp);
-    RE2 regPos (regexp);
+    Pattern regPos (regexp);
     std::vector<char> matching;
     std::map<std::string, char>::iterator i;
     i = posMappings.begin();
     while (i != posMappings.end())
     {
         //if (boost::regex_match(i->first, regPos))
-        if (RE2::FullMatch(i->first, regPos))
+        if (RegExp::FullMatch(i->first, regPos))
             matching.push_back(i->second);
         ++ i;
     }
@@ -565,7 +565,7 @@ std::vector<char> Tagset::mapPosMatching(std::string &regexp) { //@todo: obsluga
 
 std::vector<char> Tagset::mapAttributeValuesMatching(std::string &attribute, std::string &regexp) {
     //boost::regex regAttr (regexp);
-    RE2 regAttr (regexp);
+    Pattern regAttr (regexp);
     std::vector<char> matching;
     if (attrMappings.find(attribute) != attrMappings.end())
     {
@@ -576,7 +576,7 @@ std::vector<char> Tagset::mapAttributeValuesMatching(std::string &attribute, std
         while (i != p->second.end())
         {
             //if (boost::regex_match(i->first, regAttr))
-            if (RE2::FullMatch(i->first, regAttr))
+            if (RegExp::FullMatch(i->first, regAttr))
                 matching.push_back(i->second);
             ++ i;
         }
@@ -649,9 +649,9 @@ void Tagset::readDescFromFile(std::string &filename) //@todo: zlaczyc dwie metod
     //boost::regex regKeyVal( "\\s*([^\\s]+)\\s*=\\s*([^\\s].*)?\\s*(#.*)?" );
     //boost::regex regComment( "#.*" );
     //boost::regex regWhite( "\\s+" );
-    RE2 regKeyVal( "\\s*([^\\s]+)\\s*=\\s*([^\\s].*)?\\s*(#.*)?" );
-    RE2 regComment( "#.*" );
-    RE2 regWhite( "\\s+" );
+    Pattern regKeyVal( "\\s*([^\\s]+)\\s*=\\s*([^\\s].*)?\\s*(#.*)?" );
+    Pattern regComment( "#.*" );
+    Pattern regWhite( "\\s+" );
     std::string whiteChars(" \t\n");
 
     bool general = false;
@@ -668,15 +668,15 @@ void Tagset::readDescFromFile(std::string &filename) //@todo: zlaczyc dwie metod
         if (line == "")
             continue;
         //if (boost::regex_match(line, regWhite))
-        if (RE2::FullMatch(line, regWhite))
+        if (RegExp::FullMatch(line, regWhite))
             continue;
 
         //if (boost::regex_match(line, regComment))
-        if (RE2::FullMatch(line, regComment))
+        if (RegExp::FullMatch(line, regComment))
             continue;
 
         //line = boost::regex_replace(line, regComment, "", boost::match_default | boost::format_sed);
-        RE2::Replace(&line, regComment, "");
+        RegExp::Replace(&line, regComment, "");
 
         if (line.find("[GENERAL]") != std::string::npos)
         {
@@ -706,7 +706,7 @@ void Tagset::readDescFromFile(std::string &filename) //@todo: zlaczyc dwie metod
             std::string value;
             //boost::smatch what;
             //if (boost::regex_match(line, what, regKeyVal))
-            if (RE2::FullMatch(line, regKeyVal, &key, &value)) {
+            if (RegExp::FullMatch(line, regKeyVal, &key, &value)) {
                 //std::string key = what[1];
 
                 if (key == "order") {
@@ -779,7 +779,7 @@ void Tagset::readDescFromFile(std::string &filename) //@todo: zlaczyc dwie metod
             std::string pos;
             std::string values;
             //if (boost::regex_match(line, what, regKeyVal))
-            if (RE2::FullMatch(line, regKeyVal, &pos, &values)) {
+            if (RegExp::FullMatch(line, regKeyVal, &pos, &values)) {
                 //std::string pos = what[1];
 
                 std::map<std::string, std::vector<std::string> >::iterator p = POSs.find(pos);
@@ -836,7 +836,7 @@ void Tagset::readDescFromFile(std::string &filename) //@todo: zlaczyc dwie metod
             std::string group;
             std::string values;
             //if (boost::regex_match(line, what, regKeyVal))
-            if (RE2::FullMatch(line, regKeyVal, &group, &values)) {
+            if (RegExp::FullMatch(line, regKeyVal, &group, &values)) {
                 //std::string group = what[1];
 
                 std::vector<std::string> patterns;
@@ -1004,24 +1004,24 @@ std::vector<std::string> Tagset::getMappedMorphologies(std::string mapped_pos)
 }
 
         std::vector<std::string> Tagset::getPosMatching(std::string regexp) {
-            RE2 reg(regexp);
+            Pattern reg(regexp);
             std::vector<std::string> result;
             for (std::map<std::string,
                     std::vector<std::string> >::iterator pos_it = POSs.begin();
                     pos_it != POSs.end(); ++ pos_it) {
-                if (RE2::FullMatch(pos_it->first, reg))
+                if (RegExp::FullMatch(pos_it->first, reg))
                     result.push_back(pos_it->first);
             }
             return result;
         }
 
         std::vector<std::string> Tagset::getPosNotMatching(std::string regexp) {
-            RE2 reg(regexp);
+            Pattern reg(regexp);
             std::vector<std::string> result;
             for (std::map<std::string,
                     std::vector<std::string> >::iterator pos_it = POSs.begin();
                     pos_it != POSs.end(); ++ pos_it) {
-                if (!RE2::FullMatch(pos_it->first, reg))
+                if (!RegExp::FullMatch(pos_it->first, reg))
                     result.push_back(pos_it->first);
             }
             return result;
@@ -1040,7 +1040,7 @@ std::vector<std::string> Tagset::getMappedMorphologies(std::string mapped_pos)
 
         std::vector<std::string> Tagset::getAttributeValuesMatching(std::string attribute,
                 std::string regexp) {
-            RE2 reg(regexp);
+            Pattern reg(regexp);
             std::vector<std::string> result;
             std::map<std::string, std::vector<std::string> >::iterator attr_it =
                 attributes.find(attribute);
@@ -1048,7 +1048,7 @@ std::vector<std::string> Tagset::getMappedMorphologies(std::string mapped_pos)
                 std::vector<std::string> values = attr_it->second;
                 for (std::vector<std::string>::iterator val_it = values.begin();
                         val_it != values.end(); ++ val_it) {
-                    if (RE2::FullMatch(*val_it, reg))
+                    if (RegExp::FullMatch(*val_it, reg))
                         result.push_back(*val_it);
                 }
             }
@@ -1057,7 +1057,7 @@ std::vector<std::string> Tagset::getMappedMorphologies(std::string mapped_pos)
 
         std::vector<std::string> Tagset::getAttributeValuesNotMatching(std::string attribute,
                 std::string regexp) {
-            RE2 reg(regexp);
+            RegExp reg(regexp);
             std::vector<std::string> result;
             std::map<std::string, std::vector<std::string> >::iterator attr_it =
                 attributes.find(attribute);
@@ -1065,7 +1065,7 @@ std::vector<std::string> Tagset::getMappedMorphologies(std::string mapped_pos)
                 std::vector<std::string> values = attr_it->second;
                 for (std::vector<std::string>::iterator val_it = values.begin();
                         val_it != values.end(); ++ val_it) {
-                    if (!RE2::FullMatch(*val_it, reg))
+                    if (!RegExp::FullMatch(*val_it, reg))
                         result.push_back(*val_it);
                 }
             }

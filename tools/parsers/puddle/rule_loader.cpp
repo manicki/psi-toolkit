@@ -107,15 +107,15 @@ RuleLoader::~RuleLoader() {
         }
 
         void RuleLoader::initPatterns() {
-            regAmp = PatternPtr(new RE2("&"));
-            regLt = PatternPtr(new RE2("<"));
-            regGt = PatternPtr(new RE2(">"));
-            regLPar = PatternPtr(new RE2("\\\\\\("));
-            regRPar = PatternPtr(new RE2("\\\\\\)"));
-            regAlt = PatternPtr(new RE2("\\\\\\|"));
-            regPlus = PatternPtr(new RE2("\\\\\\+"));
-            regAsterisk = PatternPtr(new RE2("\\\\\\*"));
-            regOpt = PatternPtr(new RE2("\\\\\\?"));
+            regAmp = PatternPtr(new Pattern("&"));
+            regLt = PatternPtr(new Pattern("<"));
+            regGt = PatternPtr(new Pattern(">"));
+            regLPar = PatternPtr(new Pattern("\\\\\\("));
+            regRPar = PatternPtr(new Pattern("\\\\\\)"));
+            regAlt = PatternPtr(new Pattern("\\\\\\|"));
+            regPlus = PatternPtr(new Pattern("\\\\\\+"));
+            regAsterisk = PatternPtr(new Pattern("\\\\\\*"));
+            regOpt = PatternPtr(new Pattern("\\\\\\?"));
 
         }
 
@@ -153,8 +153,8 @@ RulesPtr RuleLoader::readFromFile(std::string &filename) //, LatticeWrapperPtr l
     //boost::u32regex regComment = boost::make_u32regex("#.*");
     //boost::u32regex regWhite = boost::make_u32regex("\\s+");
 
-    RE2 regComment("#.*");
-    RE2 regWhite("\\s+");
+    Pattern regComment("#.*");
+    Pattern regWhite("\\s+");
 
 //    Rules rules;
 
@@ -205,10 +205,10 @@ RulesPtr RuleLoader::readFromFile(std::string &filename) //, LatticeWrapperPtr l
 
         //std::string line2 = line;
         //line = boost::u32regex_replace(line, regComment, "", boost::match_default | boost::format_sed);
-        RE2::Replace(&line, regComment, "");
+        RegExp::Replace(&line, regComment, "");
         if (line == "")
             continue;
-        if (RE2::FullMatch(line, regWhite)) {
+        if (RegExp::FullMatch(line, regWhite)) {
             continue;
         }
         //if (boost::u32regex_match(line, regWhite))
@@ -381,11 +381,11 @@ std::string RuleLoader::compileNonTokens(std::string &matched)
 //    boost::u32regex regSpecial = boost::make_u32regex("(^|[ \\(\\)\\|])(sb|se|ns)");
 //    boost::u32regex regLPar = boost::make_u32regex("\\(");
 //    boost::u32regex regRPar = boost::make_u32regex("\\)([+*?])?");
-    RE2 regWhite("\\s+");
-    RE2 regSpecialNeg("!(sb|se|ns)");
-    RE2 regSpecial("(^|[ \\(\\)\\|])(sb|se|ns)");
-    RE2 regLPar("\\(");
-    RE2 regRPar("\\)([+*?])?");
+    Pattern regWhite("\\s+");
+    Pattern regSpecialNeg("!(sb|se|ns)");
+    Pattern regSpecial("(^|[ \\(\\)\\|])(sb|se|ns)");
+    Pattern regLPar("\\(");
+    Pattern regRPar("\\)([+*?])?");
 
 //    matched = boost::u32regex_replace(matched, regLPar, "((", boost::match_default | boost::format_sed);
 //    matched = boost::u32regex_replace(matched, regRPar, ")\\1)", boost::match_default | boost::format_sed);
@@ -393,12 +393,12 @@ std::string RuleLoader::compileNonTokens(std::string &matched)
 //    matched = boost::u32regex_replace(matched, regSpecialNeg, "((<<t<[^<>]+<[^<>]+<[^>]+>)|(<<g<[^<>+]<[^<>]+<[^<>]+<[^>]+))", boost::match_default | boost::format_sed);
 //    matched = boost::u32regex_replace(matched, regSpecial, "\\1(<<s<[^<>]+<\\2<>)", boost::match_default | boost::format_sed);
 //    matched = boost::u32regex_replace(matched, regWhite, "", boost::match_default | boost::format_sed);
-    RE2::GlobalReplace(&matched, regLPar, "((");
-    RE2::GlobalReplace(&matched, regRPar, ")\\1)");
+    RegExp::GlobalReplace(&matched, regLPar, "((");
+    RegExp::GlobalReplace(&matched, regRPar, ")\\1)");
     //matched = boost::u32regex_replace(matched, regSpecialNeg, "(<<s<[^<>]+<(?!\\1)[^<>]+<>)", boost::match_default | boost::format_sed);
-    RE2::GlobalReplace(&matched, regSpecialNeg, "((<<t<[^<>]+<[^<>]+<[^>]+>)|(<<g<[^<>+]<[^<>]+<[^<>]+<[^>]+))");
-    RE2::GlobalReplace(&matched, regSpecial, "\\1(<<s<[^<>]+<\\2<>)");
-    RE2::GlobalReplace(&matched, regWhite, "");
+    RegExp::GlobalReplace(&matched, regSpecialNeg, "((<<t<[^<>]+<[^<>]+<[^>]+>)|(<<g<[^<>+]<[^<>]+<[^<>]+<[^>]+))");
+    RegExp::GlobalReplace(&matched, regSpecial, "\\1(<<s<[^<>]+<\\2<>)");
+    RegExp::GlobalReplace(&matched, regWhite, "");
 
     return matched;
 }
@@ -406,11 +406,11 @@ std::string RuleLoader::compileNonTokens(std::string &matched)
 std::string RuleLoader::compileRuleName(std::string matched)
 {
     //boost::u32regex regRuleName = boost::make_u32regex("Rule\\s*\"\\s*(.*)\\s*\"\\s*;?\\s*");
-    RE2 regRuleName("Rule\\s*\"\\s*(.*)\\s*\"\\s*;?\\s*");
+    Pattern regRuleName("Rule\\s*\"\\s*(.*)\\s*\"\\s*;?\\s*");
     //boost::smatch container;
     std::string container;
     //if (boost::u32regex_match(matched, container, regRuleName))
-    if (RE2::FullMatch(matched, regRuleName, &container)) {
+    if (RegExp::FullMatch(matched, regRuleName, &container)) {
         std::string s = container; //@todo: zwinac ten badziew
 //        std::cout << "Kompilejszyn reguly: " << container[1] << std::endl;
         return s;
@@ -431,14 +431,14 @@ std::string RuleLoader::compileRulePattern(std::string &matched, int &size,
         NegativePatternStrings &negativePatterns) {
     //boost::u32regex regMatch = boost::make_u32regex("^(Match|Left|Right)\\s*:\\s*");
     //boost::u32regex regWhite = boost::make_u32regex("\\s+");
-    RE2 regMatch("^(Match|Left|Right)\\s*:\\s*");
-    RE2 regWhite("\\s+");
+    Pattern regMatch("^(Match|Left|Right)\\s*:\\s*");
+    Pattern regWhite("\\s+");
 
     //matched = boost::u32regex_replace(matched, regMatch, "", boost::match_default | boost::format_sed);
-    RE2::Replace(&matched, regMatch, "");
+    RegExp::Replace(&matched, regMatch, "");
 
     //if ((matched == "") || (boost::u32regex_match(matched, regWhite)))
-    if ((matched == "") || (RE2::FullMatch(matched, regWhite)))
+    if ((matched == "") || (RegExp::FullMatch(matched, regWhite)))
     {
         std::cerr << "No patterns defined in section." << std::endl;
         return "null";
@@ -503,12 +503,12 @@ std::string RuleLoader::compileRulePattern(std::string &matched, int &size,
                 i ++;
                 continue;
             }
-            mindex ++;
             if (brackets == 0)
             {
 //                std::cout << "wrzucom numer: " << mindex << std::endl;
                 matchedIndices.push_back(mindex);
             }
+            mindex ++;
             brackets ++;
         }
         if (s[i] == ')')
@@ -1463,15 +1463,15 @@ bool RuleLoader::compilePosCondition(std::string &comparisonOperator,
 bool RuleLoader::compileBaseCondition(std::string &comparisonOperator,
                     std::string &value, TokenPatterns &tokenPatterns,
                     bool icase) {
-    RE2::GlobalReplace(&value, *regAmp, "\\&amp;");
-    RE2::GlobalReplace(&value, *regLt, "\\&lt;");
-    RE2::GlobalReplace(&value, *regGt, "\\&gt;");
-    RE2::GlobalReplace(&value, *regLPar, "&#40;");
-    RE2::GlobalReplace(&value, *regRPar, "&#41;");
-    RE2::GlobalReplace(&value, *regAlt, "\\&bar;");
-    RE2::GlobalReplace(&value, *regPlus, "\\&plus;");
-    RE2::GlobalReplace(&value, *regAsterisk, "\\&astr;");
-    RE2::GlobalReplace(&value, *regOpt, "\\&qmark;");
+    RegExp::GlobalReplace(&value, *regAmp, "\\&amp;");
+    RegExp::GlobalReplace(&value, *regLt, "\\&lt;");
+    RegExp::GlobalReplace(&value, *regGt, "\\&gt;");
+    RegExp::GlobalReplace(&value, *regLPar, "&#40;");
+    RegExp::GlobalReplace(&value, *regRPar, "&#41;");
+    RegExp::GlobalReplace(&value, *regAlt, "\\&bar;");
+    RegExp::GlobalReplace(&value, *regPlus, "\\&plus;");
+    RegExp::GlobalReplace(&value, *regAsterisk, "\\&astr;");
+    RegExp::GlobalReplace(&value, *regOpt, "\\&qmark;");
 
     if (icase) {
         value = "(?i:" + value + ")";
@@ -1504,10 +1504,10 @@ bool RuleLoader::compileBaseCondition(std::string &comparisonOperator,
 //    boost::u32regex regRpar = boost::make_u32regex("\\\\\\\\\\\\\\)");
 //    value = boost::u32regex_replace(value, regLpar, "\\&lpar;", boost::match_default | boost::format_sed);
 //    value = boost::u32regex_replace(value, regRpar, "\\&rpar;", boost::match_default | boost::format_sed);
-    RE2 regLpar("\\\\\\\\\\\\\\(");
-    RE2 regRpar("\\\\\\\\\\\\\\)");
-    RE2::GlobalReplace(&value, regLpar, "\\&lpar;");
-    RE2::GlobalReplace(&value, regRpar, "\\&rpar;");
+    Pattern regLpar("\\\\\\\\\\\\\\(");
+    Pattern regRpar("\\\\\\\\\\\\\\)");
+    RegExp::GlobalReplace(&value, regLpar, "\\&lpar;");
+    RegExp::GlobalReplace(&value, regRpar, "\\&rpar;");
 
     if (value.find("|") != std::string::npos) {
         value = "(" + value + ")";
@@ -1920,15 +1920,15 @@ std::string RuleLoader::compileOrthCondition(std::string &comparisonOperator,
 //    value = boost::regex_replace(value, regPlus, "\\&plus;", boost::match_default | boost::format_sed);
 //    value = boost::regex_replace(value, regAsterisk, "\\&astr;", boost::match_default | boost::format_sed);
 //    value = boost::regex_replace(value, regOpt, "\\&qmark;", boost::match_default | boost::format_sed);
-    RE2::GlobalReplace(&value, *regAmp, "\\&amp;");
-    RE2::GlobalReplace(&value, *regLt, "\\&lt;");
-    RE2::GlobalReplace(&value, *regGt, "\\&gt;");
-    RE2::GlobalReplace(&value, *regLPar, "&#40;"); //@todo: koniecznie to zrobic tu i w compileBaseCondition we wszystkich miejscach, przeniesc to do funkcji typu util::Escape i dorobic w ruleMatcher funkcje unescape
-    RE2::GlobalReplace(&value, *regRPar, "&#41;");
-    RE2::GlobalReplace(&value, *regAlt, "\\&bar;");
-    RE2::GlobalReplace(&value, *regPlus, "\\&plus;");
-    RE2::GlobalReplace(&value, *regAsterisk, "\\&astr;");
-    RE2::GlobalReplace(&value, *regOpt, "\\&qmark;");
+    RegExp::GlobalReplace(&value, *regAmp, "\\&amp;");
+    RegExp::GlobalReplace(&value, *regLt, "\\&lt;");
+    RegExp::GlobalReplace(&value, *regGt, "\\&gt;");
+    RegExp::GlobalReplace(&value, *regLPar, "&#40;"); //@todo: koniecznie to zrobic tu i w compileBaseCondition we wszystkich miejscach, przeniesc to do funkcji typu util::Escape i dorobic w ruleMatcher funkcje unescape
+    RegExp::GlobalReplace(&value, *regRPar, "&#41;");
+    RegExp::GlobalReplace(&value, *regAlt, "\\&bar;");
+    RegExp::GlobalReplace(&value, *regPlus, "\\&plus;");
+    RegExp::GlobalReplace(&value, *regAsterisk, "\\&astr;");
+    RegExp::GlobalReplace(&value, *regOpt, "\\&qmark;");
 
     if (icase) {
         value = "(?i:" + value + ")";
@@ -2011,10 +2011,10 @@ std::string RuleLoader::compileOrthCondition(std::string &comparisonOperator,
 //    boost::u32regex regRpar = boost::make_u32regex("\\\\\\\\\\\\\\)");
 //    value = boost::u32regex_replace(value, regLpar, "\\&lpar;", boost::match_default | boost::format_sed);
 //    value = boost::u32regex_replace(value, regRpar, "\\&rpar;", boost::match_default | boost::format_sed);
-    RE2 regLpar("\\\\\\\\\\\\\\(");
-    RE2 regRpar("\\\\\\\\\\\\\\)");
-    RE2::GlobalReplace(&value, regLpar, "\\&lpar;");
-    RE2::GlobalReplace(&value, regRpar, "\\&rpar;");
+    Pattern regLpar("\\\\\\\\\\\\\\(");
+    Pattern regRpar("\\\\\\\\\\\\\\)");
+    RegExp::GlobalReplace(&value, regLpar, "\\&lpar;");
+    RegExp::GlobalReplace(&value, regRpar, "\\&rpar;");
 
     std::string result;
     if ((comparisonOperator == "~") || (comparisonOperator == "~~"))
@@ -2241,39 +2241,39 @@ ActionsPtr RuleLoader::compileRuleAction(std::string &matched, int ruleLeftSize,
 //    boost::u32regex regRepeat = boost::make_u32regex("repeat");                                         // repeat;
 //    boost::u32regex regWhite = boost::make_u32regex("\\s+");
 //    boost::u32regex regActionSeparator = boost::make_u32regex("\\s*;\\s*");
-    RE2 regEval("^Eval\\s*:\\s*");
+    Pattern regEval("^Eval\\s*:\\s*");
     // group(NP, 1);
-    RE2 regGroup("group\\s*\\(\\s*([^\\s,]+)\\s*,\\s*(\\d+)\\s*\\)\\s*");
+    Pattern regGroup("group\\s*\\(\\s*([^\\s,]+)\\s*,\\s*(\\d+)\\s*\\)\\s*");
     //boost::regex regDelete("delete\\s*\\(\\s*([^\\s!~\"]+)\\s*([!~]?~)\\s*\"([^\\s\",]+)\"\\s*,\\s*(\\d+)\\s*\\)\\s*");
     //delete(pos!~"adj", 1)
-    RE2 regDelete("delete\\s*\\(\\s*([^,]+)\\s*,\\s*(\\d+)\\s*\\)\\s*");
+    Pattern regDelete("delete\\s*\\(\\s*([^,]+)\\s*,\\s*(\\d+)\\s*\\)\\s*");
     //add("adj:sg:m", "new_base", 1);
-    RE2 regAdd("add\\s*\\(\\s*\"([^\\s\",]+)\"\\s*,\\s*((\"[^\\s\",]+\")|(base))\\s*,\\s*(\\d+)\\s*\\)\\s*");
+    Pattern regAdd("add\\s*\\(\\s*\"([^\\s\",]+)\"\\s*,\\s*((\"[^\\s\",]+\")|(base))\\s*,\\s*(\\d+)\\s*\\)\\s*");
     //unify(gender number case, 1, 2, 3);
-    RE2 regUnify("unify\\s*\\(\\s*([^,]+)\\s*((,\\s*(\\d+)\\s*)+)\\)\\s*");
+    Pattern regUnify("unify\\s*\\(\\s*([^,]+)\\s*((,\\s*(\\d+)\\s*)+)\\)\\s*");
 //    boost::u32regex regWord = boost::make_u32regex("syntok\\s*\\(\\s*([^,]+)\\s*,\\s*\"([^,\"\\s]+)\"\\s*\\)\\s*");
     //syntok("coup d'état");
-    RE2 regSyntok("syntok\\s*\\(\\s*\"([^,\"\\s]+)\"\\s*\\)\\s*");
+    Pattern regSyntok("syntok\\s*\\(\\s*\"([^,\"\\s]+)\"\\s*\\)\\s*");
     //join(NP, 1);
-    RE2 regJoin("join\\s*\\(\\s*([^\\s,]+)\\s*,\\s*(\\d+)\\s*\\)\\s*");
+    Pattern regJoin("join\\s*\\(\\s*([^\\s,]+)\\s*,\\s*(\\d+)\\s*\\)\\s*");
     //attach(NP, 1);
-    RE2 regAttach("attach\\s*\\(\\s*([^\\s,]+)\\s*,\\s*(\\d+)\\s*\\)\\s*");
+    Pattern regAttach("attach\\s*\\(\\s*([^\\s,]+)\\s*,\\s*(\\d+)\\s*\\)\\s*");
     //transform(1, VP);
-    RE2 regTransform("transform\\s*\\(\\s*(\\d+)\\s*,\\s*([^\\s,]+)\\s*\\)\\s*");
+    Pattern regTransform("transform\\s*\\(\\s*(\\d+)\\s*,\\s*([^\\s,]+)\\s*\\)\\s*");
     //repeat
-    RE2 regRepeat("repeat");
-    RE2 regWhite("\\s+");
+    Pattern regRepeat("repeat");
+    Pattern regWhite("\\s+");
     std::string actionSeparator = ";";
 
     //std::cout << "Moje wyrazenia: " << std::endl << regGroup.str() << std::endl << regDelete.str() << std::endl << regAdd.str() << std::endl << regUnify.str() << std::endl;
 
     //matched = boost::u32regex_replace(matched, regEval, "", boost::match_default | boost::format_sed);
-    RE2::Replace(&matched, regEval, "");
+    RegExp::Replace(&matched, regEval, "");
 
     ActionsPtr actions = ActionsPtr( new Actions() );
 
     //if ((matched == "") || (boost::u32regex_match(matched, regWhite)))
-    if ((matched == "") || (RE2::FullMatch(matched, regWhite)))
+    if ((matched == "") || (RegExp::FullMatch(matched, regWhite)))
     {
         std::cerr << "No actions defined in Eval section." << std::endl;
         return actions;//(Actions)NULL;
@@ -2290,7 +2290,7 @@ ActionsPtr RuleLoader::compileRuleAction(std::string &matched, int ruleLeftSize,
             asit != actionStrings.end(); ++ asit) {
         //std::string actionString = *i;
         std::string actionString = boost::algorithm::trim_copy(*asit);
-        if ((actionString == "") || (RE2::FullMatch(actionString, regWhite)))
+        if ((actionString == "") || (RegExp::FullMatch(actionString, regWhite)))
             continue;
         //boost::smatch container;
         std::string groupType;
@@ -2304,10 +2304,10 @@ ActionsPtr RuleLoader::compileRuleAction(std::string &matched, int ruleLeftSize,
         std::string mask;
         std::string slot1, slot2; //@todo: typy!
         //if (boost::u32regex_match(actionString, container, regRepeat)) {
-        if (RE2::FullMatch(actionString, regRepeat)) {
+        if (RegExp::FullMatch(actionString, regRepeat)) {
             repeat = true;
         //} else if (boost::u32regex_match(actionString, container, regGroup)) {
-        } else if (RE2::FullMatch(actionString, regGroup, &groupType, &groupHead)) {
+        } else if (RegExp::FullMatch(actionString, regGroup, &groupType, &groupHead)) {
             //GroupActionPtr action = GroupActionPtr( new GroupAction(container[1], ruleLeftSize, (ruleLeftSize + ruleMatchSize - 1), boost::lexical_cast<int>(container[2]), ruleName) );
             GroupActionPtr action = GroupActionPtr( new GroupAction(
                         groupType, ruleLeftSize, (ruleLeftSize + ruleMatchSize - 1),
@@ -2315,7 +2315,7 @@ ActionsPtr RuleLoader::compileRuleAction(std::string &matched, int ruleLeftSize,
             if (verbose)
                 action->setVerbose();
             actions->push_back(action);
-        } else if (RE2::FullMatch(actionString, regJoin, &groupType, &groupHead)) {
+        } else if (RegExp::FullMatch(actionString, regJoin, &groupType, &groupHead)) {
             //JoinActionPtr action = JoinActionPtr( new JoinAction(container[1], ruleLeftSize, (ruleLeftSize + ruleMatchSize - 1), boost::lexical_cast<int>(container[2]), ruleName) );
             JoinActionPtr action = JoinActionPtr( new JoinAction(
                         groupType, ruleLeftSize, (ruleLeftSize + ruleMatchSize - 1),
@@ -2324,7 +2324,7 @@ ActionsPtr RuleLoader::compileRuleAction(std::string &matched, int ruleLeftSize,
                 action->setVerbose();
             actions->push_back(action);
         //} else if (boost::u32regex_match(actionString, container, regAttach)) {
-        } else if (RE2::FullMatch(actionString, regAttach, &groupType, &groupHead)) {
+        } else if (RegExp::FullMatch(actionString, regAttach, &groupType, &groupHead)) {
             //AttachActionPtr action = AttachActionPtr( new AttachAction(container[1], ruleLeftSize, (ruleLeftSize + ruleMatchSize - 1), boost::lexical_cast<int>(container[2]), ruleName) );
             AttachActionPtr action = AttachActionPtr( new AttachAction(
                         groupType, ruleLeftSize, (ruleLeftSize + ruleMatchSize - 1),
@@ -2332,14 +2332,14 @@ ActionsPtr RuleLoader::compileRuleAction(std::string &matched, int ruleLeftSize,
             if (verbose)
                 action->setVerbose();
             actions->push_back(action);
-        } else if (RE2::FullMatch(actionString, regTransform, &groupHead, &groupType)) {
+        } else if (RegExp::FullMatch(actionString, regTransform, &groupHead, &groupType)) {
             TransformActionPtr action = TransformActionPtr( new TransformAction(
                         groupType, groupHead, ruleName ) ); //, latticeWrapper ) );
             if (verbose)
                 action->setVerbose();
             actions->push_back(action);
         //} else if (boost::u32regex_match(actionString, container, regDelete)) {
-        } else if (RE2::FullMatch(actionString, regDelete,
+        } else if (RegExp::FullMatch(actionString, regDelete,
                     &conditionsString, &tokenIndex)) {
             //int tokenIndex = boost::lexical_cast<int>(container[2]);
             //std::string conditions = container[1];
@@ -2404,7 +2404,7 @@ ActionsPtr RuleLoader::compileRuleAction(std::string &matched, int ruleLeftSize,
             actions->push_back(action);
  //           std::cout << "Usun interpretacje: " << container[4] << " pod warunkiem, ze: " << container[1] << " " << container[2] << " " << container[3] << std::endl;
         //} else if (boost::u32regex_match(actionString, container, regAdd)) {
-        } else if (RE2::FullMatch(actionString, regAdd, &interpretation,
+        } else if (RegExp::FullMatch(actionString, regAdd, &interpretation,
                     &baseString, &slot1, &slot2, &tokenIndex)) { //@todo: dlaczemu nie mozna uzyc NULL zamiast slotX?
             //int tokenIndex = boost::lexical_cast<int>(container[5]);
             //std::string base = container[2];
@@ -2429,7 +2429,7 @@ ActionsPtr RuleLoader::compileRuleAction(std::string &matched, int ruleLeftSize,
 
 //            std::cout << "Dodaj interpretacje: " << container[1] << " do: " << container[2] << std::endl;
         //} else if (boost::u32regex_match(actionString, container, regUnify)) {
-        } else if (RE2::FullMatch(actionString, regUnify, &attrs, &toks)) {
+        } else if (RegExp::FullMatch(actionString, regUnify, &attrs, &toks)) {
             //std::vector<int> attributes;
             std::vector<std::string> patterns;
             std::vector<std::string> attributes;
@@ -2491,7 +2491,7 @@ ActionsPtr RuleLoader::compileRuleAction(std::string &matched, int ruleLeftSize,
             //action->setBaseMask(mask);
             actions->push_back(action);
         //} else if (boost::u32regex_match(actionString, container, regWord)){
-        } else if (RE2::FullMatch(actionString, regSyntok, &mask)) {
+        } else if (RegExp::FullMatch(actionString, regSyntok, &mask)) {
             std::vector<int> tokens;
 //            std::string toks = container[1];
             //std::string mask = container[1];
@@ -2882,8 +2882,8 @@ void RuleLoader::setSyntok() {
 
 RulePtr RuleLoader::compileRule(std::string ruleString) //, LatticeWrapperPtr latticeWrapper)
 {
-    RE2 regComment("#.*");
-    RE2 regWhite("\\s+");
+    Pattern regComment("#.*");
+    Pattern regWhite("\\s+");
     std::string lineSep = "\n"; //@todo: ma byc tak czy krocej \n ?
     std::string ruleName;
     std::string rulePattern;
@@ -2919,11 +2919,11 @@ RulePtr RuleLoader::compileRule(std::string ruleString) //, LatticeWrapperPtr la
         std::string line = *line_it;
 
         //line = boost::u32regex_replace(line, regComment, "", boost::match_default | boost::format_sed);
-        RE2::Replace(&line, regComment, "");
+        RegExp::Replace(&line, regComment, "");
         if (line == "")
             continue;
         //if (boost::u32regex_match(line, regWhite))
-        if (RE2::FullMatch(line, regWhite))
+        if (RegExp::FullMatch(line, regWhite))
             continue;
 
         line = boost::algorithm::trim_copy(line);
@@ -3051,26 +3051,26 @@ ActionPtr RuleLoader::compileAction(std::string actionString, RulePtr rule) {
 //    boost::u32regex regRepeat = boost::make_u32regex("repeat");                                         // repeat;
 //    boost::u32regex regWhite = boost::make_u32regex("\\s+");
 //    boost::u32regex regActionSeparator = boost::make_u32regex("\\s*;\\s*");
-    RE2 regEval("^Eval\\s*:\\s*");
+    Pattern regEval("^Eval\\s*:\\s*");
     // group(XX, 1);
-    RE2 regGroup("group\\s*\\(\\s*([^\\s,]+)\\s*,\\s*(\\d+)\\s*\\)\\s*");
+    Pattern regGroup("group\\s*\\(\\s*([^\\s,]+)\\s*,\\s*(\\d+)\\s*\\)\\s*");
     //delete(pos!~"X", 1)
-    RE2 regDelete("delete\\s*\\(\\s*([^,]+)\\s*,\\s*(\\d+)\\s*\\)\\s*");
+    Pattern regDelete("delete\\s*\\(\\s*([^,]+)\\s*,\\s*(\\d+)\\s*\\)\\s*");
     //add("X:m:sg", 1);
-    RE2 regAdd("add\\s*\\(\\s*\"([^\\s\",]+)\"\\s*,\\s*((\"[^\\s\",]+\")|(base))\\s*,\\s*(\\d+)\\s*\\)\\s*");
+    Pattern regAdd("add\\s*\\(\\s*\"([^\\s\",]+)\"\\s*,\\s*((\"[^\\s\",]+\")|(base))\\s*,\\s*(\\d+)\\s*\\)\\s*");
     //unify(gender number case, 1, 2, 3);
-    RE2 regUnify("unify\\s*\\(\\s*([^,]+)\\s*((,\\s*(\\d+)\\s*)+)\\)\\s*");
+    Pattern regUnify("unify\\s*\\(\\s*([^,]+)\\s*((,\\s*(\\d+)\\s*)+)\\)\\s*");
     //syntok("coup d'état");
-    RE2 regSyntok("syntok\\s*\\(\\s*\"([^,\"\\s]+)\"\\s*\\)\\s*");
+    Pattern regSyntok("syntok\\s*\\(\\s*\"([^,\"\\s]+)\"\\s*\\)\\s*");
     // join(XX, 1);
-    RE2 regJoin("join\\s*\\(\\s*([^\\s,]+)\\s*,\\s*(\\d+)\\s*\\)\\s*");
+    Pattern regJoin("join\\s*\\(\\s*([^\\s,]+)\\s*,\\s*(\\d+)\\s*\\)\\s*");
     // attach(XX, 1);
-    RE2 regAttach("attach\\s*\\(\\s*([^\\s,]+)\\s*,\\s*(\\d+)\\s*\\)\\s*");
+    Pattern regAttach("attach\\s*\\(\\s*([^\\s,]+)\\s*,\\s*(\\d+)\\s*\\)\\s*");
     // transform(1, YY);
-    RE2 regTransform("transform\\s*\\(\\s*(\\d+)\\s*,\\s*([^\\s,]+)\\s*\\)\\s*");
+    Pattern regTransform("transform\\s*\\(\\s*(\\d+)\\s*,\\s*([^\\s,]+)\\s*\\)\\s*");
     // repeat;
-    RE2 regRepeat("repeat");
-    RE2 regWhite("\\s+");
+    Pattern regRepeat("repeat");
+    Pattern regWhite("\\s+");
     std::string actionSeparator = ";";
 
     ActionPtr action;
@@ -3090,11 +3090,11 @@ ActionPtr RuleLoader::compileAction(std::string actionString, RulePtr rule) {
         int slot1, slot2; //@todo: typy!
 
 //        boost::smatch container;
-        if (RE2::FullMatch(actionString, regRepeat)) {
+        if (RegExp::FullMatch(actionString, regRepeat)) {
             //@todo: to co tu sie niby dzieje?
 //            repeat = true;
         }
-        else if (RE2::FullMatch(actionString, regGroup, &groupType, &groupHead)) {
+        else if (RegExp::FullMatch(actionString, regGroup, &groupType, &groupHead)) {
             action = GroupActionPtr( new GroupAction(groupType,
                         rule->getLeftCount(),
                         (rule->getLeftCount() + rule->getMatchCount() - 1),
@@ -3102,7 +3102,7 @@ ActionPtr RuleLoader::compileAction(std::string actionString, RulePtr rule) {
             if (verbose)
                 action->setVerbose();
         }
-        else if (RE2::FullMatch(actionString, regJoin, &groupType, &groupHead)) {
+        else if (RegExp::FullMatch(actionString, regJoin, &groupType, &groupHead)) {
             action = JoinActionPtr( new JoinAction(groupType,
                         rule->getLeftCount(),
                         (rule->getLeftCount() + rule->getMatchCount() - 1),
@@ -3110,7 +3110,7 @@ ActionPtr RuleLoader::compileAction(std::string actionString, RulePtr rule) {
             if (verbose)
                 action->setVerbose();
         }
-        else if (RE2::FullMatch(actionString, regAttach, &groupType, &groupHead)) {
+        else if (RegExp::FullMatch(actionString, regAttach, &groupType, &groupHead)) {
             action = AttachActionPtr(new AttachAction(groupType,
                         rule->getLeftCount(),
                         (rule->getLeftCount() + rule->getMatchCount() - 1),
@@ -3118,13 +3118,13 @@ ActionPtr RuleLoader::compileAction(std::string actionString, RulePtr rule) {
             if (verbose)
                 action->setVerbose();
         }
-        else if (RE2::FullMatch(actionString, regTransform, &groupHead, &groupType)) {
+        else if (RegExp::FullMatch(actionString, regTransform, &groupHead, &groupType)) {
             action = TransformActionPtr( new TransformAction(groupType,
                         groupHead, rule->getName() ) );//, latticeWrapper) );
             if (verbose)
                 action->setVerbose();
         }
-        else if (RE2::FullMatch(actionString, regDelete, &conditionsString, &tokenIndex)) {
+        else if (RegExp::FullMatch(actionString, regDelete, &conditionsString, &tokenIndex)) {
             //int tokenIndex = boost::lexical_cast<int>(container[2]);
             //std::string conditions = container[1];
             std::string uncompiled = conditionsString;
@@ -3157,7 +3157,7 @@ ActionPtr RuleLoader::compileAction(std::string actionString, RulePtr rule) {
                 action->setVerbose();
  //           std::cout << "Usun interpretacje: " << container[4] << " pod warunkiem, ze: " << container[1] << " " << container[2] << " " << container[3] << std::endl;
         }
-        else if (RE2::FullMatch(actionString, regAdd, &interpretation, &baseString, &slot1, &slot2, &tokenIndex)) {
+        else if (RegExp::FullMatch(actionString, regAdd, &interpretation, &baseString, &slot1, &slot2, &tokenIndex)) {
             //int tokenIndex = boost::lexical_cast<int>(container[5]);
             //std::string base = container[2];
             std::string base = baseString;
@@ -3178,7 +3178,7 @@ ActionPtr RuleLoader::compileAction(std::string actionString, RulePtr rule) {
 
 //            std::cout << "Dodaj interpretacje: " << container[1] << " do: " << container[2] << std::endl;
         }
-        else if (RE2::FullMatch(actionString, regUnify, &attrs, &toks)) {
+        else if (RegExp::FullMatch(actionString, regUnify, &attrs, &toks)) {
             //std::vector<int> attributes;
             std::vector<std::string> attributes;
             std::vector<std::string> patterns;
@@ -3235,7 +3235,7 @@ ActionPtr RuleLoader::compileAction(std::string actionString, RulePtr rule) {
             (boost::dynamic_pointer_cast<UnifyAction>(action))->rule = rule->getName();
             //(boost::dynamic_pointer_cast<UnifyAction>(action))->setBaseMask(mask);
         }
-        else if (RE2::FullMatch(actionString, regSyntok, &mask))
+        else if (RegExp::FullMatch(actionString, regSyntok, &mask))
         {
             std::vector<int> tokens;
 //            std::string toks = container[1];

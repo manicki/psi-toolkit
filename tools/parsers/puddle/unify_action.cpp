@@ -129,7 +129,8 @@ bool UnifyAction::apply(Lattice &lattice, int currentEntity,
 
                     std::string slot;
                     std::string value;
-                    if (RE2::FullMatch(morphology, *pattern_it, &slot, &value)) {
+                    //if (RE2::FullMatch(morphology, *pattern_it, &slot, &value)) {
+                    if (RegExp::FullMatch(morphology, *pattern_it, &slot, &value)) {
                         values.insert(value);
                     }
 
@@ -201,7 +202,8 @@ bool UnifyAction::apply(Lattice &lattice, int currentEntity,
 
                         std::string slot;
                         std::string value;
-                        if (RE2::FullMatch(morphology, *pattern_it, &slot, &value)) {
+                        //if (RE2::FullMatch(morphology, *pattern_it, &slot, &value)) {
+                        if (RegExp::FullMatch(morphology, *pattern_it, &slot, &value)) {
                             std::set<std::string>::iterator unifIt = refValues.find(value);
                             if (unifIt == refValues.end()) {
                                 //boost::get<2>(*var_it) = 0; //delete the variant
@@ -770,7 +772,8 @@ bool UnifyAction::test(Lattice &lattice, int currentEntity,
 
                     std::string slot;
                     std::string value;
-                    if (RE2::FullMatch(morphology, *pattern_it, &slot, &value)) {
+                    //if (RE2::FullMatch(morphology, *pattern_it, &slot, &value)) {
+                    if (RegExp::FullMatch(morphology, *pattern_it, &slot, &value)) {
                         allValuesNull = false;
                         values.insert(value);
                     }
