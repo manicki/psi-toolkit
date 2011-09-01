@@ -68,14 +68,16 @@ void PsiLatticeWriter::Worker::doRun() {
 
         edgeOrdinalMap[edge] = ordinal;
 
-        alignOutput_(ordinal, alignments[0], '0');
+        std::stringstream ordinalSs;
+        ordinalSs << std::right << std::setfill('0') << std::setw(2);
+        ordinalSs << ordinal;
+        alignOutput_(ordinalSs.str(), alignments[0]);
         alignOutput_(" ");
 
         std::stringstream beginningSs;
         Lattice::VertexDescriptor source = lattice_.getEdgeSource(edge);
         if (lattice_.isLooseVertex(source)) {
-            beginningSs << "@";
-            beginningSs << lattice_.getLooseVertexIndex(source);
+            beginningSs << "@" << lattice_.getLooseVertexIndex(source);
         } else {
             beginningSs << std::right << std::setfill('0') << std::setw(4);
             beginningSs << lattice_.getVertexRawCharIndex(source);
@@ -86,8 +88,7 @@ void PsiLatticeWriter::Worker::doRun() {
         std::stringstream lengthSs;
         Lattice::VertexDescriptor target = lattice_.getEdgeTarget(edge);
         if (lattice_.isLooseVertex(target)) {
-            lengthSs << "*@";
-            lengthSs << lattice_.getLooseVertexIndex(target);
+            lengthSs << "*@" << lattice_.getLooseVertexIndex(target);
         } else if (lattice_.isLooseVertex(source)) {
             lengthSs << "*";
             lengthSs << std::right << std::setfill('0') << std::setw(4);

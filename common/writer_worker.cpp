@@ -23,24 +23,6 @@ unsigned int WriterWorker::alignOutput_(std::string output, unsigned int pos, ch
     return currentPos_;
 }
 
-unsigned int WriterWorker::alignOutput_(unsigned int output, unsigned int pos, char padChar) {
-    unsigned int number = output;
-    int numDigits = 0;
-    while (number > 0) {
-        ++numDigits;
-        number /= 10;
-    }
-    if (output == 0) {
-        numDigits = 1;
-    }
-    for (; currentPos_ < pos - numDigits; ++currentPos_) {
-        outputStream_ << padChar;
-    }
-    outputStream_ << output;
-    currentPos_ += numDigits;
-    return currentPos_;
-}
-
 unsigned int WriterWorker::alignOutputNewline_() {
     outputStream_ << std::endl;
     currentPos_ = 0;

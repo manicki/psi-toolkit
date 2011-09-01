@@ -27,13 +27,6 @@ protected:
     unsigned int alignOutput_(std::string output, unsigned int pos, char padChar = ' ');
 
     /**
-     * Prints output to outputStream_ and aligns cursor to the required position (pos) if possible.
-     * Numbers are aligned right.
-     * Returns the real new cursor position.
-     */
-    unsigned int alignOutput_(unsigned int output, unsigned int pos, char padChar = ' ');
-
-    /**
      * Prints newline to outputStream_ and resets cursor position.
      * Returns the new cursor position (zero).
      */
