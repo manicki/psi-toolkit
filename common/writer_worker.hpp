@@ -15,13 +15,21 @@ public:
 protected:
     std::ostream& outputStream_;
 
-    int currentPos_;
+    unsigned int currentPos_;
 
     /**
      * Prints output to outputStream_ and aligns cursor to the required position (pos) if possible.
+     * Strings are aligned left.
      * Returns the real new cursor position.
      */
-    int alignOutput_(std::string output, int pos);
+    unsigned int alignOutput_(std::string output, unsigned int pos, char padChar = ' ');
+
+    /**
+     * Prints output to outputStream_ and aligns cursor to the required position (pos) if possible.
+     * Numbers are aligned right.
+     * Returns the real new cursor position.
+     */
+    unsigned int alignOutput_(unsigned int output, unsigned int pos, char padChar = ' ');
 
 };
 
