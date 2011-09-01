@@ -173,7 +173,7 @@ Lattice::EdgeDescriptor Lattice::addEdge(
             && tags == getSymbolTag_()
         ) {
             try {
-                EdgeDescriptor ed = firstOutEdge(from, getLayerTagManager().getMask(getSymbolTag_()));
+                firstOutEdge(from, getLayerTagManager().getMask(getSymbolTag_()));
                 visibleImplicitOutEdges_[from] = true;
             } catch (NoEdgeException) {
             }
