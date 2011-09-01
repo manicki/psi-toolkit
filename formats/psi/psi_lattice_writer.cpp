@@ -177,30 +177,21 @@ void PsiLatticeWriter::Worker::doRun() {
             ) {
                 if (partitionBeginning) {
                     if (
-                        lattice_.getEdgeLayerTags(*ei)
-                            == lattice_.getLayerTagManager().createSingletonTagCollection("symbol")
+                        lattice_.isEdgeHidden(*ei)
                     ) {
                         isDefaultPartition = true;
                     }
                     partitionBeginning = false;
                 } else {
                     if (
-                        lattice_.getEdgeLayerTags(*ei)
-                            != lattice_.getLayerTagManager().createSingletonTagCollection("symbol")
+                        !lattice_.isEdgeHidden(*ei)
                     ) {
                         isDefaultPartition = false;
                     }
                     linkSs << "-";
                 }
                 std::map<Lattice::EdgeDescriptor, int>::iterator mi = edgeOrdinalMap.find(*ei);
-                if (mi == edgeOrdinalMap.end()) {
-                    if (
-                        lattice_.getEdgeLayerTags(*ei)
-                            != lattice_.getLayerTagManager().createSingletonTagCollection("symbol")
-                    ) {
-                        linkSs << "?";
-                    }
-                } else {
+                if (mi != edgeOrdinalMap.end()) {
                     linkSs << (*mi).second;
                 }
             }
