@@ -607,5 +607,24 @@ public:
         TS_ASSERT(!iter.hasNext());
     }
 
+    void testCorrections() {
+        //preparing lattice
+        Lattice lattice("cear");
+        lattice.addSymbols(lattice.getFirstVertex(), lattice.getLastVertex());
+
+        lattice.correctionErase(
+            lattice.getVertexForRawCharIndex(1),
+            lattice.getVertexForRawCharIndex(2)
+        );
+
+        LayerTagCollection
+            raw_tag = lattice.getLayerTagManager().createSingletonTagCollection("symbol");
+        LayerTagMask rawMask = lattice.getLayerTagManager().getMask(raw_tag);
+
+        boost::scoped_ptr<LatticeWriter> writer(new PsiLatticeWriter());
+
+        writer->writeLattice(lattice, std::cout);
+    }
+
 
 };
