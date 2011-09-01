@@ -15,6 +15,14 @@ public:
 protected:
     std::ostream& outputStream_;
 
+    int currentPos_;
+
+    /**
+     * Prints output to outputStream_ and aligns cursor to the required position (pos) if possible.
+     * Returns the real new cursor position.
+     */
+    int alignOutput_(std::string output, int pos);
+
 };
 
 #endif
