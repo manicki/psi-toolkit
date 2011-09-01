@@ -212,7 +212,7 @@ int Rule::matchPattern(std::string &sentenceString, int matchNumber,
         //before += matched.prefix(); //before + matched.prefix();
         before += prefix;
         //start = matched[0].second;
-        start = prefix_len + 1;
+//        start = prefix_len + 1;
         //flags |= boost::match_prev_avail;
         //flags |= boost::match_not_bob;
         std::string matching = "";
