@@ -31,7 +31,7 @@
     fun:_ZN7CxxTest10TestRunner8runSuiteERNS_16SuiteDescriptionE
 }
 {
-    memcpy overlap in re2
+    memcpy overlap in re2 find and consume N
     Memcheck:Overlap
     fun:memcpy
     obj:/usr/lib/libre2.so.0.0.0
@@ -42,9 +42,9 @@
     obj:/usr/lib/libre2.so.0.0.0
     obj:/usr/lib/libre2.so.0.0.0
     fun:_ZNK3re23RE25MatchERKNS_11StringPieceEiiNS0_6AnchorEPS1_i
+    obj:/usr/lib/libre2.so.0.0.0
+    fun:_ZN3re23RE215FindAndConsumeNEPNS_11StringPieceERKS0_PKPKNS0_3ArgEi
     fun:_ZN6poleng6bonsai6puddle4Rule12matchPatternERSsiS3_RSt6vectorIN3re211StringPieceESaIS6_EE
-    fun:_ZN6poleng6bonsai6puddle11RuleMatcher10applyRulesERSsR7Lattice
-    fun:_ZN6poleng6bonsai6puddle6Puddle5parseER7Lattice
 }
 {
     memcpy overlap in re2
