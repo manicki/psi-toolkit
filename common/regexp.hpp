@@ -94,6 +94,10 @@ class PCREWrapper : private pcrecpp::RE {
             return ((pcrecpp::RE)(*this)).NumberOfCapturingGroups();
         }
 
+        bool ok() const {
+            return true;
+        }
+
         //@todo: any other methods of pcrecpp::RE ?
 };
 #endif
