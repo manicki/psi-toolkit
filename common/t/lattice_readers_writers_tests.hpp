@@ -187,12 +187,18 @@ public:
         prepareSimpleLattice_(lattice);
 
         std::map<std::string, std::string> tagsSeparators;
+        tagsSeparators["token"] = "\n";
 
         boost::scoped_ptr<LatticeWriter> writer(new SimpleLatticeWriter(
             false,
             false,
+            "symbol",
+            " ",
+            "|",
             tagsSeparators
         ));
+
+        writer->writeLattice(lattice, std::cout);
 
         std::ostringstream osstr;
         writer->writeLattice(lattice, osstr);

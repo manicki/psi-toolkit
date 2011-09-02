@@ -20,6 +20,9 @@ LatticeWriter* SimpleLatticeWriter::Factory::doCreateLatticeWriter(
     return new SimpleLatticeWriter(
         vm.count("linear"),
         vm.count("no-alts"),
+        vm.count("tag") ? (vm["tag"].as<std::string>()) : "token",
+        vm.count("sep") ? (vm["sep"].as<std::string>()) : " ",
+        vm.count("alt-sep") ? (vm["alt-sep"].as<std::string>()) : "|",
         tagsSeparators
     );
 }
@@ -28,8 +31,11 @@ boost::program_options::options_description SimpleLatticeWriter::Factory::doOpti
     boost::program_options::options_description optionsDescription("Allowed options");
 
     optionsDescription.add_options()
+        ("alt-sep", "alternative edges separator")
         ("linear", "skips cross-edges")
         ("no-alts", "skips alternative edges")
+        ("sep", "basic tag separator")
+        ("tag", "basic tag")
         ;
 
     return optionsDescription;
@@ -53,7 +59,54 @@ SimpleLatticeWriter::Worker::Worker(SimpleLatticeWriter& processor,
 
 void SimpleLatticeWriter::Worker::doRun() {
 
-    //TODO
+    Lattice::VertexIterator vi(lattice_);
+    Lattice::VertexDescriptor vd = lattice_.getFirstVertex();
+    Lattice::EdgeDescriptor edge;
+
+    std::map<std::string, Lattice::VertexDescriptor> targets;
+    for (
+        std::map<std::string, std::string>::iterator mi = processor_.getTagsSeparatorsMap().begin();
+        mi != processor_.getTagsSeparatorsMap().end();
+        ++mi
+    ) {
+        targets[(*mi).first] = vd;
+    }
+
+    while (processor_.isLinear() ? (vd != lattice_.getLastVertex()) : vi.hasNext()) {
+        if (!processor_.isLinear()) {
+            vd = vi.next();
+        }
+        std::stringstream vertexSs;
+        std::stringstream sepSs;
+        Lattice::InOutEdgesIterator oei
+            = lattice_.outEdges(vd, lattice_.getLayerTagManager().anyTag());
+        while(oei.hasNext()) {
+            edge = oei.next();
+            std::list<std::string> tags
+                = lattice_.getLayerTagManager().getTagNames(lattice_.getEdgeLayerTags(edge));
+            for (
+                std::list<std::string>::iterator ti = tags.begin();
+                ti != tags.end();
+                ++ti
+            ) {
+                if (processor_.getBasicTag() == *ti) {
+                    if (vertexSs.str() != "") {
+                        vertexSs << processor_.getAltSeparator();
+                    }
+                    vertexSs << lattice_.getAnnotationCategory(edge);
+                }
+                if (processor_.isHandledTag(*ti) && targets[*ti] == vd) {
+                    targets[*ti] = lattice_.getEdgeTarget(edge);
+                    sepSs << processor_.getTagSeparator(*ti);
+                }
+            }
+        }
+        alignOutput_(vertexSs.str());
+        alignOutput_(sepSs.str());
+        if (processor_.isLinear()) {
+            vd = lattice_.getEdgeTarget(edge);
+        }
+    }
 
 }
 

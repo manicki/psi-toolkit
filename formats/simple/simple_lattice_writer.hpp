@@ -24,15 +24,25 @@ public:
     SimpleLatticeWriter(
         bool linear,
         bool noAlts,
+        std::string basicTag,
+        std::string basicTagSeparator,
+        std::string altSeparator,
         std::map<std::string, std::string> tagsSeparators
     ) :
         linear_(linear),
         noAlts_(noAlts),
+        basicTag_(basicTag),
+        basicTagSeparator_(basicTagSeparator),
+        altSeparator_(altSeparator),
         tagsSeparators_(tagsSeparators)
     { }
 
     bool isLinear() { return linear_; }
     bool isNoAlts() { return noAlts_; }
+    std::string getBasicTag() { return basicTag_; }
+    std::string getBasicTagSeparator() { return basicTagSeparator_; }
+    std::string getAltSeparator() { return altSeparator_; }
+    std::map<std::string, std::string> getTagsSeparatorsMap() { return tagsSeparators_; }
 
     bool isHandledTag(std::string tagName) {
         return tagsSeparators_.find(tagName) != tagsSeparators_.end();
@@ -65,6 +75,9 @@ private:
 
     bool linear_;
     bool noAlts_;
+    std::string basicTag_;
+    std::string basicTagSeparator_;
+    std::string altSeparator_;
     std::map<std::string, std::string> tagsSeparators_;
 
 };
