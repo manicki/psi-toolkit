@@ -118,27 +118,47 @@ void RuleModifier::setMatch(size_t ruleIndex, std::string match)
         std::vector<std::string> tokensModifiers;
         std::vector<bool> tokensRequired;
         std::vector<int> matchedIndices;
+#if HAVE_RE2
         NegativePatternStrings negativePatterns;
+#endif
         int bracketCount = 0;
         int size;
         std::string compiled = "";
         if (rules->at(ruleIndex)->getLeftCount() > 0)
         {
             std::string tmp = rules->at(ruleIndex)->getLeft();
+#if HAVE_RE2
             compiled = ruleCompiler->compileRulePattern(tmp, size,
                     tokensPatterns, tokensModifiers, tokensRequired,
                     matchedIndices, bracketCount, negativePatterns);
+#else
+            compiled = ruleCompiler->compileRulePattern(tmp, size,
+                    tokensPatterns, tokensModifiers, tokensRequired,
+                    matchedIndices, bracketCount);
+#endif
         }
+#if HAVE_RE2
         compiled += ruleCompiler->compileRulePattern(match, size,
                 tokensPatterns, tokensModifiers, tokensRequired,
                 matchedIndices, bracketCount, negativePatterns);
+#else
+        compiled += ruleCompiler->compileRulePattern(match, size,
+                tokensPatterns, tokensModifiers, tokensRequired,
+                matchedIndices, bracketCount);
+#endif
         rules->at(ruleIndex)->setMatchCount(size);
         if (rules->at(ruleIndex)->getRightCount() > 0)
         {
             std::string tmp = rules->at(ruleIndex)->getRight();
+#if HAVE_RE2
             compiled += ruleCompiler->compileRulePattern(tmp, size,
                     tokensPatterns, tokensModifiers, tokensRequired,
                     matchedIndices, bracketCount, negativePatterns);
+#else
+            compiled += ruleCompiler->compileRulePattern(tmp, size,
+                    tokensPatterns, tokensModifiers, tokensRequired,
+                    matchedIndices, bracketCount);
+#endif
         }
         rules->at(ruleIndex)->setMatch(match);
         rules->at(ruleIndex)->setTokensPatterns(tokensPatterns);
@@ -157,24 +177,44 @@ void RuleModifier::setLeftContext(size_t ruleIndex, std::string context)
         std::vector<std::string> tokensModifiers;
         std::vector<bool> tokensRequired;
         std::vector<int> matchedIndices;
+#if HAVE_RE2
         NegativePatternStrings negativePatterns;
+#endif
         int bracketCount = 0;
         int size;
         std::string compiled = "";
+#if HAVE_RE2
         compiled = ruleCompiler->compileRulePattern(context, size,
                 tokensPatterns, tokensModifiers, tokensRequired,
                 matchedIndices, bracketCount, negativePatterns);
+#else
+        compiled = ruleCompiler->compileRulePattern(context, size,
+                tokensPatterns, tokensModifiers, tokensRequired,
+                matchedIndices, bracketCount);
+#endif
         rules->at(ruleIndex)->setLeftCount(size);
         std::string tmp = rules->at(ruleIndex)->getMatch();
+#if HAVE_RE2
         compiled += ruleCompiler->compileRulePattern(tmp, size,
                 tokensPatterns, tokensModifiers, tokensRequired,
                 matchedIndices, bracketCount, negativePatterns);
+#else
+        compiled += ruleCompiler->compileRulePattern(tmp, size,
+                tokensPatterns, tokensModifiers, tokensRequired,
+                matchedIndices, bracketCount);
+#endif
         if (rules->at(ruleIndex)->getRightCount() > 0)
         {
             std::string tmp = rules->at(ruleIndex)->getRight();
+#if HAVE_RE2
             compiled += ruleCompiler->compileRulePattern(tmp, size,
                     tokensPatterns, tokensModifiers, tokensRequired,
                     matchedIndices, bracketCount, negativePatterns);
+#else
+            compiled += ruleCompiler->compileRulePattern(tmp, size,
+                    tokensPatterns, tokensModifiers, tokensRequired,
+                    matchedIndices, bracketCount);
+#endif
         }
         rules->at(ruleIndex)->setLeft(context);
         rules->at(ruleIndex)->setTokensPatterns(tokensPatterns);
@@ -193,24 +233,44 @@ void RuleModifier::setRightContext(size_t ruleIndex, std::string context)
         std::vector<std::string> tokensModifiers;
         std::vector<bool> tokensRequired;
         std::vector<int> matchedIndices;
+#if HAVE_RE2
         NegativePatternStrings negativePatterns;
+#endif
         int bracketCount = 0;
         int size;
         std::string compiled = "";
         if (rules->at(ruleIndex)->getLeftCount() > 0)
         {
             std::string tmp = rules->at(ruleIndex)->getLeft();
+#if HAVE_RE2
             compiled = ruleCompiler->compileRulePattern(tmp, size,
                     tokensPatterns, tokensModifiers, tokensRequired,
                     matchedIndices, bracketCount, negativePatterns);
+#else
+            compiled = ruleCompiler->compileRulePattern(tmp, size,
+                    tokensPatterns, tokensModifiers, tokensRequired,
+                    matchedIndices, bracketCount);
+#endif
         }
         std::string tmp = rules->at(ruleIndex)->getMatch();
+#if HAVE_RE2
         compiled += ruleCompiler->compileRulePattern(tmp, size,
                 tokensPatterns, tokensModifiers, tokensRequired,
                 matchedIndices, bracketCount, negativePatterns);
+#else
+        compiled += ruleCompiler->compileRulePattern(tmp, size,
+                tokensPatterns, tokensModifiers, tokensRequired,
+                matchedIndices, bracketCount);
+#endif
+#if HAVE_RE2
         compiled += ruleCompiler->compileRulePattern(context, size,
                 tokensPatterns, tokensModifiers, tokensRequired,
                 matchedIndices, bracketCount, negativePatterns);
+#else
+        compiled += ruleCompiler->compileRulePattern(context, size,
+                tokensPatterns, tokensModifiers, tokensRequired,
+                matchedIndices, bracketCount);
+#endif
         rules->at(ruleIndex)->setRightCount(size);
         rules->at(ruleIndex)->setRight(context);
         rules->at(ruleIndex)->setTokensPatterns(tokensPatterns);
