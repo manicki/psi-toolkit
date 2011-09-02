@@ -405,6 +405,10 @@ public:
 
     int getLooseVertexIndex(VertexDescriptor vd) const;
 
+    void correctionInsert(VertexDescriptor here, std::string text);
+    void correctionErase(VertexDescriptor from, VertexDescriptor to);
+    void correctionReplace(VertexDescriptor from, VertexDescriptor to, std::string text);
+
 private:
 
     Graph graph_;

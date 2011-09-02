@@ -4,6 +4,7 @@
 
 #include "psi_lattice_reader.hpp"
 #include "psi_lattice_writer.hpp"
+#include "simple_lattice_writer.hpp"
 #include "utt_lattice_reader.hpp"
 
 #include "config.h"
@@ -24,97 +25,97 @@ public:
         Lattice::EdgesSortedBySourceIterator rei = lattice.edgesSortedBySource(rawMask);
 
         TS_ASSERT(rei.hasNext());
-        TS_ASSERT_EQUALS(lattice.getEdgeAnnotationItem(rei.next()).getCategory(), "A");
+        TS_ASSERT_EQUALS(lattice.getAnnotationCategory(rei.next()), "A");
         TS_ASSERT(rei.hasNext());
-        TS_ASSERT_EQUALS(lattice.getEdgeAnnotationItem(rei.next()).getCategory(), "m");
+        TS_ASSERT_EQUALS(lattice.getAnnotationCategory(rei.next()), "m");
         TS_ASSERT(rei.hasNext());
-        TS_ASSERT_EQUALS(lattice.getEdgeAnnotationItem(rei.next()).getCategory(), "e");
+        TS_ASSERT_EQUALS(lattice.getAnnotationCategory(rei.next()), "e");
         TS_ASSERT(rei.hasNext());
-        TS_ASSERT_EQUALS(lattice.getEdgeAnnotationItem(rei.next()).getCategory(), "l");
+        TS_ASSERT_EQUALS(lattice.getAnnotationCategory(rei.next()), "l");
         TS_ASSERT(rei.hasNext());
-        TS_ASSERT_EQUALS(lattice.getEdgeAnnotationItem(rei.next()).getCategory(), "i");
+        TS_ASSERT_EQUALS(lattice.getAnnotationCategory(rei.next()), "i");
         TS_ASSERT(rei.hasNext());
-        TS_ASSERT_EQUALS(lattice.getEdgeAnnotationItem(rei.next()).getCategory(), "e");
+        TS_ASSERT_EQUALS(lattice.getAnnotationCategory(rei.next()), "e");
         TS_ASSERT(rei.hasNext());
-        TS_ASSERT_EQUALS(lattice.getEdgeAnnotationItem(rei.next()).getCategory(), " ");
+        TS_ASSERT_EQUALS(lattice.getAnnotationCategory(rei.next()), " ");
         TS_ASSERT(rei.hasNext());
-        TS_ASSERT_EQUALS(lattice.getEdgeAnnotationItem(rei.next()).getCategory(), "a");
+        TS_ASSERT_EQUALS(lattice.getAnnotationCategory(rei.next()), "a");
         TS_ASSERT(rei.hasNext());
-        TS_ASSERT_EQUALS(lattice.getEdgeAnnotationItem(rei.next()).getCategory(), " ");
+        TS_ASSERT_EQUALS(lattice.getAnnotationCategory(rei.next()), " ");
         TS_ASSERT(rei.hasNext());
-        TS_ASSERT_EQUALS(lattice.getEdgeAnnotationItem(rei.next()).getCategory(), "u");
+        TS_ASSERT_EQUALS(lattice.getAnnotationCategory(rei.next()), "u");
         TS_ASSERT(rei.hasNext());
-        TS_ASSERT_EQUALS(lattice.getEdgeAnnotationItem(rei.next()).getCategory(), "n");
+        TS_ASSERT_EQUALS(lattice.getAnnotationCategory(rei.next()), "n");
         TS_ASSERT(rei.hasNext());
-        TS_ASSERT_EQUALS(lattice.getEdgeAnnotationItem(rei.next()).getCategory(), " ");
+        TS_ASSERT_EQUALS(lattice.getAnnotationCategory(rei.next()), " ");
         TS_ASSERT(rei.hasNext());
-        TS_ASSERT_EQUALS(lattice.getEdgeAnnotationItem(rei.next()).getCategory(), "c");
+        TS_ASSERT_EQUALS(lattice.getAnnotationCategory(rei.next()), "c");
         TS_ASSERT(rei.hasNext());
-        TS_ASSERT_EQUALS(lattice.getEdgeAnnotationItem(rei.next()).getCategory(), "h");
+        TS_ASSERT_EQUALS(lattice.getAnnotationCategory(rei.next()), "h");
         TS_ASSERT(rei.hasNext());
-        TS_ASSERT_EQUALS(lattice.getEdgeAnnotationItem(rei.next()).getCategory(), "a");
+        TS_ASSERT_EQUALS(lattice.getAnnotationCategory(rei.next()), "a");
         TS_ASSERT(rei.hasNext());
-        TS_ASSERT_EQUALS(lattice.getEdgeAnnotationItem(rei.next()).getCategory(), "t");
+        TS_ASSERT_EQUALS(lattice.getAnnotationCategory(rei.next()), "t");
         TS_ASSERT(rei.hasNext());
-        TS_ASSERT_EQUALS(lattice.getEdgeAnnotationItem(rei.next()).getCategory(), ".");
+        TS_ASSERT_EQUALS(lattice.getAnnotationCategory(rei.next()), ".");
         TS_ASSERT(rei.hasNext());
-        TS_ASSERT_EQUALS(lattice.getEdgeAnnotationItem(rei.next()).getCategory(), "Q");
+        TS_ASSERT_EQUALS(lattice.getAnnotationCategory(rei.next()), "Q");
         TS_ASSERT(rei.hasNext());
-        TS_ASSERT_EQUALS(lattice.getEdgeAnnotationItem(rei.next()).getCategory(), "u");
+        TS_ASSERT_EQUALS(lattice.getAnnotationCategory(rei.next()), "u");
         TS_ASSERT(rei.hasNext());
-        TS_ASSERT_EQUALS(lattice.getEdgeAnnotationItem(rei.next()).getCategory(), "e");
+        TS_ASSERT_EQUALS(lattice.getAnnotationCategory(rei.next()), "e");
         TS_ASSERT(rei.hasNext());
-        TS_ASSERT_EQUALS(lattice.getEdgeAnnotationItem(rei.next()).getCategory(), "l");
+        TS_ASSERT_EQUALS(lattice.getAnnotationCategory(rei.next()), "l");
         TS_ASSERT(rei.hasNext());
-        TS_ASSERT_EQUALS(lattice.getEdgeAnnotationItem(rei.next()).getCategory(), "l");
+        TS_ASSERT_EQUALS(lattice.getAnnotationCategory(rei.next()), "l");
         TS_ASSERT(rei.hasNext());
-        TS_ASSERT_EQUALS(lattice.getEdgeAnnotationItem(rei.next()).getCategory(), "e");
+        TS_ASSERT_EQUALS(lattice.getAnnotationCategory(rei.next()), "e");
         TS_ASSERT(rei.hasNext());
-        TS_ASSERT_EQUALS(lattice.getEdgeAnnotationItem(rei.next()).getCategory(), " ");
+        TS_ASSERT_EQUALS(lattice.getAnnotationCategory(rei.next()), " ");
         TS_ASSERT(rei.hasNext());
-        TS_ASSERT_EQUALS(lattice.getEdgeAnnotationItem(rei.next()).getCategory(), "â");
+        TS_ASSERT_EQUALS(lattice.getAnnotationCategory(rei.next()), "â");
         TS_ASSERT(rei.hasNext());
-        TS_ASSERT_EQUALS(lattice.getEdgeAnnotationItem(rei.next()).getCategory(), "g");
+        TS_ASSERT_EQUALS(lattice.getAnnotationCategory(rei.next()), "g");
         TS_ASSERT(rei.hasNext());
-        TS_ASSERT_EQUALS(lattice.getEdgeAnnotationItem(rei.next()).getCategory(), "e");
+        TS_ASSERT_EQUALS(lattice.getAnnotationCategory(rei.next()), "e");
 
         LayerTagMask tokenMask = lattice.getLayerTagManager().getMask("token");
         Lattice::EdgesSortedBySourceIterator tei = lattice.edgesSortedBySource(tokenMask);
 
         TS_ASSERT(tei.hasNext());
-        TS_ASSERT_EQUALS(lattice.getEdgeAnnotationItem(tei.next()).getCategory(), "Amelie");
+        TS_ASSERT_EQUALS(lattice.getAnnotationCategory(tei.next()), "Amelie");
         TS_ASSERT(tei.hasNext());
-        TS_ASSERT_EQUALS(lattice.getEdgeAnnotationItem(tei.next()).getCategory(), " ");
+        TS_ASSERT_EQUALS(lattice.getAnnotationCategory(tei.next()), " ");
         TS_ASSERT(tei.hasNext());
-        TS_ASSERT_EQUALS(lattice.getEdgeAnnotationItem(tei.next()).getCategory(), "a");
+        TS_ASSERT_EQUALS(lattice.getAnnotationCategory(tei.next()), "a");
         TS_ASSERT(tei.hasNext());
-        TS_ASSERT_EQUALS(lattice.getEdgeAnnotationItem(tei.next()).getCategory(), " ");
+        TS_ASSERT_EQUALS(lattice.getAnnotationCategory(tei.next()), " ");
         TS_ASSERT(tei.hasNext());
-        TS_ASSERT_EQUALS(lattice.getEdgeAnnotationItem(tei.next()).getCategory(), "un");
+        TS_ASSERT_EQUALS(lattice.getAnnotationCategory(tei.next()), "un");
         TS_ASSERT(tei.hasNext());
-        TS_ASSERT_EQUALS(lattice.getEdgeAnnotationItem(tei.next()).getCategory(), " ");
+        TS_ASSERT_EQUALS(lattice.getAnnotationCategory(tei.next()), " ");
         TS_ASSERT(tei.hasNext());
-        TS_ASSERT_EQUALS(lattice.getEdgeAnnotationItem(tei.next()).getCategory(), "chat");
+        TS_ASSERT_EQUALS(lattice.getAnnotationCategory(tei.next()), "chat");
         TS_ASSERT(tei.hasNext());
-        TS_ASSERT_EQUALS(lattice.getEdgeAnnotationItem(tei.next()).getCategory(), ".");
+        TS_ASSERT_EQUALS(lattice.getAnnotationCategory(tei.next()), ".");
         TS_ASSERT(tei.hasNext());
-        TS_ASSERT_EQUALS(lattice.getEdgeAnnotationItem(tei.next()).getCategory(), "Quelle");
+        TS_ASSERT_EQUALS(lattice.getAnnotationCategory(tei.next()), "Quelle");
         TS_ASSERT(tei.hasNext());
-        TS_ASSERT_EQUALS(lattice.getEdgeAnnotationItem(tei.next()).getCategory(), " ");
+        TS_ASSERT_EQUALS(lattice.getAnnotationCategory(tei.next()), " ");
         TS_ASSERT(tei.hasNext());
-        TS_ASSERT_EQUALS(lattice.getEdgeAnnotationItem(tei.next()).getCategory(), "âge");
+        TS_ASSERT_EQUALS(lattice.getAnnotationCategory(tei.next()), "âge");
 
         LayerTagMask sentenceMask = lattice.getLayerTagManager().getMask("sentence");
         Lattice::EdgesSortedBySourceIterator sei = lattice.edgesSortedBySource(sentenceMask);
 
         TS_ASSERT(sei.hasNext());
-        TS_ASSERT_EQUALS(lattice.getEdgeAnnotationItem(sei.next()).getCategory(),
+        TS_ASSERT_EQUALS(lattice.getAnnotationCategory(sei.next()),
             "Amelie a un chat.");
         TS_ASSERT(sei.hasNext());
-        TS_ASSERT_EQUALS(lattice.getEdgeAnnotationItem(sei.next()).getCategory(),
+        TS_ASSERT_EQUALS(lattice.getAnnotationCategory(sei.next()),
             "Quelle âge as-tu?");
         TS_ASSERT(sei.hasNext());
-        TS_ASSERT_EQUALS(lattice.getEdgeAnnotationItem(sei.next()).getCategory(),
+        TS_ASSERT_EQUALS(lattice.getAnnotationCategory(sei.next()),
             "Karol Józef Wojtyła est élu pape de l'Église catholique romaine le 16 octobre 1978.");
         TS_ASSERT(!sei.hasNext());
 
@@ -122,9 +123,92 @@ public:
 */
     }
 
+
     void testPsiLatticeWriterSimple() {
 
-        Lattice lattice("Ala ma słonia");
+        Lattice lattice;
+        prepareSimpleLattice_(lattice);
+
+        boost::scoped_ptr<LatticeWriter> writer(new PsiLatticeWriter());
+
+        std::ostringstream osstr;
+        writer->writeLattice(lattice, osstr);
+
+        std::string line;
+        std::string contents;
+        std::ifstream s(ROOT_DIR "formats/psi/t/files/pl_sample_simple.txt");
+        while (getline(s, line)) {
+            contents += line;
+            contents += "\n";
+        }
+
+        TS_ASSERT_EQUALS(osstr.str(), contents);
+
+    }
+
+
+    void testPsiLatticeWriterAdvanced() {
+
+        Lattice lattice;
+        prepareAdvancedLattice_(lattice);
+
+        boost::scoped_ptr<LatticeWriter> writer(new PsiLatticeWriter());
+
+        // writer->writeLattice(lattice, std::cout);
+
+        std::ostringstream osstr;
+        writer->writeLattice(lattice, osstr);
+
+        std::string line;
+        std::string contents;
+        std::ifstream s(ROOT_DIR "formats/psi/t/files/pl_sample_nocomments.txt");
+        while (getline(s, line)) {
+            contents += line;
+            contents += "\n";
+        }
+
+        TS_ASSERT_EQUALS(osstr.str(), contents);
+    }
+
+
+    void testPsiLatticeReader() {
+
+        Lattice lattice("");
+
+        boost::scoped_ptr<LatticeReader> reader(new PsiLatticeReader());
+
+        reader->readIntoLattice(ROOT_DIR "formats/psi/t/files/pl_sample.txt", lattice);
+    }
+
+
+    void testSimpleLatticeWriter() {
+
+        Lattice lattice;
+        prepareSimpleLattice_(lattice);
+
+        boost::scoped_ptr<LatticeWriter> writer(new SimpleLatticeWriter());
+
+        std::ostringstream osstr;
+        writer->writeLattice(lattice, osstr);
+
+        std::string line;
+        std::string contents;
+        std::ifstream s(ROOT_DIR "formats/simple/t/files/simple_ala.txt");
+        while (getline(s, line)) {
+            contents += line;
+            contents += "\n";
+        }
+
+        TS_ASSERT_EQUALS(osstr.str(), contents);
+
+    }
+
+
+private:
+
+    void prepareSimpleLattice_(Lattice & lattice) {
+
+        lattice.appendString("Ala ma słonia");
         lattice.addSymbols(lattice.getFirstVertex(), lattice.getLastVertex());
 
         Lattice::VertexDescriptor pre_ala = lattice.getFirstVertex();
@@ -212,26 +296,12 @@ public:
             lattice.addEdge(pre_slonia, post_slonia, word_token, token_tag, slonia_builder.build());
         }
 
-        boost::scoped_ptr<LatticeWriter> writer(new PsiLatticeWriter());
-
-        std::ostringstream osstr;
-        writer->writeLattice(lattice, osstr);
-
-        std::string line;
-        std::string contents;
-        std::ifstream s(ROOT_DIR "formats/psi/t/files/pl_sample_simple.txt");
-        while (getline(s, line)) {
-            contents += line;
-            contents += "\n";
-        }
-
-        TS_ASSERT_EQUALS(osstr.str(), contents);
-
     }
 
-    void testPsiLatticeWriterAdvanced() {
 
-        Lattice lattice("Ala ma&nbsp;<b>kta</b>.");
+    void prepareAdvancedLattice_(Lattice & lattice) {
+
+        lattice.appendString("Ala ma&nbsp;<b>kta</b>.");
         lattice.addSymbols(
             lattice.getFirstVertex(),
             lattice.getVertexForRawCharIndex(6)
@@ -506,32 +576,6 @@ public:
 
         lattice.addEdge(preAla, postStop, aiZdanie, parseGobioTag, zdanieBuilder.build());
 
-
-        boost::scoped_ptr<LatticeWriter> writer(new PsiLatticeWriter());
-
-        // writer->writeLattice(lattice, std::cout);
-
-        std::ostringstream osstr;
-        writer->writeLattice(lattice, osstr);
-
-        std::string line;
-        std::string contents;
-        std::ifstream s(ROOT_DIR "formats/psi/t/files/pl_sample_nocomments.txt");
-        while (getline(s, line)) {
-            contents += line;
-            contents += "\n";
-        }
-
-        TS_ASSERT_EQUALS(osstr.str(), contents);
-    }
-
-    void testPsiLatticeReader() {
-
-        Lattice lattice("");
-
-        boost::scoped_ptr<LatticeReader> reader(new PsiLatticeReader());
-
-        reader->readIntoLattice(ROOT_DIR "formats/psi/t/files/pl_sample.txt", lattice);
     }
 
 };

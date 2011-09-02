@@ -7,7 +7,7 @@
 07 0006 06    &nbsp;       token                             '_',type=blank[6]
 08 0012 03    <b>          html,markup                       open[]
 09 0015 *@0   k            symbol                k           'k
-10 0015 01    k            symbol                            'k
+10 0015 01    k            symbol                k           'k
 11 @0   *0016 o            symbol                o           'o
 12 0015 03    kta          token                 kta         'kta',type=word[10--]
 13 0015 03    kta          corrector,token       kota        'kota',type=word[9-11--]
