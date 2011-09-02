@@ -64,9 +64,10 @@ void SimpleLatticeWriter::Worker::doRun() {
     Lattice::EdgeDescriptor edge;
 
     std::map<std::string, Lattice::VertexDescriptor> targets;
+    std::map<std::string, std::string> tagsSeparators;
     for (
-        std::map<std::string, std::string>::iterator mi = processor_.getTagsSeparatorsMap().begin();
-        mi != processor_.getTagsSeparatorsMap().end();
+        std::map<std::string, std::string>::iterator mi = tagsSeparators.begin();
+        mi != tagsSeparators.end();
         ++mi
     ) {
         targets[(*mi).first] = vd;
@@ -101,8 +102,9 @@ void SimpleLatticeWriter::Worker::doRun() {
                 }
             }
         }
-        alignOutput_(vertexSs.str());
         alignOutput_(sepSs.str());
+        alignOutput_(vertexSs.str());
+        alignOutput_(processor_.getBasicTagSeparator());
         if (processor_.isLinear()) {
             vd = lattice_.getEdgeTarget(edge);
         }
