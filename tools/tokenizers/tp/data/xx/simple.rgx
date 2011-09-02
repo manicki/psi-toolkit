@@ -1,0 +1,14 @@
+
+@rule main_regex/main_regex := .+
+
+@def LETTER \p{L}
+@def DIGIT [0-9]
+
+@rule text/T := LETTER+
+
+@rule number/T := DIGIT+
+
+@rule blank/B := \s
+
+@rule punct/I := [,\.:;!?]
+

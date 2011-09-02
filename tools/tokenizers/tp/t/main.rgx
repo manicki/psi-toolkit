@@ -1,0 +1,10 @@
+
+@rule main_regex/main_regex := .
+
+@rule text/T := [a-z]+
+
+@include    rest
+
+@rule number/T := digit+
+
+

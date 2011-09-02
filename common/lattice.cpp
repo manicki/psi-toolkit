@@ -529,7 +529,7 @@ void Lattice::runCutter(Cutter& cutter, LayerTagMask mask) {
                 tags,
                 itemSequence);
 
-    } while (pos != std::string::npos);
+    } while (pos < text.length() && pos != std::string::npos);
 }
 
 Lattice::EdgeSequence Lattice::getPath(VertexDescriptor& vertex, LayerTagMask mask) {

@@ -115,8 +115,8 @@ if(CXXTEST_FOUND)
 	include_directories(${CXXTEST_INCLUDE_DIR})
 	enable_testing()
 
-	set(TESTS ${common-t})
-	set(T-TARGETS common common-test formats-psi formats-simple formats-txt formats-utt)
+	set(TESTS ${common-t} ${tools-tokenizers-tp-t})
+	set(T-TARGETS common common-test formats-psi formats-simple formats-txt formats-utt tools-tokenizers-tp)
 
 	if(USE_JAVA)
 		set(TESTS ${TESTS} ${morfologik-t})

@@ -1,0 +1,10 @@
+# vicious circle in definitions
+
+@def FOO BARa
+
+@def BAR BAZb
+
+@def BAZ FOOc
+
+@rule foo/T := FOO
+

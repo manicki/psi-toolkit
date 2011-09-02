@@ -1,0 +1,10 @@
+
+@rule foo/T := foo+
+
+@include "extra"
+
+@def digit [0-9]
+
+
+
+
