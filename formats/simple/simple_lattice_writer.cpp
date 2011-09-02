@@ -30,12 +30,12 @@ boost::program_options::options_description SimpleLatticeWriter::Factory::doOpti
 
 
 std::string SimpleLatticeWriter::Factory::doGetName() {
-    return "psi-writer";
+    return "simple-writer";
 }
 
 
 std::string SimpleLatticeWriter::doInfo() {
-    return "PSI writer";
+    return "Simple writer";
 }
 
 SimpleLatticeWriter::Worker::Worker(SimpleLatticeWriter& processor,
