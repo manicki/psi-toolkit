@@ -607,5 +607,192 @@ public:
         TS_ASSERT(!iter.hasNext());
     }
 
+    void testCorrectionErase() {
+        //preparing lattice
+        Lattice lattice("cear");
+        lattice.addSymbols(lattice.getFirstVertex(), lattice.getLastVertex());
+
+        lattice.correctionErase(
+            lattice.getVertexForRawCharIndex(1),
+            lattice.getVertexForRawCharIndex(2)
+        );
+
+        LayerTagMask rawMask = lattice.getLayerTagManager().getMask(
+            lattice.getLayerTagManager().createSingletonTagCollection("symbol")
+        );
+
+        Lattice::VertexDescriptor vd = lattice.getFirstVertex();
+        Lattice::InOutEdgesIterator ei = lattice.outEdges(vd, rawMask);
+        TS_ASSERT(ei.hasNext());
+        Lattice::EdgeDescriptor ed = ei.next();
+        while (lattice.getEdgeAnnotationItem(ed).getCategory() != "'c") {
+            TS_ASSERT(ei.hasNext());
+            ed = ei.next();
+        }
+        vd = lattice.getEdgeTarget(ed);
+        ei = lattice.outEdges(vd, rawMask);
+        TS_ASSERT(ei.hasNext());
+        ed = ei.next();
+        while (lattice.getEdgeAnnotationItem(ed).getCategory() != "'a") {
+            TS_ASSERT(ei.hasNext());
+            ed = ei.next();
+        }
+        vd = lattice.getEdgeTarget(ed);
+        ei = lattice.outEdges(vd, rawMask);
+        TS_ASSERT(ei.hasNext());
+        ed = ei.next();
+        while (lattice.getEdgeAnnotationItem(ed).getCategory() != "'r") {
+            TS_ASSERT(ei.hasNext());
+            ed = ei.next();
+        }
+    }
+
+    void testCorrectionInsert() {
+        //preparing lattice
+        Lattice lattice("cear");
+        lattice.addSymbols(lattice.getFirstVertex(), lattice.getLastVertex());
+
+        lattice.correctionInsert(
+            lattice.getVertexForRawCharIndex(2),
+            "z"
+        );
+
+        LayerTagMask rawMask = lattice.getLayerTagManager().getMask(
+            lattice.getLayerTagManager().createSingletonTagCollection("symbol")
+        );
+
+        Lattice::VertexDescriptor vd = lattice.getFirstVertex();
+        Lattice::InOutEdgesIterator ei = lattice.outEdges(vd, rawMask);
+        TS_ASSERT(ei.hasNext());
+        Lattice::EdgeDescriptor ed = ei.next();
+        while (lattice.getEdgeAnnotationItem(ed).getCategory() != "'c") {
+            TS_ASSERT(ei.hasNext());
+            ed = ei.next();
+        }
+        vd = lattice.getEdgeTarget(ed);
+        ei = lattice.outEdges(vd, rawMask);
+        TS_ASSERT(ei.hasNext());
+        ed = ei.next();
+        while (lattice.getEdgeAnnotationItem(ed).getCategory() != "'e") {
+            TS_ASSERT(ei.hasNext());
+            ed = ei.next();
+        }
+        vd = lattice.getEdgeTarget(ed);
+        ei = lattice.outEdges(vd, rawMask);
+        TS_ASSERT(ei.hasNext());
+        ed = ei.next();
+        while (lattice.getEdgeAnnotationItem(ed).getCategory() != "'z") {
+            TS_ASSERT(ei.hasNext());
+            ed = ei.next();
+        }
+        vd = lattice.getEdgeTarget(ed);
+        ei = lattice.outEdges(vd, rawMask);
+        TS_ASSERT(ei.hasNext());
+        ed = ei.next();
+        while (lattice.getEdgeAnnotationItem(ed).getCategory() != "'a") {
+            TS_ASSERT(ei.hasNext());
+            ed = ei.next();
+        }
+        vd = lattice.getEdgeTarget(ed);
+        ei = lattice.outEdges(vd, rawMask);
+        TS_ASSERT(ei.hasNext());
+        ed = ei.next();
+        while (lattice.getEdgeAnnotationItem(ed).getCategory() != "'r") {
+            TS_ASSERT(ei.hasNext());
+            ed = ei.next();
+        }
+    }
+
+    void testCorrectionReplace() {
+        //preparing lattice
+        Lattice lattice("cear");
+        lattice.addSymbols(lattice.getFirstVertex(), lattice.getLastVertex());
+
+        lattice.correctionReplace(
+            lattice.getVertexForRawCharIndex(1),
+            lattice.getVertexForRawCharIndex(2),
+            "z"
+        );
+
+        LayerTagMask rawMask = lattice.getLayerTagManager().getMask(
+            lattice.getLayerTagManager().createSingletonTagCollection("symbol")
+        );
+
+        Lattice::VertexDescriptor vd = lattice.getFirstVertex();
+        Lattice::InOutEdgesIterator ei = lattice.outEdges(vd, rawMask);
+        TS_ASSERT(ei.hasNext());
+        Lattice::EdgeDescriptor ed = ei.next();
+        while (lattice.getEdgeAnnotationItem(ed).getCategory() != "'c") {
+            TS_ASSERT(ei.hasNext());
+            ed = ei.next();
+        }
+        vd = lattice.getEdgeTarget(ed);
+        ei = lattice.outEdges(vd, rawMask);
+        TS_ASSERT(ei.hasNext());
+        ed = ei.next();
+        while (lattice.getEdgeAnnotationItem(ed).getCategory() != "'z") {
+            TS_ASSERT(ei.hasNext());
+            ed = ei.next();
+        }
+        vd = lattice.getEdgeTarget(ed);
+        ei = lattice.outEdges(vd, rawMask);
+        TS_ASSERT(ei.hasNext());
+        ed = ei.next();
+        while (lattice.getEdgeAnnotationItem(ed).getCategory() != "'a") {
+            TS_ASSERT(ei.hasNext());
+            ed = ei.next();
+        }
+        vd = lattice.getEdgeTarget(ed);
+        ei = lattice.outEdges(vd, rawMask);
+        TS_ASSERT(ei.hasNext());
+        ed = ei.next();
+        while (lattice.getEdgeAnnotationItem(ed).getCategory() != "'r") {
+            TS_ASSERT(ei.hasNext());
+            ed = ei.next();
+        }
+    }
+
+    void testCorrectionReplaceAdvanced() {
+        //preparing lattice
+        Lattice lattice("cear");
+        lattice.addSymbols(lattice.getFirstVertex(), lattice.getLastVertex());
+
+        lattice.correctionReplace(
+            lattice.getFirstVertex(),
+            lattice.getLastVertex(),
+            "czar"
+        );
+
+        LayerTagMask rawMask = lattice.getLayerTagManager().getMask(
+            lattice.getLayerTagManager().createSingletonTagCollection("symbol")
+        );
+
+        Lattice::VertexDescriptor vd = lattice.getFirstVertex();
+        Lattice::InOutEdgesIterator ei = lattice.outEdges(vd, rawMask);
+        TS_ASSERT(ei.hasNext());
+        Lattice::EdgeDescriptor ed = ei.next();
+        TS_ASSERT_EQUALS(lattice.getEdgeAnnotationItem(ed).getCategory(), "'c");
+
+        vd = lattice.getEdgeTarget(ed);
+        ei = lattice.outEdges(vd, rawMask);
+        TS_ASSERT(ei.hasNext());
+        ed = ei.next();
+        while (lattice.getEdgeAnnotationItem(ed).getCategory() != "'z") {
+            TS_ASSERT(ei.hasNext());
+            ed = ei.next();
+        }
+
+        vd = lattice.getEdgeTarget(ed);
+        ei = lattice.outEdges(vd, rawMask);
+        TS_ASSERT(ei.hasNext());
+        ed = ei.next();
+        TS_ASSERT_EQUALS(lattice.getEdgeAnnotationItem(ei.next()).getCategory(), "'a");
+
+        vd = lattice.getEdgeTarget(ed);
+        ei = lattice.outEdges(vd, rawMask);
+        TS_ASSERT(ei.hasNext());
+        ed = ei.next();
+        TS_ASSERT_EQUALS(lattice.getEdgeAnnotationItem(ei.next()).getCategory(), "'r");
+    }
 
 };
