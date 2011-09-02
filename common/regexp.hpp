@@ -43,9 +43,9 @@ class PCREWrapper;
 class PCREWrapper : private pcrecpp::RE {
     public:
         PCREWrapper(const std::string &pattern) :
-            pcrecpp::RE(pattern) {}
+            pcrecpp::RE(pattern, pcrecpp::UTF8()) {}
         PCREWrapper(const char *pattern) :
-            pcrecpp::RE(pattern) {}
+            pcrecpp::RE(pattern, pcrecpp::UTF8()) {}
 
         static bool FullMatchN(const StringPiece& text, const PCREWrapper& re,
                 const Arg* const args[], int argc);
