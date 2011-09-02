@@ -1,0 +1,97 @@
+{
+    memcpy overlap in pcre
+    Memcheck:Overlap
+    fun:memcpy
+    obj:/lib/libpcre.so.0.0.1
+    fun:pcre_compile2
+    fun:_ZN7pcrecpp2RE7CompileENS0_6AnchorE
+    fun:_ZN7pcrecpp2RE4InitERKSsPKNS_10RE_OptionsE
+    fun:_ZN7pcrecpp2REC1EPKcRKNS_10RE_OptionsE
+    fun:_ZN11PCREWrapperC1EPKc
+    fun:_ZN6poleng6bonsai6puddle6Tagset12readFromFileERSs
+    fun:_ZN6poleng6bonsai6puddle12TagsetLoader4loadESs
+    fun:_ZN11PuddleTests10testPuddleEv
+    fun:_ZN38TestDescription_PuddleTests_testPuddle7runTestEv
+    fun:_ZN7CxxTest19RealTestDescription3runEv
+}
+{
+    memcpy overlap in pcre
+    Memcheck:Overlap
+    fun:memcpy
+    obj:/lib/libpcre.so.0.0.1
+    obj:/lib/libpcre.so.0.0.1
+    fun:pcre_compile2
+    fun:_ZN7pcrecpp2RE7CompileENS0_6AnchorE
+    fun:_ZN7pcrecpp2RE4InitERKSsPKNS_10RE_OptionsE
+    fun:_ZN7pcrecpp2REC1EPKcRKNS_10RE_OptionsE
+    fun:_ZN11PCREWrapperC1EPKc
+    fun:_ZN6poleng6bonsai6puddle6Tagset12readFromFileERSs
+    fun:_ZN6poleng6bonsai6puddle12TagsetLoader4loadESs
+    fun:_ZN11PuddleTests10testPuddleEv
+    fun:_ZN38TestDescription_PuddleTests_testPuddle7runTestEv
+}
+{
+    memcpy overlap in pcre
+    Memcheck:Overlap
+    fun:memcpy
+    obj:/lib/libpcre.so.0.0.1
+    fun:pcre_compile2
+    fun:_ZN7pcrecpp2RE7CompileENS0_6AnchorE
+    fun:_ZN7pcrecpp2RE4InitERKSsPKNS_10RE_OptionsE
+    fun:_ZN7pcrecpp2REC1EPKcRKNS_10RE_OptionsE
+    fun:_ZN11PCREWrapperC1EPKc
+    fun:_ZN6poleng6bonsai6puddle6Tagset12readFromFileERSs
+    fun:_ZN6poleng6bonsai6puddle12TagsetLoader4loadESs
+    fun:_ZN11PuddleTests10testPuddleEv
+    fun:_ZN38TestDescription_PuddleTests_testPuddle7runTestEv
+    fun:_ZN7CxxTest19RealTestDescription3runEv
+}
+{
+    memcpy overlap in pcre
+    Memcheck:Overlap
+    fun:memcpy
+    obj:/lib/libpcre.so.0.0.1
+    obj:/lib/libpcre.so.0.0.1
+    obj:/lib/libpcre.so.0.0.1
+    fun:pcre_compile2
+    fun:_ZN7pcrecpp2RE7CompileENS0_6AnchorE
+    fun:_ZN7pcrecpp2RE4InitERKSsPKNS_10RE_OptionsE
+    fun:_ZN7pcrecpp2REC1EPKcRKNS_10RE_OptionsE
+    fun:_ZN11PCREWrapperC1EPKc
+    fun:_ZN6poleng6bonsai6puddle10RuleLoader17compileRuleActionERSsiiiSsRb
+    fun:_ZN6poleng6bonsai6puddle10RuleLoader12readFromFileERSs
+    fun:_ZN11PuddleTests10testPuddleEv
+}
+{
+    memcpy overlap in pcre
+    Memcheck:Overlap
+    fun:memcpy
+    fun:_ZNSs9_M_mutateEmmm
+    fun:_ZNSs15_M_replace_safeEmmPKcm
+    fun:_ZNSs7replaceEmmPKcm
+    fun:_ZNK7pcrecpp2RE7ReplaceERKNS_11StringPieceEPSs
+    fun:_ZN11PCREWrapper7ReplaceEPSsRKS_RKN7pcrecpp11StringPieceE
+    fun:_ZN6poleng6bonsai6puddle10RuleLoader17compileRuleActionERSsiiiSsRb
+    fun:_ZN6poleng6bonsai6puddle10RuleLoader12readFromFileERSs
+    fun:_ZN11PuddleTests10testPuddleEv
+    fun:_ZN38TestDescription_PuddleTests_testPuddle7runTestEv
+    fun:_ZN7CxxTest19RealTestDescription3runEv
+    fun:_ZN7CxxTest10TestRunner7runTestERNS_15TestDescriptionE
+}
+{
+    memcpy overlap in pcre
+    Memcheck:Overlap
+    fun:memcpy
+    obj:/lib/libpcre.so.0.0.1
+    obj:/lib/libpcre.so.0.0.1
+    obj:/lib/libpcre.so.0.0.1
+    fun:pcre_compile2
+    fun:_ZN7pcrecpp2RE7CompileENS0_6AnchorE
+    fun:_ZN7pcrecpp2RE4InitERKSsPKNS_10RE_OptionsE
+    fun:_ZN7pcrecpp2REC1ERKSsRKNS_10RE_OptionsE
+    fun:_ZN11PCREWrapperC1ERKSs
+    fun:_ZN6poleng6bonsai6puddle4Rule10setPatternESs
+    fun:_ZN6poleng6bonsai6puddle4RuleC1ESsSsiiiN5boost10shared_ptrISt6vectorINS4_INS1_6ActionEEESaIS7_EEEES5_ISsSaISsEESC_S5_IbSaIbEES5_IiSaIiEEbSsSsSs
+    fun:_ZN6poleng6bonsai6puddle10RuleLoader12readFromFileERSs
+}
+

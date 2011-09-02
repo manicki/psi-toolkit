@@ -3,7 +3,7 @@
 cd prj
 ./runner
 
-valgrind --xml=yes --xml-file=valgrind.xml --suppressions=./re2.supp ./runner
+valgrind --xml=yes --xml-file=valgrind.xml --suppressions=./re2.supp --suppressions=./pcre.supp ./runner
 xsltproc  ~/valgrind-reports-to-xunit/xslt/valgrind_transform.xsl valgrind.xml > valgrindTestResults.xml
 
 cd ..
