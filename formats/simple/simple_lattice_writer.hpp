@@ -37,12 +37,12 @@ public:
         tagsSeparators_(tagsSeparators)
     { }
 
-    bool isLinear() { return linear_; }
-    bool isNoAlts() { return noAlts_; }
-    std::string getBasicTag() { return basicTag_; }
-    std::string getBasicTagSeparator() { return basicTagSeparator_; }
-    std::string getAltSeparator() { return altSeparator_; }
-    std::map<std::string, std::string> getTagsSeparatorsMap() { return tagsSeparators_; }
+    bool isLinear() const { return linear_; }
+    bool isNoAlts() const { return noAlts_; }
+    std::string getBasicTag() const { return basicTag_; }
+    std::string getBasicTagSeparator() const { return basicTagSeparator_; }
+    std::string getAltSeparator() const { return altSeparator_; }
+    std::map<std::string, std::string> getTagsSeparatorsMap() const { return tagsSeparators_; }
 
     bool isHandledTag(std::string tagName) {
         return tagsSeparators_.find(tagName) != tagsSeparators_.end();
