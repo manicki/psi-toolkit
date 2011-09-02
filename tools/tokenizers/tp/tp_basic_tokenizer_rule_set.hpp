@@ -8,7 +8,7 @@
 #include <algorithm>
 #include <exception>
 
-#include <boost/scoped_ptr.hpp>
+#include <boost/shared_ptr.hpp>
 
 #include "regexp.hpp"
 
@@ -37,7 +37,7 @@ public:
     std::string getRegexCategory(std::string &name) const;
     size_t getRegexCount() const;
 
-    void addRegex(PerlRegExp *regex, std::string &category, std::string &name);
+    void addRegex(boost::shared_ptr<PerlRegExp> regex, std::string &category, std::string &name);
     bool load(std::string fileName);
 
     TPBasicTokenizerRuleSet();
@@ -49,7 +49,7 @@ private:
     struct _regex {
         std::string category;
         std::string name;
-        PerlRegExp* reg;
+        boost::shared_ptr<PerlRegExp> reg;
     };
 
     struct stackElem {
@@ -205,7 +205,7 @@ private:
     void readEndIf(std::list<IfElem> &ifstack);
 
     std::vector<_regex> regs;
-    boost::scoped_ptr<PerlRegExp> mainRegex;
+    boost::shared_ptr<PerlRegExp> mainRegex;
 
     const static size_t MAXSTACKSIZE;
 

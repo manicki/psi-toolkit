@@ -312,18 +312,17 @@ void TPBasicTokenizerRuleSet::readRule(
     _regex r;
     ureg = "^("+ureg+")";
 
-    r.reg = new PerlRegExp(ureg);
-    r.category = ucat;
-    r.name = uname;
-    if(!r.reg->ok())
+    boost::shared_ptr<PerlRegExp> reg(new PerlRegExp(ureg));
+
+    if(!reg->ok())
     	throw TPTokenizerException(std::string("regex cannot be compiled: \n|")
                                    + ureg
                                    + std::string("| \nw: ")+context);
     else {
         if(uname == MAIN_REGEX_NAME)
-            mainRegex.reset(r.reg);
+            mainRegex = reg;
         else
-            addRegex(r.reg,ucat,uname);
+            addRegex(reg, ucat, uname);
     }
 }
 
@@ -858,13 +857,13 @@ PerlRegExp* TPBasicTokenizerRuleSet::getMainRegex() {
 }
 
 PerlRegExp* TPBasicTokenizerRuleSet::getRegex(size_t i) {
-    return regs[i].reg;
+    return regs[i].reg.get();
 }
 
 PerlRegExp* TPBasicTokenizerRuleSet::getRegex(std::string &name) {
     for (size_t i=0;i<regs.size();++i) {
         if (regs[i].name == name)
-            return regs[i].reg;
+            return regs[i].reg.get();
     }
     return NULL;
 }
@@ -884,7 +883,8 @@ std::string TPBasicTokenizerRuleSet::getRegexCategory(std::string &name) const {
     return std::string("");
 }
 
-void TPBasicTokenizerRuleSet::addRegex(PerlRegExp *regex, std::string &category, std::string &name) {
+void TPBasicTokenizerRuleSet::addRegex(
+    boost::shared_ptr<PerlRegExp> regex, std::string &category, std::string &name) {
         _regex r;
         r.reg = regex;
         r.category = category;

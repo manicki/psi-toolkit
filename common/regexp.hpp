@@ -99,7 +99,7 @@ class PCREWrapper : private pcrecpp::RE {
         }
 
         const string& pattern() const {
-            return ((pcrecpp::RE)(*this)).pattern();
+            return ((const pcrecpp::RE&)(*this)).pattern();
         }
 
         //@todo: any other methods of pcrecpp::RE ?
