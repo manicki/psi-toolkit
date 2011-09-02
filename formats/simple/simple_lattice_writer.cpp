@@ -73,6 +73,9 @@ void SimpleLatticeWriter::Worker::doRun() {
         targets[(*mi).first] = vd;
     }
 
+    std::stringstream allSs;
+    std::stringstream blockSs;
+
     while (processor_.isLinear() ? (vd != lattice_.getLastVertex()) : vi.hasNext()) {
         if (!processor_.isLinear()) {
             vd = vi.next();
@@ -94,7 +97,7 @@ void SimpleLatticeWriter::Worker::doRun() {
                     if (vertexSs.str() != "") {
                         vertexSs << processor_.getAltSeparator();
                     }
-                    vertexSs << lattice_.getAnnotationCategory(edge);
+                    vertexSs << lattice_.getAnnotationText(edge);
                 }
                 if (processor_.isHandledTag(*ti) && targets[*ti] == vd) {
                     targets[*ti] = lattice_.getEdgeTarget(edge);
@@ -102,13 +105,25 @@ void SimpleLatticeWriter::Worker::doRun() {
                 }
             }
         }
-        alignOutput_(sepSs.str());
-        alignOutput_(vertexSs.str());
-        alignOutput_(processor_.getBasicTagSeparator());
+
+        if (sepSs.str() != "") {
+            allSs << blockSs.str();
+            if (allSs.str() != "") {
+                allSs << sepSs.str();
+            }
+            blockSs.str("");
+        }
+        if (blockSs.str() != "") {
+            blockSs << processor_.getBasicTagSeparator();
+        }
+        blockSs << vertexSs.str();
         if (processor_.isLinear()) {
             vd = lattice_.getEdgeTarget(edge);
         }
     }
+    alignOutput_(allSs.str());
+    alignOutput_(blockSs.str());
+    alignOutputNewline_();
 
 }
 
