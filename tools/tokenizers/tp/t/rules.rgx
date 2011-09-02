@@ -1,0 +1,25 @@
+
+# komentarz
+
+@rule main_regex/main_regex := .
+
+@rule text/T := [a-zA-Z]+
+
+@rule number/T := \d \  \d{3}
+
+# broken rule commented out: @rule [a-z
+
+@rule hashA/T := \# xyz # rule with a hash
+
+@rule hashB/T := \##just hash
+
+@rule space/B := \ 
+
+@def polskaLitera [a-zA-ZąćęłńóśźżĄĆĘŁŃÓŚŹŻ]
+
+@rule polski/T := polskaLitera +
+
+
+
+
+

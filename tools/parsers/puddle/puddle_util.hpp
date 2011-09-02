@@ -2,7 +2,7 @@
 #define PUDDLE_UTIL_H__
 
 #include <string>
-#include <re2/re2.h>
+//#include <re2/re2.h>
 
 #include <sstream>
 //#include "ParseGraph.hpp"

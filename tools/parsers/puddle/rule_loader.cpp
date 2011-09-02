@@ -186,7 +186,9 @@ RulesPtr RuleLoader::readFromFile(std::string &filename) //, LatticeWrapperPtr l
 
     std::vector<int> matchedIndices;
 
+#if HAVE_RE2
     NegativePatternStrings negativePatterns;
+#endif
 
     std::string chars = "";
 
@@ -224,12 +226,20 @@ RulesPtr RuleLoader::readFromFile(std::string &filename) //, LatticeWrapperPtr l
                 ActionsPtr actions = this->compileRuleAction(chars,
                         ruleLeftSize, ruleMatchSize, ruleRightSize, ruleName,
                         repeat); //, latticeWrapper);
+#if HAVE_RE2
                 RulePtr rule = RulePtr( new Rule(ruleName, rulePattern,
                             ruleLeftSize, ruleMatchSize, ruleRightSize,
                             actions, tokensPatterns, tokensModifiers,
                             tokensRequired, matchedIndices, repeat,
                             rulePatternLeft, rulePatternMatch, rulePatternRight,
                             negativePatterns) );
+#else
+                RulePtr rule = RulePtr( new Rule(ruleName, rulePattern,
+                            ruleLeftSize, ruleMatchSize, ruleRightSize,
+                            actions, tokensPatterns, tokensModifiers,
+                            tokensRequired, matchedIndices, repeat,
+                            rulePatternLeft, rulePatternMatch, rulePatternRight) );
+#endif
 //                std::cerr << "dodaje regule: " << ruleName << std::endl;
                 //rule.setActions...
 //                delete actions;
@@ -247,7 +257,9 @@ RulesPtr RuleLoader::readFromFile(std::string &filename) //, LatticeWrapperPtr l
                 tokensModifiers.clear();
                 tokensRequired.clear();
                 matchedIndices.clear();
+#if HAVE_RE2
                 negativePatterns.clear();
+#endif
                 rules->push_back(rule);
             }
             //zapisanie 'starej' reguly do wektora!
@@ -275,9 +287,15 @@ RulesPtr RuleLoader::readFromFile(std::string &filename) //, LatticeWrapperPtr l
                 {
                     //std::cout << "Kontekst lewy: " << chars << std::endl;
                     rulePatternLeft = chars;
+#if HAVE_RE2
                     rulePattern = this->compileRulePattern(chars, ruleLeftSize,
                             tokensPatterns, tokensModifiers, tokensRequired,
                             matchedIndices, bracketCount, negativePatterns);
+#else
+                    rulePattern = this->compileRulePattern(chars, ruleLeftSize,
+                            tokensPatterns, tokensModifiers, tokensRequired,
+                            matchedIndices, bracketCount);
+#endif
                     //rulePatternLeft = this->compileRuleMatch(chars, ruleLeftSize, tokensPatterns, tokensModifiers, tokensRequired, matchedIndexes, bracketCount);
                     //rulePattern = rulePatternLeft;
                     chars = "";
@@ -297,9 +315,15 @@ RulesPtr RuleLoader::readFromFile(std::string &filename) //, LatticeWrapperPtr l
             {
                 //std::cout << "Maczo: " << chars << std::endl;
                 rulePatternMatch = chars;
+#if HAVE_RE2
                 rulePattern += this->compileRulePattern(chars, ruleMatchSize,
                         tokensPatterns, tokensModifiers, tokensRequired,
                         matchedIndices, bracketCount, negativePatterns);
+#else
+                rulePattern += this->compileRulePattern(chars, ruleMatchSize,
+                        tokensPatterns, tokensModifiers, tokensRequired,
+                        matchedIndices, bracketCount);
+#endif
                 //rulePatternMatch = this->compileRuleMatch(chars, ruleMatchSize, tokensPatterns, tokensModifiers, tokensRequired, matchedIndexes, bracketCount);
                 //rulePattern += rulePatternMatch;
                 chars = "";
@@ -316,9 +340,15 @@ RulesPtr RuleLoader::readFromFile(std::string &filename) //, LatticeWrapperPtr l
                     //std::cout << "Maczo: " << chars << std::endl;
                     //std::cout << "Taki macz: " << chars << std::endl;
                     rulePatternMatch = chars;
+#if HAVE_RE2
                     rulePattern += this->compileRulePattern(chars, ruleMatchSize,
                             tokensPatterns, tokensModifiers, tokensRequired,
                             matchedIndices, bracketCount, negativePatterns);
+#else
+                    rulePattern += this->compileRulePattern(chars, ruleMatchSize,
+                            tokensPatterns, tokensModifiers, tokensRequired,
+                            matchedIndices, bracketCount);
+#endif
                     //rulePatternMatch = this->compileRuleMatch(chars, ruleMatchSize, tokensPatterns, tokensModifiers, tokensRequired, matchedIndexes, bracketCount);
                     //rulePattern += rulePatternMatch;
                     //std::cout << "taki wzorze: " << rulePattern << std::endl;
@@ -327,9 +357,15 @@ RulesPtr RuleLoader::readFromFile(std::string &filename) //, LatticeWrapperPtr l
                 {
                     //std::cout << "Kontekst prawy: " << chars << std::endl;
                     rulePatternRight = chars;
+#if HAVE_RE2
                     rulePattern += this->compileRulePattern(chars, ruleRightSize,
                             tokensPatterns, tokensModifiers, tokensRequired,
                             matchedIndices, bracketCount, negativePatterns);
+#else
+                    rulePattern += this->compileRulePattern(chars, ruleRightSize,
+                            tokensPatterns, tokensModifiers, tokensRequired,
+                            matchedIndices, bracketCount);
+#endif
                     //rulePatternRight = this->compileRuleMatch(chars, ruleRightSize, tokensPatterns, tokensModifiers, tokensRequired, matchedIndexes, bracketCount);
                     //rulePattern += rulePatternRight;
                 }
@@ -348,11 +384,18 @@ RulesPtr RuleLoader::readFromFile(std::string &filename) //, LatticeWrapperPtr l
         bool repeat = false;
         ActionsPtr actions = this->compileRuleAction(chars, ruleLeftSize,
                 ruleMatchSize, ruleRightSize, ruleName, repeat); //, latticeWrapper);
+#if HAVE_RE2
         RulePtr rule = RulePtr( new Rule(ruleName, rulePattern, ruleLeftSize,
                     ruleMatchSize, ruleRightSize, actions, tokensPatterns,
                     tokensModifiers, tokensRequired, matchedIndices, repeat,
                     rulePatternLeft, rulePatternMatch, rulePatternRight,
                     negativePatterns) );
+#else
+        RulePtr rule = RulePtr( new Rule(ruleName, rulePattern, ruleLeftSize,
+                    ruleMatchSize, ruleRightSize, actions, tokensPatterns,
+                    tokensModifiers, tokensRequired, matchedIndices, repeat,
+                    rulePatternLeft, rulePatternMatch, rulePatternRight) );
+#endif
 //        delete actions;
         //rule.setActions...
         rules->push_back(rule);
@@ -423,12 +466,20 @@ std::string RuleLoader::compileRuleName(std::string matched)
 
 }
 
+#if HAVE_RE2
 std::string RuleLoader::compileRulePattern(std::string &matched, int &size,
         std::vector<std::string> &tokensPatterns,
         std::vector<std::string> &tokensModifiers,
         std::vector<bool> &tokensRequired,
         std::vector<int> &matchedIndices, int &bracketCount,
         NegativePatternStrings &negativePatterns) {
+#else
+std::string RuleLoader::compileRulePattern(std::string &matched, int &size,
+        std::vector<std::string> &tokensPatterns,
+        std::vector<std::string> &tokensModifiers,
+        std::vector<bool> &tokensRequired,
+        std::vector<int> &matchedIndices, int &bracketCount) {
+#endif
     //boost::u32regex regMatch = boost::make_u32regex("^(Match|Left|Right)\\s*:\\s*");
     //boost::u32regex regWhite = boost::make_u32regex("\\s+");
     Pattern regMatch("^(Match|Left|Right)\\s*:\\s*");
@@ -461,7 +512,11 @@ std::string RuleLoader::compileRulePattern(std::string &matched, int &size,
     while ((token = getToken(matched, before)) != "")
     {
 
+#if HAVE_RE2
         std::string compiledToken = compileToken(token, negativePatterns);
+#else
+        std::string compiledToken = compileToken(token);
+#endif
         if (matched != "")
         {
             if (matched[0] == '+' || matched[0] == '*')
@@ -853,8 +908,13 @@ int RuleLoader::countTokens(std::string &matched)
     return count;
 }
 
+#if HAVE_RE2
 std::string RuleLoader::compileToken(std::string &token,
         NegativePatternStrings &negativePatterns, bool no_prefix) {
+#else
+std::string RuleLoader::compileToken(std::string &token,
+        bool no_prefix) {
+#endif
 
     if ((token[0] == '[') && (token[token.size() - 1] == ']'))
     {
@@ -943,7 +1003,11 @@ std::string RuleLoader::compileToken(std::string &token,
             {
                 //compiledHead = compileToken(head);
                 //compiledHead = compiledHead.substr(4, compiledHead.length() - 5);
+#if HAVE_RE2
                 compiledHead = compileToken(head, negativePatterns, true);
+#else
+                compiledHead = compileToken(head, true);
+#endif
             }
             else
                 //compiledHead = "<<t<[^<>]+<[^<>]+<[^>]+>";
@@ -978,7 +1042,11 @@ std::string RuleLoader::compileToken(std::string &token,
         }
         else if (key == "orth")
         {
+#if HAVE_RE2
             orth = compileOrthCondition(compOperator, value, icase, negativePatterns);
+#else
+            orth = compileOrthCondition(compOperator, value, icase);
+#endif
             if (orth == "")
             {
                 std::cerr << "EROR!" << std::endl;
@@ -1025,7 +1093,11 @@ std::string RuleLoader::compileToken(std::string &token,
             ss << "<" << orth;
         else
             ss << "<[^<>]+";
+#if HAVE_RE2
         ss << generateTokenPatternsString(tokenPatterns, negativePatterns);
+#else
+        ss << generateTokenPatternsString(tokenPatterns);
+#endif
         //ss << interpretationsToString(interps); //@todo: o tu - jak to jest puste to co?
     }
     ss << ">";
@@ -1909,8 +1981,13 @@ bool RuleLoader::compileAttributeCondition(std::string &key,
     return true;
 }*/
 
+#if HAVE_RE2
 std::string RuleLoader::compileOrthCondition(std::string &comparisonOperator,
         std::string &value, bool icase, NegativePatternStrings &negativePatterns) {
+#else
+std::string RuleLoader::compileOrthCondition(std::string &comparisonOperator,
+        std::string &value, bool icase) {
+#endif
 //    value = boost::regex_replace(value, regAmp, "\\&amp;", boost::match_default | boost::format_sed);
 //    value = boost::regex_replace(value, regLt, "\\&lt;", boost::match_default | boost::format_sed);
 //    value = boost::regex_replace(value, regGt, "\\&gt;", boost::match_default | boost::format_sed);
@@ -2020,6 +2097,7 @@ std::string RuleLoader::compileOrthCondition(std::string &comparisonOperator,
     if ((comparisonOperator == "~") || (comparisonOperator == "~~"))
         result = value;
     else if (comparisonOperator == "!~") {
+#if HAVE_RE2
         result = "(?P<";
         std::string negativePatternName = "neg";
         negativePatternName += boost::lexical_cast<std::string>(
@@ -2032,6 +2110,9 @@ std::string RuleLoader::compileOrthCondition(std::string &comparisonOperator,
                 std::pair<std::string, std::string>(
                     negativePatternName, value
                     ) );
+#else
+        result = "(?!" + value + ")[^<>]+";
+#endif
 
 //        result = "(?!" + value + ")[^<>]+";
     }
@@ -2043,8 +2124,12 @@ std::string RuleLoader::compileOrthCondition(std::string &comparisonOperator,
     return result;
 }
 
+#if HAVE_RE2
 std::string RuleLoader::generateTokenPatternsString(TokenPatterns tokenPatterns,
         NegativePatternStrings &negativePatterns) {
+#else
+std::string RuleLoader::generateTokenPatternsString(TokenPatterns tokenPatterns) {
+#endif
     //std::string result = "";
     std::stringstream ss;
     for (TokenPatterns::iterator patternIt = tokenPatterns.begin();
@@ -2054,6 +2139,7 @@ std::string RuleLoader::generateTokenPatternsString(TokenPatterns tokenPatterns,
         std::string pattern = "";
         if (patternIt->base.condition != "") {
             if (patternIt->base.negative) {
+#if HAVE_RE2
                 basePattern = "(?P<";
                 std::string negativePatternName = "neg";
                 negativePatternName += boost::lexical_cast<std::string>(
@@ -2066,6 +2152,9 @@ std::string RuleLoader::generateTokenPatternsString(TokenPatterns tokenPatterns,
                         std::pair<std::string, std::string>(
                             negativePatternName, patternIt->base.condition
                             ) );
+#else
+                basePattern = "(?!" + patternIt->base.condition + ")[^<>]+";
+#endif
             } else {
                 basePattern = patternIt->base.condition; //@todo: nie trzeba owinac w nawiasy jeszcze tego?
             }
@@ -2081,6 +2170,7 @@ std::string RuleLoader::generateTokenPatternsString(TokenPatterns tokenPatterns,
                         morphoPattern = "[^:<>]+";
                 }
                 if (partIt->negative) {
+#if HAVE_RE2
                     if (partIt == patternIt->parts.begin() ) //first part = part of speech
                         morphoPattern = "(?P<";
                     else
@@ -2096,6 +2186,14 @@ std::string RuleLoader::generateTokenPatternsString(TokenPatterns tokenPatterns,
                             std::pair<std::string, std::string>(
                                 negativePatternName, partIt->condition
                                 ) );
+#else
+                    if (partIt == patternIt->parts.begin() ) //first part = part of speech
+                        morphoPattern = "(?!";
+                    else
+                        morphoPattern += ":(?!"; //@todo: jak sie da :?(?P< to wtedy lapie takie, ktore nie maj danego atrybutu w ogole. ta wersja z obowiazkowym : wymusza wartosc atrybutu. pytanie, ktore dzialanie jest podejrzane. moze ustawic to po prostu jako parametr parsera, tak jak 'null agreement' dla unify czy etykiete dla nierozpoznanej czesci mowy ('ign')
+                    morphoPattern += partIt->condition;
+                    morphoPattern += ")[^<>]+";
+#endif
                 } else {
                     morphoPattern += partIt->condition; //@todo: nie trzeba owinac w nawiasy jeszcze tego?
                 }
@@ -2900,7 +2998,9 @@ RulePtr RuleLoader::compileRule(std::string ruleString) //, LatticeWrapperPtr la
 
     std::vector<int> matchedIndices;
 
+#if HAVE_RE2
     NegativePatternStrings negativePatterns;
+#endif
 
     std::string chars = "";
 
@@ -2952,9 +3052,15 @@ RulePtr RuleLoader::compileRule(std::string ruleString) //, LatticeWrapperPtr la
                 {
                     //std::cout << "Kontekst lewy: " << chars << std::endl;
                     rulePatternLeft = chars;
+#if HAVE_RE2
                     rulePattern = this->compileRulePattern(chars, ruleLeftSize,
                             tokensPatterns, tokensModifiers, tokensRequired,
                             matchedIndices, bracketCount, negativePatterns);
+#else
+                    rulePattern = this->compileRulePattern(chars, ruleLeftSize,
+                            tokensPatterns, tokensModifiers, tokensRequired,
+                            matchedIndices, bracketCount);
+#endif
                     //rulePatternLeft = this->compileRuleMatch(chars, ruleLeftSize, tokensPatterns, tokensModifiers, tokensRequired, matchedIndexes, bracketCount);
                     //rulePattern = rulePatternLeft;
                     chars = "";
@@ -2974,9 +3080,15 @@ RulePtr RuleLoader::compileRule(std::string ruleString) //, LatticeWrapperPtr la
             {
                 //std::cout << "Maczo: " << chars << std::endl;
                 rulePatternMatch = chars;
+#if HAVE_RE2
                 rulePattern += this->compileRulePattern(chars, ruleMatchSize,
                         tokensPatterns, tokensModifiers, tokensRequired,
                         matchedIndices, bracketCount, negativePatterns);
+#else
+                rulePattern += this->compileRulePattern(chars, ruleMatchSize,
+                        tokensPatterns, tokensModifiers, tokensRequired,
+                        matchedIndices, bracketCount);
+#endif
                 //rulePatternMatch = this->compileRuleMatch(chars, ruleMatchSize, tokensPatterns, tokensModifiers, tokensRequired, matchedIndexes, bracketCount);
                 //rulePattern += rulePatternMatch;
                 chars = "";
@@ -2993,9 +3105,15 @@ RulePtr RuleLoader::compileRule(std::string ruleString) //, LatticeWrapperPtr la
                     //std::cout << "Maczo: " << chars << std::endl;
                     //std::cout << "Taki macz: " << chars << std::endl;
                     rulePatternMatch = chars;
+#if HAVE_RE2
                     rulePattern += this->compileRulePattern(chars, ruleMatchSize,
                             tokensPatterns, tokensModifiers, tokensRequired,
                             matchedIndices, bracketCount, negativePatterns);
+#else
+                    rulePattern += this->compileRulePattern(chars, ruleMatchSize,
+                            tokensPatterns, tokensModifiers, tokensRequired,
+                            matchedIndices, bracketCount);
+#endif
                     //rulePatternMatch = this->compileRuleMatch(chars, ruleMatchSize, tokensPatterns, tokensModifiers, tokensRequired, matchedIndexes, bracketCount);
                     //rulePattern += rulePatternMatch;
                     //std::cout << "taki wzorze: " << rulePattern << std::endl;
@@ -3004,9 +3122,15 @@ RulePtr RuleLoader::compileRule(std::string ruleString) //, LatticeWrapperPtr la
                 {
                     //std::cout << "Kontekst prawy: " << chars << std::endl;
                     rulePatternRight = chars;
+#if HAVE_RE2
                     rulePattern += this->compileRulePattern(chars, ruleRightSize,
                             tokensPatterns, tokensModifiers, tokensRequired,
                             matchedIndices, bracketCount, negativePatterns);
+#else
+                    rulePattern += this->compileRulePattern(chars, ruleRightSize,
+                            tokensPatterns, tokensModifiers, tokensRequired,
+                            matchedIndices, bracketCount);
+#endif
                     //rulePatternRight = this->compileRuleMatch(chars, ruleRightSize, tokensPatterns, tokensModifiers, tokensRequired, matchedIndexes, bracketCount);
                     //rulePattern += rulePatternRight;
                 }
@@ -3025,11 +3149,18 @@ RulePtr RuleLoader::compileRule(std::string ruleString) //, LatticeWrapperPtr la
     ActionsPtr actions = this->compileRuleAction(chars, ruleLeftSize,
             ruleMatchSize, ruleRightSize, ruleName, repeat); //, latticeWrapper);
     //Rule *rule = new Rule(ruleName, rulePattern, ruleLeftSize, ruleMatchSize, ruleRightSize, *actions, tokensPatterns, tokensModifiers, tokensRequired, matchedIndexes, repeat, rulePatternLeft, rulePatternMatch, rulePatternRight);
+#if HAVE_RE2
     RulePtr rule = RulePtr( new Rule(ruleName, rulePattern, ruleLeftSize,
                 ruleMatchSize, ruleRightSize, actions, tokensPatterns,
                 tokensModifiers, tokensRequired, matchedIndices,
                 repeat, rulePatternLeft, rulePatternMatch, rulePatternRight,
                 negativePatterns ) );
+#else
+    RulePtr rule = RulePtr( new Rule(ruleName, rulePattern, ruleLeftSize,
+                ruleMatchSize, ruleRightSize, actions, tokensPatterns,
+                tokensModifiers, tokensRequired, matchedIndices,
+                repeat, rulePatternLeft, rulePatternMatch, rulePatternRight) );
+#endif
 //    delete actions;
     //rule.setActions...
     return rule;

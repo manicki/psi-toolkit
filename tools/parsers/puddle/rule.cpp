@@ -6,7 +6,7 @@
 #include "group_action.hpp"
 #include <exception>
 
-#include <re2/re2.h>
+//#include <re2/re2.h>
 
 namespace poleng
 {
@@ -40,12 +40,20 @@ Rule::Rule()
 //    match = NULL;
 }
 
+#if HAVE_RE2
 Rule::Rule( std::string aName, std::string aCompiled, int aLeftCount,
             int aMatchCount, int aRightCount, ActionsPtr aActions,
             std::vector<std::string> aTokensPatterns, std::vector<std::string> aTokensModifiers,
             std::vector<bool> aTokensRequired, std::vector<int> aMatchedIndices,
             bool aRepeat, std::string aLeft, std::string aMatch, std::string aRight,
             NegativePatternStrings aNegativePatterns ) {
+#else
+Rule::Rule( std::string aName, std::string aCompiled, int aLeftCount,
+            int aMatchCount, int aRightCount, ActionsPtr aActions,
+            std::vector<std::string> aTokensPatterns, std::vector<std::string> aTokensModifiers,
+            std::vector<bool> aTokensRequired, std::vector<int> aMatchedIndices,
+            bool aRepeat, std::string aLeft, std::string aMatch, std::string aRight) {
+#endif
 
     tokensPatterns.insert(tokensPatterns.begin(), aTokensPatterns.begin(), aTokensPatterns.end());// = new std::vector<std::string>(aTokensPatterns);
     tokensModifiers.insert(tokensModifiers.begin(), aTokensModifiers.begin(), aTokensModifiers.end());// = new std::vector<std::string>(aTokensModifiers);
@@ -82,6 +90,7 @@ Rule::Rule( std::string aName, std::string aCompiled, int aLeftCount,
 //    match_set = false;
 //    match = NULL;
 
+#if HAVE_RE2
     for (NegativePatternStrings::iterator negPatIt =
             aNegativePatterns.begin(); negPatIt != aNegativePatterns.end();
             ++ negPatIt) {
@@ -89,6 +98,7 @@ Rule::Rule( std::string aName, std::string aCompiled, int aLeftCount,
         negativePatterns.insert(std::pair<std::string, PatternPtr>(
                     negPatIt->first, negativePattern) );
     }
+#endif
 }
 
 Rule::~Rule()
@@ -175,14 +185,16 @@ int Rule::matchPattern(std::string &sentenceString, int matchNumber,
     //RE2 regPattern(pieklo);
     //RE2::Anchor anchor = RE2::UNANCHORED; // @todo: do czego to jest?
     int num_groups = pattern->NumberOfCapturingGroups();// + 1;
+#if HAVE_RE2
     std::map<std::string, int> namedGroups = pattern->NamedCapturingGroups();
+#endif
     //re2::StringPiece* matched = new re2::StringPiece[num_groups];
     //re2::StringPiece sentence_str(sentenceString);
     //StringPiece* matched = new StringPiece[num_groups];
     StringPiece* matchedS = new StringPiece[num_groups];
-    RegExp::Arg** matched = new RegExp::Arg*[num_groups]; //@todo: jak zadziala to zmienic na samo Arg
+    Arg** matched = new Arg*[num_groups]; //@todo: jak zadziala to zmienic na samo Arg
     for (int argIt = 0; argIt < num_groups; argIt ++) {
-        matched[argIt] = new RegExp::Arg;
+        matched[argIt] = new Arg;
         *matched[argIt] = &matchedS[argIt];
     }
     StringPiece sentence_str(sentenceString);
@@ -207,7 +219,8 @@ int Rule::matchPattern(std::string &sentenceString, int matchNumber,
     while ( RegExp::FindAndConsumeN( &sentence_str, *pattern, matched, num_groups ) ) { // @todo: tu nie bedzie chyba while tylko if, skoro bedzie parametrem odkad szukac, a nie ktore ogolnie dopasowanie ma byc wziete na warsztat
     //while (boost::u32regex_search(start, end, matched, *pattern, flags)) {
         //int prefix_len = matchedS[0].begin() - sentence_str.begin();
-        int prefix_len = matchedS[0].begin() - orig_str.begin();
+        //int prefix_len = matchedS[0].begin() - orig_str.begin();
+        int prefix_len = matchedS[0].data() - orig_str.data();
         std::string prefix = sentenceString.substr(0, prefix_len); //@todo: czy od start do prefix_len?
         //before += matched.prefix(); //before + matched.prefix();
         before += prefix;
@@ -229,6 +242,7 @@ int Rule::matchPattern(std::string &sentenceString, int matchNumber,
                 match.push_back(matchedS[i]);
             }
 
+#if HAVE_RE2
             if (! namedGroups.empty()) {
                 bool negPatternMatched = false;
                 for (std::map<std::string, int>::iterator namedGroupIt =
@@ -253,6 +267,7 @@ int Rule::matchPattern(std::string &sentenceString, int matchNumber,
                     continue;
                 }
             }
+#endif
 
             if (matching == "") {
                 delete[] matchedS;

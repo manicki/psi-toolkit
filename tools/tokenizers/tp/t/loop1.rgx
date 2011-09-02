@@ -1,0 +1,6 @@
+# simple loop in a definition
+
+@def FOO FOO
+
+@rule foo/T := FOO
+

@@ -3,6 +3,7 @@
 
 #include "annotator.hpp"
 #include "annotator_factory.hpp"
+#include "tp_basic_tokenizer_rule_set.hpp"
 
 class TpTokenizer : public Annotator {
 
@@ -24,6 +25,8 @@ public:
 
     };
 
+    TpTokenizer(const std::string& lang);
+
 private:
 
     class Worker : public LatticeWorker {
@@ -38,6 +41,7 @@ private:
 
     virtual std::string doInfo();
 
+    boost::scoped_ptr<TPBasicTokenizerRuleSet> ruleSet_;
 };
 
 #endif

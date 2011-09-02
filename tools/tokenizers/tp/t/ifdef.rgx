@@ -1,0 +1,31 @@
+
+@rule main_regex/main_regex := .+
+
+@def FOO 1
+
+@ifdef FOO
+@rule text/T := [a-z]+
+@else
+@rule text/T := \p{L}+
+@endif
+
+@ifdef BAR
+@rule number/T := \d+
+@else
+@rule number/T := [0-9]+
+@endif
+
+@ifndef BAZ
+@rule blank/B := \s
+@else
+@rule blank/B := \t
+@endif
+
+@ifdef FOO
+@rule bla/T := bla+
+@endif
+
+
+
+
+

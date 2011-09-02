@@ -54,12 +54,20 @@ class RuleLoader {
         ActionPtr compileAction(std::string actionString, RulePtr rule);
 //               LatticeWrapperPtr latticeWrapper);
 
+#if HAVE_RE2
         std::string compileRulePattern(std::string &matched, int &size,
                 std::vector<std::string> &tokensPatterns,
                 std::vector<std::string> &tokensModifiers,
                 std::vector<bool> &tokensRequired,
                 std::vector<int> &matchedIndices, int &bracketCount,
                 NegativePatternStrings &negativePatterns);
+#else
+        std::string compileRulePattern(std::string &matched, int &size,
+                std::vector<std::string> &tokensPatterns,
+                std::vector<std::string> &tokensModifiers,
+                std::vector<bool> &tokensRequired,
+                std::vector<int> &matchedIndices, int &bracketCount);
+#endif
 
     private:
         TagsetPtr tagset;
@@ -73,8 +81,12 @@ class RuleLoader {
 
         int countTokens(std::string &matched);
         std::string getToken(std::string &matched, std::string &before);
+#if HAVE_RE2
         std::string compileToken(std::string &token,
                 NegativePatternStrings &negativePatterns, bool no_prefix = false);
+#else
+        std::string compileToken(std::string &token, bool no_prefix = false);
+#endif
         std::string getKey(std::string &token);
         std::string getValue(std::string &token);
         std::string getOperator(std::string &token);
@@ -89,12 +101,21 @@ class RuleLoader {
         bool compileAttributeCondition(std::string &key,
                 std::string &comparisonOperator, std::string &value,
                 TokenPatterns &tokenPatterns);
+#if HAVE_RE2
         std::string compileOrthCondition(std::string &comparisonOperator,
                 std::string &value, bool icase,
                 NegativePatternStrings &negativePatterns);
+#else
+        std::string compileOrthCondition(std::string &comparisonOperator,
+                std::string &value, bool icase);
+#endif
         //std::string interpretationsToString(Interpretations interps);
+#if HAVE_RE2
         std::string generateTokenPatternsString(TokenPatterns tokenPatterns,
                 NegativePatternStrings &negativePatterns);
+#else
+        std::string generateTokenPatternsString(TokenPatterns tokenPatterns);
+#endif
         //bool compileDeleteCondition(std::string &key, std::string &comparisonOperator, std::string &value, TokenMask &mask, std::string &orth);
         bool compileDeleteCondition(std::string &key, std::string &comparisonOperator,
                 std::string &value, DeleteConditions &conditions);

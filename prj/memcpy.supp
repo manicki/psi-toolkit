@@ -1,0 +1,6 @@
+{
+    memcpy overlap
+    Memcheck:Overlap
+    fun:memcpy
+    ...
+}

@@ -1,0 +1,14 @@
+
+@rule main_regex/main_regex := .
+
+@rule mail/T := [a-z]+\@[a-z]+\.[a-z]+
+
+@def FOO \@def goo t+
+                   z+
+
+@def BAR \@include hardc
+
+@include hardb
+
+
+

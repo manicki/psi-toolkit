@@ -1,16 +1,28 @@
 #include "tp_tokenizer.hpp"
+
 #include "tp_token_cutter.hpp"
 
 #include "logging.hpp"
+#include "config.h"
 
+#include "tp_basic_tokenizer_rule_set.hpp"
 
 Annotator* TpTokenizer::Factory::doCreateAnnotator(
-    const boost::program_options::variables_map&) {
-    return new TpTokenizer();
+    const boost::program_options::variables_map& options) {
+    std::string lang = options["lang"].as<std::string>();
+
+    return new TpTokenizer(lang);
 }
 
 boost::program_options::options_description TpTokenizer::Factory::doOptionsHandled() {
-    return boost::program_options::options_description();
+
+    boost::program_options::options_description optionsDescription("Allowed options");
+
+    optionsDescription.add_options()
+        ("lang", boost::program_options::value<std::string>(), "language")
+        ;
+
+    return optionsDescription;
 }
 
 std::string TpTokenizer::Factory::doGetName() {
@@ -31,6 +43,25 @@ std::list<std::string> TpTokenizer::Factory::doProvidedLayerTags() {
     return layerTags;
 }
 
+TpTokenizer::TpTokenizer(const std::string& lang) {
+    ruleSet_.reset(new TPBasicTokenizerRuleSet());
+
+    std::map<std::string, std::string> pathMap;
+    pathMap["main"] =
+        std::string(ROOT_DIR "tools/tokenizers/tp/data/")
+        + lang + "/" + lang + ".rgx";
+    pathMap["common"] = ROOT_DIR "tools/tokenizers/tp/data/xx/xx.rgx";
+    pathMap["abbrev_" + lang] =
+        std::string(ROOT_DIR "tools/tokenizers/tp/data/")
+        + lang + "/abbrev.rgx";
+
+    std::list<std::string> paths;
+    paths.push_back("main");
+
+    ruleSet_->load(pathMap, paths);
+}
+
+
 LatticeWorker* TpTokenizer::doCreateLatticeWorker(Lattice& lattice) {
     return new Worker(*this, lattice);
 }
@@ -44,7 +75,7 @@ void TpTokenizer::Worker::doRun() {
 
     LayerTagMask symbolMask = lattice_.getLayerTagManager().getMask("symbol");
 
-    TpTokenCutter tokenCutter;
+    TpTokenCutter tokenCutter(*dynamic_cast<TpTokenizer&>(processor_).ruleSet_.get());
 
     lattice_.runCutter(tokenCutter, symbolMask);
 }

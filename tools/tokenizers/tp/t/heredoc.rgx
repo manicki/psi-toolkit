@@ -1,0 +1,12 @@
+
+@rule main_regex/main_regex := .+
+
+@rule hhh/T := <<END
+prof
+e\.g
+Mr
+END
+
+@rule text/T := foo+
+
+

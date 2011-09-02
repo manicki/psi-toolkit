@@ -33,13 +33,16 @@ namespace bonsai
 namespace puddle
 {
 
+#if HAVE_RE2
     typedef std::map<std::string, std::string> NegativePatternStrings;
     typedef std::map<std::string, PatternPtr> NegativePatterns;
+#endif
 
 class Rule
 {
     public:
         Rule();
+#if HAVE_RE2
         Rule(std::string aName, std::string aCompiled, int aLeftCount,
                 int aMatchCount, int aRightCount, ActionsPtr aActions,
                 std::vector<std::string> aTokensPatterns,
@@ -48,12 +51,21 @@ class Rule
                 std::vector<int> aMatchedIndices, bool aRepeat,
                 std::string aLeft, std::string aMatch, std::string aRight,
                 NegativePatternStrings aNegativePatterns); //@todo: zmienic tu typy, bo mnie krew zaleje
+#else
+        Rule(std::string aName, std::string aCompiled, int aLeftCount,
+                int aMatchCount, int aRightCount, ActionsPtr aActions,
+                std::vector<std::string> aTokensPatterns,
+                std::vector<std::string> aTokensModifiers,
+                std::vector<bool> aTokensRequired,
+                std::vector<int> aMatchedIndices, bool aRepeat,
+                std::string aLeft, std::string aMatch, std::string aRight);
+#endif
         ~Rule();
 
         //bool test(std::string &sentence, Entities &entities, int currentEntity);
         //bool test(std::string &sentenceString, ParseGraphPtr pg, int currentEntity);
         bool test(std::string &sentenceString, Lattice &lattice,
-                int currentEntity, std::vector<re2::StringPiece> &match);
+                int currentEntity, std::vector<StringPiece> &match);
         //bool apply(std::string &sentence, Entities &entities, Edges &edges, int currentEntity);
         //bool apply(std::string &sentenceString, ParseGraphPtr pg, Lattice &lattice, int currentEntity);
         bool apply(std::string &sentenceString, Lattice &lattice, int currentEntity);
@@ -101,7 +113,9 @@ class Rule
         std::string name;
 //        std::vector<TransitionInfo> elements;
         PatternPtr pattern;
+#if HAVE_RE2
         NegativePatterns negativePatterns;
+#endif
         std::string compiled;
         std::string left_, match_, right_;
         ActionsPtr actions;

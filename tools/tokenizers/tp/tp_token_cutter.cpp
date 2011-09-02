@@ -1,21 +1,38 @@
 #include "tp_token_cutter.hpp"
 
+#include "logging.hpp"
+
+TpTokenCutter::TpTokenCutter(TPBasicTokenizerRuleSet& ruleSet):ruleSet_(ruleSet) {
+}
+
 AnnotationItem TpTokenCutter::doCutOff(const std::string& text, size_t& positionInText) {
-    size_t spacePosition = text.find(' ', positionInText);
 
-    if (spacePosition == positionInText) {
-        ++positionInText;
-        return AnnotationItem("blank", " ");
-    }
-    else {
-        std::string token = text.substr(positionInText,
-                                        (spacePosition == std::string::npos ?
-                                         std::string::npos :
-                                         spacePosition - positionInText));
+    size_t len = text.length() - positionInText;
+    PerlStringPiece textSp(text.data()+positionInText, len);
 
-        positionInText = spacePosition;
-        return AnnotationItem("word", token);
+    for (size_t i = 0; i < ruleSet_.getRegexCount(); ++i) {
+        PerlRegExp* regexp = ruleSet_.getRegex(i);
+
+        if (PerlRegExp::Consume(&textSp, *regexp)) {
+
+            size_t tokenLength = len - textSp.size();
+
+            size_t originalPositionInText = positionInText;
+            positionInText += tokenLength;
+
+            return AnnotationItem(
+                ruleSet_.getRegexCategory(i),
+                text.substr(originalPositionInText, tokenLength));
+        }
     }
+
+    return defaultToken(text, positionInText);
+}
+
+AnnotationItem TpTokenCutter::defaultToken(const std::string& text, size_t& positionInText) {
+    return AnnotationItem(
+        DEFAULT_CATEGORY,
+        text.substr(positionInText++, 1));
 }
 
 int TpTokenCutter::doMaximumFragmentLength() {
@@ -28,3 +45,5 @@ std::list<std::string > TpTokenCutter::doLayerTags() {
 
     return tags;
 }
+
+const std::string TpTokenCutter::DEFAULT_CATEGORY = "X";
