@@ -623,7 +623,7 @@ void Lattice::correctionReplace(VertexDescriptor from, VertexDescriptor to, std:
             EdgeDescriptor edge
                 = firstOutEdge(from, getLayerTagManager().getMask(getSymbolTag_()));
             VertexDescriptor vertex = getEdgeTarget(edge);
-            if (symbol != getEdgeAnnotationItem(edge).getText()) {
+            if (symbol != getAnnotationText(edge)) {
                 addEdge(
                     from,
                     vertex,

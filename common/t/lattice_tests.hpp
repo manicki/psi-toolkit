@@ -19,27 +19,27 @@ public:
         Lattice::EdgesSortedBySourceIterator ei
             = lattice.edgesSortedBySource(lattice.getLayerTagManager().anyTag());
         TS_ASSERT(ei.hasNext());
-        TS_ASSERT_EQUALS(lattice.getEdgeAnnotationItem(ei.next()).getCategory(), "'A");
+        TS_ASSERT_EQUALS(lattice.getAnnotationCategory(ei.next()), "'A");
         TS_ASSERT(ei.hasNext());
-        TS_ASSERT_EQUALS(lattice.getEdgeAnnotationItem(ei.next()).getCategory(), "'l");
+        TS_ASSERT_EQUALS(lattice.getAnnotationCategory(ei.next()), "'l");
         TS_ASSERT(ei.hasNext());
-        TS_ASSERT_EQUALS(lattice.getEdgeAnnotationItem(ei.next()).getCategory(), "'a");
+        TS_ASSERT_EQUALS(lattice.getAnnotationCategory(ei.next()), "'a");
         TS_ASSERT(ei.hasNext());
-        TS_ASSERT_EQUALS(lattice.getEdgeAnnotationItem(ei.next()).getCategory(), "' ");
+        TS_ASSERT_EQUALS(lattice.getAnnotationCategory(ei.next()), "' ");
         TS_ASSERT(ei.hasNext());
-        TS_ASSERT_EQUALS(lattice.getEdgeAnnotationItem(ei.next()).getCategory(), "'m");
+        TS_ASSERT_EQUALS(lattice.getAnnotationCategory(ei.next()), "'m");
         TS_ASSERT(ei.hasNext());
-        TS_ASSERT_EQUALS(lattice.getEdgeAnnotationItem(ei.next()).getCategory(), "'a");
+        TS_ASSERT_EQUALS(lattice.getAnnotationCategory(ei.next()), "'a");
         TS_ASSERT(ei.hasNext());
-        TS_ASSERT_EQUALS(lattice.getEdgeAnnotationItem(ei.next()).getCategory(), "' ");
+        TS_ASSERT_EQUALS(lattice.getAnnotationCategory(ei.next()), "' ");
         TS_ASSERT(ei.hasNext());
-        TS_ASSERT_EQUALS(lattice.getEdgeAnnotationItem(ei.next()).getCategory(), "'k");
+        TS_ASSERT_EQUALS(lattice.getAnnotationCategory(ei.next()), "'k");
         TS_ASSERT(ei.hasNext());
-        TS_ASSERT_EQUALS(lattice.getEdgeAnnotationItem(ei.next()).getCategory(), "'o");
+        TS_ASSERT_EQUALS(lattice.getAnnotationCategory(ei.next()), "'o");
         TS_ASSERT(ei.hasNext());
-        TS_ASSERT_EQUALS(lattice.getEdgeAnnotationItem(ei.next()).getCategory(), "'t");
+        TS_ASSERT_EQUALS(lattice.getAnnotationCategory(ei.next()), "'t");
         TS_ASSERT(ei.hasNext());
-        TS_ASSERT_EQUALS(lattice.getEdgeAnnotationItem(ei.next()).getCategory(), "'a");
+        TS_ASSERT_EQUALS(lattice.getAnnotationCategory(ei.next()), "'a");
         TS_ASSERT(!ei.hasNext());
 
         Lattice::VertexDescriptor pre_ala = lattice.getFirstVertex();
@@ -125,31 +125,31 @@ public:
         TS_ASSERT(tokenIter.hasNext());
 
         TS_ASSERT_EQUALS(
-            lattice.getEdgeAnnotationItem(tokenIter.next()).getCategory(),
+            lattice.getAnnotationCategory(tokenIter.next()),
             word_token.getCategory()
         );
         TS_ASSERT(tokenIter.hasNext());
 
         TS_ASSERT_EQUALS(
-            lattice.getEdgeAnnotationItem(tokenIter.next()).getCategory(),
+            lattice.getAnnotationCategory(tokenIter.next()),
             blank_token.getCategory()
         );
         TS_ASSERT(tokenIter.hasNext());
 
         TS_ASSERT_EQUALS(
-            lattice.getEdgeAnnotationItem(tokenIter.next()).getCategory(),
+            lattice.getAnnotationCategory(tokenIter.next()),
             word_token.getCategory()
         );
         TS_ASSERT(tokenIter.hasNext());
 
         TS_ASSERT_EQUALS(
-            lattice.getEdgeAnnotationItem(tokenIter.next()).getCategory(),
+            lattice.getAnnotationCategory(tokenIter.next()),
             blank_token.getCategory()
         );
         TS_ASSERT(tokenIter.hasNext());
 
         TS_ASSERT_EQUALS(
-            lattice.getEdgeAnnotationItem(tokenIter.next()).getCategory(),
+            lattice.getAnnotationCategory(tokenIter.next()),
             word_token.getCategory()
         );
         TS_ASSERT(!tokenIter.hasNext());
@@ -359,7 +359,7 @@ public:
         TS_ASSERT(tokenIter.hasNext());
         edge = tokenIter.next();
         TS_ASSERT_EQUALS(
-            lattice.getEdgeAnnotationItem(edge).getCategory(),
+            lattice.getAnnotationCategory(edge),
             ai_ananas_sg.getCategory()
         );
         std::list< std::pair<std::string, std::string> > av
@@ -381,7 +381,7 @@ public:
         TS_ASSERT(tokenIter.hasNext());
         edge = tokenIter.next();
         TS_ASSERT_EQUALS(
-            lattice.getEdgeAnnotationItem(edge).getCategory(),
+            lattice.getAnnotationCategory(edge),
             ai_ananas_pl.getCategory()
         );
         av = lattice.getAnnotationItemManager().getValues(
@@ -557,21 +557,21 @@ public:
 
         Lattice::InOutEdgesIterator eiPreOut = lattice.outEdges(vertexPre, tokenMask);
         TS_ASSERT(eiPreOut.hasNext());
-        TS_ASSERT_EQUALS(lattice.getEdgeAnnotationItem(eiPreOut.next()).getCategory(), "x");
+        TS_ASSERT_EQUALS(lattice.getAnnotationCategory(eiPreOut.next()), "x");
 
         Lattice::InOutEdgesIterator eiLooseIn = lattice.inEdges(vertexLoose, tokenMask);
         TS_ASSERT(eiLooseIn.hasNext());
-        TS_ASSERT_EQUALS(lattice.getEdgeAnnotationItem(eiLooseIn.next()).getCategory(), "x");
+        TS_ASSERT_EQUALS(lattice.getAnnotationCategory(eiLooseIn.next()), "x");
 
         lattice.addEdge(vertexLoose, vertexPost, tokenY, token_tag);
 
         Lattice::InOutEdgesIterator eiLooseOut = lattice.outEdges(vertexLoose, tokenMask);
         TS_ASSERT(eiLooseOut.hasNext());
-        TS_ASSERT_EQUALS(lattice.getEdgeAnnotationItem(eiLooseOut.next()).getCategory(), "y");
+        TS_ASSERT_EQUALS(lattice.getAnnotationCategory(eiLooseOut.next()), "y");
 
         Lattice::InOutEdgesIterator eiPostIn = lattice.inEdges(vertexPost, tokenMask);
         TS_ASSERT(eiPostIn.hasNext());
-        TS_ASSERT_EQUALS(lattice.getEdgeAnnotationItem(eiPostIn.next()).getCategory(), "y");
+        TS_ASSERT_EQUALS(lattice.getAnnotationCategory(eiPostIn.next()), "y");
     }
 
     void testVertexIteratorAdvanced() {
@@ -625,7 +625,7 @@ public:
         Lattice::InOutEdgesIterator ei = lattice.outEdges(vd, rawMask);
         TS_ASSERT(ei.hasNext());
         Lattice::EdgeDescriptor ed = ei.next();
-        while (lattice.getEdgeAnnotationItem(ed).getCategory() != "'c") {
+        while (lattice.getAnnotationCategory(ed) != "'c") {
             TS_ASSERT(ei.hasNext());
             ed = ei.next();
         }
@@ -633,7 +633,7 @@ public:
         ei = lattice.outEdges(vd, rawMask);
         TS_ASSERT(ei.hasNext());
         ed = ei.next();
-        while (lattice.getEdgeAnnotationItem(ed).getCategory() != "'a") {
+        while (lattice.getAnnotationCategory(ed) != "'a") {
             TS_ASSERT(ei.hasNext());
             ed = ei.next();
         }
@@ -641,7 +641,7 @@ public:
         ei = lattice.outEdges(vd, rawMask);
         TS_ASSERT(ei.hasNext());
         ed = ei.next();
-        while (lattice.getEdgeAnnotationItem(ed).getCategory() != "'r") {
+        while (lattice.getAnnotationCategory(ed) != "'r") {
             TS_ASSERT(ei.hasNext());
             ed = ei.next();
         }
@@ -665,7 +665,7 @@ public:
         Lattice::InOutEdgesIterator ei = lattice.outEdges(vd, rawMask);
         TS_ASSERT(ei.hasNext());
         Lattice::EdgeDescriptor ed = ei.next();
-        while (lattice.getEdgeAnnotationItem(ed).getCategory() != "'c") {
+        while (lattice.getAnnotationCategory(ed) != "'c") {
             TS_ASSERT(ei.hasNext());
             ed = ei.next();
         }
@@ -673,7 +673,7 @@ public:
         ei = lattice.outEdges(vd, rawMask);
         TS_ASSERT(ei.hasNext());
         ed = ei.next();
-        while (lattice.getEdgeAnnotationItem(ed).getCategory() != "'e") {
+        while (lattice.getAnnotationCategory(ed) != "'e") {
             TS_ASSERT(ei.hasNext());
             ed = ei.next();
         }
@@ -681,7 +681,7 @@ public:
         ei = lattice.outEdges(vd, rawMask);
         TS_ASSERT(ei.hasNext());
         ed = ei.next();
-        while (lattice.getEdgeAnnotationItem(ed).getCategory() != "'z") {
+        while (lattice.getAnnotationCategory(ed) != "'z") {
             TS_ASSERT(ei.hasNext());
             ed = ei.next();
         }
@@ -689,7 +689,7 @@ public:
         ei = lattice.outEdges(vd, rawMask);
         TS_ASSERT(ei.hasNext());
         ed = ei.next();
-        while (lattice.getEdgeAnnotationItem(ed).getCategory() != "'a") {
+        while (lattice.getAnnotationCategory(ed) != "'a") {
             TS_ASSERT(ei.hasNext());
             ed = ei.next();
         }
@@ -697,7 +697,7 @@ public:
         ei = lattice.outEdges(vd, rawMask);
         TS_ASSERT(ei.hasNext());
         ed = ei.next();
-        while (lattice.getEdgeAnnotationItem(ed).getCategory() != "'r") {
+        while (lattice.getAnnotationCategory(ed) != "'r") {
             TS_ASSERT(ei.hasNext());
             ed = ei.next();
         }
@@ -722,7 +722,7 @@ public:
         Lattice::InOutEdgesIterator ei = lattice.outEdges(vd, rawMask);
         TS_ASSERT(ei.hasNext());
         Lattice::EdgeDescriptor ed = ei.next();
-        while (lattice.getEdgeAnnotationItem(ed).getCategory() != "'c") {
+        while (lattice.getAnnotationCategory(ed) != "'c") {
             TS_ASSERT(ei.hasNext());
             ed = ei.next();
         }
@@ -730,7 +730,7 @@ public:
         ei = lattice.outEdges(vd, rawMask);
         TS_ASSERT(ei.hasNext());
         ed = ei.next();
-        while (lattice.getEdgeAnnotationItem(ed).getCategory() != "'z") {
+        while (lattice.getAnnotationCategory(ed) != "'z") {
             TS_ASSERT(ei.hasNext());
             ed = ei.next();
         }
@@ -738,7 +738,7 @@ public:
         ei = lattice.outEdges(vd, rawMask);
         TS_ASSERT(ei.hasNext());
         ed = ei.next();
-        while (lattice.getEdgeAnnotationItem(ed).getCategory() != "'a") {
+        while (lattice.getAnnotationCategory(ed) != "'a") {
             TS_ASSERT(ei.hasNext());
             ed = ei.next();
         }
@@ -746,7 +746,7 @@ public:
         ei = lattice.outEdges(vd, rawMask);
         TS_ASSERT(ei.hasNext());
         ed = ei.next();
-        while (lattice.getEdgeAnnotationItem(ed).getCategory() != "'r") {
+        while (lattice.getAnnotationCategory(ed) != "'r") {
             TS_ASSERT(ei.hasNext());
             ed = ei.next();
         }
@@ -771,29 +771,29 @@ public:
         Lattice::InOutEdgesIterator ei = lattice.outEdges(vd, rawMask);
         TS_ASSERT(ei.hasNext());
         Lattice::EdgeDescriptor ed = ei.next();
-        TS_ASSERT_EQUALS(lattice.getEdgeAnnotationItem(ed).getCategory(), "'c");
+        TS_ASSERT_EQUALS(lattice.getAnnotationCategory(ed), "'c");
 
         vd = lattice.getEdgeTarget(ed);
         ei = lattice.outEdges(vd, rawMask);
         TS_ASSERT(ei.hasNext());
         ed = ei.next();
-        while (lattice.getEdgeAnnotationItem(ed).getCategory() != "'z") {
+        while (lattice.getAnnotationCategory(ed) != "'z") {
             TS_ASSERT(ei.hasNext());
             ed = ei.next();
         }
-        TS_ASSERT_EQUALS(lattice.getEdgeAnnotationItem(ed).getCategory(), "'z");
+        TS_ASSERT_EQUALS(lattice.getAnnotationCategory(ed), "'z");
 
         vd = lattice.getEdgeTarget(ed);
         ei = lattice.outEdges(vd, rawMask);
         TS_ASSERT(ei.hasNext());
         ed = ei.next();
-        TS_ASSERT_EQUALS(lattice.getEdgeAnnotationItem(ed).getCategory(), "'a");
+        TS_ASSERT_EQUALS(lattice.getAnnotationCategory(ed), "'a");
 
         vd = lattice.getEdgeTarget(ed);
         ei = lattice.outEdges(vd, rawMask);
         TS_ASSERT(ei.hasNext());
         ed = ei.next();
-        TS_ASSERT_EQUALS(lattice.getEdgeAnnotationItem(ed).getCategory(), "'r");
+        TS_ASSERT_EQUALS(lattice.getAnnotationCategory(ed), "'r");
     }
 
 };

@@ -24,97 +24,97 @@ public:
         Lattice::EdgesSortedBySourceIterator rei = lattice.edgesSortedBySource(rawMask);
 
         TS_ASSERT(rei.hasNext());
-        TS_ASSERT_EQUALS(lattice.getEdgeAnnotationItem(rei.next()).getCategory(), "A");
+        TS_ASSERT_EQUALS(lattice.getAnnotationCategory(rei.next()), "A");
         TS_ASSERT(rei.hasNext());
-        TS_ASSERT_EQUALS(lattice.getEdgeAnnotationItem(rei.next()).getCategory(), "m");
+        TS_ASSERT_EQUALS(lattice.getAnnotationCategory(rei.next()), "m");
         TS_ASSERT(rei.hasNext());
-        TS_ASSERT_EQUALS(lattice.getEdgeAnnotationItem(rei.next()).getCategory(), "e");
+        TS_ASSERT_EQUALS(lattice.getAnnotationCategory(rei.next()), "e");
         TS_ASSERT(rei.hasNext());
-        TS_ASSERT_EQUALS(lattice.getEdgeAnnotationItem(rei.next()).getCategory(), "l");
+        TS_ASSERT_EQUALS(lattice.getAnnotationCategory(rei.next()), "l");
         TS_ASSERT(rei.hasNext());
-        TS_ASSERT_EQUALS(lattice.getEdgeAnnotationItem(rei.next()).getCategory(), "i");
+        TS_ASSERT_EQUALS(lattice.getAnnotationCategory(rei.next()), "i");
         TS_ASSERT(rei.hasNext());
-        TS_ASSERT_EQUALS(lattice.getEdgeAnnotationItem(rei.next()).getCategory(), "e");
+        TS_ASSERT_EQUALS(lattice.getAnnotationCategory(rei.next()), "e");
         TS_ASSERT(rei.hasNext());
-        TS_ASSERT_EQUALS(lattice.getEdgeAnnotationItem(rei.next()).getCategory(), " ");
+        TS_ASSERT_EQUALS(lattice.getAnnotationCategory(rei.next()), " ");
         TS_ASSERT(rei.hasNext());
-        TS_ASSERT_EQUALS(lattice.getEdgeAnnotationItem(rei.next()).getCategory(), "a");
+        TS_ASSERT_EQUALS(lattice.getAnnotationCategory(rei.next()), "a");
         TS_ASSERT(rei.hasNext());
-        TS_ASSERT_EQUALS(lattice.getEdgeAnnotationItem(rei.next()).getCategory(), " ");
+        TS_ASSERT_EQUALS(lattice.getAnnotationCategory(rei.next()), " ");
         TS_ASSERT(rei.hasNext());
-        TS_ASSERT_EQUALS(lattice.getEdgeAnnotationItem(rei.next()).getCategory(), "u");
+        TS_ASSERT_EQUALS(lattice.getAnnotationCategory(rei.next()), "u");
         TS_ASSERT(rei.hasNext());
-        TS_ASSERT_EQUALS(lattice.getEdgeAnnotationItem(rei.next()).getCategory(), "n");
+        TS_ASSERT_EQUALS(lattice.getAnnotationCategory(rei.next()), "n");
         TS_ASSERT(rei.hasNext());
-        TS_ASSERT_EQUALS(lattice.getEdgeAnnotationItem(rei.next()).getCategory(), " ");
+        TS_ASSERT_EQUALS(lattice.getAnnotationCategory(rei.next()), " ");
         TS_ASSERT(rei.hasNext());
-        TS_ASSERT_EQUALS(lattice.getEdgeAnnotationItem(rei.next()).getCategory(), "c");
+        TS_ASSERT_EQUALS(lattice.getAnnotationCategory(rei.next()), "c");
         TS_ASSERT(rei.hasNext());
-        TS_ASSERT_EQUALS(lattice.getEdgeAnnotationItem(rei.next()).getCategory(), "h");
+        TS_ASSERT_EQUALS(lattice.getAnnotationCategory(rei.next()), "h");
         TS_ASSERT(rei.hasNext());
-        TS_ASSERT_EQUALS(lattice.getEdgeAnnotationItem(rei.next()).getCategory(), "a");
+        TS_ASSERT_EQUALS(lattice.getAnnotationCategory(rei.next()), "a");
         TS_ASSERT(rei.hasNext());
-        TS_ASSERT_EQUALS(lattice.getEdgeAnnotationItem(rei.next()).getCategory(), "t");
+        TS_ASSERT_EQUALS(lattice.getAnnotationCategory(rei.next()), "t");
         TS_ASSERT(rei.hasNext());
-        TS_ASSERT_EQUALS(lattice.getEdgeAnnotationItem(rei.next()).getCategory(), ".");
+        TS_ASSERT_EQUALS(lattice.getAnnotationCategory(rei.next()), ".");
         TS_ASSERT(rei.hasNext());
-        TS_ASSERT_EQUALS(lattice.getEdgeAnnotationItem(rei.next()).getCategory(), "Q");
+        TS_ASSERT_EQUALS(lattice.getAnnotationCategory(rei.next()), "Q");
         TS_ASSERT(rei.hasNext());
-        TS_ASSERT_EQUALS(lattice.getEdgeAnnotationItem(rei.next()).getCategory(), "u");
+        TS_ASSERT_EQUALS(lattice.getAnnotationCategory(rei.next()), "u");
         TS_ASSERT(rei.hasNext());
-        TS_ASSERT_EQUALS(lattice.getEdgeAnnotationItem(rei.next()).getCategory(), "e");
+        TS_ASSERT_EQUALS(lattice.getAnnotationCategory(rei.next()), "e");
         TS_ASSERT(rei.hasNext());
-        TS_ASSERT_EQUALS(lattice.getEdgeAnnotationItem(rei.next()).getCategory(), "l");
+        TS_ASSERT_EQUALS(lattice.getAnnotationCategory(rei.next()), "l");
         TS_ASSERT(rei.hasNext());
-        TS_ASSERT_EQUALS(lattice.getEdgeAnnotationItem(rei.next()).getCategory(), "l");
+        TS_ASSERT_EQUALS(lattice.getAnnotationCategory(rei.next()), "l");
         TS_ASSERT(rei.hasNext());
-        TS_ASSERT_EQUALS(lattice.getEdgeAnnotationItem(rei.next()).getCategory(), "e");
+        TS_ASSERT_EQUALS(lattice.getAnnotationCategory(rei.next()), "e");
         TS_ASSERT(rei.hasNext());
-        TS_ASSERT_EQUALS(lattice.getEdgeAnnotationItem(rei.next()).getCategory(), " ");
+        TS_ASSERT_EQUALS(lattice.getAnnotationCategory(rei.next()), " ");
         TS_ASSERT(rei.hasNext());
-        TS_ASSERT_EQUALS(lattice.getEdgeAnnotationItem(rei.next()).getCategory(), "â");
+        TS_ASSERT_EQUALS(lattice.getAnnotationCategory(rei.next()), "â");
         TS_ASSERT(rei.hasNext());
-        TS_ASSERT_EQUALS(lattice.getEdgeAnnotationItem(rei.next()).getCategory(), "g");
+        TS_ASSERT_EQUALS(lattice.getAnnotationCategory(rei.next()), "g");
         TS_ASSERT(rei.hasNext());
-        TS_ASSERT_EQUALS(lattice.getEdgeAnnotationItem(rei.next()).getCategory(), "e");
+        TS_ASSERT_EQUALS(lattice.getAnnotationCategory(rei.next()), "e");
 
         LayerTagMask tokenMask = lattice.getLayerTagManager().getMask("token");
         Lattice::EdgesSortedBySourceIterator tei = lattice.edgesSortedBySource(tokenMask);
 
         TS_ASSERT(tei.hasNext());
-        TS_ASSERT_EQUALS(lattice.getEdgeAnnotationItem(tei.next()).getCategory(), "Amelie");
+        TS_ASSERT_EQUALS(lattice.getAnnotationCategory(tei.next()), "Amelie");
         TS_ASSERT(tei.hasNext());
-        TS_ASSERT_EQUALS(lattice.getEdgeAnnotationItem(tei.next()).getCategory(), " ");
+        TS_ASSERT_EQUALS(lattice.getAnnotationCategory(tei.next()), " ");
         TS_ASSERT(tei.hasNext());
-        TS_ASSERT_EQUALS(lattice.getEdgeAnnotationItem(tei.next()).getCategory(), "a");
+        TS_ASSERT_EQUALS(lattice.getAnnotationCategory(tei.next()), "a");
         TS_ASSERT(tei.hasNext());
-        TS_ASSERT_EQUALS(lattice.getEdgeAnnotationItem(tei.next()).getCategory(), " ");
+        TS_ASSERT_EQUALS(lattice.getAnnotationCategory(tei.next()), " ");
         TS_ASSERT(tei.hasNext());
-        TS_ASSERT_EQUALS(lattice.getEdgeAnnotationItem(tei.next()).getCategory(), "un");
+        TS_ASSERT_EQUALS(lattice.getAnnotationCategory(tei.next()), "un");
         TS_ASSERT(tei.hasNext());
-        TS_ASSERT_EQUALS(lattice.getEdgeAnnotationItem(tei.next()).getCategory(), " ");
+        TS_ASSERT_EQUALS(lattice.getAnnotationCategory(tei.next()), " ");
         TS_ASSERT(tei.hasNext());
-        TS_ASSERT_EQUALS(lattice.getEdgeAnnotationItem(tei.next()).getCategory(), "chat");
+        TS_ASSERT_EQUALS(lattice.getAnnotationCategory(tei.next()), "chat");
         TS_ASSERT(tei.hasNext());
-        TS_ASSERT_EQUALS(lattice.getEdgeAnnotationItem(tei.next()).getCategory(), ".");
+        TS_ASSERT_EQUALS(lattice.getAnnotationCategory(tei.next()), ".");
         TS_ASSERT(tei.hasNext());
-        TS_ASSERT_EQUALS(lattice.getEdgeAnnotationItem(tei.next()).getCategory(), "Quelle");
+        TS_ASSERT_EQUALS(lattice.getAnnotationCategory(tei.next()), "Quelle");
         TS_ASSERT(tei.hasNext());
-        TS_ASSERT_EQUALS(lattice.getEdgeAnnotationItem(tei.next()).getCategory(), " ");
+        TS_ASSERT_EQUALS(lattice.getAnnotationCategory(tei.next()), " ");
         TS_ASSERT(tei.hasNext());
-        TS_ASSERT_EQUALS(lattice.getEdgeAnnotationItem(tei.next()).getCategory(), "âge");
+        TS_ASSERT_EQUALS(lattice.getAnnotationCategory(tei.next()), "âge");
 
         LayerTagMask sentenceMask = lattice.getLayerTagManager().getMask("sentence");
         Lattice::EdgesSortedBySourceIterator sei = lattice.edgesSortedBySource(sentenceMask);
 
         TS_ASSERT(sei.hasNext());
-        TS_ASSERT_EQUALS(lattice.getEdgeAnnotationItem(sei.next()).getCategory(),
+        TS_ASSERT_EQUALS(lattice.getAnnotationCategory(sei.next()),
             "Amelie a un chat.");
         TS_ASSERT(sei.hasNext());
-        TS_ASSERT_EQUALS(lattice.getEdgeAnnotationItem(sei.next()).getCategory(),
+        TS_ASSERT_EQUALS(lattice.getAnnotationCategory(sei.next()),
             "Quelle âge as-tu?");
         TS_ASSERT(sei.hasNext());
-        TS_ASSERT_EQUALS(lattice.getEdgeAnnotationItem(sei.next()).getCategory(),
+        TS_ASSERT_EQUALS(lattice.getAnnotationCategory(sei.next()),
             "Karol Józef Wojtyła est élu pape de l'Église catholique romaine le 16 octobre 1978.");
         TS_ASSERT(!sei.hasNext());
 
