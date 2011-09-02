@@ -403,9 +403,10 @@ const AnnotationItem Lattice::getEdgeAnnotationItem(Lattice::EdgeDescriptor edge
     }
     std::string::iterator iter = allText_.begin() + edge.implicitIndex;
     std::string::iterator end = allText_.end();
-    std::string symbol = "'";
+    std::string symbol;
     utf8::append(utf8::next(iter, end), std::back_inserter(symbol));
-    return AnnotationItem(symbol);
+    return AnnotationItem("'" + symbol);
+    // return AnnotationItem("'" + symbol, symbol);
 }
 
 const LayerTagCollection& Lattice::getEdgeLayerTags(Lattice::EdgeDescriptor edge) const {
@@ -593,7 +594,8 @@ void Lattice::correctionInsert(VertexDescriptor here, std::string text) {
             from,
             to,
             AnnotationItem("'"+symbol, symbol),
-            getSymbolTag_());
+            getSymbolTag_()
+        );
         from = to;
     }
     try {
@@ -605,23 +607,50 @@ void Lattice::correctionInsert(VertexDescriptor here, std::string text) {
 }
 
 void Lattice::correctionErase(VertexDescriptor from, VertexDescriptor to) {
-    try {
-        EdgeDescriptor nextEdge
-            = firstOutEdge(to, getLayerTagManager().getMask(getSymbolTag_()));
-        addEdge(from, getEdgeTarget(nextEdge), getEdgeAnnotationItem(nextEdge), getSymbolTag_());
-    } catch (NoEdgeException) {
+    if (from != to) {
         try {
-            EdgeDescriptor prevEdge
+            EdgeDescriptor nextEdge
                 = firstOutEdge(to, getLayerTagManager().getMask(getSymbolTag_()));
-            addEdge(getEdgeSource(prevEdge), to, getEdgeAnnotationItem(prevEdge), getSymbolTag_());
+            addEdge(from, getEdgeTarget(nextEdge), getEdgeAnnotationItem(nextEdge), getSymbolTag_());
         } catch (NoEdgeException) {
-            throw WrongVertexException("Cannot erase the selected text range.");
+            try {
+                EdgeDescriptor prevEdge
+                    = firstOutEdge(to, getLayerTagManager().getMask(getSymbolTag_()));
+                addEdge(getEdgeSource(prevEdge), to, getEdgeAnnotationItem(prevEdge), getSymbolTag_());
+            } catch (NoEdgeException) {
+                throw WrongVertexException("Cannot erase the selected text range.");
+            }
         }
     }
 }
 
 void Lattice::correctionReplace(VertexDescriptor from, VertexDescriptor to, std::string text) {
-    //TODO
+    try {
+        std::string::iterator iter = text.begin();
+        std::string::iterator end = text.end();
+        while (iter != end) {
+            if (from == to) {
+                return correctionInsert(from, text);
+            }
+            std::string symbol;
+            utf8::append(utf8::next(iter, end), std::back_inserter(symbol));
+            EdgeDescriptor edge
+                = firstOutEdge(from, getLayerTagManager().getMask(getSymbolTag_()));
+            VertexDescriptor vertex = getEdgeTarget(edge);
+            if (symbol != getEdgeAnnotationItem(edge).getText()) {
+                addEdge(
+                    from,
+                    vertex,
+                    AnnotationItem("'"+symbol, symbol),
+                    getSymbolTag_()
+                );
+            }
+            from = vertex;
+        }
+        correctionErase(from, to);
+    } catch (NoEdgeException) {
+        throw WrongVertexException("Cannot replace the selected text range.");
+    }
 }
 
 
