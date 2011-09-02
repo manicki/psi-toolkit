@@ -6,7 +6,7 @@
 #include "group_action.hpp"
 #include <exception>
 
-#include <re2/re2.h>
+//#include <re2/re2.h>
 
 namespace poleng
 {
