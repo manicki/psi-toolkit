@@ -19,6 +19,17 @@ public:
         virtual std::string doGetName();
     };
 
+    SimpleLatticeWriter(
+        bool linear,
+        bool noAlts
+    ) :
+        linear_(linear),
+        noAlts_(noAlts)
+    { }
+
+    bool isLinear() { return linear_; }
+    bool isNoAlts() { return noAlts_; }
+
 
 private:
     virtual std::string doInfo();
@@ -39,6 +50,9 @@ private:
     virtual WriterWorker* doCreateWriterWorker(std::ostream& outputStream, Lattice& lattice) {
         return new Worker(*this, outputStream, lattice);
     }
+
+    bool linear_;
+    bool noAlts_;
 
 };
 

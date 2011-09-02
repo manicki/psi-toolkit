@@ -10,19 +10,20 @@ std::string SimpleLatticeWriter::getFormatName() {
 }
 
 LatticeWriter* SimpleLatticeWriter::Factory::doCreateLatticeWriter(
-    const boost::program_options::variables_map&) {
-    return new SimpleLatticeWriter();
+    const boost::program_options::variables_map& vm
+) {
+    return new SimpleLatticeWriter(
+        vm.count("linear"),
+        vm.count("no-alts")
+    );
 }
 
 boost::program_options::options_description SimpleLatticeWriter::Factory::doOptionsHandled() {
     boost::program_options::options_description optionsDescription("Allowed options");
 
     optionsDescription.add_options()
-        ("line-by-line", "processes line by line")
-        ("whole-text",   "read the whole text")
-        ("paragraphs",   "paragraphs are delimited with double newlines")
-        ("discard-comments", "discards comments")
-        ("pass-through-comments", "marks comments as single markup")
+        ("linear", "skips cross-edges")
+        ("no-alts", "skips alternative edges")
         ;
 
     return optionsDescription;

@@ -186,7 +186,7 @@ public:
         Lattice lattice;
         prepareSimpleLattice_(lattice);
 
-        boost::scoped_ptr<LatticeWriter> writer(new SimpleLatticeWriter());
+        boost::scoped_ptr<LatticeWriter> writer(new SimpleLatticeWriter(false, false));
 
         std::ostringstream osstr;
         writer->writeLattice(lattice, osstr);
