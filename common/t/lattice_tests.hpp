@@ -781,18 +781,19 @@ public:
             TS_ASSERT(ei.hasNext());
             ed = ei.next();
         }
+        TS_ASSERT_EQUALS(lattice.getEdgeAnnotationItem(ed).getCategory(), "'z");
 
         vd = lattice.getEdgeTarget(ed);
         ei = lattice.outEdges(vd, rawMask);
         TS_ASSERT(ei.hasNext());
         ed = ei.next();
-        TS_ASSERT_EQUALS(lattice.getEdgeAnnotationItem(ei.next()).getCategory(), "'a");
+        TS_ASSERT_EQUALS(lattice.getEdgeAnnotationItem(ed).getCategory(), "'a");
 
         vd = lattice.getEdgeTarget(ed);
         ei = lattice.outEdges(vd, rawMask);
         TS_ASSERT(ei.hasNext());
         ed = ei.next();
-        TS_ASSERT_EQUALS(lattice.getEdgeAnnotationItem(ei.next()).getCategory(), "'r");
+        TS_ASSERT_EQUALS(lattice.getEdgeAnnotationItem(ed).getCategory(), "'r");
     }
 
 };
