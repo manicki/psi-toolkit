@@ -21,8 +21,12 @@ class PCREWrapper;
     typedef RE2::Arg Arg;
 #if HAVE_PCRE
     typedef PCREWrapper PerlRegExp;
+    typedef pcrecpp::StringPiece PerlStringPiece;
+    typedef pcrecpp::Arg Arg;
 #else
     typedef RE2 PerlRegExp;
+    typedef re2::StringPiece PerlStringPiece;
+    typedef RE2::Arg PerlArg;
 #endif
 #else
 #if HAVE_PCRE
@@ -30,6 +34,8 @@ class PCREWrapper;
     typedef PCREWrapper PerlRegExp;
     typedef pcrecpp::StringPiece StringPiece;
     typedef pcrecpp::Arg Arg;
+    typedef pcrecpp::StringPiece PerlStringPiece;
+    typedef pcrecpp::Arg PerlArg;
 #endif
 #endif
 
