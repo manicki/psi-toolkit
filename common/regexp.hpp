@@ -98,6 +98,10 @@ class PCREWrapper : private pcrecpp::RE {
             return true;
         }
 
+        const string& pattern() const {
+            return ((pcrecpp::RE)(*this)).pattern();
+        }
+
         //@todo: any other methods of pcrecpp::RE ?
 };
 #endif
