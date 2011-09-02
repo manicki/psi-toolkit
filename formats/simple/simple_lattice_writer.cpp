@@ -12,9 +12,15 @@ std::string SimpleLatticeWriter::getFormatName() {
 LatticeWriter* SimpleLatticeWriter::Factory::doCreateLatticeWriter(
     const boost::program_options::variables_map& vm
 ) {
+    std::map<std::string, std::string> tagsSeparators;
+    if (vm.count("tag")) {
+        tagsSeparators[vm["tag"].as<std::string>()] = "\n";
+    }
+
     return new SimpleLatticeWriter(
         vm.count("linear"),
-        vm.count("no-alts")
+        vm.count("no-alts"),
+        tagsSeparators
     );
 }
 

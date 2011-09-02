@@ -1,6 +1,8 @@
 #ifndef SIMPLE_LATTICE_WRITER_HDR
 #define SIMPLE_LATTICE_WRITER_HDR
 
+#include <map>
+
 #include "lattice_writer.hpp"
 #include "lattice_writer_factory.hpp"
 
@@ -21,14 +23,24 @@ public:
 
     SimpleLatticeWriter(
         bool linear,
-        bool noAlts
+        bool noAlts,
+        std::map<std::string, std::string> tagsSeparators
     ) :
         linear_(linear),
-        noAlts_(noAlts)
+        noAlts_(noAlts),
+        tagsSeparators_(tagsSeparators)
     { }
 
     bool isLinear() { return linear_; }
     bool isNoAlts() { return noAlts_; }
+
+    bool isHandledTag(std::string tagName) {
+        return tagsSeparators_.find(tagName) != tagsSeparators_.end();
+    }
+
+    std::string getTagSeparator(std::string tagName) {
+        return tagsSeparators_[tagName];
+    }
 
 
 private:
@@ -53,6 +65,7 @@ private:
 
     bool linear_;
     bool noAlts_;
+    std::map<std::string, std::string> tagsSeparators_;
 
 };
 
