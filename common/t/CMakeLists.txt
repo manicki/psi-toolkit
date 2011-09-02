@@ -10,11 +10,12 @@ set(common-t
 	${psi-toolkit_SOURCE_DIR}/common/t/lattice_tests.hpp
 	${psi-toolkit_SOURCE_DIR}/common/t/layer_tags_tests.hpp
 	${psi-toolkit_SOURCE_DIR}/common/t/quoter_tests.hpp
+	${psi-toolkit_SOURCE_DIR}/common/t/regexp_tests.hpp
 CACHE PATH "CxxTests for common programms" FORCE)
 
 if(USE_JAVA)
 
-set(common-t 
+set(common-t
 	${common-t}
 	${psi-toolkit_SOURCE_DIR}/common/t/java_virtual_machine_tests.hpp
 CACHE PATH "CxxTests for common programms" FORCE)
