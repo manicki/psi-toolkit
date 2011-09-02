@@ -4,6 +4,7 @@
 
 #include "psi_lattice_reader.hpp"
 #include "psi_lattice_writer.hpp"
+#include "simple_lattice_writer.hpp"
 #include "utt_lattice_reader.hpp"
 
 #include "config.h"
@@ -122,9 +123,92 @@ public:
 */
     }
 
+
     void testPsiLatticeWriterSimple() {
 
-        Lattice lattice("Ala ma słonia");
+        Lattice lattice;
+        prepareSimpleLattice_(lattice);
+
+        boost::scoped_ptr<LatticeWriter> writer(new PsiLatticeWriter());
+
+        std::ostringstream osstr;
+        writer->writeLattice(lattice, osstr);
+
+        std::string line;
+        std::string contents;
+        std::ifstream s(ROOT_DIR "formats/psi/t/files/pl_sample_simple.txt");
+        while (getline(s, line)) {
+            contents += line;
+            contents += "\n";
+        }
+
+        TS_ASSERT_EQUALS(osstr.str(), contents);
+
+    }
+
+
+    void testPsiLatticeWriterAdvanced() {
+
+        Lattice lattice;
+        prepareAdvancedLattice_(lattice);
+
+        boost::scoped_ptr<LatticeWriter> writer(new PsiLatticeWriter());
+
+        // writer->writeLattice(lattice, std::cout);
+
+        std::ostringstream osstr;
+        writer->writeLattice(lattice, osstr);
+
+        std::string line;
+        std::string contents;
+        std::ifstream s(ROOT_DIR "formats/psi/t/files/pl_sample_nocomments.txt");
+        while (getline(s, line)) {
+            contents += line;
+            contents += "\n";
+        }
+
+        TS_ASSERT_EQUALS(osstr.str(), contents);
+    }
+
+
+    void testPsiLatticeReader() {
+
+        Lattice lattice("");
+
+        boost::scoped_ptr<LatticeReader> reader(new PsiLatticeReader());
+
+        reader->readIntoLattice(ROOT_DIR "formats/psi/t/files/pl_sample.txt", lattice);
+    }
+
+
+    void testSimpleLatticeWriter() {
+
+        Lattice lattice;
+        prepareSimpleLattice_(lattice);
+
+        boost::scoped_ptr<LatticeWriter> writer(new SimpleLatticeWriter());
+
+        std::ostringstream osstr;
+        writer->writeLattice(lattice, osstr);
+
+        std::string line;
+        std::string contents;
+        std::ifstream s(ROOT_DIR "formats/simple/t/files/simple_ala.txt");
+        while (getline(s, line)) {
+            contents += line;
+            contents += "\n";
+        }
+
+        TS_ASSERT_EQUALS(osstr.str(), contents);
+
+    }
+
+
+private:
+
+    void prepareSimpleLattice_(Lattice & lattice) {
+
+        lattice.appendString("Ala ma słonia");
         lattice.addSymbols(lattice.getFirstVertex(), lattice.getLastVertex());
 
         Lattice::VertexDescriptor pre_ala = lattice.getFirstVertex();
@@ -212,26 +296,12 @@ public:
             lattice.addEdge(pre_slonia, post_slonia, word_token, token_tag, slonia_builder.build());
         }
 
-        boost::scoped_ptr<LatticeWriter> writer(new PsiLatticeWriter());
-
-        std::ostringstream osstr;
-        writer->writeLattice(lattice, osstr);
-
-        std::string line;
-        std::string contents;
-        std::ifstream s(ROOT_DIR "formats/psi/t/files/pl_sample_simple.txt");
-        while (getline(s, line)) {
-            contents += line;
-            contents += "\n";
-        }
-
-        TS_ASSERT_EQUALS(osstr.str(), contents);
-
     }
 
-    void testPsiLatticeWriterAdvanced() {
 
-        Lattice lattice("Ala ma&nbsp;<b>kta</b>.");
+    void prepareAdvancedLattice_(Lattice & lattice) {
+
+        lattice.appendString("Ala ma&nbsp;<b>kta</b>.");
         lattice.addSymbols(
             lattice.getFirstVertex(),
             lattice.getVertexForRawCharIndex(6)
@@ -506,32 +576,6 @@ public:
 
         lattice.addEdge(preAla, postStop, aiZdanie, parseGobioTag, zdanieBuilder.build());
 
-
-        boost::scoped_ptr<LatticeWriter> writer(new PsiLatticeWriter());
-
-        // writer->writeLattice(lattice, std::cout);
-
-        std::ostringstream osstr;
-        writer->writeLattice(lattice, osstr);
-
-        std::string line;
-        std::string contents;
-        std::ifstream s(ROOT_DIR "formats/psi/t/files/pl_sample_nocomments.txt");
-        while (getline(s, line)) {
-            contents += line;
-            contents += "\n";
-        }
-
-        TS_ASSERT_EQUALS(osstr.str(), contents);
-    }
-
-    void testPsiLatticeReader() {
-
-        Lattice lattice("");
-
-        boost::scoped_ptr<LatticeReader> reader(new PsiLatticeReader());
-
-        reader->readIntoLattice(ROOT_DIR "formats/psi/t/files/pl_sample.txt", lattice);
     }
 
 };
