@@ -161,30 +161,17 @@ Lattice::EdgeDescriptor Lattice::addEdge(
             && !isLooseVertex(to)
             && tags == getSymbolTag_()
             && from + (int) symbolLength_(from) == to
+            && !implicitOutEdges_[from]
         ) {
             implicitOutEdges_.set(from, true);
             (insertResult.first)->second = EdgeDescriptor(from);
             return EdgeDescriptor(from);
         }
 
-        if (
-            !isLooseVertex(from)
-            && isLooseVertex(to)
-            && tags == getSymbolTag_()
-        ) {
+        if (tags == getSymbolTag_()) {
             try {
                 firstOutEdge(from, getLayerTagManager().getMask(getSymbolTag_()));
                 visibleImplicitOutEdges_[from] = true;
-            } catch (NoEdgeException) {
-            }
-        }
-
-        if (
-            isLooseVertex(from)
-            && !isLooseVertex(to)
-            && tags == getSymbolTag_()
-        ) {
-            try {
                 EdgeDescriptor ed = firstInEdge(to, getLayerTagManager().getMask(getSymbolTag_()));
                 visibleImplicitOutEdges_[getEdgeSource(ed)] = true;
             } catch (NoEdgeException) {
