@@ -15,7 +15,7 @@ foreach(dir ${tools_DIRS})
 endforeach(dir)
 
 add_executable(psi-pipe psi-pipe.cpp)
-target_link_libraries(psi-pipe framework ${Boost_LIBRARIES} common formats-psi formats-txt formats-utt tools-tokenizers-tp)
+target_link_libraries(psi-pipe framework ${Boost_LIBRARIES} common formats-psi formats-simple formats-txt formats-utt tools-tokenizers-tp)
 
 if(USE_JAVA)
 	include_directories("${psi-toolkit_SOURCE_DIR}/tools/lemmatizers/morfologik")

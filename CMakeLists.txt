@@ -76,7 +76,7 @@ foreach(dir ${DIRS})
 	add_subdirectory(${dir})
 endforeach(dir)
 
-set(TARGETS common framework formats-psi formats-txt formats-utt tools-tokenizers-tp psi-pipe common-test)
+set(TARGETS common framework formats-psi formats-simple formats-txt formats-utt tools-tokenizers-tp psi-pipe common-test)
 
 if(USE_JAVA)
 	set(TARGETS ${TARGETS} tools-lemmatizers-morfologik)
@@ -116,7 +116,7 @@ if(CXXTEST_FOUND)
 	enable_testing()
 
 	set(TESTS ${common-t})
-	set(T-TARGETS common common-test formats-psi formats-txt formats-utt)
+	set(T-TARGETS common common-test formats-psi formats-simple formats-txt formats-utt)
 
 	if(USE_JAVA)
 		set(TESTS ${TESTS} ${morfologik-t})
