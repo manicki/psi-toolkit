@@ -24,8 +24,9 @@ add_library(common
 	processor_factory.cpp
 	quoter.cpp
 	reader_worker.cpp
-    regexp.cpp
-	utt_like_quoter.cpp
+        regexp.cpp
+        segment_glob.cpp
+        utt_like_quoter.cpp
 	writer_worker.cpp
 	${common-java-files}
 )

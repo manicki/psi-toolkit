@@ -11,6 +11,7 @@ set(common-t
 	${psi-toolkit_SOURCE_DIR}/common/t/layer_tags_tests.hpp
 	${psi-toolkit_SOURCE_DIR}/common/t/quoter_tests.hpp
 	${psi-toolkit_SOURCE_DIR}/common/t/regexp_tests.hpp
+	${psi-toolkit_SOURCE_DIR}/common/t/segment_glob_tests.hpp
 CACHE PATH "CxxTests for common programms" FORCE)
 
 if(USE_JAVA)
