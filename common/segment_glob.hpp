@@ -25,7 +25,7 @@ public:
     /**
        Checks whether the glob is fixed (i.e. does not contain wildcard characters.
     */
-    bool isFixed();
+    bool isFixed() const;
 
     const std::string& asString() const;
 

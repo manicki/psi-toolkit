@@ -83,4 +83,15 @@ public:
         TS_ASSERT(globB.matches("abćą.txt"));
         TS_ASSERT(!globB.matches("abć.txt"));
     }
+
+    void testAll() {
+        SegmentGlob glob("*");
+
+        TS_ASSERT(!glob.isFixed());
+
+        TS_ASSERT(glob.matches("a.txt"));
+        TS_ASSERT(glob.matches(""));
+        TS_ASSERT(glob.matches("a"));
+    }
+
 };

@@ -54,7 +54,7 @@ bool SegmentGlob::matches(const std::string& segment) {
     return !*g;
 }
 
-bool SegmentGlob::isFixed() {
+bool SegmentGlob::isFixed() const {
     return isFixed_;
 }
 
