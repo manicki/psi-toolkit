@@ -4,7 +4,7 @@ project(psi-toolkit CXX)
 
 # Finds and includes external libraries
 set(Boost_USE_STATIC_LIBS ON)
-find_package(Boost COMPONENTS program_options graph serialization REQUIRED)
+find_package(Boost COMPONENTS program_options graph serialization filesystem system REQUIRED)
 
 set(CXXTEST_INCLUDE_DIR ./prj/tests)
 find_package(CxxTest)

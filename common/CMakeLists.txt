@@ -9,6 +9,7 @@ add_library(common
 	annotation_item_manager.cpp
 	annotator.cpp
 	annotator_factory.cpp
+        ant_like_path_glob.cpp
 	cutter.cpp
 	lattice.cpp
 	lattice_reader.cpp
