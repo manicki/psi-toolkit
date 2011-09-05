@@ -21,9 +21,11 @@ add_library(common
 	layer_tag_collection.cpp
 	layer_tag_manager.cpp
 	layer_tag_mask.cpp
+        lang_specific_processor_file_fetcher.cpp
 	lemmatizer_output_iterator.cpp
 	processor.cpp
 	processor_factory.cpp
+	processor_file_fetcher.cpp
 	quoter.cpp
 	reader_worker.cpp
         regexp.cpp

@@ -1,15 +1,9 @@
 #include "file_fetcher.hpp"
 
-#include <boost/algorithm/string.hpp>
-
 #include "logging.hpp"
 #include "config.h"
 
 #include "ant_like_path_glob.hpp"
-
-FileFetcher::FileFetcher(boost::filesystem::path sourceFilePath) {
-    initDirectoryParams_(sourceFilePath);
-}
 
 void FileFetcher::addParam(const std::string& param, const std::string& value) {
     if (params_.count(param))
@@ -30,29 +24,6 @@ boost::filesystem::path FileFetcher::getOneFile(const std::string& fileSpec) {
                         + "specification");
     else
         return *(files.begin());
-}
-
-template<typename Out>
-void FileFetcher::getFiles(const std::string& fileSpec, Out outputIterator) {
-    std::string finalFileSpec = replaceParams_(fileSpec);
-
-    std::set<boost::filesystem::path> files;
-
-    std::vector<std::string> fileGlobs;
-    boost::split(fileGlobs, finalFileSpec, boost::is_any_of(",;"));
-
-    for (std::vector<std::string>::const_iterator giter = fileGlobs.begin();
-         giter != fileGlobs.end();
-         ++giter) {
-        AntLikePathGlob glob(*giter);
-        boost::filesystem::path here;
-        glob.allMatchingFiles(here, files);
-    }
-
-    for (std::set<boost::filesystem::path>::iterator fiter = files.begin();
-         fiter != files.end();
-         ++fiter)
-        *outputIterator++ = *fiter;
 }
 
 std::string FileFetcher::replaceParams_(const std::string& fileSpec) {
@@ -82,37 +53,6 @@ std::string FileFetcher::replaceParams_(const std::string& fileSpec) {
     }
 
     return finalFileSpec;
-}
-
-void FileFetcher::initDirectoryParams_(boost::filesystem::path sourceFilePath) {
-
-    if (boost::filesystem::is_regular_file(sourceFilePath))
-        sourceFilePath = sourceFilePath.parent_path();
-
-    sourceFilePath = sourceFilePath.relative_path();
-
-    boost::filesystem::path sourcePath;
-    bool found = false;
-
-    for (boost::filesystem::path::iterator it = sourceFilePath.begin();
-         it != sourceFilePath.end();
-         ++it) {
-        if ((*it).string() == "tools"
-            || (*it).string() == "formatters"
-            || (*it).string() == "server") {
-            sourcePath /= (*it);
-            found = true;
-        }
-        else if (found)
-            sourcePath /= (*it);
-    }
-
-    if (!found)
-        throw Exception(std::string("unexpected source path `") + sourceFilePath.string() + "'");
-
-    boost::filesystem::path itsData = getRootDir_() / sourcePath / "data";
-
-    params_["ITSDATA"] = itsData.string();
 }
 
 boost::filesystem::path FileFetcher::getRootDir_() {
