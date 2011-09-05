@@ -35,7 +35,7 @@ AntLikePathGlob::AntLikePathGlob(const std::string& globSpec) {
 }
 
 void AntLikePathGlob::allMatchingFiles(boost::filesystem::path currentPath,
-                                       std::set<boost::filesystem::path>& matchedFiles) {
+                                       std::set<boost::filesystem::path>& matchedFiles) const {
 
     boost::filesystem::path fixedPart =
         (fixedPrefix_.has_root_path()
@@ -50,8 +50,8 @@ void AntLikePathGlob::allMatchingFiles(boost::filesystem::path currentPath,
 
 void AntLikePathGlob::findMatchingFiles_(
     boost::filesystem::path currentPath,
-    std::list<SegmentGlob>::iterator globIter,
-    std::set<boost::filesystem::path>& matchedFiles) {
+    std::list<SegmentGlob>::const_iterator globIter,
+    std::set<boost::filesystem::path>& matchedFiles) const {
 
     if (globIter == segmentGlobs_.end())
         return;
@@ -61,7 +61,7 @@ void AntLikePathGlob::findMatchingFiles_(
           ? "END"
           : (*globIter).asString()));
 
-    std::list<SegmentGlob>::iterator globIterPlusOne = globIter;
+    std::list<SegmentGlob>::const_iterator globIterPlusOne = globIter;
     ++globIterPlusOne;
 
     if ((*globIter).asString() == "**") {
@@ -93,7 +93,7 @@ void AntLikePathGlob::findMatchingFiles_(
 
 void AntLikePathGlob::checkFile_(boost::filesystem::path filePath,
                                  std::set<boost::filesystem::path>& matchedFiles,
-                                 bool printWarning) {
+                                 bool printWarning) const {
     if (is_regular_file(filePath))
         matchedFiles.insert(filePath);
     else if(printWarning)

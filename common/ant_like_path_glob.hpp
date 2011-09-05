@@ -15,18 +15,18 @@ public:
 
     void allMatchingFiles(
         boost::filesystem::path currentPath,
-        std::set<boost::filesystem::path>& matchedFiles);
+        std::set<boost::filesystem::path>& matchedFiles) const;
 
 private:
     void findMatchingFiles_(
         boost::filesystem::path currentPath,
-        std::list<SegmentGlob>::iterator globIter,
-        std::set<boost::filesystem::path>& matchedFiles);
+        std::list<SegmentGlob>::const_iterator globIter,
+        std::set<boost::filesystem::path>& matchedFiles) const;
 
     void checkFile_(
         boost::filesystem::path filePath,
         std::set<boost::filesystem::path>& matchedFiles,
-        bool printWarning);
+        bool printWarning) const;
 
     boost::filesystem::path fixedPrefix_;
     std::list<SegmentGlob> segmentGlobs_;

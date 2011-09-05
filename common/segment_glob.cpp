@@ -6,7 +6,7 @@ SegmentGlob::SegmentGlob(const std::string& glob):glob_(glob) {
     checkIfFixed_();
 }
 
-bool SegmentGlob::matches(const std::string& segment) {
+bool SegmentGlob::matches(const std::string& segment) const {
 
     if (isFixed_)
         return segment == glob_;

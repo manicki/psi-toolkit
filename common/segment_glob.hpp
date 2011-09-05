@@ -20,7 +20,7 @@ public:
     /**
        Checks whether a path segment matches the glob.
     */
-    bool matches(const std::string& segment);
+    bool matches(const std::string& segment) const;
 
     /**
        Checks whether the glob is fixed (i.e. does not contain wildcard characters.
