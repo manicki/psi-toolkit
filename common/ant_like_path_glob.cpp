@@ -15,6 +15,9 @@ AntLikePathGlob::AntLikePathGlob(const std::string& globSpec) {
         iter != rest.end();
         ++iter) {
 
+        // trick for compilation with both Boost 1.42 and 1.47
+        // (in Boost 1.42 strings are returned by an iterator rather
+        //  than boost::filesystem::paths)
         boost::filesystem::path seg(*iter);
 
         SegmentGlob segmentGlob(seg.string());
@@ -81,6 +84,9 @@ void AntLikePathGlob::findMatchingFiles_(
         for (boost::filesystem::directory_iterator fiter(currentPath);
              fiter != end_iter;
              ++fiter) {
+            // trick for compilation with both Boost 1.42 and 1.47
+            // (in Boost 1.42 filename() returns a string
+            //  rather than a path)
             boost::filesystem::path seg(fiter->path().filename());
 
             if (globIter->matches(seg.string())) {
