@@ -12,7 +12,8 @@ void FileFetcher::addParam(const std::string& param, const std::string& value) {
     params_[param] = value;
 }
 
-boost::filesystem::path FileFetcher::getOneFile(const std::string& fileSpec) {
+boost::filesystem::path FileFetcher::getOneFile(
+    const std::string& fileSpec) const {
     std::list<boost::filesystem::path> files;
 
     getFiles(fileSpec, std::back_inserter(files));
@@ -26,7 +27,7 @@ boost::filesystem::path FileFetcher::getOneFile(const std::string& fileSpec) {
         return *(files.begin());
 }
 
-std::string FileFetcher::replaceParams_(const std::string& fileSpec) {
+std::string FileFetcher::replaceParams_(const std::string& fileSpec) const {
     size_t percentPos = 0;
     std::string finalFileSpec = fileSpec;
 
@@ -43,7 +44,9 @@ std::string FileFetcher::replaceParams_(const std::string& fileSpec) {
             throw Exception(std::string("unknown param `") + param + "' in file specification `"
                             + fileSpec + "'");
         else {
-            std::string value = params_[param];
+            std::map<std::string,std::string>::const_iterator foundParam
+                = params_.find(param);
+            std::string value = foundParam->second;
 
             finalFileSpec.replace(percentPos,
                                   nextPercentPos - percentPos + 1,

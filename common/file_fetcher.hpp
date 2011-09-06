@@ -35,10 +35,10 @@ public:
 
     void addParam(const std::string& param, const std::string& value);
 
-    boost::filesystem::path getOneFile(const std::string& fileSpec);
+    boost::filesystem::path getOneFile(const std::string& fileSpec) const;
 
     template<typename Out>
-    void getFiles(const std::string& fileSpec, Out outputIterator) {
+    void getFiles(const std::string& fileSpec, Out outputIterator) const {
         std::string finalFileSpec = replaceParams_(fileSpec);
 
         std::set<boost::filesystem::path> files;
@@ -64,7 +64,7 @@ protected:
     static boost::filesystem::path getRootDir_();
 
 private:
-    std::string replaceParams_(const std::string& fileSpec);
+    std::string replaceParams_(const std::string& fileSpec) const;
 
     std::map<std::string, std::string> params_;
 
