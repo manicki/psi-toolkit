@@ -17,9 +17,14 @@ void ProcessorFileFetcher::initDirectoryParams_(boost::filesystem::path sourceFi
     for (boost::filesystem::path::iterator it = sourceFilePath.begin();
          it != sourceFilePath.end();
          ++it) {
-        if ((*it).string() == "tools"
-            || (*it).string() == "formatters"
-            || (*it).string() == "server") {
+        // trick for compilation with both Boost 1.42 and 1.47
+        // (in Boost 1.42 strings are returned by an iterator rather
+        //  than boost::filesystem::paths)
+        boost::filesystem::path seg(*it);
+
+        if (seg.string() == "tools"
+            || seg.string() == "formatters"
+            || seg.string() == "server") {
             sourcePath /= (*it);
             found = true;
         }
