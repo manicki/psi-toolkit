@@ -1,9 +1,13 @@
 #ifndef TP_TOKENIZER_HDR
 #define TP_TOKENIZER_HDR
 
+#include <boost/filesystem.hpp>
+
 #include "annotator.hpp"
 #include "annotator_factory.hpp"
 #include "tp_basic_tokenizer_rule_set.hpp"
+
+#include "lang_specific_processor_file_fetcher.hpp"
 
 class TpTokenizer : public Annotator {
 
@@ -23,9 +27,20 @@ public:
 
         virtual std::list<std::string> doProvidedLayerTags();
 
+        std::map<std::string,std::string> parseMappingOption_(
+            const std::string& mappingOption, 
+            const std::string& lang);
+
+        std::map<std::string,boost::filesystem::path> substituteMapping_(
+            const std::map<std::string,std::string>& rawMapping,
+            const LangSpecificProcessorFileFetcher& fileFetcher);
+
+        static const std::string DEFAULT_RULE_FILE_SPEC;
+        static const std::string DEFAULT_RULE_FILE_MAPPING;
     };
 
-    TpTokenizer(const std::string& lang);
+    TpTokenizer(boost::filesystem::path rules,
+                const std::map<std::string,boost::filesystem::path>& mapping);
 
 private:
 
