@@ -1,0 +1,31 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" 
+ "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html>
+<head>
+	<title>Psi Server</title>
+</head>
+
+<body>
+	<h1>Psi Server</h1>
+	<!--#psis hello -->
+	<br />
+	<br />
+	
+	<form action="name.psis" method="GET">
+		Write your name: <br />
+		<input name="yourname" />
+		<input value="Enter" type="submit" />
+	</form>
+
+	<p><!--#psis hellouser --></p>
+
+	<form action="file.psis" method="POST">
+		Please specify a files: <br />
+		<input type="file" name="yourfile">
+		<input type="submit" value="Send">
+	</form>
+
+	<p><!--#psis filecontent --></p>
+</body>
+
+</html>
