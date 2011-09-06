@@ -15,7 +15,9 @@ AntLikePathGlob::AntLikePathGlob(const std::string& globSpec) {
         iter != rest.end();
         ++iter) {
 
-        SegmentGlob segmentGlob((*iter).string());
+        boost::filesystem::path seg(*iter);
+
+        SegmentGlob segmentGlob(seg.string());
 
         if (inPrefix && segmentGlob.isFixed())
             fixedPrefix_ /= (*iter);
@@ -78,8 +80,10 @@ void AntLikePathGlob::findMatchingFiles_(
         boost::filesystem::directory_iterator end_iter;
         for (boost::filesystem::directory_iterator fiter(currentPath);
              fiter != end_iter;
-             ++fiter)
-            if (globIter->matches(fiter->path().filename().string())) {
+             ++fiter) {
+            boost::filesystem::path seg(fiter->path().filename());
+
+            if (globIter->matches(seg.string())) {
                 if (boost::filesystem::is_directory(fiter->path()))
                     findMatchingFiles_(*fiter, globIterPlusOne, matchedFiles);
                 else {
@@ -88,6 +92,7 @@ void AntLikePathGlob::findMatchingFiles_(
                         checkFile_(fiter->path(), matchedFiles, false);
                 }
             }
+        }
     }
 }
 
