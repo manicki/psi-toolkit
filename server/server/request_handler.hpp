@@ -25,6 +25,8 @@ public:
   /// Handle a request and produce a reply.
   virtual void handle_request(const request& req, reply& rep);
 
+  virtual ~request_handler() {};
+
 private:
   /// The directory containing the files to be served.
   std::string doc_root_;

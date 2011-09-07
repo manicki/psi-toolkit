@@ -11,12 +11,10 @@ class PsiRequestHandler : public http::server3::request_handler
 {
 public:
 	/// Construct with a directory containing files to be served.
-	PsiRequestHandler(const std::string& doc_root) : 
-		http::server3::request_handler(doc_root) { }
+	PsiRequestHandler(const std::string& doc_root, PsiServer* psi_server) : 
+		http::server3::request_handler(doc_root), psi_server_(psi_server) { }
 
-	void setPsiServer(PsiServer* psi_server);
-
-	virtual void handle_request(const http::server3::request& req, http::server3::reply& rep);
+	void handle_request(const http::server3::request& req, http::server3::reply& rep);
 
 private:
 	PsiServer* psi_server_;

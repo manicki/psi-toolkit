@@ -2,10 +2,6 @@
 
 #include <boost/lexical_cast.hpp>
 
-void PsiRequestHandler::setPsiServer(PsiServer* psi_server) { 
-	psi_server_ = psi_server;
-}
-
 void PsiRequestHandler::handle_request(
 	const http::server3::request& req, http::server3::reply& rep
 ) {
