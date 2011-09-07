@@ -7,12 +7,13 @@ int main(int argc, char* argv[])
   try {
     // Check command line arguments.
     if (argc != 5) {
-      std::cerr << "Simple HTTP Server based on example 3 from the boost::asio documentation\n";
-      std::cerr << "Usage: psi-server <address> <port> <threads> <doc_root>\n";
-      std::cerr << "  For IPv4, try:\n";
-      std::cerr << "    psi-server 0.0.0.0 3000 1 ./site\n";
-      std::cerr << "  For IPv6, try:\n";
-      std::cerr << "    psi-server 0::0 3000 1 ./site\n";
+		std::cerr << "PSI SERVER version 0.1\n";
+		std::cerr << "Simple multithreading web server based on Boost Asio server3 and C++ WEBEM\n";
+		std::cerr << "Usage: psi-server <address> <port> <threads> <doc_root>\n";
+		std::cerr << "  For IPv4, try:\n";
+		std::cerr << "    psi-server 0.0.0.0 3000 1 ../server/website\n";
+		std::cerr << "  For IPv6, try:\n";
+		std::cerr << "    psi-server 0::0 3000 1 ../server/website\n";
       return 1;
     }
 

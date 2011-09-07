@@ -3,7 +3,9 @@ add_library(server
 	psi_server.cpp
 )
 
-target_link_libraries(server ${Boost_LIBRARIES})
+target_link_libraries(server ${Boost_LIBRARIES} pthread)
+
+set_target_properties(server PROPERTIES LINK_FLAGS "-lpthread")
 
 include_directories("${psi-toolkit_SOURCE_DIR}/server/server")
 link_directories("${psi-toolkit_BINARY_DIR}/server/server")
