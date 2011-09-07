@@ -9,6 +9,8 @@ formats
 framework
 tools
 utf8
+server
 runner.cpp
 runner
 psi-pipe
+psi-server
