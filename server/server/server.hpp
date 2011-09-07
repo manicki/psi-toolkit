@@ -22,9 +22,6 @@ class server
 {
 public:
 
-//  explicit server(const std::string& address, const std::string& port,
-//      const std::string& doc_root, std::size_t thread_pool_size);
-
   /// Construct the server to listen on the specified TCP address and port, and
   /// use user defined requuest handler to serve up files.
   explicit server(const std::string& address, const std::string& port,

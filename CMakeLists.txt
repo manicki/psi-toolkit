@@ -4,7 +4,7 @@ project(psi-toolkit CXX)
 
 # Finds and includes external libraries
 set(Boost_USE_STATIC_LIBS ON)
-find_package(Boost COMPONENTS program_options graph serialization filesystem system REQUIRED)
+find_package(Boost COMPONENTS program_options graph serialization filesystem system thread REQUIRED)
 
 set(CXXTEST_INCLUDE_DIR ./prj/tests)
 find_package(CxxTest)
@@ -16,12 +16,12 @@ if(USE_JAVA)
 	enable_language(Java)
 
 	find_package(Java REQUIRED)
-	message(STATUS "Java runtime ${JAVA_RUNTIME}")
-	message(STATUS "Java compile ${JAVA_COMPILE}")
+#	message(STATUS "Java runtime ${JAVA_RUNTIME}")
+#	message(STATUS "Java compile ${JAVA_COMPILE}")
 
 	find_package(JNI REQUIRED)
-	message(STATUS "JVM library ${JAVA_JVM_LIBRARY}")
-	message(STATUS "JNI path ${JAVA_INCLUDE_PATH}")
+#	message(STATUS "JVM library ${JAVA_JVM_LIBRARY}")
+#	message(STATUS "JNI path ${JAVA_INCLUDE_PATH}")
 
 	string(REGEX REPLACE "(.*)/libjvm.so" "\\1" LD_LIBPATH ${JAVA_JVM_LIBRARY})
 	message(STATUS "You may need to set LD_LIBRARY_PATH=${LD_LIBPATH} to run installed software")
@@ -69,7 +69,7 @@ message(STATUS "Bonsai common path file (required while using ParseGraph) ${BONS
 # Sets compiler flags
 set(CMAKE_CXX_FLAGS "-g -Wall -Wundef -Wnon-virtual-dtor -Wextra")
 
-set(DIRS common formats tools framework utf8)
+set(DIRS common formats tools framework utf8 server)
 foreach(dir ${DIRS})
 	include_directories("${psi-toolkit_SOURCE_DIR}/${dir}")
 	link_directories("${psi-toolkit_BINARY_DIR}/${dir}")
