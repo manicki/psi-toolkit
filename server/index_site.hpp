@@ -19,7 +19,7 @@ public:
 	
 	char * info() {
 		std::string str = "<p>Some string from IndexSite class!</p>";
-		return StringToChar(str);
+		return stringToChar(str);
 	}
 
 	char * inputText() {
@@ -27,12 +27,12 @@ public:
 		if (input_text_.length()) {
 			str = "<p>Your text:</p><p>" + input_text_ + "</p>";
 		}
-		return StringToChar(str);
+		return stringToChar(str);
 	}
 	
 	char * actionInputText() {
 		input_text_ = psi_server_.findValue("input-text");
-		return StringToChar(std::string("/index.html"));
+		return stringToChar(std::string("/index.html"));
 	}
 
 private:
