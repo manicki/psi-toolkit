@@ -1,6 +1,6 @@
 #include <iostream>
 
-#include "site_hello_world.hpp"
+#include "index_site.hpp"
 
 int main(int argc, char* argv[])
 {
@@ -11,15 +11,15 @@ int main(int argc, char* argv[])
 		std::cerr << "Simple multithreading web server based on Boost Asio server3 and C++ WEBEM\n";
 		std::cerr << "Usage: psi-server <address> <port> <threads> <doc_root>\n";
 		std::cerr << "  For IPv4, try:\n";
-		std::cerr << "    psi-server 0.0.0.0 3000 1 ../server/website\n";
+		std::cerr << "    psi-server 0.0.0.0 3000 1 path_to_psi-toolkit/server/website\n";
 		std::cerr << "  For IPv6, try:\n";
-		std::cerr << "    psi-server 0::0 3000 1 ../server/website\n";
+		std::cerr << "    psi-server 0::0 3000 1 path_to_psi-toolkit/server/website\n";
       return 1;
     }
 
     PsiServer srv(argv[1], argv[2], argv[3], argv[4]);
 	std::cerr << srv.info();
-	SiteHelloWorld hello(srv);
+	IndexSite site(srv);
 
 	srv.run();
   }

@@ -7,25 +7,17 @@
 
 <body>
 	<h1>Psi Server</h1>
-	<!--#psis hello -->
-	<br />
-	<br />
 	
-	<form action="name.psis" method="GET">
-		Write your name: <br />
-		<input name="yourname" />
-		<input value="Enter" type="submit" />
+	<!--#psis index_site_info --> 
+	
+	<form action="input_text.psis" method="GET">
+		Write some text: <br />
+		<input name="input-text" />
+		<input value="Send" type="submit" name="input-text-submit" />
 	</form>
 
-	<p><!--#psis hellouser --></p>
+	<!--#psis index_site_input_text -->
 
-	<form action="file.psis" method="POST">
-		Please specify a files: <br />
-		<input type="file" name="yourfile">
-		<input type="submit" value="Send">
-	</form>
-
-	<p><!--#psis filecontent --></p>
 </body>
 
 </html>
