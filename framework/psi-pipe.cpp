@@ -2,7 +2,7 @@
 
 int main(int argc, char* argv[]) {
     if (argc < 2) {
-        std::cerr << "try this: ./psi-pipe txt-reader ! tp-tokenizer ! psi-writer\n";
+        std::cerr << "try this: cd prj; framework/psi-pipe txt-reader ! tp-tokenizer --lang pl ! psi-writer\n";
         exit(1);
     }
 

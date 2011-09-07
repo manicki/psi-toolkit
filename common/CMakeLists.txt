@@ -35,6 +35,8 @@ add_library(common
 	${common-java-files}
 )
 
+target_link_libraries(common ${Boost_LIBRARIES})
+
 if(USE_JAVA)
 	target_link_libraries(common ${JAVA_JVM_LIBRARY})
 	add_subdirectory(j)
