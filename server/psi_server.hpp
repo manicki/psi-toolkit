@@ -19,6 +19,7 @@
 	typedef boost::function<char*(PsiServer*)> psis_action_function;
 
 	class PsiServer{
+	
 	public:
 		PsiServer(const std::string& address, const std::string& port,
 			const std::string& threads, const std::string& doc_root);
