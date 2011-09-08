@@ -23,6 +23,7 @@ add_library(common
 	layer_tag_mask.cpp
         lang_specific_processor_file_fetcher.cpp
 	lemmatizer_output_iterator.cpp
+        object_cache.cpp
 	processor.cpp
 	processor_factory.cpp
 	processor_file_fetcher.cpp
