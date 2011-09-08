@@ -1,6 +1,8 @@
 #include "file_fetcher.hpp"
 #include "lang_specific_processor_file_fetcher.hpp"
 
+#include "config.h"
+
 class FileFetcherTests : public CxxTest::TestSuite
 {
 public:
@@ -80,15 +82,15 @@ public:
         TS_ASSERT_EQUALS(
             filesFound[2].string(),
             "../tools/tokenizers/tp/data/xx/xx.rgx");
-        
+
     }
 
     void testExceptions() {
         FileFetcher fileFetcher;
 
         std::vector<boost::filesystem::path> filesFound;
-        
-        TS_ASSERT_THROWS( 
+
+        TS_ASSERT_THROWS(
             fileFetcher.getFiles("%FOO%", std::back_inserter(filesFound)),
             FileFetcher::Exception);
     }

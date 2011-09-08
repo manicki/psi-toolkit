@@ -1,5 +1,7 @@
 #include "ant_like_path_glob.hpp"
 
+#include "config.h"
+
 class AntLikePathGlobTests : public CxxTest::TestSuite
 {
 public:
