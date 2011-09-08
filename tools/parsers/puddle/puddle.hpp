@@ -26,6 +26,8 @@
 #include "annotator.hpp"
 #include "annotator_factory.hpp"
 
+#include "lang_specific_processor_file_fetcher.hpp"
+
 namespace poleng
 {
 
@@ -50,6 +52,9 @@ class Puddle : public Annotator {
             virtual std::list<std::list<std::string> > doOptionalLayerTags();
 
             virtual std::list<std::string> doProvidedLayerTags();
+
+            static const std::string DEFAULT_TAGSET_FILE;
+            static const std::string DEFAULT_RULE_FILE;
         };
 
         Puddle();
@@ -72,10 +77,6 @@ class Puddle : public Annotator {
 //        void setStdoutOutput() { this->xmlWriter->setStdoutOutput(); }
         void setFlag(std::string flag);
         bool getFlag(std::string flag) const;
-        void setTagsetLogFile(std::string filename);
-        void setRulesLogFile(std::string filename);
-        void logTagset();
-        void logRules();
         //@todo: parseString, parseTaggedString mogą wrócić, tylko kwestia taggera/lematyzatora pozostaje. sama lattice zen da sie zrobic.
         //@todo: czy parse ma zwracac nowa lattice czy dodawac do wejscioewj to jest juz kwestia do przemyslenia
 //        ParseGraphPtr parseString(std::string line);
@@ -100,8 +101,6 @@ class Puddle : public Annotator {
         bool syntok;
         bool disamb;
         bool verbose;
-        std::string tagsetLogFilename;
-        std::string rulesLogFilename;
 //        std::string xmlOutputFilename;
         std::string dotOutputFilename;
 
