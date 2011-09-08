@@ -14,6 +14,7 @@ set(common-t
 	${psi-toolkit_SOURCE_DIR}/common/t/segment_glob_tests.hpp
 	${psi-toolkit_SOURCE_DIR}/common/t/ant_like_path_glob_tests.hpp
 	${psi-toolkit_SOURCE_DIR}/common/t/file_fetcher_tests.hpp
+	${psi-toolkit_SOURCE_DIR}/common/t/xml_property_tree_tests.hpp
 CACHE PATH "CxxTests for common programms" FORCE)
 
 if(USE_JAVA)

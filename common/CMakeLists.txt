@@ -32,6 +32,7 @@ add_library(common
         segment_glob.cpp
         utt_like_quoter.cpp
 	writer_worker.cpp
+        xml_property_tree.cpp
 	${common-java-files}
 )
 
