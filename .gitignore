@@ -4,3 +4,6 @@
 classjava.stamp
 psi-pipe
 common/config.h
+cppcheck-result.xml
+prj/valgrind.xml
+prj/valgrindTestResults.xml
