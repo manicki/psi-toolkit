@@ -1,6 +1,10 @@
 #ifndef PSI_LATTICE_READER_HDR
 #define PSI_LATTICE_READER_HDR
 
+// for unknown reasons property_tree has to be included
+// before Spirit/Lambda (at least for GCC 4.6.1 &
+// Boost 1.47.0 at Arch Linux)
+#include <boost/property_tree/ptree.hpp>
 
 #include <boost/fusion/include/adapt_struct.hpp>
 #include <boost/fusion/include/io.hpp>
