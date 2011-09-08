@@ -17,9 +17,17 @@ namespace puddle
         RuleLoader rule_loader;
         //@todo: tu laduje reguly i tagset
         TagsetPtr tagset;
+
+        std::string lang = options["lang"].as<std::string>();
+        LangSpecificProcessorFileFetcher fileFetcher(__FILE__, lang);
+
         if (options.count("tagset")) {
             std::string tagsetFilename = options["tagset"].as<std::string>();
-            tagset = tagset_loader.load(tagsetFilename);
+            boost::filesystem::path tagsetPath =
+                fileFetcher.getOneFile(tagsetFilename);
+            std::string tagsetPathString = tagsetPath.string();
+            std::cerr << "TAGSET: " << tagsetPathString << std::endl;
+            tagset = tagset_loader.load(tagsetPathString);
             if (tagset->size() == 0) {
                 std::cerr << "Tagset not loaded." << std::endl;
                 //@todo: wyjatek
@@ -37,13 +45,15 @@ namespace puddle
         RulesPtr rules;
         if (options.count("rules")) {
             std::string rulesFilename = options["rules"].as<std::string>();
-            rules = rule_loader.readFromFile(rulesFilename);
+            boost::filesystem::path rulesPath =
+                fileFetcher.getOneFile(rulesFilename);
+            std::string rulesPathString = rulesPath.string();
+            rules = rule_loader.readFromFile(rulesPathString);
             if (rules->size() == 0) {
                 std::cerr << "Rules not loaded. " << std::endl;
                 //return 1;
                 //@todo: wyjatek
             }
-            //parser.logRules();
         } else {
             std::cerr << "Rules not given." << std::endl;
             //return 1;
@@ -57,8 +67,11 @@ namespace puddle
     boost::program_options::options_description Puddle::Factory::doOptionsHandled() {
         boost::program_options::options_description desc("Options");
         desc.add_options()
-            ("tagset", boost::program_options::value<std::string>(), "tagset file")
-            ("rules", boost::program_options::value<std::string>(), "rules file")
+            ("lang", boost::program_options::value<std::string>(), "language")
+            ("tagset", boost::program_options::value<std::string>()
+             ->default_value(DEFAULT_TAGSET_FILE), "tagset file")
+            ("rules", boost::program_options::value<std::string>()
+             ->default_value(DEFAULT_RULE_FILE), "rules file")
             ;
         return desc;
     }
@@ -80,6 +93,11 @@ namespace puddle
         layerTags.push_back("parse");
         return layerTags;
     }
+
+    const std::string Puddle::Factory::DEFAULT_TAGSET_FILE
+        = "%ITSDATA%/%LANG%/tagset.%LANG%.cfg";
+    const std::string Puddle::Factory::DEFAULT_RULE_FILE
+        = "%ITSDATA%/%LANG%/rules.%LANG%";
 
     LatticeWorker* Puddle::doCreateLatticeWorker(Lattice& lattice) {
         return new Worker(*this, lattice);
@@ -128,8 +146,6 @@ Puddle::Puddle()
 
     ruleModifier = new RuleModifier;
 
-    tagsetLogFilename = "";
-    rulesLogFilename = "";
 //    latticeWrapper = LatticeWrapperPtr( new LatticeWrapper() );
 }
 
@@ -144,9 +160,6 @@ Puddle::Puddle(TagsetPtr tagset_, RulesPtr rules_) {//,
     describe = false;
 
     ruleModifier = new RuleModifier;
-
-    tagsetLogFilename = "";
-    rulesLogFilename = "";
 
     this->tagset = tagset_;
     describe = tagset_->containsDesc();
@@ -507,43 +520,7 @@ bool Puddle::getFlag (std::string flag) const {
     }
 }
 
-void Puddle::setTagsetLogFile(std::string filename)
-{
-    tagsetLogFilename = filename;
-}
 
-void Puddle::setRulesLogFile(std::string filename)
-{
-    rulesLogFilename = filename;
-}
-
-void Puddle::logTagset()
-{
-    if (tagsetLogFilename != "")
-    {
-        std::ofstream logfile(tagsetLogFilename.c_str());
-        logfile << tagset->log();
-        logfile.close();
-    }
-}
-
-void Puddle::logRules()
-{
-    if (rulesLogFilename != "")
-    {
-        std::ofstream logfile(rulesLogFilename.c_str());
-        for (Rules::iterator ir = rules->begin(); ir != rules->end(); ++ ir)
-        {
-            logfile << (*ir)->log();
-            logfile << std::endl;
-        }
-        logfile.close();
-    }
-}
-
-//        LatticeWrapperPtr Puddle::getLatticeWrapper() {
-//            return latticeWrapper;
-//        }
 }
 
 }
