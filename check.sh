@@ -1,6 +1,7 @@
 #!/bin/bash
 
 cd prj
+make install
 ./runner
 
 valgrind --xml=yes --xml-file=valgrind.xml --suppressions=./memcpy.supp ./runner

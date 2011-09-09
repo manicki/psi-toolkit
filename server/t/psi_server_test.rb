@@ -1,6 +1,6 @@
 require 'config'
 
-class PsiServereTest < Test::Unit::TestCase
+class PsiServerTest < Test::Unit::TestCase
 
 	def test_server_address
 		assert_nothing_raised(NativeException) do
