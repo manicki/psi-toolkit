@@ -31,7 +31,6 @@ class Tagset
         bool checkAttribute(std::string &pos, std::string &attribute);
         bool checkPos(std::string &pos);
         bool checkAttributeValue(std::string &attribute, std::string &value);
-        std::string log();
         Tagset();
         Tagset(std::string &filename);
         ~Tagset();
@@ -44,7 +43,7 @@ class Tagset
         std::vector<char> mapPosMatching(std::string &regexp);
         std::vector<char> mapAttributeValuesMatching(std::string &attribute, std::string &regexp);
         int getAttributeIndex(std::string &attribute);
-        int size();
+        size_t size();
         std::string getAttributeAtIndex(std::string &pos, int index);
         std::vector<std::string> getAttributeValues(std::string &attribute);
 
