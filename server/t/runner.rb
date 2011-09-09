@@ -1,16 +1,32 @@
 require 'config'
 
-=begin
-exec = ""
+$exe = ""
+$pid = ""
+
+at_exit do
+	`kill #{$pid}`
+	puts ""
+	puts $tst
+end
+
 t_server = Thread.new do
-	exec = "jruby #{$source_dir}/psi-server #{$arguments}"
+	puts "Starting psi-server..."
+	$exe = `#{$source_dir}/psi-server #{$arguments}`
 end
 
+sleep 0.5
+$pid = `pidof psi-server #{$arguments}`
+puts "\nPsi Server process id = #{$pid}"
+
+$tst = ""
 t_test = Thread.new do
-	sleep 0.1
-	require 'psi_server_test'
-	require 'index_site_test'
+	$tst = `jruby test_suite.rb`
 end
 
-puts exec
-=end
+while (t_test.status)
+	sleep(1)
+	print "."
+end
+
+
+exit
