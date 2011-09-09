@@ -1,3 +1,6 @@
+#ifndef TEMPLATE_SITE_HDR
+#define TEMPLATE_SITE_HDR
+
 #include <fstream>
 #include <iostream>
 
@@ -44,6 +47,6 @@ protected:
 		
 		return content;
 	}
-
-
 };
+
+#endif
