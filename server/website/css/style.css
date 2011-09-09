@@ -1,0 +1,14 @@
+/* General */
+
+#wrapper { width: 980px; margin: 0 auto; }
+
+/* Forms */
+
+input[type=text] { padding: 5px; width:800px; }
+textarea { padding: 5px; }
+#pipe-text { }
+#input-text { }
+
+/* Boxes */
+
+

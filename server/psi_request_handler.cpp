@@ -17,8 +17,6 @@ void PsiRequestHandler::handle_request(
 		
 	rep.headers[0].value = boost::lexical_cast<std::string>(rep.content.size());
 	rep.headers[1].value = getContentType(req.headers);
-
-
 }
 
 std::string PsiRequestHandler::getContentType(

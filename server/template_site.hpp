@@ -28,7 +28,11 @@ protected:
 		std::string content = "";
 		std::string line;
 
-		std::ifstream myfile(fileName);
+		std::string filePath = psi_server_.websiteRoot;
+		filePath += "/"; 
+		filePath += fileName;
+
+		std::ifstream myfile(filePath.c_str());
 
   		if (myfile.is_open()) {
 			while (myfile.good()) {

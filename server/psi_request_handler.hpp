@@ -22,6 +22,4 @@ private:
 	std::string getContentType(const std::vector<http::server3::header>& headers);
 };
 
-
-
 #endif
