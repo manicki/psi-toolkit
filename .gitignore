@@ -7,3 +7,4 @@ common/config.h
 cppcheck-result.xml
 prj/valgrind.xml
 prj/valgrindTestResults.xml
+server/test/t/reports/*
