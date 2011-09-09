@@ -2689,5 +2689,257 @@ public:
         delete puddle;
     }
 
+    void testPuddleLoadRulesFR() {
+        //preparing lattice
+        Lattice lattice("blanc chat");
+        lattice.addSymbols(lattice.getFirstVertex(), lattice.getLastVertex());
+        LayerTagCollection raw_tag
+            = lattice.getLayerTagManager().createSingletonTagCollection("symbol");
+        LayerTagCollection token_tag
+            = lattice.getLayerTagManager().createSingletonTagCollection("token");
+        LayerTagCollection lemma_tag
+            = lattice.getLayerTagManager().createSingletonTagCollection("lemma");
+        LayerTagCollection lexeme_tag
+            = lattice.getLayerTagManager().createSingletonTagCollection("lexeme");
+        LayerTagCollection form_tag
+            = lattice.getLayerTagManager().createSingletonTagCollection("form");
+        LayerTagMask rawMask = lattice.getLayerTagManager().getMask(raw_tag);
+        LayerTagMask tokenMask = lattice.getLayerTagManager().getMask(token_tag);
+        LayerTagMask lemmaMask = lattice.getLayerTagManager().getMask(lemma_tag);
+        LayerTagMask lexemeMask = lattice.getLayerTagManager().getMask(lexeme_tag);
+        LayerTagMask formMask = lattice.getLayerTagManager().getMask(form_tag);
+        AnnotationItem word_token("word");
+        AnnotationItem blank_token("blank");
+        AnnotationItem ai("base");
+
+        Lattice::VertexDescriptor pre_blanc = lattice.getFirstVertex();
+        Lattice::VertexDescriptor post_blanc = lattice.getVertexForRawCharIndex(5);
+        Lattice::VertexDescriptor pre_chat = lattice.getVertexForRawCharIndex(6);
+        Lattice::VertexDescriptor post_chat = lattice.getLastVertex();
+
+        Lattice::EdgeSequence::Builder blanc_builder;
+        for (int i = 0; i < 5; i ++) {
+            blanc_builder.addEdge(lattice.firstOutEdge(
+                        lattice.getVertexForRawCharIndex(i),
+                        rawMask
+                        ));
+        }
+        lattice.addEdge(pre_blanc, post_blanc, word_token, token_tag, blanc_builder.build());
+
+        Lattice::EdgeSequence::Builder blank_builder;
+        blank_builder.addEdge(lattice.firstOutEdge(
+            lattice.getVertexForRawCharIndex(6),
+            rawMask
+        ));
+        lattice.addEdge(post_blanc, pre_chat, blank_token, token_tag, blank_builder.build());
+        Lattice::EdgeSequence::Builder chat_builder;
+        for (int i = 6; i < 10; i ++) {
+            chat_builder.addEdge(lattice.firstOutEdge(
+                        lattice.getVertexForRawCharIndex(i),
+                        rawMask
+                        ));
+        }
+        lattice.addEdge(pre_chat, post_chat, word_token, token_tag, chat_builder.build());
+
+        Lattice::EdgeSequence::Builder blanc_lemma_builder;
+        blanc_lemma_builder.addEdge(lattice.firstOutEdge(lattice.getVertexForRawCharIndex(0), tokenMask));
+        AnnotationItem ai_blanc_lemma("word", "blanc");
+        lattice.addEdge(pre_blanc, post_blanc, ai_blanc_lemma, lemma_tag, blanc_lemma_builder.build());
+        Lattice::EdgeSequence::Builder blanc_lexeme_builder;
+        blanc_lexeme_builder.addEdge(lattice.firstOutEdge(lattice.getVertexForRawCharIndex(0), lemmaMask));
+        AnnotationItem ai_blanc_lexeme_adj("adj", "blanc_adj");
+        lattice.addEdge(pre_blanc, post_blanc, ai_blanc_lexeme_adj, lexeme_tag, blanc_lexeme_builder.build());
+        Lattice::EdgeSequence::Builder blanc_form_builder;
+        blanc_form_builder.addEdge(lattice.firstOutEdge(lattice.getVertexForRawCharIndex(0), lexemeMask));
+        AnnotationItem ai_blanc_form("adj", "blanc_adj");
+        lattice.getAnnotationItemManager().setValue(ai_blanc_form, "morpho", "sg:m");
+        lattice.getAnnotationItemManager().setValue(ai_blanc_form, "discard", "0");
+        lattice.addEdge(pre_blanc, post_blanc, ai_blanc_form, form_tag, blanc_form_builder.build());
+
+        Lattice::EdgeSequence::Builder chat_lemma_builder;
+        chat_lemma_builder.addEdge(lattice.firstOutEdge(lattice.getVertexForRawCharIndex(6), tokenMask));
+        AnnotationItem ai_chat_lemma("word", "chat");
+        lattice.addEdge(pre_chat, post_chat, ai_chat_lemma, lemma_tag, chat_lemma_builder.build());
+        Lattice::EdgeSequence::Builder chat_lexeme_builder;
+        chat_lexeme_builder.addEdge(lattice.firstOutEdge(lattice.getVertexForRawCharIndex(6), lemmaMask));
+        AnnotationItem ai_chat_lexeme("subst", "chat_subst");
+        lattice.addEdge(pre_chat, post_chat, ai_chat_lexeme, lexeme_tag, chat_lexeme_builder.build());
+        Lattice::EdgeSequence::Builder chat_form_builder;
+        chat_form_builder.addEdge(lattice.firstOutEdge(lattice.getVertexForRawCharIndex(6), lexemeMask));
+        AnnotationItem ai_chat_form("subst", "chat_subst");
+        lattice.getAnnotationItemManager().setValue(ai_chat_form, "morpho", "sg:m");
+        lattice.getAnnotationItemManager().setValue(ai_chat_form, "discard", "0");
+        lattice.addEdge(pre_chat, post_chat, ai_chat_form, form_tag, chat_form_builder.build());
+
+        //preparing parser
+        std::string tagsetFilename = ROOT_DIR "tools/parsers/puddle/data/fr/tagset.fr.cfg";
+        std::string rulesFilename = ROOT_DIR "tools/parsers/puddle/data/fr/rules.fr";
+        poleng::bonsai::puddle::TagsetLoader tagset_loader;
+        poleng::bonsai::puddle::RuleLoader rule_loader;
+//        poleng::bonsai::puddle::TaggerPtr tagger = poleng::bonsai::puddle::TaggerPtr( new poleng::bonsai::puddle::Tagger());
+
+        poleng::bonsai::puddle::Puddle *puddle = new poleng::bonsai::puddle::Puddle();
+
+        poleng::bonsai::puddle::TagsetPtr tagset;
+        tagset = tagset_loader.load(tagsetFilename);
+//        tagger->setTagset(tagset);
+        puddle->setTagset(tagset);
+        rule_loader.setTagset(tagset);
+        TS_ASSERT_EQUALS(tagset->size(), (size_t) 28);
+//        puddle->setTagger(tagger);
+        poleng::bonsai::puddle::RulesPtr rules =
+            rule_loader.readFromFile(rulesFilename);//, puddle->getLatticeWrapper());
+        puddle->setRules(rules);
+        TS_ASSERT_EQUALS(rules->size(), (size_t) 167);
+
+        //parsing
+        TS_ASSERT(puddle->parse(lattice));
+
+        delete puddle;
+    }
+
+    void testPuddleLoadRulesPL() {
+        //preparing lattice
+        Lattice lattice("Ala ma kota");
+        lattice.addSymbols(lattice.getFirstVertex(), lattice.getLastVertex());
+        LayerTagCollection raw_tag
+            = lattice.getLayerTagManager().createSingletonTagCollection("symbol");
+        LayerTagCollection token_tag
+            = lattice.getLayerTagManager().createSingletonTagCollection("token");
+        LayerTagCollection lemma_tag
+            = lattice.getLayerTagManager().createSingletonTagCollection("lemma");
+        LayerTagCollection lexeme_tag
+            = lattice.getLayerTagManager().createSingletonTagCollection("lexeme");
+        LayerTagCollection form_tag
+            = lattice.getLayerTagManager().createSingletonTagCollection("form");
+        LayerTagMask rawMask = lattice.getLayerTagManager().getMask(raw_tag);
+        LayerTagMask tokenMask = lattice.getLayerTagManager().getMask(token_tag);
+        LayerTagMask lemmaMask = lattice.getLayerTagManager().getMask(lemma_tag);
+        LayerTagMask lexemeMask = lattice.getLayerTagManager().getMask(lexeme_tag);
+        LayerTagMask formMask = lattice.getLayerTagManager().getMask(form_tag);
+        AnnotationItem word_token("word");
+        AnnotationItem blank_token("blank");
+        AnnotationItem ai("base");
+
+        Lattice::VertexDescriptor pre_ala = lattice.getFirstVertex();
+        Lattice::VertexDescriptor post_ala = lattice.getVertexForRawCharIndex(3);
+        Lattice::VertexDescriptor pre_ma = lattice.getVertexForRawCharIndex(4);
+        Lattice::VertexDescriptor post_ma = lattice.getVertexForRawCharIndex(6);
+        Lattice::VertexDescriptor pre_kota = lattice.getVertexForRawCharIndex(7);
+        Lattice::VertexDescriptor post_kota = lattice.getLastVertex();
+
+        Lattice::EdgeSequence::Builder ala_builder;
+        for (int i = 0; i < 3; i ++) {
+            ala_builder.addEdge(lattice.firstOutEdge(
+                        lattice.getVertexForRawCharIndex(i),
+                        rawMask
+                        ));
+        }
+        lattice.addEdge(pre_ala, post_ala, word_token, token_tag, ala_builder.build());
+
+        Lattice::EdgeSequence::Builder blank_builder;
+        blank_builder.addEdge(lattice.firstOutEdge(
+            lattice.getVertexForRawCharIndex(3),
+            rawMask
+        ));
+        lattice.addEdge(post_ala, pre_ma, blank_token, token_tag, blank_builder.build());
+
+        Lattice::EdgeSequence::Builder ma_builder;
+        for (int i = 4; i < 6; i ++) {
+            ma_builder.addEdge(lattice.firstOutEdge(
+                        lattice.getVertexForRawCharIndex(i),
+                        rawMask
+                        ));
+        }
+        lattice.addEdge(pre_ma, post_ma, word_token, token_tag, ma_builder.build());
+
+        Lattice::EdgeSequence::Builder blank2_builder;
+        blank2_builder.addEdge(lattice.firstOutEdge(
+            lattice.getVertexForRawCharIndex(6),
+            rawMask
+        ));
+        lattice.addEdge(post_ma, pre_kota, blank_token, token_tag, blank2_builder.build());
+
+        Lattice::EdgeSequence::Builder kota_builder;
+        for (int i = 7; i < 11; i ++) {
+            kota_builder.addEdge(lattice.firstOutEdge(
+                        lattice.getVertexForRawCharIndex(i),
+                        rawMask
+                        ));
+        }
+        lattice.addEdge(pre_kota, post_kota, word_token, token_tag, kota_builder.build());
+
+        Lattice::EdgeSequence::Builder ala_lemma_builder;
+        ala_lemma_builder.addEdge(lattice.firstOutEdge(lattice.getVertexForRawCharIndex(0), tokenMask));
+        AnnotationItem ai_ala_lemma("word", "Ala");
+        lattice.addEdge(pre_ala, post_ala, ai_ala_lemma, lemma_tag, ala_lemma_builder.build());
+        Lattice::EdgeSequence::Builder ala_lexeme_builder;
+        ala_lexeme_builder.addEdge(lattice.firstOutEdge(lattice.getVertexForRawCharIndex(0), lemmaMask));
+        AnnotationItem ai_ala_lexeme("R", "Ala_R");
+        lattice.addEdge(pre_ala, post_ala, ai_ala_lexeme, lexeme_tag, ala_lexeme_builder.build());
+        Lattice::EdgeSequence::Builder ala_form_builder;
+        ala_form_builder.addEdge(lattice.firstOutEdge(lattice.getVertexForRawCharIndex(0), lexemeMask));
+        AnnotationItem ai_ala_form("R", "Ala_R");
+        lattice.getAnnotationItemManager().setValue(ai_ala_form, "morpho", "f:nom:sg");
+        lattice.getAnnotationItemManager().setValue(ai_ala_form, "discard", "0");
+        lattice.addEdge(pre_ala, post_ala, ai_ala_form, form_tag, ala_form_builder.build());
+
+        Lattice::EdgeSequence::Builder ma_lemma_builder;
+        ma_lemma_builder.addEdge(lattice.firstOutEdge(lattice.getVertexForRawCharIndex(0), tokenMask));
+        AnnotationItem ai_ma_lemma("word", "mieć");
+        lattice.addEdge(pre_ma, post_ma, ai_ma_lemma, lemma_tag, ma_lemma_builder.build());
+        Lattice::EdgeSequence::Builder ma_lexeme_builder;
+        ma_lexeme_builder.addEdge(lattice.firstOutEdge(lattice.getVertexForRawCharIndex(0), lemmaMask));
+        AnnotationItem ai_ma_lexeme("C", "mieć_C");
+        lattice.addEdge(pre_ma, post_ma, ai_ma_lexeme, lexeme_tag, ma_lexeme_builder.build());
+        Lattice::EdgeSequence::Builder ma_form_builder;
+        ma_form_builder.addEdge(lattice.firstOutEdge(lattice.getVertexForRawCharIndex(0), lexemeMask));
+        AnnotationItem ai_ma_form("C", "mieć_C");
+        lattice.getAnnotationItemManager().setValue(ai_ma_form, "morpho", "pres:sg:ter:imperf");
+        lattice.getAnnotationItemManager().setValue(ai_ma_form, "discard", "0");
+        lattice.addEdge(pre_ma, post_ma, ai_ma_form, form_tag, ma_form_builder.build());
+
+        Lattice::EdgeSequence::Builder kota_lemma_builder;
+        kota_lemma_builder.addEdge(lattice.firstOutEdge(lattice.getVertexForRawCharIndex(0), tokenMask));
+        AnnotationItem ai_kota_lemma("word", "kot");
+        lattice.addEdge(pre_kota, post_kota, ai_kota_lemma, lemma_tag, kota_lemma_builder.build());
+        Lattice::EdgeSequence::Builder kota_lexeme_builder;
+        kota_lexeme_builder.addEdge(lattice.firstOutEdge(lattice.getVertexForRawCharIndex(0), lemmaMask));
+        AnnotationItem ai_kota_lexeme("R", "kot_R");
+        lattice.addEdge(pre_kota, post_kota, ai_kota_lexeme, lexeme_tag, kota_lexeme_builder.build());
+        Lattice::EdgeSequence::Builder kota_form_builder;
+        kota_form_builder.addEdge(lattice.firstOutEdge(lattice.getVertexForRawCharIndex(0), lexemeMask));
+        AnnotationItem ai_kota_form("R", "kot_R");
+        lattice.getAnnotationItemManager().setValue(ai_kota_form, "morpho", "m2:acc:sg");
+        lattice.getAnnotationItemManager().setValue(ai_kota_form, "discard", "0");
+        lattice.addEdge(pre_kota, post_kota, ai_kota_form, form_tag, kota_form_builder.build());
+
+        //preparing parser
+        std::string tagsetFilename = ROOT_DIR "tools/parsers/puddle/data/pl/tagset.pl.cfg";
+        std::string rulesFilename = ROOT_DIR "tools/parsers/puddle/data/pl/rules.pl";
+        poleng::bonsai::puddle::TagsetLoader tagset_loader;
+        poleng::bonsai::puddle::RuleLoader rule_loader;
+//        poleng::bonsai::puddle::TaggerPtr tagger = poleng::bonsai::puddle::TaggerPtr( new poleng::bonsai::puddle::Tagger());
+
+        poleng::bonsai::puddle::Puddle *puddle = new poleng::bonsai::puddle::Puddle();
+
+        poleng::bonsai::puddle::TagsetPtr tagset;
+        tagset = tagset_loader.load(tagsetFilename);
+//        tagger->setTagset(tagset);
+        puddle->setTagset(tagset);
+        rule_loader.setTagset(tagset);
+        TS_ASSERT_EQUALS(tagset->size(), (size_t) 36);
+//        puddle->setTagger(tagger);
+        poleng::bonsai::puddle::RulesPtr rules =
+            rule_loader.readFromFile(rulesFilename);//, puddle->getLatticeWrapper());
+        puddle->setRules(rules);
+        TS_ASSERT_EQUALS(rules->size(), (size_t) 274);
+
+        //parsing
+        TS_ASSERT(puddle->parse(lattice));
+
+        delete puddle;
+    }
+
 };
 

@@ -1,10 +1,14 @@
+require 'rubygems'
+require 'celerity'
+require 'test/unit'
+
 require 'config'
 
 class IndexSiteTest < Test::Unit::TestCase
 
 	def setup
 		@browser = Celerity::Browser.new
-		@browser.goto $server_address
+		@browser.goto $server_localhost
 	end
 
 	def teardown

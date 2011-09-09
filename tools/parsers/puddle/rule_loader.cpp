@@ -150,9 +150,6 @@ void RuleLoader::setTagset(TagsetPtr aTagset)
 
 RulesPtr RuleLoader::readFromFile(std::string &filename) //, LatticeWrapperPtr latticeWrapper)
 {
-    //boost::u32regex regComment = boost::make_u32regex("#.*");
-    //boost::u32regex regWhite = boost::make_u32regex("\\s+");
-
     Pattern regComment("#.*");
     Pattern regWhite("\\s+");
 
@@ -427,8 +424,8 @@ std::string RuleLoader::compileNonTokens(std::string &matched)
     Pattern regWhite("\\s+");
     Pattern regSpecialNeg("!(sb|se|ns)");
     Pattern regSpecial("(^|[ \\(\\)\\|])(sb|se|ns)");
-    Pattern regLPar("\\(");
-    Pattern regRPar("\\)([+*?])?");
+    //Pattern regLPar("\\(");
+    //Pattern regRPar("\\)([+*?])?");
 
 //    matched = boost::u32regex_replace(matched, regLPar, "((", boost::match_default | boost::format_sed);
 //    matched = boost::u32regex_replace(matched, regRPar, ")\\1)", boost::match_default | boost::format_sed);
@@ -436,8 +433,8 @@ std::string RuleLoader::compileNonTokens(std::string &matched)
 //    matched = boost::u32regex_replace(matched, regSpecialNeg, "((<<t<[^<>]+<[^<>]+<[^>]+>)|(<<g<[^<>+]<[^<>]+<[^<>]+<[^>]+))", boost::match_default | boost::format_sed);
 //    matched = boost::u32regex_replace(matched, regSpecial, "\\1(<<s<[^<>]+<\\2<>)", boost::match_default | boost::format_sed);
 //    matched = boost::u32regex_replace(matched, regWhite, "", boost::match_default | boost::format_sed);
-    RegExp::GlobalReplace(&matched, regLPar, "((");
-    RegExp::GlobalReplace(&matched, regRPar, ")\\1)");
+    //RegExp::GlobalReplace(&matched, regLPar, "((");
+    //RegExp::GlobalReplace(&matched, regRPar, ")\\1)");
     //matched = boost::u32regex_replace(matched, regSpecialNeg, "(<<s<[^<>]+<(?!\\1)[^<>]+<>)", boost::match_default | boost::format_sed);
     RegExp::GlobalReplace(&matched, regSpecialNeg, "((<<t<[^<>]+<[^<>]+<[^>]+>)|(<<g<[^<>+]<[^<>]+<[^<>]+<[^>]+))");
     RegExp::GlobalReplace(&matched, regSpecial, "\\1(<<s<[^<>]+<\\2<>)");
@@ -511,12 +508,12 @@ std::string RuleLoader::compileRulePattern(std::string &matched, int &size,
     std::string before = "";
     while ((token = getToken(matched, before)) != "")
     {
-
 #if HAVE_RE2
         std::string compiledToken = compileToken(token, negativePatterns);
 #else
         std::string compiledToken = compileToken(token);
 #endif
+
         if (matched != "")
         {
             if (matched[0] == '+' || matched[0] == '*')
@@ -541,10 +538,11 @@ std::string RuleLoader::compileRulePattern(std::string &matched, int &size,
 //        mindex = matchedIndexes.back();
     std::string s = compiledMatch;
     int brackets = 0;
-    bool nonMatching = false;
+    int nonMatching = 0;
     //@todo: przemyslec, czy ponizszego jakos nie da rady zrobic zmyslniej
-    while (s != "")
+    while ( (s != "") && (i < s.length()) )
     {
+//        std::cerr << "I: " << i <<std::endl;
         if (s[i] == '(')
         {
             if ((i > 0) && (s[i - 1] == '\\'))
@@ -554,13 +552,14 @@ std::string RuleLoader::compileRulePattern(std::string &matched, int &size,
             }
             if (((i+1) < s.length()) && (s[i + 1] == '?'))
             {
-                nonMatching = true;
+                //nonMatching = true;
+                nonMatching ++;
                 i ++;
                 continue;
             }
             if (brackets == 0)
             {
-//                std::cout << "wrzucom numer: " << mindex << std::endl;
+//                std::cerr << "wrzucom numer: " << mindex << std::endl;
                 matchedIndices.push_back(mindex);
             }
             mindex ++;
@@ -573,9 +572,9 @@ std::string RuleLoader::compileRulePattern(std::string &matched, int &size,
                 i ++;
                 continue;
             }
-            if (nonMatching)
+            if (nonMatching > 0)
             {
-                nonMatching = false;
+                nonMatching --;
                 i ++;
                 continue;
             }
@@ -673,6 +672,7 @@ std::string RuleLoader::compileRulePattern(std::string &matched, int &size,
                         tokensRequired.push_back(true);
                     }
                 }
+//                std::cerr << "pattern: " << pattern << std::endl;
                 tokensPatterns.push_back(pattern);
                 i = 0;
                 continue;
@@ -680,7 +680,7 @@ std::string RuleLoader::compileRulePattern(std::string &matched, int &size,
         }
         i ++;
     }
-    //std::cout << "kompiled macz: " << compiledMatch << std::endl;
+//    std::cerr << "kompiled macz: " << compiledMatch << std::endl;
     //std::cout << "Liczba tokenĂłw: " << size << std::endl;
 
     bracketCount = mindex;
@@ -995,10 +995,12 @@ std::string RuleLoader::compileToken(std::string &token,
             //int cite = token.find("\"", begin + 1);
             //while (end
             std::string head = token.substr(begin, end - begin + 1);
-            if ((end + 1) < token.size())
+            if ((end + 1) < token.size()) {
                 token = token.substr(end + 1, std::string::npos);
-            else
+            }
+            else {
                 token = "";
+            }
             if (head != "[]")
             {
                 //compiledHead = compileToken(head);
@@ -1401,6 +1403,7 @@ bool RuleLoader::compilePosCondition(std::string &comparisonOperator,
             return false;
         }
         posString = boost::join(values, "|");
+        posString = "(" + posString + ")";
         //mapped = "";
 //        std::vector<char>::iterator i = values.begin();
 //        //@todo: warto by to przerobic na jakeigos joina, ale ten char zawadza tu nieco

@@ -15,11 +15,19 @@ public:
 			"index_site_input_text", boost::bind(&IndexSite::inputText, this));
 		psi_server_.registerActionCode(
 			"input_text", boost::bind(&IndexSite::actionInputText, this));
+
+		psi_server_.registerIncludeCode(
+			"index_site_footer_part", boost::bind(&IndexSite::footerPart, this));
 	}
 	
 	char * info() {
 		std::string str = "<p>Some string from IndexSite class!</p>";
 		return stringToChar(str);
+	}
+
+	char * footerPart() {
+		std::string pipePsis = readPsisFile("footer.psis");
+		return stringToChar(pipePsis);
 	}
 
 	char * inputText() {

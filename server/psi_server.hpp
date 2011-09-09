@@ -35,6 +35,8 @@
 		void checkForAction(http::server3::request& req, http::server3::reply& rep);
 		std::string& findValue(const char* name);
 
+		std::string websiteRoot;
+
 	private:
 		/// store map between include codes and application functions
 		std::map <std::string, psis_include_function > includes_;

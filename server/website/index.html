@@ -3,20 +3,49 @@
 <html>
 <head>
 	<title>Psi Server</title>
+
+	<link href="css/reset.css" rel="stylesheet" type="text/css">
+	<link href="css/style.css" rel="stylesheet" type="text/css">
 </head>
 
 <body>
-	<h1>Psi Server</h1>
-	
-	<!--#psis index_site_info --> 
-	
-	<form action="input_text.psis" method="GET">
-		Write some text: <br />
-		<input name="input-text" />
-		<input value="Send" type="submit" name="input-text-submit" />
-	</form>
 
-	<!--#psis index_site_input_text -->
+	<div id="wrapper">
+
+		<div id="header">
+			<h1>Psi Server</h1>
+		</div>
+
+		<div id="pipe" class="box">
+			<form id="pipe-text" action="pipe_text.psis" method="GET">
+				Write pipe line: <br />
+				<input name="pipe-text" type="text" /> <br />
+				<input value="Go!" type="submit" name="pipe-text-submit" />
+			</form>
+		</div>
+		
+		<div id="options" class="box">
+		</div>
+
+		<div id="input" class="box">
+			<form id="input-text" action="input_text.psis" method="GET">
+				Write some text: <br />
+				<textarea name="input-text" rows="5" cols="112">Ala ma kota.</textarea> 
+				<div>
+					<input value="Send" type="submit" name="input-text-submit" />
+				</div>
+			</form>
+		</div>	
+
+		<div id="output" class="box">
+			<!--#psis index_site_info -->
+			<!--#psis index_site_input_text -->
+			<!--#psis pipe_site_pipe_text -->
+		</div>
+
+	</div>
+
+	<!--#psis index_site_footer_part -->
 
 </body>
 

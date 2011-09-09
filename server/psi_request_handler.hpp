@@ -18,8 +18,8 @@ public:
 
 private:
 	PsiServer* psi_server_;
+
+	std::string getContentType(const std::vector<http::server3::header>& headers);
 };
-
-
 
 #endif
