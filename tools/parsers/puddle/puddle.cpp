@@ -26,7 +26,6 @@ namespace puddle
             boost::filesystem::path tagsetPath =
                 fileFetcher.getOneFile(tagsetFilename);
             std::string tagsetPathString = tagsetPath.string();
-            std::cerr << "TAGSET: " << tagsetPathString << std::endl;
             tagset = tagset_loader.load(tagsetPathString);
             if (tagset->size() == 0) {
                 std::cerr << "Tagset not loaded." << std::endl;
