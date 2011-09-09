@@ -6,4 +6,5 @@ website = File.expand_path(current_dir + '/../website/')
 
 $source_dir = File.expand_path(current_dir + '/../../prj/')
 $server_address = "http://#{hostname}:#{port}/"
+$server_localhost = "http://localhost:#{port}/"
 $arguments = "#{hostname} #{port} #{threads} #{website}"

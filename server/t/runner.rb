@@ -2,8 +2,9 @@
 #
 # Requirements:
 # 	jruby
-# 	celerity gem 	#=> jruby -S gem install celerity
-# 	test-unit gem 	#=> jruby -S gem install test-unit
+# 	celerity gem 		#=> jruby -S gem install celerity
+# 	test-unit gem 		#=> jruby -S gem install test-unit
+#	ci_reporter gem 	#=> jruby -S gem install ci_reporter
 #
 
 require 'config'
@@ -28,7 +29,7 @@ puts "\nPsi Server process id = #{$pid}"
 
 $tst = ""
 t_test = Thread.new do
-	$tst = `jruby test_suite.rb`
+	$tst = `jruby -S rake ci:setup:testunit test`
 end
 
 while (t_test.status)

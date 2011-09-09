@@ -1,0 +1,11 @@
+require 'rubygems'
+require 'ci/reporter/rake/test_unit'
+require 'ci/reporter/rake/test_unit_loader'
+
+ENV['CI_REPORTS'] = File.dirname(__FILE__) + "/reports"
+
+task :test do
+	require 'psi_server_test'
+	require 'index_site_test'
+end
+
