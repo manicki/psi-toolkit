@@ -1,3 +1,11 @@
+# Html Tests using jRuby and Celerity gem.
+#
+# Requirements:
+# 	jruby
+# 	celerity gem 	#=> jruby -S gem install celerity
+# 	test-unit gem 	#=> jruby -S gem install test-unit
+#
+
 require 'config'
 
 $exe = ""
