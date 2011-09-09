@@ -44,6 +44,16 @@ public:
         std::string msg_;
     };
 
+    class UnexpectedElementException : public Exception {
+    public:
+        UnexpectedElementException(const std::string& elementName)
+            :Exception(
+                std::string("unexpected element `")
+                + elementName
+                + "'") {
+        }
+    };
+
     SrxRulesReader(
         const boost::filesystem::path& filePath,
         const std::string& lang);
@@ -65,6 +75,8 @@ private:
                       languageRules.get_child("")) {
             if (v.first == "languagerule")
                 processLanguageRule_(v.second, outputIterator);
+            else
+                throw UnexpectedElementException(v.first);
         }
     }
 
@@ -78,6 +90,8 @@ private:
                           languageRule.get_child("")) {
                 if (v.first == "rule")
                     processRule_(v.second, outputIterator);
+                else
+                    UnexpectedElementException(v.first);
             }
         }
     }
