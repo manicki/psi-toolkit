@@ -390,19 +390,6 @@ void Tagset::readFromFile (std::string &filename) {
 //    return 0;
 }
 
-std::string Tagset::log() {
-    std::stringstream ss;
-
-    std::map<std::string, std::string>::iterator i;
-    i = morphologyMappings.begin();
-    while (i != morphologyMappings.end()) {
-        ss << i->first << "\t" << i->second << std::endl;
-        ++ i;
-    }
-
-    return ss.str();
-}
-
 bool Tagset::checkAttribute(std::string &attribute)
 {
     bool ret = false;
@@ -542,7 +529,7 @@ int Tagset::getNumberOfAttributes()
     return attrList.size();
 }
 
-int Tagset::size()
+size_t Tagset::size()
 {
     return posMappings.size();
 }
