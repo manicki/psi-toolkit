@@ -34,6 +34,19 @@ public:
         TS_ASSERT_EQUALS(srxRules[3].getBeforeBreak(), "");
         TS_ASSERT_EQUALS(srxRules[3].getAfterBreak(), "\\n");
     }
+
+    void testRealOne() {
+        std::vector<SrxRule> srxRules;
+
+        SrxRulesReader rulesReader(
+            ROOT_DIR "tools/segmenters/srx/data/pl/segmentation.srx",
+            "pl");
+
+        rulesReader.getRules(std::back_inserter(srxRules));
+
+        TS_ASSERT_LESS_THAN(1U, srxRules.size());
+    }
+
 };
 
 

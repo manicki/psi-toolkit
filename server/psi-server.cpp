@@ -1,6 +1,7 @@
 #include <iostream>
 
 #include "index_site.hpp"
+#include "pipe_site.hpp"
 
 int main(int argc, char* argv[])
 {
@@ -19,7 +20,8 @@ int main(int argc, char* argv[])
 
     PsiServer srv(argv[1], argv[2], argv[3], argv[4]);
 	std::cerr << srv.info();
-	IndexSite site(srv);
+	IndexSite index(srv);
+	PipeSite pipe(srv);
 
 	srv.run();
   }

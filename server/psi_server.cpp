@@ -12,7 +12,8 @@ typedef std::multimap <std::string, std::string>::iterator psis_iter_name_value;
 PsiServer::PsiServer(
 	const std::string& address, const std::string& port,
 	const std::string& threads, const std::string& doc_root)
-	: port_(port), psi_request_handler_(doc_root, this), 
+	: websiteRoot(doc_root),
+	port_(port), psi_request_handler_(doc_root, this), 
 	server_(address, port, psi_request_handler_, boost::lexical_cast<std::size_t>(threads)) { }
 
 std::string& PsiServer::info() {
