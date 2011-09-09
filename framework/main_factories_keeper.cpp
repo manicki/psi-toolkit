@@ -5,6 +5,7 @@
 #include "txt_lattice_reader.hpp"
 #include "psi_lattice_writer.hpp"
 #include "tp_tokenizer.hpp"
+#include "srx_segmenter.hpp"
 #include "lemmatizer_annotator.hpp"
 #if HAVE_POSTGRESQL
 #include "lex_db_lemmatizer.hpp"
@@ -20,11 +21,12 @@ MainFactoriesKeeper::MainFactoriesKeeper() {
     keeper_.takeProcessorFactory(new TxtLatticeReader::Factory());
     keeper_.takeProcessorFactory(new PsiLatticeWriter::Factory());
     keeper_.takeProcessorFactory(new TpTokenizer::Factory());
+    keeper_.takeProcessorFactory(new SrxSegmenter::Factory());
 #if HAVE_POSTGRESQL
     keeper_.takeProcessorFactory(new LemmatizerAnnotator<LexDbLemmatizer>::Factory());
 #endif
 #if HAVE_JAVA
-	  keeper_.takeProcessorFactory(new LemmatizerAnnotator<Morfologik>::Factory());
+    keeper_.takeProcessorFactory(new LemmatizerAnnotator<Morfologik>::Factory());
 #endif
 #if HAVE_PUDDLE
       keeper_.takeProcessorFactory(new poleng::bonsai::puddle::Puddle::Factory());
