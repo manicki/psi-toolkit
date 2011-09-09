@@ -35,8 +35,8 @@ namespace poleng {
 
 //bool DeleteAction::apply(ParseGraphPtr pg, Lattice &lattice, int currentEntity,
 bool DeleteAction::apply(Lattice &lattice, int currentEntity,
-        std::vector<int> matchedTokensSize) {
-    int count = matchedTokensSize[tokenIndex - 1];
+        RuleTokenSizes &ruleTokenSizes) {
+    int count = ruleTokenSizes[tokenIndex - 1];
     if (count == 0)
     {
 //        std::cout << "Nothing matched to " << tokenIndex << " in ...." << std::endl;
@@ -52,7 +52,7 @@ bool DeleteAction::apply(Lattice &lattice, int currentEntity,
     int before = 0;
     int i = 0;
     while (i < (tokenIndex - 1)) {
-        before += matchedTokensSize[i];
+        before += ruleTokenSizes[i];
         i ++;
     }
 //    while (util::getEdge(pg, currentEntity, before) == NULL) {
@@ -329,11 +329,11 @@ bool DeleteAction::apply(Lattice &lattice, int currentEntity,
 
 //bool DeleteAction::test(ParseGraphPtr pg, Lattice &lattice,
 bool DeleteAction::test(Lattice &lattice,
-        int currentEntity, std::vector<int> matchedTokensSize) {
+        int currentEntity, RuleTokenSizes &ruleTokenSizes) {
     bool ret = false;
     //bool nothingToDelete = false;
 
-    int count = matchedTokensSize[tokenIndex - 1];
+    int count = ruleTokenSizes[tokenIndex - 1];
     if (count == 0) {
         if (verbose)
             std::cerr << "Nothing matched to " << tokenIndex << " in delete ...." << std::endl;
@@ -342,7 +342,7 @@ bool DeleteAction::test(Lattice &lattice,
     int before = 0;
     int i = 0;
     while (i < (tokenIndex - 1)) {
-        before += matchedTokensSize[i];
+        before += ruleTokenSizes[i];
         i ++;
     }
 //    while (util::getEdge(pg, currentEntity, before) == NULL) { //if there is no edge at a given position, proceed to the next vertex, as it may be a whitespace

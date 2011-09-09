@@ -2,9 +2,6 @@
 #define TRANSFORMACTION_H__
 
 #include "action.hpp"
-//#include "group.hpp"
-//#include "token.hpp"
-//#include "syntok.hpp"
 
 namespace poleng
 {
@@ -20,14 +17,10 @@ class TransformAction : public Action
     public:
         TransformAction(std::string aGroup, int aElement, std::string aRuleName);
         ~TransformAction();
-        //bool apply(Entities &entities, Edges &edges, int currentEntity, std::vector<int> matchedTokensSize);
-        //bool apply(ParseGraphPtr, Lattice &lattice, int currentEntity, std::vector<int> matchedTokensSize);
         bool apply(Lattice &lattice, int currentEntity,
-                std::vector<int> matchedTokensSize);
-        //bool test(Entities entities, int currentEntity, std::vector<int> matchedTokensSize);
-        //bool test(ParseGraphPtr, Lattice &lattice, int currentEntity, std::vector<int> matchedTokensSize);
+                RuleTokenSizes &ruleTokenSizes);
         bool test(Lattice &lattice, int currentEntity,
-                std::vector<int> matchedTokensSize);
+                RuleTokenSizes &ruleTokenSizes);
         std::string getGroup() const;
         int getElement() const;
         void setGroup(std::string aGroup);
@@ -44,7 +37,6 @@ class TransformAction : public Action
         std::string ruleName;
         std::string type;
         bool verbose;
-//        LatticeWrapperPtr latticeWrapper;
 };
 
 typedef boost::shared_ptr<TransformAction> TransformActionPtr;

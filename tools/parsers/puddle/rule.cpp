@@ -18,15 +18,8 @@ namespace bonsai
 
 Rule::Rule()
 {
-//    tokensPatterns = new std::vector<std::string>;
-//    tokensModifiers = new std::vector<std::string>;
-//    tokensRequired = new std::vector<bool>;
-//    matchedTokensSize = new std::vector<int>;
-//    matchedIndexes = new std::vector<int>;
     actions = ActionsPtr( new Actions );
-//    actions = new Actions;
     pattern = PatternPtr( new Pattern("") );
-    //pattern = new Pattern;
     repeat = false;
 
     left_ = "";
@@ -36,8 +29,6 @@ Rule::Rule()
     leftCount = 0;
     matchCount = 0;
     rightCount = 0;
-//    match_set = false;
-//    match = NULL;
 }
 
 #if HAVE_RE2
@@ -55,22 +46,18 @@ Rule::Rule( std::string aName, std::string aCompiled, int aLeftCount,
             bool aRepeat, std::string aLeft, std::string aMatch, std::string aRight) {
 #endif
 
-    tokensPatterns.insert(tokensPatterns.begin(), aTokensPatterns.begin(), aTokensPatterns.end());// = new std::vector<std::string>(aTokensPatterns);
-    tokensModifiers.insert(tokensModifiers.begin(), aTokensModifiers.begin(), aTokensModifiers.end());// = new std::vector<std::string>(aTokensModifiers);
-    tokensRequired.insert(tokensRequired.begin(), aTokensRequired.begin(), aTokensRequired.end());// = new std::vector<bool>(aTokensRequired);
+    tokensPatterns.insert(tokensPatterns.begin(), aTokensPatterns.begin(), aTokensPatterns.end());
+    tokensModifiers.insert(tokensModifiers.begin(), aTokensModifiers.begin(), aTokensModifiers.end());
+    tokensRequired.insert(tokensRequired.begin(), aTokensRequired.begin(), aTokensRequired.end());
 //    matchedTokensSize = new std::vector<int>;
     matchedIndices.insert(matchedIndices.begin(), aMatchedIndices.begin(),
             aMatchedIndices.end());// = new std::vector<int>(aMatchedIndexes);
-//    std::cerr << "3" << std::endl;
 
     pattern = PatternPtr( new Pattern("") );
-    //pattern = new Pattern;
     actions = aActions;
-//    actions = new Actions(aActions);
 
     name = aName;
     setPattern(aCompiled);
-//    actions = aActions;
     leftCount = aLeftCount;
     matchCount = aMatchCount;
     rightCount = aRightCount;
@@ -81,14 +68,7 @@ Rule::Rule( std::string aName, std::string aCompiled, int aLeftCount,
     match_ = aMatch;
     right_ = aRight;
 
-//    tokensPatterns = aTokensPatterns;
-//    tokensModifiers = aTokensModifiers;
-//    tokensRequired = aTokensRequired;
-//    matchedIndexes = aMatchedIndexes;
-    matchedTokensSize.assign(tokensPatterns.size(), 0);
 //    matchedTokensSize.assign(tokensPatterns.size(), 0);
-//    match_set = false;
-//    match = NULL;
 
 #if HAVE_RE2
     for (NegativePatternStrings::iterator negPatIt =
@@ -101,263 +81,138 @@ Rule::Rule( std::string aName, std::string aCompiled, int aLeftCount,
 #endif
 }
 
-Rule::~Rule()
-{
-//    Actions::iterator a = actions->begin();
-//    while (a != actions->end())
-//    {
-//        if ((*a)->getType() == "group")
-//            delete ((GroupAction*)(*a));
-//        else if ((*a)->getType() == "delete")
-//            delete ((DeleteAction*)(*a));
-//        else if ((*a)->getType() == "add")
-//            delete ((AddAction*)(*a));
-//        else if ((*a)->getType() == "unify")
-//            delete ((UnifyAction*)(*a));
-//        else if ((*a)->getType() == "syntok")
-//            delete ((SyntokAction*)(*a));
-//        else if ((*a)->getType() == "join")
-//            delete ((JoinAction*)(*a));
-//        else if ((*a)->getType() == "attach")
-//            delete ((AttachAction*)(*a));
-//        else if ((*a)->getType() == "transform")
-//            delete ((TransformAction*)(*a));
-//        else
-//            delete *a;
-//        a ++;
-//    }
-//    delete actions;
-//    std::cerr << "destruktor wywoluje" << std::endl;
-//    delete tokensPatterns;
-//    delete tokensModifiers;
-//    delete tokensRequired;
-//    delete matchedTokensSize;
-//    delete matchedIndexes;
-  //  delete pattern;
-//    delete[] match;
+Rule::~Rule() {
 }
 
-//bool Rule::apply(std::string &sentence, Entities &entities, Edges &edges, int currentEntity)
-//bool Rule::apply(std::string &sentence, ParseGraphPtr pg, Lattice &lattice, int currentEntity) {
-bool Rule::apply(std::string &, Lattice &lattice, int currentEntity) {
+bool Rule::apply(std::string &, Lattice &lattice, int currentEntity,
+        RuleTokenSizes &ruleTokenSizes) {
     bool ret = false;
     Actions::iterator i = actions->begin();
-    while (i != actions->end())
-    {
-//        Action *act = *i
-//
-//        std::cerr << "akcja: " << (*i)->getType() << std::endl;
-        //if ((*i)->apply(entities, edges, currentEntity, matchedTokensSize))
-        //if ((*i)->apply(pg, lattice, currentEntity, matchedTokensSize)) {
-        if ((*i)->apply(lattice, currentEntity, matchedTokensSize)) {
-            //@todo: wylaczam generowanie tego napisu w tym miejscu. po wszystkim zrobi to rulematcher
-/*            sentence = "";
-  //          if (beforeMatch != "")
-    //            sentence += beforeMatch;
-            Entities::iterator e = entities.begin();// + currentEntity;
-            while (e != entities.end())
-            {
-                sentence += (*e)->getCompiled();
-                e ++;
-            }
-//            std::cout << "Sentencja po zmianie: " << sentence << std::endl;*/
+    while (i != actions->end()) {
+        if ((*i)->apply(lattice, currentEntity, ruleTokenSizes)) {
             ret = true;
         }
         ++ i;
     }
-//    std::cout << "wychodze z reguly z wartoscia: " << (ret ? "tru" : "fols") << std::endl;
     return ret;
 }
 
 int Rule::matchPattern(std::string &sentenceString, int matchNumber,
-        //std::string &beforeMatched, std::vector<re2::StringPiece> &match) {
         std::string &beforeMatched, std::vector<StringPiece> &match) {
-    //std::string::const_iterator start = sentence.begin();
-    //std::string::const_iterator end = sentence.end();
-    //boost::match_results<std::string::const_iterator> matched;
 
     int matchCount = 0;
-//    match.clear();
-    //boost::match_flag_type flags = boost::match_default | boost::match_not_dot_newline | boost::match_not_dot_null;
-    //std::string before;
 
-    //std::string pieklo = "(<<t<[^<>]+<[^<>]+(<[^<>]+)*(<..(?i:[^<>]*[ßåàâçéèêëîïôûùüÿ][^<>]*))(<[^<>]+)*>)";
-    //RE2 regPattern(pieklo);
-    //RE2::Anchor anchor = RE2::UNANCHORED; // @todo: do czego to jest?
     int num_groups = pattern->NumberOfCapturingGroups();// + 1;
 #if HAVE_RE2
     std::map<std::string, int> namedGroups = pattern->NamedCapturingGroups();
 #endif
-    //re2::StringPiece* matched = new re2::StringPiece[num_groups];
-    //re2::StringPiece sentence_str(sentenceString);
-    //StringPiece* matched = new StringPiece[num_groups];
     StringPiece* matchedS = new StringPiece[num_groups];
-    Arg** matched = new Arg*[num_groups]; //@todo: jak zadziala to zmienic na samo Arg
+    Arg** matched = new Arg*[num_groups];
     for (int argIt = 0; argIt < num_groups; argIt ++) {
         matched[argIt] = new Arg;
         *matched[argIt] = &matchedS[argIt];
     }
     StringPiece sentence_str(sentenceString);
     StringPiece orig_str(sentenceString);
-//    int start = 0;
-//    int end = sentence_str.size();
+
     std::string before = "";
-//    std::cerr << "macz namber: " << matchNumber << std::endl;
+    //    std::cerr << "macz namber: " << matchNumber << std::endl;
 
-//    std::cerr << "ZDANIE: " << sentenceString << std::endl;
-//    std::cerr << "REGULA: " << compiled << std::endl;
-//    std::map<std::string, int> groups_map = pattern->NamedCapturingGroups();
-//    std::cerr << "NGRUP:  " << groups_map.size() << std::endl;
-//    for (std::map<std::string, int>::iterator buc = groups_map.begin();
-//            buc != groups_map.end(); buc ++)
-//        std::cerr << "  " << buc->first << " -> " << buc->second << std::endl;
-//        std::cout << "Zdanie: " << sentence << std::endl;
-//    std::cerr << "wzorzec reguly felernyj" << compiled << std::endl;
+    //    std::cerr << "ZDANIE: " << sentenceString << std::endl;
+    //    std::cerr << "REGULA: " << compiled << std::endl;
+    //    std::cerr << "NGRUP:  " << groups_map.size() << std::endl;
+    //    for (std::map<std::string, int>::iterator buc = groups_map.begin();
+    //            buc != groups_map.end(); buc ++)
+    //        std::cerr << "  " << buc->first << " -> " << buc->second << std::endl;
+    //        std::cout << "Zdanie: " << sentence << std::endl;
+    //    std::cerr << "wzorzec reguly felernyj" << compiled << std::endl;
     try {
-    //while ( pattern->Match( sentence_str, start, end,
-    //                        RE2::UNANCHORED, matched, num_groups ) ) { // @todo: tu nie bedzie chyba while tylko if, skoro bedzie parametrem odkad szukac, a nie ktore ogolnie dopasowanie ma byc wziete na warsztat
-    while ( RegExp::FindAndConsumeN( &sentence_str, *pattern, matched, num_groups ) ) { // @todo: tu nie bedzie chyba while tylko if, skoro bedzie parametrem odkad szukac, a nie ktore ogolnie dopasowanie ma byc wziete na warsztat
-    //while (boost::u32regex_search(start, end, matched, *pattern, flags)) {
-        //int prefix_len = matchedS[0].begin() - sentence_str.begin();
-        //int prefix_len = matchedS[0].begin() - orig_str.begin();
-        int prefix_len = matchedS[0].data() - orig_str.data();
-        std::string prefix = sentenceString.substr(0, prefix_len); //@todo: czy od start do prefix_len?
-        //before += matched.prefix(); //before + matched.prefix();
-        before += prefix;
-        //start = matched[0].second;
-//        start = prefix_len + 1;
-        //flags |= boost::match_prev_avail;
-        //flags |= boost::match_not_bob;
-        std::string matching = "";
-        if (matchCount == matchNumber) {
-            matching = matchedS[0].as_string();
+        //while ( pattern->Match( sentence_str, start, end,
+        //                        RE2::UNANCHORED, matched, num_groups ) ) { // @todo: tu nie bedzie chyba while tylko if, skoro bedzie parametrem odkad szukac, a nie ktore ogolnie dopasowanie ma byc wziete na warsztat
+        while ( RegExp::FindAndConsumeN( &sentence_str, *pattern, matched, num_groups ) ) { // @todo: tu nie bedzie chyba while tylko if, skoro bedzie parametrem odkad szukac, a nie ktore ogolnie dopasowanie ma byc wziete na warsztat
+            //while (boost::u32regex_search(start, end, matched, *pattern, flags)) {
+            //int prefix_len = matchedS[0].begin() - sentence_str.begin();
+            //int prefix_len = matchedS[0].begin() - orig_str.begin();
+            int prefix_len = matchedS[0].data() - orig_str.data();
+            std::string prefix = sentenceString.substr(0, prefix_len); //@todo: czy od start do prefix_len?
+            before += prefix;
+            //start = matched[0].second;
+            //        start = prefix_len + 1;
+            std::string matching = "";
+            if (matchCount == matchNumber) {
+                matching = matchedS[0].as_string();
 
-            //match = matched; //@todo: co to w okole jest?
-//            if (match_set) {
-//                delete[] match;
-//            }
-//            match = new re2::StringPiece[num_groups];
-            for (int i = 0; i < num_groups; i ++) {
-                //match[i] = matched[i];
-                match.push_back(matchedS[i]);
-            }
+                for (int i = 0; i < num_groups; i ++) {
+                    match.push_back(matchedS[i]);
+                }
 
 #if HAVE_RE2
-            if (! namedGroups.empty()) {
-                bool negPatternMatched = false;
-                for (std::map<std::string, int>::iterator namedGroupIt =
-                        namedGroups.begin(); namedGroupIt != namedGroups.end();
-                        ++ namedGroupIt) {
-                    std::string groupName = namedGroupIt->first;
-                    int groupIndex = namedGroupIt->second;
-                    NegativePatterns::iterator negPatternIt =
-                        negativePatterns.find(groupName);
-                    if (negPatternIt != negativePatterns.end()) {
-                        std::string submatch = matchedS[groupIndex].as_string();
-//                        std::cerr << "SUBMATCH: " << submatch << std::endl;
-                        if (RegExp::FullMatch(submatch, *(negPatternIt->second) )) {
-                            negPatternMatched = true;
-//                            std::cerr << "PASUJE A NIE POWINIEN: " << negPatternIt->second->pattern() << std::endl;
-                            break;
+                if (! namedGroups.empty()) {
+                    bool negPatternMatched = false;
+                    for (std::map<std::string, int>::iterator namedGroupIt =
+                            namedGroups.begin(); namedGroupIt != namedGroups.end();
+                            ++ namedGroupIt) {
+                        std::string groupName = namedGroupIt->first;
+                        int groupIndex = namedGroupIt->second;
+                        NegativePatterns::iterator negPatternIt =
+                            negativePatterns.find(groupName);
+                        if (negPatternIt != negativePatterns.end()) {
+                            std::string submatch = matchedS[groupIndex].as_string();
+                            if (RegExp::FullMatch(submatch, *(negPatternIt->second) )) {
+                                negPatternMatched = true;
+                                break;
+                            }
                         }
                     }
+                    if (negPatternMatched) {
+                        before += matchedS[0].as_string();
+                        continue;
+                    }
                 }
-                if (negPatternMatched) {
-                    before += matchedS[0].as_string();
-                    continue;
-                }
-            }
 #endif
 
-            if (matching == "") {
+                if (matching == "") {
+                    delete[] matchedS;
+                    for (int argIt = 0; argIt < num_groups; argIt ++)
+                        delete matched[argIt];
+                    delete[] matched;
+                    return -1;
+                }
+                beforeMatched = before;
+                int r = getPatternStart(before); // + 1; //@todo: ten +1 wynika ze sposobu numerowania? w kazdym razie tak jest, zeby bylo w akcjach potem dokadlnie tak, jak wczesniej bylo. moze to sie uda zmienic po wymienieniu calosci
                 delete[] matchedS;
                 for (int argIt = 0; argIt < num_groups; argIt ++)
                     delete matched[argIt];
                 delete[] matched;
-                return -1;
+                return r;
             }
-            beforeMatched = before;
-//            std::cerr << "jedynka: " << matched[1] << std::endl;
-//            std::cout << "dwojka: " << matched[3] << std::endl;
-//            std::string before = matched.prefix();
-//            std::cerr << "Dopasowalem regule: " << name << std::endl;
-//            std::cerr << "Dopasowalem wzorzec: " << compiled << std::endl;
-//            std::cerr << "Dopasowane: " << matching << std::endl;
-//            std::cout << "Przed: " << before << std::endl;
-//            std::cout << "Zdanie: " << sentenceString << std::endl;
-//            std::cerr << "before: " << before << std::endl;
-//            std::cerr << "Zwracam: " << countEntities(before) << std::endl;
-//            std::cerr << "Alternatywnie zwracam: " << getPatternStart(before) << std::endl;
-            int r = getPatternStart(before); // + 1; //@todo: ten +1 wynika ze sposobu numerowania? w kazdym razie tak jest, zeby bylo w akcjach potem dokadlnie tak, jak wczesniej bylo. moze to sie uda zmienic po wymienieniu calosci
-            //return countEntities(before);
+            else {
+                before += matchedS[0].as_string();
+            }
+            matchCount ++;
+        }
+        }
+        catch (std::exception &e) {
+            std::cerr << "jakis wyjatek zlapalem: " << e.what() << std::endl;
             delete[] matchedS;
             for (int argIt = 0; argIt < num_groups; argIt ++)
                 delete matched[argIt];
             delete[] matched;
-            return r;
+            return -1;
         }
-        else {
-            before += matchedS[0].as_string();
-        }
-        matchCount ++;
-    }
-    }
-    catch (std::exception &e) {
-        std::cerr << "jakis wyjatek zlapalem: " << e.what() << std::endl;
         delete[] matchedS;
         for (int argIt = 0; argIt < num_groups; argIt ++)
             delete matched[argIt];
         delete[] matched;
+
         return -1;
     }
-    delete[] matchedS;
-    for (int argIt = 0; argIt < num_groups; argIt ++)
-        delete matched[argIt];
-    delete[] matched;
-//    std::cout << "juz nie pasuje ta regula" << std::endl;
 
-//    std::cout << "Nie dopasowalem reguly: " << name << std::endl;
-//    std::cout << "Nie dopasowalem wzorca: " << compiled << std::endl;
-//    std::cout << "Zdanie: " << sentence << std::endl;
-
-//    if (matchCount > 0)
-//    {
-//        std::cout << "Tyle razy dopasowalem: " << matchCount << " regule: " << name << std::endl;
-//    }
-
-
-    return -1;
-}
-
-//bool Rule::test(std::string &sentence, Entities &entities, int currentEntity)
-//bool Rule::test(std::string &sentenceString, ParseGraphPtr pg, int currentEntity) {
 bool Rule::test(std::string &, Lattice &lattice, int currentEntity,
-        //std::vector<re2::StringPiece> &match) {
-        std::vector<StringPiece> &match) {
-//    std::cerr << "testuje regule: " << name << std::endl;
-//    std::cerr << "ten luj: " << match[0] << std::endl;
-    ///std::string::const_iterator start = sentence.begin();
-    ///std::string::const_iterator end = sentence.end();
-    ///boost::match_results<std::string::const_iterator> matched;
-//    std::cout << "Zdanie: " << sentence << std::endl << "Wzor: " << pattern << std::endl;
-    ///if (!boost::u32regex_search(start, end, matched, pattern, boost::match_default))
-    ///{
-    ///    return false;
-    ///}
+        std::vector<StringPiece> &match, RuleTokenSizes &ruleTokenSizes) {
 
-    ///if (countEntities(matched.prefix()) != currentEntity)
-    ///{
-    ///    return false;
-    ///}
-
-    ///std::string matching = matched[0];
-
-//    matchedTokensSize.assign(tokensPatterns.size(), 0);
-    //delete matchedTokensSize;
-    //matchedTokensSize = new std::vector<int>;
-    matchedTokensSize.clear();
-
-    matchedTokensSize.assign(matchedIndices.size(), 0);
+    ruleTokenSizes.clear();
+    ruleTokenSizes.assign(matchedIndices.size(), 0);
 
 //    std::cerr << "patterns: " << tokensPatterns.size() << std::endl;
 //    std::cerr << "modifs: " << tokensModifiers.size() << std::endl;
@@ -435,13 +290,13 @@ bool Rule::test(std::string &, Lattice &lattice, int currentEntity,
 //            std::cerr << "part pusty" << std::endl;
             return false;
         }
-        matchedTokensSize.at(i) = countEntities(part);
-        if (tokensRequired[i] && matchedTokensSize[i] == 0)
+        ruleTokenSizes.at(i) = countEntities(part);
+        if (tokensRequired[i] && ruleTokenSizes[i] == 0)
         {
 //            std::cerr << "obowiazkowy element " << i << " dlaczemus jest pusty. nie bawie sie tak" << std::endl;
             return false;
         }
-        j += matchedTokensSize.at(i);
+        j += ruleTokenSizes.at(i);
 //        boost::u32regex expr = boost::make_u32regex("^(" + *it + ").*");
 //        boost::u32regex exprReplace = boost::make_u32regex("^" + *it);
 //
@@ -523,7 +378,7 @@ bool Rule::test(std::string &, Lattice &lattice, int currentEntity,
 //        Action *act = new Action(*ia);
         //if ((*ia)->test(entities, currentEntity, matchedTokensSize) == false)
         //if ((*ia)->test(pg, currentEntity, matchedTokensSize) == false)
-        if ((*ia)->test(lattice, currentEntity, matchedTokensSize) == false) {
+        if ((*ia)->test(lattice, currentEntity, ruleTokenSizes) == false) {
             int limit;
             if (tokensModifiers.at(leftCount + matchCount - 1) == "+" || tokensModifiers.at(leftCount + matchCount - 1) == "")
                 limit = 1;
@@ -531,9 +386,9 @@ bool Rule::test(std::string &, Lattice &lattice, int currentEntity,
             {
                 limit = 0;
             }
-            if (matchedTokensSize.at(leftCount + matchCount - 1) > limit)
+            if (ruleTokenSizes.at(leftCount + matchCount - 1) > limit)
             {
-                matchedTokensSize.at(leftCount + matchCount - 1) --;
+                ruleTokenSizes.at(leftCount + matchCount - 1) --;
                 continue;
             }
             ret = false;
@@ -706,8 +561,8 @@ void Rule::setTokensPatterns(std::vector<std::string> aTokensPatterns)
 //    tokensPatterns = new std::vector<std::string>(aTokensPatterns);
     //delete matchedTokensSize;
     //matchedTokensSize = new std::vector<int>;
-    matchedTokensSize.clear();
-    matchedTokensSize.assign(tokensPatterns.size(), 0);
+//    matchedTokensSize.clear();
+//    matchedTokensSize.assign(tokensPatterns.size(), 0);
 }
 
 void Rule::setTokensModifiers(std::vector<std::string> aTokensModifiers)
@@ -819,124 +674,11 @@ std::string Rule::makeReadable()
     return ss.str();
 }
 
-std::string Rule::log()
-{
-    std::stringstream ss;
 
-    ss << this->getName() << std::endl;
-    ss << this->getCompiled() << std::endl;
-
-    if (this->getLeftCount() > 0)
-        ss << "Left: 1 - " << this->getLeftCount() << std::endl;
-    ss << "Match: " << (this->getLeftCount() + 1) << " - " << (this->getLeftCount() + this->getMatchCount()) << std::endl;
-    if (this->getRightCount() > 0)
-        ss << "Right: " << (this->getLeftCount() + this->getMatchCount() + 1) << " - " << (this->getLeftCount() + this->getMatchCount() + this->getRightCount()) << std::endl;
-
-    if (this->getRepeat())
-        ss << "Allows repeating" << std::endl;
-    ActionsPtr actions = this->getActions();
-    for (Actions::iterator a = actions->begin(); a != actions->end(); ++ a)
-    {
-        if ((*a)->getType() == "delete")
-            //ss << "Delete " << (boost::dynamic_pointer_cast<DeleteAction>(*a))->getTokenIndex() << " " << (boost::dynamic_pointer_cast<DeleteAction>(*a))->getPattern() << std::endl;
-            ss << "Delete " << (boost::dynamic_pointer_cast<DeleteAction>(*a))->getTokenIndex() << std::endl;
-        else if ((*a)->getType() == "add")
-        {
-            //std::vector<InterpretationPair> interps = ((AddAction*)(*a))->getInterpretations();
-            //std::vector<InterpretationPair> interps = (boost::dynamic_pointer_cast<AddAction>(*a))->getInterpretations();
-            //std::vector<InterpretationPair>::iterator it = interps.begin();
-            std::vector<std::string> interps = (boost::dynamic_pointer_cast<AddAction>(*a))->getInterpretations();
-            std::vector<std::string>::iterator it = interps.begin();
-            while (it != interps.end())
-            {
-                //logfile << "Add " << ((AddAction*)*a)->getTokenIndex() << " " << it->second << ((AddAction*)*a)->getBase() << std::endl;
-                //ss << "Add " << (boost::dynamic_pointer_cast<AddAction>(*a))->getTokenIndex() << " " << it->second << (boost::dynamic_pointer_cast<AddAction>(*a))->getBase() << std::endl;
-                ss << "Add " << (boost::dynamic_pointer_cast<AddAction>(*a))->getTokenIndex()
-                    << " " << *it << (boost::dynamic_pointer_cast<AddAction>(*a))->getBase()
-                    << std::endl;
-                ++ it;
-            }
-        }
-        else if ((*a)->getType() == "group")
-            //logfile << "Group " << ((GroupAction*)*a)->getGroup() << " " << (((GroupAction*)*a)->getStart() + 1) << " - " << (((GroupAction*)*a)->getEnd() + 1) << " head: " << ((GroupAction*)*a)->getHead() << std::endl;
-            ss << "Group " << (boost::dynamic_pointer_cast<GroupAction>(*a))->getGroup() << " " << ((boost::dynamic_pointer_cast<GroupAction>(*a))->getStart() + 1) << " - " << ((boost::dynamic_pointer_cast<GroupAction>(*a))->getEnd() + 1) << " head: " << (boost::dynamic_pointer_cast<GroupAction>(*a))->getHead() << std::endl;
-        else if ((*a)->getType() == "unify")
-        {
-            ss << "Unify ";
-            std::vector<int> tokenIndices = (boost::dynamic_pointer_cast<UnifyAction>(*a))->getTokenIndices();
-            //std::vector<int> attributeIndexes = (boost::dynamic_pointer_cast<UnifyAction>(*a))->getAttributeIndexes();
-            std::vector<int>::iterator it = tokenIndices.begin();
-            ss << "entities: ";
-            while (it != tokenIndices.end())
-            {
-                ss << *it;
-                ++ it;
-                if (it != tokenIndices.end())
-                    ss << ", ";
-            }
-            //it = attributeIndexes.begin();
-            //ss << " attributes: ";
-            //while (it != attributeIndexes.end())
-            //{
-            //    ss << *it;
-            //    it ++;
-            //    if (it != attributeIndexes.end())
-            //        ss << ", ";
-            //}
-            ss << std::endl;
-        }
-        else if ((*a)->getType() == "syntok")
-        {
-            ss << "Syntok ";
-            //std::vector<InterpretationPair> morphos = (boost::dynamic_pointer_cast<SyntokAction>(*a))->getMorphology();
-            std::vector<std::string> morphos =
-                (boost::dynamic_pointer_cast<SyntokAction>(*a))->getMorphology();
-            //std::string m = morphos.front().first;
-            std::string m = morphos.front();
-            ss << m.substr(m.find(":", 1) + 1, std::string::npos);
-            //                logfile << " base=";
-            //                std::vector<int> indexes = ((SyntokAction*)*a)->getTokenIndexes();
-            //                std::vector<int>::iterator i = indexes.begin();
-            //                while (i != indexes.end())
-            //                {
-            //                    logfile << *i;
-            //                    i ++;
-            //                    if (i != indexes.end())
-            //                        logfile << ".";
-            //                }
-            ss << std::endl;
-        }
-        else if ((*a)->getType() == "join")
-            ss << "Join " << (boost::dynamic_pointer_cast<JoinAction>(*a))->getGroup() << " " << ((boost::dynamic_pointer_cast<JoinAction>(*a))->getStart() + 1) << " - " << ((boost::dynamic_pointer_cast<JoinAction>(*a))->getEnd() + 1) << " head: " << (boost::dynamic_pointer_cast<JoinAction>(*a))->getHead() << std::endl;
-        //logfile << "Join " << ((JoinAction*)*a)->getGroup() << " " << (((JoinAction*)*a)->getStart() + 1) << " - " << (((JoinAction*)*a)->getEnd() + 1) << " head: " << ((JoinAction*)*a)->getHead() << std::endl;
-        else if ((*a)->getType() == "attach")
-            ss << "Attach " << (boost::dynamic_pointer_cast<AttachAction>(*a))->getGroup() << " " << ((boost::dynamic_pointer_cast<AttachAction>(*a))->getStart() + 1) << " - " << ((boost::dynamic_pointer_cast<AttachAction>(*a))->getEnd() + 1) << " head: " << (boost::dynamic_pointer_cast<AttachAction>(*a))->getHead() << std::endl;
-        else if ((*a)->getType() == "transform")
-            ss << "Transform " << (boost::dynamic_pointer_cast<TransformAction>(*a))->getElement() << " " << " into " << (boost::dynamic_pointer_cast<TransformAction>(*a))->getGroup() << std::endl;
-        else
-            std::cerr << "Unknown action type: " << (*a)->getType() << "." << std::endl;
-    }
-//    ss << std::endl;
-    return ss.str();
-}
-
-
-//stare:
-//        int Rule::getPatternStart(std::string &matchedPattern) {
-//            int r = -1;
-//
-//            RE2 regPatternInfo("<<[tsg]<(\\d+)"); //syntoki jakas inna literke jeszcze mialy?
-//            int start;
-//            if (RE2::PartialMatch(matchedPattern, regPatternInfo, &start)) {
-//                r = start;
-//            }
-//
-//            return r;
-//        }
         int Rule::getPatternStart(std::string &beforePattern) {
             int r = -1;
 
-            Pattern regPatternInfo("<<[tsg]<\\d+<(\\d+)[^>]+>$"); //syntoki jakas inna literke jeszcze mialy?
+            Pattern regPatternInfo("<<[tsg]<\\d+<(\\d+)[^>]+>$");
             int end;
             if (RegExp::PartialMatch(beforePattern, regPatternInfo, &end)) {
                 r = end;
@@ -951,7 +693,3 @@ std::string Rule::log()
 
 }
 
-//int main(int argc, char **argv)
-//{
-//    return 0;
-//}

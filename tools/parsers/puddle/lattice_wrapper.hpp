@@ -45,9 +45,6 @@ namespace poleng {
             };
 
 
-            //class LatticeWrapper {
-            //    public:
-            //        LatticeWrapper(); //TagsetPtr tagset);
             std::string readInputLattice(Lattice &lattice);
 #if _WITH_BONSAI_PARSEGRAPH
                     ParseGraphPtr convertToBonsaiGraph(Lattice &lattice);
@@ -123,19 +120,9 @@ namespace poleng {
                             LayerTagMask mask,
                             std::string category, std::string text);
 
-//                    void addPosEdges(Lattice &lattice);
-//                private:edge)
-                    //AnnotationItemManager annotationItemManager;
-                    //void initAnnotationItemManager(TagsetPtr tagset);
-//                    bool isNonTop(std::list<Lattice::EdgeDescriptor> nontopEdges,
-//                            const Lattice::EdgeDescriptor &value);
-            //};
                     bool areAnnotationItemsEqual(Lattice &lattice,
                             AnnotationItem a,
                             AnnotationItem b);
-
-
-            //typedef boost::shared_ptr<LatticeWrapper> LatticeWrapperPtr;
             }
         }
     }

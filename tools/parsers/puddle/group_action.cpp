@@ -46,7 +46,7 @@ GroupAction::~GroupAction()
 //bool GroupAction::apply(Entities &entities, Edges &edges, int currentEntity, std::vector<int> matchedTokensSize)
 //bool GroupAction::apply(ParseGraphPtr pg, Lattice &lattice,
 bool GroupAction::apply(Lattice &lattice, int currentEntity,
-        std::vector<int> matchedTokensSize) {
+        RuleTokenSizes &ruleTokenSizes) {
 
 //    std::cerr << "grupe robie: " << group << "; current entity: " << currentEntity << "; glowa: " << head <<  std::endl;
 //    std::cout << "Poczatek reguly: " << ruleName << std::endl;
@@ -56,25 +56,25 @@ bool GroupAction::apply(Lattice &lattice, int currentEntity,
     int realEnd = 0;//start;
     int realHead = 0;//start;
     unsigned int i = 0;
-    while (i < matchedTokensSize.size())
+    while (i < ruleTokenSizes.size())
     {
         if (i < start)
-            realStart += matchedTokensSize[i];
+            realStart += ruleTokenSizes[i];
         if ((i >= start) && (i < (head - 1)))
         {
 //            std::cout << "i = " << i << " zwiekszam o: " <<  matchedTokensSize[i] << std::endl;
 //        if (i < (head))
-            realHead += matchedTokensSize[i];
+            realHead += ruleTokenSizes[i];
         }
         if (i == (head - 1))
         {
-            if (matchedTokensSize[i] == 0)
+            if (ruleTokenSizes[i] == 0)
             {
                 return false;
             }
         }
         if (i <= end)
-            realEnd += matchedTokensSize[i];
+            realEnd += ruleTokenSizes[i];
         else
             break;
         i ++;
@@ -326,13 +326,13 @@ bool GroupAction::apply(Lattice &lattice, int currentEntity,
 //bool GroupAction::test(Entities entities, int currentEntity, std::vector<int> matchedTokensSize)
 //bool GroupAction::test(ParseGraphPtr pg, Lattice &lattice, int currentEntity,
 bool GroupAction::test(Lattice &lattice, int,
-        std::vector<int> matchedTokensSize) {
+        RuleTokenSizes &ruleTokenSizes) {
     //if (entities.size() < head)
     //if ( (pg->num_vertices() - 1) < head) { //the last vertex is only the 'in-vertex', so it is not taken into consideration
     if ( ( (size_t) lattice.getLastVertex() ) < head) {
         return false;
     }
-    if (matchedTokensSize[head - 1] == 0)
+    if (ruleTokenSizes[head - 1] == 0)
     {
         //@todo: throw wyjatek
 //        std::cerr << "Element group: " << head - 1 << " empty!" << std::endl;

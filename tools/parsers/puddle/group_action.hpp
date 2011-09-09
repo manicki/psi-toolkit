@@ -24,11 +24,11 @@ class GroupAction : public Action
         //bool apply(Entities &entities, Edges &edges, int currentEntity, std::vector<int> matchedTokensSize);
         //bool apply(ParseGraphPtr pg, Lattice &lattice, int currentEntity, std::vector<int> matchedTokensSize);
         bool apply(Lattice &lattice, int currentEntity,
-                std::vector<int> matchedTokensSize);
+                RuleTokenSizes &ruleTokenSizes);
         //bool test(Entities entities, int currentEntity, std::vector<int> matchedTokensSize);
         //bool test(ParseGraphPtr pg, Lattice &lattice, int currentEntity, std::vector<int> matchedTokensSize);
         bool test(Lattice &lattice, int,
-                std::vector<int> matchedTokensSize);
+                RuleTokenSizes &TokenSizes);
         std::string getGroup() const;
         unsigned int getHead() const;
         void setGroup(std::string aGroup);

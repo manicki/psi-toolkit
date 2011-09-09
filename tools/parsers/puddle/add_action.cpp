@@ -40,8 +40,8 @@ AddAction::~AddAction()
 //bool AddAction::apply(Entities &entities, Edges &edges, int currentEntity, std::vector<int> matchedTokensSize)
 //bool AddAction::apply(ParseGraphPtr pg, Lattice &lattice, int currentEntity,
 bool AddAction::apply(Lattice &lattice, int currentEntity,
-        std::vector<int> matchedTokensSize) {
-    int count = matchedTokensSize[tokenIndex - 1];
+        RuleTokenSizes &ruleTokenSizes) {
+    int count = ruleTokenSizes[tokenIndex - 1];
     if (count == 0)
     {
 //        std::cout << "Nothing matched to " << tokenIndex << " in ...." << std::endl;
@@ -51,7 +51,7 @@ bool AddAction::apply(Lattice &lattice, int currentEntity,
     int i = 0;
     while (i < (tokenIndex - 1))
     {
-        before += matchedTokensSize[i];
+        before += ruleTokenSizes[i];
         i ++;
     }
 
@@ -336,9 +336,9 @@ bool AddAction::apply(Lattice &lattice, int currentEntity,
 //bool AddAction::test(Entities entities, int currentEntity, std::vector<int> matchedTokensSize)
 //bool AddAction::test(ParseGraphPtr pg, Lattice &lattice, int currentEntity,
 bool AddAction::test(Lattice &lattice, int currentEntity,
-        std::vector<int> matchedTokensSize) {
+        RuleTokenSizes &ruleTokenSizes) {
 
-    int count = matchedTokensSize[tokenIndex - 1];
+    int count = ruleTokenSizes[tokenIndex - 1];
     if (count == 0) {
         if (verbose)
             std::cerr << "Nothing matched to " << tokenIndex << " in add ...." << std::endl;
@@ -347,7 +347,7 @@ bool AddAction::test(Lattice &lattice, int currentEntity,
     int before = 0;
     int i = 0;
     while (i < (tokenIndex - 1)) {
-        before += matchedTokensSize[i];
+        before += ruleTokenSizes[i];
         i ++;
     }
 

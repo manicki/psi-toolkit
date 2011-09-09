@@ -88,14 +88,17 @@ void RuleMatcher::applyRules(std::string &sentenceString,
         //for (Entities::iterator it = entities.begin(); it != entities.end(); it ++)
        // {
         //std::string oldSentence = sentence;
+        RuleTokenSizes ruleTokenSizes;
         std::string oldSentenceString = sentenceString;
         //if ((*ir)->test(sentence, entities, currentEntity))
         //if ((*ir)->test(sentenceString, inputGraph, currentEntity))
-        if ( (*ir)->test(sentenceString, lattice, currentEntity, match) ) {
+        if ( (*ir)->test(sentenceString, lattice, currentEntity, match,
+                    ruleTokenSizes) ) {
 //                std::cerr << "test zdany" << std::endl;
                 //if ((*ir)->apply(sentence, entities, lattice, currentEntity))
                 //if ((*ir)->apply(sentenceString, inputGraph, lattice, currentEntity))
-                if ((*ir)->apply(sentenceString, lattice, currentEntity)) {
+                if ((*ir)->apply(sentenceString, lattice, currentEntity,
+                            ruleTokenSizes)) {
                     //sentence = generateSentencePattern(lattice);
                     //sentenceString = generateSentenceString(inputGraph, lattice);
 //                    std::cerr << "SENT PRZED: " << oldSentenceString << std::endl;

@@ -31,11 +31,11 @@ namespace poleng {
                     //bool apply(Entities &entities, Edges &edges, int currentEntity, std::vector<int> matchedTokensSize);
                     //bool apply(ParseGraphPtr pg, Lattice &lattice,
                     bool apply(Lattice &lattice, int currentEntity,
-                            std::vector<int> matchedTokensSize);
+                            RuleTokenSizes &ruleTokenSizes);
                     //bool test(Entities entities, int currentEntity, std::vector<int> matchedTokensSize);
                     //bool test(ParseGraphPtr pg, Lattice &lattice,
                     bool test(Lattice &lattice, int currentEntity,
-                            std::vector<int> matchedTokensSize);
+                            RuleTokenSizes &ruleTokenSizes);
                     //void setPattern(std::string aPattern);
                     //std::string getPattern();
                     std::string getUPattern() const;

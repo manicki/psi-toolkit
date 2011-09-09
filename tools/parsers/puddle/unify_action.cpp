@@ -63,7 +63,7 @@ UnifyAction::~UnifyAction()
 
 //bool UnifyAction::apply(ParseGraphPtr pg, Lattice &lattice, int currentEntity,
 bool UnifyAction::apply(Lattice &lattice, int currentEntity,
-        std::vector<int> matchedTokensSize) {
+        RuleTokenSizes &ruleTokenSizes) {
 
    // std::vector<std::string>::iterator attribute_it = unifiedAttributes.begin();
     for (std::vector<std::string>::iterator pattern_it = unifiedPatterns.begin();
@@ -73,14 +73,14 @@ bool UnifyAction::apply(Lattice &lattice, int currentEntity,
         for (std::vector<int>::iterator index_it = tokenIndices.begin();
                 index_it != tokenIndices.end(); ++ index_it) {
 
-            int count = matchedTokensSize[*index_it - 1];
+            int count = ruleTokenSizes[*index_it - 1];
             if (count == 0) {
                 continue;
             }
             int before = 0;
             int i = 0;
             while (i < (*index_it - 1)) {
-                before += matchedTokensSize[i];
+                before += ruleTokenSizes[i];
                 i ++;
             }
 
@@ -129,7 +129,6 @@ bool UnifyAction::apply(Lattice &lattice, int currentEntity,
 
                     std::string slot;
                     std::string value;
-                    //if (RE2::FullMatch(morphology, *pattern_it, &slot, &value)) {
                     if (RegExp::FullMatch(morphology, *pattern_it, &slot, &value)) {
                         values.insert(value);
                     }
@@ -156,14 +155,14 @@ bool UnifyAction::apply(Lattice &lattice, int currentEntity,
             for (std::vector<int>::iterator index_it = tokenIndices.begin();
                     index_it != tokenIndices.end(); ++ index_it) {
 
-                int count = matchedTokensSize[*index_it - 1];
+                int count = ruleTokenSizes[*index_it - 1];
                 if (count == 0) {
                     continue;
                 }
                 int before = 0;
                 int i = 0;
                 while (i < (*index_it - 1)) {
-                    before += matchedTokensSize[i];
+                    before += ruleTokenSizes[i];
                     i ++;
                 }
                 //Lattice::VertexDescriptor vertex = currentEntity + before;
@@ -700,7 +699,7 @@ bool UnifyAction::apply(Lattice &lattice, int currentEntity,
 
 //bool UnifyAction::test(ParseGraphPtr pg, Lattice &lattice, int currentEntity,
 bool UnifyAction::test(Lattice &lattice, int currentEntity,
-        std::vector<int> matchedTokensSize) {
+        RuleTokenSizes &ruleTokenSizes) {
 
     //unifiedValues.clear();
     bool toApply = true;
@@ -715,14 +714,14 @@ bool UnifyAction::test(Lattice &lattice, int currentEntity,
         for (std::vector<int>::iterator index_it = tokenIndices.begin();
                 index_it != tokenIndices.end(); ++ index_it) {
 
-            int count = matchedTokensSize[*index_it - 1];
+            int count = ruleTokenSizes[*index_it - 1];
             if (count == 0) {
                 continue;
             }
             int before = 0;
             int i = 0;
             while (i < (*index_it - 1)) {
-                before += matchedTokensSize[i];
+                before += ruleTokenSizes[i];
                 i ++;
             }
 

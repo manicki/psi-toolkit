@@ -3,14 +3,6 @@
 
 #include <vector>
 #include <string>
-
-//#include <boost/regex.hpp>
-//#include <boost/regex/icu.hpp>
-
-//#include "utf8_converter.hpp"
-
-//#include "TransitionInfo.hpp"
-//#include "entity.hpp"
 #include "regexp.hpp"
 #include "action.hpp"
 #include "group_action.hpp"
@@ -65,10 +57,12 @@ class Rule
         //bool test(std::string &sentence, Entities &entities, int currentEntity);
         //bool test(std::string &sentenceString, ParseGraphPtr pg, int currentEntity);
         bool test(std::string &sentenceString, Lattice &lattice,
-                int currentEntity, std::vector<StringPiece> &match);
+                int currentEntity, std::vector<StringPiece> &match,
+                RuleTokenSizes &ruleTokenSizes);
         //bool apply(std::string &sentence, Entities &entities, Edges &edges, int currentEntity);
         //bool apply(std::string &sentenceString, ParseGraphPtr pg, Lattice &lattice, int currentEntity);
-        bool apply(std::string &sentenceString, Lattice &lattice, int currentEntity);
+        bool apply(std::string &sentenceString, Lattice &lattice,
+                int currentEntity, RuleTokenSizes &ruleTokenSizes);
 
         std::string getName() const;
         PatternPtr getPattern() const;
@@ -100,14 +94,12 @@ class Rule
         void setMatchedIndices(std::vector<int> aMatchedIndices);
 
         int matchPattern(std::string &sentence, int matchNumber,
-                //std::string &beforeMatched, std::vector<re2::StringPiece> &match);
                 std::string &beforeMatched, std::vector<StringPiece> &match);
 
         void addAction(ActionPtr action);
         void deleteAction(size_t index);
 
         std::string makeReadable();
-        std::string log();
 
     private:
         std::string name;
@@ -123,15 +115,10 @@ class Rule
         std::string beforeMatch;
         int countEntities(std::string matched);
 
-        //boost::match_results<std::string::const_iterator> match;
-//        re2::StringPiece *match;
-//        bool match_set; //note: to jest nowosc, przy zmianie biblioteki wyr. reg. - moze nie byc to konieczne koniec koncow
-        //std::string matching;
-
         std::vector<std::string> tokensPatterns;
         std::vector<std::string> tokensModifiers;
         std::vector<bool> tokensRequired;
-        std::vector<int> matchedTokensSize;
+//        std::vector<int> matchedTokensSize;
         std::vector<int> matchedIndices;
 
         bool repeat;

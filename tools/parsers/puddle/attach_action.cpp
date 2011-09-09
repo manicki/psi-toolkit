@@ -45,7 +45,7 @@ AttachAction::~AttachAction()
 //bool AttachAction::apply(Entities &entities, Edges &edges, int currentEntity, std::vector<int> matchedTokensSize)
 //bool AttachAction::apply(ParseGraphPtr pg, Lattice &lattice,
 bool AttachAction::apply(Lattice &lattice, int currentEntity,
-        std::vector<int> matchedTokensSize) {
+        RuleTokenSizes &ruleTokenSizes) {
 
 //    std::cout << "Poczatek reguly: " << ruleName << std::endl;
 //    std::cout << "PRZED mam elementow: " << entities.size() << std::endl;
@@ -54,18 +54,18 @@ bool AttachAction::apply(Lattice &lattice, int currentEntity,
     int realEnd = 0;//start;
     int realHead = 0;//start;
     size_t i = 0;
-    while (i < matchedTokensSize.size())
+    while (i < ruleTokenSizes.size())
     {
         if (i < start)
-            realStart += matchedTokensSize[i];
+            realStart += ruleTokenSizes[i];
         if ((i >= start) && (i < (head - 1)))
         {
 //            std::cout << "i = " << i << " zwiekszam o: " <<  matchedTokensSize[i] << std::endl;
 //        if (i < (head))
-            realHead += matchedTokensSize[i];
+            realHead += ruleTokenSizes[i];
         }
         if (i <= end)
-            realEnd += matchedTokensSize[i];
+            realEnd += ruleTokenSizes[i];
         else
             break;
         i ++;
@@ -353,13 +353,13 @@ bool AttachAction::apply(Lattice &lattice, int currentEntity,
 //bool AttachAction::test(Entities entities, int currentEntity, std::vector<int> matchedTokensSize)
 //bool AttachAction::test(ParseGraphPtr pg, Lattice &lattice, int currentEntity,
 bool AttachAction::test(Lattice &lattice, int,
-        std::vector<int> matchedTokensSize) {
+        RuleTokenSizes &ruleTokenSizes) {
     //if (entities.size() < head)
     //if ( (pg->num_vertices() - 1) < head) {
     if ( ( (size_t)lattice.getLastVertex() ) < head) {
         return false;
     }
-    if (matchedTokensSize[head - 1] == 0)
+    if (ruleTokenSizes[head - 1] == 0)
     {
 //        std::cerr << "Element attach: " << head - 1 << " empty!" << std::endl;
         return false;

@@ -5,9 +5,6 @@
 #include <sstream>
 #include <boost/lexical_cast.hpp>
 
-//#include "TransitionGraph.hpp"
-//#include "ParseGraph.hpp"
-
 namespace poleng
 {
 namespace bonsai
@@ -29,23 +26,18 @@ TransformAction::~TransformAction()
 {
 }
 
-//bool TransformAction::apply(Entities &entities, Edges &edges, int currentEntity, std::vector<int> matchedTokensSize)
-//bool TransformAction::apply(ParseGraphPtr pg, Lattice &lattice,
 bool TransformAction::apply(Lattice &lattice, int currentEntity,
-        std::vector<int> matchedTokensSize) {
+        RuleTokenSizes &ruleTokenSizes) {
 
     int before = 0;
     int i = 0;
     while (i < (element - 1))
     {
-        before += matchedTokensSize[i];
+        before += ruleTokenSizes[i];
         i ++;
     }
 
 //    Group *gr = (Group*)(entities[currentEntity + before]);
-
-//    gr->setRuleName(ruleName);
-//    gr->setGroupType(group);
 
 //    TransitionInfo *edge = util::getEdge(pg, currentEntity, before);
 //    edge->setLabel(group);
@@ -102,13 +94,13 @@ bool TransformAction::apply(Lattice &lattice, int currentEntity,
 //bool TransformAction::test(Entities entities, int currentEntity, std::vector<int> matchedTokensSize)
 //bool TransformAction::test(ParseGraphPtr pg, Lattice &lattice,
 bool TransformAction::test(Lattice &lattice, int currentEntity,
-        std::vector<int> matchedTokensSize) {
+        RuleTokenSizes &ruleTokenSizes) {
     //if (entities.size() < element)
     //if ( (pg->num_vertices() - 1) < element ) {
     if ( (lattice.getLastVertex()) < element ) {
         return false;
     }
-    if (matchedTokensSize[element - 1] == 0)
+    if (ruleTokenSizes[element - 1] == 0)
     {
         std::cerr << "Element transform: " << element - 1 << " empty!" << std::endl;
         return false;
@@ -118,7 +110,7 @@ bool TransformAction::test(Lattice &lattice, int currentEntity,
     int i = 0;
     while (i < (element - 1))
     {
-        before += matchedTokensSize[i];
+        before += ruleTokenSizes[i];
         i ++;
     }
 

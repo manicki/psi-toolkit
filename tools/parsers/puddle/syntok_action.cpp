@@ -45,16 +45,16 @@ SyntokAction::~SyntokAction()
 //3. wstawienie nowej krawedzi typu token albo grup (w zaleznosci od przelacznika) NOWOSC: wczesniej bylo, ze albo dawaj krawedz group albo nic. teraz musi byc krawedz ,jak graf to jedyna struktura. ewentualnei mozna dac na koniec opcje, wywal syntoki z grafu, przeliczyc reszte grafu
 //bool SyntokAction::apply(ParseGraphPtr pg, Lattice &lattice, int currentEntity,
 bool SyntokAction::apply(Lattice &lattice, int currentEntity,
-        std::vector<int> matchedTokensSize) {
+        RuleTokenSizes &ruleTokenSizes) {
     int realStart = 0;// start;
     int realEnd = 0;//start;
     size_t i = 0;
-    while (i < matchedTokensSize.size())
+    while (i < ruleTokenSizes.size())
     {
         if (i < start)
-            realStart += matchedTokensSize[i];
+            realStart += ruleTokenSizes[i];
         if (i <= end)
-            realEnd += matchedTokensSize[i];
+            realEnd += ruleTokenSizes[i];
         else
             break;
         i ++;
@@ -421,10 +421,10 @@ bool SyntokAction::apply(Lattice &lattice, int currentEntity,
 //bool SyntokAction::test(Entities entities, int currentEntity, std::vector<int> matchedTokensSize)
 //bool SyntokAction::test(ParseGraphPtr pg, Lattice &lattice, int currentEntity,
 bool SyntokAction::test(Lattice &, int,
-        std::vector<int> matchedTokensSize) {
+        RuleTokenSizes &ruleTokenSizes) {
     //int sum = 0;
-    for (std::vector<int>::iterator i = matchedTokensSize.begin();
-            i != matchedTokensSize.end(); ++ i) {
+    for (std::vector<int>::iterator i = ruleTokenSizes.begin();
+            i != ruleTokenSizes.end(); ++ i) {
         if (*i > 0)
             return true;
     }

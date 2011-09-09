@@ -5,6 +5,7 @@
 #include "regexp.hpp"
 #include "utf8.h"
 #include <string>
+#include <vector>
 #include <boost/shared_ptr.hpp>
 //#include "ParseGraph.hpp"
 
@@ -13,6 +14,8 @@ namespace poleng {
     namespace bonsai {
 
         namespace puddle {
+
+            typedef std::vector<int> RuleTokenSizes;
 
             typedef RegExp Pattern;
             typedef boost::shared_ptr<Pattern> PatternPtr;
