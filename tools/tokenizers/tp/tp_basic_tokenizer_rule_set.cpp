@@ -6,6 +6,8 @@
 
 #include "logging.hpp"
 
+#include "escaping.hpp"
+
 std::string TPBasicTokenizerRuleSet::itoa(size_t n) {
     std::stringstream ss;
     ss << n;
@@ -38,7 +40,7 @@ void TPBasicTokenizerRuleSet::loadWholeElement(std::istream& input, std::string&
 
     std::string buffCopy = buff;
 
-    while ((isEscaped(line, line.length())
+    while ((Escaping::isEscaped(line, line.length())
             || removeComments(buffCopy))
            && !input.eof()) {
 
@@ -48,17 +50,6 @@ void TPBasicTokenizerRuleSet::loadWholeElement(std::istream& input, std::string&
 
         buffCopy = buff;
     }
-}
-
-bool TPBasicTokenizerRuleSet::isEscaped(const std::string& s, size_t pos) {
-    if (pos == 0)
-        return false;
-
-    size_t last = s.find_last_not_of('\\', pos-1);
-
-    return ((last == std::string::npos && pos % 2 == 1)
-            || (last != std::string::npos && (pos - last) % 2 == 0));
-
 }
 
 void TPBasicTokenizerRuleSet::loadWholeElement(std::istream& input,
@@ -82,7 +73,7 @@ bool TPBasicTokenizerRuleSet::removeComments(std::string& comm) {
 
     while ((pos = comm.find_first_of('#',pos)) != comm.npos) {
 
-        if (!isEscaped(comm, pos)) {
+        if (!Escaping::isEscaped(comm, pos)) {
             if ((last = comm.find("\n",pos)) != comm.npos)
                 comm.erase(pos, last - pos + 1);
             else {
@@ -106,7 +97,7 @@ void TPBasicTokenizerRuleSet::trim(std::string& strg) {
     if (pos == std::string::npos)
         strg = "";
     else if (pos != strg.length() - 1) {
-        if (isEscaped(strg, pos+1) && strg[pos+1] == ' ')
+        if (Escaping::isEscaped(strg, pos+1) && strg[pos+1] == ' ')
             ++pos;
 
         if (pos != strg.length() - 1)

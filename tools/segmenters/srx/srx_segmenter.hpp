@@ -57,12 +57,24 @@ private:
     friend class SrxSentenceCutter;
 
     void processRule_(const SrxRule& srxRule);
-    void finish_();
-    std::string makeRegexpPart_(const SrxRule& srxRule);
+    std::string makeRegexp_(const SrxRule& srxRule);
+    std::string makeAllParensNonCapturing_(const std::string& pattern);
 
-    std::string breakPattern_;
-    boost::scoped_ptr<PerlRegExp> breakRegexp_;
-    bool firstRule_;
+    std::vector<boost::shared_ptr<PerlRegExp> > nonBreakingRules_;
+
+    struct BreakingRuleInfo {
+        size_t nbOfApplicableNonBreakingRules;
+        boost::shared_ptr<PerlRegExp> breakingRule;
+
+        BreakingRuleInfo(size_t aNbOfApplicableNonBreakingRules,
+                         boost::shared_ptr<PerlRegExp> aBreakingRule)
+            : nbOfApplicableNonBreakingRules(aNbOfApplicableNonBreakingRules),
+              breakingRule(aBreakingRule) {
+        }
+    };
+
+    std::vector<BreakingRuleInfo> breakingRules_;
+
 };
 
 #endif

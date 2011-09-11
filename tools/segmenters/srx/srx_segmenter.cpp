@@ -9,6 +9,7 @@
 
 #include "annotation_item.hpp"
 #include "cutter.hpp"
+#include "escaping.hpp"
 
 Annotator* SrxSegmenter::Factory::doCreateAnnotator(
     const boost::program_options::variables_map& options) {
@@ -78,35 +79,48 @@ public:
 
 
 void SrxSegmenter::processRule_(const SrxRule& srxRule) {
+    boost::shared_ptr<PerlRegExp> ruleRegexp(
+        new PerlRegExp(makeRegexpPart(srxRule)));
+
     if (srxRule.isBreakable()) {
-        if (firstRule_)
-            firstRule_ = false;
-        else
-            breakPattern_ += '|';
+        size_t nbOfNonBreakingRules = nonBreakingRules_.size();
 
-        breakPattern_ += makeRegexpPart_(srxRule);
+        breakingRules_.push_back(
+            BreakingRuleInfo(ruleRegexp, nbOfNonBreakingRules));
     }
+    else
+        nonBreakingRules_.push_back(ruleRegexp);
 }
 
-void SrxSegmenter::finish_() {
-    DEBUG("SRX break pattern: `" << breakPattern_ << "'");
-
-    breakRegexp_.reset(new PerlRegExp(breakPattern_));
-}
-
-std::string SrxSegmenter::makeRegexpPart_(const SrxRule& srxRule) {
+std::string SrxSegmenter::makeRegexp_(const SrxRule& srxRule) {
     return
-        std::string("(?:")
-        + srxRule.getBeforeBreak()
-        + std::string(")(?=")
-        + srxRule.getAfterBreak()
+        std::string("(")
+        + makeAllParensNonCapturing_(srxRule.getBeforeBreak())
+        + std::string(")(?:")
+        + makeAllParensNonCapturing_(srxRule.getAfterBreak())
         + std::string(")");
+}
+
+std::string SrxSegmenter::makeAllParensNonCapturing_(const std::string& pattern) {
+    size_t pos = 0;
+    std::string ret = pattern;
+    while ( (pos = ret.find("(", pos)) != std::string::npos ) {
+        if (!Escaping::isEscaped(ret, pos)
+            && !(pos + 1 < ret.length() && ret[pos+1] == '?')) {
+            ret.replace(pos+1, 0, "?:");
+            pos += 2;
+        }
+
+        ++pos;
+    }
+
+    return ret;
 }
 
 SrxSegmenter::SrxSegmenter(
     const std::string& lang,
     boost::filesystem::path rules)
-    :firstRule_(true) {
+    :firstRule_(true), nbBreakingRules_(0U) {
 
     SrxRulesReader ruleReader(rules, lang);
     RuleProcessor ruleProc(*this);
@@ -137,8 +151,17 @@ private:
         PerlStringPiece currentText(text.c_str() + positionInText);
         size_t textLen = text.length() - positionInText;
 
-        if (PerlRegExp::FindAndConsume(
-                &currentText, *(segmenter_.breakRegexp_.get()))) {
+        size_t minBreakPoint = std::string::npos;
+
+        BOOST_FOREACH(breakingRuleInfo& ruleInfo, breakingRules_) {
+            size_t ruleBreakPoint = updateIndex_(ruleInfo.breakingRules, positionInText);
+
+            if (ruleBreakPoint != std::string::npos
+                && (ruleBreakPoint < minBreakPoint || minBreakPoint == std::string::npos))
+                minBreakPoint = ruleBreakPoint;
+        }
+
+        if (minBreakPoint != std::string::npos) {
             size_t currentPosition = positionInText;
             size_t sentenceLength = textLen - currentText.size();
 
