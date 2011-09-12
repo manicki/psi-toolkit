@@ -25,6 +25,8 @@ private:
 	std::string annotatorOptionsAsString();
 
 	int executeOptions();
+
+	static const std::string DEFAULT_PIPE;
 };
 
 #endif

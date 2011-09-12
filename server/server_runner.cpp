@@ -50,6 +50,8 @@ void ServerRunner::setOptionsDescription() {
 		("verbose", "Run verbosely");	
 }
 
+const std::string ServerRunner::DEFAULT_PIPE = "txt-reader ! tp-tokenizer ! psi-writer";
+
 int ServerRunner::run() {
 
 	if (executeOptions() == 1) return 1;
@@ -66,8 +68,12 @@ int ServerRunner::run() {
 
 		// register all websites
 		IndexSite index(psiServer);
-		PipeSite pipe(psiServer);
 
+		std::string initialPipe = annotatorOptions.size() == 0 ? 
+			DEFAULT_PIPE : annotatorOptionsAsString();
+		PipeSite pipe(psiServer, initialPipe);
+
+		// run server
 		psiServer.run();
 	}
 	catch (std::exception& e) {
