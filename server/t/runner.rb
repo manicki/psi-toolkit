@@ -23,8 +23,8 @@ t_server = Thread.new do
 	$exe = `#{$source_dir}/psi-server #{$arguments}`
 end
 
-sleep 0.5
-$pid = `pidof psi-server #{$arguments}`
+sleep 1
+$pid = `pidof psi-server #{$arguments.gsub('-', '')}`
 puts "\nPsi Server process id = #{$pid}"
 
 $tst = ""
