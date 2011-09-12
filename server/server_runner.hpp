@@ -15,10 +15,14 @@ public:
 private:
 	PsiServer* psiSever_;
 
-	boost::program_options::variables_map options_;
-	boost::program_options::options_description optionsDescription_;
-	void setOptionsDescription();
+	boost::program_options::variables_map options;
+	std::vector<std::string> annotatorOptions;
+
+	boost::program_options::options_description optionsDescription;
+
 	boost::program_options::variables_map parseOptions(int argc, char * argv[]);
+	void setOptionsDescription();
+	std::string annotatorOptionsAsString();
 
 	int executeOptions();
 };
