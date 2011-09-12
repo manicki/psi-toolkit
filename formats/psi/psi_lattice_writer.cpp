@@ -109,9 +109,17 @@ void PsiLatticeWriter::Worker::doRun() {
         }
         int edgeTextLength = utf8::distance(edgeText.begin(), edgeText.end());
         if (edgeTextLength > alignments[3] - alignments[2]) {
-            alignOutput_(edgeText.substr(0,alignments[3] - alignments[2] - 7));
+            std::string::const_iterator bIter = edgeText.begin();
+            utf8::unchecked::advance(bIter, alignments[3] - alignments[2] - 7);
+            alignOutput_(edgeText.substr(0, bIter - edgeText.begin()));
             alignOutput_("...");
-            alignOutput_(edgeText.substr(edgeTextLength - 3), alignments[3]);
+
+            std::string::const_iterator eIter = edgeText.end();
+            for (int i = 0; i < 3; ++i)
+                utf8::unchecked::prior(eIter);
+
+            alignOutput_(edgeText.substr(eIter - edgeText.begin()),
+                         alignments[3]);
         } else {
             alignOutput_(edgeText, alignments[3]);
         }
