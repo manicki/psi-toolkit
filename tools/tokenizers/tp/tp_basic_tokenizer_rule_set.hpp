@@ -179,7 +179,6 @@ private:
 
     void loadWholeElement(std::istream & input, std::string & buff, size_t & pos);
     void loadWholeElement(std::istream & input, std::string & buff);
-    bool isEscaped(const std::string& s, size_t pos);
 
     void clearState(std::map<std::string, Definition> & definitions, std::map<std::string, bool> & opened);
     void returnToTheBuffer(std::stringstream & st, std::string & resBuffer);

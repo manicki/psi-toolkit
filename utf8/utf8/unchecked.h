@@ -58,6 +58,12 @@ namespace utf8
         }
 
         template <typename octet_iterator>
+        uint32_t sequence_length(octet_iterator it)
+        {
+            return utf8::internal::sequence_length(it);
+        }
+
+        template <typename octet_iterator>
         uint32_t next(octet_iterator& it)
         {
             uint32_t cp = internal::mask8(*it);
