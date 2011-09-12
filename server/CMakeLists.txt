@@ -1,6 +1,7 @@
 add_library(server
 	psi_request_handler.cpp
 	psi_server.cpp
+	server_runner.cpp
 )
 
 target_link_libraries(server ${Boost_LIBRARIES} pthread)
