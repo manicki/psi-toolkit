@@ -2885,30 +2885,30 @@ public:
         lattice.addEdge(pre_ala, post_ala, ai_ala_form, form_tag, ala_form_builder.build());
 
         Lattice::EdgeSequence::Builder ma_lemma_builder;
-        ma_lemma_builder.addEdge(lattice.firstOutEdge(lattice.getVertexForRawCharIndex(0), tokenMask));
+        ma_lemma_builder.addEdge(lattice.firstOutEdge(lattice.getVertexForRawCharIndex(4), tokenMask));
         AnnotationItem ai_ma_lemma("word", "mieć");
         lattice.addEdge(pre_ma, post_ma, ai_ma_lemma, lemma_tag, ma_lemma_builder.build());
         Lattice::EdgeSequence::Builder ma_lexeme_builder;
-        ma_lexeme_builder.addEdge(lattice.firstOutEdge(lattice.getVertexForRawCharIndex(0), lemmaMask));
+        ma_lexeme_builder.addEdge(lattice.firstOutEdge(lattice.getVertexForRawCharIndex(4), lemmaMask));
         AnnotationItem ai_ma_lexeme("C", "mieć_C");
         lattice.addEdge(pre_ma, post_ma, ai_ma_lexeme, lexeme_tag, ma_lexeme_builder.build());
         Lattice::EdgeSequence::Builder ma_form_builder;
-        ma_form_builder.addEdge(lattice.firstOutEdge(lattice.getVertexForRawCharIndex(0), lexemeMask));
+        ma_form_builder.addEdge(lattice.firstOutEdge(lattice.getVertexForRawCharIndex(4), lexemeMask));
         AnnotationItem ai_ma_form("C", "mieć_C");
         lattice.getAnnotationItemManager().setValue(ai_ma_form, "morpho", "pres:sg:ter:imperf");
         lattice.getAnnotationItemManager().setValue(ai_ma_form, "discard", "0");
         lattice.addEdge(pre_ma, post_ma, ai_ma_form, form_tag, ma_form_builder.build());
 
         Lattice::EdgeSequence::Builder kota_lemma_builder;
-        kota_lemma_builder.addEdge(lattice.firstOutEdge(lattice.getVertexForRawCharIndex(0), tokenMask));
+        kota_lemma_builder.addEdge(lattice.firstOutEdge(lattice.getVertexForRawCharIndex(7), tokenMask));
         AnnotationItem ai_kota_lemma("word", "kot");
         lattice.addEdge(pre_kota, post_kota, ai_kota_lemma, lemma_tag, kota_lemma_builder.build());
         Lattice::EdgeSequence::Builder kota_lexeme_builder;
-        kota_lexeme_builder.addEdge(lattice.firstOutEdge(lattice.getVertexForRawCharIndex(0), lemmaMask));
+        kota_lexeme_builder.addEdge(lattice.firstOutEdge(lattice.getVertexForRawCharIndex(7), lemmaMask));
         AnnotationItem ai_kota_lexeme("R", "kot_R");
         lattice.addEdge(pre_kota, post_kota, ai_kota_lexeme, lexeme_tag, kota_lexeme_builder.build());
         Lattice::EdgeSequence::Builder kota_form_builder;
-        kota_form_builder.addEdge(lattice.firstOutEdge(lattice.getVertexForRawCharIndex(0), lexemeMask));
+        kota_form_builder.addEdge(lattice.firstOutEdge(lattice.getVertexForRawCharIndex(7), lexemeMask));
         AnnotationItem ai_kota_form("R", "kot_R");
         lattice.getAnnotationItemManager().setValue(ai_kota_form, "morpho", "m2:acc:sg");
         lattice.getAnnotationItemManager().setValue(ai_kota_form, "discard", "0");
