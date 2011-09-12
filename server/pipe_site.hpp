@@ -8,9 +8,17 @@ class PipeSite : public TemplateSite
 
 public:
 
+	std::string pipe;
+	std::string input;
+
 	PipeSite(PsiServer& server, std::string initialPipe) 
-		: TemplateSite(server), pipeText_(initialPipe)
+		: TemplateSite(server), pipe(initialPipe)
 	{
+		psiServer_.registerIncludeCode(
+			"pipe_site_input_text", boost::bind(&PipeSite::inputText, this));
+		psiServer_.registerActionCode(
+			"input_text", boost::bind(&PipeSite::actionInputText, this));
+
 		psiServer_.registerIncludeCode(
 			"pipe_site_pipe_text", boost::bind(&PipeSite::pipeText, this));
 		psiServer_.registerActionCode(
@@ -18,17 +26,25 @@ public:
 	}
 
 	char * pipeText() {
-		return stringToChar(pipeText_);
+		return stringToChar(pipe);
 	}
 	
 	char * actionPipeText() {
-		pipeText_ = psiServer_.findValue("pipe-text");
+		pipe = psiServer_.findValue("pipe-text");
 		return stringToChar(std::string("/index.html"));
 	}
 
-private:
-
-	std::string pipeText_;
-
+	char * inputText() {
+		std::string str = "";
+		if (input.length()) {
+			str = "<p>Your text:</p><p>" + input + "</p>";
+		}
+		return stringToChar(str);
+	}
+	
+	char * actionInputText() {
+		input = psiServer_.findValue("input-text");
+		return stringToChar(std::string("/index.html"));
+	}
 };
 
