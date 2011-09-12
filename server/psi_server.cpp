@@ -78,10 +78,13 @@ void PsiServer::include(std::string& reply) {
 		int reply_len = reply.length();
 
 		// code identifying text generator
-		std::string code = reply.substr( p+10, q-p-14 );
+		std::string code = reply.substr(p + 10, q - p - 14);
+
+		// delete psis markup
+		reply.replace(p, q - p, "");
 
 		// find the function associated with this code
-		std::map < std::string, psis_include_function >::iterator pf = includes_.find(code);
+		std::map<std::string, psis_include_function>::iterator pf = includes_.find(code);
 		if (pf != includes_.end()) {
 			reply.insert(p, pf->second());
 		}
