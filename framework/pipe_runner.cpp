@@ -12,7 +12,7 @@ PipeRunner::PipeRunner(int argc, char* argv[]) {
     parseIntoPipelineSpecification_(argc, argv);
 }
 
-int PipeRunner::run() {
+int PipeRunner::run(std::istream& in, std::ostream& out) {
     Lattice lattice;
 
     std::list<PipelineElementSpecification>::iterator it = pipelineSpecification_.elements.begin();
@@ -22,7 +22,7 @@ int PipeRunner::run() {
     LatticeReaderFactory& readerFactory = getReaderFactory_(*it);
     boost::scoped_ptr<LatticeReader> reader(readerFactory.createLatticeReader(options));
 
-    reader->readIntoLattice(std::cin, lattice);
+    reader->readIntoLattice(in, lattice);
     ++it;
 
     for (;
@@ -33,7 +33,7 @@ int PipeRunner::run() {
             LatticeWriterFactory& writerFactory = getWriterFactory_(*it);
             boost::scoped_ptr<LatticeWriter> writer(writerFactory.createLatticeWriter(options));
 
-            writer->writeLattice(lattice, std::cout);
+            writer->writeLattice(lattice, out);
         }
         else {
             AnnotatorFactory& annotatorFactory = getAnnotatorFactory_(*it);
