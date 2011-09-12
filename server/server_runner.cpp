@@ -1,3 +1,6 @@
+#include "config.h"
+#include <boost/filesystem.hpp>
+
 #include "server_runner.hpp"
 
 ServerRunner::ServerRunner(int argc, char * argv[]) 
@@ -31,12 +34,12 @@ void ServerRunner::setOptionsDescription() {
 
 	optionsDescription_.add_options()
 		("address", boost::program_options::value<std::string>()->default_value("0.0.0.0"),
-			"Set server address (default 0.0.0.0)")
+			"Set server address")
 		("port", boost::program_options::value<std::string>()->default_value("3000"),
-			"Set port number (default 3000)")
+			"Set port number")
 		("threads", boost::program_options::value<std::string>()->default_value("1"),
-			"Specify number of threads (default 1)")
-		("root", boost::program_options::value<std::string>()->default_value("/home/romang/psi-toolkit/server/website"),
+			"Specify number of threads")
+		("root", boost::program_options::value<std::string>()->default_value(ROOT_DIR "server/website"),
 			"Set root of website files");
 
 	optionsDescription_.add_options()
@@ -82,6 +85,18 @@ int ServerRunner::executeOptions() {
 	if (options_.count("version")) {
 		std::cout << "PsiServer version 0.1" << std::endl;
 		return 1;
+	}
+
+	if (options_.count("root")) {
+		boost::filesystem::path p(options_["root"].as<std::string>() + "/index.html");
+
+		if (!boost::filesystem::exists(p)) {
+			std::cout << "Set path to website root directory "
+				<< options_["root"].as<std::string>() 
+				<< " does not contain the index.html file. " 
+				<< "Use the --root options to specify valid root path. " << std::endl;
+			return 1;
+		}
 	}
 	
 	return 0;
