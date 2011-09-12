@@ -151,7 +151,8 @@ private:
     virtual AnnotationItem doCutOff(const std::string& text, size_t& positionInText) {
         size_t nearestBreakPoint = 0;
         size_t nearestRuleIndex = 0;
-        size_t minBreakPoint = positionInText + 1;
+        size_t minBreakPoint =
+            positionInText + utf8::unchecked::sequence_length(text.begin() + positionInText);
         bool candidateFound = false;
         bool candidateAccepted = false;
 
@@ -192,7 +193,9 @@ private:
                     segmenter_.breakingRules_[nearestRuleIndex].nbOfApplicableNonBreakingRules);
 
                 if (!candidateAccepted)
-                    minBreakPoint = nearestBreakPoint + 1;
+                    minBreakPoint =
+                        nearestBreakPoint
+                        + utf8::unchecked::sequence_length(text.begin() + nearestBreakPoint);
             }
 
             assert (!(!candidateFound && candidateAccepted));
@@ -316,7 +319,9 @@ private:
 
                 assert (ruleApplication.breakingPosition >= ruleApplication.startingPosition);
 
-                ++ruleApplication.startingPosition;
+                ruleApplication.startingPosition +=
+                    utf8::unchecked::sequence_length(
+                        text.begin() + ruleApplication.startingPosition);
             }
             else {
                 ruleApplication.breakingPosition = std::string::npos;
