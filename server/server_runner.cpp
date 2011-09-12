@@ -69,7 +69,7 @@ int ServerRunner::run() {
 		// register all websites
 		IndexSite index(psiServer);
 
-		std::string initialPipe = annotatorOptions.size() == 0 ? 
+		std::string initialPipe = annotatorOptions.empty() ? 
 			DEFAULT_PIPE : annotatorOptionsAsString();
 		PipeSite pipe(psiServer, initialPipe);
 
@@ -102,7 +102,7 @@ int ServerRunner::executeOptions() {
 			std::cout << "Set path to website root directory "
 				<< options["root"].as<std::string>() 
 				<< " does not contain the index.html file. " 
-				<< "Use the --root options to specify valid root path. " << std::endl;
+				<< "Use the --root option to specify valid root path. " << std::endl;
 			return 1;
 		}
 	}

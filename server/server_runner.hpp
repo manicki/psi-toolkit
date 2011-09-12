@@ -13,8 +13,6 @@ public:
     int run();
 
 private:
-	PsiServer* psiSever_;
-
 	boost::program_options::variables_map options;
 	std::vector<std::string> annotatorOptions;
 
