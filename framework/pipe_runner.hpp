@@ -12,13 +12,14 @@ class PipeRunner {
 
 public:
     PipeRunner(int argc, char* argv[]);
+    PipeRunner(std::vector<std::string> args);
 
     int run(std::istream&, std::ostream&);
 
 private:
     PipelineSpecification pipelineSpecification_;
 
-    void parseIntoPipelineSpecification_(int argc, char* argv[]);
+    void parseIntoPipelineSpecification_(std::vector<std::string> args);
 
     ProcessorFactory& getFactory_(const PipelineElementSpecification& elementSpec);
     LatticeReaderFactory& getReaderFactory_(const PipelineElementSpecification& elementSpec);
