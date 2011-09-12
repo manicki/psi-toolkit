@@ -8,5 +8,5 @@ int main(int argc, char* argv[]) {
 
     PipeRunner pipeRunner(argc, argv);
 
-    return pipeRunner.run();
+    return pipeRunner.run(std::cin, std::cout);
 }

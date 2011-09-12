@@ -38,6 +38,8 @@
 		std::string websiteRoot;
 
 	private:
+		std::string urlDecode(std::string &);		
+
 		/// store map between include codes and application functions
 		std::map <std::string, psis_include_function > includes_;
 		/// store map between action codes and application functions

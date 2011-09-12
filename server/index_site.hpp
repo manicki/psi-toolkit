@@ -9,14 +9,14 @@ class IndexSite : public TemplateSite
 public:
 
 	IndexSite(PsiServer& server) : TemplateSite(server) {
-		psi_server_.registerIncludeCode(
+		psiServer_.registerIncludeCode(
 			"index_site_info", boost::bind(&IndexSite::info, this));
-		psi_server_.registerIncludeCode(
+		psiServer_.registerIncludeCode(
 			"index_site_input_text", boost::bind(&IndexSite::inputText, this));
-		psi_server_.registerActionCode(
+		psiServer_.registerActionCode(
 			"input_text", boost::bind(&IndexSite::actionInputText, this));
 
-		psi_server_.registerIncludeCode(
+		psiServer_.registerIncludeCode(
 			"index_site_footer_part", boost::bind(&IndexSite::footerPart, this));
 	}
 	
@@ -26,25 +26,25 @@ public:
 	}
 
 	char * footerPart() {
-		std::string pipePsis = readPsisFile("footer.psis");
-		return stringToChar(pipePsis);
+		std::string footerPsis = readPsisFile("footer.psis");
+		return stringToChar(footerPsis);
 	}
 
 	char * inputText() {
 		std::string str = "";
-		if (input_text_.length()) {
-			str = "<p>Your text:</p><p>" + input_text_ + "</p>";
+		if (inputText_.length()) {
+			str = "<p>Your text:</p><p>" + inputText_ + "</p>";
 		}
 		return stringToChar(str);
 	}
 	
 	char * actionInputText() {
-		input_text_ = psi_server_.findValue("input-text");
+		inputText_ = psiServer_.findValue("input-text");
 		return stringToChar(std::string("/index.html"));
 	}
 
 private:
 
-	std::string input_text_;
+	std::string inputText_;
 
 };

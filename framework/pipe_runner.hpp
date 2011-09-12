@@ -13,7 +13,7 @@ class PipeRunner {
 public:
     PipeRunner(int argc, char* argv[]);
 
-    int run();
+    int run(std::istream&, std::ostream&);
 
 private:
     PipelineSpecification pipelineSpecification_;

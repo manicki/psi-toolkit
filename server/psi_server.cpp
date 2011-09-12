@@ -78,10 +78,13 @@ void PsiServer::include(std::string& reply) {
 		int reply_len = reply.length();
 
 		// code identifying text generator
-		std::string code = reply.substr( p+10, q-p-14 );
+		std::string code = reply.substr(p + 10, q - p - 14);
+
+		// delete psis markup
+		reply.replace(p, q - p, "");
 
 		// find the function associated with this code
-		std::map < std::string, psis_include_function >::iterator pf = includes_.find(code);
+		std::map<std::string, psis_include_function>::iterator pf = includes_.find(code);
 		if (pf != includes_.end()) {
 			reply.insert(p, pf->second());
 		}
@@ -154,13 +157,37 @@ void PsiServer::checkForAction(http::server3::request& req, http::server3::reply
 			value.replace(p, 1, " ");
 		}
 
-		name_values_.insert(std::pair<std::string, std::string> (name, value));
+		name_values_.insert(std::pair<std::string, std::string> (name, urlDecode(value)));
 		p = q + 1;
 	}
 
 	// call the function
 	req.uri = pfun->second(this);
 	return;
+}
+
+std::string PsiServer::urlDecode(std::string & encodedString) {
+
+	std::string decodedString;
+	char ch;
+	unsigned int i;
+	int j;
+
+	for (i = 0; i < encodedString.length(); i++) {
+
+	 	if (int(encodedString[i]) == 37) {
+			sscanf(encodedString.substr(i+1, 2).c_str(), "%x", &j);
+
+			ch = static_cast<char>(j);
+			decodedString += ch;
+			i = i + 2;
+
+		} else {
+			decodedString += encodedString[i];
+		}
+	}
+
+	return (decodedString);
 }
 
 std::string& PsiServer::findValue(const char* name) {
