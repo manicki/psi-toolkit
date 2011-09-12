@@ -63,13 +63,14 @@ private:
     std::vector<boost::shared_ptr<PerlRegExp> > nonBreakingRules_;
 
     struct BreakingRuleInfo {
-        size_t nbOfApplicableNonBreakingRules;
         boost::shared_ptr<PerlRegExp> breakingRule;
+        size_t nbOfApplicableNonBreakingRules;
 
-        BreakingRuleInfo(size_t aNbOfApplicableNonBreakingRules,
-                         boost::shared_ptr<PerlRegExp> aBreakingRule)
-            : nbOfApplicableNonBreakingRules(aNbOfApplicableNonBreakingRules),
-              breakingRule(aBreakingRule) {
+
+        BreakingRuleInfo(boost::shared_ptr<PerlRegExp> aBreakingRule,
+                         size_t aNbOfApplicableNonBreakingRules)
+            : breakingRule(aBreakingRule),
+              nbOfApplicableNonBreakingRules(aNbOfApplicableNonBreakingRules) {
         }
     };
 

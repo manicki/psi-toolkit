@@ -1,5 +1,6 @@
 #include "srx_segmenter.hpp"
 
+#include <cassert>
 #include <boost/function_output_iterator.hpp>
 
 #include "logging.hpp"
@@ -80,7 +81,7 @@ public:
 
 void SrxSegmenter::processRule_(const SrxRule& srxRule) {
     boost::shared_ptr<PerlRegExp> ruleRegexp(
-        new PerlRegExp(makeRegexpPart(srxRule)));
+        new PerlRegExp(makeRegexp_(srxRule)));
 
     if (srxRule.isBreakable()) {
         size_t nbOfNonBreakingRules = nonBreakingRules_.size();
@@ -94,9 +95,9 @@ void SrxSegmenter::processRule_(const SrxRule& srxRule) {
 
 std::string SrxSegmenter::makeRegexp_(const SrxRule& srxRule) {
     return
-        std::string("(")
+        std::string("(?:")
         + makeAllParensNonCapturing_(srxRule.getBeforeBreak())
-        + std::string(")(?:")
+        + std::string(")(")
         + makeAllParensNonCapturing_(srxRule.getAfterBreak())
         + std::string(")");
 }
@@ -119,14 +120,12 @@ std::string SrxSegmenter::makeAllParensNonCapturing_(const std::string& pattern)
 
 SrxSegmenter::SrxSegmenter(
     const std::string& lang,
-    boost::filesystem::path rules)
-    :firstRule_(true), nbBreakingRules_(0U) {
+    boost::filesystem::path rules) {
 
     SrxRulesReader ruleReader(rules, lang);
     RuleProcessor ruleProc(*this);
 
     ruleReader.getRules(boost::make_function_output_iterator(ruleProc));
-    finish_();
 }
 
 LatticeWorker* SrxSegmenter::doCreateLatticeWorker(Lattice& lattice) {
@@ -141,29 +140,71 @@ SrxSegmenter::Worker::Worker(Processor& processor, Lattice& lattice):
 class SrxSentenceCutter : public Cutter {
 public:
     SrxSentenceCutter(SrxSegmenter& segmenter)
-        :segmenter_(segmenter) {
+        :segmenter_(segmenter),
+         breakingRuleApplications_(segmenter.breakingRules_.size()),
+         nonBreakingRuleApplications_(segmenter.nonBreakingRules_.size()) {
     }
 
 private:
     const static std::string DEFAULT_SENTENCE_CATEGORY;
 
     virtual AnnotationItem doCutOff(const std::string& text, size_t& positionInText) {
-        PerlStringPiece currentText(text.c_str() + positionInText);
-        size_t textLen = text.length() - positionInText;
+        size_t nearestBreakPoint = 0;
+        size_t nearestRuleIndex = 0;
+        size_t minBreakPoint = positionInText + 1;
+        bool candidateFound = false;
+        bool candidateAccepted = false;
 
-        size_t minBreakPoint = std::string::npos;
+        assert (segmenter_.breakingRules_.size() == breakingRuleApplications_.size());
+        assert (segmenter_.nonBreakingRules_.size() == nonBreakingRuleApplications_.size());
 
-        BOOST_FOREACH(breakingRuleInfo& ruleInfo, breakingRules_) {
-            size_t ruleBreakPoint = updateIndex_(ruleInfo.breakingRules, positionInText);
+        do {
+            candidateFound = false;
 
-            if (ruleBreakPoint != std::string::npos
-                && (ruleBreakPoint < minBreakPoint || minBreakPoint == std::string::npos))
-                minBreakPoint = ruleBreakPoint;
-        }
+            for (size_t i = 0; i < segmenter_.breakingRules_.size(); ++i) {
+                size_t ruleBreakPoint = updateBreakingRuleIndex_(i,
+                                                                 minBreakPoint,
+                                                                 text,
+                                                                 positionInText);
 
-        if (minBreakPoint != std::string::npos) {
+                assert (ruleBreakPoint == std::string::npos
+                        || ruleBreakPoint >= minBreakPoint);
+
+                if (ruleBreakPoint != std::string::npos
+                    && (!candidateFound || ruleBreakPoint < nearestBreakPoint)) {
+                    INFO("CANDIDATE " << i << " " << ruleBreakPoint
+                         << " " << nearestBreakPoint
+                         << " " << minBreakPoint
+                         << " " << breakingRuleApplications_[i].startingPosition
+                         << " " << breakingRuleApplications_[i].breakingPosition);
+
+                    nearestBreakPoint = ruleBreakPoint;
+                    nearestRuleIndex = i;
+                    candidateFound = true;
+                }
+            }
+
+            if (candidateFound) {
+                candidateAccepted = checkBreakPoint_(
+                    nearestBreakPoint,
+                    text,
+                    positionInText,
+                    segmenter_.breakingRules_[nearestRuleIndex].nbOfApplicableNonBreakingRules);
+
+                if (!candidateAccepted)
+                    minBreakPoint = nearestBreakPoint + 1;
+            }
+
+            assert (!(!candidateFound && candidateAccepted));
+        } while (candidateFound && !candidateAccepted);
+
+        if (candidateAccepted) {
+            assert (candidateFound);
+
             size_t currentPosition = positionInText;
-            size_t sentenceLength = textLen - currentText.size();
+
+            assert (nearestBreakPoint > currentPosition);
+            size_t sentenceLength = nearestBreakPoint - currentPosition;
 
             positionInText += sentenceLength;
 
@@ -178,7 +219,6 @@ private:
                 DEFAULT_SENTENCE_CATEGORY,
                 text.substr(currentPosition));
         }
-
     }
 
     virtual int doMaximumFragmentLength() {
@@ -192,8 +232,103 @@ private:
         return tags;
     }
 
+    size_t updateBreakingRuleIndex_(size_t breakingRuleIndex,
+                                    size_t minBreakPoint,
+                                    const std::string& text,
+                                    size_t positionInText) {
+        SrxSegmenter::BreakingRuleInfo& ruleInfo = segmenter_.breakingRules_[breakingRuleIndex];
+
+        return updatePosition_(ruleInfo.breakingRule,
+                               breakingRuleApplications_[breakingRuleIndex],
+                               minBreakPoint,
+                               text,
+                               positionInText);
+    }
+
+    bool checkBreakPoint_(size_t breakPoint,
+                          const std::string& text,
+                          size_t positionInText,
+                          size_t nbOfRulesToCheck) {
+
+        assert (nbOfRulesToCheck <= nonBreakingRuleApplications_.size());
+
+        for (size_t i = 0; i < nbOfRulesToCheck; ++i) {
+            size_t ruleNonBreakPoint = updateNonBreakingRuleIndex_(i,
+                                                                   breakPoint,
+                                                                   text,
+                                                                   positionInText);
+
+            if (ruleNonBreakPoint != std::string::npos
+                && ruleNonBreakPoint == breakPoint)
+                return false;
+        }
+
+        return true;
+    }
+
+    size_t updateNonBreakingRuleIndex_(size_t breakingRuleIndex,
+                                       size_t minBreakPoint,
+                                       const std::string& text,
+                                       size_t positionInText) {
+        return updatePosition_(segmenter_.nonBreakingRules_[breakingRuleIndex],
+                               nonBreakingRuleApplications_[breakingRuleIndex],
+                               minBreakPoint,
+                               text,
+                               positionInText);
+    }
+
     SrxSegmenter& segmenter_;
 
+    struct RuleApplication {
+        size_t startingPosition;
+        size_t breakingPosition;
+
+        RuleApplication()
+            :startingPosition(0U), breakingPosition(std::string::npos) {
+        }
+    };
+
+    std::vector<RuleApplication> breakingRuleApplications_;
+    std::vector<RuleApplication> nonBreakingRuleApplications_;
+
+    size_t updatePosition_(boost::shared_ptr<PerlRegExp> regexp,
+                           RuleApplication& ruleApplication,
+                           size_t minBreakPoint,
+                           const std::string& text,
+                           size_t positionInText) {
+
+        if (ruleApplication.startingPosition < positionInText)
+            ruleApplication.startingPosition = positionInText;
+
+        while (ruleApplication.startingPosition < text.length()
+               && (ruleApplication.breakingPosition == std::string::npos
+                   || ruleApplication.breakingPosition < minBreakPoint)) {
+            PerlStringPiece currentText(text.c_str() + ruleApplication.startingPosition);
+            int originalLength = currentText.size();
+            PerlStringPiece fragFound;
+
+            if (RegExp::FindAndConsume(&currentText, *regexp.get(), &fragFound)) {
+                assert (originalLength > currentText.size());
+                int lengthDiff = originalLength - currentText.size();
+
+                ruleApplication.breakingPosition =
+                    ruleApplication.startingPosition + (lengthDiff - fragFound.size());
+
+                assert (ruleApplication.breakingPosition >= ruleApplication.startingPosition);
+
+                ++ruleApplication.startingPosition;
+            }
+            else {
+                ruleApplication.breakingPosition = std::string::npos;
+                ruleApplication.startingPosition = text.length();
+            }
+        }
+
+        if (ruleApplication.breakingPosition < minBreakPoint)
+            ruleApplication.breakingPosition = std::string::npos;
+
+        return ruleApplication.breakingPosition;
+    }
 };
 
 const std::string SrxSentenceCutter::DEFAULT_SENTENCE_CATEGORY="sen";
