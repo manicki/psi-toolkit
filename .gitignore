@@ -3,6 +3,7 @@
 *.class
 classjava.stamp
 psi-pipe
+test_runner
 common/config.h
 cppcheck-result.xml
 prj/valgrind.xml

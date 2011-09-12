@@ -1,3 +1,9 @@
+add_library(common-tests
+        segment_glob_tests.cpp
+)
+
+target_link_libraries(common-tests common)
+
 add_library(common-test
 	by_spaces_cutter.cpp
 	fake_lemmatizer.cpp

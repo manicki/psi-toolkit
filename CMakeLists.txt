@@ -4,7 +4,7 @@ project(psi-toolkit CXX)
 
 # Finds and includes external libraries
 set(Boost_USE_STATIC_LIBS ON)
-find_package(Boost COMPONENTS program_options graph serialization filesystem system thread REQUIRED)
+find_package(Boost COMPONENTS program_options graph serialization filesystem system thread unit_test_framework test_exec_monitor prg_exec_monitor REQUIRED)
 
 set(CXXTEST_INCLUDE_DIR ./prj/tests)
 find_package(CxxTest)
@@ -75,6 +75,8 @@ foreach(dir ${DIRS})
 	link_directories("${psi-toolkit_BINARY_DIR}/${dir}")
 	add_subdirectory(${dir})
 endforeach(dir)
+
+add_subdirectory(tests)
 
 set(TARGETS common framework formats-psi formats-simple formats-txt formats-utt tools-tokenizers-tp tools-segmenters-srx psi-pipe common-test)
 
