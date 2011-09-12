@@ -5,10 +5,10 @@ p { padding: 5px 0; }
 
 /* Forms */
 
-input[type=text] { padding: 5px; width:800px; }
+input[type=text] { padding: 5px; width: 800px; }
 textarea { padding: 5px; }
 #pipe-text { }
 #input-text { }
 
 /* Boxes */
-.box { margin-top: 10px; }
+.box { margin: 10px auto 0 auto; display: table; }

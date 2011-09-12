@@ -13,11 +13,11 @@ class TemplateSite{
 
 public:
 
-	TemplateSite(PsiServer& server) : psi_server_(server) {};
+	TemplateSite(PsiServer& server) : psiServer_(server) {};
 	
 protected:
 
-	PsiServer& psi_server_;
+	PsiServer& psiServer_;
 
 	char * stringToChar(std::string str) {
 		char * chr = new char[str.size() + 1];
@@ -31,7 +31,7 @@ protected:
 		std::string content = "";
 		std::string line;
 
-		std::string filePath = psi_server_.websiteRoot;
+		std::string filePath = psiServer_.websiteRoot;
 		filePath += "/"; 
 		filePath += fileName;
 

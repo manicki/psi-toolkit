@@ -9,28 +9,34 @@ class PipeSite : public TemplateSite
 public:
 
 	PipeSite(PsiServer& server) : TemplateSite(server) {
-		psi_server_.registerIncludeCode(
-			"pipe_site_pipe_text", boost::bind(&PipeSite::pipeText, this));
-		psi_server_.registerActionCode(
+		psiServer_.registerIncludeCode(
+			"pipe_site_pipe_text", boost::bind(&PipeSite::tempPipeText, this));
+		psiServer_.registerIncludeCode(
+			"pipe_site_pipe", boost::bind(&PipeSite::pipeText, this));
+		psiServer_.registerActionCode(
 			"pipe_text", boost::bind(&PipeSite::actionPipeText, this));
 	}
 
-	char * pipeText() {
+	char * tempPipeText() {
 		std::string str = "";
-		if (pipe_text_.length()) {
-			str = "<p>Your pipe:</p><p>" + pipe_text_ + "</p>";
+		if (pipeText_.length()) {
+			str = "<p>Your pipe:</p><p>" + pipeText_ + "</p>";
 		}
 		return stringToChar(str);
 	}
+
+	char * pipeText() {
+		return stringToChar(pipeText_);
+	}
 	
 	char * actionPipeText() {
-		pipe_text_ = psi_server_.findValue("pipe-text");
+		pipeText_ = psiServer_.findValue("pipe-text");
 		return stringToChar(std::string("/index.html"));
 	}
 
 private:
 
-	std::string pipe_text_;
+	std::string pipeText_;
 
 };
 
