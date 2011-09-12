@@ -2,6 +2,7 @@
 #define SERVER_RUNNER_HDR
 
 #include <boost/program_options.hpp>
+#include <sstream>
 
 #include "index_site.hpp"
 #include "pipe_site.hpp"

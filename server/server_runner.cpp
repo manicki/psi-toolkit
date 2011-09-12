@@ -6,7 +6,7 @@
 #include "config.h"
 
 ServerRunner::ServerRunner(int argc, char * argv[]) 
-	: optionsDescription("PsiServer options") {
+	: optionsDescription("PsiServer options"){
 
 	options = parseOptions(argc, argv);
 }
@@ -50,7 +50,7 @@ void ServerRunner::setOptionsDescription() {
 		("verbose", "Run verbosely");	
 }
 
-const std::string ServerRunner::DEFAULT_PIPE = "txt-reader ! tp-tokenizer ! psi-writer";
+const std::string ServerRunner::DEFAULT_PIPE = "txt-reader ! tp-tokenizer --lang pl ! psi-writer";
 
 int ServerRunner::run() {
 
@@ -69,8 +69,7 @@ int ServerRunner::run() {
 		// register all websites
 		IndexSite index(psiServer);
 
-		std::string initialPipe = annotatorOptions.empty() ? 
-			DEFAULT_PIPE : annotatorOptionsAsString();
+		std::string initialPipe = annotatorOptions.empty() ? DEFAULT_PIPE : annotatorOptionsAsString();
 		PipeSite pipe(psiServer, initialPipe);
 
 		// run server
