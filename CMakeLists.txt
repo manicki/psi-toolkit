@@ -78,7 +78,7 @@ endforeach(dir)
 
 set(TARGETS common framework formats-psi formats-simple formats-txt formats-utt tools-tokenizers-tp tools-segmenters-srx psi-pipe common-test)
 
-set(TESTS_TARGETS common-tests tools-tokenizers-tp-tests)
+set(TESTS_TARGETS common-tests tools-tokenizers-tp-tests tools-segmenters-srx-tests)
 
 if(USE_JAVA)
 	set(TARGETS ${TARGETS} tools-lemmatizers-morfologik)
