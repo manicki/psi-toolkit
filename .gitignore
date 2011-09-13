@@ -6,6 +6,7 @@ psi-pipe
 test_runner
 common/config.h
 cppcheck-result.xml
+prj/test-results.xml
 prj/valgrind.xml
 prj/valgrindTestResults.xml
 server/t/reports/*

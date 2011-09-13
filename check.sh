@@ -2,9 +2,9 @@
 
 cd prj
 make install
-./runner
+./tests/test_runner --report_format=XML --report_level=detailed --report_sink=test-results.xml
 
-valgrind --xml=yes --xml-file=valgrind.xml --suppressions=./memcpy.supp ./runner
+valgrind --xml=yes --xml-file=valgrind.xml --suppressions=./memcpy.supp ./tests/test_runner
 xsltproc  ~/valgrind-reports-to-xunit/xslt/valgrind_transform.xsl valgrind.xml > valgrindTestResults.xml
 
 cd ..
