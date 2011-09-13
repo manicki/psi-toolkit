@@ -6,9 +6,7 @@ add_executable(
 target_link_libraries(
  test_runner
  -Wl,-whole-archive
- common-tests
- morfologik-tests
- tools-tokenizers-tp-tests
+ ${TESTS_TARGETS}
  -Wl,-no-whole-archive
  ${Boost_LIBRARIES}
  pcre

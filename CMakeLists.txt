@@ -76,9 +76,9 @@ foreach(dir ${DIRS})
 	add_subdirectory(${dir})
 endforeach(dir)
 
-add_subdirectory(tests)
-
 set(TARGETS common framework formats-psi formats-simple formats-txt formats-utt tools-tokenizers-tp tools-segmenters-srx psi-pipe common-test)
+
+set(TESTS_TARGETS common-tests tools-tokenizers-tp-tests)
 
 if(USE_JAVA)
 	set(TARGETS ${TARGETS} tools-lemmatizers-morfologik)
@@ -94,6 +94,7 @@ set(ALL_TARGETS ${TARGETS} ${TESTS_TARGETS})
 set_target_properties(${ALL_TARGETS} PROPERTIES
 	COMPILE_FLAGS "-I${psi-toolkit_SOURCE_DIR}/utf8")
 
+add_subdirectory(tests)
 
 #if(USE_JAVA)
 #	set_target_properties(psi-pipe PROPERTIES
