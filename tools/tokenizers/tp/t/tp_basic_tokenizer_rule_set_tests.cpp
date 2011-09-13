@@ -1,6 +1,4 @@
-#define BOOST_TEST_NO_MAIN
-
-#include <boost/test/unit_test.hpp>
+#include "tests.hpp"
 
 #include "../tp_basic_tokenizer_rule_set.hpp"
 

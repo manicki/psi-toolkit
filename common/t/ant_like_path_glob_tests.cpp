@@ -1,10 +1,8 @@
-#define BOOST_TEST_NO_MAIN
-#include <boost/test/unit_test.hpp>
+#include "tests.hpp"
 
 #include "ant_like_path_glob.hpp"
 
 #include "config.h"
-
 
 BOOST_AUTO_TEST_CASE( simple_ant_like_path_glob ) {
     AntLikePathGlob glob("foo/**/*.txt");

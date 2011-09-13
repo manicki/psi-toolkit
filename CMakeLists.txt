@@ -121,7 +121,7 @@ endif(USE_PUDDLE)
 set(ALL_TARGETS ${TARGETS} ${TESTS_TARGETS})
 
 set_target_properties(${ALL_TARGETS} PROPERTIES
-	COMPILE_FLAGS "-I${psi-toolkit_SOURCE_DIR}/utf8")
+	COMPILE_FLAGS "-I${psi-toolkit_SOURCE_DIR}/utf8 -I${psi-toolkit_SOURCE_DIR}/tests")
 
 add_subdirectory(tests)
 

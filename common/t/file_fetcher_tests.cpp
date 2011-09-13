@@ -1,5 +1,4 @@
-#define BOOST_TEST_NO_MAIN
-#include <boost/test/unit_test.hpp>
+#include "tests.hpp"
 
 #include "../file_fetcher.hpp"
 #include "../lang_specific_processor_file_fetcher.hpp"

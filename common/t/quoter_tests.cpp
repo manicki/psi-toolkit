@@ -1,5 +1,4 @@
-#define BOOST_TEST_NO_MAIN
-#include <boost/test/unit_test.hpp>
+#include "tests.hpp"
 
 #include "../../formats/psi/psi_quoter.hpp"
 #include "../../formats/utt/utt_quoter.hpp"

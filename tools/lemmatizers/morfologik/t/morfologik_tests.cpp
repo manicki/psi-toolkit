@@ -1,6 +1,4 @@
-#define BOOST_TEST_NO_MAIN
-
-#include <boost/test/unit_test.hpp>
+#include "tests.hpp"
 
 #include "../morfologik.hpp"
 #include "../../common/t/by_spaces_cutter.hpp"
@@ -10,10 +8,10 @@
 BOOST_AUTO_TEST_CASE( simple_stem ) {
     boost::program_options::variables_map noOptions;
     Morfologik morf(noOptions);
-    
+
     std::vector<std::string> stems = morf.simpleStem("dziecku");
     BOOST_CHECK_EQUAL((int)stems.size(), 1);
-    
+
     std::vector<std::string>::iterator s = stems.begin();
     BOOST_CHECK_EQUAL(*s, "dziecko");
 }
@@ -21,7 +19,7 @@ BOOST_AUTO_TEST_CASE( simple_stem ) {
 BOOST_AUTO_TEST_CASE( unrecognized ) {
     boost::program_options::variables_map noOptions;
     Morfologik morf(noOptions);
-    
+
     std::vector<std::string> stems = morf.simpleStem("Dziecko");
     BOOST_CHECK_EQUAL((int)stems.size(), 0);
 }
@@ -71,7 +69,7 @@ BOOST_AUTO_TEST_CASE( lexeme_level ) {
 
         Lattice::EdgeDescriptor prowokacjamiLemma = lemmaIter.next();
         AnnotationItem prowokacjamiItem = lattice.getEdgeAnnotationItem(prowokacjamiLemma);
-        
+
         BOOST_CHECK_EQUAL(prowokacjamiItem.getCategory(), "subst");
         BOOST_CHECK_EQUAL(prowokacjamiItem.getText(), "prowokacja_subst");
 
@@ -115,9 +113,9 @@ BOOST_AUTO_TEST_CASE( lexeme_level ) {
         ++valItr;
         BOOST_CHECK_EQUAL(valItr->first, "number");
         BOOST_CHECK_EQUAL(valItr->second, "pl");
-        
+
         BOOST_CHECK(!formIter.hasNext());
-    }  
+    }
 }
 
 BOOST_AUTO_TEST_CASE( many_lexemes ) {
@@ -158,7 +156,7 @@ BOOST_AUTO_TEST_CASE( many_lexemes ) {
 
         lemma = lemmaIter.next();
         item = lattice.getEdgeAnnotationItem(lemma);
-            
+
         BOOST_CHECK_EQUAL(item.getCategory(), "verb");
         BOOST_CHECK_EQUAL(item.getText(), "mieć_verb");
 

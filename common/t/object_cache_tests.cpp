@@ -1,5 +1,4 @@
-#define BOOST_TEST_NO_MAIN
-#include <boost/test/unit_test.hpp>
+#include "tests.hpp"
 
 #include "object_cache.hpp"
 #include "xml_property_tree.hpp"

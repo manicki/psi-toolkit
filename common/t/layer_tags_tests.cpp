@@ -1,5 +1,4 @@
-#define BOOST_TEST_NO_MAIN
-#include <boost/test/unit_test.hpp>
+#include "tests.hpp"
 
 #include "layer_tag_collection.hpp"
 #include "layer_tag_manager.hpp"

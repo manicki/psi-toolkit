@@ -1,13 +1,11 @@
-#define BOOST_TEST_NO_MAIN
-
-#include <boost/test/unit_test.hpp>
+#include "tests.hpp"
 
 #include "../morfologik_tags_parser.hpp"
 
 BOOST_AUTO_TEST_CASE( simple_tag ) {
     MorfologikTagsParser mrfTagPrs;
     std::string tag = "subst:sg:inst:n"; // For word "dzieckiem"
-    std::vector<std::map<std::string, std::string> > result = 
+    std::vector<std::map<std::string, std::string> > result =
         mrfTagPrs.parse(tag);
 
     BOOST_REQUIRE_EQUAL((int)result.size(), 1);
@@ -17,9 +15,9 @@ BOOST_AUTO_TEST_CASE( simple_tag ) {
 BOOST_AUTO_TEST_CASE ( complex_tag ) {
     MorfologikTagsParser mrfTagPrs;
     std::string tag = "adj:pl:acc.nom.voc:f.m2.m3.n:pos"; // For word "jakie"
-    std::vector<std::map<std::string, std::string> > result = 
+    std::vector<std::map<std::string, std::string> > result =
         mrfTagPrs.parse(tag);
-    
+
     BOOST_CHECK_EQUAL((int)result.size(), 12);
 }
 
