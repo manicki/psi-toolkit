@@ -2687,7 +2687,7 @@ BOOST_AUTO_TEST_CASE( syntok ) {
     delete puddle;
 }
 
-void testPuddleLoadRulesFR() {
+BOOST_AUTO_TEST_CASE( load_rules_fr ) {
     //preparing lattice
     Lattice lattice("blanc chat");
     lattice.addSymbols(lattice.getFirstVertex(), lattice.getLastVertex());
