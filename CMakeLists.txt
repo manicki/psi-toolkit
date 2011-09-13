@@ -126,7 +126,6 @@ if(CXXTEST_FOUND)
 	set(T-TARGETS common common-test formats-psi formats-simple formats-txt formats-utt tools-tokenizers-tp tools-segmenters-srx)
 
 	if(USE_JAVA)
-		set(TESTS ${TESTS} ${morfologik-t})
 		set(T-TARGETS ${T-TARGETS} tools-lemmatizers-morfologik)
 	endif(USE_JAVA)
 
