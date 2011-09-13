@@ -82,14 +82,18 @@ set(TARGETS common framework formats-psi formats-simple formats-txt formats-utt 
 
 if(USE_JAVA)
 	set(TARGETS ${TARGETS} tools-lemmatizers-morfologik)
+        set(TESTS_TARGETS ${TESTS_TARGETS} morfologik-tests)
 endif(USE_JAVA)
 
 if(USE_POSTGRESQL)
         set(TARGETS ${TARGETS} lex-db)
 endif(USE_POSTGRESQL)
 
-set_target_properties(${TARGETS} PROPERTIES
+set(ALL_TARGETS ${TARGETS} ${TESTS_TARGETS})
+
+set_target_properties(${ALL_TARGETS} PROPERTIES
 	COMPILE_FLAGS "-I${psi-toolkit_SOURCE_DIR}/utf8")
+
 
 #if(USE_JAVA)
 #	set_target_properties(psi-pipe PROPERTIES

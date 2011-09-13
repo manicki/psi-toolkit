@@ -1,5 +1,6 @@
 add_library(common-tests
         segment_glob_tests.cpp
+	by_spaces_cutter.cpp
 )
 
 target_link_libraries(common-tests common)

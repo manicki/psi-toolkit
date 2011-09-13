@@ -41,10 +41,6 @@ public:
 	 */
 	void setLevel(int);
 
-	friend class MorfologikTests;
-
-protected:
-
 	/**
 	 * Stems word using Morfologik tool storing lexical information.
 	 * @param word
