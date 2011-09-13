@@ -89,12 +89,6 @@ if(USE_POSTGRESQL)
         set(TARGETS ${TARGETS} lex-db)
 endif(USE_POSTGRESQL)
 
-set(ALL_TARGETS ${TARGETS} ${TESTS_TARGETS})
-
-set_target_properties(${ALL_TARGETS} PROPERTIES
-	COMPILE_FLAGS "-I${psi-toolkit_SOURCE_DIR}/utf8")
-
-add_subdirectory(tests)
 
 #if(USE_JAVA)
 #	set_target_properties(psi-pipe PROPERTIES
@@ -131,6 +125,7 @@ if(CXXTEST_FOUND)
 
 	if(USE_PUDDLE)
 		set(TESTS ${TESTS} ${puddle-t})
+                set(TESTS_TARGETS ${TESTS_TARGETS} puddle-tests)
         if(WITH_RE2)
     		set(T-TARGETS ${T-TARGETS} tools-parsers-puddle re2)
         else(WITH_RE2)
@@ -154,6 +149,13 @@ if(CXXTEST_FOUND)
         endif(USE_BONSAI_PARSEGRAPH)
     endif(USE_PUDDLE)
 endif()
+
+set(ALL_TARGETS ${TARGETS} ${TESTS_TARGETS})
+
+set_target_properties(${ALL_TARGETS} PROPERTIES
+	COMPILE_FLAGS "-I${psi-toolkit_SOURCE_DIR}/utf8")
+
+add_subdirectory(tests)
 
 configure_file(${psi-toolkit_SOURCE_DIR}/common/config.h.in ${psi-toolkit_SOURCE_DIR}/common/config.h)
 
