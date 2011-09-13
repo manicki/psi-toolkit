@@ -124,7 +124,6 @@ if(CXXTEST_FOUND)
 	endif(USE_JAVA)
 
 	if(USE_PUDDLE)
-		set(TESTS ${TESTS} ${puddle-t})
                 set(TESTS_TARGETS ${TESTS_TARGETS} puddle-tests)
         if(WITH_RE2)
     		set(T-TARGETS ${T-TARGETS} tools-parsers-puddle re2)
