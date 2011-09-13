@@ -6,9 +6,6 @@ project(psi-toolkit CXX)
 set(Boost_USE_STATIC_LIBS ON)
 find_package(Boost COMPONENTS program_options graph serialization filesystem system thread unit_test_framework test_exec_monitor prg_exec_monitor REQUIRED)
 
-set(CXXTEST_INCLUDE_DIR ./prj/tests)
-find_package(CxxTest)
-
 option(USE_JAVA "Compiling Java components" OFF)
 message(STATUS "Compiling Java components ${USE_JAVA}")
 
@@ -76,7 +73,7 @@ foreach(dir ${DIRS})
 	add_subdirectory(${dir})
 endforeach(dir)
 
-set(TARGETS common framework formats-psi formats-simple formats-txt formats-utt tools-tokenizers-tp tools-segmenters-srx psi-pipe common-test)
+set(TARGETS common framework formats-psi formats-simple formats-txt formats-utt tools-tokenizers-tp tools-segmenters-srx psi-pipe)
 
 set(TESTS_TARGETS common-tests tools-tokenizers-tp-tests tools-segmenters-srx-tests)
 
@@ -111,43 +108,15 @@ foreach(dir ${formats_SUBDIRS})
 	link_directories("${psi-toolkit_BINARY_DIR}/formats/${dir}")
 endforeach(dir)
 
-# Runs CxxTests
-if(CXXTEST_FOUND)
-	include_directories(${CXXTEST_INCLUDE_DIR})
-	enable_testing()
-
-	set(TESTS ${common-t})
-	set(T-TARGETS common common-test formats-psi formats-simple formats-txt formats-utt tools-tokenizers-tp tools-segmenters-srx)
-
-	if(USE_JAVA)
-		set(T-TARGETS ${T-TARGETS} tools-lemmatizers-morfologik)
-	endif(USE_JAVA)
-
-	if(USE_PUDDLE)
-                set(TESTS_TARGETS ${TESTS_TARGETS} puddle-tests)
-        if(WITH_RE2)
-    		set(T-TARGETS ${T-TARGETS} tools-parsers-puddle re2)
-        else(WITH_RE2)
-            if(WITH_PCRE)
-        		set(T-TARGETS ${T-TARGETS} tools-parsers-puddle pcrecpp)
-                message(STATUS "ustawilem ttargets: ${T-TARGETS}")
-            endif(WITH_PCRE)
-        endif(WITH_RE2)
-	endif(USE_PUDDLE)
-
-	CXXTEST_ADD_TEST(runner runner.cpp ${TESTS})
-	target_link_libraries(runner
-		${Boost_LIBRARIES}
-		${T-TARGETS}
-	)
-
-    if(USE_PUDDLE)
+if(USE_PUDDLE)
         include_directories("${psi-toolkit_SOURCE_DIR}/tools/parsers/puddle")
+        set(TARGETS ${TARGETS} tools-parsers-puddle)
+        set(TESTS_TARGETS ${TESTS_TARGETS} tools-parsers-puddle-tests)
         if(USE_BONSAI_PARSEGRAPH)
             include_directories(${BONSAI_PATH})
         endif(USE_BONSAI_PARSEGRAPH)
-    endif(USE_PUDDLE)
-endif()
+endif(USE_PUDDLE)
+
 
 set(ALL_TARGETS ${TARGETS} ${TESTS_TARGETS})
 
