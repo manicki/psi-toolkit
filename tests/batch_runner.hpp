@@ -2,6 +2,7 @@
 #define BATCH_RUNNER_HDR
 
 #include <boost/scoped_ptr.hpp>
+#include <boost/filesystem.hpp>
 
 #include "test_batch.hpp"
 
@@ -17,6 +18,7 @@ public:
 private:
     size_t getNextTest_();
     void runTest_(size_t testIx);
+    std::string slurpFile_(const boost::filesystem::path& filePath);
 
     const TestBatch& testBatch_;
 

@@ -2,6 +2,7 @@
 
 #include <cassert>
 #include <boost/filesystem/fstream.hpp>
+#include <sstream>
 
 #include "logging.hpp"
 
@@ -47,6 +48,31 @@ void BatchRunner::runTest_(size_t testIx) {
 
     boost::filesystem::ifstream inputStream(testRun.getInputFilePath());
 
-    pipeRunner_.run(inputStream, std::cout);
+    std::ostringstream oss;
+    pipeRunner_.run(inputStream, oss);
+
+    std::string got = oss.str();
+
+    std::string expected = slurpFile_(testRun.getExpectedOutputFilePath());
+
+    if (got == expected) {
+        INFO("...OK");
+    }
+    else {
+        INFO("... FAILED (unexpected output)");
+    }
 }
+
+std::string BatchRunner::slurpFile_(const boost::filesystem::path& filePath) {
+    boost::filesystem::ifstream ifs(filePath, std::ios::in | std::ios::binary | std::ios::ate);
+
+    std::ifstream::pos_type fileSize = ifs.tellg();
+    ifs.seekg(0, std::ios::beg);
+
+    std::vector<char> bytes(fileSize);
+    ifs.read(&bytes[0], fileSize);
+
+    return std::string(&bytes[0], fileSize);
+}
+
 
