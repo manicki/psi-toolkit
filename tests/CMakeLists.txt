@@ -18,6 +18,7 @@ add_executable(
  mass-tests
  mass-tests.cpp
  mass_tester.cpp
+ batch_runner.cpp
 )
 
 target_link_libraries(

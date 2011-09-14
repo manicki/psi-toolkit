@@ -5,7 +5,7 @@
 #include <boost/filesystem/fstream.hpp>
 #include <boost/foreach.hpp>
 
-
+#include "batch_runner.hpp"
 #include "logging.hpp"
 
 MassTester::MassTester(int argc, char* argv[]) {
@@ -79,6 +79,9 @@ void MassTester::lookInDirectory_(const boost::filesystem::path& directory) {
         addTestBatch_(fiter->path());
 }
 
+
+typedef std::map<std::string, boost::filesystem::path> file_map_type;
+
 void MassTester::addTestBatch_(const boost::filesystem::path& directory) {
     INFO("registering test batch " << directory);
 
@@ -89,8 +92,69 @@ void MassTester::addTestBatch_(const boost::filesystem::path& directory) {
     }
 
     TestBatch testBatch(directory, readCommand_(commandFileName));
+
+    std::map<std::string, boost::filesystem::path> inputFiles;
+    std::map<std::string, boost::filesystem::path> outputFiles;
+
+    boost::filesystem::directory_iterator end_iter;
+    for (boost::filesystem::directory_iterator fiter(directory);
+             fiter != end_iter;
+         ++fiter) {
+        std::string suffix;
+        std::string infix;
+        std::string basename;
+
+        parseFilePath_(fiter->path(), basename, infix, suffix);
+
+        if (infix == ".in")
+            checkFileMap_(inputFiles, fiter->path(), basename, "input");
+        else if (infix == ".out")
+            checkFileMap_(outputFiles, fiter->path(), basename, "output");
+    }
+
+    BOOST_FOREACH(const file_map_type::value_type& pair, inputFiles) {
+        if (outputFiles.count(pair.first) > 0)
+            testBatch.addTestRun(
+                TestRun(
+                    pair.second,
+                    outputFiles[pair.first]));
+        else
+            WARN("no expected output for " << pair.first);
+    }
+
     testBatches_.push_back(testBatch);
 }
+
+void MassTester::parseFilePath_(const boost::filesystem::path& filePath,
+                                std::string& basename,
+                                std::string& infix,
+                                std::string& suffix) {
+
+    boost::filesystem::path outerStem(filePath.stem());
+    boost::filesystem::path outerExtension(filePath.extension());
+    boost::filesystem::path innerStem(outerStem.stem());
+    boost::filesystem::path innerExtension(outerStem.extension());
+
+    basename = innerStem.string();
+    infix = innerExtension.string();
+    suffix = outerExtension.string();
+
+    INFO("parsing file path " << filePath << " " << basename << "+" << infix << "+" << suffix);
+}
+
+void MassTester::checkFileMap_(std::map<std::string, boost::filesystem::path>& filemap,
+                               const boost::filesystem::path& path,
+                               const std::string& key,
+                               const std::string& infoString) {
+    WARN("checking " << path << " as " << infoString);
+
+    if (filemap.count(key))
+        WARN("cannot use " << path << " test " << infoString << " file "
+             << "as a file with the same basename (" << filemap[key] << ") exists");
+    else
+        filemap[key] = path;
+}
+
 
 void MassTester::runAllBatches_() {
     BOOST_FOREACH(TestBatch batch, testBatches_) {
@@ -100,6 +164,10 @@ void MassTester::runAllBatches_() {
 
 void MassTester::runBatch_(const TestBatch& batch) {
     INFO("running " << batch.getDirectory() << " [" << batch.getPipeline() << "]");
+
+    BatchRunner runner(batch);
+
+    while (runner.runSingleTest());
 }
 
 std::string MassTester::readCommand_(boost::filesystem::path commandFileName) {

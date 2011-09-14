@@ -6,6 +6,8 @@
 #include <boost/program_options/options_description.hpp>
 #include <boost/filesystem.hpp>
 
+#include "test_batch.hpp"
+
 class MassTester {
 
 public:
@@ -14,36 +16,6 @@ public:
     int run();
 
 private:
-    struct TestRun {
-        boost::filesystem::path inputFilePath;
-        boost::filesystem::path expectedOutputFilePath;
-    };
-
-    class TestBatch {
-    private:
-        boost::filesystem::path mDirectory_;
-        std::string pipeline_;
-        std::vector<TestRun> testRuns_;
-    public:
-        TestBatch(const boost::filesystem::path& mDirectory,
-                  const std::string& pipeline)
-            :mDirectory_(mDirectory), pipeline_(pipeline) {
-        }
-
-        boost::filesystem::path getDirectory() const {
-            return mDirectory_;
-        }
-
-        std::string getPipeline() const {
-            return pipeline_;
-        }
-
-        void addTestRun(const TestRun& testRun) {
-            testRuns_.push_back(testRun);
-        }
-
-
-    };
 
     static boost::program_options::options_description optionsHandled();
 
@@ -52,6 +24,16 @@ private:
     void addTestBatch_(const boost::filesystem::path& directory);
     void runAllBatches_();
     void runBatch_(const TestBatch& batch);
+
+    void parseFilePath_(const boost::filesystem::path& filePath,
+                        std::string& basename,
+                        std::string& infix,
+                        std::string& suffix);
+
+    void checkFileMap_(std::map<std::string, boost::filesystem::path>& filemap,
+                       const boost::filesystem::path& path,
+                       const std::string& key,
+                       const std::string& infoString);
 
     std::string readCommand_(boost::filesystem::path commandFileName);
     std::string stripComments_(const std::string& line);
