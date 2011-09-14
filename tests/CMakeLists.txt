@@ -14,3 +14,16 @@ target_link_libraries(
 )
 
 
+add_executable(
+ mass-tests
+ mass-tests.cpp
+ mass_tester.cpp
+)
+
+target_link_libraries(
+ mass-tests
+ common
+ ${Boost_LIBRARIES}
+)
+
+
