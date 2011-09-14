@@ -5,6 +5,8 @@
 
 #include "config.h"
 
+BOOST_AUTO_TEST_SUITE( object_cache )
+
 BOOST_AUTO_TEST_CASE( object_cache_simple ) {
     boost::shared_ptr<XmlPropertyTree> objA1
         = ObjectCache::getInstance().getObject<XmlPropertyTree>(
@@ -21,3 +23,6 @@ BOOST_AUTO_TEST_CASE( object_cache_simple ) {
 
     BOOST_CHECK(objA1.get() == objA2.get());
 }
+
+BOOST_AUTO_TEST_SUITE_END()
+

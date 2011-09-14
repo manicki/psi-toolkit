@@ -7,6 +7,8 @@
 #include "fake_lemmatizer.hpp"
 #include "lemmatizer_annotator.hpp"
 
+BOOST_AUTO_TEST_SUITE( lattice )
+
 BOOST_AUTO_TEST_CASE( lattice_simple ) {
     Lattice lattice("Ala ma kota");
 
@@ -793,3 +795,5 @@ BOOST_AUTO_TEST_CASE( correction_replace_advanced ) {
     ed = ei.next();
     BOOST_CHECK_EQUAL(lattice.getAnnotationCategory(ed), "'r");
 }
+
+BOOST_AUTO_TEST_SUITE_END()

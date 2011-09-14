@@ -2,6 +2,7 @@
 
 #include "../java_virtual_machine.hpp"
 
+BOOST_AUTO_TEST_SUITE( java_virtual_machine )
 
 BOOST_AUTO_TEST_CASE( java_singleton ) {
     JavaVirtualMachine *jvm1 = JavaVirtualMachine::Instance();
@@ -35,3 +36,5 @@ BOOST_AUTO_TEST_CASE( java_hello_world ) {
     }
     BOOST_CHECK_EQUAL((std::string)hello, "Hello World from Java");
 }
+
+BOOST_AUTO_TEST_SUITE_END()

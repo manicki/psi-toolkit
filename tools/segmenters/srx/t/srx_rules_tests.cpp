@@ -6,6 +6,8 @@
 
 #include <vector>
 
+BOOST_AUTO_TEST_SUITE( srx_rules )
+
 BOOST_AUTO_TEST_CASE( srx_simple ) {
 
     std::vector<SrxRule> srxRules;
@@ -48,4 +50,5 @@ BOOST_AUTO_TEST_CASE( real_one ) {
     BOOST_CHECK(1U < srxRules.size());
 }
 
+BOOST_AUTO_TEST_SUITE_END()
 

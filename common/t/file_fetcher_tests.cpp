@@ -5,7 +5,9 @@
 
 #include "config.h"
 
-BOOST_AUTO_TEST_CASE( file_fetcher_simple ) {
+BOOST_AUTO_TEST_SUITE( file_fetcher )
+
+BOOST_AUTO_TEST_CASE( simple ) {
     FileFetcher fileFetcher;
 
     fileFetcher.addParam("BAZZZ", "baz");
@@ -93,3 +95,5 @@ BOOST_AUTO_TEST_CASE( exceptions ) {
         fileFetcher.getFiles("%FOO%", std::back_inserter(filesFound)),
         FileFetcher::Exception);
 }
+
+BOOST_AUTO_TEST_SUITE_END()

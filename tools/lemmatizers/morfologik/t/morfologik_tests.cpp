@@ -5,6 +5,8 @@
 
 #include "lemmatizer_annotator.hpp"
 
+BOOST_AUTO_TEST_SUITE( morfologik )
+
 BOOST_AUTO_TEST_CASE( simple_stem ) {
     boost::program_options::variables_map noOptions;
     Morfologik morf(noOptions);
@@ -163,3 +165,5 @@ BOOST_AUTO_TEST_CASE( many_lexemes ) {
         BOOST_CHECK(!lemmaIter.hasNext());
     }
 }
+
+BOOST_AUTO_TEST_SUITE_END()

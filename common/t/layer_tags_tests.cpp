@@ -3,6 +3,7 @@
 #include "layer_tag_collection.hpp"
 #include "layer_tag_manager.hpp"
 
+BOOST_AUTO_TEST_SUITE( layer_tags )
 
 BOOST_AUTO_TEST_CASE( tags_simple ) {
     LayerTagManager layer_tag_manager;
@@ -24,3 +25,5 @@ BOOST_AUTO_TEST_CASE( tags_simple ) {
     BOOST_CHECK_EQUAL(tag_list.front(), "bar");
     BOOST_CHECK_EQUAL(tag_list.back(), "foo");
 }
+
+BOOST_AUTO_TEST_SUITE_END()

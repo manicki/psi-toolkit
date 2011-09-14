@@ -7,6 +7,8 @@
 
 #include "config.h"
 
+BOOST_AUTO_TEST_SUITE( xml_property_tree )
+
 BOOST_AUTO_TEST_CASE( xml_property_tree_simple ) {
     XmlPropertyTree xmlTree(ROOT_DIR "common/t/simple.xml");
 
@@ -50,3 +52,5 @@ BOOST_AUTO_TEST_CASE( xml_property_tree_space_entity ) {
     BOOST_CHECK_EQUAL(
         xmlTree.get<std::string>("root.foo"), "   ");
 }
+
+BOOST_AUTO_TEST_SUITE_END()

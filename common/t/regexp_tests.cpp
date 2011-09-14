@@ -2,8 +2,9 @@
 
 #include "regexp.hpp"
 
+BOOST_AUTO_TEST_SUITE( regexp )
 
-BOOST_AUTO_TEST_CASE( regexp_utf8 ) {
+BOOST_AUTO_TEST_CASE( utf8 ) {
     RegExp re("(ż+)");
 
     std::string arg;
@@ -17,3 +18,4 @@ BOOST_AUTO_TEST_CASE( regexp_utf8 ) {
     BOOST_CHECK_EQUAL(perlArg, "żżż");
 }
 
+BOOST_AUTO_TEST_SUITE_END()

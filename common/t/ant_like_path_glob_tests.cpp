@@ -4,7 +4,9 @@
 
 #include "config.h"
 
-BOOST_AUTO_TEST_CASE( simple_ant_like_path_glob ) {
+BOOST_AUTO_TEST_SUITE( ant_like_path_glob )
+
+BOOST_AUTO_TEST_CASE( simple ) {
     AntLikePathGlob glob("foo/**/*.txt");
 
     std::set<boost::filesystem::path> matchedFiles;
@@ -101,3 +103,5 @@ BOOST_AUTO_TEST_CASE( in_the_middle ) {
                       ROOT_DIR "common/t/ant_like_path_glob_tests_dir/foo/bar/baz/testB.txt");
 
 }
+
+BOOST_AUTO_TEST_SUITE_END()
