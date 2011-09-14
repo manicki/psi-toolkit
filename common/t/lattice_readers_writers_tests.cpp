@@ -403,7 +403,7 @@ void prepareAdvancedLattice_(Lattice & lattice) {
     LayerTagMask rawMask = lattice.getLayerTagManager().getMask(rawTag);
     LayerTagMask tokenMask = lattice.getLayerTagManager().getMask(tokenTag);
 
-    AnnotationItem aiAla("'Ala'");
+    AnnotationItem aiAla("'Ala'", "Ala");
     lattice.getAnnotationItemManager().setValue(aiAla, "type", "word");
 
 
@@ -459,7 +459,7 @@ void prepareAdvancedLattice_(Lattice & lattice) {
 
     Lattice::VertexDescriptor preMa = lattice.getVertexForRawCharIndex(4);
 
-    AnnotationItem aiBlank("' '");
+    AnnotationItem aiBlank("' '", " ");
     lattice.getAnnotationItemManager().setValue(aiBlank, "type", "blank");
 
     Lattice::EdgeSequence::Builder blankBuilder;
@@ -473,7 +473,7 @@ void prepareAdvancedLattice_(Lattice & lattice) {
 
     Lattice::VertexDescriptor postMa = lattice.getVertexForRawCharIndex(6);
 
-    AnnotationItem aiMa("'ma'");
+    AnnotationItem aiMa("'ma'", "ma");
     lattice.getAnnotationItemManager().setValue(aiMa, "type", "word");
 
     Lattice::EdgeSequence::Builder maBuilder;
@@ -489,7 +489,7 @@ void prepareAdvancedLattice_(Lattice & lattice) {
 
     Lattice::VertexDescriptor preMarkup = lattice.getVertexForRawCharIndex(12);
 
-    AnnotationItem aiNbsp("' ");
+    AnnotationItem aiNbsp("' ", " ");
 
     lattice.addEdge(postMa, preMarkup, aiNbsp, rawTag);
 
@@ -625,7 +625,7 @@ void prepareAdvancedLattice_(Lattice & lattice) {
 
     Lattice::VertexDescriptor postStop = lattice.getVertexForRawCharIndex(23);
 
-    AnnotationItem aiStop("'.'");
+    AnnotationItem aiStop("'.'", ".");
     lattice.getAnnotationItemManager().setValue(aiStop, "type", "punct");
 
     Lattice::EdgeSequence::Builder stopBuilder;
