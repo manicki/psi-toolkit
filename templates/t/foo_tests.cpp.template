@@ -1,0 +1,35 @@
+//!-all
+
+/*!development,tests/300
+Writing tests
+-------------
+
+Each module should have a `t` directory with test source codes and all
+the needed files, e.g. tests for the Puddle parser should reside in
+the `tools/parsers/puddle/t` directory (along with, for instance,
+fake rules and tagsets used in testing).
+
+Test cases of a given module, should be written in a file matching `*_tests.cpp`
+wildcard (e.g. `puddle_tests.cpp`). For an example (and the template) of such file
+see <this file>.
+*/
+
+#include "tests.hpp"
+
+// Include the header file(s) of a given module, note that relative path
+// could be used.
+#include "../foo.hpp"
+
+// The tests specified in a given file should be grouped into
+// a test suite.
+BOOST_AUTO_TEST_SUITE( foo )
+
+BOOST_AUTO_TEST_CASE( simple ) {
+    BOOST_CHECK_EQUAL(2+2, 4);
+}
+
+BOOST_AUTO_TEST_CASE( harder ) {
+    BOOST_CHECK(123 < 124);
+}
+
+BOOST_AUTO_TEST_SUITE()
