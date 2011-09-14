@@ -76,7 +76,7 @@ void SimpleLatticeWriter::Worker::doRun() {
     std::stringstream allSs;
     std::stringstream blockSs;
 
-    while (processor_.isLinear() ? (vd != lattice_.getLastVertex()) : vi.hasNext()) {
+    while (processor_.isLinear() ? true : vi.hasNext()) {
         if (!processor_.isLinear()) {
             vd = vi.next();
         }
@@ -118,7 +118,13 @@ void SimpleLatticeWriter::Worker::doRun() {
         }
         blockSs << vertexSs.str();
         if (processor_.isLinear()) {
-            vd = lattice_.getEdgeTarget(edge);
+            try {
+                vd = lattice_.getEdgeTarget(
+                    lattice_.firstOutEdge(vd, lattice_.getLayerTagManager().anyTag())
+                );
+            } catch (NoEdgeException) {
+                break;
+            }
         }
     }
     alignOutput_(allSs.str());
