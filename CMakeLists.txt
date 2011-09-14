@@ -79,6 +79,15 @@ if(USE_POSTGRESQL)
         set(BASE_TARGETS ${BASE_TARGETS} lex-db)
 endif(USE_POSTGRESQL)
 
+if(USE_PUDDLE)
+        include_directories("${psi-toolkit_SOURCE_DIR}/tools/parsers/puddle")
+        set(BASE_TARGETS ${BASE_TARGETS} tools-parsers-puddle)
+        set(TESTS_TARGETS ${TESTS_TARGETS} tools-parsers-puddle-tests)
+        if(USE_BONSAI_PARSEGRAPH)
+            include_directories(${BONSAI_PATH})
+        endif(USE_BONSAI_PARSEGRAPH)
+endif(USE_PUDDLE)
+
 set(TARGETS ${BASE_TARGETS} psi-pipe)
 
 set(DIRS common formats tools framework utf8 server)
@@ -108,15 +117,6 @@ foreach(dir ${formats_SUBDIRS})
 	include_directories("${psi-toolkit_SOURCE_DIR}/formats/${dir}")
 	link_directories("${psi-toolkit_BINARY_DIR}/formats/${dir}")
 endforeach(dir)
-
-if(USE_PUDDLE)
-        include_directories("${psi-toolkit_SOURCE_DIR}/tools/parsers/puddle")
-        set(TARGETS ${TARGETS} tools-parsers-puddle)
-        set(TESTS_TARGETS ${TESTS_TARGETS} tools-parsers-puddle-tests)
-        if(USE_BONSAI_PARSEGRAPH)
-            include_directories(${BONSAI_PATH})
-        endif(USE_BONSAI_PARSEGRAPH)
-endif(USE_PUDDLE)
 
 
 set(ALL_TARGETS ${TARGETS} ${TESTS_TARGETS})

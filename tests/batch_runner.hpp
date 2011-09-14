@@ -5,6 +5,8 @@
 
 #include "test_batch.hpp"
 
+#include "pipe_runner.hpp"
+
 class BatchRunner {
 
 public:
@@ -17,6 +19,9 @@ private:
     void runTest_(size_t testIx);
 
     const TestBatch& testBatch_;
+
+    PipeRunner pipeRunner_;
+
     enum test_state {
         INTACT,
         RUNNING,

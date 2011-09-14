@@ -1,16 +1,20 @@
 #include "batch_runner.hpp"
 
 #include <cassert>
+#include <boost/filesystem/fstream.hpp>
+
 #include "logging.hpp"
 
 BatchRunner::BatchRunner(const TestBatch& testBatch)
-    :testBatch_(testBatch) {
+    :testBatch_(testBatch), pipeRunner_(testBatch.getPipeline()) {
 
     testBatch.getTestRuns(std::back_inserter(testRuns_));
 
     testStates_.reset(new std::vector<test_state>(testRuns_.size(), INTACT));
 
     INFO(testRuns_.size() << " tests");
+
+
 }
 
 bool BatchRunner::runSingleTest() {
@@ -40,5 +44,9 @@ void BatchRunner::runTest_(size_t testIx) {
     const TestRun& testRun(testRuns_[testIx]);
 
     INFO("running test for " << testRun.getInputFilePath());
+
+    boost::filesystem::ifstream inputStream(testRun.getInputFilePath());
+
+    pipeRunner_.run(inputStream, std::cout);
 }
 

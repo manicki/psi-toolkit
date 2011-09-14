@@ -23,8 +23,10 @@ add_executable(
 
 target_link_libraries(
  mass-tests
- common
+ ${BASE_TARGETS}
  ${Boost_LIBRARIES}
+ pcre
+ pcrecpp
 )
 
 
