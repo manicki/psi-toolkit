@@ -80,6 +80,7 @@ void SimpleLatticeWriter::Worker::doRun() {
         if (!processor_.isLinear()) {
             vd = vi.next();
         }
+        bool areEdgesToWrite = false;
         std::stringstream vertexSs;
         std::stringstream sepSs;
         Lattice::InOutEdgesIterator oei
@@ -94,12 +95,18 @@ void SimpleLatticeWriter::Worker::doRun() {
                 ++ti
             ) {
                 if (processor_.getBasicTag() == *ti) {
+                    areEdgesToWrite = true;
                     if (vertexSs.str() != "") {
                         vertexSs << processor_.getAltSeparator();
                     }
-                    vertexSs << lattice_.getAnnotationText(edge);
+                    if (lattice_.getAnnotationText(edge) == "") {
+                        vertexSs << lattice_.getAnnotationCategory(edge);
+                    } else {
+                        vertexSs << lattice_.getAnnotationText(edge);
+                    }
                 }
                 if (processor_.isHandledTag(*ti) && targets[*ti] == vd) {
+                    areEdgesToWrite = true;
                     targets[*ti] = lattice_.getEdgeTarget(edge);
                     sepSs << processor_.getTagSeparator(*ti);
                 }
@@ -113,7 +120,7 @@ void SimpleLatticeWriter::Worker::doRun() {
             }
             blockSs.str("");
         }
-        if (blockSs.str() != "") {
+        if (blockSs.str() != "" && areEdgesToWrite) {
             blockSs << processor_.getBasicTagSeparator();
         }
         blockSs << vertexSs.str();
