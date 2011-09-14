@@ -4,7 +4,7 @@ project(psi-toolkit CXX)
 
 # Finds and includes external libraries
 set(Boost_USE_STATIC_LIBS ON)
-find_package(Boost COMPONENTS program_options graph serialization filesystem system thread unit_test_framework test_exec_monitor prg_exec_monitor REQUIRED)
+find_package(Boost COMPONENTS program_options graph serialization filesystem system thread unit_test_framework prg_exec_monitor REQUIRED)
 
 option(USE_JAVA "Compiling Java components" OFF)
 message(STATUS "Compiling Java components ${USE_JAVA}")
@@ -122,6 +122,14 @@ set(ALL_TARGETS ${TARGETS} ${TESTS_TARGETS})
 
 set_target_properties(${ALL_TARGETS} PROPERTIES
 	COMPILE_FLAGS "-I${psi-toolkit_SOURCE_DIR}/utf8 -I${psi-toolkit_SOURCE_DIR}/tests")
+if(USE_PUDDLE)
+    if(USE_BONSAI_PARSEGRAPH)
+        set_target_properties(tools-parsers-puddle PROPERTIES
+        COMPILE_FLAGS "-I${psi-toolkit_SOURCE_DIR}/utf8  -I${psi-toolkit_SOURCE_DIR}/tests -I${BONSAI_PATH}")
+        set_target_properties(tools-parsers-puddle-tests PROPERTIES
+        COMPILE_FLAGS "-I${psi-toolkit_SOURCE_DIR}/utf8  -I${psi-toolkit_SOURCE_DIR}/tests -I${BONSAI_PATH}")
+    endif(USE_BONSAI_PARSEGRAPH)
+endif(USE_PUDDLE)
 
 add_subdirectory(tests)
 

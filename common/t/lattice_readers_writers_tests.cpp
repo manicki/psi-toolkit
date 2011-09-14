@@ -187,11 +187,11 @@ BOOST_AUTO_TEST_CASE( simple_lattice_writer ) {
     tagsSeparators["token"] = ";";
 
     boost::scoped_ptr<LatticeWriter> writer(new SimpleLatticeWriter(
-                                                false,
-                                                false,
-                                                "symbol",
-                                                ",",
-                                                "|",
+                                                false, //linear
+                                                false, //no-alts
+                                                "symbol", //tag
+                                                ",", //sep
+                                                "|", //alt-sep
                                                 tagsSeparators
                                                 ));
 
@@ -203,6 +203,74 @@ BOOST_AUTO_TEST_CASE( simple_lattice_writer ) {
     std::string line;
     std::string contents;
     std::ifstream s(ROOT_DIR "formats/simple/t/files/simple_ala.txt");
+    while (getline(s, line)) {
+        contents += line;
+        contents += "\n";
+    }
+
+    BOOST_CHECK_EQUAL(osstr.str(), contents);
+
+}
+
+BOOST_AUTO_TEST_CASE( simple_lattice_writer_linear ) {
+
+    Lattice lattice;
+    prepareSimpleLattice_(lattice);
+
+    std::map<std::string, std::string> tagsSeparators;
+    tagsSeparators["token"] = ";";
+
+    boost::scoped_ptr<LatticeWriter> writer(new SimpleLatticeWriter(
+                                                true, //linear
+                                                false, //no-alts
+                                                "symbol", //tag
+                                                ",", //sep
+                                                "|", //alt-sep
+                                                tagsSeparators
+                                                ));
+
+    // writer->writeLattice(lattice, std::cout);
+
+    std::ostringstream osstr;
+    writer->writeLattice(lattice, osstr);
+
+    std::string line;
+    std::string contents;
+    std::ifstream s(ROOT_DIR "formats/simple/t/files/simple_ala.txt");
+    while (getline(s, line)) {
+        contents += line;
+        contents += "\n";
+    }
+
+    BOOST_CHECK_EQUAL(osstr.str(), contents);
+
+}
+
+BOOST_AUTO_TEST_CASE( simple_lattice_writer_advanced ) {
+
+    Lattice lattice;
+    prepareAdvancedLattice_(lattice);
+
+    std::map<std::string, std::string> tagsSeparators;
+    // tagsSeparators["splitter"] = "\n";
+
+    boost::scoped_ptr<LatticeWriter> writer(new SimpleLatticeWriter(
+                                                false, //linear
+                                                false, //no-alts
+                                                "token", //tag
+                                                ",", //sep
+                                                "|", //alt-sep
+                                                tagsSeparators
+                                                ));
+
+    // writer->writeLattice(lattice, std::cout);
+
+    std::ostringstream osstr;
+    writer->writeLattice(lattice, osstr);
+
+    std::string line;
+    std::string contents;
+    std::ifstream s(ROOT_DIR "formats/simple/t/files/simple_ala_advanced.txt");
     while (getline(s, line)) {
         contents += line;
         contents += "\n";
@@ -335,7 +403,7 @@ void prepareAdvancedLattice_(Lattice & lattice) {
     LayerTagMask rawMask = lattice.getLayerTagManager().getMask(rawTag);
     LayerTagMask tokenMask = lattice.getLayerTagManager().getMask(tokenTag);
 
-    AnnotationItem aiAla("'Ala'");
+    AnnotationItem aiAla("'Ala'", "Ala");
     lattice.getAnnotationItemManager().setValue(aiAla, "type", "word");
 
 
@@ -391,7 +459,7 @@ void prepareAdvancedLattice_(Lattice & lattice) {
 
     Lattice::VertexDescriptor preMa = lattice.getVertexForRawCharIndex(4);
 
-    AnnotationItem aiBlank("' '");
+    AnnotationItem aiBlank("' '", " ");
     lattice.getAnnotationItemManager().setValue(aiBlank, "type", "blank");
 
     Lattice::EdgeSequence::Builder blankBuilder;
@@ -405,7 +473,7 @@ void prepareAdvancedLattice_(Lattice & lattice) {
 
     Lattice::VertexDescriptor postMa = lattice.getVertexForRawCharIndex(6);
 
-    AnnotationItem aiMa("'ma'");
+    AnnotationItem aiMa("'ma'", "ma");
     lattice.getAnnotationItemManager().setValue(aiMa, "type", "word");
 
     Lattice::EdgeSequence::Builder maBuilder;
@@ -421,7 +489,7 @@ void prepareAdvancedLattice_(Lattice & lattice) {
 
     Lattice::VertexDescriptor preMarkup = lattice.getVertexForRawCharIndex(12);
 
-    AnnotationItem aiNbsp("' ");
+    AnnotationItem aiNbsp("' ", " ");
 
     lattice.addEdge(postMa, preMarkup, aiNbsp, rawTag);
 
@@ -557,7 +625,7 @@ void prepareAdvancedLattice_(Lattice & lattice) {
 
     Lattice::VertexDescriptor postStop = lattice.getVertexForRawCharIndex(23);
 
-    AnnotationItem aiStop("'.'");
+    AnnotationItem aiStop("'.'", ".");
     lattice.getAnnotationItemManager().setValue(aiStop, "type", "punct");
 
     Lattice::EdgeSequence::Builder stopBuilder;
