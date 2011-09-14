@@ -2,6 +2,8 @@
 
 #include "../morfologik_tags_parser.hpp"
 
+BOOST_AUTO_TEST_SUITE( morfologik_tags_parser )
+
 BOOST_AUTO_TEST_CASE( simple_tag ) {
     MorfologikTagsParser mrfTagPrs;
     std::string tag = "subst:sg:inst:n"; // For word "dzieckiem"
@@ -21,3 +23,4 @@ BOOST_AUTO_TEST_CASE ( complex_tag ) {
     BOOST_CHECK_EQUAL((int)result.size(), 12);
 }
 
+BOOST_AUTO_TEST_SUITE_END()

@@ -3,6 +3,7 @@
 #include "../../formats/psi/psi_quoter.hpp"
 #include "../../formats/utt/utt_quoter.hpp"
 
+BOOST_AUTO_TEST_SUITE( quoter )
 
 BOOST_AUTO_TEST_CASE( psi_quoter ) {
     Quoter * quoter = new PsiQuoter();
@@ -77,3 +78,5 @@ BOOST_AUTO_TEST_CASE( utt_quoter_illegal_sentence ) {
         QuoterException);
     delete quoter;
 }
+
+BOOST_AUTO_TEST_SUITE_END()

@@ -4,6 +4,8 @@
 
 #include "config.h"
 
+BOOST_AUTO_TEST_SUITE( tp_basic_tokenizer_rule_set )
+
 BOOST_AUTO_TEST_CASE( tokenize_simple ) {
     TPBasicTokenizerRuleSet ruleSet;
 
@@ -186,3 +188,5 @@ BOOST_AUTO_TEST_CASE( ifdef ) {
                       "^(bla+)");
 
 }
+
+BOOST_AUTO_TEST_SUITE_END()

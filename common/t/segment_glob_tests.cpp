@@ -2,6 +2,8 @@
 
 #include "segment_glob.hpp"
 
+BOOST_AUTO_TEST_SUITE( segment_glob )
+
 BOOST_AUTO_TEST_CASE( simple ) {
     SegmentGlob glob("*.txt");
 
@@ -98,3 +100,4 @@ BOOST_AUTO_TEST_CASE( all ) {
     BOOST_CHECK(glob.matches("a"));
 }
 
+BOOST_AUTO_TEST_SUITE_END()

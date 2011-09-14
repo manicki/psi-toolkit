@@ -4,6 +4,8 @@
 #include "../tagset_loader.hpp"
 #include "../rule_loader.hpp"
 
+BOOST_AUTO_TEST_SUITE( puddle )
+
 BOOST_AUTO_TEST_CASE( puddle ) {
 
     Lattice lattice("blanc chat");
@@ -2938,3 +2940,4 @@ BOOST_AUTO_TEST_CASE( load_rules_pl ) {
     delete puddle;
 }
 
+BOOST_AUTO_TEST_SUITE_END()

@@ -14,6 +14,8 @@
 void prepareSimpleLattice_(Lattice & lattice);
 void prepareAdvancedLattice_(Lattice & lattice);
 
+BOOST_AUTO_TEST_SUITE( utt_lattice_reader )
+
 BOOST_AUTO_TEST_CASE( utt_lattice_reader ) {
     Lattice lattice("");
 /*
@@ -210,6 +212,7 @@ BOOST_AUTO_TEST_CASE( simple_lattice_writer ) {
 
 }
 
+BOOST_AUTO_TEST_SUITE_END()
 
 void prepareSimpleLattice_(Lattice & lattice) {
 
@@ -582,3 +585,5 @@ void prepareAdvancedLattice_(Lattice & lattice) {
     lattice.addEdge(preAla, postStop, aiZdanie, parseGobioTag, zdanieBuilder.build());
 
 }
+
+
