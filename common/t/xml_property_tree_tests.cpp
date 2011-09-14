@@ -39,10 +39,12 @@ BOOST_AUTO_TEST_CASE( xml_property_tree_spaces ) {
     XmlPropertyTree xmlTree(ROOT_DIR "common/t/spaces.xml");
 
     // in Boost 1.42 all spaces are trimmed (a bug??)
-#if BOOST_VERSION != 14200
+#if BOOST_VERSION == 104200
+    BOOST_WARN_EQUAL(
+#else
     BOOST_CHECK_EQUAL(
-        xmlTree.get<std::string>("root.foo"), "  ");
 #endif
+        xmlTree.get<std::string>("root.foo"), "  ");
 }
 
 
