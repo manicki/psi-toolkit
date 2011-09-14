@@ -3,10 +3,11 @@
 #include <sstream>
 
 #include <boost/bind.hpp>
-#include <boost/algorithm/string.hpp>
 
 #include "template_site.hpp"
 #include "pipe_runner.hpp"
+
+#include "logging.hpp"
 
 class PipeSite : public TemplateSite
 {
@@ -17,7 +18,7 @@ public:
 	std::string input;
 	std::string output;
 
-	PipeSite(PsiServer& server, std::string initialPipe) 
+	PipeSite(PsiServer& server, std::string initialPipe)
 		: TemplateSite(server), pipe(initialPipe)
 	{
 		output = runPipe(std::string("Ala ma kota"));
@@ -31,7 +32,6 @@ public:
 			"pipe_site_pipe_text", boost::bind(&PipeSite::pipeText, this));
 		psiServer_.registerActionCode(
 			"pipe_text", boost::bind(&PipeSite::actionPipeText, this));
-	#include <boost/algorithm/string.hpp>
 
 		psiServer_.registerIncludeCode(
 			"pipe_site_output_text", boost::bind(&PipeSite::outputText, this));
@@ -44,7 +44,7 @@ public:
 		}
 		return stringToChar(str);
 	}
-	
+
 	char * actionInputText() {
 		input = psiServer_.findValue("input-text");
 		return stringToChar(std::string("/index.html"));
@@ -53,34 +53,31 @@ public:
 	char * pipeText() {
 		return stringToChar(pipe);
 	}
-	
+
 	char * actionPipeText() {
 		pipe = psiServer_.findValue("pipe-text");
 		return stringToChar(std::string("/index.html"));
 	}
 
 	char * outputText() {
-		std::string out = runPipe(input);
-		return stringToChar(out);
-	}	
+            std::string out = std::string("<pre>") + runPipe(input) + std::string("</pre>");
+            return stringToChar(out);
+	}
 
 	std::string runPipe(std::string input) {
-		std::stringstream iss;
+            if (input.empty())
+                input = "Ala ma kota i psa";
+            std::stringstream iss(input);
 		std::ostringstream oss;
 
-		std::vector<std::string> sp = splittedPipe();
-		PipeRunner p(sp);
+                INFO("constructing pipe [" << pipe << "]...");
+                INFO("input is: " << input);
+		PipeRunner p(pipe);
+                INFO("... running");
 		p.run(iss, oss);
-		
-		iss << input << std::endl;
+                INFO("... OK");
+
 		return oss.str();
 	}
-
-	std::vector<std::string> splittedPipe() {
-		std::vector<std::string> strs;
-		boost::split(strs, pipe, boost::is_any_of(" "));
-		return strs;
-	}
-
 };
 

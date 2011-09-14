@@ -5,16 +5,23 @@
 #include <boost/scoped_ptr.hpp>
 #include <boost/scoped_array.hpp>
 #include <boost/program_options/parsers.hpp>
+#include <boost/algorithm/string.hpp>
 
 #include "main_factories_keeper.hpp"
 
+#include "logging.hpp"
+
+PipeRunner::PipeRunner(const std::string& pipeline) {
+    parseIntoPipelineSpecification_(splitPipeline_(pipeline), false);
+}
+
 PipeRunner::PipeRunner(int argc, char* argv[]) {
-	std::vector<std::string> args(argv, argv + argc);
-    parseIntoPipelineSpecification_(args);
+    std::vector<std::string> args(argv, argv + argc);
+    parseIntoPipelineSpecification_(args, true);
 }
 
 PipeRunner::PipeRunner(std::vector<std::string> args) {
-    parseIntoPipelineSpecification_(args);
+    parseIntoPipelineSpecification_(args, false);
 }
 
 int PipeRunner::run(std::istream& in, std::ostream& out) {
@@ -24,6 +31,7 @@ int PipeRunner::run(std::istream& in, std::ostream& out) {
 
     boost::program_options::variables_map options;
 
+    INFO("creating the first processor: " << (*it).processorName);
     LatticeReaderFactory& readerFactory = getReaderFactory_(*it);
     boost::scoped_ptr<LatticeReader> reader(readerFactory.createLatticeReader(options));
 
@@ -33,6 +41,8 @@ int PipeRunner::run(std::istream& in, std::ostream& out) {
     for (;
          it != pipelineSpecification_.elements.end();
          ++it) {
+
+        INFO("creating processor: " << (*it).processorName);
 
         if (isLastElement_(it, pipelineSpecification_)) {
             LatticeWriterFactory& writerFactory = getWriterFactory_(*it);
@@ -73,13 +83,16 @@ AnnotatorFactory& PipeRunner::getAnnotatorFactory_(const PipelineElementSpecific
 }
 
 
-void PipeRunner::parseIntoPipelineSpecification_(std::vector<std::string> args) {
+void PipeRunner::parseIntoPipelineSpecification_(
+    std::vector<std::string> args, bool isTheFirstArgProgramName) {
 
     bool nameExpected = true;
 
-    for (unsigned int i = 1; i < args.size(); ++i) {
+    size_t startingIndex = (isTheFirstArgProgramName ? 1 : 0);
 
-        if (i == 1 || args[i] == PIPELINE_SEPARATOR) {
+    for (size_t i = startingIndex; i < args.size(); ++i) {
+
+        if (i == startingIndex || args[i] == PIPELINE_SEPARATOR) {
             nameExpected = true;
             pipelineSpecification_.elements.push_back(PipelineElementSpecification());
         }
@@ -127,4 +140,11 @@ boost::program_options::variables_map PipeRunner::parseOptions_(
     boost::program_options::notify(options);
 
     return options;
+}
+
+std::vector<std::string> PipeRunner::splitPipeline_(const std::string& pipeline) {
+    std::vector<std::string> strs;
+    // the first element should be the name of the program
+    boost::split(strs, pipeline, boost::is_any_of(" "));
+    return strs;
 }

@@ -11,6 +11,7 @@
 class PipeRunner {
 
 public:
+    explicit PipeRunner(const std::string& pipeline);
     PipeRunner(int argc, char* argv[]);
     PipeRunner(std::vector<std::string> args);
 
@@ -19,7 +20,7 @@ public:
 private:
     PipelineSpecification pipelineSpecification_;
 
-    void parseIntoPipelineSpecification_(std::vector<std::string> args);
+    void parseIntoPipelineSpecification_(std::vector<std::string> args, bool isTheFirstArgProgramName);
 
     ProcessorFactory& getFactory_(const PipelineElementSpecification& elementSpec);
     LatticeReaderFactory& getReaderFactory_(const PipelineElementSpecification& elementSpec);
@@ -33,6 +34,8 @@ private:
     boost::program_options::variables_map parseOptions_(
         const boost::program_options::options_description& optionsDescription,
         const PipelineElementSpecification& pipelineElement);
+
+    std::vector<std::string> splitPipeline_(const std::string& pipeline);
 
     static const std::string PIPELINE_SEPARATOR;
 };

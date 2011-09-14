@@ -68,26 +68,25 @@ set(CMAKE_CXX_FLAGS "-g -Wall -Wundef -Wnon-virtual-dtor -Wextra")
 
 set(BASE_TARGETS common framework formats-psi formats-simple formats-txt formats-utt tools-tokenizers-tp tools-segmenters-srx)
 
+set(TESTS_TARGETS common-tests tools-tokenizers-tp-tests tools-segmenters-srx-tests)
+
+if(USE_JAVA)
+	set(BASE_TARGETS ${BASE_TARGETS} tools-lemmatizers-morfologik)
+        set(TESTS_TARGETS ${TESTS_TARGETS} morfologik-tests)
+endif(USE_JAVA)
+
+if(USE_POSTGRESQL)
+        set(BASE_TARGETS ${BASE_TARGETS} lex-db)
+endif(USE_POSTGRESQL)
+
+set(TARGETS ${BASE_TARGETS} psi-pipe)
+
 set(DIRS common formats tools framework utf8 server)
 foreach(dir ${DIRS})
 	include_directories("${psi-toolkit_SOURCE_DIR}/${dir}")
 	link_directories("${psi-toolkit_BINARY_DIR}/${dir}")
 	add_subdirectory(${dir})
 endforeach(dir)
-
-set(TARGETS ${BASE_TARGETS} psi-pipe)
-
-set(TESTS_TARGETS common-tests tools-tokenizers-tp-tests tools-segmenters-srx-tests)
-
-if(USE_JAVA)
-	set(TARGETS ${TARGETS} tools-lemmatizers-morfologik)
-        set(TESTS_TARGETS ${TESTS_TARGETS} morfologik-tests)
-endif(USE_JAVA)
-
-if(USE_POSTGRESQL)
-        set(TARGETS ${TARGETS} lex-db)
-endif(USE_POSTGRESQL)
-
 
 #if(USE_JAVA)
 #	set_target_properties(psi-pipe PROPERTIES
