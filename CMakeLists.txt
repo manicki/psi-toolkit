@@ -66,6 +66,8 @@ message(STATUS "Bonsai common path file (required while using ParseGraph) ${BONS
 # Sets compiler flags
 set(CMAKE_CXX_FLAGS "-g -Wall -Wundef -Wnon-virtual-dtor -Wextra")
 
+set(BASE_TARGETS common framework formats-psi formats-simple formats-txt formats-utt tools-tokenizers-tp tools-segmenters-srx)
+
 set(DIRS common formats tools framework utf8 server)
 foreach(dir ${DIRS})
 	include_directories("${psi-toolkit_SOURCE_DIR}/${dir}")
@@ -73,7 +75,7 @@ foreach(dir ${DIRS})
 	add_subdirectory(${dir})
 endforeach(dir)
 
-set(TARGETS common framework formats-psi formats-simple formats-txt formats-utt tools-tokenizers-tp tools-segmenters-srx psi-pipe)
+set(TARGETS ${BASE_TARGETS} psi-pipe)
 
 set(TESTS_TARGETS common-tests tools-tokenizers-tp-tests tools-segmenters-srx-tests)
 

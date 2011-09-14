@@ -4,7 +4,8 @@ add_library(server
 	server_runner.cpp
 )
 
-target_link_libraries(server ${Boost_LIBRARIES} pthread)
+
+target_link_libraries(server ${Boost_LIBRARIES} pthread ${BASE_TARGETS} pcre pcrecpp tools-parsers-puddle)
 
 set_target_properties(server PROPERTIES LINK_FLAGS "-lpthread")
 
