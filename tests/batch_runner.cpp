@@ -12,10 +12,6 @@ BatchRunner::BatchRunner(const TestBatch& testBatch)
     testBatch.getTestRuns(std::back_inserter(testRuns_));
 
     testStates_.reset(new std::vector<test_state>(testRuns_.size(), INTACT));
-
-    INFO(testRuns_.size() << " tests");
-
-
 }
 
 bool BatchRunner::runSingleTest() {
@@ -44,8 +40,6 @@ size_t BatchRunner::getNextTest_() {
 void BatchRunner::runTest_(size_t testIx) {
     const TestRun& testRun(testRuns_[testIx]);
 
-    INFO("running test for " << testRun.getInputFilePath());
-
     boost::filesystem::ifstream inputStream(testRun.getInputFilePath());
 
     std::ostringstream oss;
@@ -60,6 +54,9 @@ void BatchRunner::runTest_(size_t testIx) {
     }
     else {
         INFO("... FAILED (unexpected output)");
+
+        boost::filesystem::ofstream outputStream(testRun.getExpectedOutputFilePath());
+        outputStream << got;
     }
 }
 
