@@ -1,5 +1,12 @@
 #include "simple_lattice_writer_stream_output_iterator.hpp"
 
+
+SimpleLatticeWriterStreamOutputIterator::SimpleLatticeWriterStreamOutputIterator(
+    std::ostream& outputStream
+) { }
+
+SimpleLatticeWriterStreamOutputIterator::~SimpleLatticeWriterStreamOutputIterator() { }
+
 void SimpleLatticeWriterStreamOutputIterator::doPutElement(const std::string& element) {
     //TODO
 }
@@ -19,7 +26,3 @@ void SimpleLatticeWriterStreamOutputIterator::doOpenGroup(const std::string& gro
 void SimpleLatticeWriterStreamOutputIterator::doCloseGroup(const std::string& group) {
     //TODO
 }
-
-SimpleLatticeWriterStreamOutputIterator::~SimpleLatticeWriterStreamOutputIterator() {
-}
-

@@ -22,6 +22,8 @@ public:
         std::vector<std::string> handledTags
     );
 
+    void run();
+
     virtual ~LatticeIterWriter();
 
 private:

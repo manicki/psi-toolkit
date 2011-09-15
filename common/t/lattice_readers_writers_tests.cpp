@@ -4,9 +4,11 @@
 
 #include <boost/scoped_ptr.hpp>
 
+#include "../../common/lattice_iter_writer.hpp"
 #include "../../formats/psi/psi_lattice_reader.hpp"
 #include "../../formats/psi/psi_lattice_writer.hpp"
 #include "../../formats/simple/simple_lattice_writer.hpp"
+#include "../../formats/simple/simple_lattice_writer_stream_output_iterator.hpp"
 #include "../../formats/utt/utt_lattice_reader.hpp"
 
 #include "config.h"
@@ -280,7 +282,44 @@ BOOST_AUTO_TEST_CASE( simple_lattice_writer_advanced ) {
 
 }
 
+BOOST_AUTO_TEST_CASE( lattice_iter_writer ) {
+
+    Lattice lattice;
+    prepareSimpleLattice_(lattice);
+
+    std::vector<std::string> handledTags;
+    handledTags.push_back("token");
+
+    std::ostringstream osstr;
+
+    SimpleLatticeWriterStreamOutputIterator outputIterator(osstr);
+
+    boost::scoped_ptr<LatticeIterWriter> writer(new LatticeIterWriter(
+        lattice,
+        outputIterator,
+        false, //linear
+        "symbol", //basicTag
+        handledTags
+    ));
+
+    // writer->writeLattice(lattice, std::cout);
+
+    writer->run();
+
+    std::string line;
+    std::string contents;
+    std::ifstream s(ROOT_DIR "formats/simple/t/files/simple_ala.txt");
+    while (getline(s, line)) {
+        contents += line;
+        contents += "\n";
+    }
+
+    BOOST_CHECK_EQUAL(osstr.str(), contents);
+
+}
+
 BOOST_AUTO_TEST_SUITE_END()
+
 
 void prepareSimpleLattice_(Lattice & lattice) {
 

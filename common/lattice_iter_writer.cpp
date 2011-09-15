@@ -17,6 +17,10 @@ LatticeIterWriter::LatticeIterWriter(
 LatticeIterWriter::~LatticeIterWriter() {
 }
 
+void LatticeIterWriter::run() {
+    doRun();
+}
+
 std::string LatticeIterWriter::doInfo() {
     return "Lattice iter writer";
 }

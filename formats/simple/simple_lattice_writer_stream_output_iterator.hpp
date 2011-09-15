@@ -10,6 +10,8 @@
  */
 class SimpleLatticeWriterStreamOutputIterator : public LatticeWriterOutputIterator {
 public:
+    SimpleLatticeWriterStreamOutputIterator(std::ostream& outputStream);
+
     virtual ~SimpleLatticeWriterStreamOutputIterator();
 
 private:
