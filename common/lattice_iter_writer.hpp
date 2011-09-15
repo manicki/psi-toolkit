@@ -13,12 +13,30 @@
 class LatticeIterWriter : public Processor {
 
 public:
-    void writeLattice(Lattice& lattice, LatticeWriterOutputIterator& outputIterator);
+
+    LatticeIterWriter(
+        Lattice& lattice,
+        LatticeWriterOutputIterator& outputIterator,
+        bool linear,
+        std::string basicTag,
+        std::vector<std::string> handledTags
+    );
 
     virtual ~LatticeIterWriter();
 
 private:
+
+    Lattice & lattice_;
+    LatticeWriterOutputIterator & outputIterator_;
+    bool linear_;
+    std::string basicTag_;
+    std::vector<std::string> handledTags_;
+
     virtual std::string doInfo();
+
+    void doRun();
+
+    bool isHandledTag_(std::string tagName);
 
 };
 
