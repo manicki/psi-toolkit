@@ -38,7 +38,7 @@ MassTester::MassTester(int argc, char* argv[]) {
         reporter_.reset(new JUnitMassTestsReporter(*outStream_.get()));
     }
     else
-        reporter_.reset(new NoneMassTestsReporter());
+        reporter_.reset(new NoneMassTestsReporter(std::cout));
 }
 
 int MassTester::run() {
@@ -177,7 +177,7 @@ void MassTester::runAllBatches_() {
 }
 
 void MassTester::runBatch_(const TestBatch& batch) {
-    INFO("running " << batch.getDirectory() << " [" << batch.getPipeline() << "]");
+    std::cout << "running " << batch.getDirectory() << " [" << batch.getPipeline() << "]" << std::endl;
 
     BatchRunner runner(batch, *reporter_);
 

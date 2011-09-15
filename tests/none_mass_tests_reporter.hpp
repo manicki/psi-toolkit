@@ -7,13 +7,28 @@
 
 class NoneMassTestsReporter : public MassTestsReporter {
 
+private:
+    std::ostream& outStream_;
+    size_t tests_;
+    size_t failures_;
+
 public:
+    NoneMassTestsReporter(std::ostream& outStream)
+        :outStream_(outStream), tests_(0U), failures_(0U) {
+    }
+
     virtual void report(
         const std::string& /*batchName*/,
         const std::string& /*testRunName*/,
-        bool /*success*/) {}
+        bool success) {
+        ++tests_;
+        if (!success)
+            ++failures_;
+    }
 
-    virtual void finish() {}
+    virtual void finish() {
+        outStream_ << tests_ << " tests run, " << failures_ << " failures_ " << std::endl;
+    }
 };
 
 #endif

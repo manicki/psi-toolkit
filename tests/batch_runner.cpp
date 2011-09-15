@@ -50,14 +50,14 @@ void BatchRunner::runTest_(size_t testIx) {
     std::string expected = slurpFile_(testRun.getExpectedOutputFilePath());
 
     if (got == expected) {
-        INFO("...OK");
+        std::cout << "... OK" << std::endl;
         reporter_.report(
             testBatch_.getDirectory().string(),
             testRun.getInputFilePath().string(),
             true);
     }
     else {
-        INFO("... FAILED (unexpected output)");
+        std::cout << "... FAILED (unexpected output)" << std::endl;
 
         reporter_.report(
             testBatch_.getDirectory().string(),
