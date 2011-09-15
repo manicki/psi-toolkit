@@ -59,6 +59,34 @@ SimpleLatticeWriter::Worker::Worker(SimpleLatticeWriter& processor,
 
 void SimpleLatticeWriter::Worker::doRun() {
 
+    SimpleLatticeWriterStreamOutputIterator outputIterator(
+        getOutputStream(),
+        processor_.getAltSeparator(),
+        processor_.getBasicTagSeparator()
+    );
+
+    std::vector<std::string> handledTags;
+
+    for (
+        std::map<std::string, std::string>::iterator mi = processor_.getTagsSeparatorsMap().begin();
+        mi != processor_.getTagsSeparatorsMap().end();
+        ++mi
+    ) {
+        outputIterator.setSeparator((*mi).first, (*mi).second);
+        handledTags.push_back((*mi).first);
+    }
+
+    LatticeIterWriter writer(
+        lattice_,
+        outputIterator,
+        processor_.isLinear(),
+        processor_.getBasicTag(),
+        handledTags
+    );
+
+    writer.run();
+
+/*
     Lattice::VertexIterator vi(lattice_);
     Lattice::VertexDescriptor vd = lattice_.getFirstVertex();
     Lattice::EdgeDescriptor edge;
@@ -137,7 +165,7 @@ void SimpleLatticeWriter::Worker::doRun() {
     alignOutput_(allSs.str());
     alignOutput_(blockSs.str());
     alignOutputNewline_();
-
+*/
 }
 
 SimpleLatticeWriter::Worker::~Worker() {
