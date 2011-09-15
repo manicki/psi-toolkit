@@ -20,6 +20,10 @@ void LatticeWriterOutputIterator::closeGroup(const std::string& group) {
     doCloseGroup(group);
 }
 
+void LatticeWriterOutputIterator::flush() {
+    doFlush();
+}
+
 LatticeWriterOutputIterator::~LatticeWriterOutputIterator() {
 }
 

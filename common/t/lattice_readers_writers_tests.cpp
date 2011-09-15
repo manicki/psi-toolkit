@@ -292,7 +292,13 @@ BOOST_AUTO_TEST_CASE( lattice_iter_writer ) {
 
     std::ostringstream osstr;
 
-    SimpleLatticeWriterStreamOutputIterator outputIterator(osstr);
+    SimpleLatticeWriterStreamOutputIterator outputIterator(
+        osstr,
+        "|",
+        ","
+    );
+
+    outputIterator.setSeparator("token", ";");
 
     boost::scoped_ptr<LatticeIterWriter> writer(new LatticeIterWriter(
         lattice,
@@ -302,9 +308,9 @@ BOOST_AUTO_TEST_CASE( lattice_iter_writer ) {
         handledTags
     ));
 
-    // writer->writeLattice(lattice, std::cout);
-
     writer->run();
+
+    osstr << std::endl;
 
     std::string line;
     std::string contents;

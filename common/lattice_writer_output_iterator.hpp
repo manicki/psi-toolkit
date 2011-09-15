@@ -36,6 +36,11 @@ public:
      */
     void closeGroup(const std::string& group);
 
+    /**
+     * Writes out the remaining content of the iterator.
+     */
+    void flush();
+
     virtual ~LatticeWriterOutputIterator();
 
 private:
@@ -48,6 +53,8 @@ private:
     virtual void doOpenGroup(const std::string& group) = 0;
 
     virtual void doCloseGroup(const std::string& group) = 0;
+
+    virtual void doFlush() = 0;
 
 };
 
