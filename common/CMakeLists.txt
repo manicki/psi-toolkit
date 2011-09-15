@@ -14,6 +14,7 @@ add_library(common
         escaping.cpp
     file_fetcher.cpp
     lattice.cpp
+    lattice_iter_writer.cpp
     lattice_reader.cpp
     lattice_reader_factory.cpp
     lattice_worker.cpp
