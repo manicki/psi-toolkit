@@ -2,6 +2,7 @@
 #define SIMPLE_LATTICE_WRITER_STREAM_OUTPUT_ITERATOR_HDR
 
 #include <iostream>
+#include <sstream>
 #include <string>
 
 #include "lattice_writer_output_iterator.hpp"
