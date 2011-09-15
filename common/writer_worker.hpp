@@ -32,6 +32,8 @@ protected:
      */
     unsigned int alignOutputNewline_();
 
+    std::ostream& getOutputStream() { return outputStream_; }
+
 private:
     std::ostream& outputStream_;
 
