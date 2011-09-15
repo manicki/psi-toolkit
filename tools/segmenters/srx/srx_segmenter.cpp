@@ -230,7 +230,7 @@ private:
 
     virtual std::list<std::string> doLayerTags() {
         std::list<std::string>  tags;
-        tags.push_back(std::string("segmenter"));
+        tags.push_back(std::string("segment"));
 
         return tags;
     }
