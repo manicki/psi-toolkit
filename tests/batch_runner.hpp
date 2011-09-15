@@ -5,13 +5,14 @@
 #include <boost/filesystem.hpp>
 
 #include "test_batch.hpp"
+#include "mass_tests_reporter.hpp"
 
 #include "pipe_runner.hpp"
 
 class BatchRunner {
 
 public:
-    BatchRunner(const TestBatch& testBatch);
+    BatchRunner(const TestBatch& testBatch, MassTestsReporter& reporter);
 
     bool runSingleTest();
 
@@ -32,6 +33,8 @@ private:
 
     std::vector<TestRun> testRuns_;
     boost::scoped_ptr<std::vector<test_state> > testStates_;
+
+    MassTestsReporter& reporter_;
 };
 
 #endif

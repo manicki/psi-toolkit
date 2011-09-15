@@ -220,7 +220,8 @@ public:
             while (edgeIterator.hasNext()) {
                 Lattice::EdgeDescriptor edge = edgeIterator.next();
 
-                if (lattice_.getAnnotationCategory(edge) == "word") {
+                if (lattice_.getAnnotationCategory(edge) == "T"
+                    || lattice_.getAnnotationCategory(edge) == "word") {
                     WorkerOutputIterator outputIterator(layerTags, lattice_, edge);
                     lemmatizer.lemmatize(
                         lattice_.getAnnotationText(edge),

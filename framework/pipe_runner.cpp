@@ -31,7 +31,6 @@ int PipeRunner::run(std::istream& in, std::ostream& out) {
 
     boost::program_options::variables_map options;
 
-    INFO("creating the first processor: " << (*it).processorName);
     LatticeReaderFactory& readerFactory = getReaderFactory_(*it);
     boost::scoped_ptr<LatticeReader> reader(readerFactory.createLatticeReader(options));
 
@@ -41,8 +40,6 @@ int PipeRunner::run(std::istream& in, std::ostream& out) {
     for (;
          it != pipelineSpecification_.elements.end();
          ++it) {
-
-        INFO("creating processor: " << (*it).processorName);
 
         if (isLastElement_(it, pipelineSpecification_)) {
             LatticeWriterFactory& writerFactory = getWriterFactory_(*it);

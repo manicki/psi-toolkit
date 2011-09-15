@@ -5,8 +5,12 @@
 
 #include <boost/program_options/options_description.hpp>
 #include <boost/filesystem.hpp>
+#include <boost/scoped_ptr.hpp>
 
 #include "test_batch.hpp"
+#include "mass_tests_reporter.hpp"
+#include "none_mass_tests_reporter.hpp"
+#include "junit_mass_tests_reporter.hpp"
 
 class MassTester {
 
@@ -41,6 +45,9 @@ private:
     std::vector<boost::filesystem::path> directories_;
 
     std::vector<TestBatch> testBatches_;
+
+    boost::scoped_ptr<std::ostream> outStream_;
+    boost::scoped_ptr<MassTestsReporter> reporter_;
 
     const static boost::filesystem::path TEST_BATCH_DIRECTORY_NAME;
     const static boost::filesystem::path TEST_COMMAND_FILE_NAME;

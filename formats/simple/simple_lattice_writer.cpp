@@ -21,7 +21,7 @@ LatticeWriter* SimpleLatticeWriter::Factory::doCreateLatticeWriter(
         vm.count("linear"),
         vm.count("no-alts"),
         vm.count("tag") ? (vm["tag"].as<std::string>()) : "token",
-        vm.count("sep") ? (vm["sep"].as<std::string>()) : " ",
+        vm.count("sep") ? (vm["sep"].as<std::string>()) : "\n",
         vm.count("alt-sep") ? (vm["alt-sep"].as<std::string>()) : "|",
         tagsSeparators
     );

@@ -12,3 +12,10 @@ textarea { padding: 5px; }
 
 /* Boxes */
 .box { margin: 10px auto 0 auto; display: table; }
+
+pre {
+    border-width: 1px;
+    border-style: solid;
+    padding: 8px;
+    font-family: monospace;
+ }

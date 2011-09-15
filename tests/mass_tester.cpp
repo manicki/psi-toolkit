@@ -1,5 +1,7 @@
 #include "mass_tester.hpp"
 
+#include <fstream>
+
 #include <boost/program_options/parsers.hpp>
 #include <boost/program_options/variables_map.hpp>
 #include <boost/filesystem/fstream.hpp>
@@ -28,6 +30,15 @@ MassTester::MassTester(int argc, char* argv[]) {
     BOOST_FOREACH(std::string directory, directories) {
         directories_.push_back(directory);
     }
+
+    if (options.count("xml")) {
+        std::string xml_file_name = options["xml"].as<std::string>();
+
+        outStream_.reset(new std::ofstream(xml_file_name.c_str()));
+        reporter_.reset(new JUnitMassTestsReporter(*outStream_.get()));
+    }
+    else
+        reporter_.reset(new NoneMassTestsReporter());
 }
 
 int MassTester::run() {
@@ -36,6 +47,8 @@ int MassTester::run() {
     }
 
     runAllBatches_();
+
+    reporter_->finish();
 
     return 0;
 }
@@ -47,6 +60,7 @@ boost::program_options::options_description MassTester::optionsHandled() {
     optionsDescription.add_options()
         ("directory", boost::program_options::value<std::vector<std::string> >(),
          "directories to traverse")
+        ("xml", boost::program_options::value<std::string>(), "XML output file (if wanted)")
         ;
 
     return optionsDescription;
@@ -165,7 +179,7 @@ void MassTester::runAllBatches_() {
 void MassTester::runBatch_(const TestBatch& batch) {
     INFO("running " << batch.getDirectory() << " [" << batch.getPipeline() << "]");
 
-    BatchRunner runner(batch);
+    BatchRunner runner(batch, *reporter_);
 
     while (runner.runSingleTest());
 }

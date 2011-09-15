@@ -6,16 +6,12 @@
 
 #include "logging.hpp"
 
-BatchRunner::BatchRunner(const TestBatch& testBatch)
-    :testBatch_(testBatch), pipeRunner_(testBatch.getPipeline()) {
+BatchRunner::BatchRunner(const TestBatch& testBatch, MassTestsReporter& reporter)
+    :testBatch_(testBatch), pipeRunner_(testBatch.getPipeline()), reporter_(reporter) {
 
     testBatch.getTestRuns(std::back_inserter(testRuns_));
 
     testStates_.reset(new std::vector<test_state>(testRuns_.size(), INTACT));
-
-    INFO(testRuns_.size() << " tests");
-
-
 }
 
 bool BatchRunner::runSingleTest() {
@@ -44,8 +40,6 @@ size_t BatchRunner::getNextTest_() {
 void BatchRunner::runTest_(size_t testIx) {
     const TestRun& testRun(testRuns_[testIx]);
 
-    INFO("running test for " << testRun.getInputFilePath());
-
     boost::filesystem::ifstream inputStream(testRun.getInputFilePath());
 
     std::ostringstream oss;
@@ -57,9 +51,21 @@ void BatchRunner::runTest_(size_t testIx) {
 
     if (got == expected) {
         INFO("...OK");
+        reporter_.report(
+            testBatch_.getDirectory().string(),
+            testRun.getInputFilePath().string(),
+            true);
     }
     else {
         INFO("... FAILED (unexpected output)");
+
+        reporter_.report(
+            testBatch_.getDirectory().string(),
+            testRun.getInputFilePath().string(),
+            false);
+
+        boost::filesystem::ofstream outputStream(testRun.getExpectedOutputFilePath());
+        outputStream << got;
     }
 }
 
