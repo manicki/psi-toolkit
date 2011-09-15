@@ -23,10 +23,21 @@ To run mass testing, use `mass-tests` program:
     $ ./tests/mass-tests ..
     ...
 
-The directories to analyze are given as arguments.
+The directories given as parameters are searched by `mass-tests` for
+`m/` directories. Then each subdirectory of a given `m/` directory is
+assumed to be a *batch test*.
+
+Writing batch tests
+-------------------
+
+In a batch test directory, `WHAT` file containing a PSI pipeline
+(without a ./psi-pipe command) must be given. This pipeline will be
+applied to all files whose names are of the `BASENAME.in.FOO`, where
+`FOO` is any extention (without a dot). The expected output file is
+given as `BASENAME.out.BAR`, where `BOO` is any extention, not
+necessarily the same as `FOO`.
 
 */
-
 
 int main(int argc, char* argv[]) {
     MassTester massTester(argc, argv);
