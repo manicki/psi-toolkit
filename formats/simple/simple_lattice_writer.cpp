@@ -77,6 +77,7 @@ void SimpleLatticeWriter::Worker::doRun() {
         lattice_,
         outputIterator,
         processor_.isLinear(),
+        processor_.isNoAlts(),
         processor_.getBasicTag(),
         handledTags
     );

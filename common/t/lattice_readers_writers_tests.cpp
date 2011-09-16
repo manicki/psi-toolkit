@@ -304,6 +304,7 @@ BOOST_AUTO_TEST_CASE( lattice_iter_writer ) {
         lattice,
         outputIterator,
         false, //linear
+        false, //no-alts
         "symbol", //basicTag
         handledTags
     ));

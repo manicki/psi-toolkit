@@ -19,6 +19,7 @@ public:
         Lattice& lattice,
         LatticeWriterOutputIterator& outputIterator,
         bool linear,
+        bool noAlts,
         std::string basicTag,
         std::vector<std::string> handledTags
     );
@@ -32,6 +33,7 @@ private:
     Lattice & lattice_;
     LatticeWriterOutputIterator & outputIterator_;
     bool linear_;
+    bool noAlts_;
     std::string basicTag_;
     std::vector<std::string> handledTags_;
 
