@@ -30,7 +30,7 @@ void LatticeIterWriter::doRun() {
     Lattice::VertexIterator vi(lattice_);
     Lattice::VertexDescriptor vd = lattice_.getFirstVertex();
     Lattice::EdgeDescriptor edge;
-    Lattice::EdgeDescriptor basicTagEdge;
+    std::queue<Lattice::EdgeDescriptor> basicTagEdges;
 
     std::map<std::string, Lattice::VertexDescriptor> targets;
 
@@ -52,7 +52,7 @@ void LatticeIterWriter::doRun() {
             ) {
                 if (basicTag_ == *ti) {
                     basicTagFound = true;
-                    basicTagEdge = edge;
+                    basicTagEdges.push(edge);
                 }
                 if (isHandledTag_(*ti) && targets[*ti] == vd) {
                     targets[*ti] = lattice_.getEdgeTarget(edge);
@@ -61,7 +61,9 @@ void LatticeIterWriter::doRun() {
                 }
             }
         }
-        if (basicTagFound) {
+        outputIterator_.openAlternative();
+        while (!basicTagEdges.empty()) {
+            Lattice::EdgeDescriptor basicTagEdge = basicTagEdges.front();
             if (lattice_.getAnnotationText(basicTagEdge) == "") {
                 outputIterator_.putElement(
                     lattice_.getAnnotationCategory(basicTagEdge)
@@ -71,9 +73,9 @@ void LatticeIterWriter::doRun() {
                     lattice_.getAnnotationText(basicTagEdge)
                 );
             }
+            basicTagEdges.pop();
         }
         outputIterator_.closeAlternative();
-        outputIterator_.openAlternative();
         if (linear_) {
             try {
                 vd = lattice_.getEdgeTarget(
