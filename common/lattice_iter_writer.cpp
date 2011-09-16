@@ -74,6 +74,11 @@ void LatticeIterWriter::doRun() {
                 );
             }
             basicTagEdges.pop();
+            if (noAlts_) {
+                while (!basicTagEdges.empty()) {
+                    basicTagEdges.pop();
+                }
+            }
         }
         outputIterator_.closeAlternative();
         if (linear_) {
