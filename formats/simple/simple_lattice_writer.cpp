@@ -9,6 +9,19 @@ LatticeWriter* SimpleLatticeWriter::Factory::doCreateLatticeWriter(
     const boost::program_options::variables_map& options
 ) {
     std::map<std::string, std::string> tagsSeparators;
+    if (options.count("spec")) {
+        std::vector<std::string> spec = options["spec"].as< std::vector<std::string> >();
+        std::vector<std::string>::iterator si = spec.begin();
+        while (si != spec.end()) {
+            std::string tag = *si;
+            ++si;
+            if (si == spec.end()) {
+                break;
+            }
+            tagsSeparators[tag] = *si;
+            ++si;
+        }
+    }
 
     return new SimpleLatticeWriter(
         options.count("linear"),
@@ -32,6 +45,8 @@ boost::program_options::options_description SimpleLatticeWriter::Factory::doOpti
             "skips alternative edges")
         ("sep", boost::program_options::value<std::string>()->default_value("\n"),
             "basic tag separator")
+        ("spec", boost::program_options::value< std::vector<std::string> >()->multitoken(),
+            "specification of higher-order tags and their separators")
         ("tag", boost::program_options::value<std::string>()->default_value("token"),
             "basic tag")
         ;
