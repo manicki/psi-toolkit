@@ -40,7 +40,6 @@ void LatticeIterWriter::doRun() {
         }
         Lattice::InOutEdgesIterator oei
             = lattice_.outEdges(vd, lattice_.getLayerTagManager().anyTag());
-        bool basicTagFound = false;
         while(oei.hasNext()) {
             edge = oei.next();
             std::list<std::string> tags
@@ -51,7 +50,6 @@ void LatticeIterWriter::doRun() {
                 ++ti
             ) {
                 if (basicTag_ == *ti) {
-                    basicTagFound = true;
                     basicTagEdges.push(edge);
                 }
                 if (isHandledTag_(*ti) && targets[*ti] == vd) {
