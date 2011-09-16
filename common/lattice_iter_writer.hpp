@@ -1,6 +1,7 @@
 #ifndef LATTICE_ITER_WRITER_HDR
 #define LATTICE_ITER_WRITER_HDR
 
+#include <queue>
 #include <string>
 
 #include "lattice.hpp"
