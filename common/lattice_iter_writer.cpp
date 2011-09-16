@@ -32,7 +32,10 @@ void LatticeIterWriter::doRun() {
                 ti != tags.end();
                 ++ti
             ) {
-                if (basicTag_ == *ti) {
+                if (
+                    basicTag_ == *ti &&
+                    (!noBlank_ || boost::algorithm::trim_copy(lattice_.getEdgeText(edge)) != "")
+                ) {
                     basicTagEdges.push(edge);
                 }
                 if (isHandledTag_(*ti) && targets[*ti] == vd) {
