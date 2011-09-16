@@ -43,6 +43,9 @@ int PipeRunner::run(std::istream& in, std::ostream& out) {
 
         if (isLastElement_(it, pipelineSpecification_)) {
             LatticeWriterFactory& writerFactory = getWriterFactory_(*it);
+            boost::program_options::variables_map options
+                = parseOptions_(writerFactory.optionsHandled(), *it);
+
             boost::scoped_ptr<LatticeWriter> writer(writerFactory.createLatticeWriter(options));
 
             writer->writeLattice(lattice, out);
