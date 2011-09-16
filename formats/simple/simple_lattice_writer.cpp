@@ -9,9 +9,6 @@ LatticeWriter* SimpleLatticeWriter::Factory::doCreateLatticeWriter(
     const boost::program_options::variables_map& options
 ) {
     std::map<std::string, std::string> tagsSeparators;
-    if (options.count("tag")) {
-        tagsSeparators[options["tag"].as<std::string>()] = "\n";
-    }
 
     return new SimpleLatticeWriter(
         options.count("linear"),
