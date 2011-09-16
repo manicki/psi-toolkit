@@ -13,9 +13,9 @@ LatticeWriter* SimpleLatticeWriter::Factory::doCreateLatticeWriter(
     return new SimpleLatticeWriter(
         options.count("linear"),
         options.count("no-alts"),
-        options.count("tag") ? (options["tag"].as<std::string>()) : "token",
-        options.count("sep") ? (options["sep"].as<std::string>()) : "\n",
-        options.count("alt-sep") ? (options["alt-sep"].as<std::string>()) : "|",
+        options["tag"].as<std::string>(),
+        options["sep"].as<std::string>(),
+        options["alt-sep"].as<std::string>(),
         tagsSeparators
     );
 }
@@ -24,11 +24,16 @@ boost::program_options::options_description SimpleLatticeWriter::Factory::doOpti
     boost::program_options::options_description optionsDescription("Allowed options");
 
     optionsDescription.add_options()
-        ("alt-sep", boost::program_options::value<std::string>(), "alternative edges separator")
-        ("linear", "skips cross-edges")
-        ("no-alts", "skips alternative edges")
-        ("sep", boost::program_options::value<std::string>(), "basic tag separator")
-        ("tag", boost::program_options::value<std::string>(), "basic tag")
+        ("alt-sep", boost::program_options::value<std::string>()->default_value("|"),
+            "alternative edges separator")
+        ("linear",
+            "skips cross-edges")
+        ("no-alts",
+            "skips alternative edges")
+        ("sep", boost::program_options::value<std::string>()->default_value("\n"),
+            "basic tag separator")
+        ("tag", boost::program_options::value<std::string>()->default_value("token"),
+            "basic tag")
         ;
 
     return optionsDescription;
