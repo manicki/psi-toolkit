@@ -191,6 +191,7 @@ BOOST_AUTO_TEST_CASE( simple_lattice_writer ) {
     boost::scoped_ptr<LatticeWriter> writer(new SimpleLatticeWriter(
                                                 false, //linear
                                                 false, //no-alts
+                                                false, //no-blank
                                                 "symbol", //tag
                                                 ",", //sep
                                                 "|", //alt-sep
@@ -225,6 +226,7 @@ BOOST_AUTO_TEST_CASE( simple_lattice_writer_linear ) {
     boost::scoped_ptr<LatticeWriter> writer(new SimpleLatticeWriter(
                                                 true, //linear
                                                 false, //no-alts
+                                                false, //no-blank
                                                 "symbol", //tag
                                                 ",", //sep
                                                 "|", //alt-sep
@@ -259,6 +261,7 @@ BOOST_AUTO_TEST_CASE( simple_lattice_writer_advanced ) {
     boost::scoped_ptr<LatticeWriter> writer(new SimpleLatticeWriter(
                                                 false, //linear
                                                 false, //no-alts
+                                                false, //no-blank
                                                 "token", //tag
                                                 ",", //sep
                                                 "|", //alt-sep
@@ -305,6 +308,7 @@ BOOST_AUTO_TEST_CASE( lattice_iter_writer ) {
         outputIterator,
         false, //linear
         false, //no-alts
+        false, //no-blank
         "symbol", //basicTag
         handledTags
     ));

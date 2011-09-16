@@ -1,24 +1,5 @@
 #include "lattice_iter_writer.hpp"
 
-LatticeIterWriter::LatticeIterWriter(
-    Lattice& lattice,
-    LatticeWriterOutputIterator& outputIterator,
-    bool linear,
-    bool noAlts,
-    std::string basicTag,
-    std::vector<std::string> handledTags
-) :
-    lattice_(lattice),
-    outputIterator_(outputIterator),
-    linear_(linear),
-    noAlts_(noAlts),
-    basicTag_(basicTag),
-    handledTags_(handledTags)
-{ }
-
-LatticeIterWriter::~LatticeIterWriter() {
-}
-
 void LatticeIterWriter::run() {
     doRun();
 }

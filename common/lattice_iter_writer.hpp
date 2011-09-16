@@ -20,13 +20,22 @@ public:
         LatticeWriterOutputIterator& outputIterator,
         bool linear,
         bool noAlts,
+        bool noBlank,
         std::string basicTag,
         std::vector<std::string> handledTags
-    );
+    ) :
+        lattice_(lattice),
+        outputIterator_(outputIterator),
+        linear_(linear),
+        noAlts_(noAlts),
+        noBlank_(noBlank),
+        basicTag_(basicTag),
+        handledTags_(handledTags)
+    { }
+
+    virtual ~LatticeIterWriter() { }
 
     void run();
-
-    virtual ~LatticeIterWriter();
 
 private:
 
@@ -34,6 +43,7 @@ private:
     LatticeWriterOutputIterator & outputIterator_;
     bool linear_;
     bool noAlts_;
+    bool noBlank_;
     std::string basicTag_;
     std::vector<std::string> handledTags_;
 
