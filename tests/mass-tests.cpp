@@ -37,6 +37,14 @@ applied to all files whose names are of the `BASENAME.in.FOO`, where
 given as `BASENAME.out.BAR`, where `BOO` is any extention, not
 necessarily the same as `FOO`.
 
+Checking test results
+---------------------
+
+*The actual output will clobber expected files.* This way any
+differences between the actual and expected output could be easily
+inspected with git status/diff. However, you must be careful with running
+`mass-tests` twice!
+
 */
 
 int main(int argc, char* argv[]) {
