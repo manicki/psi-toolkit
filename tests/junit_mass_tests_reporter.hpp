@@ -31,11 +31,11 @@ private:
         }
     };
 
-    void printXmlHeader_();
+    void printXmlHeader_() const;
     void printTestSuite_(size_t tests, size_t failures);
     void printTestCases_();
     void printTestCase_(const TestInfo& testInfo);
-    void printTestSuiteEnd_();
+    void printTestSuiteEnd_() const;
 
 
     std::string quoteXmlEntities_(const std::string& t);

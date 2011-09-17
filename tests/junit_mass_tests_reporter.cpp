@@ -22,7 +22,7 @@ void JUnitMassTestsReporter::finish() {
     printTestSuiteEnd_();
 }
 
-void JUnitMassTestsReporter::printXmlHeader_() {
+void JUnitMassTestsReporter::printXmlHeader_() const {
     outStream_ << "<?xml version=\"1.0\" encoding=\"UTF-8\" ?>" << std::endl;
 }
 
@@ -58,7 +58,7 @@ void JUnitMassTestsReporter::printTestCase_(const TestInfo& testInfo) {
     }
 }
 
-void JUnitMassTestsReporter::printTestSuiteEnd_() {
+void JUnitMassTestsReporter::printTestSuiteEnd_() const {
     outStream_ << "</testsuite>" << std::endl;
 }
 
