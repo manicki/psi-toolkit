@@ -7,7 +7,7 @@
 #include "regexp.hpp"
 
 #include "annotator.hpp"
-#include "annotator_factory.hpp"
+#include "language_dependent_annotator_factory.hpp"
 
 #include "lang_specific_processor_file_fetcher.hpp"
 
@@ -18,12 +18,13 @@ class SrxSentenceCutter;
 class SrxSegmenter : public Annotator {
 
 public:
-    class Factory : public AnnotatorFactory {
+    class Factory : public LanguageDependentAnnotatorFactory {
     private:
         virtual Annotator* doCreateAnnotator(
             const boost::program_options::variables_map& options);
 
-        virtual boost::program_options::options_description doOptionsHandled();
+        virtual void doAddLanguageIndependentOptionsHandled(
+            boost::program_options::options_description& optionsDescription);
 
         virtual std::string doGetName();
 
