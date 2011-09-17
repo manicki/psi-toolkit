@@ -11,7 +11,7 @@
   provided.
 */
 
-class LanguageDependentAnnotatorFactory {
+class LanguageDependentAnnotatorFactory : public AnnotatorFactory {
 
 public:
     virtual ~LanguageDependentAnnotatorFactory();
