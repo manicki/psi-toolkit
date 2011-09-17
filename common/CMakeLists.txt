@@ -9,10 +9,11 @@ add_library(common
     annotation_item_manager.cpp
     annotator.cpp
     annotator_factory.cpp
-        ant_like_path_glob.cpp
+    ant_like_path_glob.cpp
     cutter.cpp
-        escaping.cpp
+    escaping.cpp
     file_fetcher.cpp
+    language_dependent_annotator_factory.cpp
     lattice.cpp
     lattice_iter_writer.cpp
     lattice_reader.cpp
@@ -24,19 +25,19 @@ add_library(common
     layer_tag_collection.cpp
     layer_tag_manager.cpp
     layer_tag_mask.cpp
-        lang_specific_processor_file_fetcher.cpp
+    lang_specific_processor_file_fetcher.cpp
     lemmatizer_output_iterator.cpp
-        object_cache.cpp
+    object_cache.cpp
     processor.cpp
     processor_factory.cpp
     processor_file_fetcher.cpp
     quoter.cpp
     reader_worker.cpp
-        regexp.cpp
-        segment_glob.cpp
-        utt_like_quoter.cpp
+    regexp.cpp
+    segment_glob.cpp
+    utt_like_quoter.cpp
     writer_worker.cpp
-        xml_property_tree.cpp
+    xml_property_tree.cpp
     ${common-java-files}
 )
 
