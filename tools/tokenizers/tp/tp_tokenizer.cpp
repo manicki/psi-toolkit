@@ -30,12 +30,10 @@ Annotator* TpTokenizer::Factory::doCreateAnnotator(
     return new TpTokenizer(rules, mapping);
 }
 
-boost::program_options::options_description TpTokenizer::Factory::doOptionsHandled() {
-
-    boost::program_options::options_description optionsDescription("Allowed options");
+void TpTokenizer::Factory::doAddLanguageIndependentOptionsHandled(
+    boost::program_options::options_description& optionsDescription) {
 
     optionsDescription.add_options()
-        ("lang", boost::program_options::value<std::string>(), "language")
         ("rules",
          boost::program_options::value<std::string>()
          ->default_value(DEFAULT_RULE_FILE_SPEC),
@@ -45,8 +43,6 @@ boost::program_options::options_description TpTokenizer::Factory::doOptionsHandl
          ->default_value(DEFAULT_RULE_FILE_MAPPING),
          "mapping between include names and files")
         ;
-
-    return optionsDescription;
 }
 
 std::string TpTokenizer::Factory::doGetName() {
