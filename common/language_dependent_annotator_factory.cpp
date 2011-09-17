@@ -8,7 +8,7 @@ boost::program_options::options_description LanguageDependentAnnotatorFactory::d
 
     optionsDescription.add_options()
         ("lang", boost::program_options::value<std::string>(), "language")
-        ("force-language", boost::program_options::value<bool>()->default_value(false)->zero_tokens(),
+        ("force-language", boost::program_options::bool_switch()->default_value(false),
          "force using specified language even if a text was resognised otherwise")
         ;
 
