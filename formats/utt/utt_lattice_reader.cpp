@@ -9,6 +9,34 @@ std::string UTTLatticeReader::doInfo() {
     return "UTT reader";
 }
 
+
+UTTLatticeReader::Factory::~Factory() {
+}
+
+LatticeReader* UTTLatticeReader::Factory::doCreateLatticeReader(
+    const boost::program_options::variables_map&) {
+    return new UTTLatticeReader();
+}
+
+boost::program_options::options_description UTTLatticeReader::Factory::doOptionsHandled() {
+    boost::program_options::options_description optionsDescription("Allowed options");
+
+    optionsDescription.add_options()
+        ("line-by-line", "processes line by line")
+        ("whole-text",   "read the whole text")
+        ("paragraphs",   "paragraphs are delimited with double newlines")
+        ("discard-comments", "discards comments")
+        ("pass-through-comments", "marks comments as single markup")
+        ;
+
+    return optionsDescription;
+}
+
+std::string UTTLatticeReader::Factory::doGetName() {
+    return "utt-reader";
+}
+
+
 UTTLatticeReader::Worker::Worker(UTTLatticeReader& processor,
                                  std::istream& inputStream,
                                  Lattice& lattice):

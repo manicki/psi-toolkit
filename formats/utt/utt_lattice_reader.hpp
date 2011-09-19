@@ -85,6 +85,19 @@ public:
 
     virtual ~UTTLatticeReader();
 
+    class Factory : public LatticeReaderFactory {
+    public:
+        virtual ~Factory();
+
+    private:
+        virtual LatticeReader* doCreateLatticeReader(
+            const boost::program_options::variables_map& options);
+
+        virtual boost::program_options::options_description doOptionsHandled();
+
+        virtual std::string doGetName();
+    };
+
 private:
     virtual std::string doInfo();
 
