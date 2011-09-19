@@ -76,6 +76,7 @@ void RuleMatcher::applyRules(std::string &sentenceString,
                 if (!(*ir)->getRepeat())
                 {
                     if (prev_before == before)
+                        match.clear();
                         continue;
                 }
             }
@@ -120,10 +121,12 @@ void RuleMatcher::applyRules(std::string &sentenceString,
 
         if (structureChanged)
         {
+            match.clear();
         //    ir = rules.begin();
         //    currentMatch = 0;
             continue;
         }
+            match.clear();
         }
 //        std::cerr << "koniec reguly" << std::endl;
         ++ ir;
