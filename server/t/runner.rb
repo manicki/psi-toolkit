@@ -20,7 +20,7 @@ end
 
 t_server = Thread.new do
 	puts "Starting psi-server..."
-	$exe = `#{$source_dir}/psi-server #{$arguments}`
+	$exe = `cd #{$source_dir}; ./psi-server #{$arguments}`
 end
 
 sleep 1

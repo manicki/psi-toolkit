@@ -5,6 +5,7 @@
 #include <string>
 
 #include <boost/bimap.hpp>
+#include <boost/foreach.hpp>
 
 #include "layer_tag_collection.hpp"
 #include "layer_tag_mask.hpp"

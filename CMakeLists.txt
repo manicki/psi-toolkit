@@ -4,10 +4,7 @@ project(psi-toolkit CXX)
 
 # Finds and includes external libraries
 set(Boost_USE_STATIC_LIBS ON)
-find_package(Boost COMPONENTS program_options graph serialization filesystem system thread REQUIRED)
-
-set(CXXTEST_INCLUDE_DIR ./prj/tests)
-find_package(CxxTest)
+find_package(Boost COMPONENTS program_options graph serialization filesystem system thread unit_test_framework prg_exec_monitor REQUIRED)
 
 option(USE_JAVA "Compiling Java components" OFF)
 message(STATUS "Compiling Java components ${USE_JAVA}")
@@ -69,25 +66,36 @@ message(STATUS "Bonsai common path file (required while using ParseGraph) ${BONS
 # Sets compiler flags
 set(CMAKE_CXX_FLAGS "-g -Wall -Wundef -Wnon-virtual-dtor -Wextra")
 
+set(BASE_TARGETS common framework formats-psi formats-simple formats-txt formats-utt tools-tokenizers-tp tools-segmenters-srx)
+
+set(TESTS_TARGETS common-tests tools-tokenizers-tp-tests tools-segmenters-srx-tests)
+
+if(USE_JAVA)
+	set(BASE_TARGETS ${BASE_TARGETS} tools-lemmatizers-morfologik)
+        set(TESTS_TARGETS ${TESTS_TARGETS} morfologik-tests)
+endif(USE_JAVA)
+
+if(USE_POSTGRESQL)
+        set(BASE_TARGETS ${BASE_TARGETS} lex-db)
+endif(USE_POSTGRESQL)
+
+if(USE_PUDDLE)
+        include_directories("${psi-toolkit_SOURCE_DIR}/tools/parsers/puddle")
+        set(BASE_TARGETS ${BASE_TARGETS} tools-parsers-puddle)
+        set(TESTS_TARGETS ${TESTS_TARGETS} tools-parsers-puddle-tests)
+        if(USE_BONSAI_PARSEGRAPH)
+            include_directories(${BONSAI_PATH})
+        endif(USE_BONSAI_PARSEGRAPH)
+endif(USE_PUDDLE)
+
+set(TARGETS ${BASE_TARGETS} psi-pipe)
+
 set(DIRS common formats tools framework utf8 server)
 foreach(dir ${DIRS})
 	include_directories("${psi-toolkit_SOURCE_DIR}/${dir}")
 	link_directories("${psi-toolkit_BINARY_DIR}/${dir}")
 	add_subdirectory(${dir})
 endforeach(dir)
-
-set(TARGETS common framework formats-psi formats-simple formats-txt formats-utt tools-tokenizers-tp tools-segmenters-srx psi-pipe common-test)
-
-if(USE_JAVA)
-	set(TARGETS ${TARGETS} tools-lemmatizers-morfologik)
-endif(USE_JAVA)
-
-if(USE_POSTGRESQL)
-        set(TARGETS ${TARGETS} lex-db)
-endif(USE_POSTGRESQL)
-
-set_target_properties(${TARGETS} PROPERTIES
-	COMPILE_FLAGS "-I${psi-toolkit_SOURCE_DIR}/utf8")
 
 #if(USE_JAVA)
 #	set_target_properties(psi-pipe PROPERTIES
@@ -110,44 +118,21 @@ foreach(dir ${formats_SUBDIRS})
 	link_directories("${psi-toolkit_BINARY_DIR}/formats/${dir}")
 endforeach(dir)
 
-# Runs CxxTests
-if(CXXTEST_FOUND)
-	include_directories(${CXXTEST_INCLUDE_DIR})
-	enable_testing()
 
-	set(TESTS ${common-t} ${tools-tokenizers-tp-t} ${tools-segmenters-srx-t})
-	set(T-TARGETS common common-test formats-psi formats-simple formats-txt formats-utt tools-tokenizers-tp tools-segmenters-srx)
+set(ALL_TARGETS ${TARGETS} ${TESTS_TARGETS})
 
-	if(USE_JAVA)
-		set(TESTS ${TESTS} ${morfologik-t})
-		set(T-TARGETS ${T-TARGETS} tools-lemmatizers-morfologik)
-	endif(USE_JAVA)
+set_target_properties(${ALL_TARGETS} PROPERTIES
+	COMPILE_FLAGS "-I${psi-toolkit_SOURCE_DIR}/utf8 -I${psi-toolkit_SOURCE_DIR}/tests")
+if(USE_PUDDLE)
+    if(USE_BONSAI_PARSEGRAPH)
+        set_target_properties(tools-parsers-puddle PROPERTIES
+        COMPILE_FLAGS "-I${psi-toolkit_SOURCE_DIR}/utf8  -I${psi-toolkit_SOURCE_DIR}/tests -I${BONSAI_PATH}")
+        set_target_properties(tools-parsers-puddle-tests PROPERTIES
+        COMPILE_FLAGS "-I${psi-toolkit_SOURCE_DIR}/utf8  -I${psi-toolkit_SOURCE_DIR}/tests -I${BONSAI_PATH}")
+    endif(USE_BONSAI_PARSEGRAPH)
+endif(USE_PUDDLE)
 
-	if(USE_PUDDLE)
-		set(TESTS ${TESTS} ${puddle-t})
-        if(WITH_RE2)
-    		set(T-TARGETS ${T-TARGETS} tools-parsers-puddle re2)
-        else(WITH_RE2)
-            if(WITH_PCRE)
-        		set(T-TARGETS ${T-TARGETS} tools-parsers-puddle pcrecpp)
-                message(STATUS "ustawilem ttargets: ${T-TARGETS}")
-            endif(WITH_PCRE)
-        endif(WITH_RE2)
-	endif(USE_PUDDLE)
-
-	CXXTEST_ADD_TEST(runner runner.cpp ${TESTS})
-	target_link_libraries(runner
-		${Boost_LIBRARIES}
-		${T-TARGETS}
-	)
-
-    if(USE_PUDDLE)
-        include_directories("${psi-toolkit_SOURCE_DIR}/tools/parsers/puddle")
-        if(USE_BONSAI_PARSEGRAPH)
-            include_directories(${BONSAI_PATH})
-        endif(USE_BONSAI_PARSEGRAPH)
-    endif(USE_PUDDLE)
-endif()
+add_subdirectory(tests)
 
 configure_file(${psi-toolkit_SOURCE_DIR}/common/config.h.in ${psi-toolkit_SOURCE_DIR}/common/config.h)
 

@@ -26,19 +26,15 @@ Annotator* SrxSegmenter::Factory::doCreateAnnotator(
     return new SrxSegmenter(lang, rules);
 }
 
-boost::program_options::options_description SrxSegmenter::Factory::doOptionsHandled() {
-
-    boost::program_options::options_description optionsDescription("Allowed options");
+void SrxSegmenter::Factory::doAddLanguageIndependentOptionsHandled(
+    boost::program_options::options_description& optionsDescription) {
 
     optionsDescription.add_options()
-        ("lang", boost::program_options::value<std::string>(), "language")
         ("rules",
          boost::program_options::value<std::string>()
          ->default_value(DEFAULT_RULE_FILE_SPEC),
          "rule file")
         ;
-
-    return optionsDescription;
 }
 
 std::string SrxSegmenter::Factory::doGetName() {
@@ -230,7 +226,7 @@ private:
 
     virtual std::list<std::string> doLayerTags() {
         std::list<std::string>  tags;
-        tags.push_back(std::string("segmenter"));
+        tags.push_back(std::string("segment"));
 
         return tags;
     }

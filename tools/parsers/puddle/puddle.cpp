@@ -63,16 +63,15 @@ namespace puddle
         return puddle;
     }
 
-    boost::program_options::options_description Puddle::Factory::doOptionsHandled() {
-        boost::program_options::options_description desc("Options");
-        desc.add_options()
-            ("lang", boost::program_options::value<std::string>(), "language")
+    void Puddle::Factory::doAddLanguageIndependentOptionsHandled(
+        boost::program_options::options_description& optionsDescription) {
+
+        optionsDescription.add_options()
             ("tagset", boost::program_options::value<std::string>()
              ->default_value(DEFAULT_TAGSET_FILE), "tagset file")
             ("rules", boost::program_options::value<std::string>()
              ->default_value(DEFAULT_RULE_FILE), "rules file")
             ;
-        return desc;
     }
 
     std::string Puddle::Factory::doGetName() {

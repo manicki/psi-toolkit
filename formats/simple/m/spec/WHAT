@@ -1,0 +1,1 @@
+txt-reader ! tp-tokenizer --lang pl ! simple-writer --tag symbol --sep "," --spec token ";"

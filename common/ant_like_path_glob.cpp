@@ -11,19 +11,17 @@ AntLikePathGlob::AntLikePathGlob(const std::string& globSpec) {
     bool inPrefix = true;
     bool lastStarStar = false;
 
-    for (boost::filesystem::path::iterator iter = rest.begin();
-        iter != rest.end();
-        ++iter) {
+    BOOST_FOREACH(boost::filesystem::path i, rest) {
 
         // trick for compilation with both Boost 1.42 and 1.47
         // (in Boost 1.42 strings are returned by an iterator rather
         //  than boost::filesystem::paths)
-        boost::filesystem::path seg(*iter);
+        boost::filesystem::path seg(i);
 
         SegmentGlob segmentGlob(seg.string());
 
         if (inPrefix && segmentGlob.isFixed())
-            fixedPrefix_ /= (*iter);
+            fixedPrefix_ /= i;
         else {
             inPrefix = false;
 

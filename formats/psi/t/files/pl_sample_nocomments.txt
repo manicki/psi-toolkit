@@ -1,10 +1,10 @@
-01 0000 03    Ala          token                             'Ala',type=word
+01 0000 03    Ala          token                 Ala         'Ala',type=word
 02 0000 03    Ala          lemma,poleng-tagset               Ala,pos=R:4,morpho=ŻMP[1]
 03 0000 03    Ala          gobio,parse                       rzeczownik,R=4,L=1,P=mian[2]
-04 0003 01    _            token                             '_',type=blank
-05 0004 02    ma           token                             'ma',type=word
-06 0006 06    &nbsp;       symbol                            '_
-07 0006 06    &nbsp;       token                             '_',type=blank[6]
+04 0003 01    _            token                 _           '_',type=blank
+05 0004 02    ma           token                 ma          'ma',type=word
+06 0006 06    &nbsp;       symbol                _           '_
+07 0006 06    &nbsp;       token                 _           '_',type=blank[6]
 08 0012 03    <b>          html,markup                       open[]
 09 0015 *@0   k            symbol                k           'k
 10 0015 01    k            symbol                k           'k
@@ -16,6 +16,6 @@
 16 0012 10    <b>kta</b>   gobio,parse                       fraza\_rzeczownikowa,R=2,L=1,P=dop[8-14-15]
 17 0004 18    ma&nbs.../b> gobio,parse                       fraza\_czasownikowa,L=1,C=teraźniejszy,O=3[5-7-16]
 18 0000 22    Ala_ma.../b> gobio,parse                       pełna\_fraza\_czasownikowa<-0.342>,C=teraźniejszy[3-4-17]
-19 0022 01    .            token                             '.',type=punct
+19 0022 01    .            token                 .           '.',type=punct
 20 0000 23    Ala_ma...b>. splitter                          sentence[]
 21 0000 23    Ala_ma...b>. gobio,parse                       zdanie[18-19]

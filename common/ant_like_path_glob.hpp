@@ -4,7 +4,9 @@
 #include <string>
 #include <set>
 #include <list>
+
 #include <boost/filesystem.hpp>
+#include <boost/foreach.hpp>
 
 #include "segment_glob.hpp"
 

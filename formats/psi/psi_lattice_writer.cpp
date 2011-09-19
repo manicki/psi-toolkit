@@ -128,15 +128,11 @@ void PsiLatticeWriter::Worker::doRun() {
         std::string tagStr = "";
         std::list<std::string> tagNames
             = lattice_.getLayerTagManager().getTagNames(lattice_.getEdgeLayerTags(edge));
-        for (
-            std::list<std::string>::iterator ti = tagNames.begin();
-            ti != tagNames.end();
-            ++ti
-        ) {
+        BOOST_FOREACH(std::string tagName, tagNames) {
             if (!tagStr.empty()) {
                 tagStr += ",";
             }
-            tagStr += *ti;
+            tagStr += tagName;
         }
         alignOutput_(quoter.escape(tagStr), alignments[4]);
         alignOutput_(" ");

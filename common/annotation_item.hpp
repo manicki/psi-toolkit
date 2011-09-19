@@ -6,6 +6,7 @@
 #include <vector>
 
 #include <boost/dynamic_bitset.hpp>
+#include <boost/foreach.hpp>
 
 
 class AnnotationItem {

@@ -8,6 +8,7 @@
 #include <vector>
 
 #include <boost/dynamic_bitset.hpp>
+#include <boost/foreach.hpp>
 
 #include <boost/graph/adjacency_list.hpp>
 #include <boost/graph/topological_sort.hpp>
@@ -425,7 +426,8 @@ private:
 
     boost::dynamic_bitset<> visibleImplicitOutEdges_;
 
-    std::map<int, Graph::vertex_descriptor> vertices_;
+    typedef std::map<int, Graph::vertex_descriptor> VerticesMap;
+    VerticesMap vertices_;
 
     int nLooseVertices_;
 

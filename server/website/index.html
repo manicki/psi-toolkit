@@ -31,7 +31,7 @@
 		<div id="input" class="box">
 			<form id="input-text" action="input_text.psis" method="GET">
 				Write some text: <br />
-				<textarea name="input-text" rows="5" cols="112">Ala ma kota.</textarea> 
+				<textarea name="input-text" rows="5" cols="112"><!--#psis pipe_site_input_text --></textarea> 
 				<div>
 					<input value="Send" type="submit" name="input-text-submit" />
 				</div>
@@ -44,10 +44,10 @@
 
 		<div id="temp" class="box">
 			<!--#psis index_site_info -->
-			<!--#psis pipe_site_input_text -->
 			<!--#psis pipe_site_pipe_text -->
 		</div>
 
+		<div class="push"></div>
 	</div>
 
 	<!--#psis index_site_footer_part -->

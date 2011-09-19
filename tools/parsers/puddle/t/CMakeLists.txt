@@ -1,4 +1,7 @@
-set(puddle-t
-	${psi-toolkit_SOURCE_DIR}/tools/parsers/puddle/t/puddle_tests.hpp
-	CACHE PATH "CxxTests for puddle parser" FORCE
+add_library(tools-parsers-puddle-tests
+        puddle_tests.cpp
+)
+
+target_link_libraries(tools-parsers-puddle-tests
+  tools-parsers-puddle
 )
