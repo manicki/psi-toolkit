@@ -5,6 +5,7 @@
 #include <string>
 
 #include <boost/algorithm/string/trim.hpp>
+#include <boost/foreach.hpp>
 
 #include "lattice.hpp"
 #include "lattice_writer_output_iterator.hpp"

@@ -27,21 +27,17 @@ void LatticeIterWriter::doRun() {
             edge = oei.next();
             std::list<std::string> tags
                 = lattice_.getLayerTagManager().getTagNames(lattice_.getEdgeLayerTags(edge));
-            for (
-                std::list<std::string>::iterator ti = tags.begin();
-                ti != tags.end();
-                ++ti
-            ) {
+            BOOST_FOREACH(std::string tag, tags) {
                 if (
-                    basicTag_ == *ti &&
+                    basicTag_ == tag &&
                     (!noBlank_ || boost::algorithm::trim_copy(lattice_.getEdgeText(edge)) != "")
                 ) {
                     basicTagEdges.push(edge);
                 }
-                if (isHandledTag_(*ti) && targets[*ti] == vd) {
-                    targets[*ti] = lattice_.getEdgeTarget(edge);
-                    outputIterator_.closeGroup(*ti);
-                    outputIterator_.openGroup(*ti);
+                if (isHandledTag_(tag) && targets[tag] == vd) {
+                    targets[tag] = lattice_.getEdgeTarget(edge);
+                    outputIterator_.closeGroup(tag);
+                    outputIterator_.openGroup(tag);
                 }
             }
         }
@@ -76,12 +72,9 @@ void LatticeIterWriter::doRun() {
         }
     }
 
-    for (
-        std::map<std::string, Lattice::VertexDescriptor>::iterator mi = targets.begin();
-        mi != targets.end();
-        ++mi
-    ) {
-        outputIterator_.closeGroup((*mi).first);
+    typedef std::pair<std::string, Lattice::VertexDescriptor> TagTargetPair;
+    BOOST_FOREACH(TagTargetPair tagTargetpair, targets) {
+        outputIterator_.closeGroup(tagTargetpair.first);
     }
 
     outputIterator_.flush();
