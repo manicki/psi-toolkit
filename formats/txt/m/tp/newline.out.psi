@@ -1,0 +1,15 @@
+01 0000 03    ala          token                 ala         T
+02 0003 01    _            token                 _           B
+03 0004 02    ma           token                 ma          T
+04 0006 01    _            token                 _           B
+05 0007 04    kota         token                 kota        T
+06 0011 01    _            token                 _           B
+07 0012 01    i            token                 i           T
+08 0013 01    _            token                 _           B
+09 0014 03    psa          token                 psa         T
+10 0018 03    ala          token                 ala         T
+11 0021 01    _            token                 _           B
+12 0022 02    ma           token                 ma          T
+13 0024 01    _            token                 _           B
+14 0025 05    kotka        token                 kotka       T
+
