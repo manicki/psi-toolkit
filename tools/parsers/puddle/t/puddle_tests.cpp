@@ -283,7 +283,7 @@ BOOST_AUTO_TEST_CASE( puddle ) {
     poleng::bonsai::puddle::RuleLoader rule_loader;
 //        poleng::bonsai::puddle::TaggerPtr tagger = poleng::bonsai::puddle::TaggerPtr( new poleng::bonsai::puddle::Tagger());
 
-    poleng::bonsai::puddle::Puddle *puddle = new poleng::bonsai::puddle::Puddle();
+    boost::scoped_ptr<poleng::bonsai::puddle::Puddle> puddle(new poleng::bonsai::puddle::Puddle());
 
     poleng::bonsai::puddle::TagsetPtr tagset;
     tagset = tagset_loader.load(tagsetFilename);
@@ -299,7 +299,6 @@ BOOST_AUTO_TEST_CASE( puddle ) {
     //parsing
     BOOST_CHECK(puddle->parse(lattice));
 
-    delete puddle;
 }
 
 //    void testPuddleUnify() {
@@ -505,7 +504,6 @@ BOOST_AUTO_TEST_CASE( puddle ) {
 //        BOOST_CHECK(avi == av.end());
 //        BOOST_CHECK(!tokenIter.hasNext());
 //
-//        delete puddle;
 //    }
 
 //    void testPuddleDelete() {
@@ -711,7 +709,6 @@ BOOST_AUTO_TEST_CASE( puddle ) {
 //        BOOST_CHECK(avi == av.end());
 //        BOOST_CHECK(!tokenIter.hasNext());
 //
-//        delete puddle;
 //    }
 
 BOOST_AUTO_TEST_CASE( puddle_add ) {
@@ -824,7 +821,7 @@ BOOST_AUTO_TEST_CASE( puddle_add ) {
     poleng::bonsai::puddle::RuleLoader rule_loader;
     poleng::bonsai::puddle::TaggerPtr tagger = poleng::bonsai::puddle::TaggerPtr( new poleng::bonsai::puddle::Tagger());
 
-    poleng::bonsai::puddle::Puddle *puddle = new poleng::bonsai::puddle::Puddle();
+    boost::scoped_ptr<poleng::bonsai::puddle::Puddle> puddle(new poleng::bonsai::puddle::Puddle());
 
     poleng::bonsai::puddle::TagsetPtr tagset;
     tagset = tagset_loader.load(tagsetFilename);
@@ -953,7 +950,6 @@ BOOST_AUTO_TEST_CASE( puddle_add ) {
     BOOST_CHECK(avi == av.end());
     BOOST_CHECK(!tokenIter.hasNext());
 
-    delete puddle;
 }
 
 BOOST_AUTO_TEST_CASE( puddle_group ) {
@@ -1071,7 +1067,7 @@ BOOST_AUTO_TEST_CASE( puddle_group ) {
     poleng::bonsai::puddle::RuleLoader rule_loader;
     poleng::bonsai::puddle::TaggerPtr tagger = poleng::bonsai::puddle::TaggerPtr( new poleng::bonsai::puddle::Tagger());
 
-    poleng::bonsai::puddle::Puddle *puddle = new poleng::bonsai::puddle::Puddle();
+    boost::scoped_ptr<poleng::bonsai::puddle::Puddle> puddle(new poleng::bonsai::puddle::Puddle());
 
     poleng::bonsai::puddle::TagsetPtr tagset;
     tagset = tagset_loader.load(tagsetFilename);
@@ -1226,7 +1222,6 @@ BOOST_AUTO_TEST_CASE( puddle_group ) {
 //        BOOST_CHECK( avi == av.end() );
     BOOST_CHECK(!parseIter.hasNext());
 
-    delete puddle;
 }
 
 //    void testPuddleJoin() {
@@ -1463,7 +1458,6 @@ BOOST_AUTO_TEST_CASE( puddle_group ) {
 //        BOOST_CHECK(avi == av.end());
 //        BOOST_CHECK(!parseIter.hasNext());
 //
-//        delete puddle;
 //    }
 
 //    void testPuddleAttach() {
@@ -1700,7 +1694,6 @@ BOOST_AUTO_TEST_CASE( puddle_group ) {
 //        BOOST_CHECK(avi == av.end());
 //        BOOST_CHECK(!parseIter.hasNext());
 //
-//        delete puddle;
 //    }
 
 //    void testPuddleTransform() {
@@ -1894,7 +1887,6 @@ BOOST_AUTO_TEST_CASE( puddle_group ) {
 //        BOOST_CHECK(avi == av.end());
 //        BOOST_CHECK(!parseIter.hasNext());
 //
-//        delete puddle;
 //    }
 
 BOOST_AUTO_TEST_CASE( syntok ) {
@@ -2070,7 +2062,7 @@ BOOST_AUTO_TEST_CASE( syntok ) {
     poleng::bonsai::puddle::RuleLoader rule_loader;
     poleng::bonsai::puddle::TaggerPtr tagger = poleng::bonsai::puddle::TaggerPtr( new poleng::bonsai::puddle::Tagger());
 
-    poleng::bonsai::puddle::Puddle *puddle = new poleng::bonsai::puddle::Puddle();
+    boost::scoped_ptr<poleng::bonsai::puddle::Puddle> puddle(new poleng::bonsai::puddle::Puddle());
 
     poleng::bonsai::puddle::TagsetPtr tagset;
     tagset = tagset_loader.load(tagsetFilename);
@@ -2685,7 +2677,6 @@ BOOST_AUTO_TEST_CASE( syntok ) {
     BOOST_CHECK(avi == av.end());
     BOOST_CHECK(!formIter.hasNext());
 
-    delete puddle;
 }
 
 BOOST_AUTO_TEST_CASE( load_rules_fr ) {
@@ -2777,7 +2768,7 @@ BOOST_AUTO_TEST_CASE( load_rules_fr ) {
     poleng::bonsai::puddle::RuleLoader rule_loader;
 //        poleng::bonsai::puddle::TaggerPtr tagger = poleng::bonsai::puddle::TaggerPtr( new poleng::bonsai::puddle::Tagger());
 
-    poleng::bonsai::puddle::Puddle *puddle = new poleng::bonsai::puddle::Puddle();
+    boost::scoped_ptr<poleng::bonsai::puddle::Puddle> puddle(new poleng::bonsai::puddle::Puddle());
 
     poleng::bonsai::puddle::TagsetPtr tagset;
     tagset = tagset_loader.load(tagsetFilename);
@@ -2794,7 +2785,6 @@ BOOST_AUTO_TEST_CASE( load_rules_fr ) {
     //parsing
     BOOST_CHECK(puddle->parse(lattice));
 
-    delete puddle;
 }
 
 BOOST_AUTO_TEST_CASE( load_rules_pl ) {
@@ -2920,7 +2910,7 @@ BOOST_AUTO_TEST_CASE( load_rules_pl ) {
     poleng::bonsai::puddle::RuleLoader rule_loader;
 //        poleng::bonsai::puddle::TaggerPtr tagger = poleng::bonsai::puddle::TaggerPtr( new poleng::bonsai::puddle::Tagger());
 
-    poleng::bonsai::puddle::Puddle *puddle = new poleng::bonsai::puddle::Puddle();
+    boost::scoped_ptr<poleng::bonsai::puddle::Puddle> puddle(new poleng::bonsai::puddle::Puddle());
 
     poleng::bonsai::puddle::TagsetPtr tagset;
     tagset = tagset_loader.load(tagsetFilename);
@@ -2937,7 +2927,6 @@ BOOST_AUTO_TEST_CASE( load_rules_pl ) {
     //parsing
     BOOST_CHECK(puddle->parse(lattice));
 
-    delete puddle;
 }
 
 BOOST_AUTO_TEST_SUITE_END()
