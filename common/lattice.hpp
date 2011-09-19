@@ -173,7 +173,7 @@ public:
         EdgeDescriptor(const Graph::edge_descriptor& ed) : descriptor(ed), implicitIndex(-1) { }
 
         bool operator<(EdgeDescriptor other) const {
-            if (implicitIndex == -1 && other.implicitIndex == -1) {
+            if (implicitIndex < 0 && other.implicitIndex < 0) {
                 return descriptor < other.descriptor;
             }
             return implicitIndex < other.implicitIndex;
