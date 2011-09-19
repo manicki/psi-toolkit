@@ -80,8 +80,15 @@ private:
     space_before_header_value,
     header_value,
     expecting_newline_2,
-    expecting_newline_3
+    expecting_newline_3,
+	post_line_start,
   } state_;
+
+  void set_post_data_length(request& req);
+  int post_data_length_;
+  int post_data_length_counter_;
+  bool all_post_data();
+
 };
 
 } // namespace server3

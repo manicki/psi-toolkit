@@ -9,7 +9,7 @@ IndexSite::IndexSite(PsiServer& server) : TemplateSite(server) {
     psiServer_.registerIncludeCode(
         "index_site_footer_part", boost::bind(&IndexSite::footerPart, this));
 }
-	
+    
 char * IndexSite::info() {
     std::string str = "<p>Some string from IndexSite class!</p>";
     return stringToChar(str);

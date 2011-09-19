@@ -1,9 +1,9 @@
 /* General */
 
 html, body { height: 100%; }
-body { background: url("/img/bg-gradient.jpg") repeat-x #FFFFFF; border-top: 2px solid #222222; }
+body { background: url("/img/bg-gradient.jpg") repeat-x #FFFFFF; border-top: 0 solid #222222; }
 
-#wrapper { width: 980px; margin: 0 auto -70px; min-height: 100%; height: auto !important; height: 100%;}
+#wrapper { width: 980px; margin: 0 auto -72px; min-height: 100%; height: auto !important; height: 100%; }
 p { padding: 5px 0; }
 
 /* Header */
@@ -20,12 +20,7 @@ textarea { padding: 5px; }
 /* Boxes */
 .box { margin: 10px auto 0 auto; display: table; }
 
-pre {
-    border-width: 1px;
-    border-style: solid;
-    padding: 8px;
-    font-family: monospace;
- }
+pre { border-width: 1px; border-style: solid; padding: 8px; font-family: monospace; }
 
 /* Footer */
 

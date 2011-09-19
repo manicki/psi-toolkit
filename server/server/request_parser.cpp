@@ -4,6 +4,7 @@
 
 #include "request_parser.hpp"
 #include "request.hpp"
+#include <iostream>
 
 namespace http {
 namespace server3 {
@@ -20,6 +21,7 @@ void request_parser::reset()
 
 boost::tribool request_parser::consume(request& req, char input)
 {
+
   switch (state_)
   {
   case method_start:
@@ -281,11 +283,52 @@ boost::tribool request_parser::consume(request& req, char input)
       return false;
     }
   case expecting_newline_3:
-    return (input == '\n');
+    if (input == '\n')
+	{
+		if (req.method == "POST") {
+			set_post_data_length(req);
+			state_ = post_line_start;
+			return boost::indeterminate;
+		}
+		else {
+			// end parsing for GET method
+			return true;
+		}
+	}
+	else
+	{
+		return false;
+	}
+  case post_line_start:
+    if (input != '\n' && input != '\r') {
+        if (!all_post_data()) {
+            post_data_length_counter_++;
+            req.post_data += input;
+            return boost::indeterminate;
+        } 
+        else {
+            req.post_data += input;
+		    return true;
+        }
+    }
+    else {
+        return false;
+    }
   default:
     return false;
   }
 }
+
+
+void request_parser::set_post_data_length(request& req) {
+    post_data_length_counter_ = 1;
+	post_data_length_ = atoi(req.headers.back().value.c_str());
+}
+
+bool request_parser::all_post_data() {
+	return (post_data_length_counter_ >= post_data_length_);
+}
+
 
 bool request_parser::is_char(int c)
 {

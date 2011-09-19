@@ -32,7 +32,7 @@
 		void registerActionCode(const char* idname, psis_action_function fun);
 		void include(std::string& reply);
 
-		void checkForAction(http::server3::request& req, http::server3::reply& rep);
+		void checkForAction(http::server3::request& req);
 		std::string& findValue(const char* name);
 
 		std::string websiteRoot;

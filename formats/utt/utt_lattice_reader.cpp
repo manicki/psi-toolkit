@@ -9,6 +9,34 @@ std::string UTTLatticeReader::doInfo() {
     return "UTT reader";
 }
 
+
+UTTLatticeReader::Factory::~Factory() {
+}
+
+LatticeReader* UTTLatticeReader::Factory::doCreateLatticeReader(
+    const boost::program_options::variables_map&) {
+    return new UTTLatticeReader();
+}
+
+boost::program_options::options_description UTTLatticeReader::Factory::doOptionsHandled() {
+    boost::program_options::options_description optionsDescription("Allowed options");
+
+    optionsDescription.add_options()
+        ("line-by-line", "processes line by line")
+        ("whole-text",   "read the whole text")
+        ("paragraphs",   "paragraphs are delimited with double newlines")
+        ("discard-comments", "discards comments")
+        ("pass-through-comments", "marks comments as single markup")
+        ;
+
+    return optionsDescription;
+}
+
+std::string UTTLatticeReader::Factory::doGetName() {
+    return "utt-reader";
+}
+
+
 UTTLatticeReader::Worker::Worker(UTTLatticeReader& processor,
                                  std::istream& inputStream,
                                  Lattice& lattice):
@@ -31,21 +59,27 @@ void UTTLatticeReader::Worker::doRun() {
 
             if (item.length > 0) {
 
-                lattice_.appendString(item.form);
+                Lattice::VertexDescriptor from = lattice_.getLastVertex();
 
-                LayerTagMask rawMask = lattice_.getLayerTagManager().getMask("raw");
+                lattice_.appendStringWithSymbols(item.form);
+
+                Lattice::VertexDescriptor to = lattice_.getLastVertex();
+
+                LayerTagMask rawMask = lattice_.getLayerTagManager().getMask("symbol");
 
                 Lattice::EdgeSequence::Builder seqBuilder;
 
-                for (int i = item.position; i < item.position + item.length; ++i) {
-                    seqBuilder.addEdge(
-                        lattice_.firstOutEdge(lattice_.getVertexForRawCharIndex(i), rawMask)
-                    );
+                Lattice::VertexDescriptor currentVertex = from;
+                while (currentVertex != to) {
+                    Lattice::EdgeDescriptor currentEdge
+                        = lattice_.firstOutEdge(currentVertex, rawMask);
+                    seqBuilder.addEdge(currentEdge);
+                    currentVertex = lattice_.getEdgeTarget(currentEdge);
                 }
 
                 lattice_.addEdge(
-                    lattice_.getVertexForRawCharIndex(item.position),
-                    lattice_.getVertexForRawCharIndex(item.position + item.length),
+                    from,
+                    to,
                     AnnotationItem(item.form),
                     lattice_.getLayerTagManager().createSingletonTagCollection("token"),
                     seqBuilder.build()

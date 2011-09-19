@@ -55,7 +55,7 @@ void PsiServer::run(){
 
 void PsiServer::registerIncludeCode(const char* idname, psis_include_function fun) {
 	includes_.insert(std::pair<std::string, psis_include_function >( 
-		std::string(idname), fun) 	
+		std::string(idname), fun)	
 	);
 }
 
@@ -94,20 +94,13 @@ void PsiServer::include(std::string& reply) {
 	}
 }
 
-void PsiServer::checkForAction(http::server3::request& req, http::server3::reply& rep) {
-
-	// write headers
-	std::cerr << "Headers:" << std::endl;
-	for (unsigned int i=0; i < req.headers.size(); i++) {
-		std::cerr << "  " << req.headers[i].name << "=" << req.headers[i].value << std::endl;
-	}
+void PsiServer::checkForAction(http::server3::request& req) {
 
 	// look for psis form action request
 	std::string uri = req.uri;
 		
 	int q = 0;
 	if (req.method != "POST") {
-		//std::cerr << "GET uri=" << uri << std::endl;
 		q = uri.find(".psis?");
 		if (q == -1) return;
 	} else {
@@ -124,8 +117,7 @@ void PsiServer::checkForAction(http::server3::request& req, http::server3::reply
 
 	// decode the values
 	if (req.method == "POST") {
-		uri = rep.content;  /// (?)
-		//std::cerr << "POST uri=" << uri << std::endl;
+		uri = req.post_data;
 		q = 0;
 	} else {
 		q += 6;
@@ -175,7 +167,7 @@ std::string PsiServer::urlDecode(std::string & encodedString) {
 
 	for (i = 0; i < encodedString.length(); i++) {
 
-	 	if (int(encodedString[i]) == 37) {
+		if (int(encodedString[i]) == 37) {
 			sscanf(encodedString.substr(i+1, 2).c_str(), "%x", &j);
 
 			ch = static_cast<char>(j);

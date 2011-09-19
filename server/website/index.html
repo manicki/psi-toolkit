@@ -13,11 +13,12 @@
 	<div id="wrapper">
 
 		<div id="header">
+            
 			<h1>Psi Server</h1>
 		</div>
 
 		<div id="pipe" class="box">
-			<form id="pipe-text" action="pipe_text.psis" method="GET">
+			<form id="pipe-text" action="pipe_text.psis" method="POST">
 				Write pipe line: <br />
 				<input name="pipe-text" type="text" value="<!--#psis pipe_site_pipe_text -->" /> 
 				<br />
@@ -29,7 +30,7 @@
 		</div>
 
 		<div id="input" class="box">
-			<form id="input-text" action="input_text.psis" method="GET">
+			<form id="input-text" action="input_text.psis" method="POST">
 				Write some text: <br />
 				<textarea name="input-text" rows="5" cols="112"><!--#psis pipe_site_input_text --></textarea> 
 				<div>
