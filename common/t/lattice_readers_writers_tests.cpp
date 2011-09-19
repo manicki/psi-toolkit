@@ -20,11 +20,11 @@ BOOST_AUTO_TEST_SUITE( utt_lattice_reader )
 
 BOOST_AUTO_TEST_CASE( utt_lattice_reader ) {
     Lattice lattice("");
-/*
+
   LatticeReader * reader = new UTTLatticeReader();
 
   reader->readIntoLattice("../formats/utt/t/files/fr_simple_puddle_input.txt", lattice);
-
+/*
   LayerTagMask rawMask = lattice.getLayerTagManager().getMask("raw");
   Lattice::EdgesSortedBySourceIterator rei = lattice.edgesSortedBySource(rawMask);
 
@@ -122,9 +122,9 @@ BOOST_AUTO_TEST_CASE( utt_lattice_reader ) {
   BOOST_CHECK_EQUAL(lattice.getAnnotationCategory(sei.next()),
   "Karol Józef Wojtyła est élu pape de l'Église catholique romaine le 16 octobre 1978.");
   BOOST_CHECK(!sei.hasNext());
-
-  delete reader;
 */
+  delete reader;
+
 }
 
 BOOST_AUTO_TEST_CASE( psi_lattice_writer_simple ) {

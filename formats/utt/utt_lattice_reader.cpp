@@ -31,9 +31,9 @@ void UTTLatticeReader::Worker::doRun() {
 
             if (item.length > 0) {
 
-                lattice_.appendString(item.form);
+                lattice_.appendStringWithSymbols(item.form);
 
-                LayerTagMask rawMask = lattice_.getLayerTagManager().getMask("raw");
+                LayerTagMask rawMask = lattice_.getLayerTagManager().getMask("symbol");
 
                 Lattice::EdgeSequence::Builder seqBuilder;
 
