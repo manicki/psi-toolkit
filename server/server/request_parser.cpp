@@ -300,15 +300,19 @@ boost::tribool request_parser::consume(request& req, char input)
 		return false;
 	}
   case post_line_start:
-    if (!all_post_data())
-    {
-		post_data_length_counter_++;
-		req.post_data += input;
-		return boost::indeterminate;
+    if (input != '\n' && input != '\r') {
+        if (!all_post_data()) {
+            post_data_length_counter_++;
+            req.post_data += input;
+            return boost::indeterminate;
+        } 
+        else {
+            req.post_data += input;
+		    return true;
+        }
     }
-    else
-    {
-		return true;
+    else {
+        return false;
     }
   default:
     return false;
@@ -317,12 +321,12 @@ boost::tribool request_parser::consume(request& req, char input)
 
 
 void request_parser::set_post_data_length(request& req) {
-    post_data_length_counter_ = 0;
+    post_data_length_counter_ = 1;
 	post_data_length_ = atoi(req.headers.back().value.c_str());
 }
 
 bool request_parser::all_post_data() {
-	return (post_data_length_counter_ >= (post_data_length_ - 1));
+	return (post_data_length_counter_ >= post_data_length_);
 }
 
 

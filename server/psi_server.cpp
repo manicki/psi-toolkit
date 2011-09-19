@@ -94,14 +94,13 @@ void PsiServer::include(std::string& reply) {
 	}
 }
 
-void PsiServer::checkForAction(http::server3::request& req, http::server3::reply& rep) {
+void PsiServer::checkForAction(http::server3::request& req) {
 
 	// look for psis form action request
 	std::string uri = req.uri;
 		
 	int q = 0;
 	if (req.method != "POST") {
-		//std::cerr << "GET uri=" << uri << std::endl;
 		q = uri.find(".psis?");
 		if (q == -1) return;
 	} else {
@@ -118,9 +117,7 @@ void PsiServer::checkForAction(http::server3::request& req, http::server3::reply
 
 	// decode the values
 	if (req.method == "POST") {
-		uri = req.post_data;  /// (?)
-        std::cerr << "post_data=" << req.post_data << std::endl;
-		std::cerr << "POST uri=" << uri << std::endl;
+		uri = req.post_data;
 		q = 0;
 	} else {
 		q += 6;
