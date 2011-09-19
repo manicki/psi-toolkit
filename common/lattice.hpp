@@ -66,7 +66,11 @@ public:
     struct EdgeDescriptorWrapperToFoolBoost146OrGnu461;
 
     struct VertexEntry {
+        /**
+         * Vertex's position in text.
+         */
         int index;
+
         std::vector< std::list<EdgeDescriptorWrapperToFoolBoost146OrGnu461> > outEdgesIndex;
         std::vector< std::list<EdgeDescriptorWrapperToFoolBoost146OrGnu461> > inEdgesIndex;
 
@@ -157,6 +161,11 @@ public:
 
     struct EdgeDescriptor {
         Graph::edge_descriptor descriptor;
+
+        /**
+         * Indicates the position of source vertex if the edge is an implicit edge.
+         * if the edge is an explicit edge, its implicit index is negative.
+         */
         int implicitIndex;
 
         EdgeDescriptor() : descriptor(), implicitIndex(-1) { }
@@ -178,7 +187,14 @@ public:
             :Graph::edge_descriptor(ed) {}
     };
 
+    /**
+     * Vertex descriptor is a number.
+     * For non-loose vertices, it is a non-negative integer indicating position in the text
+     * (counted in bytes).
+     * For loose vertices, vertex descriptor is an arbitrary negative integer.
+     */
     typedef int VertexDescriptor;
+
     typedef Graph::edge_iterator EdgeIterator;
     typedef Graph::out_edge_iterator OutEdgeIterator;
     typedef Graph::in_edge_iterator InEdgeIterator;
@@ -420,13 +436,33 @@ private:
 
     std::string allText_;
 
+    /**
+     * Stores the information about whether there is an implicit out-edge from given vertex.
+     */
     boost::dynamic_bitset<> implicitOutEdges_;
 
+    /**
+     * Stores the information about whether given implicit out-edge is hidden
+     * (ie. it is a standard "symbol" edge).
+     * Implicit edges that are not hidden are visible
+     * but can be made hidden by adding proper super-edges.
+     */
     boost::dynamic_bitset<> hiddenImplicitOutEdges_;
 
+    /**
+     * Stores the information about whether given implicit out-edge is explicitly visible
+     * (eg. when there are multiple "symbol" out-edges).
+     * Explicitly visible implicit edge cannot be made hidden.
+     */
     boost::dynamic_bitset<> visibleImplicitOutEdges_;
 
     typedef std::map<int, Graph::vertex_descriptor> VerticesMap;
+
+    /**
+     * A map mapping VertexDescriptors to boost's vertex descriptors.
+     * If map does not contain given index, it means that given vertex is an implicit vertex
+     * (or that there is no such vertex - if index is in the middle of multibyte UTF8 char).
+     */
     VerticesMap vertices_;
 
     int nLooseVertices_;
