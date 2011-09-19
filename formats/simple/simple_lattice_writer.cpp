@@ -83,14 +83,10 @@ void SimpleLatticeWriter::Worker::doRun() {
 
     std::vector<std::string> handledTags;
 
-    std::map<std::string, std::string> tagsSeparatorsMap = processor_.getTagsSeparatorsMap();
-    for (
-        std::map<std::string, std::string>::iterator mi = tagsSeparatorsMap.begin();
-        mi != tagsSeparatorsMap.end();
-        ++mi
-    ) {
-        outputIterator.setSeparator((*mi).first, (*mi).second);
-        handledTags.push_back((*mi).first);
+    typedef std::pair<std::string, std::string> TagSeparatorPair;
+    BOOST_FOREACH(TagSeparatorPair tagSeparatorPair, processor_.getTagsSeparatorsMap()) {
+        outputIterator.setSeparator(tagSeparatorPair.first, tagSeparatorPair.second);
+        handledTags.push_back(tagSeparatorPair.first);
     }
 
     LatticeIterWriter writer(

@@ -1,6 +1,8 @@
 #ifndef PSI_LATTICE_WRITER_HDR
 #define PSI_LATTICE_WRITER_HDR
 
+#include <boost/foreach.hpp>
+
 #include "lattice_writer.hpp"
 #include "lattice_writer_factory.hpp"
 #include "psi_quoter.hpp"

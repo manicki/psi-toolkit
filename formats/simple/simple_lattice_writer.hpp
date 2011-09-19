@@ -3,6 +3,8 @@
 
 #include <map>
 
+#include <boost/foreach.hpp>
+
 #include "lattice_iter_writer.hpp"
 #include "lattice_writer.hpp"
 #include "lattice_writer_factory.hpp"

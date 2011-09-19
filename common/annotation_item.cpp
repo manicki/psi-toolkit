@@ -18,7 +18,7 @@ std::string AnnotationItem::getText() const {
 long AnnotationItem::getHash() const {
     std::string str = category_;
     str += text_;
-    BOOST_FOREACH(const std::string av, values_) {
+    BOOST_FOREACH(const std::string & av, values_) {
         str += av;
     }
     const std::collate<char>& coll = std::use_facet<std::collate<char> >(std::locale());
