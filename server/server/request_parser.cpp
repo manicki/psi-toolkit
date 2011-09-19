@@ -22,8 +22,6 @@ void request_parser::reset()
 boost::tribool request_parser::consume(request& req, char input)
 {
 
-	std::cerr << "" << input;
-
   switch (state_)
   {
   case method_start:
@@ -319,6 +317,7 @@ boost::tribool request_parser::consume(request& req, char input)
 
 
 void request_parser::set_post_data_length(request& req) {
+    post_data_length_counter_ = 0;
 	post_data_length_ = atoi(req.headers.back().value.c_str());
 }
 

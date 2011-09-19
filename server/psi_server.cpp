@@ -118,8 +118,9 @@ void PsiServer::checkForAction(http::server3::request& req, http::server3::reply
 
 	// decode the values
 	if (req.method == "POST") {
-		uri = rep.content;  /// (?)
-		//std::cerr << "POST uri=" << uri << std::endl;
+		uri = req.post_data;  /// (?)
+        std::cerr << "post_data=" << req.post_data << std::endl;
+		std::cerr << "POST uri=" << uri << std::endl;
 		q = 0;
 	} else {
 		q += 6;
