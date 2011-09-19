@@ -10,6 +10,8 @@
 
 #include <iostream>
 
+#include "logging.hpp"
+
 namespace http {
 namespace server3 {
 
@@ -35,7 +37,7 @@ server::server(const std::string& address, const std::string& port,
 
 void server::run()
 {
-  std::cerr << "Starting...";
+  INFO("Starting server...");
 
   // Create a pool of threads to run all of the io_services.
   std::vector<boost::shared_ptr<boost::thread> > threads;
@@ -52,12 +54,12 @@ void server::run()
     threads[i]->join();
   }
   
-  std::cerr << "Stopped!" << std::endl;
+  INFO("Stopped!");
 }
 
 void server::stop()
 {
-  std::cerr << "Stopping..." << std::endl;
+  INFO("Stopping server...");
   io_service_.stop();
 }
 
