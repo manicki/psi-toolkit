@@ -31,21 +31,27 @@ void UTTLatticeReader::Worker::doRun() {
 
             if (item.length > 0) {
 
+                Lattice::VertexDescriptor from = lattice_.getLastVertex();
+
                 lattice_.appendStringWithSymbols(item.form);
+
+                Lattice::VertexDescriptor to = lattice_.getLastVertex();
 
                 LayerTagMask rawMask = lattice_.getLayerTagManager().getMask("symbol");
 
                 Lattice::EdgeSequence::Builder seqBuilder;
 
-                for (int i = item.position; i < item.position + item.length; ++i) {
-                    seqBuilder.addEdge(
-                        lattice_.firstOutEdge(lattice_.getVertexForRawCharIndex(i), rawMask)
-                    );
+                Lattice::VertexDescriptor currentVertex = from;
+                while (currentVertex != to) {
+                    Lattice::EdgeDescriptor currentEdge
+                        = lattice_.firstOutEdge(currentVertex, rawMask);
+                    seqBuilder.addEdge(currentEdge);
+                    currentVertex = lattice_.getEdgeTarget(currentEdge);
                 }
 
                 lattice_.addEdge(
-                    lattice_.getVertexForRawCharIndex(item.position),
-                    lattice_.getVertexForRawCharIndex(item.position + item.length),
+                    from,
+                    to,
                     AnnotationItem(item.form),
                     lattice_.getLayerTagManager().createSingletonTagCollection("token"),
                     seqBuilder.build()
