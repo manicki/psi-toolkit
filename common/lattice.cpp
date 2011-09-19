@@ -122,24 +122,14 @@ Lattice::EdgeDescriptor Lattice::addEdge(
         Score oldScore = getEdgeScore(edge);
         if (tags != oldTags) {
             tags = createUnion(oldTags, tags);
-            if (edge.implicitIndex < 0) {
-                graph_[edge.descriptor].tagList = tags;
-            } else {
-                implicitOutEdges_.set(from, false);
-                edge.implicitIndex = -1;
-                needToAddEdge = true;
-            }
-        }
-        if (score > oldScore) {
-            if (edge.implicitIndex < 0) {
-                graph_[edge.descriptor].score = score;
-            } else {
-                implicitOutEdges_.set(from, false);
-                edge.implicitIndex = -1;
-                needToAddEdge = true;
-            }
         }
         if (edge.implicitIndex < 0) {
+            if (tags != oldTags) {
+                graph_[edge.descriptor].tagList = tags;
+            }
+            if (score > oldScore) {
+                graph_[edge.descriptor].score = score;
+            }
             graph_[edge.descriptor].partitions.push_back(Partition(tags, sequence, score, ruleId));
         } else {
             implicitOutEdges_.set(from, false);
