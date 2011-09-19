@@ -82,7 +82,6 @@ AnnotatorFactory& PipeRunner::getAnnotatorFactory_(const PipelineElementSpecific
     return dynamic_cast<AnnotatorFactory&>(getFactory_(elementSpec));
 }
 
-
 void PipeRunner::parseIntoPipelineSpecification_(
     std::vector<std::string> args, bool isTheFirstArgProgramName) {
 
