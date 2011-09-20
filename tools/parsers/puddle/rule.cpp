@@ -193,7 +193,7 @@ int Rule::matchPattern(std::string &sentenceString, int matchNumber,
         }
         }
         catch (std::exception &e) {
-            std::cerr << "jakis wyjatek zlapalem: " << e.what() << std::endl;
+            std::cerr << "Exception in puddle: " << e.what() << std::endl;
             delete[] matchedS;
             for (int argIt = 0; argIt < num_groups; argIt ++)
                 delete matched[argIt];

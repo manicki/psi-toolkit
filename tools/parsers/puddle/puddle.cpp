@@ -160,7 +160,9 @@ Puddle::Puddle(TagsetPtr tagset_, RulesPtr rules_) {//,
     ruleModifier = new RuleModifier;
 
     this->tagset = tagset_;
+#if _WITH_BONSAI_PARSEGRAPH
     describe = tagset_->containsDesc();
+#endif
     ruleMatcher->setTagset(tagset_);
 
     this->rules = rules_;
@@ -193,7 +195,9 @@ void Puddle::setTagset(bonsai::puddle::TagsetPtr tagset_)
         return;
     }
     this->tagset = tagset_;
+#if _WITH_BONSAI_PARSEGRAPH
     describe = tagset_->containsDesc();
+#endif
     //tagset->writeToFile(tagsetLogFilename);
 //    ruleCompiler->setTagset(tagset);
 //    newtagger->setTagset(tagset);

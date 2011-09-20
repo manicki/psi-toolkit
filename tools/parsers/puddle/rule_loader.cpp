@@ -2944,11 +2944,9 @@ bool RuleLoader::compileAddInterpretation(std::string &pattern,
 
     for (std::vector<std::string>::iterator m = morphologies.begin();
             m != morphologies.end(); ++ m) {
-        std::string mapped = tagset->mapMorphology(*m);
-        if (mapped != "") {
+        if (tagset->checkMorphology(*m)) {
             interpretations.push_back(*m);
         } else {
-            //empty mapped string means the morphology is not valid.
             std::cerr << "Morphology not valid: " << *m << std::endl;
             return false;
         }

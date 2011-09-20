@@ -4,6 +4,7 @@
 #include <string>
 #include <map>
 #include <vector>
+#include <set>
 
 #include <boost/shared_ptr.hpp>
 #include "puddle_types.hpp"
@@ -34,32 +35,26 @@ class Tagset
         Tagset();
         Tagset(std::string &filename);
         ~Tagset();
-        //destruktory tez
-        std::string mapMorphology(std::string &morphology);
-        std::string unmapMorphology(std::string &mapped);
-        char mapPos(std::string &pos);
-        std::pair<char, int> mapAttributeValue(std::string &attribute, std::string &value);
+        bool checkMorphology(std::string &morphology);
         int getNumberOfAttributes();
-        std::vector<char> mapPosMatching(std::string &regexp);
-        std::vector<char> mapAttributeValuesMatching(std::string &attribute, std::string &regexp);
         int getAttributeIndex(std::string &attribute);
         size_t size();
         std::string getAttributeAtIndex(std::string &pos, int index);
         std::vector<std::string> getAttributeValues(std::string &attribute);
 
+#if _WITH_BONSAI_PARSEGRAPH
         void readDescFromFile(std::string &filename);
         bool containsDesc();
         bool desc_terminals;
         bool desc_nonterminals;
-//        bool desc_include_pos;
         std::vector<int> desc_order;
         std::string desc_separator;
         std::vector<std::string> getGroupDesc(std::string group);
         std::vector<std::string> getTokenDesc(std::string pos);
+#endif
         std::map<std::string, std::string> getAttributes(std::string morphologyString, bool buffer = false);
 
         std::vector<std::string> getOpenClasses() const;
-        std::vector<std::string> getMappedMorphologies(std::string mapped_pos);
 
         std::vector<std::string> getPosMatching(std::string regexp);
         std::vector<std::string> getPosNotMatching(std::string regexp);
@@ -73,23 +68,25 @@ class Tagset
 
     private:
 
+        void parseAttribute(std::string &attribute, std::string &valuesString);
+        void parsePartOfSpeech(std::string &partOfSpeech,
+                std::string &attributesString);
+        void parseOpenClasses(std::string &openClassesString);
+        void generateProperMorphologyLabels();
+
         std::vector<std::string> attrList;
         std::map<std::string, std::vector<std::string> > attributes;
-        std::map<std::string, std::map<std::string, char> > attrMappings;
-        std::map<std::string, std::vector<std::string> > POSs;
-        std::map<std::string, char> posMappings;
+        std::map<std::string, std::vector<std::string> > partsOfSpeech;
 
-        std::map<std::string, std::string> morphologyMappings;
-
+#if _WITH_BONSAI_PARSEGRAPH
         std::map<std::string, std::vector<std::string> > token_description;
         std::map<std::string, std::vector<std::string> > group_description;
+#endif
 
         std::map<std::string, std::map<std::string, std::string> > attributes_buffer;
-        std::map<std::string, std::vector<std::string> > mapped_morphologies_by_pos; // zawiera wszystkie morfologie danej czesci mowy w postaci 'nieczytelnej'
+        std::set<std::string> properMorphologyLabels;
 
         std::vector<std::string> open_classes;
-
-//        bool verbose;
 };
 
 typedef boost::shared_ptr<Tagset> TagsetPtr;

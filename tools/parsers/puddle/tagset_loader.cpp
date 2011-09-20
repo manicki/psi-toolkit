@@ -24,6 +24,7 @@ namespace puddle
         return tagset;
     }
 
+#if _WITH_BONSAI_PARSEGRAPH
     TagsetPtr TagsetLoader::load(std::string filename, std::string desc_filename)
     {
         TagsetPtr tagset = TagsetPtr(new Tagset());
@@ -31,6 +32,7 @@ namespace puddle
         tagset->readDescFromFile(desc_filename);
         return tagset;
     }
+#endif
 
 }
 
