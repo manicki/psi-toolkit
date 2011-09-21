@@ -33,6 +33,7 @@ struct PsiLRItem {
     int length;
     std::string text;
     std::string tags;
+    std::string annotationText;
     std::string annotationItem;
 
     void unescape(Quoter & quoter) {
@@ -53,6 +54,7 @@ BOOST_FUSION_ADAPT_STRUCT(
     (int, length)
     (std::string, text)
     (std::string, tags)
+    (std::string, annotationText)
     (std::string, annotationItem)
 )
 
@@ -75,6 +77,7 @@ struct PsiLRGrammar : public qi::grammar<std::string::const_iterator, PsiLRItem(
             >> whitespaces
             >> +(qi::char_ - ' ')
             >> whitespaces
+            >> -(+(qi::char_ - ' ') >> whitespaces)
             >> +(qi::char_ - ' ')
             ;
 

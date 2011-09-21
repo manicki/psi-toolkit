@@ -27,9 +27,15 @@ void PsiLatticeReader::Worker::doRun() {
 
             item.unescape(quoter);
 
-DEBUG("Reading line " << item.ordinal
-    << " " << (item.beginningLoose?"(@)":"( )")
-    << " " << (item.lengthPoint?"(*)":"( )") << (item.lengthLoose?"(@)":"( )"));
+DEBUG("Reading line " << ((item.ordinal < 10)?" ":"") << item.ordinal
+    << "|" << (item.beginningLoose?"@":" ")
+    << "|" << (item.lengthPoint?"*":" ") << (item.lengthLoose?"@":" ")
+    << "|" << item.annotationText
+    << "|");
+
+        // } else {
+
+// DEBUG("Line '" << line.substr(0,8) << "' not parsed. " << ((begin==line.begin())?"At all.":"A bit."));
 
         }
     }
