@@ -29,7 +29,6 @@ struct PsiLRItem {
     std::string text;
     std::string tags;
     std::string annotationItem;
-    std::string unused;
 
     void unescape(Quoter & quoter) {
         text = quoter.unescape(text);
@@ -42,15 +41,10 @@ struct PsiLRItem {
 BOOST_FUSION_ADAPT_STRUCT(
     PsiLRItem,
     (int, ordinal)
-    // (std::string, unused) // strange error in spirit if there are to many string fields
     (int, beginning)
-    (std::string, unused)
     (int, length)
-    (std::string, unused)
     (std::string, text)
-    (std::string, unused)
     (std::string, tags)
-    (std::string, unused)
     (std::string, annotationItem)
 )
 
@@ -61,15 +55,15 @@ struct PsiLRGrammar : public qi::grammar<std::string::const_iterator, PsiLRItem(
 
         start
             %= qi::int_
-            >> ' ' //TODO
+            >> +(qi::lit(' '))
             >> qi::int_
-            >> +(qi::space)
+            >> +(qi::lit(' '))
             >> qi::int_
-            >> +(qi::space)
+            >> +(qi::lit(' '))
             >> +(qi::char_ - ' ')
-            >> +(qi::space)
+            >> +(qi::lit(' '))
             >> +(qi::char_ - ' ')
-            >> +(qi::space)
+            >> +(qi::lit(' '))
             >> +(qi::char_ - ' ')
             ;
 
