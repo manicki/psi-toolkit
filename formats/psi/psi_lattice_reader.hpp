@@ -199,6 +199,53 @@ struct PsiLRAVPairGrammar : public qi::grammar<
 };
 
 
+struct PsiLRPartitionsItem {
+    bool open;
+    std::vector<std::string> partitions;
+    bool close;
+};
+
+
+BOOST_FUSION_ADAPT_STRUCT(
+    PsiLRPartitionsItem,
+    (bool, open)
+    (std::vector<std::string>, partitions)
+    (bool, close)
+)
+
+
+struct PsiLRPartitionsGrammar : public qi::grammar<
+    std::string::const_iterator,
+    PsiLRPartitionsItem()
+> {
+
+    PsiLRPartitionsGrammar() : PsiLRPartitionsGrammar::base_type(start) {
+
+        start
+            %= openBracket
+            >> +(qi::char_ - ',') % ','
+            >> closeBracket
+            ;
+
+        openBracket
+            = qi::eps[qi::_val = false]
+            >> -(qi::lit("[")[qi::_val = true])
+            ;
+
+        closeBracket
+            = qi::eps[qi::_val = false]
+            >> -(qi::lit("]")[qi::_val = true])
+            ;
+
+    }
+
+    qi::rule<std::string::const_iterator, PsiLRPartitionsItem()> start;
+    qi::rule<std::string::const_iterator, bool()> openBracket;
+    qi::rule<std::string::const_iterator, bool()> closeBracket;
+
+};
+
+
 class PsiLatticeReader : public LatticeReader {
 
 public:

@@ -37,12 +37,12 @@ tagsSs << "+";
 tagsSs << tag;
 }
 
-DEBUG("+|" << ((item.ordinal < 10)?" ":"") << item.ordinal
-    << "|" << item.annotationItem.category << "|\t"
-    << "|" << item.annotationItem.score << "|\t"
-    << "|" << item.annotationItem.avVector << "|\t"
-    << "|" << item.annotationItem.partitions
-    << "|");
+// DEBUG("+|" << ((item.ordinal < 10)?" ":"") << item.ordinal
+    // << "|" << item.annotationItem.category << "|\t"
+    // << "|" << item.annotationItem.score << "|\t"
+    // << "|" << item.annotationItem.avVector << "|\t"
+    // << "|" << item.annotationItem.partitions
+    // << "|");
 
             std::vector<std::string> avItem;
             std::string::const_iterator avBegin = item.annotationItem.avVector.begin();
@@ -54,20 +54,21 @@ DEBUG("+|" << ((item.ordinal < 10)?" ":"") << item.ordinal
                     std::string::const_iterator avPairBegin = av.begin();
                     std::string::const_iterator avPairEnd = av.end();
                     if (parse(avPairBegin, avPairEnd, avPairGrammar, avPairItem)) {
-DEBUG("\t" << avPairItem.arg);
-DEBUG("\t\t" << avPairItem.val);
+
+// DEBUG("\t" << avPairItem.arg);
+// DEBUG("\t\t" << avPairItem.val);
+
                     }
                 }
 
-            } else {
-
-DEBUG("AV FAIL " << item.annotationItem.avVector);
+            // } else {
+// DEBUG("AV FAIL " << item.annotationItem.avVector);
 
             }
 
-        } else {
-if (!line.empty() && line[0] != '#')
-DEBUG("-|" << line.substr(0,2) << "|--------");
+        // } else {
+// if (!line.empty() && line[0] != '#')
+// DEBUG("-|" << line.substr(0,2) << "|--------");
 
         }
     }
