@@ -68,7 +68,7 @@ struct PsiLRGrammar : public qi::grammar<std::string::const_iterator, PsiLRItem(
             ;
 
         whitespaces
-            %= +(qi::lit(' ') | qi::lit('\t'))
+            %= +(qi::lit(' ') | qi::lit('\t') | qi::lit('\v') | qi::lit('\f') | qi::lit('\r'))
             ;
 
     }
