@@ -180,6 +180,14 @@ BOOST_AUTO_TEST_CASE( psi_lattice_reader ) {
     reader->readIntoLattice(ROOT_DIR "formats/psi/t/files/pl_sample.txt", lattice);
 }
 
+BOOST_AUTO_TEST_CASE( psi_lattice_reader_2 ) {
+    Lattice lattice("");
+
+    boost::scoped_ptr<LatticeReader> reader(new PsiLatticeReader());
+
+    reader->readIntoLattice(ROOT_DIR "formats/psi/t/files/pl_sample_nocomments.txt", lattice);
+}
+
 BOOST_AUTO_TEST_CASE( simple_lattice_writer ) {
 
     Lattice lattice;

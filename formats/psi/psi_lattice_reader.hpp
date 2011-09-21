@@ -6,6 +6,7 @@
 // Boost 1.47.0 at Arch Linux)
 #include <boost/property_tree/ptree.hpp>
 
+#include <boost/foreach.hpp>
 #include <boost/fusion/include/adapt_struct.hpp>
 #include <boost/fusion/include/io.hpp>
 #include <boost/lambda/lambda.hpp>
@@ -18,23 +19,53 @@
 #include "quoter.hpp"
 #include "psi_quoter.hpp"
 
+#include "logging.hpp"
 
-using namespace boost::spirit;
+
+namespace qi = boost::spirit::qi;
+
+
+struct PsiLRAnnotation {
+    std::string category;
+    double score;
+    std::string avVector;
+    std::string partitions;
+
+    void unescape(Quoter & quoter) {
+        category = quoter.unescape(category);
+        avVector = quoter.unescape(avVector);
+        partitions = quoter.unescape(partitions);
+    }
+};
+
+
+BOOST_FUSION_ADAPT_STRUCT(
+    PsiLRAnnotation,
+    (std::string, category)
+    (double, score)
+    (std::string, avVector)
+    (std::string, partitions)
+)
 
 
 struct PsiLRItem {
     int ordinal;
+    bool beginningLoose;
     int beginning;
+    bool lengthPoint;
+    bool lengthLoose;
     int length;
     std::string text;
-    std::string tags;
-    std::string annotationItem;
-    std::string unused;
+    std::vector<std::string> tags;
+    std::string annotationText;
+    PsiLRAnnotation annotationItem;
 
     void unescape(Quoter & quoter) {
         text = quoter.unescape(text);
-        tags = quoter.unescape(tags);
-        annotationItem = quoter.unescape(annotationItem);
+        BOOST_FOREACH(std::string tag, tags) {
+            tag = quoter.unescape(tag);
+        }
+        annotationItem.unescape(quoter);
     }
 };
 
@@ -42,16 +73,15 @@ struct PsiLRItem {
 BOOST_FUSION_ADAPT_STRUCT(
     PsiLRItem,
     (int, ordinal)
-    // (std::string, unused) // strange error in spirit if there are to many string fields
+    (bool, beginningLoose)
     (int, beginning)
-    (std::string, unused)
+    (bool, lengthPoint)
+    (bool, lengthLoose)
     (int, length)
-    (std::string, unused)
     (std::string, text)
-    (std::string, unused)
-    (std::string, tags)
-    (std::string, unused)
-    (std::string, annotationItem)
+    (std::vector<std::string>, tags)
+    (std::string, annotationText)
+    (PsiLRAnnotation, annotationItem)
 )
 
 
@@ -61,21 +91,157 @@ struct PsiLRGrammar : public qi::grammar<std::string::const_iterator, PsiLRItem(
 
         start
             %= qi::int_
-            >> ' ' //TODO
+            >> whitespaces
+            >> loose
             >> qi::int_
-            >> +(qi::space)
+            >> whitespaces
+            >> point
+            >> loose
             >> qi::int_
-            >> +(qi::space)
+            >> whitespaces
             >> +(qi::char_ - ' ')
-            >> +(qi::space)
-            >> +(qi::char_ - ' ')
-            >> +(qi::space)
-            >> +(qi::char_ - ' ')
+            >> whitespaces
+            >> tags
+            >> whitespaces
+            >> -(+(qi::char_ - ' ') >> whitespaces)
+            >> annotation
+            ;
+
+        whitespaces = +(qi::space);
+
+        loose
+            = qi::eps[qi::_val = false]
+            >> -(qi::lit("@")[qi::_val = true])
+            ;
+
+        point
+            = qi::eps[qi::_val = false]
+            >> -(qi::lit("*")[qi::_val = true])
+            ;
+
+        tags
+            %= +(qi::char_ - ' ' - ',') % ','
+            ;
+
+        annotation
+            %= +(qi::char_ - ' ' - ',' - '[' - '<')                         //category
+            >> score                                                        //score
+            >> -(',' >> +(qi::char_ - '['))                                 //av
+            >> -(qi::char_("[") >> *(qi::char_ - ']') >> qi::char_("]"))    //partitions
+            ;
+
+        score
+            = qi::eps[qi::_val = 0.0]
+            >> -('<' >> qi::double_[qi::_val = qi::_1] >> '>')
             ;
 
     }
 
     qi::rule<std::string::const_iterator, PsiLRItem()> start;
+    qi::rule<std::string::const_iterator, qi::unused_type()> whitespaces;
+    qi::rule<std::string::const_iterator, bool()> loose;
+    qi::rule<std::string::const_iterator, bool()> point;
+    qi::rule<std::string::const_iterator, std::vector<std::string>()> tags;
+    qi::rule<std::string::const_iterator, PsiLRAnnotation()> annotation;
+    qi::rule<std::string::const_iterator, double()> score;
+
+};
+
+
+struct PsiLRAVGrammar : public qi::grammar<
+    std::string::const_iterator,
+    std::vector<std::string>()
+> {
+
+    PsiLRAVGrammar() : PsiLRAVGrammar::base_type(start) {
+
+        start
+            %= +(qi::char_ - ',') % ','
+            ;
+
+    }
+
+    qi::rule<std::string::const_iterator, std::vector<std::string>()> start;
+
+};
+
+
+struct PsiLRAVPairItem {
+    std::string arg;
+    std::string val;
+};
+
+
+BOOST_FUSION_ADAPT_STRUCT(
+    PsiLRAVPairItem,
+    (std::string, arg)
+    (std::string, val)
+)
+
+
+struct PsiLRAVPairGrammar : public qi::grammar<
+    std::string::const_iterator,
+    PsiLRAVPairItem()
+> {
+
+    PsiLRAVPairGrammar() : PsiLRAVPairGrammar::base_type(start) {
+
+        start
+            %= +(qi::char_ - ',' - '=')
+            >> '='
+            >> +(qi::char_ - ',' - '=')
+            ;
+
+    }
+
+    qi::rule<std::string::const_iterator, PsiLRAVPairItem()> start;
+
+};
+
+
+struct PsiLRPartitionsItem {
+    bool open;
+    std::vector<std::string> partitions;
+    bool close;
+};
+
+
+BOOST_FUSION_ADAPT_STRUCT(
+    PsiLRPartitionsItem,
+    (bool, open)
+    (std::vector<std::string>, partitions)
+    (bool, close)
+)
+
+
+struct PsiLRPartitionsGrammar : public qi::grammar<
+    std::string::const_iterator,
+    PsiLRPartitionsItem()
+> {
+
+    PsiLRPartitionsGrammar() : PsiLRPartitionsGrammar::base_type(start) {
+
+        start
+            %= openBracket
+            >> +(qi::char_ - ',') % ','
+            >> closeBracket
+            ;
+
+        openBracket
+            = qi::eps[qi::_val = false]
+            >> -(qi::lit("[")[qi::_val = true])
+            ;
+
+        closeBracket
+            = qi::eps[qi::_val = false]
+            >> -(qi::lit("]")[qi::_val = true])
+            ;
+
+    }
+
+    qi::rule<std::string::const_iterator, PsiLRPartitionsItem()> start;
+    qi::rule<std::string::const_iterator, bool()> openBracket;
+    qi::rule<std::string::const_iterator, bool()> closeBracket;
 
 };
 

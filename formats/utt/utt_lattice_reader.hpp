@@ -20,7 +20,7 @@
 #include "utt_quoter.hpp"
 
 
-using namespace boost::spirit;
+namespace qi = boost::spirit::qi;
 
 
 struct UTTLRItem {
