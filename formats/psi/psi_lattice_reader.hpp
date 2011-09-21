@@ -153,12 +153,6 @@ struct PsiLRGrammar : public qi::grammar<std::string::const_iterator, PsiLRItem(
 };
 
 
-struct PsiLRAVPair {
-    std::string arg;
-    std::string val;
-};
-
-
 struct PsiLRAVGrammar : public qi::grammar<
     std::string::const_iterator,
     std::vector<std::string>()
@@ -173,6 +167,39 @@ struct PsiLRAVGrammar : public qi::grammar<
     }
 
     qi::rule<std::string::const_iterator, std::vector<std::string>()> start;
+
+};
+
+
+struct PsiLRAVPair {
+    std::string arg;
+    std::string val;
+};
+
+
+BOOST_FUSION_ADAPT_STRUCT(
+    PsiLRAVPair,
+    (std::string, arg)
+    (std::string, val)
+)
+
+
+struct PsiLRAVSplitterGrammar : public qi::grammar<
+    std::string::const_iterator,
+    PsiLRAVPair()
+> {
+
+    PsiLRAVSplitterGrammar() : PsiLRAVSplitterGrammar::base_type(start) {
+
+        start
+            %= +(qi::char_ - ',' - '=')
+            >> '='
+            >> +(qi::char_ - ',' - '=')
+            ;
+
+    }
+
+    qi::rule<std::string::const_iterator, PsiLRAVPair()> start;
 
 };
 
