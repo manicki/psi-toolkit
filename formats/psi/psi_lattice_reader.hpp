@@ -26,7 +26,10 @@ namespace qi = boost::spirit::qi;
 
 struct PsiLRItem {
     int ordinal;
+    bool beginningLoose;
     int beginning;
+    bool lengthPoint;
+    bool lengthLoose;
     int length;
     std::string text;
     std::string tags;
@@ -43,7 +46,10 @@ struct PsiLRItem {
 BOOST_FUSION_ADAPT_STRUCT(
     PsiLRItem,
     (int, ordinal)
+    (bool, beginningLoose)
     (int, beginning)
+    (bool, lengthPoint)
+    (bool, lengthLoose)
     (int, length)
     (std::string, text)
     (std::string, tags)
@@ -58,8 +64,11 @@ struct PsiLRGrammar : public qi::grammar<std::string::const_iterator, PsiLRItem(
         start
             %= qi::int_
             >> whitespaces
+            >> loose
             >> qi::int_
             >> whitespaces
+            >> point
+            >> loose
             >> qi::int_
             >> whitespaces
             >> +(qi::char_ - ' ')
@@ -71,10 +80,22 @@ struct PsiLRGrammar : public qi::grammar<std::string::const_iterator, PsiLRItem(
 
         whitespaces = +(qi::space);
 
+        loose
+            = qi::eps[qi::_val = false]
+            >> -(qi::lit("@")[qi::_val = true])
+            ;
+
+        point
+            = qi::eps[qi::_val = false]
+            >> -(qi::lit("*")[qi::_val = true])
+            ;
+
     }
 
     qi::rule<std::string::const_iterator, PsiLRItem()> start;
     qi::rule<std::string::const_iterator, qi::unused_type()> whitespaces;
+    qi::rule<std::string::const_iterator, bool()> loose;
+    qi::rule<std::string::const_iterator, bool()> point;
 
 };
 
