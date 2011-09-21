@@ -3,4 +3,5 @@
 03 0004 02    ma           token                 ma          T
 04 0006 01    _            token                 _           B
 05 0007 04    kota         token                 kota        T
-06 0011 01    .            token                 .           I
+06 0000 12    Ala_ma_kota. text,txt-reader       Ala_ma_kota. TEXT[]
+07 0011 01    .            token                 .           I
