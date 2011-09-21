@@ -6,7 +6,9 @@
 
 std::string Morfologik::tagSeparator = "+";
 
-Morfologik::Morfologik(const boost::program_options::variables_map& options) {
+Morfologik::Morfologik(const boost::program_options::variables_map& options) 
+    : annotationManager(NULL)
+{
 	jenv = NULL;
 	level = 3;
 

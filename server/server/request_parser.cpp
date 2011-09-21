@@ -10,7 +10,7 @@ namespace http {
 namespace server3 {
 
 request_parser::request_parser()
-  : state_(method_start)
+  : state_(method_start), post_data_length_(0), post_data_length_counter_(0)
 {
 }
 

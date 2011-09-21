@@ -1,9 +1,10 @@
 /* General */
 
 html, body { height: 100%; }
-body { background: url("/img/bg-gradient.jpg") repeat-x #FFFFFF; border-top: 0 solid #222222; }
+body { background: url("/img/bg-gradient.jpg") repeat-x #FFFFFF; }
 
-#wrapper { width: 980px; margin: 0 auto -72px; min-height: 100%; height: auto !important; height: 100%; }
+#wrapper { width: 980px; margin: 0 auto -100px; min-height: 100%; }
+#content { overflow:auto; padding-bottom: 120px; }
 p { padding: 5px 0; }
 
 /* Header */
@@ -24,5 +25,5 @@ pre { border-width: 1px; border-style: solid; padding: 8px; font-family: monospa
 
 /* Footer */
 
-#footer { padding: 10px; background-color: #335599; height: 50px; }
+#footer { background-color: #335599; height: 100px; }
 #footer #wrapper { }
