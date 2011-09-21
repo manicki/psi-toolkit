@@ -29,18 +29,12 @@ struct PsiLRAnnotation {
     std::string category;
     double score;
     std::string avVector;
-    // std::vector<std::string> avVector;
-    // std::vector< std::vector<std::string> > avVector;
-    // std::vector<int> partition;
-    std::string rest;
+    std::string partition;
 
     void unescape(Quoter & quoter) {
         category = quoter.unescape(category);
-        // BOOST_FOREACH(std::vector<std::string> avPair, avVector) {
-            // BOOST_FOREACH(std::string av, avPair) {
-                // av = quoter.unescape(av);
-            // }
-        // }
+        avVector = quoter.unescape(avVector);
+        partition = quoter.unescape(partition);
     }
 };
 
@@ -50,10 +44,7 @@ BOOST_FUSION_ADAPT_STRUCT(
     (std::string, category)
     (double, score)
     (std::string, avVector)
-    // (std::vector<std::string> avVector)
-    // (std::vector< std::vector<std::string> >, avVector)
-    // (std::vector<int>, partition)
-    (std::string, rest)
+    (std::string, partition)
 )
 
 
@@ -135,13 +126,17 @@ struct PsiLRGrammar : public qi::grammar<std::string::const_iterator, PsiLRItem(
         annotation
             %= +(qi::char_ - ' ' - ',' - '[' - '<')
             >> score
-            >> *(qi::char_ - '[')
+            >> avVector
             >> partition
             ;
 
         score
             = qi::eps[qi::_val = 0.0]
             >> -('<' >> qi::double_[qi::_val = qi::_1] >> '>')
+            ;
+
+        avVector
+            %= *(qi::char_ - '[')
             ;
 
         partition
@@ -157,6 +152,7 @@ struct PsiLRGrammar : public qi::grammar<std::string::const_iterator, PsiLRItem(
     qi::rule<std::string::const_iterator, std::vector<std::string>()> tags;
     qi::rule<std::string::const_iterator, PsiLRAnnotation()> annotation;
     qi::rule<std::string::const_iterator, double()> score;
+    qi::rule<std::string::const_iterator, std::string()> avVector;
     qi::rule<std::string::const_iterator, std::string()> partition;
 
 };
