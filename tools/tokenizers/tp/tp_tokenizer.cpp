@@ -152,10 +152,11 @@ void TpTokenizer::Worker::doRun() {
     DEBUG("starting tp tokenizer...");
 
     LayerTagMask symbolMask = lattice_.getLayerTagManager().getMask("symbol");
+    LayerTagMask textMask = lattice_.getLayerTagManager().getMask("text");
 
     TpTokenCutter tokenCutter(*dynamic_cast<TpTokenizer&>(processor_).ruleSet_.get());
 
-    lattice_.runCutter(tokenCutter, symbolMask);
+    lattice_.runCutter(tokenCutter, symbolMask, textMask);
 }
 
 std::string TpTokenizer::doInfo() {

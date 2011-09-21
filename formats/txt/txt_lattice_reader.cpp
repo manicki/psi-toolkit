@@ -2,6 +2,8 @@
 
 #include "logging.hpp"
 
+#include <boost/assign/list_of.hpp>
+
 std::string TxtLatticeReader::getFormatName() {
     return "TXT";
 }
@@ -40,7 +42,10 @@ std::string TxtLatticeReader::Factory::doGetName() {
 TxtLatticeReader::Worker::Worker(TxtLatticeReader& processor,
                                  std::istream& inputStream,
                                  Lattice& lattice):
-    ReaderWorker(inputStream, lattice), processor_(processor) {
+    ReaderWorker(inputStream, lattice),
+    processor_(processor),
+    textTags_(lattice_.getLayerTagManager().createTagCollectionFromList(
+                  boost::assign::list_of("text")("txt-reader"))) {
 }
 
 void TxtLatticeReader::Worker::doRun() {
@@ -54,5 +59,12 @@ void TxtLatticeReader::Worker::doRun() {
 }
 
 void TxtLatticeReader::Worker::appendParagraphToLattice_(std::string paragraph) {
+    Lattice::VertexDescriptor prevEnd = lattice_.getLastVertex();
     lattice_.appendStringWithSymbols(paragraph);
+    Lattice::VertexDescriptor nowEnd = lattice_.getLastVertex();
+
+    AnnotationItem item("TEXT", paragraph);
+    lattice_.addEdge(prevEnd, nowEnd,
+                     item, textTags_);
+
 }

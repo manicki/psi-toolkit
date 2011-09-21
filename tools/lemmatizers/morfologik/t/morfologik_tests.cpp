@@ -51,12 +51,20 @@ BOOST_AUTO_TEST_CASE( stems ) {
 BOOST_AUTO_TEST_CASE( lexeme_level ) {
 
     Lattice lattice;
-    lattice.appendStringWithSymbols("prowokacjami");
+    std::string paragraph = "prowokacjami";
+    lattice.appendStringWithSymbols(paragraph);
 
     BySpacesCutter cutter;
     LayerTagMask symbolMask = lattice.getLayerTagManager().getMask("symbol");
+    LayerTagMask textMask = lattice.getLayerTagManager().getMask("text");
 
-    lattice.runCutter(cutter, symbolMask);
+    LayerTagCollection textTags(
+        lattice.getLayerTagManager().createSingletonTagCollection("text"));
+    AnnotationItem item("TEXT", paragraph);
+    lattice.addEdge(lattice.getFirstVertex(), lattice.getLastVertex(),
+                    item, textTags);
+
+    lattice.runCutter(cutter, symbolMask, textMask);
 
     boost::program_options::variables_map noOptions;
     LemmatizerAnnotator<Morfologik> annotator(noOptions);
@@ -123,12 +131,20 @@ BOOST_AUTO_TEST_CASE( lexeme_level ) {
 BOOST_AUTO_TEST_CASE( many_lexemes ) {
 
     Lattice lattice;
-    lattice.appendStringWithSymbols("mam");
+    std::string paragraph = "mam";
+    lattice.appendStringWithSymbols(paragraph);
 
     BySpacesCutter cutter;
     LayerTagMask symbolMask = lattice.getLayerTagManager().getMask("symbol");
+    LayerTagMask textMask = lattice.getLayerTagManager().getMask("text");
 
-    lattice.runCutter(cutter, symbolMask);
+    LayerTagCollection textTags(
+        lattice.getLayerTagManager().createSingletonTagCollection("text"));
+    AnnotationItem item("TEXT", paragraph);
+    lattice.addEdge(lattice.getFirstVertex(), lattice.getLastVertex(),
+                    item, textTags);
+
+    lattice.runCutter(cutter, symbolMask, textMask);
 
     boost::program_options::variables_map noOptions;
     LemmatizerAnnotator<Morfologik> annotator(noOptions);

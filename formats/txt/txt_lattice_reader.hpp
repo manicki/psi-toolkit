@@ -38,6 +38,8 @@ private:
         void appendParagraphToLattice_(std::string paragraph);
 
         Processor& processor_;
+
+        LayerTagCollection textTags_;
     };
 
     virtual ReaderWorker* doCreateReaderWorker(std::istream& inputStream, Lattice& lattice) {

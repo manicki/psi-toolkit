@@ -406,7 +406,7 @@ public:
     const std::string getAnnotationText(EdgeDescriptor edge);
     const std::string getAnnotationCategory(EdgeDescriptor edge);
 
-    void runCutter(Cutter& cutter, LayerTagMask mask);
+    void runCutter(Cutter& cutter, LayerTagMask mask, LayerTagMask superMask);
 
     /**
      * Get a path starting with `vertex` composed of edges matching `mask`.
@@ -483,6 +483,8 @@ private:
     VertexDescriptor lastSequenceVertex_(const EdgeSequence& sequence) const;
     VertexDescriptor firstPartitionVertex_(const Partition& partition) const;
     VertexDescriptor lastPartitionVertex_(const Partition& partition) const;
+
+    void runCutterOnEdge_(Cutter& cutter, EdgeDescriptor edge, LayerTagMask mask);
 
     EdgeSequence cutSequenceByTextLength_(const EdgeSequence& partition,
                                           EdgeSequence::Iterator& sequenceIterator,

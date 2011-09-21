@@ -489,39 +489,14 @@ const std::string Lattice::getAnnotationCategory(EdgeDescriptor edge) {
     return getEdgeAnnotationItem(edge).getCategory();
 }
 
+void Lattice::runCutter(Cutter& cutter, LayerTagMask mask, LayerTagMask superMask) {
+    EdgesSortedBySourceIterator edgeIter(*this, superMask);
 
-void Lattice::runCutter(Cutter& cutter, LayerTagMask mask) {
-    VertexDescriptor vertex = getFirstVertex();
-
-    EdgeSequence sequence = getPath(vertex, mask);
-
-    if (sequence.empty())
-        return;
-
-    std::string text = getSequenceText(sequence);
-
-    size_t pos = 0;
-    EdgeSequence::Iterator sequenceIter = sequence.begin();
-
-    LayerTagCollection tags = layerTagManager_.createTagCollection(cutter.layerTags());
-
-    do {
-        size_t prevPos = pos;
-
-        AnnotationItem item = cutter.cutOff(text, pos);
-
-        int itemLength = (pos == std::string::npos ? text.length() : pos) - prevPos;
-
-        EdgeSequence itemSequence = cutSequenceByTextLength_(sequence, sequenceIter, itemLength);
-
-        addEdge(firstSequenceVertex_(itemSequence),
-                lastSequenceVertex_(itemSequence),
-                item,
-                tags,
-                itemSequence);
-
-    } while (pos < text.length() && pos != std::string::npos);
+    while (edgeIter.hasNext()) {
+        runCutterOnEdge_(cutter, edgeIter.next(), mask);
+    }
 }
+
 
 Lattice::EdgeSequence Lattice::getPath(VertexDescriptor& vertex, LayerTagMask mask) {
     bool nextVertexFound = true;
@@ -788,6 +763,40 @@ Lattice::VertexDescriptor Lattice::firstPartitionVertex_(const Partition& partit
 
 Lattice::VertexDescriptor Lattice::lastPartitionVertex_(const Partition& partition) const {
     return lastSequenceVertex_(partition.getSequence());
+}
+
+void Lattice::runCutterOnEdge_(Cutter& cutter, EdgeDescriptor edge, LayerTagMask mask) {
+
+    VertexDescriptor vertex = getEdgeSource(edge);
+
+    EdgeSequence sequence = getPath(vertex, mask);
+
+    if (sequence.empty())
+        return;
+
+    std::string text = getSequenceText(sequence);
+
+    size_t pos = 0;
+    EdgeSequence::Iterator sequenceIter = sequence.begin();
+
+    LayerTagCollection tags = layerTagManager_.createTagCollection(cutter.layerTags());
+
+    do {
+        size_t prevPos = pos;
+
+        AnnotationItem item = cutter.cutOff(text, pos);
+
+        int itemLength = (pos == std::string::npos ? text.length() : pos) - prevPos;
+
+        EdgeSequence itemSequence = cutSequenceByTextLength_(sequence, sequenceIter, itemLength);
+
+        addEdge(firstSequenceVertex_(itemSequence),
+                lastSequenceVertex_(itemSequence),
+                item,
+                tags,
+                itemSequence);
+
+    } while (pos < text.length() && pos != std::string::npos);
 }
 
 Lattice::EdgeSequence Lattice::cutSequenceByTextLength_(

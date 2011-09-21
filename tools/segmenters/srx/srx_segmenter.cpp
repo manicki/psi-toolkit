@@ -338,10 +338,11 @@ void SrxSegmenter::Worker::doRun() {
     DEBUG("starting srx segmenter...");
 
     LayerTagMask symbolMask = lattice_.getLayerTagManager().getMask("symbol");
+    LayerTagMask textMask = lattice_.getLayerTagManager().getMask("text");
 
     SrxSentenceCutter sentenceCutter(dynamic_cast<SrxSegmenter&>(processor_));
 
-    lattice_.runCutter(sentenceCutter, symbolMask);
+    lattice_.runCutter(sentenceCutter, symbolMask, textMask);
 }
 
 std::string SrxSegmenter::doInfo() {
