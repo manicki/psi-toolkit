@@ -6,6 +6,7 @@
 // Boost 1.47.0 at Arch Linux)
 #include <boost/property_tree/ptree.hpp>
 
+#include <boost/foreach.hpp>
 #include <boost/fusion/include/adapt_struct.hpp>
 #include <boost/fusion/include/io.hpp>
 #include <boost/lambda/lambda.hpp>
@@ -32,13 +33,15 @@ struct PsiLRItem {
     bool lengthLoose;
     int length;
     std::string text;
-    std::string tags;
+    std::vector<std::string> tags;
     std::string annotationText;
     std::string annotationItem;
 
     void unescape(Quoter & quoter) {
         text = quoter.unescape(text);
-        tags = quoter.unescape(tags);
+        BOOST_FOREACH(std::string tag, tags) {
+            tag = quoter.unescape(tag);
+        }
         annotationItem = quoter.unescape(annotationItem);
     }
 };
@@ -53,7 +56,7 @@ BOOST_FUSION_ADAPT_STRUCT(
     (bool, lengthLoose)
     (int, length)
     (std::string, text)
-    (std::string, tags)
+    (std::vector<std::string>, tags)
     (std::string, annotationText)
     (std::string, annotationItem)
 )
@@ -75,7 +78,7 @@ struct PsiLRGrammar : public qi::grammar<std::string::const_iterator, PsiLRItem(
             >> whitespaces
             >> +(qi::char_ - ' ')
             >> whitespaces
-            >> +(qi::char_ - ' ')
+            >> tags
             >> whitespaces
             >> -(+(qi::char_ - ' ') >> whitespaces)
             >> +(qi::char_ - ' ')
@@ -93,12 +96,17 @@ struct PsiLRGrammar : public qi::grammar<std::string::const_iterator, PsiLRItem(
             >> -(qi::lit("*")[qi::_val = true])
             ;
 
+        tags
+            %= +(qi::char_ - ' ' - ',') % ','
+            ;
+
     }
 
     qi::rule<std::string::const_iterator, PsiLRItem()> start;
     qi::rule<std::string::const_iterator, qi::unused_type()> whitespaces;
     qi::rule<std::string::const_iterator, bool()> loose;
     qi::rule<std::string::const_iterator, bool()> point;
+    qi::rule<std::string::const_iterator, std::vector<std::string>()> tags;
 
 };
 
