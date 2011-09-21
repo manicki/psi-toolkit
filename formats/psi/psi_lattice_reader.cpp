@@ -42,6 +42,7 @@ DEBUG("+|" << ((item.ordinal < 10)?" ":"") << item.ordinal
     // << "|" << item.annotationText
     << "|" << item.annotationItem.category << "|\t"
     << "|" << item.annotationItem.score << "|\t"
+    << "|" << item.annotationItem.avVector << "|\t"
     << "|" << item.annotationItem.rest
     << "|");
 
