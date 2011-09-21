@@ -25,6 +25,32 @@
 namespace qi = boost::spirit::qi;
 
 
+struct PsiLRAnnotation {
+    std::string category;
+    double score;
+    std::vector< std::vector<std::string> > avVector;
+    std::vector<int> partition;
+
+    void unescape(Quoter & quoter) {
+        category = quoter.unescape(category);
+        BOOST_FOREACH(std::vector<std::string> avPair, avVector) {
+            BOOST_FOREACH(std::string av, avPair) {
+                av = quoter.unescape(av);
+            }
+        }
+    }
+};
+
+
+BOOST_FUSION_ADAPT_STRUCT(
+    PsiLRAnnotation,
+    (std::string, category)
+    (double, score)
+    (std::vector< std::vector<std::string> >, avVector)
+    (std::vector<int>, partition)
+)
+
+
 struct PsiLRItem {
     int ordinal;
     bool beginningLoose;
@@ -42,7 +68,7 @@ struct PsiLRItem {
         BOOST_FOREACH(std::string tag, tags) {
             tag = quoter.unescape(tag);
         }
-        annotationItem = quoter.unescape(annotationItem);
+        // annotationItem.unescape(quoter);
     }
 };
 

@@ -27,13 +27,13 @@ void PsiLatticeReader::Worker::doRun() {
 
             item.unescape(quoter);
 
-            std::stringstream tagsSs;
-            BOOST_FOREACH(std::string tag, item.tags) {
-                if (!tagsSs.str().empty()) {
-                    tagsSs << "+";
-                }
-                tagsSs << tag;
-            }
+std::stringstream tagsSs;
+BOOST_FOREACH(std::string tag, item.tags) {
+if (!tagsSs.str().empty()) {
+tagsSs << "+";
+}
+tagsSs << tag;
+}
 
 DEBUG("Reading line " << ((item.ordinal < 10)?" ":"") << item.ordinal
     << "|" << (item.beginningLoose?"@":" ")
