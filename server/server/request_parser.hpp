@@ -87,7 +87,6 @@ private:
   void set_post_data_length(request& req);
   int post_data_length_;
   int post_data_length_counter_;
-  bool all_post_data();
 
 };
 

@@ -7,19 +7,19 @@
 
 class PsiServer;
 
-class PsiRequestHandler : public http::server3::request_handler 
+class PsiRequestHandler : public http::server3::request_handler
 {
 public:
-	/// Construct with a directory containing files to be served.
-	PsiRequestHandler(const std::string& doc_root, PsiServer* psi_server) : 
-		http::server3::request_handler(doc_root), psi_server_(psi_server) { }
+    /// Construct with a directory containing files to be served.
+    PsiRequestHandler(const std::string& doc_root, PsiServer* psi_server) :
+        http::server3::request_handler(doc_root), psi_server_(psi_server) { }
 
-	void handle_request(const http::server3::request& req, http::server3::reply& rep);
+    void handle_request(const http::server3::request& req, http::server3::reply& rep);
 
 private:
-	PsiServer* psi_server_;
+    PsiServer* psi_server_;
 
-	std::string getContentType(const std::vector<http::server3::header>& headers);
+    std::string getContentType(const std::vector<http::server3::header>& headers);
 };
 
 #endif

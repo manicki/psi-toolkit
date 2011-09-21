@@ -301,11 +301,12 @@ boost::tribool request_parser::consume(request& req, char input)
 	}
   case post_line_start:
     if (input != '\n' && input != '\r') {
-        if (!all_post_data()) {
+
+        if (post_data_length_counter_ < post_data_length_) {
             post_data_length_counter_++;
             req.post_data += input;
             return boost::indeterminate;
-        } 
+        }
         else {
             req.post_data += input;
 		    return true;
@@ -335,11 +336,6 @@ void request_parser::set_post_data_length(request& req) {
         ERROR("The Content-Length header has been not found for POST method request");
     }
 }
-
-bool request_parser::all_post_data() {
-	return (post_data_length_counter_ >= post_data_length_);
-}
-
 
 bool request_parser::is_char(int c)
 {

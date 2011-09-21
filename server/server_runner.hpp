@@ -14,18 +14,18 @@ public:
     int run();
 
 private:
-	boost::program_options::variables_map options;
-	std::vector<std::string> annotatorOptions;
+    boost::program_options::variables_map options;
+    std::vector<std::string> annotatorOptions;
 
-	boost::program_options::options_description optionsDescription;
+    boost::program_options::options_description optionsDescription;
 
-	boost::program_options::variables_map parseOptions(int argc, char * argv[]);
-	void setOptionsDescription();
-	std::string annotatorOptionsAsString();
+    boost::program_options::variables_map parseOptions(int argc, char * argv[]);
+    void setOptionsDescription();
+    std::string annotatorOptionsAsString();
 
-	int executeOptions();
+    int executeOptions();
 
-	static const std::string DEFAULT_PIPE;
+    static const std::string DEFAULT_PIPE;
 };
 
 #endif

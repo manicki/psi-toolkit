@@ -23,11 +23,11 @@ class PipeSiteTest < Test::Unit::TestCase
         assert !input.value.empty?
 
         txt = 'Marysia ma rysia'
-       
+
         assert_not_equal input.value, txt
         input.set txt
         assert input.value, txt
-       
+
         btn = @browser.button(:name => 'pipe-submit')
         assert btn.exists?
         btn.click
