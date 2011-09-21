@@ -37,7 +37,7 @@
 
 		std::string websiteRoot;
 
-	private:
+	//private:
 		std::string urlDecode(std::string &);		
 
 		/// store map between include codes and application functions

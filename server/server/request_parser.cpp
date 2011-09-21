@@ -4,7 +4,7 @@
 
 #include "request_parser.hpp"
 #include "request.hpp"
-#include <iostream>
+#include "logging.hpp"
 
 namespace http {
 namespace server3 {
@@ -322,7 +322,18 @@ boost::tribool request_parser::consume(request& req, char input)
 
 void request_parser::set_post_data_length(request& req) {
     post_data_length_counter_ = 1;
-	post_data_length_ = atoi(req.headers.back().value.c_str());
+    post_data_length_ = 0;
+
+    for (unsigned int i = req.headers.size(); i > 0; i--) {
+        if (req.headers[i-1].name == "Content-Length") {
+            post_data_length_ = atoi(req.headers[i-1].value.c_str());
+            break;
+        }
+    }
+
+    if (post_data_length_ == 0) {
+        ERROR("The Content-Length header has been not found for POST method request");
+    }
 }
 
 bool request_parser::all_post_data() {

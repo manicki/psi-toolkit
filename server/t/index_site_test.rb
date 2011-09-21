@@ -19,15 +19,4 @@ class IndexSiteTest < Test::Unit::TestCase
 		assert(@browser.text.include? 'Psi Server')
 	end
 
-	def test_input_text
-		assert(@browser.text_field(:name => 'input-text').exists?)
-
-		txt = 'Ala ma kota';
-
-		@browser.text_field(:name => 'input-text').set txt
-		@browser.button(:name => 'input-text-submit').click
-
-		assert(@browser.text.include? txt)
-	end
-
 end

@@ -14,10 +14,8 @@ public:
     PipeSite(PsiServer& server, std::string initialPipe);
 
     char * inputText();
-    char * actionInputText();
-
     char * pipeText();
-    char * actionPipeText();
+    char * actionPipe();
 
     char * outputText();
 

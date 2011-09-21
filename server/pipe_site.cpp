@@ -18,13 +18,11 @@ PipeSite::PipeSite(PsiServer& server, std::string initialPipe)
 
     psiServer_.registerIncludeCode(
         "pipe_site_input_text", boost::bind(&PipeSite::inputText, this));
-    psiServer_.registerActionCode(
-        "input_text", boost::bind(&PipeSite::actionInputText, this));
 
     psiServer_.registerIncludeCode(
         "pipe_site_pipe_text", boost::bind(&PipeSite::pipeText, this));
     psiServer_.registerActionCode(
-        "pipe_text", boost::bind(&PipeSite::actionPipeText, this));
+        "pipe", boost::bind(&PipeSite::actionPipe, this));
 
     psiServer_.registerIncludeCode(
         "pipe_site_output_text", boost::bind(&PipeSite::outputText, this));
@@ -34,22 +32,21 @@ char * PipeSite::inputText() {
     return stringToChar(input);
 }
 
-char * PipeSite::actionInputText() {
-    input = psiServer_.findValue("input-text");
-    return stringToChar(std::string("/index.html"));
-}
-
 char * PipeSite::pipeText() {
     return stringToChar(pipe);
 }
 
-char * PipeSite::actionPipeText() {
+char * PipeSite::actionPipe() {
+    input = psiServer_.findValue("input-text");
     pipe = psiServer_.findValue("pipe-text");
+
+    output = runPipe(input);
+
     return stringToChar(std::string("/index.html"));
 }
 
 char * PipeSite::outputText() {
-    std::string out = std::string("<pre>") + runPipe(input) + std::string("</pre>");
+    std::string out = std::string("<pre>") + output + std::string("</pre>");
     return stringToChar(out);
 }
 

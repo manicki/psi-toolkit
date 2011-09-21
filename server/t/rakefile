@@ -7,5 +7,6 @@ ENV['CI_REPORTS'] = File.dirname(__FILE__) + "/reports"
 task :test do
 	require 'psi_server_test'
 	require 'index_site_test'
+    require 'pipe_site_test'
 end
 

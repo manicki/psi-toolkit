@@ -17,28 +17,25 @@
 			<h1>Psi Server</h1>
 		</div>
 
-		<div id="pipe" class="box">
-			<form id="pipe-text" action="pipe_text.psis" method="POST">
+        <form id="pipe" action="pipe.psis" method="POST">
+			
+		    <div id="pipe" class="box">
 				Write pipe line: <br />
 				<input name="pipe-text" type="text" value="<!--#psis pipe_site_pipe_text -->" /> 
-				<br />
-				<input value="Go!" type="submit" name="pipe-text-submit" />
-			</form>
-		</div>
+    		</div>
 		
-		<div id="options" class="box">
-		</div>
+    		<div id="options" class="box">
+	    	</div>
 
-		<div id="input" class="box">
-			<form id="input-text" action="input_text.psis" method="POST">
+		    <div id="input" class="box">
 				Write some text: <br />
-				<textarea name="input-text" rows="5" cols="112"><!--#psis pipe_site_input_text --></textarea> 
-				<div>
-					<input value="Send" type="submit" name="input-text-submit" />
-				</div>
-			</form>
-		</div>	
-
+				<textarea name="input-text" rows="5" cols="112"><!--#psis pipe_site_input_text --></textarea>	
+		    </div>	
+            <div>
+			    <input value="Send" type="submit" name="pipe-submit" />
+			</div>
+        </form>
+		
 		<div id="output" class="box">
 			<!--#psis pipe_site_output_text -->
 		</div>
