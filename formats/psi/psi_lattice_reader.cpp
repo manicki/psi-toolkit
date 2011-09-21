@@ -18,6 +18,7 @@ PsiLatticeReader::Worker::Worker(PsiLatticeReader& processor,
 void PsiLatticeReader::Worker::doRun() {
     PsiQuoter quoter;
     PsiLRGrammar grammar;
+    PsiLRAVGrammar avGrammar;
     std::string line;
     while (std::getline(inputStream_, line)) {
         PsiLRItem item;
@@ -45,6 +46,21 @@ DEBUG("+|" << ((item.ordinal < 10)?" ":"") << item.ordinal
     << "|" << item.annotationItem.avVector << "|\t"
     << "|" << item.annotationItem.partition
     << "|");
+
+            std::vector<std::string> avItem;
+            std::string::const_iterator avBegin = item.annotationItem.avVector.begin();
+            std::string::const_iterator avEnd = item.annotationItem.avVector.end();
+            if (parse(avBegin, avEnd, avGrammar, avItem)) {
+
+BOOST_FOREACH(std::string av, avItem) {
+DEBUG("AV OK " << av);
+}
+
+            } else {
+
+DEBUG("AV FAIL " << item.annotationItem.avVector);
+
+            }
 
         } else {
 if (!line.empty() && line[0] != '#')

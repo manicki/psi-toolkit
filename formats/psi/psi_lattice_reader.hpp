@@ -126,17 +126,13 @@ struct PsiLRGrammar : public qi::grammar<std::string::const_iterator, PsiLRItem(
         annotation
             %= +(qi::char_ - ' ' - ',' - '[' - '<')
             >> score
-            >> avVector
+            >> -(',' >> +(qi::char_ - '['))
             >> partition
             ;
 
         score
             = qi::eps[qi::_val = 0.0]
             >> -('<' >> qi::double_[qi::_val = qi::_1] >> '>')
-            ;
-
-        avVector
-            %= *(qi::char_ - '[')
             ;
 
         partition
@@ -152,8 +148,31 @@ struct PsiLRGrammar : public qi::grammar<std::string::const_iterator, PsiLRItem(
     qi::rule<std::string::const_iterator, std::vector<std::string>()> tags;
     qi::rule<std::string::const_iterator, PsiLRAnnotation()> annotation;
     qi::rule<std::string::const_iterator, double()> score;
-    qi::rule<std::string::const_iterator, std::string()> avVector;
     qi::rule<std::string::const_iterator, std::string()> partition;
+
+};
+
+
+struct PsiLRAVPair {
+    std::string arg;
+    std::string val;
+};
+
+
+struct PsiLRAVGrammar : public qi::grammar<
+    std::string::const_iterator,
+    std::vector<std::string>()
+> {
+
+    PsiLRAVGrammar() : PsiLRAVGrammar::base_type(start) {
+
+        start
+            %= +(qi::char_ - ',') % ','
+            ;
+
+    }
+
+    qi::rule<std::string::const_iterator, std::vector<std::string>()> start;
 
 };
 
