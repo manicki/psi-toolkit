@@ -35,16 +35,18 @@ tagsSs << "+";
 tagsSs << tag;
 }
 
-DEBUG("Reading line " << ((item.ordinal < 10)?" ":"") << item.ordinal
-    << "|" << (item.beginningLoose?"@":" ")
-    << "|" << (item.lengthPoint?"*":" ") << (item.lengthLoose?"@":" ")
-    << "|" << tagsSs.str()
-    << "|" << item.annotationText
+DEBUG("+|" << ((item.ordinal < 10)?" ":"") << item.ordinal
+    // << "|" << (item.beginningLoose?"@":" ")
+    // << "|" << (item.lengthPoint?"*":" ") << (item.lengthLoose?"@":" ")
+    // << "|" << tagsSs.str()
+    // << "|" << item.annotationText
+    << "|" << item.annotationItem.category << "|\t"
+    << "|" << item.annotationItem.rest
     << "|");
 
-        // } else {
-
-// DEBUG("Line '" << line.substr(0,8) << "' not parsed. " << ((begin==line.begin())?"At all.":"A bit."));
+        } else {
+if (!line.empty() && line[0] != '#')
+DEBUG("-|" << line.substr(0,2) << "|--------");
 
         }
     }

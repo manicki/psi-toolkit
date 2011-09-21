@@ -27,17 +27,18 @@ namespace qi = boost::spirit::qi;
 
 struct PsiLRAnnotation {
     std::string category;
-    double score;
-    std::vector< std::vector<std::string> > avVector;
-    std::vector<int> partition;
+    // double score;
+    // std::vector< std::vector<std::string> > avVector;
+    // std::vector<int> partition;
+    std::string rest;
 
     void unescape(Quoter & quoter) {
         category = quoter.unescape(category);
-        BOOST_FOREACH(std::vector<std::string> avPair, avVector) {
-            BOOST_FOREACH(std::string av, avPair) {
-                av = quoter.unescape(av);
-            }
-        }
+        // BOOST_FOREACH(std::vector<std::string> avPair, avVector) {
+            // BOOST_FOREACH(std::string av, avPair) {
+                // av = quoter.unescape(av);
+            // }
+        // }
     }
 };
 
@@ -45,9 +46,10 @@ struct PsiLRAnnotation {
 BOOST_FUSION_ADAPT_STRUCT(
     PsiLRAnnotation,
     (std::string, category)
-    (double, score)
-    (std::vector< std::vector<std::string> >, avVector)
-    (std::vector<int>, partition)
+    // (double, score)
+    // (std::vector< std::vector<std::string> >, avVector)
+    // (std::vector<int>, partition)
+    (std::string, rest)
 )
 
 
@@ -61,14 +63,14 @@ struct PsiLRItem {
     std::string text;
     std::vector<std::string> tags;
     std::string annotationText;
-    std::string annotationItem;
+    PsiLRAnnotation annotationItem;
 
     void unescape(Quoter & quoter) {
         text = quoter.unescape(text);
         BOOST_FOREACH(std::string tag, tags) {
             tag = quoter.unescape(tag);
         }
-        // annotationItem.unescape(quoter);
+        annotationItem.unescape(quoter);
     }
 };
 
@@ -84,7 +86,7 @@ BOOST_FUSION_ADAPT_STRUCT(
     (std::string, text)
     (std::vector<std::string>, tags)
     (std::string, annotationText)
-    (std::string, annotationItem)
+    (PsiLRAnnotation, annotationItem)
 )
 
 
@@ -107,7 +109,7 @@ struct PsiLRGrammar : public qi::grammar<std::string::const_iterator, PsiLRItem(
             >> tags
             >> whitespaces
             >> -(+(qi::char_ - ' ') >> whitespaces)
-            >> +(qi::char_ - ' ')
+            >> annotation
             ;
 
         whitespaces = +(qi::space);
@@ -126,6 +128,11 @@ struct PsiLRGrammar : public qi::grammar<std::string::const_iterator, PsiLRItem(
             %= +(qi::char_ - ' ' - ',') % ','
             ;
 
+        annotation
+            %= +(qi::char_ - ' ' - ',' - '<')
+            >> *(qi::char_ - ' ')
+            ;
+
     }
 
     qi::rule<std::string::const_iterator, PsiLRItem()> start;
@@ -133,6 +140,7 @@ struct PsiLRGrammar : public qi::grammar<std::string::const_iterator, PsiLRItem(
     qi::rule<std::string::const_iterator, bool()> loose;
     qi::rule<std::string::const_iterator, bool()> point;
     qi::rule<std::string::const_iterator, std::vector<std::string>()> tags;
+    qi::rule<std::string::const_iterator, PsiLRAnnotation()> annotation;
 
 };
 
