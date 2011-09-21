@@ -41,6 +41,7 @@ DEBUG("+|" << ((item.ordinal < 10)?" ":"") << item.ordinal
     // << "|" << tagsSs.str()
     // << "|" << item.annotationText
     << "|" << item.annotationItem.category << "|\t"
+    << "|" << item.annotationItem.score << "|\t"
     << "|" << item.annotationItem.rest
     << "|");
 

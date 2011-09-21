@@ -27,7 +27,7 @@ namespace qi = boost::spirit::qi;
 
 struct PsiLRAnnotation {
     std::string category;
-    // double score;
+    double score;
     // std::vector< std::vector<std::string> > avVector;
     // std::vector<int> partition;
     std::string rest;
@@ -46,7 +46,7 @@ struct PsiLRAnnotation {
 BOOST_FUSION_ADAPT_STRUCT(
     PsiLRAnnotation,
     (std::string, category)
-    // (double, score)
+    (double, score)
     // (std::vector< std::vector<std::string> >, avVector)
     // (std::vector<int>, partition)
     (std::string, rest)
@@ -130,7 +130,13 @@ struct PsiLRGrammar : public qi::grammar<std::string::const_iterator, PsiLRItem(
 
         annotation
             %= +(qi::char_ - ' ' - ',' - '<')
+            >> -('<' >> qi::double_ >> '>')
             >> *(qi::char_ - ' ')
+            ;
+
+        score
+            = qi::eps[qi::_val = 0.0]
+            >> -('<' >> qi::double_[qi::_val = qi::_1] >> '>')
             ;
 
     }
@@ -141,6 +147,7 @@ struct PsiLRGrammar : public qi::grammar<std::string::const_iterator, PsiLRItem(
     qi::rule<std::string::const_iterator, bool()> point;
     qi::rule<std::string::const_iterator, std::vector<std::string>()> tags;
     qi::rule<std::string::const_iterator, PsiLRAnnotation()> annotation;
+    qi::rule<std::string::const_iterator, double()> score;
 
 };
 
