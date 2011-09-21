@@ -1,9 +1,9 @@
 add_library(server
-	psi_request_handler.cpp
-	psi_server.cpp
-	index_site.cpp
-	pipe_site.cpp
-	server_runner.cpp
+    psi_request_handler.cpp
+    psi_server.cpp
+    index_site.cpp
+    pipe_site.cpp
+    server_runner.cpp
 )
 
 target_link_libraries(server ${Boost_LIBRARIES} pthread ${BASE_TARGETS} pcre pcrecpp tools-parsers-puddle)

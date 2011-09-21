@@ -10,24 +10,24 @@ option(USE_JAVA "Compiling Java components" OFF)
 message(STATUS "Compiling Java components ${USE_JAVA}")
 
 if(USE_JAVA)
-	enable_language(Java)
+    enable_language(Java)
 
-	find_package(Java REQUIRED)
-#	message(STATUS "Java runtime ${JAVA_RUNTIME}")
-#	message(STATUS "Java compile ${JAVA_COMPILE}")
+    find_package(Java REQUIRED)
+#   message(STATUS "Java runtime ${JAVA_RUNTIME}")
+#   message(STATUS "Java compile ${JAVA_COMPILE}")
 
-	find_package(JNI REQUIRED)
-#	message(STATUS "JVM library ${JAVA_JVM_LIBRARY}")
-#	message(STATUS "JNI path ${JAVA_INCLUDE_PATH}")
+    find_package(JNI REQUIRED)
+#   message(STATUS "JVM library ${JAVA_JVM_LIBRARY}")
+#   message(STATUS "JNI path ${JAVA_INCLUDE_PATH}")
 
-	string(REGEX REPLACE "(.*)/libjvm.so" "\\1" LD_LIBPATH ${JAVA_JVM_LIBRARY})
-	message(STATUS "You may need to set LD_LIBRARY_PATH=${LD_LIBPATH} to run installed software")
+    string(REGEX REPLACE "(.*)/libjvm.so" "\\1" LD_LIBPATH ${JAVA_JVM_LIBRARY})
+    message(STATUS "You may need to set LD_LIBRARY_PATH=${LD_LIBPATH} to run installed software")
 
-	include_directories(${JAVA_INCLUDE_PATH})
-	include_directories(${JAVA_INCLUDE_PATH}/linux)
-	include_directories("${psi-toolkit_SOURCE_DIR}/common/j")
+    include_directories(${JAVA_INCLUDE_PATH})
+    include_directories(${JAVA_INCLUDE_PATH}/linux)
+    include_directories("${psi-toolkit_SOURCE_DIR}/common/j")
 
-	set(HAVE_JAVA 1)
+    set(HAVE_JAVA 1)
 endif(USE_JAVA)
 
 option(USE_POSTGRESQL "Compiling PostgreSQL components" OFF)
@@ -71,7 +71,7 @@ set(BASE_TARGETS common framework formats-psi formats-simple formats-txt formats
 set(TESTS_TARGETS common-tests tools-tokenizers-tp-tests tools-segmenters-srx-tests)
 
 if(USE_JAVA)
-	set(BASE_TARGETS ${BASE_TARGETS} tools-lemmatizers-morfologik)
+    set(BASE_TARGETS ${BASE_TARGETS} tools-lemmatizers-morfologik)
         set(TESTS_TARGETS ${TESTS_TARGETS} morfologik-tests)
 endif(USE_JAVA)
 
@@ -92,19 +92,19 @@ set(TARGETS ${BASE_TARGETS} psi-pipe)
 
 set(DIRS common formats tools framework utf8 server)
 foreach(dir ${DIRS})
-	include_directories("${psi-toolkit_SOURCE_DIR}/${dir}")
-	link_directories("${psi-toolkit_BINARY_DIR}/${dir}")
-	add_subdirectory(${dir})
+    include_directories("${psi-toolkit_SOURCE_DIR}/${dir}")
+    link_directories("${psi-toolkit_BINARY_DIR}/${dir}")
+    add_subdirectory(${dir})
 endforeach(dir)
 
 #if(USE_JAVA)
-#	set_target_properties(psi-pipe PROPERTIES
-#		COMPILE_FLAGS "-I${psi-toolkit_SOURCE_DIR}/utf8 -I${psi-toolkit_SOURCE_DIR}/common")
+#   set_target_properties(psi-pipe PROPERTIES
+#       COMPILE_FLAGS "-I${psi-toolkit_SOURCE_DIR}/utf8 -I${psi-toolkit_SOURCE_DIR}/common")
 #endif(USE_JAVA)
 
 if(USE_PUDDLE)
 set_target_properties(tools-parsers-puddle PROPERTIES
-	COMPILE_FLAGS "-I${psi-toolkit_SOURCE_DIR}/utf8")
+    COMPILE_FLAGS "-I${psi-toolkit_SOURCE_DIR}/utf8")
     if(USE_BONSAI_PARSEGRAPH)
         set_target_properties(tools-parsers-puddle PROPERTIES
         COMPILE_FLAGS "-I${psi-toolkit_SOURCE_DIR}/utf8 -I${BONSAI_PATH}")
@@ -114,15 +114,15 @@ set_target_properties(tools-parsers-puddle PROPERTIES
 endif(USE_PUDDLE)
 
 foreach(dir ${formats_SUBDIRS})
-	include_directories("${psi-toolkit_SOURCE_DIR}/formats/${dir}")
-	link_directories("${psi-toolkit_BINARY_DIR}/formats/${dir}")
+    include_directories("${psi-toolkit_SOURCE_DIR}/formats/${dir}")
+    link_directories("${psi-toolkit_BINARY_DIR}/formats/${dir}")
 endforeach(dir)
 
 
 set(ALL_TARGETS ${TARGETS} ${TESTS_TARGETS})
 
 set_target_properties(${ALL_TARGETS} PROPERTIES
-	COMPILE_FLAGS "-I${psi-toolkit_SOURCE_DIR}/utf8 -I${psi-toolkit_SOURCE_DIR}/tests")
+    COMPILE_FLAGS "-I${psi-toolkit_SOURCE_DIR}/utf8 -I${psi-toolkit_SOURCE_DIR}/tests")
 if(USE_PUDDLE)
     if(USE_BONSAI_PARSEGRAPH)
         set_target_properties(tools-parsers-puddle PROPERTIES

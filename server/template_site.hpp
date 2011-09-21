@@ -13,40 +13,40 @@ class TemplateSite{
 
 public:
 
-	TemplateSite(PsiServer& server) : psiServer_(server) {};
-	
+    TemplateSite(PsiServer& server) : psiServer_(server) {};
+
 protected:
 
-	PsiServer& psiServer_;
+    PsiServer& psiServer_;
 
-	char * stringToChar(std::string str) {
-		char * chr = new char[str.size() + 1];
-		std::copy(str.begin(), str.end(), chr);
-		chr[str.size()] = '\0';
+    char * stringToChar(std::string str) {
+        char * chr = new char[str.size() + 1];
+        std::copy(str.begin(), str.end(), chr);
+        chr[str.size()] = '\0';
 
-		return chr;
-	}
+        return chr;
+    }
 
-	std::string readPsisFile(const char * fileName) {
-		std::string content = "";
-		std::string line;
+    std::string readPsisFile(const char * fileName) {
+        std::string content = "";
+        std::string line;
 
-		std::string filePath = psiServer_.websiteRoot;
-		filePath += "/"; 
-		filePath += fileName;
+        std::string filePath = psiServer_.websiteRoot;
+        filePath += "/";
+        filePath += fileName;
 
-		std::ifstream myfile(filePath.c_str());
+        std::ifstream myfile(filePath.c_str());
 
-  		if (myfile.is_open()) {
-			while (myfile.good()) {
-      			std::getline(myfile, line);
-      			content += line + "\n";
-    		}
-    		myfile.close();
-  		}
-		
-		return content;
-	}
+        if (myfile.is_open()) {
+            while (myfile.good()) {
+                std::getline(myfile, line);
+                content += line + "\n";
+            }
+            myfile.close();
+        }
+
+        return content;
+    }
 };
 
 #endif
