@@ -27,8 +27,7 @@ void PsiLatticeReader::Worker::doRun() {
 
             item.unescape(quoter);
 
-//DEBUG
-// std::cerr << item.ordinal << " " << item.text << std::endl;
+DEBUG("Reading line " << item.ordinal);
 
         }
     }

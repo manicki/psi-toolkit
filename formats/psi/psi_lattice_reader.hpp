@@ -18,6 +18,8 @@
 #include "quoter.hpp"
 #include "psi_quoter.hpp"
 
+#include "logging.hpp"
+
 
 namespace qi = boost::spirit::qi;
 
