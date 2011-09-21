@@ -19,7 +19,7 @@ void PsiLatticeReader::Worker::doRun() {
     PsiQuoter quoter;
     PsiLRGrammar grammar;
     PsiLRAVGrammar avGrammar;
-    PsiLRAVSplitterGrammar avSplitterGrammar;
+    PsiLRAVPairGrammar avPairGrammar;
     std::string line;
     while (std::getline(inputStream_, line)) {
         PsiLRItem item;
@@ -38,14 +38,10 @@ tagsSs << tag;
 }
 
 DEBUG("+|" << ((item.ordinal < 10)?" ":"") << item.ordinal
-    // << "|" << (item.beginningLoose?"@":" ")
-    // << "|" << (item.lengthPoint?"*":" ") << (item.lengthLoose?"@":" ")
-    // << "|" << tagsSs.str()
-    // << "|" << item.annotationText
     << "|" << item.annotationItem.category << "|\t"
     << "|" << item.annotationItem.score << "|\t"
     << "|" << item.annotationItem.avVector << "|\t"
-    << "|" << item.annotationItem.partition
+    << "|" << item.annotationItem.partitions
     << "|");
 
             std::vector<std::string> avItem;
@@ -54,16 +50,13 @@ DEBUG("+|" << ((item.ordinal < 10)?" ":"") << item.ordinal
             if (parse(avBegin, avEnd, avGrammar, avItem)) {
 
                 BOOST_FOREACH(std::string av, avItem) {
-                    PsiLRAVPair avPair;
+                    PsiLRAVPairItem avPairItem;
                     std::string::const_iterator avPairBegin = av.begin();
                     std::string::const_iterator avPairEnd = av.end();
-                    if (parse(avPairBegin, avPairEnd, avSplitterGrammar, avPair)) {
-DEBUG("\t" << avPair.arg);
-DEBUG("\t\t" << avPair.val);
+                    if (parse(avPairBegin, avPairEnd, avPairGrammar, avPairItem)) {
+DEBUG("\t" << avPairItem.arg);
+DEBUG("\t\t" << avPairItem.val);
                     }
-
-DEBUG("AV OK " << av);
-
                 }
 
             } else {

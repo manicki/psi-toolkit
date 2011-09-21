@@ -29,12 +29,12 @@ struct PsiLRAnnotation {
     std::string category;
     double score;
     std::string avVector;
-    std::string partition;
+    std::string partitions;
 
     void unescape(Quoter & quoter) {
         category = quoter.unescape(category);
         avVector = quoter.unescape(avVector);
-        partition = quoter.unescape(partition);
+        partitions = quoter.unescape(partitions);
     }
 };
 
@@ -44,7 +44,7 @@ BOOST_FUSION_ADAPT_STRUCT(
     (std::string, category)
     (double, score)
     (std::string, avVector)
-    (std::string, partition)
+    (std::string, partitions)
 )
 
 
@@ -124,19 +124,15 @@ struct PsiLRGrammar : public qi::grammar<std::string::const_iterator, PsiLRItem(
             ;
 
         annotation
-            %= +(qi::char_ - ' ' - ',' - '[' - '<')
-            >> score
-            >> -(',' >> +(qi::char_ - '['))
-            >> partition
+            %= +(qi::char_ - ' ' - ',' - '[' - '<')                         //category
+            >> score                                                        //score
+            >> -(',' >> +(qi::char_ - '['))                                 //av
+            >> -(qi::char_("[") >> *(qi::char_ - ']') >> qi::char_("]"))    //partitions
             ;
 
         score
             = qi::eps[qi::_val = 0.0]
             >> -('<' >> qi::double_[qi::_val = qi::_1] >> '>')
-            ;
-
-        partition
-            %= -(qi::char_("[") >> *(qi::char_ - ']') >> qi::char_("]"))
             ;
 
     }
@@ -148,7 +144,6 @@ struct PsiLRGrammar : public qi::grammar<std::string::const_iterator, PsiLRItem(
     qi::rule<std::string::const_iterator, std::vector<std::string>()> tags;
     qi::rule<std::string::const_iterator, PsiLRAnnotation()> annotation;
     qi::rule<std::string::const_iterator, double()> score;
-    qi::rule<std::string::const_iterator, std::string()> partition;
 
 };
 
@@ -171,25 +166,25 @@ struct PsiLRAVGrammar : public qi::grammar<
 };
 
 
-struct PsiLRAVPair {
+struct PsiLRAVPairItem {
     std::string arg;
     std::string val;
 };
 
 
 BOOST_FUSION_ADAPT_STRUCT(
-    PsiLRAVPair,
+    PsiLRAVPairItem,
     (std::string, arg)
     (std::string, val)
 )
 
 
-struct PsiLRAVSplitterGrammar : public qi::grammar<
+struct PsiLRAVPairGrammar : public qi::grammar<
     std::string::const_iterator,
-    PsiLRAVPair()
+    PsiLRAVPairItem()
 > {
 
-    PsiLRAVSplitterGrammar() : PsiLRAVSplitterGrammar::base_type(start) {
+    PsiLRAVPairGrammar() : PsiLRAVPairGrammar::base_type(start) {
 
         start
             %= +(qi::char_ - ',' - '=')
@@ -199,7 +194,7 @@ struct PsiLRAVSplitterGrammar : public qi::grammar<
 
     }
 
-    qi::rule<std::string::const_iterator, PsiLRAVPair()> start;
+    qi::rule<std::string::const_iterator, PsiLRAVPairItem()> start;
 
 };
 
