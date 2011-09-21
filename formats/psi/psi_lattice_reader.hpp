@@ -55,21 +55,26 @@ struct PsiLRGrammar : public qi::grammar<std::string::const_iterator, PsiLRItem(
 
         start
             %= qi::int_
-            >> +(qi::lit(' '))
+            >> whitespaces
             >> qi::int_
-            >> +(qi::lit(' '))
+            >> whitespaces
             >> qi::int_
-            >> +(qi::lit(' '))
+            >> whitespaces
             >> +(qi::char_ - ' ')
-            >> +(qi::lit(' '))
+            >> whitespaces
             >> +(qi::char_ - ' ')
-            >> +(qi::lit(' '))
+            >> whitespaces
             >> +(qi::char_ - ' ')
+            ;
+
+        whitespaces
+            %= +(qi::lit(' ') | qi::lit('\t'))
             ;
 
     }
 
     qi::rule<std::string::const_iterator, PsiLRItem()> start;
+    qi::rule<std::string::const_iterator, qi::unused_type()> whitespaces;
 
 };
 
