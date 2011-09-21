@@ -6,22 +6,23 @@
 #include <boost/scoped_array.hpp>
 #include <boost/program_options/parsers.hpp>
 #include <boost/algorithm/string.hpp>
+#include <boost/foreach.hpp>
 
 #include "main_factories_keeper.hpp"
 
 #include "logging.hpp"
 
 PipeRunner::PipeRunner(const std::string& pipeline) {
-    parseIntoPipelineSpecification_(splitPipeline_(pipeline), false);
+    parseIntoGraph_(splitPipeline_(pipeline), false);
 }
 
 PipeRunner::PipeRunner(int argc, char* argv[]) {
     std::vector<std::string> args(argv, argv + argc);
-    parseIntoPipelineSpecification_(args, true);
+    parseIntoGraph_(args, true);
 }
 
 PipeRunner::PipeRunner(std::vector<std::string> args) {
-    parseIntoPipelineSpecification_(args, false);
+    parseIntoGraph_(args, false);
 }
 
 int PipeRunner::run(std::istream& in, std::ostream& out) {
@@ -82,6 +83,11 @@ AnnotatorFactory& PipeRunner::getAnnotatorFactory_(const PipelineElementSpecific
     return dynamic_cast<AnnotatorFactory&>(getFactory_(elementSpec));
 }
 
+void PipeRunner::parseIntoGraph_(std::vector<std::string> args, bool isTheFirstArgProgramName) {
+    parseIntoPipelineSpecification_(args, isTheFirstArgProgramName);
+//    pipelineSpecification2Graph_();
+}
+
 void PipeRunner::parseIntoPipelineSpecification_(
     std::vector<std::string> args, bool isTheFirstArgProgramName) {
 
@@ -107,6 +113,34 @@ void PipeRunner::parseIntoPipelineSpecification_(
             pipelineSpecification_.elements.back().processorArgs.push_back(args[i]);
         }
     }
+}
+
+void PipeRunner::pipelineSpecification2Graph_() {
+    bool isFirst = true;
+    PipelineGraph::vertex_descriptor currentVertex;
+
+    BOOST_FOREACH(const PipelineElementSpecification& element, pipelineSpecification_.elements) {
+        PipelineGraph::vertex_descriptor newVertex =
+            boost::add_vertex(
+                pipelineElement2Node_(element),
+                pipelineGraph_);
+
+        if (isFirst)
+            isFirst = false;
+        else {
+            std::string emptyString;
+            boost::add_edge(currentVertex, newVertex, emptyString, pipelineGraph_);
+            currentVertex = newVertex;
+        }
+    }
+}
+
+PipeRunner::PipelineNode PipeRunner::pipelineElement2Node_(const PipelineElementSpecification& element) {
+    ProcessorFactory& factory = getFactory_(element);
+
+    return PipelineNode(
+        factory,
+        parseOptions_(factory.optionsHandled(), element));
 }
 
 bool PipeRunner::isLastElement_(
