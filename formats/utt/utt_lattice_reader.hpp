@@ -29,7 +29,6 @@ struct UTTLRItem {
     std::string segmentType;
     std::string form;
     std::string annotations;
-    std::string unused;
 
     void unescape(Quoter & quoter) {
         segmentType = quoter.unescape(segmentType);
@@ -42,11 +41,8 @@ struct UTTLRItem {
 BOOST_FUSION_ADAPT_STRUCT(
     UTTLRItem,
     (int, position)
-    (std::string, unused)
     (int, length)
-    (std::string, unused)
     (std::string, segmentType)
-    (std::string, unused)
     (std::string, form)
     (std::string, annotations)
 )
@@ -57,19 +53,27 @@ struct UTTLRGrammar : public qi::grammar<std::string::const_iterator, UTTLRItem(
     UTTLRGrammar() : UTTLRGrammar::base_type(start) {
 
         start
-            %= qi::int_
-            >> +(qi::space)
-            >> qi::int_
-            >> +(qi::space)
+            %= -whitespaces
+            >> optionalInt
+            >> optionalInt
             >> +(qi::char_ - ' ')
-            >> +(qi::space)
+            >> whitespaces
             >> +(qi::char_ - ' ')
-            >> -(qi::lexeme[' ' >> +(qi::char_)])
+            >> -(whitespaces >> +(qi::char_))
             ;
+
+        optionalInt
+            = qi::eps[qi::_val = -1]
+            >> -(qi::int_[qi::_val = qi::_1] >> +(qi::space))
+            ;
+
+        whitespaces = +(qi::space);
 
     }
 
     qi::rule<std::string::const_iterator, UTTLRItem()> start;
+    qi::rule<std::string::const_iterator, int()> optionalInt;
+    qi::rule<std::string::const_iterator, qi::unused_type()> whitespaces;
 
 };
 
