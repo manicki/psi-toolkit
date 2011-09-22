@@ -165,9 +165,11 @@ void PsiServer::parseMultipartFormData(http::server3::request& req) {
                     it->first + std::string("-filename"), it->second->GetFileName()
                 ));
                 // add file content
+                std::size_t size = it->second->GetFileContentSize();
                 name_values_.insert(std::pair<std::string, std::string> (
-                    it->first, std::string(it->second->GetFileContent())
+                    it->first, std::string(it->second->GetFileContent(), size)
                 ));
+
             }
             else {
                 name_values_.insert(std::pair<std::string, std::string> (
@@ -242,7 +244,7 @@ std::string& PsiServer::findValue(const char* name) {
     val = "";
 
     psis_iter_name_value it = name_values_.find(name);
-    if(it != name_values_.end()) {
+    if (it != name_values_.end()) {
         val = it->second;
     }
 

@@ -6,8 +6,6 @@
 #include "request.hpp"
 #include "logging.hpp"
 
-#include <iostream>
-
 namespace http {
 namespace server3 {
 
@@ -23,8 +21,6 @@ void request_parser::reset()
 
 boost::tribool request_parser::consume(request& req, char input)
 {
-
-    std::cerr << input;
 
   switch (state_)
   {
@@ -354,7 +350,6 @@ void request_parser::set_post_data_length(request& req) {
     std::string val = req.get_header_value("Content-Length");
     if (!val.empty()) {
         post_data_length_ = atoi(val.c_str());
-        std::cerr << "(psl set to: " << post_data_length_ << ")";
     }
 
     if (post_data_length_ == 0) {

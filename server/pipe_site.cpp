@@ -15,6 +15,7 @@ PipeSite::PipeSite(PsiServer& server, std::string initialPipe)
 {
     input = INITIAL_TEXT;
     output = runPipe(input);
+    file = "";
 
     psiServer_.registerIncludeCode(
         "pipe_site_input_text", boost::bind(&PipeSite::inputText, this));
@@ -39,8 +40,10 @@ char * PipeSite::pipeText() {
 char * PipeSite::actionPipe() {
     input = psiServer_.findValue("input-text");
     pipe = psiServer_.findValue("pipe-text");
+    file = psiServer_.findValue("input-file");
 
-    output = runPipe(input);
+    std::string in = file.empty() ? input : file;
+    output = runPipe(in);
 
     return stringToChar(std::string("/index.html"));
 }
@@ -52,7 +55,7 @@ char * PipeSite::outputText() {
 
 std::string PipeSite::runPipe(std::string input) {
     if (input.empty())
-        input = INITIAL_TEXT;            
+        input = INITIAL_TEXT;
 
     std::stringstream iss(input);
     std::ostringstream oss;
@@ -65,7 +68,7 @@ std::string PipeSite::runPipe(std::string input) {
         INFO("... running");
         p.run(iss, oss);
         INFO("... OK");
-    } 
+    }
     catch(std::exception& e) {
         oss << "There is some problem: " << e.what() << std::endl
             << "Check the pipe-line specification and try once again.";
