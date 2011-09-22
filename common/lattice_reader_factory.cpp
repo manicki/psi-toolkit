@@ -8,3 +8,8 @@ LatticeReader* LatticeReaderFactory::createLatticeReader(const boost::program_op
 LatticeReader* LatticeReaderFactory::doCreateProcessor(const boost::program_options::variables_map& options) {
     return doCreateLatticeReader(options);
 }
+
+std::string LatticeReaderFactory::doGetContinuation(
+    const boost::program_options::variables_map& /*options*/) const {
+    return std::string("psi-writer");
+}

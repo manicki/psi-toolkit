@@ -1,0 +1,9 @@
+01 0000 05    Prof.        token                 Prof.       T
+02 0005 01    _            token                 _           B
+03 0006 08    Kowalski     token                 Kowalski    T
+04 0014 01    _            token                 _           B
+05 0015 04    lubi         token                 lubi        T
+06 0019 01    _            token                 _           B
+07 0020 04    koty         token                 koty        T
+08 0000 25    Prof._...ty. text,txt-reader       Prof._Kowalski_lubi_koty. TEXT[]
+09 0024 01    .            token                 .           I

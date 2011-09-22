@@ -24,17 +24,11 @@ private:
     PipelineSpecification pipelineSpecification_;
 
     void parseIntoGraph_(std::vector<std::string> args, bool isTheFirstArgProgramName);
-    void parseIntoPipelineSpecification_(std::vector<std::string> args, bool isTheFirstArgProgramName);
-    void pipelineSpecification2Graph_();
+    void parseIntoPipelineSpecification_(
+        std::vector<std::string> args, bool isTheFirstArgProgramName,
+        PipelineSpecification& pipelineSpec);
 
     ProcessorFactory& getFactory_(const PipelineElementSpecification& elementSpec);
-    LatticeReaderFactory& getReaderFactory_(const PipelineElementSpecification& elementSpec);
-    LatticeWriterFactory& getWriterFactory_(const PipelineElementSpecification& elementSpec);
-    AnnotatorFactory& getAnnotatorFactory_(const PipelineElementSpecification& elementSpec);
-
-    bool isLastElement_(
-        std::list<PipelineElementSpecification>::iterator it,
-        PipelineSpecification& pipelineSpecification);
 
     boost::program_options::variables_map parseOptions_(
         const boost::program_options::options_description& optionsDescription,
@@ -53,6 +47,28 @@ private:
         PipelineNode(ProcessorFactory& factory, boost::program_options::variables_map options)
             : factory_(&factory), options_(options) {
         }
+
+        void createProcessor() {
+            if (!processor_)
+                processor_.reset(factory_->createProcessor(options_));
+        }
+
+        boost::shared_ptr<Processor> getProcessor() const {
+            return processor_;
+        }
+
+        const ProcessorFactory* getFactory() const {
+            return factory_;
+        }
+
+        boost::program_options::variables_map getOptions() const {
+            return options_;
+        }
+
+        std::string getContinuation() const {
+            return getFactory()->getContinuation(getOptions());
+        }
+
     };
 
     PipelineNode pipelineElement2Node_(const PipelineElementSpecification& element);
@@ -69,6 +85,23 @@ private:
 
     PipelineGraph::vertex_descriptor firstNode;
     PipelineGraph::vertex_descriptor lastNode;
+
+    void pipelineSpecification2Graph_(
+        PipelineSpecification& pipelineSpec,
+        PipelineGraph::vertex_descriptor& firstVertex,
+        PipelineGraph::vertex_descriptor& lastVertex);
+
+    void completeGraph_();
+    void checkReader_();
+    void checkWriter_();
+    void prepend_(const std::string& pipeline);
+    void append_(const std::string& pipeline);
+
+    void runPipelineNode_(
+        PipelineGraph::vertex_descriptor current,
+        Lattice& lattice,
+        std::istream& in, std::ostream& out);
+    bool goToNextNode_(PipelineGraph::vertex_descriptor& current);
 };
 
 #endif
