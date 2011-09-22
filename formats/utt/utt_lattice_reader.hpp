@@ -14,6 +14,8 @@
 #include <boost/spirit/include/phoenix_operator.hpp>
 #include <boost/spirit/include/qi.hpp>
 
+#include "utf8.h"
+
 #include "lattice_reader.hpp"
 #include "lattice_reader_factory.hpp"
 #include "quoter.hpp"
@@ -104,6 +106,42 @@ public:
 
 private:
     virtual std::string doInfo();
+
+    class PosConverter {
+    public:
+        PosConverter() : count_(0) { }
+
+        int psi(int uttPos) {
+            for (int i = position_.size() - 1; i >= 0; --i) {
+                if (position_[i] <= uttPos) {
+                    return uttPos + offset_[i];
+                }
+            }
+            return uttPos;
+        }
+
+        int utt(int psiPos) {
+            for (int i = position_.size() - 1; i >= 0; --i) {
+                if (position_[i] + offset_[i] <= psiPos) {
+                    return psiPos - offset_[i];
+                }
+            }
+            return psiPos;
+        }
+
+        void add(int uttPos, int psiPos) {
+            if (psiPos - uttPos > count_) {
+                count_ = psiPos - uttPos;
+                position_.push_back(uttPos);
+                offset_.push_back(count_);
+            }
+        }
+
+    private:
+        std::vector<int> position_;
+        std::vector<int> offset_;
+        int count_;
+    };
 
     class Worker : public ReaderWorker {
     public:

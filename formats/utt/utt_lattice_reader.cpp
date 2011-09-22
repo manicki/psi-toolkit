@@ -46,6 +46,7 @@ UTTLatticeReader::Worker::Worker(UTTLatticeReader& processor,
 void UTTLatticeReader::Worker::doRun() {
     UTTQuoter quoter;
     UTTLRGrammar grammar;
+    PosConverter conv;
     std::string line;
     std::string sentenceForm = "";
     int beginningOfSentencePosition = -1;
@@ -57,13 +58,51 @@ void UTTLatticeReader::Worker::doRun() {
 
             item.unescape(quoter);
 
+            if (item.position < 0) {
+                item.position = conv.utt(lattice_.getVertexRawCharIndex(lattice_.getLastVertex()));
+            }
+
+            if (item.length < 0) {
+                item.length = utf8::distance(item.form.begin(), item.form.end());
+            }
+
             if (item.length > 0) {
 
-                Lattice::VertexDescriptor from = lattice_.getLastVertex();
+                if ((unsigned int)item.length == item.form.length()) {
+                    lattice_.appendStringWithSymbols(item.form.substr(
+                        conv.utt(lattice_.getVertexRawCharIndex(lattice_.getLastVertex()))
+                            - item.position
+                    ));
+                } else {
+                    std::string::iterator iter = item.form.begin();
+                    std::string::iterator end = item.form.end();
+                    for (
+                        int i = item.position;
+                        i < conv.utt(lattice_.getVertexRawCharIndex(lattice_.getLastVertex()));
+                        ++i
+                    ) {
+                        utf8::next(iter, end);
+                    }
+                    for (
+                        int i = conv.utt(lattice_.getVertexRawCharIndex(lattice_.getLastVertex()));
+                        i < item.position + item.length;
+                        ++i
+                    ) {
+                        conv.add(i, lattice_.getVertexRawCharIndex(lattice_.getLastVertex()));
+                        std::string symbol;
+                        utf8::append(utf8::next(iter, end), std::back_inserter(symbol));
+                        lattice_.appendStringWithSymbols(symbol);
+                    }
+                    conv.add(
+                        item.position + item.length,
+                        lattice_.getVertexRawCharIndex(lattice_.getLastVertex())
+                    );
+                }
 
-                lattice_.appendStringWithSymbols(item.form);
-
-                Lattice::VertexDescriptor to = lattice_.getLastVertex();
+                Lattice::VertexDescriptor from
+                    = lattice_.getVertexForRawCharIndex(conv.psi(item.position));
+                Lattice::VertexDescriptor to
+                    = lattice_.getVertexForRawCharIndex(conv.psi(item.position + item.length));
 
                 LayerTagMask rawMask = lattice_.getLayerTagManager().getMask("symbol");
 
@@ -104,14 +143,17 @@ void UTTLatticeReader::Worker::doRun() {
                 for (int i = beginningOfSentencePosition; i < item.position + item.length; ++i) {
                     try {
                         sentenceBuilder.addEdge(
-                            lattice_.firstOutEdge(lattice_.getVertexForRawCharIndex(i), tokenMask)
+                            lattice_.firstOutEdge(
+                                lattice_.getVertexForRawCharIndex(conv.psi(i)),
+                                tokenMask
+                            )
                         );
                     } catch (NoEdgeException) { }
                 }
 
                 lattice_.addEdge(
-                    lattice_.getVertexForRawCharIndex(beginningOfSentencePosition),
-                    lattice_.getVertexForRawCharIndex(item.position + item.length),
+                    lattice_.getVertexForRawCharIndex(conv.psi(beginningOfSentencePosition)),
+                    lattice_.getVertexForRawCharIndex(conv.psi(item.position + item.length)),
                     AnnotationItem(sentenceForm),
                     lattice_.getLayerTagManager().createSingletonTagCollection("sentence"),
                     sentenceBuilder.build()
