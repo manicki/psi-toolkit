@@ -23,6 +23,7 @@ void PsiLatticeReader::Worker::doRun() {
     PsiLRPartitionsGrammar partsGrammar;
     PsiLRPartitionGrammar partGrammar;
     LayerTagManager ltm = lattice_.getLayerTagManager();
+    std::map<int, Lattice::VertexDescriptor> looseVertices;
     std::string line;
     while (std::getline(inputStream_, line)) {
         if (
@@ -41,14 +42,18 @@ void PsiLatticeReader::Worker::doRun() {
             LayerTagCollection tags = ltm.createTagCollection(item.tags);
             LayerTagMask tagsMask = ltm.getMask(tags);
 
+            std::stringstream formSs;
+            formSs << std::setw(item.length) << item.text;
+            std::string form = formSs.str();
+
             if (!item.beginningLoose) {
                 try {
                     if (ltm.match(tagsMask, "symbol")) {
-                        lattice_.appendString(item.text.substr(
+                        lattice_.appendString(form.substr(
                             lattice_.getVertexRawCharIndex(lattice_.getLastVertex()) - item.beginning
                         ));
                     } else {
-                        lattice_.appendStringWithSymbols(item.text.substr(
+                        lattice_.appendStringWithSymbols(form.substr(
                             lattice_.getVertexRawCharIndex(lattice_.getLastVertex()) - item.beginning
                         ));
                     }
@@ -56,6 +61,62 @@ void PsiLatticeReader::Worker::doRun() {
                     // Don't need to append lattice.
                 }
             }
+
+            Lattice::VertexDescriptor from;
+            if (item.beginningLoose) {
+                std::map<int, Lattice::VertexDescriptor>::iterator lvi
+                    = looseVertices.find(item.beginning);
+                if (lvi == looseVertices.end()) {
+                    looseVertices[item.beginning] = lattice_.addLooseVertex();
+                }
+                from = looseVertices[item.beginning];
+            } else {
+                from = lattice_.getVertexForRawCharIndex(item.beginning);
+            }
+
+            Lattice::VertexDescriptor to;
+            if (item.lengthPoint) {
+                if (item.lengthLoose) {
+                    std::map<int, Lattice::VertexDescriptor>::iterator lvi
+                        = looseVertices.find(item.length);
+                    if (lvi == looseVertices.end()) {
+                        looseVertices[item.length] = lattice_.addLooseVertex();
+                    }
+                    to = looseVertices[item.length];
+                } else {
+                    to = lattice_.getVertexForRawCharIndex(item.length);
+                }
+            } else {
+                if (item.lengthLoose) {
+                    throw FileFormatException(
+                        "PSI reader: Edge length cannot be a loose vertex. Missed point marker(*)?"
+                    );
+                } else {
+                    to = lattice_.getVertexForRawCharIndex(item.beginning + item.length);
+                }
+            }
+
+            LayerTagMask rawMask = ltm.getMask("symbol");
+
+            Lattice::EdgeSequence::Builder seqBuilder;
+
+            if (!ltm.match(tagsMask, "symbol")) {
+                Lattice::VertexDescriptor currentVertex = from;
+                while (currentVertex != to) {
+                    Lattice::EdgeDescriptor currentEdge
+                        = lattice_.firstOutEdge(currentVertex, rawMask);
+                    seqBuilder.addEdge(currentEdge);
+                    currentVertex = lattice_.getEdgeTarget(currentEdge);
+                }
+            }
+
+            lattice_.addEdge(
+                from,
+                to,
+                AnnotationItem(item.annotationItem.category, item.annotationText),
+                tags,
+                seqBuilder.build()
+            );
 
             std::vector<std::string> avItem;
             std::string::const_iterator avBegin = item.annotationItem.avVector.begin();
@@ -101,8 +162,6 @@ void PsiLatticeReader::Worker::doRun() {
 
         }
     }
-
-DEBUG("Σ: " << lattice_.getAllText());
 
 }
 
