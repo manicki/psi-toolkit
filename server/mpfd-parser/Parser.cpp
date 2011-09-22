@@ -32,11 +32,13 @@ MPFD::Parser::~Parser() {
     }
 }
 
-void MPFD::Parser::SetContentType(const std::string type) {
-    if (type.find("multipart/form-data;") != 0) {
+void MPFD::Parser::SetContentType(const std::string & type) {
+
+    unsigned int mpfd = type.find("multipart/form-data;");
+
+    if (mpfd != 0) {
         throw MPFD::Exception(std::string("Content type is not \"multipart/form-data\"\nIt is \"") + type + std::string("\""));
     }
-
 
     unsigned int bp = type.find("boundary=");
 
@@ -139,7 +141,7 @@ bool MPFD::Parser::WaitForHeadersEndAndParseThem() {
 
             TruncateDataCollectorFromTheBeginning(i + 4);
 
-            delete headers;
+            //delete headers;
 
             return true;
         }

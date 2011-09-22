@@ -134,10 +134,10 @@ void PsiServer::checkForAction(http::server3::request& req) {
         parseNamesAndValues(uri, q);
     }
 
-    std::cerr << "Name/values:" << std::endl;
-    std::multimap <std::string, std::string>::iterator it;
-    for (it = name_values_.begin() ; it != name_values_.end(); it++)
-        std::cerr << (*it).first << " => " << (*it).second << std::endl;
+    //std::cerr << "Name/values:" << std::endl;
+    //std::multimap <std::string, std::string>::iterator it;
+    //for (it = name_values_.begin() ; it != name_values_.end(); ++it)
+    //    DEBUG((*it).first << " => " << (*it).second << std::endl);
 
     // call the function
     req.uri = pfun->second(this);
@@ -157,7 +157,7 @@ void PsiServer::parseMultipartFormData(http::server3::request& req) {
         std::map<std::string, MPFD::Field *> fields = parser.GetFieldsMap();
         std::map<std::string, MPFD::Field *>::iterator it;
 
-        for (it = fields.begin(); it != fields.end(); it++) {
+        for (it = fields.begin(); it != fields.end(); ++it) {
             if (it->second->GetType() == MPFD::Field::FileType) {
 
                 // add file name
@@ -178,7 +178,7 @@ void PsiServer::parseMultipartFormData(http::server3::request& req) {
             }
         }
 
-    } catch (MPFD::Exception e) {
+    } catch (MPFD::Exception & e) {
         ERROR(e.GetError());
     }
 }

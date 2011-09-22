@@ -19,9 +19,9 @@ namespace MPFD {
         Exception(std::string error);
         Exception(const Exception& orig);
         virtual ~Exception();
-        
-        std::string GetError();
-     
+
+        const std::string GetError();
+
     private:
         std::string Error;
 
