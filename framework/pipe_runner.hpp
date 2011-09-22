@@ -61,6 +61,14 @@ private:
             return factory_;
         }
 
+        boost::program_options::variables_map getOptions() const {
+            return options_;
+        }
+
+        std::string getContinuation() const {
+            return getFactory()->getContinuation(getOptions());
+        }
+
     };
 
     PipelineNode pipelineElement2Node_(const PipelineElementSpecification& element);
@@ -87,6 +95,7 @@ private:
     void checkReader_();
     void checkWriter_();
     void prepend_(const std::string& pipeline);
+    void append_(const std::string& pipeline);
 
     void runPipelineNode_(
         PipelineGraph::vertex_descriptor current,

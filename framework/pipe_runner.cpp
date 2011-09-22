@@ -123,6 +123,20 @@ void PipeRunner::checkReader_() {
 }
 
 void PipeRunner::checkWriter_() {
+    PipelineNode& lastPipelineNode = pipelineGraph_[lastNode];
+
+    std::string continuation = lastPipelineNode.getContinuation();
+
+    if (!continuation.empty())
+        append_(continuation);
+
+    const LatticeWriterFactory* writer =
+        dynamic_cast<const LatticeWriterFactory*>(
+            pipelineGraph_[firstNode].getFactory());
+
+    if (!writer)
+        ERROR("no writer specified");
+
 }
 
 void PipeRunner::prepend_(const std::string& pipeline) {
@@ -137,6 +151,20 @@ void PipeRunner::prepend_(const std::string& pipeline) {
     std::string emptyString;
     boost::add_edge(prepLast, prevFirst, emptyString, pipelineGraph_);
 }
+
+void PipeRunner::append_(const std::string& pipeline) {
+    PipelineSpecification appendedSpec;
+    parseIntoPipelineSpecification_(splitPipeline_(pipeline), false, appendedSpec);
+
+    PipelineGraph::vertex_descriptor prevLast = lastNode;
+    PipelineGraph::vertex_descriptor appFirst;
+
+    pipelineSpecification2Graph_(appendedSpec, appFirst, lastNode);
+
+    std::string emptyString;
+    boost::add_edge(prevLast, appFirst, emptyString, pipelineGraph_);
+}
+
 
 void PipeRunner::runPipelineNode_(
     PipelineGraph::vertex_descriptor current,

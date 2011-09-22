@@ -12,4 +12,9 @@ LatticeWriter* LatticeWriterFactory::doCreateProcessor(const boost::program_opti
 LatticeWriterFactory::~LatticeWriterFactory() {
 }
 
+std::string LatticeWriterFactory::doGetContinuation(
+    const boost::program_options::variables_map& /*options*/) const {
+    return std::string();
+}
+
 
