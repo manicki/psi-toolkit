@@ -70,7 +70,7 @@ std::string PipeSite::runPipe(std::string input) {
         INFO("... OK");
     }
     catch(std::exception& e) {
-        oss << "There is some problem: " << e.what() << std::endl
+        oss << "There are some problems: " << e.what() << std::endl
             << "Check the pipe-line specification and try once again.";
     }
 

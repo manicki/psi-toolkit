@@ -14,6 +14,8 @@
 #include <boost/spirit/include/phoenix_operator.hpp>
 #include <boost/spirit/include/qi.hpp>
 
+#include "utf8.h"
+
 #include "lattice_reader.hpp"
 #include "lattice_reader_factory.hpp"
 #include "quoter.hpp"
@@ -29,7 +31,6 @@ struct UTTLRItem {
     std::string segmentType;
     std::string form;
     std::string annotations;
-    std::string unused;
 
     void unescape(Quoter & quoter) {
         segmentType = quoter.unescape(segmentType);
@@ -42,11 +43,8 @@ struct UTTLRItem {
 BOOST_FUSION_ADAPT_STRUCT(
     UTTLRItem,
     (int, position)
-    (std::string, unused)
     (int, length)
-    (std::string, unused)
     (std::string, segmentType)
-    (std::string, unused)
     (std::string, form)
     (std::string, annotations)
 )
@@ -57,19 +55,27 @@ struct UTTLRGrammar : public qi::grammar<std::string::const_iterator, UTTLRItem(
     UTTLRGrammar() : UTTLRGrammar::base_type(start) {
 
         start
-            %= qi::int_
-            >> +(qi::space)
-            >> qi::int_
-            >> +(qi::space)
+            %= -whitespaces
+            >> optionalInt
+            >> optionalInt
             >> +(qi::char_ - ' ')
-            >> +(qi::space)
+            >> whitespaces
             >> +(qi::char_ - ' ')
-            >> -(qi::lexeme[' ' >> +(qi::char_)])
+            >> -(whitespaces >> +(qi::char_))
             ;
+
+        optionalInt
+            = qi::eps[qi::_val = -1]
+            >> -(qi::int_[qi::_val = qi::_1] >> +(qi::space))
+            ;
+
+        whitespaces = +(qi::space);
 
     }
 
     qi::rule<std::string::const_iterator, UTTLRItem()> start;
+    qi::rule<std::string::const_iterator, int()> optionalInt;
+    qi::rule<std::string::const_iterator, qi::unused_type()> whitespaces;
 
 };
 
@@ -100,6 +106,42 @@ public:
 
 private:
     virtual std::string doInfo();
+
+    class PosConverter {
+    public:
+        PosConverter() : count_(0) { }
+
+        int psi(int uttPos) {
+            for (int i = position_.size() - 1; i >= 0; --i) {
+                if (position_[i] <= uttPos) {
+                    return uttPos + offset_[i];
+                }
+            }
+            return uttPos;
+        }
+
+        int utt(int psiPos) {
+            for (int i = position_.size() - 1; i >= 0; --i) {
+                if (position_[i] + offset_[i] <= psiPos) {
+                    return psiPos - offset_[i];
+                }
+            }
+            return psiPos;
+        }
+
+        void add(int uttPos, int psiPos) {
+            if (psiPos - uttPos > count_) {
+                count_ = psiPos - uttPos;
+                position_.push_back(uttPos);
+                offset_.push_back(count_);
+            }
+        }
+
+    private:
+        std::vector<int> position_;
+        std::vector<int> offset_;
+        int count_;
+    };
 
     class Worker : public ReaderWorker {
     public:
