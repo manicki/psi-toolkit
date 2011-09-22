@@ -50,6 +50,9 @@ private:
 
     virtual std::list<std::string> doProvidedLayerTags() = 0;
 
+    virtual std::string doGetContinuation(
+        const boost::program_options::variables_map& options) const;
+
 };
 
 #endif

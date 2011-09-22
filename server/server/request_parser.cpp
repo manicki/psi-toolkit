@@ -286,9 +286,14 @@ boost::tribool request_parser::consume(request& req, char input)
     if (input == '\n')
 	{
 		if (req.method == "POST") {
-			set_post_data_length(req);
-			state_ = post_line_start;
-			return boost::indeterminate;
+            if (!is_multipart(req)) {
+                state_ = post_line_start;
+            }
+            else {
+                state_ = multipart_start;
+            }
+            set_post_data_length(req);
+            return boost::indeterminate;
 		}
 		else {
 			// end parsing for GET method
@@ -315,21 +320,36 @@ boost::tribool request_parser::consume(request& req, char input)
     else {
         return false;
     }
+  case multipart_start:
+    if (post_data_length_counter_ < post_data_length_) {
+        post_data_length_counter_++;
+        req.post_data += input;
+        return boost::indeterminate;
+    }
+    else {
+        return true;
+    }
   default:
     return false;
   }
 }
 
+bool request_parser::is_multipart(request& req) {
+    std::string val = req.get_header_value("Content-Type");
+
+    if (val.substr(0,9) == "multipart") {
+        return true;
+    }
+    return false;
+}
 
 void request_parser::set_post_data_length(request& req) {
     post_data_length_counter_ = 1;
     post_data_length_ = 0;
 
-    for (unsigned int i = req.headers.size(); i > 0; i--) {
-        if (req.headers[i-1].name == "Content-Length") {
-            post_data_length_ = atoi(req.headers[i-1].value.c_str());
-            break;
-        }
+    std::string val = req.get_header_value("Content-Length");
+    if (!val.empty()) {
+        post_data_length_ = atoi(val.c_str());
     }
 
     if (post_data_length_ == 0) {

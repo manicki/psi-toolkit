@@ -18,6 +18,9 @@ private:
 
     virtual LatticeReader* doCreateLatticeReader(const boost::program_options::variables_map& options) = 0;
 
+    virtual std::string doGetContinuation(
+        const boost::program_options::variables_map& options) const;
+
 };
 
 #endif

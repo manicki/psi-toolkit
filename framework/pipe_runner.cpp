@@ -28,39 +28,13 @@ PipeRunner::PipeRunner(std::vector<std::string> args) {
 int PipeRunner::run(std::istream& in, std::ostream& out) {
     Lattice lattice;
 
-    std::list<PipelineElementSpecification>::iterator it = pipelineSpecification_.elements.begin();
+    PipelineGraph::vertex_descriptor current = firstNode;
 
-    boost::program_options::variables_map options;
-
-    LatticeReaderFactory& readerFactory = getReaderFactory_(*it);
-    boost::scoped_ptr<LatticeReader> reader(readerFactory.createLatticeReader(options));
-
-    reader->readIntoLattice(in, lattice);
-    ++it;
-
-    for (;
-         it != pipelineSpecification_.elements.end();
-         ++it) {
-
-        if (isLastElement_(it, pipelineSpecification_)) {
-            LatticeWriterFactory& writerFactory = getWriterFactory_(*it);
-            boost::program_options::variables_map options
-                = parseOptions_(writerFactory.optionsHandled(), *it);
-
-            boost::scoped_ptr<LatticeWriter> writer(writerFactory.createLatticeWriter(options));
-
-            writer->writeLattice(lattice, out);
-        }
-        else {
-            AnnotatorFactory& annotatorFactory = getAnnotatorFactory_(*it);
-            boost::program_options::variables_map options
-                = parseOptions_(annotatorFactory.optionsHandled(), *it);
-
-            boost::scoped_ptr<Annotator> annotator(annotatorFactory.createAnnotator(options));
-
-            annotator->annotate(lattice);
-        }
-    }
+    do {
+        runPipelineNode_(current, lattice, in, out);
+        if (!goToNextNode_(current))
+            break;
+    } while (1);
 
     return 0;
 }
@@ -71,25 +45,15 @@ ProcessorFactory& PipeRunner::getFactory_(const PipelineElementSpecification& el
     return MainFactoriesKeeper::getInstance().getProcessorFactory(elementSpec.processorName);
 }
 
-LatticeReaderFactory& PipeRunner::getReaderFactory_(const PipelineElementSpecification& elementSpec) {
-    return dynamic_cast<LatticeReaderFactory&>(getFactory_(elementSpec));
-}
-
-LatticeWriterFactory& PipeRunner::getWriterFactory_(const PipelineElementSpecification& elementSpec) {
-    return dynamic_cast<LatticeWriterFactory&>(getFactory_(elementSpec));
-}
-
-AnnotatorFactory& PipeRunner::getAnnotatorFactory_(const PipelineElementSpecification& elementSpec) {
-    return dynamic_cast<AnnotatorFactory&>(getFactory_(elementSpec));
-}
-
 void PipeRunner::parseIntoGraph_(std::vector<std::string> args, bool isTheFirstArgProgramName) {
-    parseIntoPipelineSpecification_(args, isTheFirstArgProgramName);
-//    pipelineSpecification2Graph_();
+    parseIntoPipelineSpecification_(args, isTheFirstArgProgramName, pipelineSpecification_);
+    pipelineSpecification2Graph_(pipelineSpecification_, firstNode, lastNode);
+    completeGraph_();
 }
 
 void PipeRunner::parseIntoPipelineSpecification_(
-    std::vector<std::string> args, bool isTheFirstArgProgramName) {
+    std::vector<std::string> args, bool isTheFirstArgProgramName,
+    PipelineSpecification& pipelineSpec) {
 
     bool nameExpected = true;
 
@@ -99,40 +63,152 @@ void PipeRunner::parseIntoPipelineSpecification_(
 
         if (i == startingIndex || args[i] == PIPELINE_SEPARATOR) {
             nameExpected = true;
-            pipelineSpecification_.elements.push_back(PipelineElementSpecification());
+            pipelineSpec.elements.push_back(PipelineElementSpecification());
         }
 
         if (args[i] == PIPELINE_SEPARATOR) {
             ;
         }
         else if (nameExpected) {
-            pipelineSpecification_.elements.back().processorName = args[i];
+            pipelineSpec.elements.back().processorName = args[i];
             nameExpected = false;
         }
         else {
-            pipelineSpecification_.elements.back().processorArgs.push_back(args[i]);
+            pipelineSpec.elements.back().processorArgs.push_back(args[i]);
         }
     }
 }
 
-void PipeRunner::pipelineSpecification2Graph_() {
+void PipeRunner::pipelineSpecification2Graph_(
+    PipelineSpecification& pipelineSpec,
+    PipelineGraph::vertex_descriptor& firstVertex,
+    PipelineGraph::vertex_descriptor& lastVertex) {
+
     bool isFirst = true;
     PipelineGraph::vertex_descriptor currentVertex;
 
-    BOOST_FOREACH(const PipelineElementSpecification& element, pipelineSpecification_.elements) {
+    BOOST_FOREACH(const PipelineElementSpecification& element, pipelineSpec.elements) {
         PipelineGraph::vertex_descriptor newVertex =
             boost::add_vertex(
                 pipelineElement2Node_(element),
                 pipelineGraph_);
 
-        if (isFirst)
+        if (isFirst) {
             isFirst = false;
+            firstVertex = newVertex;
+        }
         else {
             std::string emptyString;
             boost::add_edge(currentVertex, newVertex, emptyString, pipelineGraph_);
-            currentVertex = newVertex;
         }
+
+        currentVertex = newVertex;
     }
+
+    lastVertex = currentVertex;
+}
+
+void PipeRunner::completeGraph_() {
+    checkReader_();
+    checkWriter_();
+}
+
+void PipeRunner::checkReader_() {
+    const LatticeReaderFactory* reader =
+        dynamic_cast<const LatticeReaderFactory*>(
+            pipelineGraph_[firstNode].getFactory());
+
+    if (!reader)
+        prepend_("txt-reader --line-by-line");
+}
+
+void PipeRunner::checkWriter_() {
+    PipelineNode& lastPipelineNode = pipelineGraph_[lastNode];
+
+    std::string continuation = lastPipelineNode.getContinuation();
+
+    if (!continuation.empty())
+        append_(continuation);
+
+    const LatticeWriterFactory* writer =
+        dynamic_cast<const LatticeWriterFactory*>(
+            pipelineGraph_[firstNode].getFactory());
+
+    if (!writer)
+        ERROR("no writer specified");
+
+}
+
+void PipeRunner::prepend_(const std::string& pipeline) {
+    PipelineSpecification prependedSpec;
+    parseIntoPipelineSpecification_(splitPipeline_(pipeline), false, prependedSpec);
+
+    PipelineGraph::vertex_descriptor prevFirst = firstNode;
+    PipelineGraph::vertex_descriptor prepLast;
+
+    pipelineSpecification2Graph_(prependedSpec, firstNode, prepLast);
+
+    std::string emptyString;
+    boost::add_edge(prepLast, prevFirst, emptyString, pipelineGraph_);
+}
+
+void PipeRunner::append_(const std::string& pipeline) {
+    PipelineSpecification appendedSpec;
+    parseIntoPipelineSpecification_(splitPipeline_(pipeline), false, appendedSpec);
+
+    PipelineGraph::vertex_descriptor prevLast = lastNode;
+    PipelineGraph::vertex_descriptor appFirst;
+
+    pipelineSpecification2Graph_(appendedSpec, appFirst, lastNode);
+
+    std::string emptyString;
+    boost::add_edge(prevLast, appFirst, emptyString, pipelineGraph_);
+}
+
+
+void PipeRunner::runPipelineNode_(
+    PipelineGraph::vertex_descriptor current,
+    Lattice& lattice, std::istream& in, std::ostream& out) {
+
+    PipelineNode& currentPipelineNode = pipelineGraph_[current];
+    currentPipelineNode.createProcessor();
+
+    if (current == firstNode) {
+        boost::shared_ptr<LatticeReader> reader =
+            boost::dynamic_pointer_cast<LatticeReader>(
+                currentPipelineNode.getProcessor());
+        reader->readIntoLattice(in, lattice);
+    }
+    else if (current == lastNode) {
+        boost::shared_ptr<LatticeWriter> writer =
+            boost::dynamic_pointer_cast<LatticeWriter>(
+                currentPipelineNode.getProcessor());
+        writer->writeLattice(lattice, out);
+    }
+    else {
+        boost::shared_ptr<Annotator> annotator =
+            boost::dynamic_pointer_cast<Annotator>(
+                currentPipelineNode.getProcessor());
+        annotator->annotate(lattice);
+    }
+}
+
+bool PipeRunner::goToNextNode_(PipelineGraph::vertex_descriptor& current) {
+    std::pair<boost::graph_traits<PipelineGraph>::out_edge_iterator,
+              boost::graph_traits<PipelineGraph>::out_edge_iterator> iterPair
+        = boost::out_edges(current, pipelineGraph_);
+
+    if (iterPair.first == iterPair.second)
+        return false;
+    else {
+        current = boost::target(*iterPair.first, pipelineGraph_);
+
+        ++iterPair.first;
+        if (iterPair.first != iterPair.second)
+            WARN("unexpected fork in pipeline graph");
+    }
+
+    return true;
 }
 
 PipeRunner::PipelineNode PipeRunner::pipelineElement2Node_(const PipelineElementSpecification& element) {
@@ -141,13 +217,6 @@ PipeRunner::PipelineNode PipeRunner::pipelineElement2Node_(const PipelineElement
     return PipelineNode(
         factory,
         parseOptions_(factory.optionsHandled(), element));
-}
-
-bool PipeRunner::isLastElement_(
-    std::list<PipelineElementSpecification>::iterator it,
-    PipelineSpecification& pipelineSpecification) {
-    ++it;
-    return it == pipelineSpecification.elements.end();
 }
 
 boost::program_options::variables_map PipeRunner::parseOptions_(

@@ -1,0 +1,16 @@
+     0000 BOS *
+     W Piszemy lem:pisać,V
+     S _
+     W dobre lem:dobry,ADJ
+     S _
+     W progrumy cor:programy lem:program,N
+     P .
+     EOS *
+     S _
+     0024 BOS *
+     W Warszawiacy lem:Warszawiak,N
+     S _
+     W też
+     P .
+     EOS *
+

@@ -10,6 +10,7 @@ public:
     std::string pipe;
     std::string input;
     std::string output;
+    std::string file;
 
     PipeSite(PsiServer& server, std::string initialPipe);
 

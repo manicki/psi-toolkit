@@ -20,6 +20,9 @@ private:
 
     virtual LatticeWriter* doCreateLatticeWriter(const boost::program_options::variables_map& options) = 0;
 
+    std::string doGetContinuation(
+        const boost::program_options::variables_map& options) const;
+
 };
 
 #endif
