@@ -199,49 +199,46 @@ struct PsiLRAVPairGrammar : public qi::grammar<
 };
 
 
-struct PsiLRPartitionsItem {
-    bool open;
-    std::vector<std::string> partitions;
-    bool close;
-};
-
-
-BOOST_FUSION_ADAPT_STRUCT(
-    PsiLRPartitionsItem,
-    (bool, open)
-    (std::vector<std::string>, partitions)
-    (bool, close)
-)
-
-
 struct PsiLRPartitionsGrammar : public qi::grammar<
     std::string::const_iterator,
-    PsiLRPartitionsItem()
+    std::vector<std::string>()
 > {
 
     PsiLRPartitionsGrammar() : PsiLRPartitionsGrammar::base_type(start) {
 
         start
-            %= openBracket
-            >> +(qi::char_ - ',') % ','
-            >> closeBracket
-            ;
-
-        openBracket
-            = qi::eps[qi::_val = false]
-            >> -(qi::lit("[")[qi::_val = true])
-            ;
-
-        closeBracket
-            = qi::eps[qi::_val = false]
-            >> -(qi::lit("]")[qi::_val = true])
+            %= '['
+            >> +(qi::char_ - ']' - ',') % ','
+            >> ']'
             ;
 
     }
 
-    qi::rule<std::string::const_iterator, PsiLRPartitionsItem()> start;
-    qi::rule<std::string::const_iterator, bool()> openBracket;
-    qi::rule<std::string::const_iterator, bool()> closeBracket;
+    qi::rule<std::string::const_iterator, std::vector<std::string>()> start;
+
+};
+
+
+struct PsiLRPartitionGrammar : public qi::grammar<
+    std::string::const_iterator,
+    std::vector<int>()
+> {
+
+    PsiLRPartitionGrammar() : PsiLRPartitionGrammar::base_type(start) {
+
+        start
+            %= edge % '-'
+            ;
+
+        edge
+            = qi::eps[qi::_val = 0]
+            >> -(qi::int_[qi::_val = qi::_1])
+            ;
+
+    }
+
+    qi::rule<std::string::const_iterator, std::vector<int>()> start;
+    qi::rule<std::string::const_iterator, int()> edge;
 
 };
 

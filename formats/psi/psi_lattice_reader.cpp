@@ -20,6 +20,8 @@ void PsiLatticeReader::Worker::doRun() {
     PsiLRGrammar grammar;
     PsiLRAVGrammar avGrammar;
     PsiLRAVPairGrammar avPairGrammar;
+    PsiLRPartitionsGrammar partsGrammar;
+    PsiLRPartitionGrammar partGrammar;
     std::string line;
     while (std::getline(inputStream_, line)) {
         PsiLRItem item;
@@ -37,12 +39,12 @@ tagsSs << "+";
 tagsSs << tag;
 }
 
-// DEBUG("+|" << ((item.ordinal < 10)?" ":"") << item.ordinal
-    // << "|" << item.annotationItem.category << "|\t"
-    // << "|" << item.annotationItem.score << "|\t"
-    // << "|" << item.annotationItem.avVector << "|\t"
-    // << "|" << item.annotationItem.partitions
-    // << "|");
+DEBUG("+|" << ((item.ordinal < 10)?" ":"") << item.ordinal
+    << "|" << item.annotationItem.category << "|\t"
+    << "|" << item.annotationItem.score << "|\t"
+    << "|" << item.annotationItem.avVector << "|\t"
+    << "|" << item.annotationItem.partitions
+    << "|");
 
             std::vector<std::string> avItem;
             std::string::const_iterator avBegin = item.annotationItem.avVector.begin();
@@ -66,9 +68,35 @@ tagsSs << tag;
 
             }
 
-        // } else {
-// if (!line.empty() && line[0] != '#')
-// DEBUG("-|" << line.substr(0,2) << "|--------");
+DEBUG("\t" << (item.annotationItem.partitions.empty()?"default":"[]"));
+
+            std::vector<std::string> partsItem;
+            std::string::const_iterator partsBegin = item.annotationItem.partitions.begin();
+            std::string::const_iterator partsEnd = item.annotationItem.partitions.end();
+            if (parse(partsBegin, partsEnd, partsGrammar, partsItem)) {
+
+// DEBUG("\t" << ((partsItem.open && partsItem.close)?"[]":"default"));
+
+                BOOST_FOREACH(std::string part, partsItem) {
+                    std::vector<int> partItem;
+                    std::string::const_iterator partBegin = part.begin();
+                    std::string::const_iterator partEnd = part.end();
+                    if (parse(partBegin, partEnd, partGrammar, partItem)) {
+                        BOOST_FOREACH(int edge, partItem) {
+
+DEBUG("\t\t" << edge);
+// DEBUG("\t" << avPairItem.arg);
+// DEBUG("\t\t" << avPairItem.val);
+
+                        }
+                    }
+                }
+
+            }
+
+        } else {
+if (!line.empty() && line[0] != '#')
+DEBUG("-|" << line.substr(0,2) << "|--------");
 
         }
     }
