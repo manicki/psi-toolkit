@@ -50,29 +50,42 @@ void UTTLatticeReader::Worker::doRun() {
     std::string line;
     std::string sentenceForm = "";
     int beginningOfSentencePosition = -1;
+    int endPosition = -1;
     while (std::getline(inputStream_, line)) {
         UTTLRItem item;
         std::string::const_iterator begin = line.begin();
         std::string::const_iterator end = line.end();
         if (parse(begin, end, grammar, item)) {
 
-            item.unescape(quoter);
+            if (item.form == "*") {
+                item.form = "";
+            }
 
             if (item.position < 0) {
-                item.position = conv.utt(lattice_.getVertexRawCharIndex(lattice_.getLastVertex()));
+                if (endPosition < 0) {
+                    throw FileFormatException("UTT reader: No beginning position.");
+                }
+                item.position = endPosition;
             }
 
             if (item.length < 0) {
                 item.length = utf8::distance(item.form.begin(), item.form.end());
             }
 
+            item.unescape(quoter);
+            endPosition = item.position + item.length;
+
             if (item.length > 0) {
 
                 if ((unsigned int)item.length == item.form.length()) {
-                    lattice_.appendStringWithSymbols(item.form.substr(
-                        conv.utt(lattice_.getVertexRawCharIndex(lattice_.getLastVertex()))
-                            - item.position
-                    ));
+                    try {
+                        lattice_.appendStringWithSymbols(item.form.substr(
+                            conv.utt(lattice_.getVertexRawCharIndex(lattice_.getLastVertex()))
+                                - item.position
+                        ));
+                    } catch (std::out_of_range) {
+                        // Don't need to append lattice.
+                    }
                 } else {
                     std::string::iterator iter = item.form.begin();
                     std::string::iterator end = item.form.end();
@@ -81,20 +94,29 @@ void UTTLatticeReader::Worker::doRun() {
                         i < conv.utt(lattice_.getVertexRawCharIndex(lattice_.getLastVertex()));
                         ++i
                     ) {
-                        utf8::next(iter, end);
+                        try {
+                            utf8::next(iter, end);
+                        } catch (utf8::not_enough_room) {
+                            break; // Don't need to iterate further.
+                        }
                     }
                     for (
                         int i = conv.utt(lattice_.getVertexRawCharIndex(lattice_.getLastVertex()));
-                        i < item.position + item.length;
+                        i < endPosition;
                         ++i
                     ) {
                         conv.add(i, lattice_.getVertexRawCharIndex(lattice_.getLastVertex()));
-                        std::string symbol;
-                        utf8::append(utf8::next(iter, end), std::back_inserter(symbol));
-                        lattice_.appendStringWithSymbols(symbol);
+                        try {
+                            std::string symbol;
+                            utf8::append(utf8::next(iter, end), std::back_inserter(symbol));
+                            lattice_.appendStringWithSymbols(symbol);
+                        } catch (utf8::not_enough_room) {
+                            lattice_.appendStringWithSymbols(" ");
+                                // Appending lattice with undefined content.
+                        }
                     }
                     conv.add(
-                        item.position + item.length,
+                        endPosition,
                         lattice_.getVertexRawCharIndex(lattice_.getLastVertex())
                     );
                 }
@@ -102,7 +124,7 @@ void UTTLatticeReader::Worker::doRun() {
                 Lattice::VertexDescriptor from
                     = lattice_.getVertexForRawCharIndex(conv.psi(item.position));
                 Lattice::VertexDescriptor to
-                    = lattice_.getVertexForRawCharIndex(conv.psi(item.position + item.length));
+                    = lattice_.getVertexForRawCharIndex(conv.psi(endPosition));
 
                 LayerTagMask rawMask = lattice_.getLayerTagManager().getMask("symbol");
 
@@ -140,7 +162,7 @@ void UTTLatticeReader::Worker::doRun() {
                 LayerTagMask tokenMask = lattice_.getLayerTagManager().getMask("token");
 
                 Lattice::EdgeSequence::Builder sentenceBuilder;
-                for (int i = beginningOfSentencePosition; i < item.position + item.length; ++i) {
+                for (int i = beginningOfSentencePosition; i < endPosition; ++i) {
                     try {
                         sentenceBuilder.addEdge(
                             lattice_.firstOutEdge(
@@ -153,7 +175,7 @@ void UTTLatticeReader::Worker::doRun() {
 
                 lattice_.addEdge(
                     lattice_.getVertexForRawCharIndex(conv.psi(beginningOfSentencePosition)),
-                    lattice_.getVertexForRawCharIndex(conv.psi(item.position + item.length)),
+                    lattice_.getVertexForRawCharIndex(conv.psi(endPosition)),
                     AnnotationItem(sentenceForm),
                     lattice_.getLayerTagManager().createSingletonTagCollection("sentence"),
                     sentenceBuilder.build()
