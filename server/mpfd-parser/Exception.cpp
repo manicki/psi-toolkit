@@ -18,6 +18,6 @@ MPFD::Exception::~Exception() {
 
 }
 
-const std::string MPFD::Exception::GetError() {
+std::string MPFD::Exception::GetError() const {
     return Error;
 }

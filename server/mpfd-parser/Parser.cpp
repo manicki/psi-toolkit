@@ -23,7 +23,7 @@ MPFD::Parser::Parser() {
 
 MPFD::Parser::~Parser() {
     std::map<std::string, Field *>::iterator it;
-    for (it = Fields.begin(); it != Fields.end(); it++) {
+    for (it = Fields.begin(); it != Fields.end(); ++it) {
         delete it->second;
     }
 
@@ -40,7 +40,7 @@ void MPFD::Parser::SetContentType(const std::string & type) {
         throw MPFD::Exception(std::string("Content type is not \"multipart/form-data\"\nIt is \"") + type + std::string("\""));
     }
 
-    unsigned int bp = type.find("boundary=");
+    std::size_t bp = type.find("boundary=");
 
     if (bp == std::string::npos) {
         throw MPFD::Exception(std::string("Cannot find boundary in Content-type: \"") + type + std::string("\""));

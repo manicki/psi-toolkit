@@ -20,7 +20,7 @@ namespace MPFD {
         Exception(const Exception& orig);
         virtual ~Exception();
 
-        const std::string GetError();
+        std::string GetError() const;
 
     private:
         std::string Error;
