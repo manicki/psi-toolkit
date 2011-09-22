@@ -82,11 +82,14 @@ private:
     expecting_newline_2,
     expecting_newline_3,
 	post_line_start,
+    multipart_start
   } state_;
 
   void set_post_data_length(request& req);
   int post_data_length_;
   int post_data_length_counter_;
+
+  bool is_multipart(request& req);
 
 };
 
