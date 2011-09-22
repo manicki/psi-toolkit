@@ -218,10 +218,8 @@ std::string RuleLoader::compileRulePattern(std::string &matched, int &size,
                         s = s.substr(1, std::string::npos);
                     }
                 } else {
-                    if (s == "") {
-                        tokensModifiers.push_back("");
-                        tokensRequired.push_back(true);
-                    }
+                    tokensModifiers.push_back("");
+                    tokensRequired.push_back(true);
                 }
                 tokensPatterns.push_back(pattern);
                 i = 0;
