@@ -27,13 +27,6 @@ private:
     void parseIntoPipelineSpecification_(std::vector<std::string> args, bool isTheFirstArgProgramName);
 
     ProcessorFactory& getFactory_(const PipelineElementSpecification& elementSpec);
-    LatticeReaderFactory& getReaderFactory_(const PipelineElementSpecification& elementSpec);
-    LatticeWriterFactory& getWriterFactory_(const PipelineElementSpecification& elementSpec);
-    AnnotatorFactory& getAnnotatorFactory_(const PipelineElementSpecification& elementSpec);
-
-    bool isLastElement_(
-        std::list<PipelineElementSpecification>::iterator it,
-        PipelineSpecification& pipelineSpecification);
 
     boost::program_options::variables_map parseOptions_(
         const boost::program_options::options_description& optionsDescription,

@@ -45,18 +45,6 @@ ProcessorFactory& PipeRunner::getFactory_(const PipelineElementSpecification& el
     return MainFactoriesKeeper::getInstance().getProcessorFactory(elementSpec.processorName);
 }
 
-LatticeReaderFactory& PipeRunner::getReaderFactory_(const PipelineElementSpecification& elementSpec) {
-    return dynamic_cast<LatticeReaderFactory&>(getFactory_(elementSpec));
-}
-
-LatticeWriterFactory& PipeRunner::getWriterFactory_(const PipelineElementSpecification& elementSpec) {
-    return dynamic_cast<LatticeWriterFactory&>(getFactory_(elementSpec));
-}
-
-AnnotatorFactory& PipeRunner::getAnnotatorFactory_(const PipelineElementSpecification& elementSpec) {
-    return dynamic_cast<AnnotatorFactory&>(getFactory_(elementSpec));
-}
-
 void PipeRunner::parseIntoGraph_(std::vector<std::string> args, bool isTheFirstArgProgramName) {
     parseIntoPipelineSpecification_(args, isTheFirstArgProgramName);
     pipelineSpecification2Graph_();
@@ -169,13 +157,6 @@ PipeRunner::PipelineNode PipeRunner::pipelineElement2Node_(const PipelineElement
     return PipelineNode(
         factory,
         parseOptions_(factory.optionsHandled(), element));
-}
-
-bool PipeRunner::isLastElement_(
-    std::list<PipelineElementSpecification>::iterator it,
-    PipelineSpecification& pipelineSpecification) {
-    ++it;
-    return it == pipelineSpecification.elements.end();
 }
 
 boost::program_options::variables_map PipeRunner::parseOptions_(
