@@ -63,7 +63,7 @@
 08 0004 02 ma          token                'ma',type=word
 09 0004 02 ma          lemma,poleng-tagset  mieć,pos=C:N,morpho=OP3[8]
 10 0004 02 ma          lemma,poleng-tagset  mój,pos=ZP,morpho=ŻMP[8]
-11 0004 03 ma          parse,gobio          czasownik,C=teraźniejszy,R=any,L=1,O=3[9]
+11 0004 02 ma          parse,gobio          czasownik,C=teraźniejszy,R=any,L=1,O=3[9]
 
 # Here comes the tricky stuff - the entity &nbsp;, now `symbol` edge is
 # given explicitly:
