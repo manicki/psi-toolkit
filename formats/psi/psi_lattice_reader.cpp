@@ -39,12 +39,12 @@ tagsSs << "+";
 tagsSs << tag;
 }
 
-DEBUG("+|" << ((item.ordinal < 10)?" ":"") << item.ordinal
-    << "|" << item.annotationItem.category << "|\t"
-    << "|" << item.annotationItem.score << "|\t"
-    << "|" << item.annotationItem.avVector << "|\t"
-    << "|" << item.annotationItem.partitions
-    << "|");
+// DEBUG("+|" << ((item.ordinal < 10)?" ":"") << item.ordinal
+    // << "|" << item.annotationItem.category << "|\t"
+    // << "|" << item.annotationItem.score << "|\t"
+    // << "|" << item.annotationItem.avVector << "|\t"
+    // << "|" << item.annotationItem.partitions
+    // << "|");
 
             std::vector<std::string> avItem;
             std::string::const_iterator avBegin = item.annotationItem.avVector.begin();
@@ -68,7 +68,7 @@ DEBUG("+|" << ((item.ordinal < 10)?" ":"") << item.ordinal
 
             }
 
-DEBUG("\t" << (item.annotationItem.partitions.empty()?"default":"[]"));
+// DEBUG("\t" << (item.annotationItem.partitions.empty()?"default":"[]"));
 
             std::vector<std::string> partsItem;
             std::string::const_iterator partsBegin = item.annotationItem.partitions.begin();
@@ -84,7 +84,7 @@ DEBUG("\t" << (item.annotationItem.partitions.empty()?"default":"[]"));
                     if (parse(partBegin, partEnd, partGrammar, partItem)) {
                         BOOST_FOREACH(int edge, partItem) {
 
-DEBUG("\t\t" << edge);
+// DEBUG("\t\t" << edge);
 // DEBUG("\t" << avPairItem.arg);
 // DEBUG("\t\t" << avPairItem.val);
 
@@ -94,9 +94,9 @@ DEBUG("\t\t" << edge);
 
             }
 
-        } else {
-if (!line.empty() && line[0] != '#')
-DEBUG("-|" << line.substr(0,2) << "|--------");
+        // } else {
+// if (!line.empty() && line[0] != '#')
+// DEBUG("-|" << line.substr(0,2) << "|--------");
 
         }
     }

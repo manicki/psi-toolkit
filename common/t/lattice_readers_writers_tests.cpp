@@ -178,6 +178,10 @@ BOOST_AUTO_TEST_CASE( psi_lattice_reader ) {
     boost::scoped_ptr<LatticeReader> reader(new PsiLatticeReader());
 
     reader->readIntoLattice(ROOT_DIR "formats/psi/t/files/pl_sample.txt", lattice);
+
+    boost::scoped_ptr<LatticeWriter> writer(new PsiLatticeWriter());
+
+    writer->writeLattice(lattice, std::cout);
 }
 
 BOOST_AUTO_TEST_CASE( psi_lattice_reader_2 ) {
@@ -186,6 +190,10 @@ BOOST_AUTO_TEST_CASE( psi_lattice_reader_2 ) {
     boost::scoped_ptr<LatticeReader> reader(new PsiLatticeReader());
 
     reader->readIntoLattice(ROOT_DIR "formats/psi/t/files/pl_sample_nocomments.txt", lattice);
+
+    boost::scoped_ptr<LatticeWriter> writer(new PsiLatticeWriter());
+
+    writer->writeLattice(lattice, std::cout);
 }
 
 BOOST_AUTO_TEST_CASE( simple_lattice_writer ) {
