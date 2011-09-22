@@ -126,12 +126,18 @@ void PsiServer::checkForAction(http::server3::request& req) {
         q += 6;
     }
 
-    if (req.get_header_value("Content-Type").find("multipart/form-data;") != 0) {
-        parseNamesAndValues(uri, q);
-    }
-    else {
+    name_values_.clear();
+    if (req.get_header_value("Content-Type").find("multipart/form-data;") == 0) {
         parseMultipartFormData(req);
     }
+    else {
+        parseNamesAndValues(uri, q);
+    }
+
+    std::cerr << "Name/values:" << std::endl;
+    std::multimap <std::string, std::string>::iterator it;
+    for (it = name_values_.begin() ; it != name_values_.end(); it++)
+        std::cerr << (*it).first << " => " << (*it).second << std::endl;
 
     // call the function
     req.uri = pfun->second(this);
@@ -141,13 +147,34 @@ void PsiServer::checkForAction(http::server3::request& req) {
 void PsiServer::parseMultipartFormData(http::server3::request& req) {
     try {
         MPFD::Parser parser;
+
         parser.SetTempDirForFileUpload("/tmp");
+        parser.SetUploadedFilesStorage(MPFD::Parser::StoreUploadedFilesInMemory);
         parser.SetContentType(req.get_header_value("Content-Type"));
-        std::string data = req.post_data;
 
-        parser.AcceptSomeData(data.c_str(), data.size());
+        parser.AcceptSomeData(req.post_data.c_str(), req.post_data.size());
 
+        std::map<std::string, MPFD::Field *> fields = parser.GetFieldsMap();
+        std::map<std::string, MPFD::Field *>::iterator it;
 
+        for (it = fields.begin(); it != fields.end(); it++) {
+            if (it->second->GetType() == MPFD::Field::FileType) {
+
+                // add file name
+                name_values_.insert(std::pair<std::string, std::string> (
+                    it->first + std::string("-filename"), it->second->GetFileName()
+                ));
+                // add file content
+                name_values_.insert(std::pair<std::string, std::string> (
+                    it->first, std::string(it->second->GetFileContent())
+                ));
+            }
+            else {
+                name_values_.insert(std::pair<std::string, std::string> (
+                    it->first, it->second->GetTextTypeContent()
+                ));
+            }
+        }
 
     } catch (MPFD::Exception e) {
         ERROR(e.GetError());
@@ -155,7 +182,6 @@ void PsiServer::parseMultipartFormData(http::server3::request& req) {
 }
 
 void PsiServer::parseNamesAndValues(std::string uri, int q) {
-    name_values_.clear();
     std::string name;
     std::string value;
 
