@@ -22,6 +22,18 @@ LayerTagCollection LayerTagManager::createTagCollection(std::list<std::string> t
     return result;
 }
 
+LayerTagCollection LayerTagManager::createTagCollection(std::vector<std::string> tagNames) {
+    LayerTagCollection result = LayerTagCollection();
+    BOOST_FOREACH(std::string tagName, tagNames) {
+        m_.insert(StringBimapItem(tagName, m_.size()));
+        if (m_.left.at(tagName) >= result.v_.size()) {
+            result.resize_(m_.left.at(tagName) + 1);
+        }
+        result.v_.set(m_.left.at(tagName), true);
+    }
+    return result;
+}
+
 LayerTagCollection LayerTagManager::createTagCollection(LayerTagMask mask) {
     if (mask.isAny()) {
         LayerTagCollection result = LayerTagCollection(m_.size());

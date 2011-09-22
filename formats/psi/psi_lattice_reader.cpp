@@ -22,6 +22,7 @@ void PsiLatticeReader::Worker::doRun() {
     PsiLRAVPairGrammar avPairGrammar;
     PsiLRPartitionsGrammar partsGrammar;
     PsiLRPartitionGrammar partGrammar;
+    LayerTagManager ltm = lattice_.getLayerTagManager();
     std::string line;
     while (std::getline(inputStream_, line)) {
         if (
@@ -36,6 +37,25 @@ void PsiLatticeReader::Worker::doRun() {
         if (parse(begin, end, grammar, item)) {
 
             item.unescape(quoter);
+
+            LayerTagCollection tags = ltm.createTagCollection(item.tags);
+            LayerTagMask tagsMask = ltm.getMask(tags);
+
+            if (!item.beginningLoose) {
+                try {
+                    if (ltm.match(tagsMask, "symbol")) {
+                        lattice_.appendString(item.text.substr(
+                            lattice_.getVertexRawCharIndex(lattice_.getLastVertex()) - item.beginning
+                        ));
+                    } else {
+                        lattice_.appendStringWithSymbols(item.text.substr(
+                            lattice_.getVertexRawCharIndex(lattice_.getLastVertex()) - item.beginning
+                        ));
+                    }
+                } catch (std::out_of_range) {
+                    // Don't need to append lattice.
+                }
+            }
 
             std::vector<std::string> avItem;
             std::string::const_iterator avBegin = item.annotationItem.avVector.begin();
@@ -65,11 +85,11 @@ void PsiLatticeReader::Worker::doRun() {
                     std::string::const_iterator partBegin = part.begin();
                     std::string::const_iterator partEnd = part.end();
                     if (parse(partBegin, partEnd, partGrammar, partItem)) {
-                        BOOST_FOREACH(int edge, partItem) {
+                        // BOOST_FOREACH(int edge, partItem) {
 
                             //TODO
 
-                        }
+                        // }
                     }
                 }
 
@@ -81,5 +101,8 @@ void PsiLatticeReader::Worker::doRun() {
 
         }
     }
+
+DEBUG("Σ: " << lattice_.getAllText());
+
 }
 

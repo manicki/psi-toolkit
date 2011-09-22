@@ -23,8 +23,15 @@ public:
 
     LayerTagCollection createTagCollection(std::list<std::string> tagNames);
 
+    LayerTagCollection createTagCollection(std::vector<std::string> tagNames);
+
     // alternative non-ambiguous form to make it simple to use Boost.Assign
     LayerTagCollection createTagCollectionFromList(std::list<std::string> tagNames) {
+        return createTagCollection(tagNames);
+    }
+
+    // alternative non-ambiguous form to make it simple to use Boost.Assign
+    LayerTagCollection createTagCollectionFromVector(std::vector<std::string> tagNames) {
         return createTagCollection(tagNames);
     }
 
