@@ -25,6 +25,8 @@ public:
      */
     boost::program_options::options_description optionsHandled();
 
+    std::string getContinuation(const boost::program_options::variables_map& options) const;
+
     /**
      * Name as used in the psi toolkit.
      */
@@ -34,9 +36,13 @@ public:
 
 private:
 
-    virtual Processor* doCreateProcessor(const boost::program_options::variables_map& options) = 0;
+    virtual Processor* doCreateProcessor(
+        const boost::program_options::variables_map& options) = 0;
 
     virtual boost::program_options::options_description doOptionsHandled() = 0;
+
+    virtual std::string doGetContinuation(
+        const boost::program_options::variables_map& options) const = 0;
 
     virtual std::string doGetName() = 0;
 

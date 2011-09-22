@@ -15,14 +15,10 @@ namespace bonsai {
 
 namespace puddle {
 
-//typedef std::vector<std::string> TokenMask;
-//typedef std::vector<TokenMask> Interpretations;
-
 class TokenPatternPart {
     public:
         TokenPatternPart() : condition(""), negative(false) {}
         std::string condition;
-//        std::string modifier;
         bool negative;
 };
 class TokenPattern {
@@ -32,27 +28,21 @@ class TokenPattern {
         std::string modifier;
         TokenPatternPart base;
 };
-//typedef std::vector<TokenPatternPart> TokenPattern;
 typedef std::vector<TokenPattern> TokenPatterns;
 
 class RuleLoader {
     public:
-        RuleLoader();//const boost::program_options::variables_map& options);
-//        RuleLoader(std::string &filename);
+        RuleLoader();
         ~RuleLoader();
 
         void setTagset(TagsetPtr aTagset);
-        RulesPtr readFromFile(std::string &filename); //, LatticeWrapperPtr latticeWrapper);
-//        void test();
-
-//        void logRulesToFile(std::string &filename);
+        RulesPtr readFromFile(std::string &filename);
 
         void setVerbose(); //@todo: te do wyrzutu chyba
         void setSyntok();
 
-        RulePtr compileRule(std::string ruleString); //, LatticeWrapperPtr latticeWrapper);
+        RulePtr compileRule(std::string ruleString);
         ActionPtr compileAction(std::string actionString, RulePtr rule);
-//               LatticeWrapperPtr latticeWrapper);
 
 #if HAVE_RE2
         std::string compileRulePattern(std::string &matched, int &size,
@@ -70,14 +60,11 @@ class RuleLoader {
 #endif
 
     private:
-        TagsetPtr tagset;
-//        int numAttributes;
         std::string compileNonTokens(std::string &matched);
         std::string compileRuleName(std::string matched);
-        //std::string compileRuleMatch(std::string &matched, int &size, std::vector<string> &tokensPatterns, std::vector<string> &tokensModifiers, std::vector<bool> &tokensRequired, std::vector<int> &matchedIndexes, int &bracketCount);
         ActionsPtr compileRuleAction(std::string &matched, int ruleLeftCount,
                 int ruleMatchCount, int ruleRightCount, std::string ruleName,
-                bool &repeat); //, LatticeWrapperPtr latticeWrapper);
+                bool &repeat);
 
         int countTokens(std::string &matched);
         std::string getToken(std::string &matched, std::string &before);
@@ -87,18 +74,17 @@ class RuleLoader {
 #else
         std::string compileToken(std::string &token, bool no_prefix = false);
 #endif
+
         std::string getKey(std::string &token);
         std::string getValue(std::string &token);
         std::string getOperator(std::string &token);
+        std::string getHead(std::string &token);
 
-        //bool compilePosCondition(std::string &comparisonOperator, std::string &value, Interpretations &interps);
-        bool compilePosCondition(std::string &comparisonOperator,
+        void compilePosCondition(std::string &comparisonOperator,
                 std::string &value, TokenPatterns &tokenPatterns);
-        //bool compileBaseCondition(std::string &comparisonOperator, std::string &value, Interpretations &interps, bool icase);
-        bool compileBaseCondition(std::string &comparisonOperator,
+        void compileBaseCondition(std::string &comparisonOperator,
                 std::string &value, TokenPatterns &tokenPatterns, bool icase);
-        //bool compileAttributeCondition(std::string &key, std::string &comparisonOperator, std::string &value, Interpretations &interps);
-        bool compileAttributeCondition(std::string &key,
+        void compileAttributeCondition(std::string &key,
                 std::string &comparisonOperator, std::string &value,
                 TokenPatterns &tokenPatterns);
 #if HAVE_RE2
@@ -109,50 +95,50 @@ class RuleLoader {
         std::string compileOrthCondition(std::string &comparisonOperator,
                 std::string &value, bool icase);
 #endif
-        //std::string interpretationsToString(Interpretations interps);
+        bool compileDeleteCondition(std::string &key, std::string &comparisonOperator,
+                std::string &value, DeleteConditions &conditions);
+        std::vector<std::string> compileAddInterpretation(std::string &pattern);
+
 #if HAVE_RE2
         std::string generateTokenPatternsString(TokenPatterns tokenPatterns,
                 NegativePatternStrings &negativePatterns);
 #else
         std::string generateTokenPatternsString(TokenPatterns tokenPatterns);
 #endif
-        //bool compileDeleteCondition(std::string &key, std::string &comparisonOperator, std::string &value, TokenMask &mask, std::string &orth);
-        bool compileDeleteCondition(std::string &key, std::string &comparisonOperator,
-                std::string &value, DeleteConditions &conditions);
-        //bool compileAddInterpretation(std::string &pattern, std::vector<InterpretationPair> &interpretations);
-        bool compileAddInterpretation(std::string &pattern, std::vector<std::string> &interpretations);
+#if HAVE_RE2
+        std::string generateCompiledTokenString(bool tokenMatch,
+                std::string &type, std::string &compiledHead, std::string &orth,
+                TokenPatterns tokenPatterns, NegativePatternStrings &negativePatterns,
+                bool no_prefix);
+#else
+        std::string generateCompiledTokenString(bool tokenMatch,
+                std::string &type, std::string &compiledHead, std::string &orth,
+                TokenPatterns tokenPatterns, bool no_prefix);
+#endif
 
-        //TokenMask baseMask;
-        //int baseIndex;
-        //int modifierIndex;
+        DeleteActionPtr createDeleteAction(std::string &conditionsString,
+                int tokenIndex);
+        AddActionPtr createAddAction(std::string &interpretation,
+                std::string &baseString, int tokenIndex);
+        UnifyActionPtr createUnifyAction(std::string &attributesString,
+                std::string &tokensString);
+        SyntokActionPtr createSyntokAction(std::string &interpretationString,
+                int ruleLeftSize, int ruleMatchSize, std::string &ruleName);
 
-        //std::string nothingSet;
-        //boost::u32regex regNothingSet;
-        //PatternPtr regNothingSet;
+        void addConditionToPatterns(TokenPatterns &tokenPatterns,
+                std::string conditionString, int attributeIndex,
+                std::string comparisonOperator);
 
+        RulePtr parseRuleString(std::string &ruleString);
+
+        TagsetPtr tagset;
         bool verbose;
         bool syntok;
-
         RulesPtr rules;
-//        RulesPtr rules;
-        //std::string trim(std::string s);
-       // std::string baseMask;
 
-//        boost::regex regAmp;
-//        boost::regex regLt;
-//        boost::regex regGt;
-//        boost::regex regLPar;
-//        boost::regex regRPar;
-//        boost::regex regAlt, regPlus, regAsterisk, regOpt;
-        PatternPtr regAmp;
-        PatternPtr regLt;
-        PatternPtr regGt;
-        PatternPtr regLPar;
-        PatternPtr regRPar;
-        PatternPtr regAlt, regPlus, regAsterisk, regOpt;
+        std::string escapeSpecialChars(std::string text);
 
-        void initProperties();//const boost::program_options::variables_map& options);
-        void initPatterns();
+        void initProperties();
 };
 
 }
