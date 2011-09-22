@@ -26,11 +26,11 @@ namespace MPFD {
         Parser();
         ~Parser();
 
-        void SetContentType(const std::string type);
+        void SetContentType(const std::string & type);
 
         void AcceptSomeData(const char *data, const long length);
 
-        
+
 
         void SetMaxCollectedDataLength(long max);
         void SetTempDirForFileUpload(std::string dir);
@@ -40,7 +40,7 @@ namespace MPFD {
 
     private:
         int WhereToStoreUploadedFiles;
-        
+
         std::map<std::string, Field *> Fields;
 
         std::string TempDirForFileUpload;

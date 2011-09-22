@@ -23,7 +23,7 @@ MPFD::Parser::Parser() {
 
 MPFD::Parser::~Parser() {
     std::map<std::string, Field *>::iterator it;
-    for (it = Fields.begin(); it != Fields.end(); it++) {
+    for (it = Fields.begin(); it != Fields.end(); ++it) {
         delete it->second;
     }
 
@@ -32,13 +32,15 @@ MPFD::Parser::~Parser() {
     }
 }
 
-void MPFD::Parser::SetContentType(const std::string type) {
-    if (type.find("multipart/form-data;") != 0) {
+void MPFD::Parser::SetContentType(const std::string & type) {
+
+    unsigned int mpfd = type.find("multipart/form-data;");
+
+    if (mpfd != 0) {
         throw MPFD::Exception(std::string("Content type is not \"multipart/form-data\"\nIt is \"") + type + std::string("\""));
     }
 
-
-    unsigned int bp = type.find("boundary=");
+    std::size_t bp = type.find("boundary=");
 
     if (bp == std::string::npos) {
         throw MPFD::Exception(std::string("Cannot find boundary in Content-type: \"") + type + std::string("\""));
@@ -139,7 +141,7 @@ bool MPFD::Parser::WaitForHeadersEndAndParseThem() {
 
             TruncateDataCollectorFromTheBeginning(i + 4);
 
-            delete headers;
+            //delete headers;
 
             return true;
         }
