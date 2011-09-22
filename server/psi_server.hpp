@@ -38,6 +38,8 @@
         std::string websiteRoot;
 
     //private:
+        void parseMultipartFormData(http::server3::request& req);
+        void parseNamesAndValues(std::string, int);
         std::string urlDecode(std::string &);
 
         /// store map between include codes and application functions
