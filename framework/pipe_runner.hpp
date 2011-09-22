@@ -25,7 +25,6 @@ private:
 
     void parseIntoGraph_(std::vector<std::string> args, bool isTheFirstArgProgramName);
     void parseIntoPipelineSpecification_(std::vector<std::string> args, bool isTheFirstArgProgramName);
-    void pipelineSpecification2Graph_();
 
     ProcessorFactory& getFactory_(const PipelineElementSpecification& elementSpec);
     LatticeReaderFactory& getReaderFactory_(const PipelineElementSpecification& elementSpec);
@@ -53,6 +52,15 @@ private:
         PipelineNode(ProcessorFactory& factory, boost::program_options::variables_map options)
             : factory_(&factory), options_(options) {
         }
+
+        void createProcessor() {
+            if (!processor_)
+                processor_.reset(factory_->createProcessor(options_));
+        }
+
+        boost::shared_ptr<Processor> getProcessor() {
+            return processor_;
+        }
     };
 
     PipelineNode pipelineElement2Node_(const PipelineElementSpecification& element);
@@ -69,6 +77,14 @@ private:
 
     PipelineGraph::vertex_descriptor firstNode;
     PipelineGraph::vertex_descriptor lastNode;
+
+    void pipelineSpecification2Graph_();
+    void completeGraph_();
+    void runPipelineNode_(
+        PipelineGraph::vertex_descriptor current,
+        Lattice& lattice,
+        std::istream& in, std::ostream& out);
+    bool goToNextNode_(PipelineGraph::vertex_descriptor& current);
 };
 
 #endif

@@ -28,39 +28,13 @@ PipeRunner::PipeRunner(std::vector<std::string> args) {
 int PipeRunner::run(std::istream& in, std::ostream& out) {
     Lattice lattice;
 
-    std::list<PipelineElementSpecification>::iterator it = pipelineSpecification_.elements.begin();
+    PipelineGraph::vertex_descriptor current = firstNode;
 
-    boost::program_options::variables_map options;
-
-    LatticeReaderFactory& readerFactory = getReaderFactory_(*it);
-    boost::scoped_ptr<LatticeReader> reader(readerFactory.createLatticeReader(options));
-
-    reader->readIntoLattice(in, lattice);
-    ++it;
-
-    for (;
-         it != pipelineSpecification_.elements.end();
-         ++it) {
-
-        if (isLastElement_(it, pipelineSpecification_)) {
-            LatticeWriterFactory& writerFactory = getWriterFactory_(*it);
-            boost::program_options::variables_map options
-                = parseOptions_(writerFactory.optionsHandled(), *it);
-
-            boost::scoped_ptr<LatticeWriter> writer(writerFactory.createLatticeWriter(options));
-
-            writer->writeLattice(lattice, out);
-        }
-        else {
-            AnnotatorFactory& annotatorFactory = getAnnotatorFactory_(*it);
-            boost::program_options::variables_map options
-                = parseOptions_(annotatorFactory.optionsHandled(), *it);
-
-            boost::scoped_ptr<Annotator> annotator(annotatorFactory.createAnnotator(options));
-
-            annotator->annotate(lattice);
-        }
-    }
+    do {
+        runPipelineNode_(current, lattice, in, out);
+        if (!goToNextNode_(current))
+            break;
+    } while (1);
 
     return 0;
 }
@@ -85,7 +59,8 @@ AnnotatorFactory& PipeRunner::getAnnotatorFactory_(const PipelineElementSpecific
 
 void PipeRunner::parseIntoGraph_(std::vector<std::string> args, bool isTheFirstArgProgramName) {
     parseIntoPipelineSpecification_(args, isTheFirstArgProgramName);
-//    pipelineSpecification2Graph_();
+    pipelineSpecification2Graph_();
+    completeGraph_();
 }
 
 void PipeRunner::parseIntoPipelineSpecification_(
@@ -125,14 +100,67 @@ void PipeRunner::pipelineSpecification2Graph_() {
                 pipelineElement2Node_(element),
                 pipelineGraph_);
 
-        if (isFirst)
+        if (isFirst) {
             isFirst = false;
+            firstNode = newVertex;
+        }
         else {
             std::string emptyString;
             boost::add_edge(currentVertex, newVertex, emptyString, pipelineGraph_);
-            currentVertex = newVertex;
         }
+
+        currentVertex = newVertex;
     }
+
+    lastNode = currentVertex;
+}
+
+void PipeRunner::completeGraph_() {
+}
+
+void PipeRunner::runPipelineNode_(
+    PipelineGraph::vertex_descriptor current,
+    Lattice& lattice, std::istream& in, std::ostream& out) {
+
+    PipelineNode& currentPipelineNode = pipelineGraph_[current];
+    currentPipelineNode.createProcessor();
+
+    if (current == firstNode) {
+        boost::shared_ptr<LatticeReader> reader =
+            boost::dynamic_pointer_cast<LatticeReader>(
+                currentPipelineNode.getProcessor());
+        reader->readIntoLattice(in, lattice);
+    }
+    else if (current == lastNode) {
+        boost::shared_ptr<LatticeWriter> writer =
+            boost::dynamic_pointer_cast<LatticeWriter>(
+                currentPipelineNode.getProcessor());
+        writer->writeLattice(lattice, out);
+    }
+    else {
+        boost::shared_ptr<Annotator> annotator =
+            boost::dynamic_pointer_cast<Annotator>(
+                currentPipelineNode.getProcessor());
+        annotator->annotate(lattice);
+    }
+}
+
+bool PipeRunner::goToNextNode_(PipelineGraph::vertex_descriptor& current) {
+    std::pair<boost::graph_traits<PipelineGraph>::out_edge_iterator,
+              boost::graph_traits<PipelineGraph>::out_edge_iterator> iterPair
+        = boost::out_edges(current, pipelineGraph_);
+
+    if (iterPair.first == iterPair.second)
+        return false;
+    else {
+        current = boost::target(*iterPair.first, pipelineGraph_);
+
+        ++iterPair.first;
+        if (iterPair.first != iterPair.second)
+            WARN("unexpected fork in pipeline graph");
+    }
+
+    return true;
 }
 
 PipeRunner::PipelineNode PipeRunner::pipelineElement2Node_(const PipelineElementSpecification& element) {
