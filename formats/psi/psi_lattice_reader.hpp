@@ -6,6 +6,7 @@
 // Boost 1.47.0 at Arch Linux)
 #include <boost/property_tree/ptree.hpp>
 
+#include <boost/algorithm/string/trim.hpp>
 #include <boost/foreach.hpp>
 #include <boost/fusion/include/adapt_struct.hpp>
 #include <boost/fusion/include/io.hpp>
