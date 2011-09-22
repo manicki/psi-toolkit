@@ -30,7 +30,6 @@ struct request
         }
         return std::string("");
     }
-
 };
 
 } // namespace server3

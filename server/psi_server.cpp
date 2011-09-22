@@ -1,10 +1,13 @@
 #include "psi_server.hpp"
+#include "mpfd-parser/Parser.h"
+#include "logging.hpp"
 
-#include <iostream>
 #include <boost/asio.hpp>
 #include <boost/thread.hpp>
 #include <boost/bind.hpp>
 #include <boost/lexical_cast.hpp>
+
+#include <iostream>
 
 typedef std::multimap <std::string, std::string> psis_mmp_name_value;
 typedef std::multimap <std::string, std::string>::iterator psis_iter_name_value;
@@ -123,12 +126,42 @@ void PsiServer::checkForAction(http::server3::request& req) {
         q += 6;
     }
 
+    if (req.get_header_value("Content-Type").find("multipart/form-data;") != 0) {
+        parseNamesAndValues(uri, q);
+    }
+    else {
+        parseMultipartFormData(req);
+    }
+
+    // call the function
+    req.uri = pfun->second(this);
+    return;
+}
+
+void PsiServer::parseMultipartFormData(http::server3::request& req) {
+    try {
+        MPFD::Parser parser;
+        parser.SetTempDirForFileUpload("/tmp");
+        parser.SetContentType(req.get_header_value("Content-Type"));
+        std::string data = req.post_data;
+
+        parser.AcceptSomeData(data.c_str(), data.size());
+
+
+
+    } catch (MPFD::Exception e) {
+        ERROR(e.GetError());
+    }
+}
+
+void PsiServer::parseNamesAndValues(std::string uri, int q) {
     name_values_.clear();
     std::string name;
     std::string value;
 
     int p = q;
     int flag_done = 0;
+
     while (!flag_done) {
         q = uri.find("=",p);
         name = uri.substr(p,q-p);
@@ -152,10 +185,6 @@ void PsiServer::checkForAction(http::server3::request& req) {
         name_values_.insert(std::pair<std::string, std::string> (name, urlDecode(value)));
         p = q + 1;
     }
-
-    // call the function
-    req.uri = pfun->second(this);
-    return;
 }
 
 std::string PsiServer::urlDecode(std::string & encodedString) {
