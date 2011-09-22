@@ -46,13 +46,14 @@ ProcessorFactory& PipeRunner::getFactory_(const PipelineElementSpecification& el
 }
 
 void PipeRunner::parseIntoGraph_(std::vector<std::string> args, bool isTheFirstArgProgramName) {
-    parseIntoPipelineSpecification_(args, isTheFirstArgProgramName);
-    pipelineSpecification2Graph_();
+    parseIntoPipelineSpecification_(args, isTheFirstArgProgramName, pipelineSpecification_);
+    pipelineSpecification2Graph_(pipelineSpecification_, firstNode, lastNode);
     completeGraph_();
 }
 
 void PipeRunner::parseIntoPipelineSpecification_(
-    std::vector<std::string> args, bool isTheFirstArgProgramName) {
+    std::vector<std::string> args, bool isTheFirstArgProgramName,
+    PipelineSpecification& pipelineSpec) {
 
     bool nameExpected = true;
 
@@ -62,27 +63,31 @@ void PipeRunner::parseIntoPipelineSpecification_(
 
         if (i == startingIndex || args[i] == PIPELINE_SEPARATOR) {
             nameExpected = true;
-            pipelineSpecification_.elements.push_back(PipelineElementSpecification());
+            pipelineSpec.elements.push_back(PipelineElementSpecification());
         }
 
         if (args[i] == PIPELINE_SEPARATOR) {
             ;
         }
         else if (nameExpected) {
-            pipelineSpecification_.elements.back().processorName = args[i];
+            pipelineSpec.elements.back().processorName = args[i];
             nameExpected = false;
         }
         else {
-            pipelineSpecification_.elements.back().processorArgs.push_back(args[i]);
+            pipelineSpec.elements.back().processorArgs.push_back(args[i]);
         }
     }
 }
 
-void PipeRunner::pipelineSpecification2Graph_() {
+void PipeRunner::pipelineSpecification2Graph_(
+    PipelineSpecification& pipelineSpec,
+    PipelineGraph::vertex_descriptor& firstVertex,
+    PipelineGraph::vertex_descriptor& lastVertex) {
+
     bool isFirst = true;
     PipelineGraph::vertex_descriptor currentVertex;
 
-    BOOST_FOREACH(const PipelineElementSpecification& element, pipelineSpecification_.elements) {
+    BOOST_FOREACH(const PipelineElementSpecification& element, pipelineSpec.elements) {
         PipelineGraph::vertex_descriptor newVertex =
             boost::add_vertex(
                 pipelineElement2Node_(element),
@@ -90,7 +95,7 @@ void PipeRunner::pipelineSpecification2Graph_() {
 
         if (isFirst) {
             isFirst = false;
-            firstNode = newVertex;
+            firstVertex = newVertex;
         }
         else {
             std::string emptyString;
@@ -100,10 +105,37 @@ void PipeRunner::pipelineSpecification2Graph_() {
         currentVertex = newVertex;
     }
 
-    lastNode = currentVertex;
+    lastVertex = currentVertex;
 }
 
 void PipeRunner::completeGraph_() {
+    checkReader_();
+    checkWriter_();
+}
+
+void PipeRunner::checkReader_() {
+    const LatticeReaderFactory* reader =
+        dynamic_cast<const LatticeReaderFactory*>(
+            pipelineGraph_[firstNode].getFactory());
+
+    if (!reader)
+        prepend_("txt-reader --line-by-line");
+}
+
+void PipeRunner::checkWriter_() {
+}
+
+void PipeRunner::prepend_(const std::string& pipeline) {
+    PipelineSpecification prependedSpec;
+    parseIntoPipelineSpecification_(splitPipeline_(pipeline), false, prependedSpec);
+
+    PipelineGraph::vertex_descriptor prevFirst = firstNode;
+    PipelineGraph::vertex_descriptor prepLast;
+
+    pipelineSpecification2Graph_(prependedSpec, firstNode, prepLast);
+
+    std::string emptyString;
+    boost::add_edge(prepLast, prevFirst, emptyString, pipelineGraph_);
 }
 
 void PipeRunner::runPipelineNode_(
