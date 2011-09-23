@@ -9,6 +9,34 @@ std::string PsiLatticeReader::doInfo() {
     return "Psi reader";
 }
 
+
+PsiLatticeReader::Factory::~Factory() {
+}
+
+LatticeReader* PsiLatticeReader::Factory::doCreateLatticeReader(
+    const boost::program_options::variables_map&) {
+    return new PsiLatticeReader();
+}
+
+boost::program_options::options_description PsiLatticeReader::Factory::doOptionsHandled() {
+    boost::program_options::options_description optionsDescription("Allowed options");
+
+    optionsDescription.add_options()
+        ("line-by-line", "processes line by line")
+        ("whole-text",   "read the whole text")
+        ("paragraphs",   "paragraphs are delimited with double newlines")
+        ("discard-comments", "discards comments")
+        ("pass-through-comments", "marks comments as single markup")
+        ;
+
+    return optionsDescription;
+}
+
+std::string PsiLatticeReader::Factory::doGetName() {
+    return "psi-reader";
+}
+
+
 PsiLatticeReader::Worker::Worker(PsiLatticeReader& processor,
                                  std::istream& inputStream,
                                  Lattice& lattice):

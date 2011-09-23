@@ -19,6 +19,7 @@
 #include <boost/spirit/include/qi.hpp>
 
 #include "lattice_reader.hpp"
+#include "lattice_reader_factory.hpp"
 #include "quoter.hpp"
 #include "psi_quoter.hpp"
 
@@ -255,6 +256,19 @@ public:
      * Gets format name (here: "Psi").
      */
     std::string getFormatName();
+
+    class Factory : public LatticeReaderFactory {
+    public:
+        virtual ~Factory();
+
+    private:
+        virtual LatticeReader* doCreateLatticeReader(
+            const boost::program_options::variables_map& options);
+
+        virtual boost::program_options::options_description doOptionsHandled();
+
+        virtual std::string doGetName();
+    };
 
 private:
     virtual std::string doInfo();
