@@ -46,7 +46,7 @@
             <div class="box black" id="inputs" >
                 <div id="input-text" class="hidable">
                     <p>Write some text:</p>
-                    <textarea class="resizable" name="input-text" rows="5"><!--#psis pipe_site_input_text --></textarea>
+                    <textarea class="resizable" name="input-text" rows="2"><!--#psis pipe_site_input_text --></textarea>
                 </div>
 
                 <div id="input-file" class="hidable">
@@ -65,22 +65,22 @@
         </form>
 
         <div class="box" id="message">
-
+            <!--#psis pipe_site_message -->
         </div>
 
         <div class="box" id="output">
             <!--#psis pipe_site_output_text -->
         </div>
 
-        <div class="box" id="temp">
-            <!--#psis index_site_info -->
-            <!--#psis pipe_site_pipe_text -->
-        </div>
 
     </div>
 </div>
 
 <!--#psis index_site_footer_part -->
+
+<div id="psis-hidden-options" style="visibility: hidden; display: none;">
+    <!--#psis pipe_site_options -->
+</div>
 
 </body>
 

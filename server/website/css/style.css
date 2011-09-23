@@ -24,7 +24,7 @@ p { padding: 5px 0; }
 
 #pipe { }
 #inputs { margin-top: -1px; }
-#input-file input { width: 620px; margin: 20px auto; }
+#input-file input { width: 620px; margin: 21px auto; }
 
 #submit { margin: 5px 35px; width: 100px; height: 32px; cursor: pointer;
     background-color: #335599; color: #FFFFFF;
@@ -42,7 +42,8 @@ input.input-radio {visibility: hidden; display: none; }
 
 /* Output */
 
-pre { border-width: 1px; border-style: solid; padding: 8px; font-family: monospace; font-size: 12px; }
+pre { font-family: monospace; font-size: 12px;
+    border-width: 1px; border-style: solid; padding: 8px; margin-bottom: 50px; }
 
 /* Input bookmarks */
 
@@ -71,4 +72,8 @@ div.grippie { width: 760px; height: 8px; overflow: hidden; margin-left: 20px; cu
     background: #DCDCDC url("/img/grippie.png") no-repeat scroll center 2px;
     border: solid #BBBBBB; border-width: 0 1px 1px;
     -webkit--border-radius: 3px; -moz-border-radius: 3px; border-radius: 3px; }
+
+/* Psis options */
+
+div#psis-hidden-options, div#psis-hidden-options div { visibility: hidden; display: none; }
 

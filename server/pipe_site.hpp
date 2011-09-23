@@ -17,9 +17,9 @@ public:
     char * inputText();
     char * pipeText();
     char * actionPipe();
-
     char * outputText();
 
+    char * hiddenOptions();
 private:
 
     static const std::string INITIAL_TEXT;
