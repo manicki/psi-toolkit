@@ -132,38 +132,43 @@ void PsiLatticeReader::Worker::doRun() {
 
             // Defining partitions.
 
-            std::vector<std::string> partsItem;
-            std::string::const_iterator partsBegin = item.annotationItem.partitions.begin();
-            std::string::const_iterator partsEnd = item.annotationItem.partitions.end();
-            if (parse(partsBegin, partsEnd, partsGrammar, partsItem)) {
+            LayerTagMask rawMask = lattice_.getLayerTagManager().getMask("symbol");
+            Lattice::EdgeSequence::Builder seqBuilder;
 
-                BOOST_FOREACH(std::string part, partsItem) {
-                    std::vector<int> partItem;
-                    std::string::const_iterator partBegin = part.begin();
-                    std::string::const_iterator partEnd = part.end();
-                    if (parse(partBegin, partEnd, partGrammar, partItem)) {
-                        // BOOST_FOREACH(int edge, partItem) {
+            if (item.annotationItem.partitions.empty()) {
 
-                            //TODO
-
-                        // }
+                if (!lattice_.getLayerTagManager().match(tagsMask, "symbol")) {
+                    Lattice::VertexDescriptor currentVertex = from;
+                    while (currentVertex != to) {
+                        Lattice::EdgeDescriptor currentEdge
+                            = lattice_.firstOutEdge(currentVertex, rawMask);
+                        seqBuilder.addEdge(currentEdge);
+                        currentVertex = lattice_.getEdgeTarget(currentEdge);
                     }
                 }
 
-            }
+            } else {
 
-            LayerTagMask rawMask = lattice_.getLayerTagManager().getMask("symbol");
+                std::vector<std::string> partsItem;
+                std::string::const_iterator partsBegin = item.annotationItem.partitions.begin();
+                std::string::const_iterator partsEnd = item.annotationItem.partitions.end();
+                if (parse(partsBegin, partsEnd, partsGrammar, partsItem)) {
 
-            Lattice::EdgeSequence::Builder seqBuilder;
+                    BOOST_FOREACH(std::string part, partsItem) {
+                        std::vector<int> partItem;
+                        std::string::const_iterator partBegin = part.begin();
+                        std::string::const_iterator partEnd = part.end();
+                        if (parse(partBegin, partEnd, partGrammar, partItem)) {
+                            // BOOST_FOREACH(int edge, partItem) {
 
-            if (!lattice_.getLayerTagManager().match(tagsMask, "symbol")) {
-                Lattice::VertexDescriptor currentVertex = from;
-                while (currentVertex != to) {
-                    Lattice::EdgeDescriptor currentEdge
-                        = lattice_.firstOutEdge(currentVertex, rawMask);
-                    seqBuilder.addEdge(currentEdge);
-                    currentVertex = lattice_.getEdgeTarget(currentEdge);
+                                //TODO
+
+                            // }
+                        }
+                    }
+
                 }
+
             }
 
 
