@@ -134,12 +134,13 @@ void PsiLatticeReader::Worker::doRun() {
             // Defining partitions.
 
             LayerTagMask rawMask = lattice_.getLayerTagManager().getMask("symbol");
-            Lattice::EdgeSequence::Builder seqBuilder;
+            std::list<Lattice::EdgeSequence::Builder> seqBuilders;
             Lattice::VertexDescriptor currentVertex = from;
             Lattice::EdgeDescriptor currentEdge;
 
             if (item.annotationItem.partitions.empty()) {
 
+                Lattice::EdgeSequence::Builder seqBuilder;
                 if (!lattice_.getLayerTagManager().match(tagsMask, "symbol")) {
                     while (currentVertex != to) {
                         currentEdge = lattice_.firstOutEdge(currentVertex, rawMask);
@@ -147,6 +148,7 @@ void PsiLatticeReader::Worker::doRun() {
                         currentVertex = lattice_.getEdgeTarget(currentEdge);
                     }
                 }
+                seqBuilders.push_back(seqBuilder);
 
             } else {
 
@@ -155,14 +157,8 @@ void PsiLatticeReader::Worker::doRun() {
                 std::string::const_iterator partsEnd = item.annotationItem.partitions.end();
                 if (parse(partsBegin, partsEnd, partsGrammar, partsItem)) {
 
-                    // TODO implement multiple partitions
-
-                    // BOOST_FOREACH(std::string part, partsItem) {
-                        if (partsItem.size() > 1) {
-                            throw FileFormatException(
-                                "Reading multiple partitions not yet implemented"
-                            );
-                        }
+                    BOOST_FOREACH(std::string part, partsItem) {
+                        Lattice::EdgeSequence::Builder seqBuilder;
                         std::string part = partsItem.at(0);
                         std::vector<int> partItem;
                         std::string::const_iterator partBegin = part.begin();
@@ -187,7 +183,12 @@ void PsiLatticeReader::Worker::doRun() {
                                 currentVertex = lattice_.getEdgeTarget(currentEdge);
                             }
                         }
-                    // }
+                        seqBuilders.push_back(seqBuilder);
+                    }
+
+                } else {
+
+                    seqBuilders.push_back(Lattice::EdgeSequence::Builder());
 
                 }
 
@@ -196,14 +197,16 @@ void PsiLatticeReader::Worker::doRun() {
 
             // Adding edge.
 
-            edgeOrdinalMap[item.ordinal] = lattice_.addEdge(
-                from,
-                to,
-                annotationItem,
-                tags,
-                seqBuilder.build(),
-                item.annotationItem.score
-            );
+            BOOST_FOREACH(Lattice::EdgeSequence::Builder builder, seqBuilders) {
+                edgeOrdinalMap[item.ordinal] = lattice_.addEdge(
+                    from,
+                    to,
+                    annotationItem,
+                    tags,
+                    builder.build(),
+                    item.annotationItem.score
+                );
+            }
 
         } else {
 
