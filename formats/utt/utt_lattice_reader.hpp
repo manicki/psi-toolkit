@@ -50,7 +50,10 @@ BOOST_FUSION_ADAPT_STRUCT(
 )
 
 
-struct UTTLRGrammar : public qi::grammar<std::string::const_iterator, UTTLRItem()> {
+struct UTTLRGrammar : public qi::grammar<
+    std::string::const_iterator,
+    UTTLRItem()
+> {
 
     UTTLRGrammar() : UTTLRGrammar::base_type(start) {
 
@@ -76,6 +79,60 @@ struct UTTLRGrammar : public qi::grammar<std::string::const_iterator, UTTLRItem(
     qi::rule<std::string::const_iterator, UTTLRItem()> start;
     qi::rule<std::string::const_iterator, int()> optionalInt;
     qi::rule<std::string::const_iterator, qi::unused_type()> whitespaces;
+
+};
+
+
+struct UTTLRAnnotationsGrammar : public qi::grammar<
+    std::string::const_iterator,
+    std::vector<std::string>()
+> {
+
+    UTTLRAnnotationsGrammar() : UTTLRAnnotationsGrammar::base_type(start) {
+
+        start
+            %= +(qi::char_- ' ') % whitespaces
+            ;
+
+        whitespaces = +(qi::space);
+
+    }
+
+    qi::rule<std::string::const_iterator, std::vector<std::string>()> start;
+    qi::rule<std::string::const_iterator, qi::unused_type()> whitespaces;
+
+};
+
+
+struct UTTLRAVItem {
+    std::string arg;
+    std::string val;
+};
+
+
+BOOST_FUSION_ADAPT_STRUCT(
+    UTTLRAVItem,
+    (std::string, arg)
+    (std::string, val)
+)
+
+
+struct UTTLRAVGrammar : public qi::grammar<
+    std::string::const_iterator,
+    UTTLRAVItem()
+> {
+
+    UTTLRAVGrammar() : UTTLRAVGrammar::base_type(start) {
+
+        start
+            %= +(qi::char_ - ' ' - ':')
+            >> ':'
+            >> +(qi::char_ - ' ' - ':')
+            ;
+
+    }
+
+    qi::rule<std::string::const_iterator, UTTLRAVItem()> start;
 
 };
 
