@@ -135,14 +135,14 @@ void PsiLatticeReader::Worker::doRun() {
 
             LayerTagMask rawMask = lattice_.getLayerTagManager().getMask("symbol");
             Lattice::EdgeSequence::Builder seqBuilder;
+            Lattice::VertexDescriptor currentVertex = from;
+            Lattice::EdgeDescriptor currentEdge;
 
             if (item.annotationItem.partitions.empty()) {
 
                 if (!lattice_.getLayerTagManager().match(tagsMask, "symbol")) {
-                    Lattice::VertexDescriptor currentVertex = from;
                     while (currentVertex != to) {
-                        Lattice::EdgeDescriptor currentEdge
-                            = lattice_.firstOutEdge(currentVertex, rawMask);
+                        currentEdge = lattice_.firstOutEdge(currentVertex, rawMask);
                         seqBuilder.addEdge(currentEdge);
                         currentVertex = lattice_.getEdgeTarget(currentEdge);
                     }
@@ -155,9 +155,13 @@ void PsiLatticeReader::Worker::doRun() {
                 std::string::const_iterator partsEnd = item.annotationItem.partitions.end();
                 if (parse(partsBegin, partsEnd, partsGrammar, partsItem)) {
 
+                    // TODO implement multiple partitions
+
                     // BOOST_FOREACH(std::string part, partsItem) {
                         if (partsItem.size() > 1) {
-                            throw FileFormatException("Reading multiple partitions not yet implemented");
+                            throw FileFormatException(
+                                "Reading multiple partitions not yet implemented"
+                            );
                         }
                         std::string part = partsItem.at(0);
                         std::vector<int> partItem;
@@ -166,14 +170,21 @@ void PsiLatticeReader::Worker::doRun() {
                         if (parse(partBegin, partEnd, partGrammar, partItem)) {
                             BOOST_FOREACH(int edgeNumber, partItem) {
                                 if (edgeNumber < 1) {
-                                    //TODO
+                                    if (currentVertex == to) {
+                                        throw FileFormatException(
+                                            "PSI reader: Wrong partition's notation (too many sub-edges)"
+                                        );
+                                    }
+                                    currentEdge = lattice_.firstOutEdge(currentVertex, rawMask);
                                 } else if (edgeOrdinalMap.find(edgeNumber) == edgeOrdinalMap.end()) {
                                     throw FileFormatException(
-                                        "PSI reader: Wrong edge number"
+                                        "PSI reader: Wrong partition's notation (unknown sub-edge)"
                                     );
                                 } else {
-                                    seqBuilder.addEdge(edgeOrdinalMap[edgeNumber]);
+                                    currentEdge = edgeOrdinalMap[edgeNumber];
                                 }
+                                seqBuilder.addEdge(currentEdge);
+                                currentVertex = lattice_.getEdgeTarget(currentEdge);
                             }
                         }
                     // }
