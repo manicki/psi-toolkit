@@ -164,7 +164,7 @@ public:
 
         /**
          * Indicates the position of source vertex if the edge is an implicit edge.
-         * if the edge is an explicit edge, its implicit index is negative.
+         * If the edge is an explicit edge, its implicit index is negative.
          */
         int implicitIndex;
 
@@ -335,9 +335,9 @@ public:
     size_t getVertexRawCharIndex(VertexDescriptor vd);
 
     /**
-     * Adds an edge from vertex `from` to vertex `to` with `annonation_item`
+     * Adds an edge from vertex `from` to vertex `to` with `annotationItem`
      * and `tags` as layer tags. The partition of the edge into subedges
-     * is given with `partition` argument.
+     * is given with `sequence` argument.
      *
      * A new will not be added if there is already an edge from vertex `from`
      * to vertex `to` of annotation `annotation_item` (tags and partitions will
