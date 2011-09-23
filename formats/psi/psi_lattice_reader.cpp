@@ -187,7 +187,6 @@ void PsiLatticeReader::Worker::doRun() {
 
                     BOOST_FOREACH(std::string part, partsItem) {
                         Lattice::EdgeSequence::Builder seqBuilder;
-                        std::string part = partsItem.at(0);
                         std::vector<int> partItem;
                         std::string::const_iterator partBegin = part.begin();
                         std::string::const_iterator partEnd = part.end();
