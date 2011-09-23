@@ -15,9 +15,22 @@ class PipeSiteTest < Test::Unit::TestCase
         @browser.close
     end
 
-    def test_input_text
+    def test_pipe
         assert !@browser.text_field(:name => 'pipe-text').value.empty?
+    end
 
+    def test_bookmarks_before_switching
+        assert @browser.div(:id, 'input-text').visible?
+        assert !@browser.div(:id, 'input-file').visible?
+
+        active_li_class = @browser.a(:class, 'input-text').parent.attribute_value(:class)
+        assert active_li_class, '.active'
+
+        inactive_li_class = @browser.a(:class, 'input-file').parent.attribute_value(:class)
+        assert inactive_li_class, ''
+    end
+
+    def test_input_text
         input  = @browser.text_field(:name => 'input-text')
         assert input.exists?
         assert !input.value.empty?
@@ -35,6 +48,13 @@ class PipeSiteTest < Test::Unit::TestCase
         txt.split(' ').each do |word|
             assert @browser.text.include? word
         end
+    end
+
+    def test_input_file
+        #TODO
+
+        input_file = @browser.file_field(:name => 'input-file')
+        assert input_file.exists?
     end
 
 end
