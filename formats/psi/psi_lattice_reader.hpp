@@ -128,6 +128,11 @@ struct PsiLRGrammar : public qi::grammar<std::string::const_iterator, PsiLRItem(
             %= +(qi::char_ - ' ' - ',') % ','
             ;
 
+        annotationText
+            = qi::eps[qi::_val = ""]
+            >> -(+(qi::char_ - ' ')[qi::_val = qi::_1] >> +(qi::space))
+            ;
+
         annotation
             %= +(qi::char_ - ' ' - ',' - '[' - '<')                         //category
             >> score                                                        //score
@@ -147,6 +152,7 @@ struct PsiLRGrammar : public qi::grammar<std::string::const_iterator, PsiLRItem(
     qi::rule<std::string::const_iterator, bool()> loose;
     qi::rule<std::string::const_iterator, bool()> point;
     qi::rule<std::string::const_iterator, std::vector<std::string>()> tags;
+    qi::rule<std::string::const_iterator, std::string()> annotationText;
     qi::rule<std::string::const_iterator, PsiLRAnnotation()> annotation;
     qi::rule<std::string::const_iterator, double()> score;
 
