@@ -87,39 +87,39 @@ BOOST_AUTO_TEST_CASE( utt_lattice_reader ) {
   Lattice::EdgesSortedBySourceIterator tei = lattice.edgesSortedBySource(tokenMask);
 
   BOOST_CHECK(tei.hasNext());
-  BOOST_CHECK_EQUAL(lattice.getAnnotationCategory(tei.next()), "Amelie");
+  BOOST_CHECK_EQUAL(lattice.getAnnotationCategory(tei.next()), "'Amelie'");
   BOOST_CHECK(tei.hasNext());
-  BOOST_CHECK_EQUAL(lattice.getAnnotationCategory(tei.next()), " ");
+  BOOST_CHECK_EQUAL(lattice.getAnnotationCategory(tei.next()), "' '");
   BOOST_CHECK(tei.hasNext());
-  BOOST_CHECK_EQUAL(lattice.getAnnotationCategory(tei.next()), "a");
+  BOOST_CHECK_EQUAL(lattice.getAnnotationCategory(tei.next()), "'a'");
   BOOST_CHECK(tei.hasNext());
-  BOOST_CHECK_EQUAL(lattice.getAnnotationCategory(tei.next()), " ");
+  BOOST_CHECK_EQUAL(lattice.getAnnotationCategory(tei.next()), "' '");
   BOOST_CHECK(tei.hasNext());
-  BOOST_CHECK_EQUAL(lattice.getAnnotationCategory(tei.next()), "un");
+  BOOST_CHECK_EQUAL(lattice.getAnnotationCategory(tei.next()), "'un'");
   BOOST_CHECK(tei.hasNext());
-  BOOST_CHECK_EQUAL(lattice.getAnnotationCategory(tei.next()), " ");
+  BOOST_CHECK_EQUAL(lattice.getAnnotationCategory(tei.next()), "' '");
   BOOST_CHECK(tei.hasNext());
-  BOOST_CHECK_EQUAL(lattice.getAnnotationCategory(tei.next()), "chat");
+  BOOST_CHECK_EQUAL(lattice.getAnnotationCategory(tei.next()), "'chat'");
   BOOST_CHECK(tei.hasNext());
-  BOOST_CHECK_EQUAL(lattice.getAnnotationCategory(tei.next()), ".");
+  BOOST_CHECK_EQUAL(lattice.getAnnotationCategory(tei.next()), "'.'");
   BOOST_CHECK(tei.hasNext());
-  BOOST_CHECK_EQUAL(lattice.getAnnotationCategory(tei.next()), "Quelle");
+  BOOST_CHECK_EQUAL(lattice.getAnnotationCategory(tei.next()), "'Quelle'");
   BOOST_CHECK(tei.hasNext());
-  BOOST_CHECK_EQUAL(lattice.getAnnotationCategory(tei.next()), " ");
+  BOOST_CHECK_EQUAL(lattice.getAnnotationCategory(tei.next()), "' '");
   BOOST_CHECK(tei.hasNext());
-  BOOST_CHECK_EQUAL(lattice.getAnnotationCategory(tei.next()), "âge");
+  BOOST_CHECK_EQUAL(lattice.getAnnotationCategory(tei.next()), "'âge'");
 
   LayerTagMask sentenceMask = lattice.getLayerTagManager().getMask("sentence");
   Lattice::EdgesSortedBySourceIterator sei = lattice.edgesSortedBySource(sentenceMask);
 
   BOOST_CHECK(sei.hasNext());
-  BOOST_CHECK_EQUAL(lattice.getAnnotationCategory(sei.next()),
+  BOOST_CHECK_EQUAL(lattice.getAnnotationText(sei.next()),
   "Amelie a un chat.");
   BOOST_CHECK(sei.hasNext());
-  BOOST_CHECK_EQUAL(lattice.getAnnotationCategory(sei.next()),
+  BOOST_CHECK_EQUAL(lattice.getAnnotationText(sei.next()),
   "Quelle âge as-tu?");
   BOOST_CHECK(sei.hasNext());
-  BOOST_CHECK_EQUAL(lattice.getAnnotationCategory(sei.next()),
+  BOOST_CHECK_EQUAL(lattice.getAnnotationText(sei.next()),
   "Karol Józef Wojtyła est élu pape de l'Église catholique romaine le 16 octobre 1978.");
   BOOST_CHECK(!sei.hasNext());
 
