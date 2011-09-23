@@ -115,18 +115,18 @@ void PsiLatticeReader::Worker::doRun() {
             std::string::const_iterator avBegin = item.annotationItem.avVector.begin();
             std::string::const_iterator avEnd = item.annotationItem.avVector.end();
             if (parse(avBegin, avEnd, avGrammar, avItem)) {
-
                 BOOST_FOREACH(std::string av, avItem) {
                     PsiLRAVPairItem avPairItem;
                     std::string::const_iterator avPairBegin = av.begin();
                     std::string::const_iterator avPairEnd = av.end();
                     if (parse(avPairBegin, avPairEnd, avPairGrammar, avPairItem)) {
-
-                        //TODO
-
+                        lattice_.getAnnotationItemManager().setValue(
+                            annotationItem,
+                            avPairItem.arg,
+                            avPairItem.val
+                        );
                     }
                 }
-
             }
 
 
