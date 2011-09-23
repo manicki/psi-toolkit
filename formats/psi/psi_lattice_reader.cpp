@@ -180,7 +180,8 @@ void PsiLatticeReader::Worker::doRun() {
                 to,
                 annotationItem,
                 tags,
-                seqBuilder.build()
+                seqBuilder.build(),
+                item.annotationItem.score
             );
 
         } else {
