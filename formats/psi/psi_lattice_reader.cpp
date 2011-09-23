@@ -45,6 +45,9 @@ void PsiLatticeReader::Worker::doRun() {
             formSs << std::setw(item.length) << item.text;
             std::string form = formSs.str();
 
+
+            // Appending lattice.
+
             if (!item.beginningLoose) {
                 try {
                     if (lattice_.getLayerTagManager().match(tagsMask, "symbol")) {
@@ -63,6 +66,9 @@ void PsiLatticeReader::Worker::doRun() {
                 }
             }
 
+
+            // Defining source vertex.
+
             Lattice::VertexDescriptor from;
             if (item.beginningLoose) {
                 std::map<int, Lattice::VertexDescriptor>::iterator lvi
@@ -74,6 +80,9 @@ void PsiLatticeReader::Worker::doRun() {
             } else {
                 from = lattice_.getVertexForRawCharIndex(item.beginning);
             }
+
+
+            // Defining target vertex.
 
             Lattice::VertexDescriptor to;
             if (item.lengthPoint) {
@@ -97,27 +106,10 @@ void PsiLatticeReader::Worker::doRun() {
                 }
             }
 
-            LayerTagMask rawMask = lattice_.getLayerTagManager().getMask("symbol");
 
-            Lattice::EdgeSequence::Builder seqBuilder;
+            // Creating annotation item.
 
-            if (!lattice_.getLayerTagManager().match(tagsMask, "symbol")) {
-                Lattice::VertexDescriptor currentVertex = from;
-                while (currentVertex != to) {
-                    Lattice::EdgeDescriptor currentEdge
-                        = lattice_.firstOutEdge(currentVertex, rawMask);
-                    seqBuilder.addEdge(currentEdge);
-                    currentVertex = lattice_.getEdgeTarget(currentEdge);
-                }
-            }
-
-            lattice_.addEdge(
-                from,
-                to,
-                AnnotationItem(item.annotationItem.category, item.annotationText),
-                tags,
-                seqBuilder.build()
-            );
+            AnnotationItem annotationItem(item.annotationItem.category, item.annotationText);
 
             std::vector<std::string> avItem;
             std::string::const_iterator avBegin = item.annotationItem.avVector.begin();
@@ -136,6 +128,9 @@ void PsiLatticeReader::Worker::doRun() {
                 }
 
             }
+
+
+            // Defining partitions.
 
             std::vector<std::string> partsItem;
             std::string::const_iterator partsBegin = item.annotationItem.partitions.begin();
@@ -156,6 +151,31 @@ void PsiLatticeReader::Worker::doRun() {
                 }
 
             }
+
+            LayerTagMask rawMask = lattice_.getLayerTagManager().getMask("symbol");
+
+            Lattice::EdgeSequence::Builder seqBuilder;
+
+            if (!lattice_.getLayerTagManager().match(tagsMask, "symbol")) {
+                Lattice::VertexDescriptor currentVertex = from;
+                while (currentVertex != to) {
+                    Lattice::EdgeDescriptor currentEdge
+                        = lattice_.firstOutEdge(currentVertex, rawMask);
+                    seqBuilder.addEdge(currentEdge);
+                    currentVertex = lattice_.getEdgeTarget(currentEdge);
+                }
+            }
+
+
+            // Adding edge.
+
+            lattice_.addEdge(
+                from,
+                to,
+                annotationItem,
+                tags,
+                seqBuilder.build()
+            );
 
         } else {
 

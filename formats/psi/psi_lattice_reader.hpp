@@ -1,6 +1,8 @@
 #ifndef PSI_LATTICE_READER_HDR
 #define PSI_LATTICE_READER_HDR
 
+#include <iomanip>
+
 // for unknown reasons property_tree has to be included
 // before Spirit/Lambda (at least for GCC 4.6.1 &
 // Boost 1.47.0 at Arch Linux)
