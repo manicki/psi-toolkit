@@ -214,254 +214,60 @@ bool Rule::test(std::string &, Lattice &lattice, int currentEntity,
     ruleTokenSizes.clear();
     ruleTokenSizes.assign(matchedIndices.size(), 0);
 
-//    std::cerr << "patterns: " << tokensPatterns.size() << std::endl;
-//    std::cerr << "modifs: " << tokensModifiers.size() << std::endl;
-//    std::cerr << "reqs: " << tokensRequired.size() << std::endl;
-//    std::vector<std::string>::iterator xx = tokensPatterns.begin();
-//    std::vector<std::string>::iterator yy = tokensModifiers.begin();
-//    std::vector<bool>::iterator zz = tokensRequired.begin();
-//    while (xx != tokensPatterns.end())
-//    {
-//        std::cerr << *xx << " " << *yy << " " << *zz << std::endl;
-//        xx ++;
-//        yy ++;
-//        zz ++;
-//    }
-//    std::cout << "Maczing przed: " << matching << std::endl;
-//    std::vector<std::string>::iterator it = tokensPatterns.begin();
     std::vector<int>::iterator it = matchedIndices.begin();
     int i = 0;
-    int j = 0;
-//    while (it != tokensPatterns.end())
-//    {
-//        if (tokensRequired[i] == false)
-//        {
-//            i++;
-//            it ++;
-//            continue;
-//        }
-////        std::cout << "Runda pierwsza: " << *it << std::endl;
-//
-//        boost::u32regex expr = boost::make_u32regex(".*" + *it + ".*");
-//        boost::u32regex exprReplace = boost::make_u32regex("" + *it);
-//
-////        std::cout << "pattern sratern: " << *it << std::endl;
-//        std::string mod = tokensModifiers[i];
-////        std::cout << "TAKI MOD: " << mod << "." << std::endl;
-//        if (mod == "")
-//        {
-////            std::cout << "pasuje to gowno bez niczego" << std::endl;
-//            //matchedTokensSize[i] = 1;
-//            boost::smatch what;
-//            boost::u32regex_match(matching, what, expr);
-//            std::string ma = what[1];
-//            matchedTokensSize[i] = countEntities(ma);
-//            matching = boost::u32regex_replace(matching, exprReplace, "", boost::match_default | boost::format_sed);
-//        }
-//        else if (mod == "+")
-//        {
-////            std::cout << "pasuje to gowno z plusem" << std::endl;
-////            std::cout << "To wycinam: " << *it << " z " << matching << std::endl;
-//            if (boost::u32regex_match(matching, expr))
-//            {
-//                matchedTokensSize[i] ++;
-////                std::cout << "Przed: " << matching << std::endl;
-//                matching = boost::u32regex_replace(matching, exprReplace, "", boost::match_default | boost::format_sed);
-////                std::cout << "Po: " << matching << std::endl;
-//         //       continue;
-//            }
-//        }
-//        i ++;
-//        it ++;
-//    }
-//
-////    std::cout << "Maczing po pierwszej rundzie: " << matching << std::endl;
-//
-//    it = tokensPatterns.begin();
-//    i = 0;
-//    while (it != tokensPatterns.end())
-    while (it != matchedIndices.end())
-    {
-//        std::cerr << "Numerex: " << *it << std::endl;
-//        std::cerr << "a dwojka: " << match[0] << std::endl;
+    int j = 0; //@todo: dac tej zmiennej jakas lepsza nazwe
+    while (it != matchedIndices.end()) {
         std::string part = match[*it].as_string();
-        if ((part == "") && (tokensRequired[i]))
-        {
-//            std::cerr << "part pusty" << std::endl;
+        if ((part == "") && (tokensRequired[i])) {
             return false;
         }
         ruleTokenSizes.at(i) = countEntities(part);
-        if (tokensRequired[i] && ruleTokenSizes[i] == 0)
-        {
-//            std::cerr << "obowiazkowy element " << i << " dlaczemus jest pusty. nie bawie sie tak" << std::endl;
+        if (tokensRequired[i] && ruleTokenSizes[i] == 0) {
             return false;
         }
         j += ruleTokenSizes.at(i);
-//        boost::u32regex expr = boost::make_u32regex("^(" + *it + ").*");
-//        boost::u32regex exprReplace = boost::make_u32regex("^" + *it);
-//
-//    //    std::cout << "pattern sratern: " << *it << std::endl;
-//        std::string mod = tokensModifiers[i];
-//        if (mod == "")
-//        {
-//            //matchedTokensSize[i] = 1;
-//            boost::smatch what;
-//            boost::u32regex_match(matching, what, expr);
-//            std::string ma = what[1];
-//            matchedTokensSize[i] = countEntities(ma);
-//            matching = boost::u32regex_replace(matching, exprReplace, "", boost::match_default | boost::format_sed);
-//        }
-//        else if (mod == "?")
-//        //if (mod == "?")
-//        {
-//            if (boost::u32regex_match(matching, expr))
-//            {
-//                matchedTokensSize[i] = 1;
-//                matching = boost::u32regex_replace(matching, exprReplace, "", boost::match_default | boost::format_sed);
-//            }
-//            else
-//            {
-//                matchedTokensSize[i] = 0;
-//            }
-//        }
-//        else if (mod == "+")
-//        {
-////            std::cout << "To wycinam: " << *it << " z " << matching << std::endl;
-//            if (boost::u32regex_match(matching, expr))
-//            {
-//                matchedTokensSize[i] ++;
-////                std::cout << "Przed: " << matching << std::endl;
-//                matching = boost::u32regex_replace(matching, exprReplace, "", boost::match_default | boost::format_sed);
-////                std::cout << "Po: " << matching << std::endl;
-//                continue;
-//            }
-//        }
-//        else if (mod == "*")
-//        {
-//            if (boost::u32regex_match(matching, expr))
-//            {
-//                matchedTokensSize[i] ++;
-//                matching = boost::u32regex_replace(matching, exprReplace, "", boost::match_default | boost::format_sed);
-//                continue;
-//            }
-//        }
         i ++;
         ++ it;
     }
-    if (j == 0)
-    {
+    if (j == 0) {
         return false;
     }
-    //if (matched.prefix() != "")
-    //{
-//        beforeMatch = matched.prefix();
-    //    return false;
-    //}
 
-//    std::cout << "Pasuje: " << matched[0] << " do: " << pattern << std::endl;
-//    std::cout << "Natomiast liczebnosc dopasowanych elementow prezentuje sie nastepujaco:" << std::endl;
-//    std::vector<int>::iterator im = matchedTokensSize->begin();
-//    int x = 0;
-//    while (im != matchedTokensSize->end())
-//    {
-////        std::cout << "Element " << x << ": " << *im << " klamotow" << std::endl;
-//        x ++;
-//        im ++;
-//    }
-
-//        std::cout << "pasuje mi: " << sentence << " do: " << pattern << std::endl;
-
-    Actions::iterator ia = actions->begin();
     bool ret = true;
-    while (ia != actions->end())
-    {
-//        Action *act = new Action(*ia);
-        //if ((*ia)->test(entities, currentEntity, matchedTokensSize) == false)
-        //if ((*ia)->test(pg, currentEntity, matchedTokensSize) == false)
+    Actions::iterator ia = actions->begin();
+    while (ia != actions->end()) {
         if ((*ia)->test(lattice, currentEntity, ruleTokenSizes) == false) {
             int limit;
-            if (tokensModifiers.at(leftCount + matchCount - 1) == "+" || tokensModifiers.at(leftCount + matchCount - 1) == "")
+            int lastIndex = leftCount + matchCount - 1;
+            if (tokensModifiers[lastIndex] == "+" ||
+                    tokensModifiers[lastIndex] == "") {
                 limit = 1;
-            else
-            {
+            } else {
                 limit = 0;
             }
-            if (ruleTokenSizes.at(leftCount + matchCount - 1) > limit)
-            {
-                ruleTokenSizes.at(leftCount + matchCount - 1) --;
+            if (ruleTokenSizes[lastIndex] > limit) {
+                ruleTokenSizes[lastIndex] --;
                 continue;
             }
             ret = false;
             break;
         }
-//        delete *act;
-
         ++ ia;
     }
-
-//    if (ret)
-//        std::cerr << "wychodze z testu z prawda" << std::endl;
-//    else
-//        std::cerr << "wychodze z testu z klamstwem" << std::endl;
 
     return ret;
 }
 
-//@todo: a tego nie zamienimy na jakies zliczenie ile jest ciagow <<[tgs] w dopasowaniu?
-int Rule::countEntities(std::string matched)
-{
-    size_t i = 0;
+int Rule::countEntities(std::string matched) {
     int p = 0;
-    int brackets = 0;
 
-    while (i < matched.length())
-    {
-        if (matched[i] == '(')
-            brackets ++;
-        if (matched[i] == ')')
-            brackets --;
-        if (matched[i] == '<')
-            if (i < matched.length())
-            {
-                if (matched[i + 1] == '<')
-                {
-                    if (brackets == 0)
-                    {
-                        p ++;
-                        i ++;
-                    }
-                }
-                else if (i > 0)
-                {
-                    if (matched[i - 1] == '(')
-                    {
-                        brackets --;
-                        i ++;
-                    }
-                    else if (matched[i - 1] == ')')
-                    {
-                        brackets ++;
-                        i ++;
-                    }
-                }
-            }
-        i ++;
+    StringPiece tmpMatched = matched;
+    std::string str;
+    while ( RegExp::FindAndConsumeN( &tmpMatched, "^<<[tsg]<\\d+<\\d+[^>]+>", 0, 0) ) {
+        p ++;
     }
-
     return p;
-//    std::string s = matched;
-//    while (s.find("<<", p) != std::string::npos)
-//    {
-//        //if (s[p+2] == 'g')
-//        //{
-//        //     i ++;
-//        //     p = s.find("<<t", p) + 3;
-//        //     continue;
-//        //}
-//        i ++;
-//        p = s.find("<<", p) + 2;
-//    }
-//    return i;
 }
 
 std::string Rule::getName() const {
