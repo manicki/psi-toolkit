@@ -34,7 +34,7 @@ void Lattice::addSymbols(VertexDescriptor startVertex, VertexDescriptor endVerte
         addEdge(
             vd,
             vd + symbol.length(),
-            AnnotationItem(symbol),
+            AnnotationItem("'" + symbol),
             getSymbolTag_());
         vd += symbol.length();
     }
