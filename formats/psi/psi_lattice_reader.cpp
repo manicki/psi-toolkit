@@ -9,6 +9,34 @@ std::string PsiLatticeReader::doInfo() {
     return "Psi reader";
 }
 
+
+PsiLatticeReader::Factory::~Factory() {
+}
+
+LatticeReader* PsiLatticeReader::Factory::doCreateLatticeReader(
+    const boost::program_options::variables_map&) {
+    return new PsiLatticeReader();
+}
+
+boost::program_options::options_description PsiLatticeReader::Factory::doOptionsHandled() {
+    boost::program_options::options_description optionsDescription("Allowed options");
+
+    optionsDescription.add_options()
+        ("line-by-line", "processes line by line")
+        ("whole-text",   "read the whole text")
+        ("paragraphs",   "paragraphs are delimited with double newlines")
+        ("discard-comments", "discards comments")
+        ("pass-through-comments", "marks comments as single markup")
+        ;
+
+    return optionsDescription;
+}
+
+std::string PsiLatticeReader::Factory::doGetName() {
+    return "psi-reader";
+}
+
+
 PsiLatticeReader::Worker::Worker(PsiLatticeReader& processor,
                                  std::istream& inputStream,
                                  Lattice& lattice):
@@ -17,12 +45,14 @@ PsiLatticeReader::Worker::Worker(PsiLatticeReader& processor,
 
 void PsiLatticeReader::Worker::doRun() {
     PsiQuoter quoter;
+    StringSequenceGrammar strSeqGrammar;
     PsiLRGrammar grammar;
     PsiLRAVGrammar avGrammar;
     PsiLRAVPairGrammar avPairGrammar;
     PsiLRPartitionsGrammar partsGrammar;
     PsiLRPartitionGrammar partGrammar;
     std::map<int, Lattice::VertexDescriptor> looseVertices;
+    std::map<int, Lattice::EdgeDescriptor> edgeOrdinalMap;
     std::string line;
     while (std::getline(inputStream_, line)) {
         if (
@@ -35,6 +65,19 @@ void PsiLatticeReader::Worker::doRun() {
         std::string::const_iterator begin = line.begin();
         std::string::const_iterator end = line.end();
         if (parse(begin, end, grammar, item)) {
+
+            // Fixes issue with Spirit 2.5.
+            std::vector<std::string> strSeqItem;
+            std::string::const_iterator strSeqBegin = line.begin();
+            std::string::const_iterator strSeqEnd = line.end();
+            if (parse(strSeqBegin, strSeqEnd, strSeqGrammar, strSeqItem)) {
+                if (strSeqItem.size() != 7) {
+                    item.annotationText = "";
+                }
+            }
+
+
+            // Preparation.
 
             item.unescape(quoter);
 
@@ -115,67 +158,96 @@ void PsiLatticeReader::Worker::doRun() {
             std::string::const_iterator avBegin = item.annotationItem.avVector.begin();
             std::string::const_iterator avEnd = item.annotationItem.avVector.end();
             if (parse(avBegin, avEnd, avGrammar, avItem)) {
-
                 BOOST_FOREACH(std::string av, avItem) {
                     PsiLRAVPairItem avPairItem;
                     std::string::const_iterator avPairBegin = av.begin();
                     std::string::const_iterator avPairEnd = av.end();
                     if (parse(avPairBegin, avPairEnd, avPairGrammar, avPairItem)) {
-
-                        //TODO
-
+                        lattice_.getAnnotationItemManager().setValue(
+                            annotationItem,
+                            avPairItem.arg,
+                            avPairItem.val
+                        );
                     }
                 }
-
             }
 
 
             // Defining partitions.
 
-            std::vector<std::string> partsItem;
-            std::string::const_iterator partsBegin = item.annotationItem.partitions.begin();
-            std::string::const_iterator partsEnd = item.annotationItem.partitions.end();
-            if (parse(partsBegin, partsEnd, partsGrammar, partsItem)) {
+            LayerTagMask rawMask = lattice_.getLayerTagManager().getMask("symbol");
+            std::list<Lattice::EdgeSequence::Builder> seqBuilders;
+            Lattice::VertexDescriptor currentVertex = from;
+            Lattice::EdgeDescriptor currentEdge;
 
-                BOOST_FOREACH(std::string part, partsItem) {
-                    std::vector<int> partItem;
-                    std::string::const_iterator partBegin = part.begin();
-                    std::string::const_iterator partEnd = part.end();
-                    if (parse(partBegin, partEnd, partGrammar, partItem)) {
-                        // BOOST_FOREACH(int edge, partItem) {
+            if (item.annotationItem.partitions.empty()) {
 
-                            //TODO
-
-                        // }
+                Lattice::EdgeSequence::Builder seqBuilder;
+                if (!lattice_.getLayerTagManager().match(tagsMask, "symbol")) {
+                    while (currentVertex != to) {
+                        currentEdge = lattice_.firstOutEdge(currentVertex, rawMask);
+                        seqBuilder.addEdge(currentEdge);
+                        currentVertex = lattice_.getEdgeTarget(currentEdge);
                     }
                 }
+                seqBuilders.push_back(seqBuilder);
 
-            }
+            } else {
 
-            LayerTagMask rawMask = lattice_.getLayerTagManager().getMask("symbol");
+                std::vector<std::string> partsItem;
+                std::string::const_iterator partsBegin = item.annotationItem.partitions.begin();
+                std::string::const_iterator partsEnd = item.annotationItem.partitions.end();
+                if (parse(partsBegin, partsEnd, partsGrammar, partsItem)) {
 
-            Lattice::EdgeSequence::Builder seqBuilder;
+                    BOOST_FOREACH(std::string part, partsItem) {
+                        Lattice::EdgeSequence::Builder seqBuilder;
+                        std::vector<int> partItem;
+                        std::string::const_iterator partBegin = part.begin();
+                        std::string::const_iterator partEnd = part.end();
+                        if (parse(partBegin, partEnd, partGrammar, partItem)) {
+                            BOOST_FOREACH(int edgeNumber, partItem) {
+                                if (edgeNumber < 1) {
+                                    if (currentVertex == to) {
+                                        throw FileFormatException(
+                                            "PSI reader: Wrong partition's notation (too many sub-edges)"
+                                        );
+                                    }
+                                    currentEdge = lattice_.firstOutEdge(currentVertex, rawMask);
+                                } else if (edgeOrdinalMap.find(edgeNumber) == edgeOrdinalMap.end()) {
+                                    throw FileFormatException(
+                                        "PSI reader: Wrong partition's notation (unknown sub-edge)"
+                                    );
+                                } else {
+                                    currentEdge = edgeOrdinalMap[edgeNumber];
+                                }
+                                seqBuilder.addEdge(currentEdge);
+                                currentVertex = lattice_.getEdgeTarget(currentEdge);
+                            }
+                        }
+                        seqBuilders.push_back(seqBuilder);
+                    }
 
-            if (!lattice_.getLayerTagManager().match(tagsMask, "symbol")) {
-                Lattice::VertexDescriptor currentVertex = from;
-                while (currentVertex != to) {
-                    Lattice::EdgeDescriptor currentEdge
-                        = lattice_.firstOutEdge(currentVertex, rawMask);
-                    seqBuilder.addEdge(currentEdge);
-                    currentVertex = lattice_.getEdgeTarget(currentEdge);
+                } else {
+
+                    seqBuilders.push_back(Lattice::EdgeSequence::Builder());
+
                 }
+
             }
 
 
             // Adding edge.
 
-            lattice_.addEdge(
-                from,
-                to,
-                annotationItem,
-                tags,
-                seqBuilder.build()
-            );
+            BOOST_FOREACH(Lattice::EdgeSequence::Builder builder, seqBuilders) {
+                edgeOrdinalMap[item.ordinal] = lattice_.addEdge(
+                    from,
+                    to,
+                    annotationItem,
+                    tags,
+                    builder.build(),
+                    item.annotationItem.score
+                );
+            }
 
         } else {
 

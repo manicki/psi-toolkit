@@ -4,6 +4,7 @@
 
 #include "txt_lattice_reader.hpp"
 #include "utt_lattice_reader.hpp"
+#include "psi_lattice_reader.hpp"
 #include "psi_lattice_writer.hpp"
 #include "simple_lattice_writer.hpp"
 #include "tp_tokenizer.hpp"
@@ -22,6 +23,7 @@
 MainFactoriesKeeper::MainFactoriesKeeper() {
     keeper_.takeProcessorFactory(new TxtLatticeReader::Factory());
     keeper_.takeProcessorFactory(new UTTLatticeReader::Factory());
+    keeper_.takeProcessorFactory(new PsiLatticeReader::Factory());
     keeper_.takeProcessorFactory(new PsiLatticeWriter::Factory());
     keeper_.takeProcessorFactory(new SimpleLatticeWriter::Factory());
     keeper_.takeProcessorFactory(new TpTokenizer::Factory());

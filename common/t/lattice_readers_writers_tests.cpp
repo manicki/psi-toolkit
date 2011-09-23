@@ -41,17 +41,17 @@ BOOST_AUTO_TEST_CASE( utt_lattice_reader ) {
   BOOST_CHECK(rei.hasNext());
   BOOST_CHECK_EQUAL(lattice.getAnnotationCategory(rei.next()), "'e");
   BOOST_CHECK(rei.hasNext());
-  rei.next(); // BOOST_CHECK_EQUAL(lattice.getAnnotationCategory(rei.next()), "' ");
+  BOOST_CHECK_EQUAL(lattice.getAnnotationCategory(rei.next()), "' ");
   BOOST_CHECK(rei.hasNext());
-  rei.next(); // BOOST_CHECK_EQUAL(lattice.getAnnotationCategory(rei.next()), "'a");
+  BOOST_CHECK_EQUAL(lattice.getAnnotationCategory(rei.next()), "'a");
   BOOST_CHECK(rei.hasNext());
-  rei.next(); // BOOST_CHECK_EQUAL(lattice.getAnnotationCategory(rei.next()), "' ");
+  BOOST_CHECK_EQUAL(lattice.getAnnotationCategory(rei.next()), "' ");
   BOOST_CHECK(rei.hasNext());
   BOOST_CHECK_EQUAL(lattice.getAnnotationCategory(rei.next()), "'u");
   BOOST_CHECK(rei.hasNext());
   BOOST_CHECK_EQUAL(lattice.getAnnotationCategory(rei.next()), "'n");
   BOOST_CHECK(rei.hasNext());
-  rei.next(); // BOOST_CHECK_EQUAL(lattice.getAnnotationCategory(rei.next()), "' ");
+  BOOST_CHECK_EQUAL(lattice.getAnnotationCategory(rei.next()), "' ");
   BOOST_CHECK(rei.hasNext());
   BOOST_CHECK_EQUAL(lattice.getAnnotationCategory(rei.next()), "'c");
   BOOST_CHECK(rei.hasNext());
@@ -61,7 +61,7 @@ BOOST_AUTO_TEST_CASE( utt_lattice_reader ) {
   BOOST_CHECK(rei.hasNext());
   BOOST_CHECK_EQUAL(lattice.getAnnotationCategory(rei.next()), "'t");
   BOOST_CHECK(rei.hasNext());
-  rei.next(); // BOOST_CHECK_EQUAL(lattice.getAnnotationCategory(rei.next()), "'.");
+  BOOST_CHECK_EQUAL(lattice.getAnnotationCategory(rei.next()), "'.");
   BOOST_CHECK(rei.hasNext());
   BOOST_CHECK_EQUAL(lattice.getAnnotationCategory(rei.next()), "'Q");
   BOOST_CHECK(rei.hasNext());
@@ -75,7 +75,7 @@ BOOST_AUTO_TEST_CASE( utt_lattice_reader ) {
   BOOST_CHECK(rei.hasNext());
   BOOST_CHECK_EQUAL(lattice.getAnnotationCategory(rei.next()), "'e");
   BOOST_CHECK(rei.hasNext());
-  rei.next(); // BOOST_CHECK_EQUAL(lattice.getAnnotationCategory(rei.next()), "' ");
+  BOOST_CHECK_EQUAL(lattice.getAnnotationCategory(rei.next()), "' ");
   BOOST_CHECK(rei.hasNext());
   BOOST_CHECK_EQUAL(lattice.getAnnotationCategory(rei.next()), "'â");
   BOOST_CHECK(rei.hasNext());
@@ -87,39 +87,39 @@ BOOST_AUTO_TEST_CASE( utt_lattice_reader ) {
   Lattice::EdgesSortedBySourceIterator tei = lattice.edgesSortedBySource(tokenMask);
 
   BOOST_CHECK(tei.hasNext());
-  BOOST_CHECK_EQUAL(lattice.getAnnotationCategory(tei.next()), "Amelie");
+  BOOST_CHECK_EQUAL(lattice.getAnnotationCategory(tei.next()), "'Amelie'");
   BOOST_CHECK(tei.hasNext());
-  BOOST_CHECK_EQUAL(lattice.getAnnotationCategory(tei.next()), " ");
+  BOOST_CHECK_EQUAL(lattice.getAnnotationCategory(tei.next()), "' '");
   BOOST_CHECK(tei.hasNext());
-  BOOST_CHECK_EQUAL(lattice.getAnnotationCategory(tei.next()), "a");
+  BOOST_CHECK_EQUAL(lattice.getAnnotationCategory(tei.next()), "'a'");
   BOOST_CHECK(tei.hasNext());
-  BOOST_CHECK_EQUAL(lattice.getAnnotationCategory(tei.next()), " ");
+  BOOST_CHECK_EQUAL(lattice.getAnnotationCategory(tei.next()), "' '");
   BOOST_CHECK(tei.hasNext());
-  BOOST_CHECK_EQUAL(lattice.getAnnotationCategory(tei.next()), "un");
+  BOOST_CHECK_EQUAL(lattice.getAnnotationCategory(tei.next()), "'un'");
   BOOST_CHECK(tei.hasNext());
-  BOOST_CHECK_EQUAL(lattice.getAnnotationCategory(tei.next()), " ");
+  BOOST_CHECK_EQUAL(lattice.getAnnotationCategory(tei.next()), "' '");
   BOOST_CHECK(tei.hasNext());
-  BOOST_CHECK_EQUAL(lattice.getAnnotationCategory(tei.next()), "chat");
+  BOOST_CHECK_EQUAL(lattice.getAnnotationCategory(tei.next()), "'chat'");
   BOOST_CHECK(tei.hasNext());
-  BOOST_CHECK_EQUAL(lattice.getAnnotationCategory(tei.next()), ".");
+  BOOST_CHECK_EQUAL(lattice.getAnnotationCategory(tei.next()), "'.'");
   BOOST_CHECK(tei.hasNext());
-  BOOST_CHECK_EQUAL(lattice.getAnnotationCategory(tei.next()), "Quelle");
+  BOOST_CHECK_EQUAL(lattice.getAnnotationCategory(tei.next()), "'Quelle'");
   BOOST_CHECK(tei.hasNext());
-  BOOST_CHECK_EQUAL(lattice.getAnnotationCategory(tei.next()), " ");
+  BOOST_CHECK_EQUAL(lattice.getAnnotationCategory(tei.next()), "' '");
   BOOST_CHECK(tei.hasNext());
-  BOOST_CHECK_EQUAL(lattice.getAnnotationCategory(tei.next()), "âge");
+  BOOST_CHECK_EQUAL(lattice.getAnnotationCategory(tei.next()), "'âge'");
 
   LayerTagMask sentenceMask = lattice.getLayerTagManager().getMask("sentence");
   Lattice::EdgesSortedBySourceIterator sei = lattice.edgesSortedBySource(sentenceMask);
 
   BOOST_CHECK(sei.hasNext());
-  BOOST_CHECK_EQUAL(lattice.getAnnotationCategory(sei.next()),
+  BOOST_CHECK_EQUAL(lattice.getAnnotationText(sei.next()),
   "Amelie a un chat.");
   BOOST_CHECK(sei.hasNext());
-  BOOST_CHECK_EQUAL(lattice.getAnnotationCategory(sei.next()),
+  BOOST_CHECK_EQUAL(lattice.getAnnotationText(sei.next()),
   "Quelle âge as-tu?");
   BOOST_CHECK(sei.hasNext());
-  BOOST_CHECK_EQUAL(lattice.getAnnotationCategory(sei.next()),
+  BOOST_CHECK_EQUAL(lattice.getAnnotationText(sei.next()),
   "Karol Józef Wojtyła est élu pape de l'Église catholique romaine le 16 octobre 1978.");
   BOOST_CHECK(!sei.hasNext());
 
@@ -172,19 +172,8 @@ BOOST_AUTO_TEST_CASE( psi_lattice_writer_advanced ) {
 }
 
 
-BOOST_AUTO_TEST_CASE( psi_lattice_reader ) {
-    Lattice lattice("");
+BOOST_AUTO_TEST_CASE( psi_lattice_reader_reflexive ) {
 
-    boost::scoped_ptr<LatticeReader> reader(new PsiLatticeReader());
-
-    reader->readIntoLattice(ROOT_DIR "formats/psi/t/files/pl_sample.txt", lattice);
-
-    boost::scoped_ptr<LatticeWriter> writer(new PsiLatticeWriter());
-
-    writer->writeLattice(lattice, std::cout);
-}
-
-BOOST_AUTO_TEST_CASE( psi_lattice_reader_2 ) {
     Lattice lattice("");
 
     boost::scoped_ptr<LatticeReader> reader(new PsiLatticeReader());
@@ -193,8 +182,23 @@ BOOST_AUTO_TEST_CASE( psi_lattice_reader_2 ) {
 
     boost::scoped_ptr<LatticeWriter> writer(new PsiLatticeWriter());
 
-    writer->writeLattice(lattice, std::cout);
+    // writer->writeLattice(lattice, std::cout);
+
+    std::ostringstream osstr;
+    writer->writeLattice(lattice, osstr);
+
+    std::string line;
+    std::string contents;
+    std::ifstream s(ROOT_DIR "formats/psi/t/files/pl_sample_nocomments.txt");
+    while (getline(s, line)) {
+        contents += line;
+        contents += "\n";
+    }
+
+    BOOST_CHECK_EQUAL(osstr.str(), contents);
+
 }
+
 
 BOOST_AUTO_TEST_CASE( simple_lattice_writer ) {
 

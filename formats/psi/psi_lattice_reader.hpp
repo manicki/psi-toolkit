@@ -19,6 +19,7 @@
 #include <boost/spirit/include/qi.hpp>
 
 #include "lattice_reader.hpp"
+#include "lattice_reader_factory.hpp"
 #include "quoter.hpp"
 #include "psi_quoter.hpp"
 
@@ -26,6 +27,28 @@
 
 
 namespace qi = boost::spirit::qi;
+
+
+struct StringSequenceGrammar : public qi::grammar<
+    std::string::const_iterator,
+    std::vector<std::string>()
+> {
+
+    StringSequenceGrammar() : StringSequenceGrammar::base_type(start) {
+
+        start
+            %= +(qi::char_ - ' ') % whitespaces
+            ;
+
+        whitespaces = +(qi::space);
+
+    }
+
+    qi::rule<std::string::const_iterator, std::vector<std::string>()> start;
+    qi::rule<std::string::const_iterator, qi::unused_type()> whitespaces;
+
+};
+
 
 
 struct PsiLRAnnotation {
@@ -68,6 +91,7 @@ struct PsiLRItem {
         BOOST_FOREACH(std::string tag, tags) {
             tag = quoter.unescape(tag);
         }
+        annotationText = quoter.unescape(annotationText);
         annotationItem.unescape(quoter);
     }
 };
@@ -88,7 +112,10 @@ BOOST_FUSION_ADAPT_STRUCT(
 )
 
 
-struct PsiLRGrammar : public qi::grammar<std::string::const_iterator, PsiLRItem()> {
+struct PsiLRGrammar : public qi::grammar<
+    std::string::const_iterator,
+    PsiLRItem()
+> {
 
     PsiLRGrammar() : PsiLRGrammar::base_type(start) {
 
@@ -254,6 +281,19 @@ public:
      * Gets format name (here: "Psi").
      */
     std::string getFormatName();
+
+    class Factory : public LatticeReaderFactory {
+    public:
+        virtual ~Factory();
+
+    private:
+        virtual LatticeReader* doCreateLatticeReader(
+            const boost::program_options::variables_map& options);
+
+        virtual boost::program_options::options_description doOptionsHandled();
+
+        virtual std::string doGetName();
+    };
 
 private:
     virtual std::string doInfo();
