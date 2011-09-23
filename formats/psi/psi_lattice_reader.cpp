@@ -155,18 +155,28 @@ void PsiLatticeReader::Worker::doRun() {
                 std::string::const_iterator partsEnd = item.annotationItem.partitions.end();
                 if (parse(partsBegin, partsEnd, partsGrammar, partsItem)) {
 
-                    BOOST_FOREACH(std::string part, partsItem) {
+                    // BOOST_FOREACH(std::string part, partsItem) {
+                        if (partsItem.size() > 1) {
+                            throw FileFormatException("Reading multiple partitions not yet implemented");
+                        }
+                        std::string part = partsItem.at(0);
                         std::vector<int> partItem;
                         std::string::const_iterator partBegin = part.begin();
                         std::string::const_iterator partEnd = part.end();
                         if (parse(partBegin, partEnd, partGrammar, partItem)) {
-                            // BOOST_FOREACH(int edgeNumber, partItem) {
-
-                                //TODO
-
-                            // }
+                            BOOST_FOREACH(int edgeNumber, partItem) {
+                                if (edgeNumber < 1) {
+                                    //TODO
+                                } else if (edgeOrdinalMap.find(edgeNumber) == edgeOrdinalMap.end()) {
+                                    throw FileFormatException(
+                                        "PSI reader: Wrong edge number"
+                                    );
+                                } else {
+                                    seqBuilder.addEdge(edgeOrdinalMap[edgeNumber]);
+                                }
+                            }
                         }
-                    }
+                    // }
 
                 }
 
