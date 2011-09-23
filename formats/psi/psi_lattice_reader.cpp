@@ -22,7 +22,6 @@ void PsiLatticeReader::Worker::doRun() {
     PsiLRAVPairGrammar avPairGrammar;
     PsiLRPartitionsGrammar partsGrammar;
     PsiLRPartitionGrammar partGrammar;
-    LayerTagManager ltm = lattice_.getLayerTagManager();
     std::map<int, Lattice::VertexDescriptor> looseVertices;
     std::string line;
     while (std::getline(inputStream_, line)) {
@@ -39,8 +38,8 @@ void PsiLatticeReader::Worker::doRun() {
 
             item.unescape(quoter);
 
-            LayerTagCollection tags = ltm.createTagCollection(item.tags);
-            LayerTagMask tagsMask = ltm.getMask(tags);
+            LayerTagCollection tags = lattice_.getLayerTagManager().createTagCollection(item.tags);
+            LayerTagMask tagsMask = lattice_.getLayerTagManager().getMask(tags);
 
             std::stringstream formSs;
             formSs << std::setw(item.length) << item.text;
@@ -48,13 +47,15 @@ void PsiLatticeReader::Worker::doRun() {
 
             if (!item.beginningLoose) {
                 try {
-                    if (ltm.match(tagsMask, "symbol")) {
+                    if (lattice_.getLayerTagManager().match(tagsMask, "symbol")) {
                         lattice_.appendString(form.substr(
-                            lattice_.getVertexRawCharIndex(lattice_.getLastVertex()) - item.beginning
+                            lattice_.getVertexRawCharIndex(lattice_.getLastVertex())
+                                - item.beginning
                         ));
                     } else {
                         lattice_.appendStringWithSymbols(form.substr(
-                            lattice_.getVertexRawCharIndex(lattice_.getLastVertex()) - item.beginning
+                            lattice_.getVertexRawCharIndex(lattice_.getLastVertex())
+                                - item.beginning
                         ));
                     }
                 } catch (std::out_of_range) {
@@ -96,11 +97,11 @@ void PsiLatticeReader::Worker::doRun() {
                 }
             }
 
-            LayerTagMask rawMask = ltm.getMask("symbol");
+            LayerTagMask rawMask = lattice_.getLayerTagManager().getMask("symbol");
 
             Lattice::EdgeSequence::Builder seqBuilder;
 
-            if (!ltm.match(tagsMask, "symbol")) {
+            if (!lattice_.getLayerTagManager().match(tagsMask, "symbol")) {
                 Lattice::VertexDescriptor currentVertex = from;
                 while (currentVertex != to) {
                     Lattice::EdgeDescriptor currentEdge
