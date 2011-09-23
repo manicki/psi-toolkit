@@ -15,7 +15,7 @@ PipeSite::PipeSite(PsiServer& server, std::string initialPipe)
 {
     input = INITIAL_TEXT;
     output = runPipe(input);
-    file = "";
+    fileName = "";
 
     psiServer_.registerIncludeCode(
         "pipe_site_input_text", boost::bind(&PipeSite::inputText, this));
@@ -40,9 +40,16 @@ char * PipeSite::pipeText() {
 char * PipeSite::actionPipe() {
     input = psiServer_.findValue("input-text");
     pipe = psiServer_.findValue("pipe-text");
-    file = psiServer_.findValue("input-file");
 
-    std::string in = file.empty() ? input : file;
+    fileName = "";
+    std::string in = input;
+
+    std::string is_file = psiServer_.findValue("radio-file");
+    if (is_file == "on") {
+        fileName = psiServer_.findValue("input-file-filename");
+        in = psiServer_.findValue("input-file");
+    }
+
     output = runPipe(in);
 
     return stringToChar(std::string("/index.html"));

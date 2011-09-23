@@ -10,31 +10,7 @@
     <script type="text/javascript" src="js/jquery-1.6.4.min.js"></script>
     <script type="text/javascript" src="js/jquery.textarearesizer.compressed.js"></script>
 
-    <script type="text/javascript">
-
-$().ready(function()
-{
-    $('textarea.resizable:not(.processed)').TextAreaResizer();
-
-    $("ul#input-bookmarks li a").click(function(e)
-    {
-        e.preventDefault();
-
-        $("ul#input-bookmarks .active").removeClass("active");
-        $(this).parent().addClass("active");
-
-        var class_name = $(this).attr("class");
-
-        $("#inputs div.hidable:visible").hide();
-        $("#inputs div#" + class_name).show();
-
-        return false;
-    });
-});
-
-    </script>
-
-
+    <script type="text/javascript" src="js/main.js"></script>
 </head>
 
 <body>
@@ -62,9 +38,6 @@ $().ready(function()
                 <input name="pipe-text" type="text" value="<!--#psis pipe_site_pipe_text -->" />
             </div>
 
-            <div class="box black" id="options">
-            </div>
-
             <ul id="input-bookmarks">
                 <li class="active"><a class="input-text" href="#">Text</a></li>
                 <li><a href="#" class="input-file">File</a></li>
@@ -80,6 +53,10 @@ $().ready(function()
                     <p>Select file:</p>
                     <input type="file" accept="text/html" name="input-file" size="60" />
                 </div>
+
+                <input class="input-radio" id="radio-input-text" type="radio" name="radio-text" checked="yes" />
+                <input class="input-radio" id="radio-input-file" type="radio" name="radio-file" />
+
             </div>
 
             <div>
