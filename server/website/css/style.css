@@ -1,29 +1,72 @@
-/* General */
-
 html, body { height: 100%; }
-body { background: url("/img/bg-gradient.jpg") repeat-x #FFFFFF; }
+body { background: url("/img/bg-gradient.jpg") repeat-x #FFFFFF;
+    font-family: Verdana, sans-serif; font-size: 14px; }
 
-#wrapper { width: 980px; margin: 0 auto -100px; min-height: 100%; }
-#content { overflow:auto; padding-bottom: 120px; }
+#wrapper { width: 900px; margin: 0 auto -100px; min-height: 100%; }
+#content { overflow:auto; padding-bottom: 100px; }
 p { padding: 5px 0; }
 
 /* Header */
 
-#header { min-height: 50px; }
+#header { min-height: 50px; line-height: 20px; }
+#header div.logo { float: left; margin: 15px; font-size: 16px; font-weight: bold; }
+
+#menu { float: right; }
+#menu li { float: left; height: 40px; line-height: 40px; padding: 0 20px;
+    border-left: 2px solid #666; }
+#menu li a { text-decoration: none; color: #335599; }
 
 /* Forms */
 
-input[type=text] { padding: 5px; width: 800px; }
-textarea { padding: 5px; }
-#pipe-text { }
-#input-text { }
+.box input, .box textarea { display: table; margin: 0 auto; padding: 5px; width: 784px;
+    -moz-border-radius: 5px; border-radius: 5px; border: 1px solid #CCCCCC; }
+.box input:focus, .box textarea:focus { background-color: #FFFFFF; border: 1px solid #888888; }
+
+#pipe { }
+#inputs { margin-top: -1px; }
+#input-file input { width: 620px; margin: 20px auto; }
+
+#submit { margin: 10px 30px; width: 100px; height: 32px; cursor: pointer;
+    background-color: #335599; color: #FFFFFF;
+    -webkit-border-radius: 8px; -moz-border-radius: 8px; border-radius: 8px; border: 1px solid #DEDEDE;}
+#submit:hover { background-color: #1b4394; }
 
 /* Boxes */
-.box { margin: 10px auto 0 auto; display: table; }
 
-pre { border-width: 1px; border-style: solid; padding: 8px; font-family: monospace; }
+.box { display: table; margin: 10px auto 0 auto;  padding: 5px; width: 800px; }
+.box.black { background-color: #EEEEEE; color: #000000; padding: 15px;
+   -webkit-border-radius: 12px; -moz-border-radius: 12px; border-radius: 12px; border: 1px solid #DEDEDE; }
+.box p { padding-top: 0; }
+
+/* Output */
+
+pre { border-width: 1px; border-style: solid; padding: 8px; font-family: monospace; font-size: 12px; }
+
+/* Input bookmarks */
+
+#input-bookmarks { overflow:hidden; width: 600px; margin: 0 auto; }
+#input-bookmarks li { width: 90px; height: 20px; float: right; display: block;
+    text-align: center; padding-top: 3px; background-color: #CCCCCC;
+    -webkit-border-top-left-radius: 12px; -moz-border-radius-topleft: 12px; border-top-left-radius: 12px;
+    -webkit-border-top-right-radius: 12px; -moz-border-radius-topright: 12px; border-top-right-radius: 12px;
+    border: solid #DCDCDC; border-width: 1px 1px 0 1px; }
+#input-bookmarks li a { text-decoration: none; color: #FFFFFF; cursor: pointer; }
+#input-bookmarks li.active { background-color: #EEEEEE; }
+#input-bookmarks li.active a { color: #000000; width: 80px; height: 100%; cursor: default; }
+
+#input-text { display: block; }
+#input-file { display: none; }
 
 /* Footer */
 
-#footer { background-color: #335599; height: 100px; }
+#footer { background-color: #335599; height: 100px; color: #FFFFFF; }
 #footer #wrapper { }
+#footer div.logo { padding-top: 20px; font-size: 16px; font-weight: bold; }
+
+/* Resizable textarea */
+
+div.grippie { width: 760px; height: 8px; overflow: hidden; margin-left: 20px; cursor: s-resize;
+    background: #DCDCDC url("/img/grippie.png") no-repeat scroll center 2px;
+    border: solid #BBBBBB; border-width: 0 1px 1px;
+    -webkit--border-radius: 3px; -moz-border-radius: 3px; border-radius: 3px; }
+

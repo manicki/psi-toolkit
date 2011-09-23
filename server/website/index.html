@@ -6,56 +6,104 @@
 
     <link href="css/reset.css" rel="stylesheet" type="text/css" />
     <link href="css/style.css" rel="stylesheet" type="text/css" />
+
+    <script type="text/javascript" src="js/jquery-1.6.4.min.js"></script>
+    <script type="text/javascript" src="js/jquery.textarearesizer.compressed.js"></script>
+
+    <script type="text/javascript">
+
+$().ready(function()
+{
+    $('textarea.resizable:not(.processed)').TextAreaResizer();
+
+    $("ul#input-bookmarks li a").click(function(e)
+    {
+        e.preventDefault();
+
+        $("ul#input-bookmarks .active").removeClass("active");
+        $(this).parent().addClass("active");
+
+        var class_name = $(this).attr("class");
+
+        $("#inputs div.hidable:visible").hide();
+        $("#inputs div#" + class_name).show();
+
+        return false;
+    });
+});
+
+    </script>
+
+
 </head>
 
 <body>
 
-    <div id="wrapper">
+<div id="wrapper">
 
-        <div id="header">
-
+    <div id="header">
+        <div class="logo">
             <h1>Psi Server</h1>
         </div>
 
-        <div id="content">
-
-            <form id="pipe-form" action="pipe.psis" method="post" enctype="multipart/form-data">
-
-                <div id="pipe" class="box">
-                    Write pipe line: <br />
-                    <input name="pipe-text" type="text" value="<!--#psis pipe_site_pipe_text -->" />
-                </div>
-
-                <div id="options" class="box">
-                </div>
-
-                <div id="input" class="box">
-                    Write some text: <br />
-                    <textarea name="input-text" rows="5" cols="112"><!--#psis pipe_site_input_text --></textarea>
-                </div>
-
-                <div id="file" class="box">
-                    <input type="file" accept="text/html" name="input-file" />
-                </div>
-
-                <div>
-                    <input value="Send" type="submit" name="pipe-submit" />
-                </div>
-            </form>
-
-            <div id="output" class="box">
-                <!--#psis pipe_site_output_text -->
-            </div>
-
-            <div id="temp" class="box">
-                <!--#psis index_site_info -->
-                <!--#psis pipe_site_pipe_text -->
-            </div>
-
-        </div>
+        <ul id="menu">
+            <li><a href="#">About</a></li>
+            <li><a href="#">Psi-Toolkit</a></li>
+            <li><a href="#">Help</a></li>
+        </ul>
     </div>
 
-    <!--#psis index_site_footer_part -->
+    <div id="content">
+
+        <form id="pipe-form" action="pipe.psis" method="post" enctype="multipart/form-data">
+
+            <div class="box black" id="pipe">
+                <p>Write pipe line:</p>
+                <input name="pipe-text" type="text" value="<!--#psis pipe_site_pipe_text -->" />
+            </div>
+
+            <div class="box black" id="options">
+            </div>
+
+            <ul id="input-bookmarks">
+                <li class="active"><a class="input-text" href="#">Text</a></li>
+                <li><a href="#" class="input-file">File</a></li>
+            </ul>
+
+            <div class="box black" id="inputs" >
+                <div id="input-text" class="hidable">
+                    <p>Write some text:</p>
+                    <textarea class="resizable" name="input-text" rows="5"><!--#psis pipe_site_input_text --></textarea>
+                </div>
+
+                <div id="input-file" class="hidable">
+                    <p>Select file:</p>
+                    <input type="file" accept="text/html" name="input-file" size="60" />
+                </div>
+            </div>
+
+            <div>
+                <input id="submit" value="Send" type="submit" name="pipe-submit" />
+            </div>
+        </form>
+
+        <div class="box" id="message">
+
+        </div>
+
+        <div class="box" id="output">
+            <!--#psis pipe_site_output_text -->
+        </div>
+
+        <div class="box" id="temp">
+            <!--#psis index_site_info -->
+            <!--#psis pipe_site_pipe_text -->
+        </div>
+
+    </div>
+</div>
+
+<!--#psis index_site_footer_part -->
 
 </body>
 
