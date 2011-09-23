@@ -45,6 +45,7 @@ PsiLatticeReader::Worker::Worker(PsiLatticeReader& processor,
 
 void PsiLatticeReader::Worker::doRun() {
     PsiQuoter quoter;
+    StringSequenceGrammar strSeqGrammar;
     PsiLRGrammar grammar;
     PsiLRAVGrammar avGrammar;
     PsiLRAVPairGrammar avPairGrammar;
@@ -64,6 +65,19 @@ void PsiLatticeReader::Worker::doRun() {
         std::string::const_iterator begin = line.begin();
         std::string::const_iterator end = line.end();
         if (parse(begin, end, grammar, item)) {
+
+            // Fixes issue with Spirit 2.5.
+            std::vector<std::string> strSeqItem;
+            std::string::const_iterator strSeqBegin = line.begin();
+            std::string::const_iterator strSeqEnd = line.end();
+            if (parse(strSeqBegin, strSeqEnd, strSeqGrammar, strSeqItem)) {
+                if (strSeqItem.size() != 7) {
+                    item.annotationText = "";
+                }
+            }
+
+
+            // Preparation.
 
             item.unescape(quoter);
 

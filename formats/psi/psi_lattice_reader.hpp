@@ -29,6 +29,28 @@
 namespace qi = boost::spirit::qi;
 
 
+struct StringSequenceGrammar : public qi::grammar<
+    std::string::const_iterator,
+    std::vector<std::string>()
+> {
+
+    StringSequenceGrammar() : StringSequenceGrammar::base_type(start) {
+
+        start
+            %= +(qi::char_ - ' ') % whitespaces
+            ;
+
+        whitespaces = +(qi::space);
+
+    }
+
+    qi::rule<std::string::const_iterator, std::vector<std::string>()> start;
+    qi::rule<std::string::const_iterator, qi::unused_type()> whitespaces;
+
+};
+
+
+
 struct PsiLRAnnotation {
     std::string category;
     double score;
@@ -90,7 +112,10 @@ BOOST_FUSION_ADAPT_STRUCT(
 )
 
 
-struct PsiLRGrammar : public qi::grammar<std::string::const_iterator, PsiLRItem()> {
+struct PsiLRGrammar : public qi::grammar<
+    std::string::const_iterator,
+    PsiLRItem()
+> {
 
     PsiLRGrammar() : PsiLRGrammar::base_type(start) {
 
