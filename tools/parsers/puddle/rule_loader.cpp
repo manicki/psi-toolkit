@@ -64,8 +64,10 @@ RulesPtr RuleLoader::readFromFile(std::string &filename) {
         line = boost::algorithm::trim_copy(line);
         if (line.find("Rule") == 0) {
             if (ruleString != "") {
-                RulePtr rule = parseRuleString(ruleString);
-                rules->push_back(rule);
+                bool wrong = false;
+                RulePtr rule = parseRuleString(ruleString, wrong);
+                if (!wrong)
+                    rules->push_back(rule);
                 ruleString = line;
             }
         } else {
@@ -75,8 +77,10 @@ RulesPtr RuleLoader::readFromFile(std::string &filename) {
         }
     }
     if (ruleString != "") {
-        RulePtr rule = parseRuleString(ruleString);
-        rules->push_back(rule);
+        bool wrong = false;
+        RulePtr rule = parseRuleString(ruleString, wrong);
+        if (! wrong)
+            rules->push_back(rule);
     }
     return rules;
 }
@@ -157,6 +161,10 @@ std::string RuleLoader::compileRulePattern(std::string &matched, int &size,
     }
     if (matched != "")
         compiledMatch += compileNonTokens(matched);
+    //if (compiledMatch[0] != '(' || compiledMatch[compiledMatch.size() - 1] != ')') {
+    //    std::cerr << "DOPISUJE A NAWIASOW MAM: " << bracketCount << std::endl;
+        compiledMatch = "(" + compiledMatch + ")";
+    //}
 
     size_t i = 0;
     int mindex = bracketCount;
@@ -1120,7 +1128,8 @@ void RuleLoader::setSyntok() {
 
 
 RulePtr RuleLoader::compileRule(std::string ruleString) {
-    return parseRuleString(ruleString);
+    bool wrong = false;
+    return parseRuleString(ruleString, wrong);
 }
 
 ActionPtr RuleLoader::compileAction(std::string actionString, RulePtr rule) {
@@ -1391,7 +1400,7 @@ SyntokActionPtr RuleLoader::createSyntokAction(std::string &interpretationString
     return action;
 }
 
-RulePtr RuleLoader::parseRuleString(std::string &ruleString) {
+RulePtr RuleLoader::parseRuleString(std::string &ruleString, bool &wrong) {
     std::string ruleName;
     std::string rulePattern;
     std::string rulePatternLeft, rulePatternMatch, rulePatternRight;
@@ -1400,6 +1409,7 @@ RulePtr RuleLoader::parseRuleString(std::string &ruleString) {
     bool hasLeft = false;
     bool hasRight = false;
     int bracketCount = 0;
+    wrong = false;
 
     std::vector<std::string> tokensPatterns;
     std::vector<std::string> tokensModifiers;
@@ -1500,6 +1510,9 @@ RulePtr RuleLoader::parseRuleString(std::string &ruleString) {
         } else {
             chars += line;
         }
+    }
+    if (bracketCount > 16) {
+        wrong = true;
     }
     bool repeat = false;
     ActionsPtr actions = this->compileRuleAction(chars,

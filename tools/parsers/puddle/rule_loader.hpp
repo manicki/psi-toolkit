@@ -129,7 +129,7 @@ class RuleLoader {
                 std::string conditionString, int attributeIndex,
                 std::string comparisonOperator);
 
-        RulePtr parseRuleString(std::string &ruleString);
+        RulePtr parseRuleString(std::string &ruleString, bool &wrong);
 
         TagsetPtr tagset;
         bool verbose;
