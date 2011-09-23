@@ -68,6 +68,7 @@ struct PsiLRItem {
         BOOST_FOREACH(std::string tag, tags) {
             tag = quoter.unescape(tag);
         }
+        annotationText = quoter.unescape(annotationText);
         annotationItem.unescape(quoter);
     }
 };
