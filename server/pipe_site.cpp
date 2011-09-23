@@ -15,18 +15,22 @@ PipeSite::PipeSite(PsiServer& server, std::string initialPipe)
 {
     input = INITIAL_TEXT;
     output = runPipe(input);
-    file = "";
+    fileName = "";
 
     psiServer_.registerIncludeCode(
         "pipe_site_input_text", boost::bind(&PipeSite::inputText, this));
 
     psiServer_.registerIncludeCode(
         "pipe_site_pipe_text", boost::bind(&PipeSite::pipeText, this));
+
     psiServer_.registerActionCode(
         "pipe", boost::bind(&PipeSite::actionPipe, this));
 
     psiServer_.registerIncludeCode(
         "pipe_site_output_text", boost::bind(&PipeSite::outputText, this));
+
+    psiServer_.registerIncludeCode(
+        "pipe_site_options", boost::bind(&PipeSite::hiddenOptions, this));
 }
 
 char * PipeSite::inputText() {
@@ -40,9 +44,17 @@ char * PipeSite::pipeText() {
 char * PipeSite::actionPipe() {
     input = psiServer_.findValue("input-text");
     pipe = psiServer_.findValue("pipe-text");
-    file = psiServer_.findValue("input-file");
 
-    std::string in = file.empty() ? input : file;
+    fileName = "";
+
+    std::string in = input;
+
+    std::string is_file = psiServer_.findValue("radio-file");
+    if (is_file == "on") {
+        fileName = psiServer_.findValue("input-file-filename");
+        in = psiServer_.findValue("input-file");
+    }
+
     output = runPipe(in);
 
     return stringToChar(std::string("/index.html"));
@@ -51,6 +63,15 @@ char * PipeSite::actionPipe() {
 char * PipeSite::outputText() {
     std::string out = std::string("<pre>") + output + std::string("</pre>");
     return stringToChar(out);
+}
+
+char * PipeSite::hiddenOptions() {
+    std::string is_input_file_on = fileName.empty() ? "" : "on";
+    std::string opts =
+        std::string("<div input_file=\"") + is_input_file_on
+        + std::string("\" />");
+
+    return stringToChar(opts);
 }
 
 std::string PipeSite::runPipe(std::string input) {

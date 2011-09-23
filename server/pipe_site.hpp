@@ -10,16 +10,16 @@ public:
     std::string pipe;
     std::string input;
     std::string output;
-    std::string file;
+    std::string fileName;
 
     PipeSite(PsiServer& server, std::string initialPipe);
 
     char * inputText();
     char * pipeText();
     char * actionPipe();
-
     char * outputText();
 
+    char * hiddenOptions();
 private:
 
     static const std::string INITIAL_TEXT;
