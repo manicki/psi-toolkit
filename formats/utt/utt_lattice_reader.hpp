@@ -104,6 +104,39 @@ struct UTTLRAnnotationsGrammar : public qi::grammar<
 };
 
 
+struct UTTLRAVItem {
+    std::string arg;
+    std::string val;
+};
+
+
+BOOST_FUSION_ADAPT_STRUCT(
+    UTTLRAVItem,
+    (std::string, arg)
+    (std::string, val)
+)
+
+
+struct UTTLRAVGrammar : public qi::grammar<
+    std::string::const_iterator,
+    UTTLRAVItem()
+> {
+
+    UTTLRAVGrammar() : UTTLRAVGrammar::base_type(start) {
+
+        start
+            %= +(qi::char_ - ' ' - ':')
+            >> ':'
+            >> +(qi::char_ - ' ' - ':')
+            ;
+
+    }
+
+    qi::rule<std::string::const_iterator, UTTLRAVItem()> start;
+
+};
+
+
 class UTTLatticeReader : public LatticeReader {
 
 public:
