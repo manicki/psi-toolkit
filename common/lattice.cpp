@@ -146,6 +146,16 @@ Lattice::EdgeDescriptor Lattice::addEdge(
             ++edgeCounterHash_[vpair];
         }
 
+        if (tags == getSymbolTag_()) {
+            try {
+                firstOutEdge(from, getLayerTagManager().getMask(getSymbolTag_()));
+                visibleImplicitOutEdges_[from] = true;
+                EdgeDescriptor ed = firstInEdge(to, getLayerTagManager().getMask(getSymbolTag_()));
+                visibleImplicitOutEdges_[getEdgeSource(ed)] = true;
+            } catch (NoEdgeException) {
+            }
+        }
+
         if (
             !isLooseVertex(from)
             && !isLooseVertex(to)
@@ -156,16 +166,6 @@ Lattice::EdgeDescriptor Lattice::addEdge(
             implicitOutEdges_.set(from, true);
             (insertResult.first)->second = EdgeDescriptor(from);
             return EdgeDescriptor(from);
-        }
-
-        if (tags == getSymbolTag_()) {
-            try {
-                firstOutEdge(from, getLayerTagManager().getMask(getSymbolTag_()));
-                visibleImplicitOutEdges_[from] = true;
-                EdgeDescriptor ed = firstInEdge(to, getLayerTagManager().getMask(getSymbolTag_()));
-                visibleImplicitOutEdges_[getEdgeSource(ed)] = true;
-            } catch (NoEdgeException) {
-            }
         }
 
         Graph::vertex_descriptor boost_from;
