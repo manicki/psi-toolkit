@@ -23,6 +23,7 @@ void PsiLatticeReader::Worker::doRun() {
     PsiLRPartitionsGrammar partsGrammar;
     PsiLRPartitionGrammar partGrammar;
     std::map<int, Lattice::VertexDescriptor> looseVertices;
+    std::map<int, Lattice::EdgeDescriptor> edgeOrdinalMap;
     std::string line;
     while (std::getline(inputStream_, line)) {
         if (
@@ -159,7 +160,7 @@ void PsiLatticeReader::Worker::doRun() {
                         std::string::const_iterator partBegin = part.begin();
                         std::string::const_iterator partEnd = part.end();
                         if (parse(partBegin, partEnd, partGrammar, partItem)) {
-                            // BOOST_FOREACH(int edge, partItem) {
+                            // BOOST_FOREACH(int edgeNumber, partItem) {
 
                                 //TODO
 
@@ -174,7 +175,7 @@ void PsiLatticeReader::Worker::doRun() {
 
             // Adding edge.
 
-            lattice_.addEdge(
+            edgeOrdinalMap[item.ordinal] = lattice_.addEdge(
                 from,
                 to,
                 annotationItem,
