@@ -138,10 +138,19 @@ void UTTLatticeReader::Worker::doRun() {
                     currentVertex = lattice_.getEdgeTarget(currentEdge);
                 }
 
+                AnnotationItem annotationItem("'" + item.form + "'", item.form);
+                if (!item.annotations.empty()) {
+                    lattice_.getAnnotationItemManager().setValue(
+                        annotationItem,
+                        "utt-annotations",
+                        item.annotations
+                    );
+                }
+
                 lattice_.addEdge(
                     from,
                     to,
-                    AnnotationItem("'" + item.form + "'", item.form),
+                    annotationItem,
                     lattice_.getLayerTagManager().createSingletonTagCollection("token"),
                     seqBuilder.build()
                 );

@@ -1,12 +1,12 @@
-01 0000 07    Piszemy      token                 Piszemy     'Piszemy'
+01 0000 07    Piszemy      token                 Piszemy     'Piszemy',utt-annotations=lem:pisać,V
 02 0007 01    _            token                 _           '_'
-03 0008 05    dobre        token                 dobre       'dobre'
+03 0008 05    dobre        token                 dobre       'dobre',utt-annotations=lem:dobry,ADJ
 04 0013 01    _            token                 _           '_'
-05 0014 08    progrumy     token                 progrumy    'progrumy'
+05 0014 08    progrumy     token                 progrumy    'progrumy',utt-annotations=cor:programy_lem:program,N
 06 0022 01    .            token                 .           '.'
 07 0000 23    Piszem...my. sentence              Piszemy_dobre_progrumy. sentence[1-2-3-4-5-6]
 08 0023 01    _            token                 _           '_'
-09 0024 11    Warszawiacy  token                 Warszawiacy 'Warszawiacy'
+09 0024 11    Warszawiacy  token                 Warszawiacy 'Warszawiacy',utt-annotations=lem:Warszawiak,N
 10 0035 01    _            token                 _           '_'
 11 0036 04    też          token                 też         'też'
 12 0040 01    .            token                 .           '.'
