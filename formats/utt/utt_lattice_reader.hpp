@@ -127,7 +127,7 @@ struct UTTLRAVGrammar : public qi::grammar<
         start
             %= +(qi::char_ - ' ' - ':')
             >> ':'
-            >> +(qi::char_ - ' ' - ':')
+            >> +(qi::char_ - ' ')
             ;
 
     }
