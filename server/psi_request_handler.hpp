@@ -21,6 +21,7 @@ private:
 
     static std::map<std::string, std::string> fileContentTypes;
     std::string getContentType(const std::string & uri);
+    http::server3::header createCookieHeader(std::string id);
 };
 
 #endif

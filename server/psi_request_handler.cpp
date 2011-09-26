@@ -1,9 +1,9 @@
 #include "psi_request_handler.hpp"
+#include "session_manager.hpp"
+#include "logging.hpp"
 
 #include <boost/lexical_cast.hpp>
 #include <boost/assign.hpp>
-
-#include <iostream>
 
 std::map<std::string, std::string> PsiRequestHandler::fileContentTypes =
     boost::assign::map_list_of
@@ -35,14 +35,36 @@ void PsiRequestHandler::handle_request(
 ) {
     http::server3::request req_modified = req;
 
+    // session management
+    SessionManager * sesMng = SessionManager::Instance();
+    std::string id = sesMng->getSessionId(req_modified.get_header_value("Cookie"));
+
+    bool hasId = sesMng->isSession(id);
+
+    Session * session;
+    if (hasId) {
+        session = sesMng->getSession(id);
+    } else {
+        session = sesMng->newSession();
+    }
+
     psi_server_->checkForAction(req_modified);
-
     http::server3::request_handler::handle_request(req_modified, rep);
-
     psi_server_->include(rep.content);
 
     rep.headers[0].value = boost::lexical_cast<std::string>(rep.content.size());
     rep.headers[1].value = getContentType(req.uri);
+
+    //set cookie with session id for browser
+    if (!hasId) {
+        rep.headers.push_back(createCookieHeader(session->getId()));
+    }
+
+    //debug
+    for (unsigned int i = 0; i < rep.headers.size(); i++) {
+        DEBUG(i << ": " << rep.headers[i].name << " => " << rep.headers[i].value);
+    }
+
 }
 
 std::string PsiRequestHandler::getContentType(const std::string & uri) {
@@ -64,4 +86,12 @@ std::string PsiRequestHandler::getContentType(const std::string & uri) {
     str += ";charset=UTF-8";
 
     return str;
+}
+
+http::server3::header PsiRequestHandler::createCookieHeader(std::string id) {
+    http::server3::header cookie;
+    cookie.name = "Set-Cookie";
+    cookie.value = SessionManager::CookieHeaderValue(id);
+
+    return cookie;
 }
