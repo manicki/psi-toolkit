@@ -24,10 +24,23 @@ class PipeSiteTest < Test::Unit::TestCase
         assert !@browser.div(:id, 'input-file').visible?
 
         active_li_class = @browser.a(:class, 'input-text').parent.attribute_value(:class)
-        assert active_li_class, '.active'
+        assert active_li_class.include?('active')
 
         inactive_li_class = @browser.a(:class, 'input-file').parent.attribute_value(:class)
-        assert inactive_li_class, ''
+        assert !inactive_li_class.include?('active')
+    end
+
+    def test_bookmarks_after_switching
+        @browser.a(:class => 'input-file').click
+
+        assert !@browser.div(:id, 'input-text').visible?
+        assert @browser.div(:id, 'input-file').visible?
+
+        inactive_li_class = @browser.a(:class, 'input-text').parent.attribute_value(:class)
+        assert !inactive_li_class.include?('active')
+
+        active_li_class = @browser.a(:class, 'input-file').parent.attribute_value(:class)
+        assert active_li_class.include?('active')
     end
 
     def test_input_text
