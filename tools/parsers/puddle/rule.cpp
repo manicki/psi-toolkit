@@ -46,12 +46,10 @@ Rule::Rule( std::string aName, std::string aCompiled, int aLeftCount,
             bool aRepeat, std::string aLeft, std::string aMatch, std::string aRight) {
 #endif
 
-    tokensPatterns.insert(tokensPatterns.begin(), aTokensPatterns.begin(), aTokensPatterns.end());
-    tokensModifiers.insert(tokensModifiers.begin(), aTokensModifiers.begin(), aTokensModifiers.end());
-    tokensRequired.insert(tokensRequired.begin(), aTokensRequired.begin(), aTokensRequired.end());
-//    matchedTokensSize = new std::vector<int>;
-    matchedIndices.insert(matchedIndices.begin(), aMatchedIndices.begin(),
-            aMatchedIndices.end());// = new std::vector<int>(aMatchedIndexes);
+    tokensPatterns = aTokensPatterns;
+    tokensModifiers = aTokensModifiers;
+    tokensRequired = aTokensRequired;
+    matchedIndices = aMatchedIndices,
 
     pattern = PatternPtr( new Pattern("") );
     actions = aActions;
@@ -67,8 +65,6 @@ Rule::Rule( std::string aName, std::string aCompiled, int aLeftCount,
     left_ = aLeft;
     match_ = aMatch;
     right_ = aRight;
-
-//    matchedTokensSize.assign(tokensPatterns.size(), 0);
 
 #if HAVE_RE2
     for (NegativePatternStrings::iterator negPatIt =
@@ -97,10 +93,11 @@ bool Rule::apply(std::string &, Lattice &lattice, int currentEntity,
     return ret;
 }
 
-int Rule::matchPattern(std::string &sentenceString, int matchNumber,
-        std::string &beforeMatched, std::vector<StringPiece> &match) {
+int Rule::matchPattern(std::string &sentenceString,
+        std::string &beforeMatched, std::string &afterMatched,
+        int &afterIndex, std::vector<StringPiece> &match) {
 
-    int matchCount = 0;
+//    int matchCount = 0;
 
     int num_groups = pattern->NumberOfCapturingGroups();// + 1;
 #if HAVE_RE2
@@ -116,30 +113,23 @@ int Rule::matchPattern(std::string &sentenceString, int matchNumber,
     StringPiece orig_str(sentenceString);
 
     std::string before = "";
-    //    std::cerr << "macz namber: " << matchNumber << std::endl;
-
-    //    std::cerr << "ZDANIE: " << sentenceString << std::endl;
-    //    std::cerr << "REGULA: " << compiled << std::endl;
-    //    std::cerr << "NGRUP:  " << groups_map.size() << std::endl;
-    //    for (std::map<std::string, int>::iterator buc = groups_map.begin();
-    //            buc != groups_map.end(); buc ++)
-    //        std::cerr << "  " << buc->first << " -> " << buc->second << std::endl;
-    //        std::cout << "Zdanie: " << sentence << std::endl;
-    //    std::cerr << "wzorzec reguly felernyj" << compiled << std::endl;
     try {
         //while ( pattern->Match( sentence_str, start, end,
         //                        RE2::UNANCHORED, matched, num_groups ) ) { // @todo: tu nie bedzie chyba while tylko if, skoro bedzie parametrem odkad szukac, a nie ktore ogolnie dopasowanie ma byc wziete na warsztat
-        while ( RegExp::FindAndConsumeN( &sentence_str, *pattern, matched, num_groups ) ) { // @todo: tu nie bedzie chyba while tylko if, skoro bedzie parametrem odkad szukac, a nie ktore ogolnie dopasowanie ma byc wziete na warsztat
+        if ( RegExp::FindAndConsumeN( &sentence_str, *pattern, matched, num_groups ) ) { // @todo: tu nie bedzie chyba while tylko if, skoro bedzie parametrem odkad szukac, a nie ktore ogolnie dopasowanie ma byc wziete na warsztat
             //while (boost::u32regex_search(start, end, matched, *pattern, flags)) {
             //int prefix_len = matchedS[0].begin() - sentence_str.begin();
             //int prefix_len = matchedS[0].begin() - orig_str.begin();
             int prefix_len = matchedS[0].data() - orig_str.data();
+            int suffix_start = matchedS[0].data() +
+                matchedS[0].size() - orig_str.data();
             std::string prefix = sentenceString.substr(0, prefix_len); //@todo: czy od start do prefix_len?
+            std::string suffix = sentenceString.substr(suffix_start, std::string::npos);
             before += prefix;
             //start = matched[0].second;
             //        start = prefix_len + 1;
             std::string matching = "";
-            if (matchCount == matchNumber) {
+    //        if (matchCount == matchNumber) {
                 matching = matchedS[0].as_string();
 
                 for (int i = 0; i < num_groups; i ++) {
@@ -179,16 +169,18 @@ int Rule::matchPattern(std::string &sentenceString, int matchNumber,
                     return -1;
                 }
                 beforeMatched = before;
-                int r = getPatternStart(before); // + 1; //@todo: ten +1 wynika ze sposobu numerowania? w kazdym razie tak jest, zeby bylo w akcjach potem dokadlnie tak, jak wczesniej bylo. moze to sie uda zmienic po wymienieniu calosci
+                afterMatched = suffix;
+                int r = getPatternEnd(before); // + 1; //@todo: ten +1 wynika ze sposobu numerowania? w kazdym razie tak jest, zeby bylo w akcjach potem dokadlnie tak, jak wczesniej bylo. moze to sie uda zmienic po wymienieniu calosci
+                afterIndex = getPatternStart(afterMatched);
                 delete[] matchedS;
                 for (int argIt = 0; argIt < num_groups; argIt ++)
                     delete matched[argIt];
                 delete[] matched;
                 return r;
-            }
-            else {
-                before += matchedS[0].as_string();
-            }
+           // }
+           // else {
+           //     before += matchedS[0].as_string();
+           // }
             matchCount ++;
         }
         }
@@ -303,40 +295,28 @@ void Rule::setName(std::string aName)
     name = aName;
 }
 
-void Rule::setPattern(std::string aCompiled)
-{
-    //delete pattern;
-    //pattern = new Pattern;
-
-    //*pattern = boost::make_u32regex(aCompiled.c_str(), boost::regex::perl);
+void Rule::setPattern(std::string aCompiled) {
     pattern = PatternPtr(new Pattern(aCompiled));
-    //*pattern = boost::make_u32regex(utf8converter::ToUtf8(utf8converter::FromUtf8(aCompiled)));
-    //64: *pattern = boost::make_u32regex(aCompiled);
     compiled = aCompiled;
 }
 
-void Rule::setLeftCount(int aCount)
-{
+void Rule::setLeftCount(int aCount) {
     leftCount = aCount;
 }
 
-void Rule::setMatchCount(int aCount)
-{
+void Rule::setMatchCount(int aCount) {
     matchCount = aCount;
 }
 
-void Rule::setRightCount(int aCount)
-{
+void Rule::setRightCount(int aCount) {
     rightCount = aCount;
 }
 
-void Rule::setActions(Actions aActions)
-{
+void Rule::setActions(Actions aActions) {
     *actions = aActions;
 }
 
-void Rule::setRepeat(bool aRepeat)
-{
+void Rule::setRepeat(bool aRepeat) {
     repeat = aRepeat;
 }
 
@@ -344,56 +324,32 @@ bool Rule::getRepeat() const {
     return repeat;
 }
 
-void Rule::setMatch(std::string aMatch)
-{
+void Rule::setMatch(std::string aMatch) {
     match_ = aMatch;
 }
 
-void Rule::setLeft(std::string aLeft)
-{
+void Rule::setLeft(std::string aLeft) {
     left_ = aLeft;
 }
 
-void Rule::setRight(std::string aRight)
-{
+void Rule::setRight(std::string aRight) {
     right_ = aRight;
 }
 
-void Rule::setTokensPatterns(std::vector<std::string> aTokensPatterns)
-{
-    tokensPatterns.clear();
-    tokensPatterns.insert(tokensPatterns.begin(), aTokensPatterns.begin(), aTokensPatterns.end());
-//    delete tokensPatterns;
-//    tokensPatterns = new std::vector<std::string>(aTokensPatterns);
-    //delete matchedTokensSize;
-    //matchedTokensSize = new std::vector<int>;
-//    matchedTokensSize.clear();
-//    matchedTokensSize.assign(tokensPatterns.size(), 0);
+void Rule::setTokensPatterns(std::vector<std::string> aTokensPatterns) {
+    tokensPatterns = aTokensPatterns;
 }
 
-void Rule::setTokensModifiers(std::vector<std::string> aTokensModifiers)
-{
-    tokensModifiers.clear();
-    tokensModifiers.insert(tokensModifiers.begin(), aTokensModifiers.begin(), aTokensModifiers.end());
-//    delete tokensModifiers;
-//    tokensModifiers = new std::vector<std::string>(aTokensModifiers);
+void Rule::setTokensModifiers(std::vector<std::string> aTokensModifiers) {
+    tokensModifiers = aTokensModifiers;
 }
 
-void Rule::setTokensRequired(std::vector<bool> aTokensRequired)
-{
-    tokensRequired.clear();
-    tokensRequired.insert(tokensRequired.begin(), aTokensRequired.begin(), aTokensRequired.end());
-//    delete tokensRequired;
-//    tokensRequired = new std::vector<bool>(aTokensRequired);
+void Rule::setTokensRequired(std::vector<bool> aTokensRequired) {
+    tokensRequired = aTokensRequired;
 }
 
-void Rule::setMatchedIndices(std::vector<int> aMatchedIndices)
-{
-    matchedIndices.clear();
-    matchedIndices.insert(matchedIndices.begin(), aMatchedIndices.begin(),
-            aMatchedIndices.end());
-//    delete matchedIndexes;
-//    matchedIndexes = new std::vector<int>(aMatchedIndexes);
+void Rule::setMatchedIndices(std::vector<int> aMatchedIndices) {
+    matchedIndices = aMatchedIndices;
 }
 
 std::string Rule::getMatch() const {
@@ -481,12 +437,24 @@ std::string Rule::makeReadable()
 }
 
 
-        int Rule::getPatternStart(std::string &beforePattern) {
+        int Rule::getPatternStart(std::string &pattern) {
+            int r = -1;
+
+            Pattern regPatternInfo("^<<[tsg]<(\\d+)<\\d+[^>]+>");
+            int start;
+            if (RegExp::PartialMatch(pattern, regPatternInfo, &start)) {
+                r = start;
+            }
+
+            return r;
+        }
+
+        int Rule::getPatternEnd(std::string &pattern) {
             int r = -1;
 
             Pattern regPatternInfo("<<[tsg]<\\d+<(\\d+)[^>]+>$");
             int end;
-            if (RegExp::PartialMatch(beforePattern, regPatternInfo, &end)) {
+            if (RegExp::PartialMatch(pattern, regPatternInfo, &end)) {
                 r = end;
             }
 

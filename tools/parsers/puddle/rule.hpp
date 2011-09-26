@@ -93,8 +93,9 @@ class Rule
         void setTokensRequired(std::vector<bool> aTokensRequired);
         void setMatchedIndices(std::vector<int> aMatchedIndices);
 
-        int matchPattern(std::string &sentence, int matchNumber,
-                std::string &beforeMatched, std::vector<StringPiece> &match);
+        int matchPattern(std::string &sentence,
+                std::string &beforeMatched, std::string &afterMatched,
+                int &afterIndex, std::vector<StringPiece> &match);
 
         void addAction(ActionPtr action);
         void deleteAction(size_t index);
@@ -123,7 +124,8 @@ class Rule
 
         bool repeat;
 
-        int getPatternStart(std::string &matchedPattern); //wcale nie powiedziane, ze to bedzie wyciagac (tylko lub w ogole) start, wiec funkcja z nazwa wlacznie ulegac ma zmianom
+        int getPatternStart(std::string &pattern); //wcale nie powiedziane, ze to bedzie wyciagac (tylko lub w ogole) start, wiec funkcja z nazwa wlacznie ulegac ma zmianom
+        int getPatternEnd(std::string &pattern); //wcale nie powiedziane, ze to bedzie wyciagac (tylko lub w ogole) start, wiec funkcja z nazwa wlacznie ulegac ma zmianom
 };
 
 typedef boost::shared_ptr<Rule> RulePtr;

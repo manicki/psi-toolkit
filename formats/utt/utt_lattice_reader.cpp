@@ -46,6 +46,8 @@ UTTLatticeReader::Worker::Worker(UTTLatticeReader& processor,
 void UTTLatticeReader::Worker::doRun() {
     UTTQuoter quoter;
     UTTLRGrammar grammar;
+    UTTLRAnnotationsGrammar aGrammar;
+    UTTLRAVGrammar avGrammar;
     PosConverter conv;
     std::string line;
     std::string sentenceForm = "";
@@ -139,13 +141,32 @@ void UTTLatticeReader::Worker::doRun() {
                 }
 
                 AnnotationItem annotationItem("'" + item.form + "'", item.form);
-                if (!item.annotations.empty()) {
-                    lattice_.getAnnotationItemManager().setValue(
-                        annotationItem,
-                        "utt-annotations",
-                        item.annotations
-                    );
+
+                std::vector<std::string> aItem;
+                std::string::const_iterator aBegin = item.annotations.begin();
+                std::string::const_iterator aEnd = item.annotations.end();
+                if (parse(aBegin, aEnd, aGrammar, aItem)) {
+                    BOOST_FOREACH(std::string annotation, aItem) {
+                        UTTLRAVItem avItem;
+                        std::string::const_iterator avBegin = annotation.begin();
+                        std::string::const_iterator avEnd = annotation.end();
+                        if (parse(avBegin, avEnd, avGrammar, avItem)) {
+                            lattice_.getAnnotationItemManager().setValue(
+                                annotationItem,
+                                avItem.arg,
+                                avItem.val
+                            );
+                        }
+                    }
                 }
+
+                // if (!item.annotations.empty()) {
+                    // lattice_.getAnnotationItemManager().setValue(
+                        // annotationItem,
+                        // "utt-annotations",
+                        // item.annotations
+                    // );
+                // }
 
                 lattice_.addEdge(
                     from,
@@ -185,7 +206,7 @@ void UTTLatticeReader::Worker::doRun() {
                 lattice_.addEdge(
                     lattice_.getVertexForRawCharIndex(conv.psi(beginningOfSentencePosition)),
                     lattice_.getVertexForRawCharIndex(conv.psi(endPosition)),
-                    AnnotationItem("sentence", sentenceForm),
+                    AnnotationItem("sen", sentenceForm),
                     lattice_.getLayerTagManager().createSingletonTagCollection("sentence"),
                     sentenceBuilder.build()
                 );
