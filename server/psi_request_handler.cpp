@@ -11,11 +11,24 @@ std::map<std::string, std::string> PsiRequestHandler::fileContentTypes =
         ("html", "text/html")
         ("shtml", "text/html")
         ("css", "text/css")
-        ("js", "text/html")
-        ("jpg", "image/png")
-        ("jpeg", "image/png")
+
+        ("js", "application/javascript")
+        ("pdf", "application/pdf")
+        ("ps", "application/postscript")
+        ("eps", "application/postscript")
+        ("ai", "application/postscript")
+        ("doc", "application/msword")
+        ("xdoc", "application/msword")
+        ("rtf", "application/rtf")
+        ("zip", "application/zip")
+
+        ("jpg", "image/jpeg")
+        ("jpeg", "image/jpeg")
+        ("jpe", "image/jpeg")
         ("png", "image/png")
-        ("gif", "image/png");
+        ("gif", "image/gif")
+        ("tiff", "image/tiff")
+        ("tiff", "image/tif");
 
 void PsiRequestHandler::handle_request(
     const http::server3::request& req, http::server3::reply& rep
