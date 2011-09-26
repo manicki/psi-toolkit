@@ -107,8 +107,27 @@ void PsiLatticeWriter::Worker::doRun() {
         } else {
             edgeText = quoter.escape(lattice_.getEdgeText(edge));
         }
+
+        std::list<Lattice::Partition> partitions = lattice_.getEdgePartitions(edge);
+        bool writeWholeText = false;
+        BOOST_FOREACH(Lattice::Partition partition, partitions) {
+            for (
+                Lattice::Partition::Iterator ei = partition.begin();
+                ei != partition.end();
+                ++ei
+            ) {
+                if (
+                    lattice_.getEdgeLayerTags(*ei)
+                        == lattice_.getLayerTagManager().createSingletonTagCollection("symbol")
+                ) {
+                    writeWholeText = true;
+                    break;
+                }
+            }
+        }
+
         int edgeTextLength = utf8::distance(edgeText.begin(), edgeText.end());
-        if (edgeTextLength > alignments[3] - alignments[2]) {
+        if (edgeTextLength > alignments[3] - alignments[2] && !writeWholeText) {
             std::string::const_iterator bIter = edgeText.begin();
             utf8::unchecked::advance(bIter, alignments[3] - alignments[2] - 7);
             alignOutput_(edgeText.substr(0, bIter - edgeText.begin()));
@@ -150,17 +169,14 @@ void PsiLatticeWriter::Worker::doRun() {
         }
 
         std::string avStr = "";
-        std::list< std::pair<std::string, std::string> > avPairs
+        typedef std::pair<std::string, std::string> StrStrPair;
+        std::list<StrStrPair> avPairs
             = lattice_.getAnnotationItemManager().getValues(annotationItem);
-        for (
-            std::list< std::pair<std::string, std::string> >::iterator avi = avPairs.begin();
-            avi != avPairs.end();
-            ++avi
-        ) {
+        BOOST_FOREACH(StrStrPair av, avPairs) {
             avStr += ",";
-            avStr += (*avi).first;
+            avStr += av.first;
             avStr += "=";
-            avStr += (*avi).second;
+            avStr += av.second;
         }
         aiSs << quoter.escape(avStr);
 
@@ -169,21 +185,16 @@ void PsiLatticeWriter::Worker::doRun() {
                 == lattice_.getLayerTagManager().createSingletonTagCollection("symbol")
         );
         bool partitionBeginning = false;
-        std::list<Lattice::Partition> partitions = lattice_.getEdgePartitions(edge);
         std::string partStr = "";
-        for (
-            std::list<Lattice::Partition>::iterator pi = partitions.begin();
-            pi != partitions.end();
-            ++pi
-        ) {
+        BOOST_FOREACH(Lattice::Partition partition, partitions) {
             if (partStr != "") {
                 partStr += ",";
             }
             std::stringstream linkSs;
             partitionBeginning = true;
             for (
-                Lattice::Partition::Iterator ei = (*pi).begin();
-                ei != (*pi).end();
+                Lattice::Partition::Iterator ei = partition.begin();
+                ei != partition.end();
                 ++ei
             ) {
                 if (partitionBeginning) {
