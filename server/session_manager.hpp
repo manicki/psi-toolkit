@@ -14,10 +14,10 @@ public:
 
     static SessionManager* Instance();
 
-    bool isSession(std::string & id);
-
-    std::string getSessionId(std::string cookie);
+    static std::string SessionId(std::string cookies);
     static std::string CookieHeaderValue(std::string & id);
+
+    bool isSession(std::string & id);
 
     Session * getSession(std::string & id);
     Session * newSession();
@@ -25,15 +25,18 @@ public:
 private:
 
     static std::string cookieIdentifier;
+    static int sessionIdLength;
+    std::string generateNewId();
+    void randomString(char *, const int);
 
     std::map<std::string, Session> sessions_;
+
+    void addSession(Session *);
 
     static SessionManager* sessionManagerInstance_;
     SessionManager();
     SessionManager(const SessionManager&);
     SessionManager& operator= (const SessionManager&);
-
-    void addSession(Session *);
 
 };
 

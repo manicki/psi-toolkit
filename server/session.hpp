@@ -8,13 +8,12 @@ class Session
 
 public:
 
-    Session();
+    Session(std::string id);
     std::string getId();
 
 private:
 
     std::string id_;
-    std::string generateId();
 
 };
 

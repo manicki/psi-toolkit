@@ -37,7 +37,7 @@ void PsiRequestHandler::handle_request(
 
     // session management
     SessionManager * sesMng = SessionManager::Instance();
-    std::string id = sesMng->getSessionId(req_modified.get_header_value("Cookie"));
+    std::string id = SessionManager::SessionId(req_modified.get_header_value("Cookie"));
 
     bool hasId = sesMng->isSession(id);
 
@@ -64,6 +64,7 @@ void PsiRequestHandler::handle_request(
     for (unsigned int i = 0; i < rep.headers.size(); i++) {
         DEBUG(i << ": " << rep.headers[i].name << " => " << rep.headers[i].value);
     }
+    DEBUG("--------------");
 
 }
 

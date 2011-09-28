@@ -4,13 +4,14 @@
 #include <iostream>
 
 std::string SessionManager::cookieIdentifier = "PSISESSIONID";
+int SessionManager::sessionIdLength = 25;
 
-std::string SessionManager::getSessionId(std::string cookies) {
+std::string SessionManager::SessionId(std::string cookies) {
     size_t hasId = cookies.find(cookieIdentifier);
-    std::string id = "";
 
+    std::string id = "";
     if (hasId != std::string::npos) {
-        id = "psis-temp-id";
+        id = cookies.substr(hasId + cookieIdentifier.size() + 1, sessionIdLength);
     }
     return id;
 }
@@ -18,6 +19,7 @@ std::string SessionManager::getSessionId(std::string cookies) {
 std::string SessionManager::CookieHeaderValue(std::string & id) {
     return cookieIdentifier + std::string("=") + id;
 }
+
 
 SessionManager* SessionManager::sessionManagerInstance_ = NULL;
 
@@ -32,6 +34,7 @@ SessionManager::SessionManager() {
     //constructor
 }
 
+
 bool SessionManager::isSession(std::string & id) {
     std::map<std::string, Session>::iterator found = sessions_.find(id);
 
@@ -42,11 +45,18 @@ bool SessionManager::isSession(std::string & id) {
 }
 
 Session * SessionManager::getSession(std::string & id) {
-    return &(sessions_[id]);
+    std::map<std::string, Session>::iterator found = sessions_.find(id);
+
+    Session * session;
+    if (found != sessions_.end()) {
+        session = &(found->second);
+    }
+    return session;
 }
 
 Session * SessionManager::newSession() {
-    Session * ses = new Session();
+    std::string id = generateNewId();
+    Session * ses = new Session(id);
     addSession(ses);
     return ses;
 }
@@ -62,3 +72,33 @@ void SessionManager::addSession(Session * session) {
     }
     INFO(info);
 }
+
+
+std::string SessionManager::generateNewId() {
+    std::string id = "";
+
+    char time_buff[15];
+    time_t now = time(NULL);
+    strftime(time_buff, 15, "%y%m%d-%H%M%S-", localtime(&now));
+    id += time_buff;
+
+    char rand_buff[sessionIdLength - 15];
+    randomString(rand_buff, sessionIdLength - 15);
+    id += rand_buff;
+
+    return id;
+}
+
+void SessionManager::randomString(char *s, const int len) {
+     for (int i = 0; i < len; ++i) {
+         int randomChar = rand()%(26+26+10);
+         if (randomChar < 26)
+             s[i] = 'a' + randomChar;
+         else if (randomChar < 26+26)
+             s[i] = 'A' + randomChar - 26;
+         else
+             s[i] = '0' + randomChar - 26 - 26;
+     }
+     s[len] = 0;
+ }
+
