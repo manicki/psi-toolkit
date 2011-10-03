@@ -1165,7 +1165,7 @@ namespace poleng {
                 std::list< std::pair<std::string, std::string> > av
                     = lattice.getAnnotationItemManager().getValues(ai);
                 for (std::list< std::pair<std::string, std::string> >::iterator avit = //@todo: sortowanie tego
-                        av.begin(); avit != av.end(); avit ++) {
+                        av.begin(); avit != av.end(); ++ avit) {
                     if (avit->first == "discard")
                         continue;
                     morpho += ":";

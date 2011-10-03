@@ -31,7 +31,6 @@ void RuleMatcher::applyRules(std::string &sentenceString,
     while (ir != rules->end()) {
         //int currentMatch = 0;
         int currentEntity;
-        bool first_match = true;
         std::string before = "";
         std::string after = "";
         int afterIndex = 0;
@@ -43,7 +42,6 @@ void RuleMatcher::applyRules(std::string &sentenceString,
         {
           //  currentMatch ++;
 
-            first_match = false;
             prev_before = before;
             bool structureChanged = false;
             RuleTokenSizes ruleTokenSizes;

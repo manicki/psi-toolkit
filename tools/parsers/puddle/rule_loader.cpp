@@ -245,9 +245,6 @@ std::string RuleLoader::getToken(std::string &matched, std::string &before) {
     std::string opening = "[";
     std::string::iterator opening_begin_it = opening.begin();
     std::string::iterator opening_end_it = opening.end();
-    std::string closing = "]";
-    std::string::iterator closing_begin_it = closing.begin();
-    std::string::iterator closing_end_it = closing.end();
 
     int brackets = 0;
     std::string s = "";
@@ -409,7 +406,6 @@ std::string RuleLoader::compileToken(std::string &token,
             emptyPatternPart);
     TokenPatterns tokenPatterns;
     tokenPatterns.push_back(emptyPattern);
-    bool groupMatch = false;
     std::string compiledHead = "";
     std::string type = "";
 
@@ -419,9 +415,7 @@ std::string RuleLoader::compileToken(std::string &token,
         std::string compOperator = getOperator(token);
         if ((key != "head") && (key != "type")) {
             tokenMatch = true;
-            groupMatch = false;
         } else {
-            groupMatch = true;
             tokenMatch = false;
         }
 
