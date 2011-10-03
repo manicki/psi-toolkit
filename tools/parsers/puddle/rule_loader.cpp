@@ -1043,20 +1043,24 @@ bool RuleLoader::compileDeleteCondition(std::string &key,
     return true;
 }
 
-std::vector<std::string> RuleLoader::compileAddInterpretation(std::string &pattern) {
-    std::vector<std::string> interpretations;
+std::vector<Morphology> RuleLoader::compileAddInterpretation(std::string &pattern) {
+    std::vector<Morphology> interpretations;
     std::string fieldSeparator = ":";
     std::vector<std::string> partsVector;
     boost::split(partsVector, pattern, boost::is_any_of(fieldSeparator));
     int index = 0;
     std::string pos;
-    std::vector<std::string> morphologies;
+    std::vector<Morphology> morphologies;
     for (std::vector<std::string>::iterator it = partsVector.begin();
             it != partsVector.end(); ++ it) {
         std::string value = *it;
         if (index == 0) {
             if (tagset->checkPos(value)) {
-                morphologies.push_back(value);
+                Morphology morphology;
+                morphology.insert(std::pair<std::string, std::string>(
+                            "pos", value));
+                morphologies.push_back(morphology);
+                //morphologies.push_back(value);
                 pos = value;
             } else {
                 std::cerr << "Unknown part of speech: " << value
@@ -1092,13 +1096,17 @@ std::vector<std::string> RuleLoader::compileAddInterpretation(std::string &patte
                     return interpretations;
                 }
             }
-            std::vector<std::string> newMorphologies;
+            std::vector<Morphology> newMorphologies;
             for (std::vector<std::string>::iterator valueIt = values.begin();
                     valueIt != values.end(); ++ valueIt) {
-                for (std::vector<std::string>::iterator morphoIt =
+                for (std::vector<Morphology>::iterator morphoIt =
                         morphologies.begin();
                         morphoIt != morphologies.end(); ++ morphoIt) {
-                    newMorphologies.push_back(*morphoIt + ":" + *valueIt);
+                    Morphology morphology = *morphoIt;
+                    morphology.insert(std::pair<std::string, std::string>(
+                                attribute, *valueIt));
+                    newMorphologies.push_back(morphology);
+                    //newMorphologies.push_back(*morphoIt + ":" + *valueIt);
                 }
             }
             morphologies = newMorphologies;
@@ -1106,12 +1114,14 @@ std::vector<std::string> RuleLoader::compileAddInterpretation(std::string &patte
         index ++;
     }
 
-    for (std::vector<std::string>::iterator m = morphologies.begin();
+    for (std::vector<Morphology>::iterator m = morphologies.begin();
             m != morphologies.end(); ++ m) {
-        if (tagset->checkMorphology(*m)) {
+        std::string morphoString = util::getMorphologyString(*m);
+        if (tagset->checkMorphology(morphoString)) {
             interpretations.push_back(*m);
         } else {
-            std::cerr << "The morphology is not valid: " << *m << std::endl;
+            std::cerr << "The morphology is not valid: " << morphoString
+                << std::endl;
             return interpretations;
         }
     }
@@ -1337,7 +1347,7 @@ AddActionPtr RuleLoader::createAddAction(std::string &interpretation,
         base = base.substr(1, base.length() - 2); //removes quotes surrounding the base form
     }
 
-    std::vector<std::string> interpretations =
+    std::vector<Morphology> interpretations =
         compileAddInterpretation(interpretation);
 
     AddActionPtr action = AddActionPtr( new AddAction(
@@ -1391,7 +1401,7 @@ SyntokActionPtr RuleLoader::createSyntokAction(std::string &interpretationString
     for (int x = ruleLeftSize; x < (ruleLeftSize + ruleMatchSize); x ++) {
         tokens.push_back(x + 1);
     }
-    std::vector<std::string> interpretations =
+    std::vector<Morphology> interpretations =
         compileAddInterpretation(interpretationString);
 
     SyntokActionPtr action = SyntokActionPtr( new SyntokAction(

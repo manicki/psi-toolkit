@@ -319,8 +319,8 @@ void Puddle::setTagger(bonsai::puddle::TaggerPtr tagger_)
 //}
 
 bool Puddle::parse(Lattice &lattice) {
-    //ParseGraphPtr inputGraph = lattice::readInputLattice(lattice, sentenceString);
-    std::string sentenceString = lattice::readInputLattice(lattice);
+    //std::string sentenceString = lattice::readInputLattice(lattice);
+    std::string sentenceString = lattice::readMorfologikLattice(lattice);
 //    std::cerr << "jest sentence string" << std::endl;
     //ParseGraphPtr pg = ruleMatcher->applyRules(sentenceString, inputGraph, lattice);
     ruleMatcher->applyRules(sentenceString, lattice);

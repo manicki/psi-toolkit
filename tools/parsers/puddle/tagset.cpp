@@ -680,8 +680,12 @@ void Tagset::generateProperMorphologyLabels() {
 
     for (std::map<std::string, std::vector<std::string> >::iterator
             posIt = partsOfSpeech.begin(); posIt != partsOfSpeech.end(); ++ posIt) {
-        std::vector<std::string> morphologies;
-        morphologies.push_back(posIt->first);
+        std::vector<Morphology> morphologies;
+        //morphologies.push_back(posIt->first);
+        Morphology posMorphology;
+        posMorphology.insert(std::pair<std::string, std::string>(
+                    "pos", posIt->first));
+        morphologies.push_back(posMorphology);
         for (std::vector<std::string>::iterator attrIt = posIt->second.begin();
                 attrIt != posIt->second.end(); ++ attrIt) {
             bool optional = false;
@@ -692,14 +696,18 @@ void Tagset::generateProperMorphologyLabels() {
                 optional = true;
             }
             std::vector<std::string> attrValues = attributes[attribute];
-            std::vector<std::string> morphologiesTmp;
-            for (std::vector<std::string>::iterator morphologyIt =
+            std::vector<Morphology> morphologiesTmp;
+            for (std::vector<Morphology>::iterator morphologyIt =
                 morphologies.begin(); morphologyIt != morphologies.end();
                 ++ morphologyIt ) {
                 for (std::vector<std::string>::iterator valueIt = attrValues.begin();
                         valueIt != attrValues.end(); ++ valueIt) {
-                    std::string newMorphology = *morphologyIt + ":" + *valueIt;
+                    Morphology newMorphology = *morphologyIt;
+                    newMorphology.insert(std::pair<std::string, std::string>(
+                                attribute, *valueIt));
                     morphologiesTmp.push_back(newMorphology);
+                    //std::string newMorphology = *morphologyIt + ":" + *valueIt;
+                    //morphologiesTmp.push_back(newMorphology);
                 }
             }
             if (!optional) {
@@ -711,9 +719,11 @@ void Tagset::generateProperMorphologyLabels() {
             }
         }
 
-        for (std::vector<std::string>::iterator morphologyIt = morphologies.begin();
+        for (std::vector<Morphology>::iterator morphologyIt = morphologies.begin();
                 morphologyIt != morphologies.end(); ++ morphologyIt) {
-            properMorphologyLabels.insert(*morphologyIt);
+            std::string morphoString = util::getMorphologyString(*morphologyIt);
+            //properMorphologyLabels.insert(*morphologyIt);
+            properMorphologyLabels.insert(morphoString);
         }
     }
 }

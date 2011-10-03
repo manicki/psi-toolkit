@@ -97,7 +97,7 @@ class RuleLoader {
 #endif
         bool compileDeleteCondition(std::string &key, std::string &comparisonOperator,
                 std::string &value, DeleteConditions &conditions);
-        std::vector<std::string> compileAddInterpretation(std::string &pattern);
+        std::vector<Morphology> compileAddInterpretation(std::string &pattern);
 
 #if HAVE_RE2
         std::string generateTokenPatternsString(TokenPatterns tokenPatterns,

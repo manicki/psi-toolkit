@@ -13,7 +13,7 @@ namespace bonsai
 
 //SyntokAction::SyntokAction(int aStart, int aEnd, std::vector<int> aTokenIndexes, std::vector<InterpretationPair> aMorphology, std::string aRuleName, std::string uMorphology)
 SyntokAction::SyntokAction(int aStart, int aEnd, std::vector<int> aTokenIndices,
-        std::vector<std::string> aMorphology, std::string aRuleName,
+        std::vector<Morphology> aMorphology, std::string aRuleName,
         std::string uMorphology) { //, LatticeWrapperPtr aLatticeWrapper) {
     type = "syntok";
     start = aStart;
@@ -450,11 +450,11 @@ void SyntokAction::setEnd(int aEnd)
 }
 
 //std::vector<InterpretationPair> SyntokAction::getMorphology()
-std::vector<std::string> SyntokAction::getMorphology() const {
+std::vector<Morphology> SyntokAction::getMorphology() const {
     return morphology;
 }
 
-void SyntokAction::setMorphology(std::vector<std::string> aMorphology) {
+void SyntokAction::setMorphology(std::vector<Morphology> aMorphology) {
     morphology.clear();
     morphology.insert(morphology.begin(), aMorphology.begin(), aMorphology.end());
     //morphology = &aMorphology;

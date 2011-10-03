@@ -14,7 +14,7 @@ namespace bonsai
     {
 
 //AddAction::AddAction(std::vector<InterpretationPair> aInterpretations, std::string aBase, int aTokenIndex, std::string uInterpretation)
-AddAction::AddAction(std::vector<std::string> aInterpretations, std::string aBase,
+AddAction::AddAction(std::vector<Morphology> aInterpretations, std::string aBase,
         int aTokenIndex, std::string uInterpretation) {
 //        LatticeWrapperPtr aLatticeWrapper) {
     base = aBase;
@@ -409,13 +409,14 @@ bool AddAction::test(Lattice &lattice, int currentEntity,
                 continue; //take the next variant
         }
         bool interpretationFound = false;
-        for (std::vector<std::string>::iterator morph_it =
+        for (std::vector<Morphology>::iterator morph_it =
                 interpretations.begin();
                 morph_it != interpretations.end();
                 ++ morph_it) {
             //if (lattice.getAnnotationItemManager().getValue(ai, "base") ==
             //        *morph_it) {
-            if (edgeBase == *morph_it) {
+            //if (edgeBase == *morph_it) {
+            if (edgeBase == morph_it->begin()->second) { //@todo: poprawic to na porownanie z napisem zrobionym z mapy. swoja droga, ten warunek to ma sens?
                 interpretationFound = true;
                 break;
             }
@@ -592,12 +593,12 @@ bool AddAction::test(Lattice &lattice, int currentEntity,
 }
 
 //void AddAction::setInterpretations(std::vector<InterpretationPair> aInterpretations)
-void AddAction::setInterpretations(std::vector<std::string> aInterpretations) {
+void AddAction::setInterpretations(std::vector<Morphology> aInterpretations) {
     interpretations.insert(interpretations.begin(), aInterpretations.begin(),
             aInterpretations.end());
 }
 
-std::vector<std::string> AddAction::getInterpretations() const {
+std::vector<Morphology> AddAction::getInterpretations() const {
     return interpretations;
 }
 

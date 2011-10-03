@@ -170,6 +170,23 @@ namespace poleng {
 //                    }
 //                }
 
+                std::string getMorphologyString(Morphology morphology) {
+                    std::string s = "";
+                    std::string partOfSpeech = morphology["pos"];
+                    s = partOfSpeech;
+                    for (Morphology::iterator morphoIt = morphology.begin();
+                            morphoIt != morphology.end(); ++ morphoIt) {
+                        std::string attribute = morphoIt->first;
+                        std::string value = morphoIt->second;
+                        if (attribute == "pos")
+                            continue;
+                        if (s != "")
+                            s += ":";
+                        s += value;
+                    }
+                    return s;
+                }
+
             }
         }
 

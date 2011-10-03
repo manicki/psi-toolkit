@@ -5,6 +5,7 @@
 
 #include "lattice.hpp"
 #include "tagset.hpp"
+#include "puddle_util.hpp"
 #if _WITH_BONSAI_PARSEGRAPH
 #include "ParseGraph.hpp"
 #endif
@@ -46,6 +47,7 @@ namespace poleng {
 
 
             std::string readInputLattice(Lattice &lattice);
+            std::string readMorfologikLattice(Lattice &lattice);
 #if _WITH_BONSAI_PARSEGRAPH
                     ParseGraphPtr convertToBonsaiGraph(Lattice &lattice);
 #endif
@@ -78,14 +80,14 @@ namespace poleng {
                             std::string &syntokCategory,
                             std::string &concatenatedOrth,
                             std::vector<std::string> baseForms,
-                            std::vector<std::string> morphology,
+                            std::vector<Morphology> morphology,
                             std::list<Lattice::EdgeSequence> edgeSequences,
                             LayerTagCollection tags,
                             Lattice::Score score = 0.0);
                     void addNewVariantEdges(Lattice &lattice,
                             Lattice::EdgeDescriptor edge,
                             std::vector<std::string> baseForms,
-                            std::vector<std::string> morphology);
+                            std::vector<Morphology> morphology);
                     void removeParseEdges(Lattice &lattice,
                             Lattice::VertexDescriptor start,
                             Lattice::VertexDescriptor end);
@@ -123,6 +125,9 @@ namespace poleng {
                     bool areAnnotationItemsEqual(Lattice &lattice,
                             AnnotationItem a,
                             AnnotationItem b);
+
+                    std::string getMorphologyString(Lattice &lattice,
+                            Lattice::EdgeDescriptor edge);
             }
         }
     }

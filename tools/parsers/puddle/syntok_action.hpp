@@ -21,7 +21,7 @@ class SyntokAction : public Action
     public:
         //SyntokAction(int aStart, int aEnd, std::vector<int> aTokenIndexes, std::vector<InterpretationPair> aMorphology, std::string aRuleName, std::string uMorphology);
         SyntokAction(int aStart, int aEnd, std::vector<int> aTokenIndices,
-                std::vector<std::string> aMorphology, std::string aRuleName,
+                std::vector<Morphology> aMorphology, std::string aRuleName,
                 std::string uMorphology);
         ~SyntokAction();
         //bool apply(Entities &entities, Edges &edges, int currentEntity, std::vector<int> matchedTokensSize);
@@ -38,8 +38,8 @@ class SyntokAction : public Action
         void setEnd(int aEnd);
         //std::vector<InterpretationPair> getMorphology();
         //void setMorphology(std::vector<InterpretationPair> aMorphology);
-        std::vector<std::string> getMorphology() const;
-        void setMorphology(std::vector<std::string> aMorphology);
+        std::vector<Morphology> getMorphology() const;
+        void setMorphology(std::vector<Morphology> aMorphology);
         std::vector<int> getTokenIndices() const;
         void setTokenIndices(std::vector<int> aTokenIndices);
         std::string getRuleName() const;
@@ -54,7 +54,7 @@ class SyntokAction : public Action
     private:
         std::vector<int> tokenIndices;
         //std::vector<InterpretationPair> morphology;
-        std::vector<std::string> morphology;
+        std::vector<Morphology> morphology;
         size_t start, end;
 
         std::string ruleName;

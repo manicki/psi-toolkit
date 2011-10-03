@@ -18,6 +18,132 @@ namespace poleng {
                     std::string type;
                 };
 
+                std::string readMorfologikLattice(Lattice &lattice) {
+                    std::string sentenceString = "";
+
+                    std::map<int, SentenceToken> edgesMap;
+
+                    LayerTagCollection form_tag
+                        = lattice.getLayerTagManager().createSingletonTagCollection("form");
+                    LayerTagMask formMask = lattice.getLayerTagManager().getMask(form_tag);
+                    LayerTagCollection parse_tag
+                        = lattice.getLayerTagManager().createSingletonTagCollection("parse");
+                    LayerTagMask parseMask = lattice.getLayerTagManager().getMask(parse_tag);
+                    LayerTagMask mask = lattice.getLayerTagManager().getMask(
+                            createUnion(form_tag, parse_tag) );
+
+                    Lattice::EdgesSortedBySourceIterator edgeIterator =
+                        lattice.edgesSortedBySource(mask);
+                    while (edgeIterator.hasNext()) {
+                        Lattice::EdgeDescriptor edge = edgeIterator.next();
+                        LayerTagCollection tags = lattice.getEdgeLayerTags(edge);
+                        std::list<std::string> tagNames =
+                            lattice.getLayerTagManager().getTagNames(tags);
+                        bool isParse = false;
+                        for (std::list<std::string>::iterator tagIt = tagNames.begin();
+                                tagIt != tagNames.end(); ++ tagIt) {
+                            if (*tagIt == "parse") {
+                                isParse = true;
+                                break;
+                            }
+                        }
+                        int start = lattice.getEdgeBeginIndex(edge);
+                        int end = start + lattice.getEdgeLength(edge);
+                        std::string orth = lattice.getEdgeText(edge); //@todo: przerabiac to na wygrzebywaine tej formy z krawedzi 'token' czy zostawic jak jest?
+                        AnnotationItem ai = lattice.getEdgeAnnotationItem(edge);
+                        std::string category = ai.getCategory();
+                        std::list< std::pair<std::string, std::string> > av
+                            = lattice.getAnnotationItemManager().getValues(ai);
+                        //if (lattice.getAnnotationItemManager().getValue(
+                        //           ai, "discard") == "1")
+                        //    continue; //skip discarded edges
+                        std::string base = getBase(lattice, edge);
+                        std::string partOfSpeech = getPartOfSpeech(lattice, edge);
+                        std::string morphology = getMorphologyString(lattice, edge);
+                        //std::string morphology = partOfSpeech;
+                        //for (std::list< std::pair<std::string, std::string> >::iterator avit =
+                        //        av.begin(); avit != av.end(); avit ++) {
+                        //    morphology += ":" + avit->second;
+                        //    std::cerr << "dodaje: " << avit->second << std::endl;
+                        //}
+
+                        std::map<int, SentenceToken>::iterator edgesMapIt =
+                            edgesMap.find(start);
+                        if (edgesMapIt != edgesMap.end()) {
+                            if (isParse) {
+                                if (edgesMapIt->second.type == "parse") {
+                                    edgesMapIt->second.baseForms.push_back(base);
+                                    edgesMapIt->second.morphology.push_back(morphology);
+                                } else {
+                                    edgesMapIt->second.baseForms.clear();
+                                    edgesMapIt->second.morphology.clear();
+                                    edgesMapIt->second.type = "parse";
+                                    edgesMapIt->second.category = category;
+                                    edgesMapIt->second.baseForms.push_back(base);
+                                    edgesMapIt->second.morphology.push_back(morphology);
+                                }
+                            } else {
+                                if (edgesMapIt->second.type == "form") {
+                                    edgesMapIt->second.baseForms.push_back(base);
+                                    edgesMapIt->second.morphology.push_back(morphology);
+                                }
+                            }
+                        } else {
+                            SentenceToken edge;
+                            edge.orth = orth;
+                            edge.category = category;
+                            edge.start = start;
+                            edge.end = end;
+                            edge.baseForms.push_back(base);
+                            edge.morphology.push_back(morphology);
+                            if (isParse)
+                                edge.type = "parse";
+                            else
+                                edge.type = "form";
+                            edgesMap.insert(std::pair<int, SentenceToken>(
+                                        start, edge));
+                        }
+
+                    }
+
+                    int start = 0;
+                    int end = 0;
+                    std::stringstream ss;
+                    ss << "<<s<" << start << "<" << start << "<sb<>";
+                    for (std::map<int, SentenceToken>::iterator edgesMapIt =
+                            edgesMap.begin();
+                            edgesMapIt != edgesMap.end(); ++ edgesMapIt) {
+                        start = edgesMapIt->second.start;
+                        end = edgesMapIt->second.end;
+                        std::string type = edgesMapIt->second.type;
+                        ss << "<<";
+                        if (type == "form")
+                            ss << "t";
+                        else
+                            ss << "g";
+                        ss << "<" << start << "<" << end << "<";
+                        if (type == "form")
+                            ss << "TOKEN";
+                        else
+                            ss << edgesMapIt->second.category;
+                        ss << "<" << edgesMapIt->second.orth;
+                        std::vector<std::string>::iterator baseIt =
+                            edgesMapIt->second.baseForms.begin();
+                        std::vector<std::string>::iterator morphIt =
+                            edgesMapIt->second.morphology.begin();
+                        while (baseIt != edgesMapIt->second.baseForms.end()) {
+                            ss << "<" << *baseIt << "<" << *morphIt;
+                            ++ baseIt;
+                            ++ morphIt;
+                        }
+                        ss << ">";
+                    }
+                    ss << "<<s<" << end << "<" << end << "<se<>";
+                    sentenceString = ss.str();
+
+                    return sentenceString;;
+                }
+
                 std::string readInputLattice(Lattice &lattice) {
                     std::string sentenceString = "";
 
@@ -59,11 +185,13 @@ namespace poleng {
                             continue; //skip discarded edges
                         std::string base = getBase(lattice, edge);
                         std::string partOfSpeech = getPartOfSpeech(lattice, edge);
-                        std::string morpho = lattice.getAnnotationItemManager().getValue(
-                                ai, "morpho");
-                        std::string morphology = partOfSpeech;
-                        if (morpho != "")
-                            morphology += ":" + morpho;
+                        std::string morphology = lattice::getMorphologyString(
+                                lattice, edge);
+                        //std::string morpho = lattice.getAnnotationItemManager().getValue(
+                        //        ai, "morpho");
+                        //std::string morphology = partOfSpeech;
+                        //if (morpho != "")
+                        //    morphology += ":" + morpho;
 
                         std::map<int, SentenceToken>::iterator edgesMapIt =
                             edgesMap.find(start);
@@ -190,11 +318,12 @@ namespace poleng {
                             continue; //skip discarded edges
                         std::string base = lattice::getBase(lattice, edge);
                         std::string partOfSpeech = lattice::getPartOfSpeech(lattice, edge);
-                        std::string morpho = lattice.getAnnotationItemManager().getValue(
-                                ai, "morpho");
-                        std::string morphology = partOfSpeech;
-                        if (morpho != "")
-                            morphology += ":" + morpho;
+                        //std::string morpho = lattice.getAnnotationItemManager().getValue(
+                        //        ai, "morpho");
+                        std::string morphology = getMorphologyString(lattice, edge);
+                        //std::string morphology = partOfSpeech;
+                        //if (morpho != "")
+                        //    morphology += ":" + morpho;
                         PosInfo pi(base, morphology, 1);
                         if (type == "token") {
                             TransitionInfo *edge = new TransitionInfo("token");
@@ -549,7 +678,7 @@ namespace poleng {
                     std::string &syntokCategory,
                     std::string &concatenatedOrth,
                     std::vector<std::string> baseForms,
-                    std::vector<std::string> morphology,
+                    std::vector<Morphology> morphology,
                     std::list<Lattice::EdgeSequence> edgeSequences,
                     LayerTagCollection tags,
                     Lattice::Score) {
@@ -580,18 +709,20 @@ namespace poleng {
                     } else
                         lemmaEdge = getLemmaEdge(lattice, startVertex, *baseIt);
 
-                    for (std::vector<std::string>::iterator morphIt =
+                    for (std::vector<Morphology>::iterator morphIt =
                             morphology.begin();
                             morphIt != morphology.end();
                             ++ morphIt) {
 
-                        std::string morphology = *morphIt;
-                        size_t delimPos = morphology.find(":");
-                        std::string partOfSpeech = morphology.substr(0, delimPos);
+                        //std::string morphology = *morphIt;
+                        std::string morphoString = util::getMorphologyString(
+                                *morphIt);
+                        size_t delimPos = morphoString.find(":");
+                        std::string partOfSpeech = morphoString.substr(0, delimPos);
                         std::string morpho = "";
                         if ( (delimPos != std::string::npos) &&
-                                (delimPos < morphology.size()) )
-                            morpho = morphology.substr(delimPos + 1, std::string::npos);
+                                (delimPos < morphoString.size()) )
+                            morpho = morphoString.substr(delimPos + 1, std::string::npos);
                         std::string lexeme = *baseIt + "_" + partOfSpeech;
 
                         Lattice::EdgeDescriptor lexemeEdge;
@@ -611,8 +742,15 @@ namespace poleng {
 
                         if (syntokCategory != concatenatedOrth) { //adding parse edge 'SYNTOK'
                             AnnotationItem annotationItem(syntokCategory);
-                            lattice.getAnnotationItemManager().setValue(
-                                    annotationItem, "morpho", morpho);
+                            //lattice.getAnnotationItemManager().setValue(
+                            //        annotationItem, "morpho", morpho);
+                            for (Morphology::iterator attribIt = morphIt->begin();
+                                    attribIt != morphIt->end(); ++ attribIt) {
+                                if (attribIt->first == "pos")
+                                    continue;
+                                lattice.getAnnotationItemManager().setValue(
+                                        annotationItem, attribIt->first, attribIt->second);
+                            }
                             lattice.getAnnotationItemManager().setValue(
                                     annotationItem, "discard", "0");
                             lattice.getAnnotationItemManager().setValue(
@@ -638,8 +776,15 @@ namespace poleng {
                             Lattice::EdgeSequence::Builder formBuilder;
                             formBuilder.addEdge(lexemeEdge);
                             AnnotationItem annotationItem(partOfSpeech, lexeme);
-                            lattice.getAnnotationItemManager().setValue(
-                                    annotationItem, "morpho", morpho);
+                            //lattice.getAnnotationItemManager().setValue(
+                            //        annotationItem, "morpho", morpho);
+                            for (Morphology::iterator attribIt = morphIt->begin();
+                                    attribIt != morphIt->end(); ++ attribIt) {
+                                if (attribIt->first == "pos")
+                                    continue;
+                                lattice.getAnnotationItemManager().setValue(
+                                        annotationItem, attribIt->first, attribIt->second);
+                            }
                             lattice.getAnnotationItemManager().setValue(
                                     annotationItem, "discard", "0");
 
@@ -655,7 +800,7 @@ namespace poleng {
             void addNewVariantEdges(Lattice &lattice,
                     Lattice::EdgeDescriptor edge,
                     std::vector<std::string> baseForms,
-                    std::vector<std::string> morphology) {
+                    std::vector<Morphology> morphology) {
 
                 Lattice::VertexDescriptor startVertex =
                     lattice.getEdgeBeginIndex(edge);
@@ -685,15 +830,17 @@ namespace poleng {
                     } else
                         lemmaEdge = getLemmaEdge(lattice, startVertex, *baseIt);
 
-                    for (std::vector<std::string>::iterator morphIt =
+                    for (std::vector<Morphology>::iterator morphIt =
                             morphology.begin();
                             morphIt != morphology.end();
                             ++ morphIt) {
-                        std::string morpho;
-                        size_t delimPos = morphIt->find(":");
-                        std::string partOfSpeech = morphIt->substr(0, delimPos);
+                        std::string morphoString = util::getMorphologyString(
+                                *morphIt);
+                        std::string morpho = "";
+                        size_t delimPos = morphoString.find(":");
+                        std::string partOfSpeech = morphoString.substr(0, delimPos);
                         if (delimPos != std::string::npos)
-                            morpho = morphIt->substr(delimPos + 1, std::string::npos);
+                            morpho = morphoString.substr(delimPos + 1, std::string::npos);
                         std::string lexeme = *baseIt + "_" + partOfSpeech;
 
                         Lattice::EdgeDescriptor lexemeEdge;
@@ -714,8 +861,15 @@ namespace poleng {
                         Lattice::EdgeSequence::Builder formBuilder;
                         formBuilder.addEdge(lexemeEdge);
                         AnnotationItem annotationItem(partOfSpeech, lexeme);
-                        lattice.getAnnotationItemManager().setValue(
-                                annotationItem, "morpho", morpho);
+                        //lattice.getAnnotationItemManager().setValue(
+                        //        annotationItem, "morpho", morpho);
+                        for (Morphology::iterator attribIt = morphIt->begin();
+                                attribIt != morphIt->end(); ++ attribIt) {
+                            if (attribIt->first == "pos")
+                                continue;
+                            lattice.getAnnotationItemManager().setValue(
+                                    annotationItem, attribIt->first, attribIt->second);
+                        }
                         lattice.getAnnotationItemManager().setValue(
                                 annotationItem, "discard", "0");
 
@@ -1001,6 +1155,23 @@ namespace poleng {
                 }
                 Lattice::EdgeDescriptor edge; //@todo: wyjatek
                 return edge;
+            }
+
+            std::string getMorphologyString(Lattice &lattice,
+                    Lattice::EdgeDescriptor edge) {
+                std::string partOfSpeech = getPartOfSpeech(lattice, edge);
+                std::string morpho = partOfSpeech;
+                AnnotationItem ai = lattice.getEdgeAnnotationItem(edge);
+                std::list< std::pair<std::string, std::string> > av
+                    = lattice.getAnnotationItemManager().getValues(ai);
+                for (std::list< std::pair<std::string, std::string> >::iterator avit = //@todo: sortowanie tego
+                        av.begin(); avit != av.end(); avit ++) {
+                    if (avit->first == "discard")
+                        continue;
+                    morpho += ":";
+                    morpho += avit->second;
+                }
+                return morpho;
             }
 
             }

@@ -139,12 +139,14 @@ bool DeleteAction::apply(Lattice &lattice, int currentEntity,
                 } else if (cond_it->type == MORPHOLOGY_CONDITION) {
 //                    std::string tokenMorphology = lattice.getAnnotationItemManager().
 //                        getValue(annotationItem, "morpho");
-                    std::string tokenMorphology =
-                        lattice::getPartOfSpeech(lattice, *edgeIt);
-                    std::string morpho = lattice.getAnnotationItemManager().
-                        getValue(annotationItem, "morpho");
-                    if (morpho != "")
-                        tokenMorphology += ":" + morpho;
+                    //std::string tokenMorphology =
+                    //    lattice::getPartOfSpeech(lattice, *edgeIt);
+                    //std::string morpho = lattice.getAnnotationItemManager().
+                    //    getValue(annotationItem, "morpho");
+                    //if (morpho != "")
+                    //    tokenMorphology += ":" + morpho;
+                    std::string tokenMorphology = lattice::getMorphologyString(
+                            lattice, *edgeIt);
                     //if (!RE2::FullMatch(tokenMorphology, cond_it->pattern)) {
                     if (!RegExp::FullMatch(tokenMorphology, cond_it->pattern)) {
                         lattice.getAnnotationItemManager().setValue(
@@ -436,8 +438,10 @@ bool DeleteAction::test(Lattice &lattice,
                         }
                     }
                 } else if (cond_it->type == MORPHOLOGY_CONDITION) {
-                    std::string tokenMorphology = lattice.getAnnotationItemManager().
-                        getValue(annotationItem, "morphology");
+                    //std::string tokenMorphology = lattice.getAnnotationItemManager().
+                    //    getValue(annotationItem, "morphology");
+                    std::string tokenMorphology = lattice::getMorphologyString(
+                            lattice, *edgeIt);
                     //if (!RE2::FullMatch(tokenMorphology, cond_it->pattern)) {
                     if (!RegExp::FullMatch(tokenMorphology, cond_it->pattern)) {
                         satisfied = false;

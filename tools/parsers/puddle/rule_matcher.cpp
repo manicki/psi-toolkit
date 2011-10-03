@@ -368,12 +368,14 @@ std::string RuleMatcher::generateSentenceString(Lattice &lattice, int startVerte
             if (lattice.getAnnotationItemManager().getValue(ai, "discard") == "1")
                 continue; //skip discarded edges
             std::string base = lattice::getBase(lattice, *edgeIt); //@todo: nie bedzie dzialalo dla krawedzi 'parse'
-            std::string partOfSpeech = lattice::getPartOfSpeech(lattice, *edgeIt); //@todo: nie bedzie dzialalo dla krawedzi 'parse'
-            std::string morpho = lattice.getAnnotationItemManager().getValue(
-                    ai, "morpho");
-            std::string morphology = partOfSpeech;
-            if (morpho != "")
-                morphology += ":" + morpho;
+            //std::string partOfSpeech = lattice::getPartOfSpeech(lattice, *edgeIt); //@todo: nie bedzie dzialalo dla krawedzi 'parse'
+            //std::string morpho = lattice.getAnnotationItemManager().getValue(
+            //       ai, "morpho");
+            //std::string morphology = partOfSpeech;
+            //if (morpho != "")
+            //    morphology += ":" + morpho;
+            std::string morphology = lattice::getMorphologyString(
+                    lattice, *edgeIt);
             ss << "<";
             ss << base;
             ss << "<";

@@ -21,7 +21,7 @@ class AddAction : public Action
 {
     public:
         //AddAction(std::vector<InterpretationPair> aInterpretations, std::string aBase, int aTokenIndex, std::string uInterpretation);
-        AddAction(std::vector<std::string> aInterpretations, std::string aBase,
+        AddAction(std::vector<Morphology> aInterpretations, std::string aBase,
                 int aTokenIndex, std::string uInterpretation);
 //                LatticeWrapperPtr aLatticeWrapper);
         ~AddAction();
@@ -33,8 +33,8 @@ class AddAction : public Action
         bool test(Lattice &lattice, int currentEntity, RuleTokenSizes &ruleTokenSizes);
         //void setInterpretations(std::vector<InterpretationPair> aInterpretations);
         //std::vector<InterpretationPair> getInterpretations();
-        void setInterpretations(std::vector<std::string> aInterpretations);
-        std::vector<std::string> getInterpretations() const;
+        void setInterpretations(std::vector<Morphology> aInterpretations);
+        std::vector<Morphology> getInterpretations() const;
         void setBase(std::string aBase);
         std::string getBase() const;
         void setTokenIndex(int aTokenIndex);
@@ -46,7 +46,7 @@ class AddAction : public Action
         void setVerbose() { verbose = true; }
     private:
         //std::vector<InterpretationPair> interpretations;
-        std::vector<std::string> interpretations;
+        std::vector<Morphology> interpretations;
         std::string base;
         int tokenIndex;
         std::string type;

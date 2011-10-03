@@ -8,6 +8,7 @@
 
 #include <boost/shared_ptr.hpp>
 #include "puddle_types.hpp"
+#include "puddle_util.hpp"
 
 //using namespace puddle;
 

@@ -120,12 +120,14 @@ bool UnifyAction::apply(Lattice &lattice, int currentEntity,
                         continue; //skip discarded edges
                     //std::string morphology = lattice.getAnnotationItemManager().
                     //    getValue(annotationItem, "morphology");
-                    std::string morphology =
-                        lattice::getPartOfSpeech(lattice, *edgeIt);
-                    std::string morpho = lattice.getAnnotationItemManager().
-                        getValue(annotationItem, "morpho");
-                    if (morpho != "")
-                        morphology += ":" + morpho;
+                    //std::string morphology =
+                    //    lattice::getPartOfSpeech(lattice, *edgeIt);
+                    //std::string morpho = lattice.getAnnotationItemManager().
+                    //    getValue(annotationItem, "morpho");
+                    //if (morpho != "")
+                    //    morphology += ":" + morpho;
+                    std::string morphology = lattice::getMorphologyString(
+                            lattice, *edgeIt);
 
                     std::string slot;
                     std::string value;
@@ -192,12 +194,14 @@ bool UnifyAction::apply(Lattice &lattice, int currentEntity,
                             continue; //skip discarded edges
                         //std::string morphology = lattice.getAnnotationItemManager().
                         //    getValue(annotationItem, "morphology");
-                        std::string morphology =
-                            lattice::getPartOfSpeech(lattice, *edgeIt);
-                        std::string morpho = lattice.getAnnotationItemManager().
-                            getValue(annotationItem, "morphology");
-                        if (morpho != "")
-                            morphology += ":" + morpho;
+                        //std::string morphology =
+                        //    lattice::getPartOfSpeech(lattice, *edgeIt);
+                        //std::string morpho = lattice.getAnnotationItemManager().
+                        //    getValue(annotationItem, "morphology");
+                        //if (morpho != "")
+                        //    morphology += ":" + morpho;
+                        std::string morphology = lattice::getMorphologyString(
+                                lattice, *edgeIt);
 
                         std::string slot;
                         std::string value;
@@ -762,12 +766,14 @@ bool UnifyAction::test(Lattice &lattice, int currentEntity,
                     //std::string morphology = boost::get<1>(*var_it);
                     //std::string morphology = lattice.getAnnotationItemManager().
                     //    getValue(annotationItem, "morphology");
-                    std::string morphology =
-                        lattice::getPartOfSpeech(lattice, *edgeIt);
-                    std::string morpho = lattice.getAnnotationItemManager().
-                        getValue(annotationItem, "morpho");
-                    if (morpho != "")
-                        morphology += ":" + morpho;
+                    //std::string morphology =
+                    //    lattice::getPartOfSpeech(lattice, *edgeIt);
+                    //std::string morpho = lattice.getAnnotationItemManager().
+                    //    getValue(annotationItem, "morpho");
+                    //if (morpho != "")
+                    //    morphology += ":" + morpho;
+                    std::string morphology = lattice::getMorphologyString(
+                            lattice, *edgeIt);
 
                     std::string slot;
                     std::string value;
