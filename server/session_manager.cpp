@@ -31,7 +31,7 @@ SessionManager* SessionManager::Instance() {
 }
 
 SessionManager::SessionManager() {
-    //constructor
+    currentSessionId = "";
 }
 
 
@@ -59,6 +59,14 @@ Session * SessionManager::newSession() {
     Session * ses = new Session(id);
     addSession(ses);
     return ses;
+}
+
+Session * SessionManager::currentSession() {
+    return getSession(currentSessionId);
+}
+
+void SessionManager::setCurrentSession(std::string id) {
+    currentSessionId = id;
 }
 
 void SessionManager::addSession(Session * session) {

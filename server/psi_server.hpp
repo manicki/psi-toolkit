@@ -13,6 +13,7 @@
 
 #include <pthread.h>
 #include <signal.h>
+#include <session.hpp>
 
     class PsiServer;
     typedef boost::function<char*()> psis_include_function;
@@ -33,14 +34,19 @@
         void include(std::string& reply);
 
         void checkForAction(http::server3::request& req);
-        std::string& findValue(const char* name);
+
+        Session * session();
+        //bool hasValue(const char* name);
+        //std::string findValue(const char* name);
+        //void saveValue(const char* name, std::string value);
 
         std::string websiteRoot;
 
-    //private:
+    private:
         void parseMultipartFormData(http::server3::request& req);
         void parseNamesAndValues(std::string, int);
         std::string urlDecode(std::string &);
+        void addDataToCurrentSession(std::string key, std::string value);
 
         /// store map between include codes and application functions
         std::map <std::string, psis_include_function > includes_;

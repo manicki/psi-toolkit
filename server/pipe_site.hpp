@@ -7,12 +7,8 @@ class PipeSite : public TemplateSite
 
 public:
 
-    std::string pipe;
-    std::string input;
-    std::string output;
-    std::string fileName;
-
-    PipeSite(PsiServer& server, std::string initialPipe);
+    PipeSite(PsiServer& server);
+    //PipeSite(PsiServer& server, std::string input, std::string pipe);
 
     char * inputText();
     char * pipeText();
@@ -22,9 +18,12 @@ public:
     char * hiddenOptions();
 private:
 
-    static const std::string INITIAL_TEXT;
+    static const std::string initialText;
+    static const std::string initialPipe;
 
-    std::string runPipe(std::string input);
+    std::string getOrSetDefaultData(const char* name, std::string initialValue);
 
+    std::string getInput();
+    std::string runPipe();
 };
 

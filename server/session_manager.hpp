@@ -22,7 +22,12 @@ public:
     Session * getSession(std::string & id);
     Session * newSession();
 
+    Session * currentSession();
+    void setCurrentSession(std::string id);
+
 private:
+
+    std::string currentSessionId;
 
     static std::string cookieIdentifier;
     static int sessionIdLength;
@@ -40,4 +45,4 @@ private:
 
 };
 
-#endif
+ #endif
