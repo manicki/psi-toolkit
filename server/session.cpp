@@ -13,7 +13,6 @@ std::string Session::getId() {
 
 void Session::setData(std::string key, std::string value) {
     data[key] = value;
-    //INFO("++ currSess: " << key << " = " << data[key] << " dla SID: " << id);
 }
 
 std::string Session::getData(std::string key) {
@@ -21,7 +20,6 @@ std::string Session::getData(std::string key) {
     std::string value = "";
 
     if (it != data.end()) {
-        //INFO("+++ znalazlem w getData: " << it->second << " z " << key << " dla SID: " << id);
         value = it->second;
     }
 
@@ -36,4 +34,9 @@ bool Session::isData(std::string key) {
     }
 
     return false;
+}
+
+void Session::clearData(std::string key) {
+    //FIXME
+    data[key] = std::string("");
 }

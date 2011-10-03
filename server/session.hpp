@@ -16,6 +16,7 @@ public:
     void setData(std::string key, std::string value);
     std::string getData(std::string key);
     bool isData(std::string key);
+    void clearData(std::string key);
 
 private:
 

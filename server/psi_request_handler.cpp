@@ -50,8 +50,6 @@ void PsiRequestHandler::handle_request(
     //TODO: dodac sessionID to request lub usunac stamtad to pole
     sesMng->setCurrentSession(session->getId());
 
-    INFO("++ USTAWILEM CURR SID na: " << SessionManager::Instance()->currentSession()->getId());
-
     //handle request
     psi_server_->checkForAction(req_modified);
     http::server3::request_handler::handle_request(req_modified, rep);

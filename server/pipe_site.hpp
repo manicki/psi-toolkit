@@ -24,6 +24,6 @@ private:
     std::string getOrSetDefaultData(const char* name, std::string initialValue);
 
     std::string getInput();
-    std::string runPipe();
+    std::string runPipe(std::string);
 };
 

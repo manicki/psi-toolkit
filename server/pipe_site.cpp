@@ -15,6 +15,7 @@ const std::string PipeSite::initialPipe = "tp-tokenizer --lang pl";
 PipeSite::PipeSite(PsiServer& server)
     : TemplateSite(server)
 {
+
     psiServer_.registerIncludeCode(
         "pipe_site_input_text", boost::bind(&PipeSite::inputText, this));
 
@@ -42,7 +43,7 @@ char * PipeSite::pipeText() {
 }
 
 char * PipeSite::outputText() {
-    std::string output = getOrSetDefaultData("output-text", runPipe());
+    std::string output = getOrSetDefaultData("output-text", runPipe(initialText));
     output = std::string("<pre>") + output + std::string("</pre>");
 
     return stringToChar(output);
@@ -55,22 +56,23 @@ char * PipeSite::actionPipe() {
     std::string pipe = psiServer_.session()->getData("pipe-text");
 
     std::string input = getInput();
-    psiServer_.session()->setData("input-text", input);
 
-    std::string output = runPipe();
+    std::string output = runPipe(input);
     psiServer_.session()->setData("output-text", output);
 
     return stringToChar(std::string("/index.html"));
 }
 
 char * PipeSite::hiddenOptions() {
-    /*
-    std::string is_input_file_on = fileName.empty() ? "" : "on";
+    std::string fileOnOff = psiServer_.session()->getData("radio-file");
+
     std::string opts =
-        std::string("<div input_file=\"") + is_input_file_on
+        std::string("<div input_file=\"") + fileOnOff
         + std::string("\" />");
-    */
-    return stringToChar(std::string(" "));
+
+    psiServer_.session()->clearData("radio-file");
+
+    return stringToChar(opts);
 }
 
 std::string PipeSite::getOrSetDefaultData(const char* name, std::string initialValue) {
@@ -82,23 +84,20 @@ std::string PipeSite::getOrSetDefaultData(const char* name, std::string initialV
 
 std::string PipeSite::getInput() {
     std::string input = psiServer_.session()->getData("input-text");
-
-    //fileName = "";
-/*
     std::string isFile = psiServer_.session()->getData("radio-file");
+
     if (isFile == "on") {
-        //fileName = psiServer_.findValue("input-file-filename");
-        in = psiServer_.findValue("input-file");
+        input = psiServer_.session()->getData("input-file");
     }
-*/
-    if (input.empty())
+
+    if (input.empty()) {
         input = initialText;
+    }
 
     return input;
 }
 
-std::string PipeSite::runPipe() {
-    std::string input = psiServer_.session()->getData("input-text");
+std::string PipeSite::runPipe(std::string input) {
     std::string pipe = psiServer_.session()->getData("pipe-text");
 
     if (input.empty())

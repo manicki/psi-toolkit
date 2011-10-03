@@ -135,11 +135,6 @@ void PsiServer::checkForAction(http::server3::request& req) {
         parseNamesAndValues(uri, q);
     }
 
-    //std::cerr << "Name/values:" << std::endl;
-    //std::multimap <std::string, std::string>::iterator it;
-    //for (it = name_values_.begin() ; it != name_values_.end(); ++it)
-    //    DEBUG((*it).first << " => " << (*it).second << std::endl);
-
     // call the function
     req.uri = pfun->second(this);
     return;
@@ -162,22 +157,15 @@ void PsiServer::parseMultipartFormData(http::server3::request& req) {
             if (it->second->GetType() == MPFD::Field::FileType) {
 
                 // add file name
-                //name_values_.insert(std::pair<std::string, std::string> (
-                //    it->first + std::string("-filename"), it->second->GetFileName()
-                //));
-                addDataToCurrentSession(it->first + std::string("-filename"), it->second->GetFileName());
+                addDataToCurrentSession(
+                    it->first + std::string("-filename"), it->second->GetFileName()
+                );
 
                 // add file content
                 std::size_t size = it->second->GetFileContentSize();
-                //name_values_.insert(std::pair<std::string, std::string> (
-                //    it->first, std::string(it->second->GetFileContent(), size)
-                //));
                 addDataToCurrentSession(it->first, std::string(it->second->GetFileContent(), size));
             }
             else {
-                //name_values_.insert(std::pair<std::string, std::string> (
-                //    it->first, it->second->GetTextTypeContent()
-                //));
                 addDataToCurrentSession(it->first, it->second->GetTextTypeContent());
             }
         }
@@ -221,7 +209,6 @@ void PsiServer::parseNamesAndValues(std::string uri, int q) {
 }
 
 void PsiServer::addDataToCurrentSession(std::string key, std::string value) {
-    INFO("++ I will add data: " << key << ", " << value << ";");
     SessionManager::Instance()->currentSession()->setData(key, value);
 }
 
@@ -252,37 +239,3 @@ std::string PsiServer::urlDecode(std::string & encodedString) {
 Session * PsiServer::session() {
     return SessionManager::Instance()->currentSession();
 }
-
-/*
-std::string PsiServer::findValue(const char* name) {
-*/
-/*
-    static std::string val;
-    val = "";
-
-    psis_iter_name_value it = name_values_.find(name);
-    if (it != name_values_.end()) {
-        val = it->second;
-    }
-
-    return val;
-*/
-/*
-    INFO("__szukam key: " << name);
-    std::string val = SessionManager::Instance()->currentSession()->getData(std::string(name));
-    INFO("__mam value: " << val);
-
-    return val;
-}
-
-void PsiServer::saveValue(const char* name, std::string value) {
-    SessionManager::Instance()->currentSession()->setData(
-        std::string(name), value
-    );
-}
-
-bool PsiServer::hasValue(const char* name) {
-    bool result = SessionManager::Instance()->currentSession()->isData(name);
-    return result;
-}
-*/
