@@ -1,6 +1,7 @@
 #include "psi_server.hpp"
 #include "mpfd-parser/Parser.h"
 #include "logging.hpp"
+#include "session_manager.hpp"
 
 #include <boost/asio.hpp>
 #include <boost/thread.hpp>
@@ -134,11 +135,6 @@ void PsiServer::checkForAction(http::server3::request& req) {
         parseNamesAndValues(uri, q);
     }
 
-    //std::cerr << "Name/values:" << std::endl;
-    //std::multimap <std::string, std::string>::iterator it;
-    //for (it = name_values_.begin() ; it != name_values_.end(); ++it)
-    //    DEBUG((*it).first << " => " << (*it).second << std::endl);
-
     // call the function
     req.uri = pfun->second(this);
     return;
@@ -161,20 +157,16 @@ void PsiServer::parseMultipartFormData(http::server3::request& req) {
             if (it->second->GetType() == MPFD::Field::FileType) {
 
                 // add file name
-                name_values_.insert(std::pair<std::string, std::string> (
+                addDataToCurrentSession(
                     it->first + std::string("-filename"), it->second->GetFileName()
-                ));
+                );
+
                 // add file content
                 std::size_t size = it->second->GetFileContentSize();
-                name_values_.insert(std::pair<std::string, std::string> (
-                    it->first, std::string(it->second->GetFileContent(), size)
-                ));
-
+                addDataToCurrentSession(it->first, std::string(it->second->GetFileContent(), size));
             }
             else {
-                name_values_.insert(std::pair<std::string, std::string> (
-                    it->first, it->second->GetTextTypeContent()
-                ));
+                addDataToCurrentSession(it->first, it->second->GetTextTypeContent());
             }
         }
 
@@ -210,14 +202,19 @@ void PsiServer::parseNamesAndValues(std::string uri, int q) {
             value.replace(p, 1, " ");
         }
 
-        name_values_.insert(std::pair<std::string, std::string> (name, urlDecode(value)));
+        addDataToCurrentSession(name, urlDecode(value));
+        //ame_values_.insert(std::pair<std::string, std::string> (name, urlDecode(value)));
         p = q + 1;
     }
 }
 
-std::string PsiServer::urlDecode(std::string & encodedString) {
+void PsiServer::addDataToCurrentSession(std::string key, std::string value) {
+    SessionManager::Instance()->currentSession()->setData(key, value);
+}
 
+std::string PsiServer::urlDecode(std::string & encodedString) {
     std::string decodedString;
+
     char ch;
     unsigned int i;
     int j;
@@ -239,15 +236,6 @@ std::string PsiServer::urlDecode(std::string & encodedString) {
     return (decodedString);
 }
 
-std::string& PsiServer::findValue(const char* name) {
-    static std::string val;
-    val = "";
-
-    psis_iter_name_value it = name_values_.find(name);
-    if (it != name_values_.end()) {
-        val = it->second;
-    }
-
-    return val;
+Session * PsiServer::session() {
+    return SessionManager::Instance()->currentSession();
 }
-

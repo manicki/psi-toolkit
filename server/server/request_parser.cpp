@@ -6,6 +6,8 @@
 #include "request.hpp"
 #include "logging.hpp"
 
+#include <iostream>
+
 namespace http {
 namespace server3 {
 
@@ -21,6 +23,8 @@ void request_parser::reset()
 
 boost::tribool request_parser::consume(request& req, char input)
 {
+
+    std::cerr << input;
 
   switch (state_)
   {

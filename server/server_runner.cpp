@@ -69,8 +69,10 @@ int ServerRunner::run() {
         // register all websites
         IndexSite index(psiServer);
 
-        std::string initialPipe = annotatorOptions.empty() ? DEFAULT_PIPE : annotatorOptionsAsString();
-        PipeSite pipe(psiServer, initialPipe);
+        // FIXME:
+        //std::string initialPipe = annotatorOptions.empty() ?
+        //  DEFAULT_PIPE : annotatorOptionsAsString();
+        PipeSite pipe(psiServer);
 
         // run server
         psiServer.run();

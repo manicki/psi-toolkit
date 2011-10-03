@@ -3,6 +3,8 @@ add_library(server
     psi_server.cpp
     index_site.cpp
     pipe_site.cpp
+    session.cpp
+    session_manager.cpp
     server_runner.cpp
 )
 
