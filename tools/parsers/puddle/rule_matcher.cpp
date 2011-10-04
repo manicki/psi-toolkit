@@ -271,8 +271,9 @@ void RuleMatcher::addPosEdges(Lattice &lattice) {
         int start = lattice.getEdgeBeginIndex(edge);
         int end = start + lattice.getEdgeLength(edge);
         AnnotationItem annotationItem = lattice.getEdgeAnnotationItem(edge);
-        if (lattice.getAnnotationItemManager().getValue(annotationItem,
-                    "discard") == "1")
+        //if (lattice.getAnnotationItemManager().getValue(annotationItem,
+        //            "discard") == "1")
+        if (lattice::isDiscarded(lattice, edge))
             continue; //skip discarded forms
         std::string partOfSpeech = lattice::getPartOfSpeech(lattice, edge);
         std::pair<
@@ -363,7 +364,8 @@ std::string RuleMatcher::generateSentenceString(Lattice &lattice, int startVerte
         for (std::list<Lattice::EdgeDescriptor>::iterator edgeIt = edges.begin();
                 edgeIt != edges.end(); ++ edgeIt) {
             AnnotationItem ai = lattice.getEdgeAnnotationItem(*edgeIt);
-            if (lattice.getAnnotationItemManager().getValue(ai, "discard") == "1")
+            //if (lattice.getAnnotationItemManager().getValue(ai, "discard") == "1")
+            if (lattice::isDiscarded(lattice, *edgeIt))
                 continue; //skip discarded edges
             std::string base = lattice::getBase(lattice, *edgeIt); //@todo: nie bedzie dzialalo dla krawedzi 'parse'
             //std::string partOfSpeech = lattice::getPartOfSpeech(lattice, *edgeIt); //@todo: nie bedzie dzialalo dla krawedzi 'parse'

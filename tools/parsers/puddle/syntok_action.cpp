@@ -113,8 +113,9 @@ bool SyntokAction::apply(Lattice &lattice, int currentEntity,
                 edgeIt != sequenceIt->end();
                 ++ edgeIt) {
             AnnotationItem ai = lattice.getEdgeAnnotationItem(*edgeIt);
-            if (lattice.getAnnotationItemManager().getValue(
-                    ai, "discard") == "1")
+            //if (lattice.getAnnotationItemManager().getValue(
+            //        ai, "discard") == "1")
+            if (lattice::isDiscarded(lattice, *edgeIt))
                 continue;
 
             //std::string base = lattice.getAnnotationItemManager().getValue(

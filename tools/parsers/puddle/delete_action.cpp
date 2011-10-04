@@ -58,8 +58,9 @@ bool DeleteAction::apply(Lattice &lattice, int currentEntity,
 //    while (util::getEdge(pg, currentEntity, before) == NULL) {
 //        before ++;
 //    }
-    Lattice::VertexDescriptor vertex = lattice::getVertex(lattice,
-            currentEntity + before);
+    //Lattice::VertexDescriptor vertex = lattice::getVertex(lattice,
+    //        currentEntity + before);
+    Lattice::VertexDescriptor vertex = currentEntity; //@todo: tymczasowo. to nie uwzglednia lewego kontekstu
     //@todo: czy to sprawdzenie jest nadal konieczne? ta funkcja getVertex nie robi czegos takiego?
     while (lattice::getTopEdges(lattice, vertex).size() == 0) { //if there is no edge at a given position, proceed to the next vertex, as it may be a whitespace
         before ++;
@@ -111,8 +112,7 @@ bool DeleteAction::apply(Lattice &lattice, int currentEntity,
         for (std::list<Lattice::EdgeDescriptor>::iterator edgeIt = edges.begin();
                 edgeIt != edges.end(); ++ edgeIt) {
             AnnotationItem annotationItem = lattice.getEdgeAnnotationItem(*edgeIt);
-            if (lattice.getAnnotationItemManager().getValue(
-                        annotationItem, "discard") == "1")
+            if (lattice::isDiscarded(lattice, *edgeIt))
                 continue; //skip discarded edges
 
             for (DeleteConditions::iterator cond_it = conditions.begin();
@@ -351,8 +351,11 @@ bool DeleteAction::test(Lattice &lattice,
 //        before ++;
 //    }
     //Lattice::VertexDescriptor vertex = currentEntity + before;
-    Lattice::VertexDescriptor vertex = lattice::getVertex(lattice,
-            currentEntity + before);
+    //Lattice::VertexDescriptor vertex = lattice::getVertex(lattice,
+    //        currentEntity + before);
+    Lattice::VertexDescriptor vertex = currentEntity; //@todo: tymczasowo. to nie uwzglednia lewego kontekstu
+    //if (before > 0) {
+    //    vertex += lattice::getVertex(lattice,
     //@todo: czy to sprawdzenie jest nadal konieczne? ta funkcja getVertex nie robi czegos takiego?
     while (lattice::getTopEdges(lattice, vertex).size() == 0) { //if there is no edge at a given position, proceed to the next vertex, as it may be a whitespace
         before ++;
@@ -414,8 +417,9 @@ bool DeleteAction::test(Lattice &lattice,
                 edgeIt != edges.end(); ++ edgeIt) {
             bool conditionsSatisfied = true;
             AnnotationItem annotationItem = lattice.getEdgeAnnotationItem(*edgeIt);
-            if (lattice.getAnnotationItemManager().getValue(
-                        annotationItem, "discard") == "1")
+            if (lattice::isDiscarded(lattice, *edgeIt))
+            //if (lattice.getAnnotationItemManager().getValue(
+            //            annotationItem, "discard") == "1")
                 continue; //skip discarded edges
 
             for (DeleteConditions::iterator cond_it = conditions.begin();

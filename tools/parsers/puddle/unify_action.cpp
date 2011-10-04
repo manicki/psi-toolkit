@@ -115,8 +115,9 @@ bool UnifyAction::apply(Lattice &lattice, int currentEntity,
                         edgeIt != edges.end(); ++ edgeIt) {
                     AnnotationItem annotationItem =
                         lattice.getEdgeAnnotationItem(*edgeIt);
-                    if (lattice.getAnnotationItemManager().getValue(
-                                annotationItem, "discard") == "1")
+                    //if (lattice.getAnnotationItemManager().getValue(
+                    //            annotationItem, "discard") == "1")
+                    if (lattice::isDiscarded(lattice, *edgeIt))
                         continue; //skip discarded edges
                     //std::string morphology = lattice.getAnnotationItemManager().
                     //    getValue(annotationItem, "morphology");
@@ -189,8 +190,9 @@ bool UnifyAction::apply(Lattice &lattice, int currentEntity,
                             edgeIt != edges.end(); ++ edgeIt) {
                         AnnotationItem annotationItem =
                             lattice.getEdgeAnnotationItem(*edgeIt);
-                        if (lattice.getAnnotationItemManager().getValue(
-                                    annotationItem, "discard") == "1")
+                        //if (lattice.getAnnotationItemManager().getValue(
+                        //            annotationItem, "discard") == "1")
+                        if (lattice::isDiscarded(lattice, *edgeIt))
                             continue; //skip discarded edges
                         //std::string morphology = lattice.getAnnotationItemManager().
                         //    getValue(annotationItem, "morphology");
@@ -754,8 +756,9 @@ bool UnifyAction::test(Lattice &lattice, int currentEntity,
                         edgeIt != edges.end(); ++ edgeIt) {
                     AnnotationItem annotationItem =
                         lattice.getEdgeAnnotationItem(*edgeIt);
-                    if (lattice.getAnnotationItemManager().getValue(
-                                annotationItem, "discard") == "1")
+                    //if (lattice.getAnnotationItemManager().getValue(
+                    //            annotationItem, "discard") == "1")
+                    if (lattice::isDiscarded(lattice, *edgeIt))
                         continue; //skip discarded edges
                 //for (std::vector<PosInfo>::iterator var_it =
                 //        edge->variants_.begin();

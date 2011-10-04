@@ -171,6 +171,8 @@ int Rule::matchPattern(std::string &sentenceString,
                 beforeMatched = before;
                 afterMatched = suffix;
                 int r = getPatternEnd(before); // + 1; //@todo: ten +1 wynika ze sposobu numerowania? w kazdym razie tak jest, zeby bylo w akcjach potem dokadlnie tak, jak wczesniej bylo. moze to sie uda zmienic po wymienieniu calosci
+                if (before == "")
+                    r = getPatternStart(matching);
                 afterIndex = getPatternStart(afterMatched);
                 delete[] matchedS;
                 for (int argIt = 0; argIt < num_groups; argIt ++)

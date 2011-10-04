@@ -121,6 +121,8 @@ namespace poleng {
                             Lattice::VertexDescriptor vertex,
                             LayerTagMask mask,
                             std::string category, std::string text);
+                    bool isDiscarded(Lattice &lattice,
+                            Lattice::EdgeDescriptor edge);
 
                     bool areAnnotationItemsEqual(Lattice &lattice,
                             AnnotationItem a,

@@ -180,8 +180,9 @@ namespace poleng {
                         std::string category = ai.getCategory();
                         std::list< std::pair<std::string, std::string> > av
                             = lattice.getAnnotationItemManager().getValues(ai);
-                        if (lattice.getAnnotationItemManager().getValue(
-                                    ai, "discard") == "1")
+                        //if (lattice.getAnnotationItemManager().getValue(
+                        //            ai, "discard") == "1")
+                        if (isDiscarded(lattice, edge))
                             continue; //skip discarded edges
                         std::string base = getBase(lattice, edge);
                         std::string partOfSpeech = getPartOfSpeech(lattice, edge);
@@ -313,8 +314,9 @@ namespace poleng {
 
                     if (type == "token" || type == "group") {
                         std::string orth = lattice.getEdgeText(edge);
-                        if (lattice.getAnnotationItemManager().getValue(
-                                    ai, "discard") == "1")
+                        //if (lattice.getAnnotationItemManager().getValue(
+                        //            ai, "discard") == "1")
+                        if (isDiscarded(lattice, edge))
                             continue; //skip discarded edges
                         std::string base = lattice::getBase(lattice, edge);
                         std::string partOfSpeech = lattice::getPartOfSpeech(lattice, edge);
@@ -478,6 +480,7 @@ namespace poleng {
                     Lattice::InOutEdgesIterator edgeIt =
                         lattice.outEdges(vertex, mask);
                     if (! edgeIt.hasNext()) {
+                        edgePosition ++;
                         vertex ++;
                         continue;
                     }
@@ -526,8 +529,9 @@ namespace poleng {
                 while (edgeIt.hasNext()) {
                     Lattice::EdgeDescriptor edge = edgeIt.next();
                     AnnotationItem ai = lattice.getEdgeAnnotationItem(edge);
-                    if (lattice.getAnnotationItemManager().getValue(
-                                ai, "discard") == "1")
+                    //if (lattice.getAnnotationItemManager().getValue(
+                    //            ai, "discard") == "1")
+                    if (isDiscarded(lattice, edge))
                         continue;
 
                     edges.push_back(edge);
@@ -1172,6 +1176,22 @@ namespace poleng {
                     morpho += avit->second;
                 }
                 return morpho;
+            }
+
+            bool isDiscarded(Lattice &lattice, Lattice::EdgeDescriptor edge) {
+                AnnotationItem ai = lattice.getEdgeAnnotationItem(edge);
+                std::list< std::pair<std::string, std::string> > av
+                    = lattice.getAnnotationItemManager().getValues(ai);
+                for (std::list< std::pair<std::string, std::string> >::iterator avit =
+                        av.begin(); avit != av.end(); ++ avit) {
+                    if (avit->first == "discard") {
+                        if (avit->second == "1")
+                            return true;
+                        else
+                            return false;
+                    }
+                }
+                return false;
             }
 
             }

@@ -93,7 +93,8 @@ bool AddAction::apply(Lattice &lattice, int currentEntity,
         for (Lattice::EdgeSequence::Iterator edgeIt = sequenceIt->begin();
                 edgeIt != sequenceIt->end(); ++ edgeIt) {
             AnnotationItem ai = lattice.getEdgeAnnotationItem(*edgeIt);
-            if (lattice.getAnnotationItemManager().getValue(ai, "discard") == "1")
+            //if (lattice.getAnnotationItemManager().getValue(ai, "discard") == "1")
+            if (lattice::isDiscarded(lattice, *edgeIt))
                 continue; //skip discarded interpretations
             if (! allBaseForms) {
                 std::vector<std::string> baseForms;
@@ -399,7 +400,8 @@ bool AddAction::test(Lattice &lattice, int currentEntity,
     for (Lattice::EdgeSequence::Iterator edgeIt = sequenceIt->begin();
             edgeIt != sequenceIt->end(); ++ edgeIt) {
         AnnotationItem ai = lattice.getEdgeAnnotationItem(*edgeIt);
-        if (lattice.getAnnotationItemManager().getValue(ai, "discard") == "1")
+        //if (lattice.getAnnotationItemManager().getValue(ai, "discard") == "1")
+        if (lattice::isDiscarded(lattice, *edgeIt))
             continue; //skip discarded interpretations
         std::string edgeBase = lattice::getBase(lattice, *edgeIt);
         if (! allBaseForms) {
