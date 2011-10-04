@@ -91,9 +91,9 @@ bool SyntokAction::apply(Lattice &lattice, int currentEntity,
 //        }
 //    }
     Lattice::VertexDescriptor startVertex = lattice::getVertex(
-            lattice, currentEntity + realStart);
+            lattice, realStart, currentEntity);
     Lattice::VertexDescriptor endVertex = lattice::getVertex(
-            lattice, currentEntity + realEnd);
+            lattice, realEnd, currentEntity);
     std::list<Lattice::EdgeDescriptor> startEdges = lattice::getTopEdges(
             lattice, startVertex);
     std::list<Lattice::EdgeDescriptor> endEdges = lattice::getTopEdges(

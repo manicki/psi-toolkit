@@ -2810,7 +2810,8 @@ BOOST_AUTO_TEST_CASE( load_rules_fr ) {
     Lattice::EdgeSequence::Builder blanc_form_builder;
     blanc_form_builder.addEdge(lattice.firstOutEdge(lattice.getVertexForRawCharIndex(0), lexemeMask));
     AnnotationItem ai_blanc_form("adj", "blanc_adj");
-    lattice.getAnnotationItemManager().setValue(ai_blanc_form, "morpho", "sg:m");
+    lattice.getAnnotationItemManager().setValue(ai_blanc_form, "number", "sg:m");
+    lattice.getAnnotationItemManager().setValue(ai_blanc_form, "gender", "m");
     lattice.getAnnotationItemManager().setValue(ai_blanc_form, "discard", "0");
     lattice.addEdge(pre_blanc, post_blanc, ai_blanc_form, form_tag, blanc_form_builder.build());
 
@@ -2825,7 +2826,8 @@ BOOST_AUTO_TEST_CASE( load_rules_fr ) {
     Lattice::EdgeSequence::Builder chat_form_builder;
     chat_form_builder.addEdge(lattice.firstOutEdge(lattice.getVertexForRawCharIndex(6), lexemeMask));
     AnnotationItem ai_chat_form("subst", "chat_subst");
-    lattice.getAnnotationItemManager().setValue(ai_chat_form, "morpho", "sg:m");
+    lattice.getAnnotationItemManager().setValue(ai_chat_form, "number", "sg");
+    lattice.getAnnotationItemManager().setValue(ai_chat_form, "gender", "m");
     lattice.getAnnotationItemManager().setValue(ai_chat_form, "discard", "0");
     lattice.addEdge(pre_chat, post_chat, ai_chat_form, form_tag, chat_form_builder.build());
 
@@ -2938,7 +2940,9 @@ BOOST_AUTO_TEST_CASE( load_rules_pl ) {
     Lattice::EdgeSequence::Builder ala_form_builder;
     ala_form_builder.addEdge(lattice.firstOutEdge(lattice.getVertexForRawCharIndex(0), lexemeMask));
     AnnotationItem ai_ala_form("R", "Ala_R");
-    lattice.getAnnotationItemManager().setValue(ai_ala_form, "morpho", "f:nom:sg");
+    lattice.getAnnotationItemManager().setValue(ai_ala_form, "gender", "f");
+    lattice.getAnnotationItemManager().setValue(ai_ala_form, "case", "nom");
+    lattice.getAnnotationItemManager().setValue(ai_ala_form, "number", "sg");
     lattice.getAnnotationItemManager().setValue(ai_ala_form, "discard", "0");
     lattice.addEdge(pre_ala, post_ala, ai_ala_form, form_tag, ala_form_builder.build());
 
@@ -2953,7 +2957,10 @@ BOOST_AUTO_TEST_CASE( load_rules_pl ) {
     Lattice::EdgeSequence::Builder ma_form_builder;
     ma_form_builder.addEdge(lattice.firstOutEdge(lattice.getVertexForRawCharIndex(4), lexemeMask));
     AnnotationItem ai_ma_form("C", "mieć_C");
-    lattice.getAnnotationItemManager().setValue(ai_ma_form, "morpho", "pres:sg:ter:imperf");
+    lattice.getAnnotationItemManager().setValue(ai_ma_form, "tense", "pres");
+    lattice.getAnnotationItemManager().setValue(ai_ma_form, "number", "sg");
+    lattice.getAnnotationItemManager().setValue(ai_ma_form, "person", "ter");
+    lattice.getAnnotationItemManager().setValue(ai_ma_form, "aspect", "imperf");
     lattice.getAnnotationItemManager().setValue(ai_ma_form, "discard", "0");
     lattice.addEdge(pre_ma, post_ma, ai_ma_form, form_tag, ma_form_builder.build());
 
@@ -2968,7 +2975,9 @@ BOOST_AUTO_TEST_CASE( load_rules_pl ) {
     Lattice::EdgeSequence::Builder kota_form_builder;
     kota_form_builder.addEdge(lattice.firstOutEdge(lattice.getVertexForRawCharIndex(7), lexemeMask));
     AnnotationItem ai_kota_form("R", "kot_R");
-    lattice.getAnnotationItemManager().setValue(ai_kota_form, "morpho", "m2:acc:sg");
+    lattice.getAnnotationItemManager().setValue(ai_kota_form, "gender", "m2");
+    lattice.getAnnotationItemManager().setValue(ai_kota_form, "case", "acc");
+    lattice.getAnnotationItemManager().setValue(ai_kota_form, "number", "sg");
     lattice.getAnnotationItemManager().setValue(ai_kota_form, "discard", "0");
     lattice.addEdge(pre_kota, post_kota, ai_kota_form, form_tag, kota_form_builder.build());
 
@@ -2986,7 +2995,7 @@ BOOST_AUTO_TEST_CASE( load_rules_pl ) {
 //        tagger->setTagset(tagset);
     puddle->setTagset(tagset);
     rule_loader.setTagset(tagset);
-    BOOST_CHECK_EQUAL(tagset->size(), (size_t) 36);
+    BOOST_CHECK_EQUAL(tagset->size(), (size_t) 21);
 //        puddle->setTagger(tagger);
     poleng::bonsai::puddle::RulesPtr rules =
         rule_loader.readFromFile(rulesFilename);//, puddle->getLatticeWrapper());

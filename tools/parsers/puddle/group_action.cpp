@@ -113,13 +113,19 @@ bool GroupAction::apply(Lattice &lattice, int currentEntity,
 //    TransitionInfo *edgeStart = util::getEdge(pg, currentEntity, realStart);
     //Lattice::VertexDescriptor startVertex = lattice::getVertex(
     //        lattice, currentEntity + realStart);
-    Lattice::VertexDescriptor startVertex = currentEntity + realStart; //@todo: rozwiazanie tymczasowe. nie uwzglednia to chyba lewego kontekstu
+    Lattice::VertexDescriptor startVertex = lattice::getVertex(
+            lattice, realStart, currentEntity);
+    //Lattice::VertexDescriptor startVertex = currentEntity + realStart; //@todo: rozwiazanie tymczasowe. nie uwzglednia to chyba lewego kontekstu
     //Lattice::VertexDescriptor headVertex = lattice::getVertex(
     //        lattice, currentEntity + realHead);
-    Lattice::VertexDescriptor headVertex = currentEntity + realHead; //@todo: rozwiazanie tymczasowe. nie uwzglednia to chyba lewego kontekstu
+    Lattice::VertexDescriptor headVertex = lattice::getVertex(
+            lattice, realHead, currentEntity);
+    //Lattice::VertexDescriptor headVertex = currentEntity + realHead; //@todo: rozwiazanie tymczasowe. nie uwzglednia to chyba lewego kontekstu
     //Lattice::VertexDescriptor endVertex = lattice::getVertex(
     //        lattice, currentEntity + realEnd);
-    Lattice::VertexDescriptor endVertex = currentEntity + realEnd; //@todo: rozwiazanie tymczasowe. nie uwzglednia to chyba lewego kontekstu
+    Lattice::VertexDescriptor endVertex = lattice::getVertex(
+            lattice, realEnd, currentEntity);
+    //Lattice::VertexDescriptor endVertex = currentEntity + realEnd; //@todo: rozwiazanie tymczasowe. nie uwzglednia to chyba lewego kontekstu
     //Lattice::EdgeDescriptor edgeStart2 = lattice.firstOutEdge(startVertex,
     //lattice.getLayerTagManager().getMask("lemma"));
     //std::cerr << lattice.getEdgeText(edgeStart2) << " " << lattice.getEdgeSource(edgeStart2) << " " << lattice.getEdgeTarget(edgeStart2) << " " << lattice.getEdgeBeginIndex(edgeStart2) << " " << lattice.getEdgeLength(edgeStart2) << std::endl;

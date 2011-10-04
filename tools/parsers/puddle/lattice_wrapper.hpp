@@ -51,10 +51,10 @@ namespace poleng {
 #if _WITH_BONSAI_PARSEGRAPH
                     ParseGraphPtr convertToBonsaiGraph(Lattice &lattice);
 #endif
-                    Lattice::VertexDescriptor getVertex(Lattice &lattice,
-                            int edgeIndex, LayerTagMask mask);
-                    Lattice::VertexDescriptor getVertex(Lattice &lattice,
-                            int edgeIndex);
+                    Lattice::VertexDescriptor getVertex(Lattice &lattice, //@todo: zmienic nazwe na getStartVertex
+                            int edgeIndex, LayerTagMask mask, int offset = 0);
+                    Lattice::VertexDescriptor getVertex(Lattice &lattice, //@todo: zmienic nazwe na getStartVertex
+                            int edgeIndex, int offset = 0);
                     std::list<Lattice::EdgeDescriptor> getTopEdges(Lattice &lattice,
                             Lattice::VertexDescriptor start, LayerTagMask mask);
                     std::list<Lattice::EdgeDescriptor> getTopEdges(Lattice &lattice,

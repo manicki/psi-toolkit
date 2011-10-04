@@ -459,7 +459,7 @@ namespace poleng {
              * returns start vertex descriptor for the edgeIndex-th edge in the lattice
              */
             Lattice::VertexDescriptor getVertex(Lattice &lattice,
-                    int edgeIndex) {
+                    int edgeIndex, int offset) {
                 LayerTagMask mask = lattice.getLayerTagManager().getMask(
                         createUnion(
                             lattice.getLayerTagManager().
@@ -469,19 +469,20 @@ namespace poleng {
                             createSingletonTagCollection("parse")
                             )
                         );
-                return getVertex(lattice, edgeIndex, mask);
+                return getVertex(lattice, edgeIndex, mask, offset);
             }
 
             Lattice::VertexDescriptor getVertex(Lattice &lattice,
-                    int edgeIndex, LayerTagMask mask) {
-                Lattice::VertexDescriptor vertex = 0;
+                    int edgeIndex, LayerTagMask mask, int offset) {
+                Lattice::VertexDescriptor vertex = offset;
                 int edgePosition = 0;
                 while (edgePosition < edgeIndex) {
                     Lattice::InOutEdgesIterator edgeIt =
                         lattice.outEdges(vertex, mask);
                     if (! edgeIt.hasNext()) {
-                        edgePosition ++;
                         vertex ++;
+                        if (vertex == lattice.getLastVertex())
+                            return lattice.getLastVertex();
                         continue;
                     }
 
