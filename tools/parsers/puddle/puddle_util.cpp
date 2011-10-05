@@ -187,6 +187,40 @@ namespace poleng {
                     return s;
                 }
 
+                bool getGroupActionParams(RuleTokenSizes &ruleTokenSizes,
+                    unsigned int start, unsigned int head, unsigned int end,
+                    int &realStart, int &realHead, int &realEnd) {
+                    unsigned int i = 0;
+                    realStart = 0;
+                    realHead = 0;
+                    realEnd = 0;
+                    while (i < ruleTokenSizes.size()) {
+                        if (i < start)
+                            realStart += ruleTokenSizes[i];
+                        if (i >= start) {
+                            if (i < (head - 1)) {
+                                realHead += ruleTokenSizes[i];
+                            }
+                        }
+                        if (i == (head - 1)) {
+                            if (ruleTokenSizes[i] == 0) {
+                                return false;
+                            }
+                        }
+                        if (i <= end)
+                            realEnd += ruleTokenSizes[i];
+                        else
+                            break;
+                        i ++;
+                    }
+                    realEnd --;
+
+                    if (realStart > realEnd)
+                        return false;
+
+                    return true;
+                }
+
             }
         }
 
