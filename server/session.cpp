@@ -7,7 +7,7 @@ Session::Session(std::string sid)
     : id(sid), createdTime(time(NULL))
 {}
 
-std::string Session::getId() {
+const std::string Session::getId() {
     return id;
 }
 
