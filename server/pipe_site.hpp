@@ -7,7 +7,8 @@ class PipeSite : public TemplateSite
 
 public:
 
-    PipeSite(PsiServer& server);
+    //PipeSite(PsiServer& server);
+    PipeSite(PsiServer& server, const std::string pipe);
     //PipeSite(PsiServer& server, std::string input, std::string pipe);
 
     char * inputText();
@@ -18,8 +19,10 @@ public:
     char * hiddenOptions();
 private:
 
-    static const std::string initialText;
-    static const std::string initialPipe;
+    void registerIncludesAndActions();
+
+    const std::string initialText;
+    const std::string initialPipe;
 
     std::string getOrSetDefaultData(const char* name, std::string initialValue);
 
