@@ -1515,6 +1515,7 @@ RulePtr RuleLoader::parseRuleString(std::string &ruleString, bool &wrong) {
             chars += line;
         }
     }
+
     if (bracketCount > 16) {
         wrong = true;
     }

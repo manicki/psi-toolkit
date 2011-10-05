@@ -60,7 +60,9 @@ bool DeleteAction::apply(Lattice &lattice, int currentEntity,
 //    }
     //Lattice::VertexDescriptor vertex = lattice::getVertex(lattice,
     //        currentEntity + before);
-    Lattice::VertexDescriptor vertex = currentEntity; //@todo: tymczasowo. to nie uwzglednia lewego kontekstu
+    //Lattice::VertexDescriptor vertex = currentEntity; //@todo: tymczasowo. to nie uwzglednia lewego kontekstu
+    Lattice::VertexDescriptor vertex = lattice::getVertex(lattice,
+            before, currentEntity);
     //@todo: czy to sprawdzenie jest nadal konieczne? ta funkcja getVertex nie robi czegos takiego?
     while (lattice::getTopEdges(lattice, vertex).size() == 0) { //if there is no edge at a given position, proceed to the next vertex, as it may be a whitespace
         before ++;
@@ -96,7 +98,8 @@ bool DeleteAction::apply(Lattice &lattice, int currentEntity,
 //            }
 //        }
 //    }
-    int offset = currentEntity + before;
+    //int offset = currentEntity + before;
+    int offset = vertex;
 //    Lattice::VertexDescriptor lastVertex = lattice::getVertex(
 //            lattice, offset + count);
     int vertexI = 0;
@@ -353,7 +356,9 @@ bool DeleteAction::test(Lattice &lattice,
     //Lattice::VertexDescriptor vertex = currentEntity + before;
     //Lattice::VertexDescriptor vertex = lattice::getVertex(lattice,
     //        currentEntity + before);
-    Lattice::VertexDescriptor vertex = currentEntity; //@todo: tymczasowo. to nie uwzglednia lewego kontekstu
+    //Lattice::VertexDescriptor vertex = currentEntity; //@todo: tymczasowo. to nie uwzglednia lewego kontekstu
+    Lattice::VertexDescriptor vertex = lattice::getVertex(lattice,
+            before, currentEntity);
     //if (before > 0) {
     //    vertex += lattice::getVertex(lattice,
     //@todo: czy to sprawdzenie jest nadal konieczne? ta funkcja getVertex nie robi czegos takiego?
@@ -405,7 +410,8 @@ bool DeleteAction::test(Lattice &lattice,
 //            //@todo: i tu break?
 //        }
 //    }
-    int offset = currentEntity + before;
+    //int offset = currentEntity + before;
+    int offset = vertex;
     int vertexI = 0;
     //for (vertex = currentEntity + before;
     //        vertex < (currentEntity + before + count); vertex ++) {

@@ -86,14 +86,14 @@ bool UnifyAction::apply(Lattice &lattice, int currentEntity,
 
             //Lattice::VertexDescriptor vertex = currentEntity + before;
             Lattice::VertexDescriptor vertex = lattice::getVertex(lattice,
-                    currentEntity + before);
+                    before, currentEntity);
             //@todo: czy to sprawdzenie jest nadal konieczne? ta funkcja getVertex nie robi czegos takiego?
             while (lattice::getTopEdges(lattice, vertex).size() == 0) {
                 before ++;
                 vertex = currentEntity + before;
             }
 
-            int offset = currentEntity + before;
+            int offset = vertex;
             int vertexI = 0;
             //for (vertex = currentEntity + before;
             //        vertex < (currentEntity + before + count); vertex ++) {
@@ -170,14 +170,14 @@ bool UnifyAction::apply(Lattice &lattice, int currentEntity,
                 }
                 //Lattice::VertexDescriptor vertex = currentEntity + before;
                 Lattice::VertexDescriptor vertex = lattice::getVertex(lattice,
-                        currentEntity + before);
+                        before, currentEntity);
                 //@todo: czy to sprawdzenie jest nadal konieczne? ta funkcja getVertex nie robi czegos takiego?
                 while (lattice::getTopEdges(lattice, vertex).empty()) {
                     before ++;
                     vertex = currentEntity + before;
                 }
 
-                int offset = currentEntity + before;
+                int offset = vertex;
                 int vertexI = 0;
                 //for (vertex = currentEntity + before;
                 //        vertex < (currentEntity + before + count); vertex ++) {
@@ -733,14 +733,14 @@ bool UnifyAction::test(Lattice &lattice, int currentEntity,
 
             //Lattice::VertexDescriptor vertex = currentEntity + before;
             Lattice::VertexDescriptor vertex = lattice::getVertex(lattice,
-                    currentEntity + before);
+                    before, currentEntity);
             //@todo: czy to sprawdzenie jest nadal konieczne? ta funkcja getVertex nie robi czegos takiego?
             while (lattice::getTopEdges(lattice, vertex).size() == 0) {
                 before ++;
                 vertex = currentEntity + before;
             }
 
-            int offset = currentEntity + before;
+            int offset = vertex;
             int vertexI = 0;
             //for (vertex = currentEntity + before;
             //        vertex < (currentEntity + before + count); vertex ++) {
