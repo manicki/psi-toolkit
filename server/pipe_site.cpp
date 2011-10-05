@@ -9,7 +9,7 @@
 #include <boost/bind.hpp>
 #include <boost/algorithm/string.hpp>
 
-PipeSite::PipeSite(PsiServer& server, const std::string pipe)
+PipeSite::PipeSite(PsiServer& server, const std::string & pipe)
     : TemplateSite(server),
     initialText("Ala ma kota"), initialPipe(pipe.c_str())
 {
