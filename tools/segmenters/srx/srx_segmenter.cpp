@@ -306,7 +306,7 @@ private:
             int originalLength = currentText.size();
             PerlStringPiece fragFound;
 
-            if (RegExp::FindAndConsume(&currentText, *regexp.get(), &fragFound)) {
+            if (PerlRegExp::FindAndConsume(&currentText, *regexp.get(), &fragFound)) {
                 assert (originalLength > currentText.size());
                 int lengthDiff = originalLength - currentText.size();
 

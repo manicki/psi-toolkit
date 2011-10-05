@@ -9,6 +9,9 @@ add_library(server
 )
 
 target_link_libraries(server ${Boost_LIBRARIES} pthread mpfd-parser ${BASE_TARGETS} pcre pcrecpp tools-parsers-puddle)
+if (WITH_RE2)
+    target_link_libraries(server re2)
+endif(WITH_RE2)
 
 set_target_properties(server PROPERTIES LINK_FLAGS "-lpthread")
 

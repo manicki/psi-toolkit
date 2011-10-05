@@ -247,7 +247,7 @@ std::string TPBasicTokenizerRuleSet::getContent(
     std::string target;
     PerlRegExp ruleName(pattern);
 
-    StringPiece bufferPiece(buffer);
+    PerlStringPiece bufferPiece(buffer);
     if (!PerlRegExp::FindAndConsume(&bufferPiece, ruleName, &target))
         throw new TPTokenizerException(msg + context + " at line: " + itoa(filePos));
 

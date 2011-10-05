@@ -3,13 +3,13 @@
 
 #if HAVE_PCRE
 
-const VariadicFunction2<bool, const StringPiece&, const PCREWrapper&, Arg, PCREWrapper::FullMatchN> PCREWrapper::FullMatch;
-const VariadicFunction2<bool, const StringPiece&, const PCREWrapper&, Arg, PCREWrapper::PartialMatchN> PCREWrapper::PartialMatch;
-const VariadicFunction2<bool, StringPiece*, const PCREWrapper&, Arg, PCREWrapper::ConsumeN> PCREWrapper::Consume;
-const VariadicFunction2<bool, StringPiece*, const PCREWrapper&, Arg, PCREWrapper::FindAndConsumeN> PCREWrapper::FindAndConsume;
+const VariadicFunction2<bool, const PerlStringPiece&, const PCREWrapper&, PerlArg, PCREWrapper::FullMatchN> PCREWrapper::FullMatch;
+const VariadicFunction2<bool, const PerlStringPiece&, const PCREWrapper&, PerlArg, PCREWrapper::PartialMatchN> PCREWrapper::PartialMatch;
+const VariadicFunction2<bool, PerlStringPiece*, const PCREWrapper&, PerlArg, PCREWrapper::ConsumeN> PCREWrapper::Consume;
+const VariadicFunction2<bool, PerlStringPiece*, const PCREWrapper&, PerlArg, PCREWrapper::FindAndConsumeN> PCREWrapper::FindAndConsume;
 
-bool PCREWrapper::FullMatchN(const StringPiece& text,
-        const PCREWrapper& re, const Arg* const args[], int argc) {
+bool PCREWrapper::FullMatchN(const PerlStringPiece& text,
+        const PCREWrapper& re, const PerlArg* const args[], int argc) {
     switch (argc) {
         case 0: return ((pcrecpp::RE)re).FullMatch(text); break;
         case 1: return ((pcrecpp::RE)re).FullMatch(text, *args[0]); break;
@@ -53,8 +53,8 @@ bool PCREWrapper::FullMatchN(const StringPiece& text,
     }
 }
 
-bool PCREWrapper::PartialMatchN(const StringPiece& text,
-        const PCREWrapper& re, const Arg* const args[], int argc) {
+bool PCREWrapper::PartialMatchN(const PerlStringPiece& text,
+        const PCREWrapper& re, const PerlArg* const args[], int argc) {
     switch (argc) {
         case 0: return ((pcrecpp::RE)re).PartialMatch(text); break;
         case 1: return ((pcrecpp::RE)re).PartialMatch(text, *args[0]); break;
@@ -98,8 +98,8 @@ bool PCREWrapper::PartialMatchN(const StringPiece& text,
     }
 }
 
-bool PCREWrapper::ConsumeN(StringPiece* input,
-        const PCREWrapper& re, const Arg* const args[], int argc) {
+bool PCREWrapper::ConsumeN(PerlStringPiece* input,
+        const PCREWrapper& re, const PerlArg* const args[], int argc) {
     switch (argc) {
         case 0: return ((pcrecpp::RE)re).Consume(input); break;
         case 1: return ((pcrecpp::RE)re).Consume(input, *args[0]); break;
@@ -143,8 +143,8 @@ bool PCREWrapper::ConsumeN(StringPiece* input,
     }
 }
 
-bool PCREWrapper::FindAndConsumeN(StringPiece* input,
-        const PCREWrapper& re, const Arg* const args[], int argc) {
+bool PCREWrapper::FindAndConsumeN(PerlStringPiece* input,
+        const PCREWrapper& re, const PerlArg* const args[], int argc) {
     switch (argc) {
         case 0: return ((pcrecpp::RE)re).FindAndConsume(input); break;
         case 1: return ((pcrecpp::RE)re).FindAndConsume(input, *args[0]); break;

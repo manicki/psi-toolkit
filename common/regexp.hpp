@@ -22,7 +22,7 @@ class PCREWrapper;
 #if HAVE_PCRE
     typedef PCREWrapper PerlRegExp;
     typedef pcrecpp::StringPiece PerlStringPiece;
-    typedef pcrecpp::Arg Arg;
+    typedef pcrecpp::Arg PerlArg;
 #else
     typedef RE2 PerlRegExp;
     typedef re2::StringPiece PerlStringPiece;
@@ -47,45 +47,45 @@ class PCREWrapper : private pcrecpp::RE {
         PCREWrapper(const char *pattern) :
             pcrecpp::RE(pattern, pcrecpp::UTF8()) {}
 
-        static bool FullMatchN(const StringPiece& text, const PCREWrapper& re,
-                const Arg* const args[], int argc);
+        static bool FullMatchN(const PerlStringPiece& text, const PCREWrapper& re,
+                const PerlArg* const args[], int argc);
         static const VariadicFunction2<
-            bool, const StringPiece&, const PCREWrapper&, Arg,
+            bool, const PerlStringPiece&, const PCREWrapper&, PerlArg,
             PCREWrapper::FullMatchN> FullMatch;
 
-        static bool PartialMatchN(const StringPiece& text, const PCREWrapper& re,
-                const Arg* const args[], int argc);
+        static bool PartialMatchN(const PerlStringPiece& text, const PCREWrapper& re,
+                const PerlArg* const args[], int argc);
         static const VariadicFunction2<
-            bool, const StringPiece&, const PCREWrapper&, Arg,
+            bool, const PerlStringPiece&, const PCREWrapper&, PerlArg,
             PCREWrapper::PartialMatchN> PartialMatch;
 
-        static bool ConsumeN(StringPiece* input, const PCREWrapper& re,
-                const Arg* const args[], int argc);
+        static bool ConsumeN(PerlStringPiece* input, const PCREWrapper& re,
+                const PerlArg* const args[], int argc);
         static const VariadicFunction2<
-            bool, StringPiece*, const PCREWrapper&, Arg,
+            bool, PerlStringPiece*, const PCREWrapper&, PerlArg,
             PCREWrapper::ConsumeN> Consume;
 
-        static bool FindAndConsumeN(StringPiece* input, const PCREWrapper& re,
-                const Arg* const args[], int argc);
+        static bool FindAndConsumeN(PerlStringPiece* input, const PCREWrapper& re,
+                const PerlArg* const args[], int argc);
         static const VariadicFunction2<
-            bool, StringPiece*, const PCREWrapper&, Arg,
+            bool, PerlStringPiece*, const PCREWrapper&, PerlArg,
             PCREWrapper::FindAndConsumeN> FindAndConsume;
 
         static bool Replace(std::string *str,
                 const PCREWrapper& pattern,
-                const StringPiece& rewrite) {
+                const PerlStringPiece& rewrite) {
             return ((pcrecpp::RE)pattern).Replace(rewrite, str);
         }
 
         static int GlobalReplace(std::string *str,
                 const PCREWrapper& pattern,
-                const StringPiece& rewrite) {
+                const PerlStringPiece& rewrite) {
             return ((pcrecpp::RE)pattern).GlobalReplace(rewrite, str);
         }
 
-        static bool Extract(const StringPiece &text,
+        static bool Extract(const PerlStringPiece &text,
                 const PCREWrapper& pattern,
-                const StringPiece &rewrite,
+                const PerlStringPiece &rewrite,
                 std::string *out) {
             return ((pcrecpp::RE)pattern).Extract(rewrite, text, out);
         }

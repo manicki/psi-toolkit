@@ -12,7 +12,9 @@ target_link_libraries(
  pcre
  pcrecpp
 )
-
+if (WITH_RE2)
+    target_link_libraries(test_runner re2)
+endif(WITH_RE2)
 
 add_executable(
  mass-tests
@@ -29,5 +31,8 @@ target_link_libraries(
  pcre
  pcrecpp
 )
+if (WITH_RE2)
+    target_link_libraries(mass-tests re2)
+endif(WITH_RE2)
 
 
