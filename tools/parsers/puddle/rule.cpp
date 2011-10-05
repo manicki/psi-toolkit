@@ -116,7 +116,11 @@ int Rule::matchPattern(std::string &sentenceString,
     try {
         //while ( pattern->Match( sentence_str, start, end,
         //                        RE2::UNANCHORED, matched, num_groups ) ) { // @todo: tu nie bedzie chyba while tylko if, skoro bedzie parametrem odkad szukac, a nie ktore ogolnie dopasowanie ma byc wziete na warsztat
+#if HAVE_RE2
+        while ( RegExp::FindAndConsumeN( &sentence_str, *pattern, matched, num_groups ) ) { // @todo: tu nie bedzie chyba while tylko if, skoro bedzie parametrem odkad szukac, a nie ktore ogolnie dopasowanie ma byc wziete na warsztat
+#else
         if ( RegExp::FindAndConsumeN( &sentence_str, *pattern, matched, num_groups ) ) { // @todo: tu nie bedzie chyba while tylko if, skoro bedzie parametrem odkad szukac, a nie ktore ogolnie dopasowanie ma byc wziete na warsztat
+#endif
             //while (boost::u32regex_search(start, end, matched, *pattern, flags)) {
             //int prefix_len = matchedS[0].begin() - sentence_str.begin();
             //int prefix_len = matchedS[0].begin() - orig_str.begin();
@@ -156,6 +160,7 @@ int Rule::matchPattern(std::string &sentenceString,
                     }
                     if (negPatternMatched) {
                         before += matchedS[0].as_string();
+                        sentence_str.set(suffix.c_str());
                         continue;
                     }
                 }
