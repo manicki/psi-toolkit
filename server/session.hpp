@@ -11,7 +11,7 @@ class Session
 public:
 
     Session(std::string sid);
-    std::string getId();
+    std::string getId() const;
 
     void setData(std::string key, std::string value);
     std::string getData(std::string key);

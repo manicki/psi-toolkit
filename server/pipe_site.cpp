@@ -9,13 +9,14 @@
 #include <boost/bind.hpp>
 #include <boost/algorithm/string.hpp>
 
-const std::string PipeSite::initialText = "Ala ma kota.";
-const std::string PipeSite::initialPipe = "tp-tokenizer --lang pl";
-
-PipeSite::PipeSite(PsiServer& server)
-    : TemplateSite(server)
+PipeSite::PipeSite(PsiServer& server, const std::string pipe)
+    : TemplateSite(server),
+    initialText("Ala ma kota"), initialPipe(pipe.c_str())
 {
+    registerIncludesAndActions();
+}
 
+void PipeSite::registerIncludesAndActions() {
     psiServer_.registerIncludeCode(
         "pipe_site_input_text", boost::bind(&PipeSite::inputText, this));
 

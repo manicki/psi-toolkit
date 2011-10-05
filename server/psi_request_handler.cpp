@@ -47,7 +47,6 @@ void PsiRequestHandler::handle_request(
     } else {
         session = sesMng->newSession();
     }
-    //TODO: dodac sessionID to request lub usunac stamtad to pole
     sesMng->setCurrentSession(session->getId());
 
     //handle request

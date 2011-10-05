@@ -7,7 +7,7 @@ Session::Session(std::string sid)
     : id(sid), createdTime(time(NULL))
 {}
 
-std::string Session::getId() {
+std::string Session::getId() const {
     return id;
 }
 
@@ -30,6 +30,9 @@ bool Session::isData(std::string key) {
     std::map<std::string, std::string>::iterator it = data.find(key);
 
     if (it != data.end()) {
+        if (it->second == "") {
+            return false;
+        }
         return true;
     }
 

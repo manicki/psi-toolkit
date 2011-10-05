@@ -4,6 +4,7 @@
 #include "server_runner.hpp"
 
 #include "config.h"
+#include "logging.hpp"
 
 ServerRunner::ServerRunner(int argc, char * argv[])
     : optionsDescription("PsiServer options"){
@@ -69,10 +70,8 @@ int ServerRunner::run() {
         // register all websites
         IndexSite index(psiServer);
 
-        // FIXME:
-        //std::string initialPipe = annotatorOptions.empty() ?
-        //  DEFAULT_PIPE : annotatorOptionsAsString();
-        PipeSite pipe(psiServer);
+        std::string opts = annotatorOptions.empty() ? DEFAULT_PIPE : annotatorOptionsAsString();
+        PipeSite pipe(psiServer, opts);
 
         // run server
         psiServer.run();
