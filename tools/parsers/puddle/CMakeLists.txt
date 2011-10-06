@@ -6,7 +6,7 @@ if(USE_BONSAI_PARSEGRAPH)
 	)
 endif(USE_BONSAI_PARSEGRAPH)
 
-add_library(tools-parsers-puddle
+add_library(tools-parsers-puddle SHARED
 	puddle.cpp
 	tagset_loader.cpp
 	rule_loader.cpp
@@ -28,7 +28,6 @@ add_library(tools-parsers-puddle
 	lattice_wrapper.cpp
     ${common-bonsai-files}
 )
-target_link_libraries(tools-parsers-puddle ${Boost_LIBRARIES} common)
 
 add_subdirectory(t)
 

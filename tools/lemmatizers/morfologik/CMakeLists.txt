@@ -1,4 +1,4 @@
-add_library(tools-lemmatizers-morfologik
+add_library(tools-lemmatizers-morfologik SHARED
 	morfologik_tags_parser.cpp
 	morfologik.cpp
 )

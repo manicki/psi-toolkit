@@ -1,6 +1,7 @@
-add_library(formats-psi 
+add_library(formats-psi SHARED
 	psi_lattice_reader.cpp
 	psi_lattice_writer.cpp
-	psi_quoter.cpp	
+	psi_quoter.cpp
 )
-target_link_libraries(formats-psi ${Boost_LIBRARIES} common)
+
+

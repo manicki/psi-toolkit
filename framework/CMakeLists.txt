@@ -1,4 +1,4 @@
-add_library(framework
+add_library(framework SHARED
     factories_keeper.cpp
     main_factories_keeper.cpp
     pipe_runner.cpp
