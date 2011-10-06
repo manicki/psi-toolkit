@@ -26,7 +26,7 @@ LatticeWriter* SimpleLatticeWriter::Factory::doCreateLatticeWriter(
     return new SimpleLatticeWriter(
         options.count("linear"),
         options.count("no-alts"),
-        options.count("no-blank"),
+        options.count("with-blank"),
         options["tag"].as<std::string>(),
         options["sep"].as<std::string>(),
         options["alt-sep"].as<std::string>(),
@@ -44,8 +44,8 @@ boost::program_options::options_description SimpleLatticeWriter::Factory::doOpti
             "skips cross-edges")
         ("no-alts",
             "skips alternative edges")
-        ("no-blank",
-            "skips edges with whitespace text")
+        ("with-blank",
+            "does not skip edges with whitespace text")
         ("sep", boost::program_options::value<std::string>()->default_value("\n"),
             "basic tag separator")
         ("spec", boost::program_options::value< std::vector<std::string> >()->multitoken(),
@@ -94,7 +94,7 @@ void SimpleLatticeWriter::Worker::doRun() {
         outputIterator,
         processor_.isLinear(),
         processor_.isNoAlts(),
-        processor_.isNoBlank(),
+        processor_.isWithBlank(),
         processor_.getBasicTag(),
         handledTags
     );

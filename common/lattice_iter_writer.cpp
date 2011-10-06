@@ -22,7 +22,7 @@ void LatticeIterWriter::run() {
             BOOST_FOREACH(std::string tag, tags) {
                 if (
                     basicTag_ == tag &&
-                    (!noBlank_ || boost::algorithm::trim_copy(lattice_.getEdgeText(edge)) != "")
+                    (withBlank_ || !boost::algorithm::trim_copy(lattice_.getEdgeText(edge)).empty())
                 ) {
                     basicTagEdges.push(edge);
                 }
@@ -36,7 +36,7 @@ void LatticeIterWriter::run() {
         outputIterator_.openAlternative();
         while (!basicTagEdges.empty()) {
             Lattice::EdgeDescriptor basicTagEdge = basicTagEdges.front();
-            if (lattice_.getAnnotationText(basicTagEdge) == "") {
+            if (lattice_.getAnnotationText(basicTagEdge).empty()) {
                 outputIterator_.putElement(
                     lattice_.getAnnotationCategory(basicTagEdge)
                 );

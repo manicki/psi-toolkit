@@ -23,7 +23,7 @@ public:
         LatticeWriterOutputIterator& outputIterator,
         bool linear,
         bool noAlts,
-        bool noBlank,
+        bool withBlank,
         std::string basicTag,
         std::vector<std::string> handledTags
     ) :
@@ -31,7 +31,7 @@ public:
         outputIterator_(outputIterator),
         linear_(linear),
         noAlts_(noAlts),
-        noBlank_(noBlank),
+        withBlank_(withBlank),
         basicTag_(basicTag),
         handledTags_(handledTags)
     { }
@@ -44,7 +44,7 @@ private:
     LatticeWriterOutputIterator & outputIterator_;
     bool linear_;
     bool noAlts_;
-    bool noBlank_;
+    bool withBlank_;
     std::string basicTag_;
     std::vector<std::string> handledTags_;
 
