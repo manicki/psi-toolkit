@@ -14,7 +14,7 @@
 /*!
   Lattice iter writer takes a lattice and writes its content to the lattice output iterator.
 */
-class LatticeIterWriter : public Processor {
+class LatticeIterWriter {
 
 public:
 
