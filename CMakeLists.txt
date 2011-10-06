@@ -3,7 +3,8 @@ cmake_minimum_required(VERSION 2.8)
 project(psi-toolkit CXX)
 
 # Finds and includes external libraries
-set(Boost_USE_STATIC_LIBS ON)
+set(Boost_USE_STATIC_LIBS OFF)
+set(Boost_USE_STATIC_RUNTIME OFF)
 find_package(Boost COMPONENTS program_options graph serialization filesystem system thread unit_test_framework prg_exec_monitor REQUIRED)
 
 option(USE_JAVA "Compiling Java components" OFF)

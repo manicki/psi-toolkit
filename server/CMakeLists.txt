@@ -1,4 +1,4 @@
-add_library(server
+add_library(server SHARED
     psi_request_handler.cpp
     psi_server.cpp
     index_site.cpp

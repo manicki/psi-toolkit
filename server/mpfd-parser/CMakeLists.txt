@@ -1,4 +1,4 @@
-add_library(mpfd-parser
+add_library(mpfd-parser SHARED
     Parser.cpp
     Field.cpp
     Exception.cpp

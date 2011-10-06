@@ -1,4 +1,4 @@
-add_library(formats-txt 
+add_library(formats-txt SHARED
 	txt_lattice_reader.cpp
 )
-target_link_libraries(formats-txt common)
+
