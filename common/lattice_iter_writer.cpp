@@ -1,14 +1,6 @@
 #include "lattice_iter_writer.hpp"
 
 void LatticeIterWriter::run() {
-    doRun();
-}
-
-std::string LatticeIterWriter::doInfo() {
-    return "Lattice iter writer";
-}
-
-void LatticeIterWriter::doRun() {
 
     Lattice::VertexIterator vi(lattice_);
     Lattice::VertexDescriptor vd = lattice_.getFirstVertex();

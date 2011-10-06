@@ -36,8 +36,6 @@ public:
         handledTags_(handledTags)
     { }
 
-    virtual ~LatticeIterWriter() { }
-
     void run();
 
 private:
@@ -49,10 +47,6 @@ private:
     bool noBlank_;
     std::string basicTag_;
     std::vector<std::string> handledTags_;
-
-    virtual std::string doInfo();
-
-    void doRun();
 
     bool isHandledTag_(std::string tagName);
 
