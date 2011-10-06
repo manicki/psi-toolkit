@@ -19,6 +19,9 @@ namespace poleng {
                 bool getGroupActionParams(RuleTokenSizes &ruleTokenSizes,
                         unsigned int start, unsigned int head, unsigned int end,
                         int &realStart, int &realHead, int &realEnd);
+                bool getSyntokActionParams(RuleTokenSizes &ruleTokenSizes,
+                        unsigned int start, unsigned int end,
+                        int &realStart, int &realEnd);
 
             }
         }

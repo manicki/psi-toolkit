@@ -719,7 +719,6 @@ namespace poleng {
                             morphIt != morphology.end();
                             ++ morphIt) {
 
-                        //std::string morphology = *morphIt;
                         std::string morphoString = util::getMorphologyString(
                                 *morphIt);
                         size_t delimPos = morphoString.find(":");

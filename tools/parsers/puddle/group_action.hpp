@@ -39,6 +39,9 @@ namespace poleng
 
                     void setVerbose() { verbose = true; }
                 private:
+                    void init(std::string aGroup, unsigned int aStart,
+                            unsigned int aEnd, unsigned int aHead,
+                            std::string aRuleName);
                     std::string group;
                     unsigned int head;
                     unsigned int start, end;

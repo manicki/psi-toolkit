@@ -190,10 +190,10 @@ namespace poleng {
                 bool getGroupActionParams(RuleTokenSizes &ruleTokenSizes,
                     unsigned int start, unsigned int head, unsigned int end,
                     int &realStart, int &realHead, int &realEnd) {
-                    unsigned int i = 0;
                     realStart = 0;
                     realHead = 0;
                     realEnd = 0;
+                    size_t i = 0;
                     while (i < ruleTokenSizes.size()) {
                         if (i < start)
                             realStart += ruleTokenSizes[i];
@@ -218,6 +218,27 @@ namespace poleng {
                     if (realStart > realEnd)
                         return false;
 
+                    return true;
+                }
+
+
+                bool getSyntokActionParams(RuleTokenSizes &ruleTokenSizes,
+                        unsigned int start, unsigned int end,
+                        int &realStart, int &realEnd) {
+                    realStart = 0;
+                    realEnd = 0;
+                    size_t i = 0;
+                    while (i < ruleTokenSizes.size())
+                    {
+                        if (i < start)
+                            realStart += ruleTokenSizes[i];
+                        if (i <= end)
+                            realEnd += ruleTokenSizes[i];
+                        else
+                            break;
+                        i ++;
+                    }
+                    realEnd --;
                     return true;
                 }
 

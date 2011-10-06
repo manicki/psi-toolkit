@@ -16,23 +16,10 @@ namespace bonsai
 GroupAction::GroupAction(std::string aGroup, unsigned int aStart,
         unsigned int aEnd, unsigned int aHead,
         std::string aRuleName) {
-    group = aGroup;
-    start = aStart;
-    end = aEnd;
-    head = aHead;
-    if ((head > (end+1)) || (head <= start))
-    {
-        if (start == end)
-            head = 0;
-        else
-            head = (head % (end+1)) - start;
-    }
-    type = "group";
-    ruleName = aRuleName;
-    verbose = false;
+    init(aGroup, aStart, aEnd, aHead, aRuleName);
 }
 
-GroupAction::~GroupAction() { }
+GroupAction::~GroupAction() { } //@todo: wywalac te destruktory czy nie?
 
 //@todo: zmienic chyba te nazwe currentEntity na cos wlasciwszego
 bool GroupAction::apply(Lattice &lattice, int currentEntity,
@@ -133,6 +120,25 @@ std::string GroupAction::getRuleName() const {
 
 void GroupAction::setRuleName(std::string aRuleName) {
     ruleName = aRuleName;
+}
+
+void GroupAction::init(std::string aGroup, unsigned int aStart,
+        unsigned int aEnd, unsigned int aHead,
+        std::string aRuleName) {
+    group = aGroup;
+    start = aStart;
+    end = aEnd;
+    head = aHead;
+    if ((head > (end+1)) || (head <= start))
+    {
+        if (start == end)
+            head = 0;
+        else
+            head = (head % (end+1)) - start;
+    }
+    type = "group";
+    ruleName = aRuleName;
+    verbose = false;
 }
 
 
