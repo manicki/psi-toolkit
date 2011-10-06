@@ -545,6 +545,10 @@ namespace poleng {
                                 partIt->begin(),
                                 partIt->end()
                                 );
+                        // Lattice::Partition::Iterator lpi(lattice, *partIt);
+                        // while (lpi.hasNext()) {
+                            // nontopEdges.insert(nontopEdges.end(), lpi.next());
+                        // }
                     }
                 }
                 nontopEdges.unique(EdgeUnique());
@@ -572,10 +576,10 @@ namespace poleng {
                             for (std::list<Lattice::EdgeSequence>::iterator seqIt =
                                     ranges.begin(); seqIt != ranges.end(); ++ seqIt) {
                                 Lattice::EdgeSequence::Builder rangeBuilder;
-                                    for (Lattice::EdgeSequence::Iterator rangeIt =
-                                            seqIt->begin(); rangeIt != seqIt->end();
-                                            ++ rangeIt)
-                                        rangeBuilder.addEdge(*rangeIt);
+                                Lattice::EdgeSequence::Iterator rangeIt(lattice, *seqIt);
+                                while (rangeIt.hasNext()) {
+                                    rangeBuilder.addEdge(rangeIt.next());
+                                }
                                 rangeBuilder.addEdge(*edgeIt);
                                 tmpRanges.push_back(rangeBuilder.build());
                             }
@@ -983,10 +987,11 @@ namespace poleng {
                     Lattice::Partition partition =
                         lattice.getEdgePartitions(edge).front();
                     int edgeCount = 0;
-                    for (Lattice::Partition::Iterator edgeIt = partition.begin();
-                            edgeIt != partition.end(); ++ edgeIt) {
+                    Lattice::Partition::Iterator edgeIt(lattice, partition);
+                    while (edgeIt.hasNext()) {
+                        Lattice::EdgeDescriptor ed = edgeIt.next();
                         if (edgeCount == headEdgeIndex) {
-                            return getLexemeEdge(lattice, *edgeIt);
+                            return getLexemeEdge(lattice, ed);
                         }
                         edgeCount ++;
                     }
@@ -1033,10 +1038,11 @@ namespace poleng {
                                     annotationItem, "head") );
                     }
                     int edgeCount = 0;
-                    for (Lattice::Partition::Iterator edgeIt = partition.begin();
-                            edgeIt != partition.end(); ++ edgeIt) {
+                    Lattice::Partition::Iterator edgeIt(lattice, partition);
+                    while (edgeIt.hasNext()) {
+                        Lattice::EdgeDescriptor ed = edgeIt.next();
                         if (edgeCount == headEdgeIndex) {
-                            return getLemmaEdge(lattice, *edgeIt);
+                            return getLemmaEdge(lattice, ed);
                         }
                         edgeCount ++;
                     }
