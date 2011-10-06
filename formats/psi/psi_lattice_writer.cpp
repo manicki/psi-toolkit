@@ -111,13 +111,10 @@ void PsiLatticeWriter::Worker::doRun() {
         std::list<Lattice::Partition> partitions = lattice_.getEdgePartitions(edge);
         bool writeWholeText = false;
         BOOST_FOREACH(Lattice::Partition partition, partitions) {
-            for (
-                Lattice::Partition::Iterator ei = partition.begin();
-                ei != partition.end();
-                ++ei
-            ) {
+            Lattice::Partition::Iterator ei(lattice_, partition);
+            while (ei.hasNext()) {
                 if (
-                    lattice_.getEdgeLayerTags(*ei)
+                    lattice_.getEdgeLayerTags(ei.next())
                         == lattice_.getLayerTagManager().createSingletonTagCollection("symbol")
                 ) {
                     writeWholeText = true;
@@ -192,27 +189,25 @@ void PsiLatticeWriter::Worker::doRun() {
             }
             std::stringstream linkSs;
             partitionBeginning = true;
-            for (
-                Lattice::Partition::Iterator ei = partition.begin();
-                ei != partition.end();
-                ++ei
-            ) {
+            Lattice::Partition::Iterator ei(lattice_, partition);
+            while (ei.hasNext()) {
+                Lattice::EdgeDescriptor ed = ei.next();
                 if (partitionBeginning) {
                     if (
-                        lattice_.isEdgeHidden(*ei)
+                        lattice_.isEdgeHidden(ed)
                     ) {
                         isDefaultPartition = true;
                     }
                     partitionBeginning = false;
                 } else {
                     if (
-                        !lattice_.isEdgeHidden(*ei)
+                        !lattice_.isEdgeHidden(ed)
                     ) {
                         isDefaultPartition = false;
                     }
                     linkSs << "-";
                 }
-                std::map<Lattice::EdgeDescriptor, int>::iterator mi = edgeOrdinalMap.find(*ei);
+                std::map<Lattice::EdgeDescriptor, int>::iterator mi = edgeOrdinalMap.find(ed);
                 if (mi != edgeOrdinalMap.end()) {
                     linkSs << (*mi).second;
                 }
