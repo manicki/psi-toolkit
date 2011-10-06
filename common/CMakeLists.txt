@@ -31,6 +31,7 @@ add_library(common
     processor.cpp
     processor_factory.cpp
     processor_file_fetcher.cpp
+    psi_quoter.cpp
     quoter.cpp
     reader_worker.cpp
     regexp.cpp

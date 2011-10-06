@@ -8,17 +8,19 @@ std::string SimpleLatticeWriter::getFormatName() {
 LatticeWriter* SimpleLatticeWriter::Factory::doCreateLatticeWriter(
     const boost::program_options::variables_map& options
 ) {
+    PsiQuoter quoter;
+
     std::map<std::string, std::string> tagsSeparators;
     if (options.count("spec")) {
         std::vector<std::string> spec = options["spec"].as< std::vector<std::string> >();
         std::vector<std::string>::iterator si = spec.begin();
         while (si != spec.end()) {
-            std::string tag = *si;
+            std::string tag = quoter.unescape(*si);
             ++si;
             if (si == spec.end()) {
                 break;
             }
-            tagsSeparators[tag] = *si;
+            tagsSeparators[tag] = quoter.unescape(*si);
             ++si;
         }
     }
@@ -26,10 +28,10 @@ LatticeWriter* SimpleLatticeWriter::Factory::doCreateLatticeWriter(
     return new SimpleLatticeWriter(
         options.count("linear"),
         options.count("no-alts"),
-        options.count("no-blank"),
-        options["tag"].as<std::string>(),
-        options["sep"].as<std::string>(),
-        options["alt-sep"].as<std::string>(),
+        options.count("with-blank"),
+        quoter.unescape(options["tag"].as<std::string>()),
+        quoter.unescape(options["sep"].as<std::string>()),
+        quoter.unescape(options["alt-sep"].as<std::string>()),
         tagsSeparators
     );
 }
@@ -44,8 +46,8 @@ boost::program_options::options_description SimpleLatticeWriter::Factory::doOpti
             "skips cross-edges")
         ("no-alts",
             "skips alternative edges")
-        ("no-blank",
-            "skips edges with whitespace text")
+        ("with-blank",
+            "does not skip edges with whitespace text")
         ("sep", boost::program_options::value<std::string>()->default_value("\n"),
             "basic tag separator")
         ("spec", boost::program_options::value< std::vector<std::string> >()->multitoken(),
@@ -94,7 +96,7 @@ void SimpleLatticeWriter::Worker::doRun() {
         outputIterator,
         processor_.isLinear(),
         processor_.isNoAlts(),
-        processor_.isNoBlank(),
+        processor_.isWithBlank(),
         processor_.getBasicTag(),
         handledTags
     );

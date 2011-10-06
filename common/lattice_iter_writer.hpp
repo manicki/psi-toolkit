@@ -14,7 +14,7 @@
 /*!
   Lattice iter writer takes a lattice and writes its content to the lattice output iterator.
 */
-class LatticeIterWriter : public Processor {
+class LatticeIterWriter {
 
 public:
 
@@ -23,7 +23,7 @@ public:
         LatticeWriterOutputIterator& outputIterator,
         bool linear,
         bool noAlts,
-        bool noBlank,
+        bool withBlank,
         std::string basicTag,
         std::vector<std::string> handledTags
     ) :
@@ -31,12 +31,10 @@ public:
         outputIterator_(outputIterator),
         linear_(linear),
         noAlts_(noAlts),
-        noBlank_(noBlank),
+        withBlank_(withBlank),
         basicTag_(basicTag),
         handledTags_(handledTags)
     { }
-
-    virtual ~LatticeIterWriter() { }
 
     void run();
 
@@ -46,13 +44,9 @@ private:
     LatticeWriterOutputIterator & outputIterator_;
     bool linear_;
     bool noAlts_;
-    bool noBlank_;
+    bool withBlank_;
     std::string basicTag_;
     std::vector<std::string> handledTags_;
-
-    virtual std::string doInfo();
-
-    void doRun();
 
     bool isHandledTag_(std::string tagName);
 

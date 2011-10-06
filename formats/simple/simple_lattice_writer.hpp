@@ -8,6 +8,7 @@
 #include "lattice_iter_writer.hpp"
 #include "lattice_writer.hpp"
 #include "lattice_writer_factory.hpp"
+#include "psi_quoter.hpp"
 #include "simple_lattice_writer_stream_output_iterator.hpp"
 
 class SimpleLatticeWriter : public LatticeWriter {
@@ -28,7 +29,7 @@ public:
     SimpleLatticeWriter(
         bool linear,
         bool noAlts,
-        bool noBlank,
+        bool withBlank,
         std::string basicTag,
         std::string basicTagSeparator,
         std::string altSeparator,
@@ -36,7 +37,7 @@ public:
     ) :
         linear_(linear),
         noAlts_(noAlts),
-        noBlank_(noBlank),
+        withBlank_(withBlank),
         basicTag_(basicTag),
         basicTagSeparator_(basicTagSeparator),
         altSeparator_(altSeparator),
@@ -45,7 +46,7 @@ public:
 
     bool isLinear() const { return linear_; }
     bool isNoAlts() const { return noAlts_; }
-    bool isNoBlank() const { return noBlank_; }
+    bool isWithBlank() const { return withBlank_; }
     std::string getBasicTag() const { return basicTag_; }
     std::string getBasicTagSeparator() const { return basicTagSeparator_; }
     std::string getAltSeparator() const { return altSeparator_; }
@@ -82,7 +83,7 @@ private:
 
     bool linear_;
     bool noAlts_;
-    bool noBlank_;
+    bool withBlank_;
     std::string basicTag_;
     std::string basicTagSeparator_;
     std::string altSeparator_;
