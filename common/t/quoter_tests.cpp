@@ -1,6 +1,6 @@
 #include "tests.hpp"
 
-#include "../../formats/psi/psi_quoter.hpp"
+#include "../../common/psi_quoter.hpp"
 #include "../../formats/utt/utt_quoter.hpp"
 
 BOOST_AUTO_TEST_SUITE( quoter )

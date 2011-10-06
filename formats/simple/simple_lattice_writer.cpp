@@ -8,17 +8,19 @@ std::string SimpleLatticeWriter::getFormatName() {
 LatticeWriter* SimpleLatticeWriter::Factory::doCreateLatticeWriter(
     const boost::program_options::variables_map& options
 ) {
+    PsiQuoter quoter;
+
     std::map<std::string, std::string> tagsSeparators;
     if (options.count("spec")) {
         std::vector<std::string> spec = options["spec"].as< std::vector<std::string> >();
         std::vector<std::string>::iterator si = spec.begin();
         while (si != spec.end()) {
-            std::string tag = *si;
+            std::string tag = quoter.unescape(*si);
             ++si;
             if (si == spec.end()) {
                 break;
             }
-            tagsSeparators[tag] = *si;
+            tagsSeparators[tag] = quoter.unescape(*si);
             ++si;
         }
     }
@@ -27,9 +29,9 @@ LatticeWriter* SimpleLatticeWriter::Factory::doCreateLatticeWriter(
         options.count("linear"),
         options.count("no-alts"),
         options.count("with-blank"),
-        options["tag"].as<std::string>(),
-        options["sep"].as<std::string>(),
-        options["alt-sep"].as<std::string>(),
+        quoter.unescape(options["tag"].as<std::string>()),
+        quoter.unescape(options["sep"].as<std::string>()),
+        quoter.unescape(options["alt-sep"].as<std::string>()),
         tagsSeparators
     );
 }

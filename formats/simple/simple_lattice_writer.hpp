@@ -8,6 +8,7 @@
 #include "lattice_iter_writer.hpp"
 #include "lattice_writer.hpp"
 #include "lattice_writer_factory.hpp"
+#include "psi_quoter.hpp"
 #include "simple_lattice_writer_stream_output_iterator.hpp"
 
 class SimpleLatticeWriter : public LatticeWriter {
