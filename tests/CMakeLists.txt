@@ -9,6 +9,7 @@ target_link_libraries(
  ${TESTS_TARGETS}
  -Wl,-no-whole-archive
  ${Boost_LIBRARIES}
+ ${BASE_TARGETS}
  pcre
  pcrecpp
 )
