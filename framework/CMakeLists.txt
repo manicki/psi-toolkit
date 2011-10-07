@@ -53,5 +53,5 @@ if(USE_PUDDLE)
 
 endif(USE_PUDDLE)
 
-install(TARGETS psi-pipe DESTINATION "${psi-toolkit_BINARY_DIR}")
+install(TARGETS framework psi-pipe DESTINATION "${psi-toolkit_BINARY_DIR}")
 install(FILES DESTINATION "${psi-toolkit_BINARY_DIR}")

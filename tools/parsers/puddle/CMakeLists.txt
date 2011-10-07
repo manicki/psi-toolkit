@@ -31,3 +31,4 @@ add_library(tools-parsers-puddle SHARED
 
 add_subdirectory(t)
 
+install(TARGETS tools-parsers-puddle DESTINATION "${psi-toolkit_BINARY_DIR}")

@@ -12,3 +12,4 @@ prj/test-results.xml
 prj/valgrind.xml
 prj/valgrindTestResults.xml
 server/t/reports/*
+*.so

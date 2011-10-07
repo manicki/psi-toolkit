@@ -32,3 +32,5 @@ install(FILES DESTINATION "${psi-toolkit_BINARY_DIR}")
 
 add_subdirectory(mpfd-parser)
 add_subdirectory(server)
+
+install(TARGETS server DESTINATION "${psi-toolkit_BINARY_DIR}")

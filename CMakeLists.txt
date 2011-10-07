@@ -2,6 +2,8 @@ cmake_minimum_required(VERSION 2.8)
 
 project(psi-toolkit CXX)
 
+SET(CMAKE_INSTALL_RPATH "${psi-toolkit_BINARY_DIR}")
+
 # Finds and includes external libraries
 set(Boost_USE_STATIC_LIBS OFF)
 set(Boost_USE_STATIC_RUNTIME OFF)
@@ -23,6 +25,8 @@ if(USE_JAVA)
 
     string(REGEX REPLACE "(.*)/libjvm.so" "\\1" LD_LIBPATH ${JAVA_JVM_LIBRARY})
     message(STATUS "You may need to set LD_LIBRARY_PATH=${LD_LIBPATH} to run installed software")
+
+    SET(CMAKE_INSTALL_RPATH "${CMAKE_INSTALL_RPATH}:${LD_LIBPATH}")
 
     include_directories(${JAVA_INCLUDE_PATH})
     include_directories(${JAVA_INCLUDE_PATH}/linux)

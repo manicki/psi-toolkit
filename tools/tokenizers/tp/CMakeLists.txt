@@ -11,3 +11,4 @@ target_link_libraries(
 
 add_subdirectory(t)
 
+install(TARGETS tools-tokenizers-tp DESTINATION "${psi-toolkit_BINARY_DIR}")

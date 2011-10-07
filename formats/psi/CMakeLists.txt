@@ -3,4 +3,5 @@ add_library(formats-psi SHARED
 	psi_lattice_writer.cpp
 )
 
+install(TARGETS formats-psi DESTINATION "${psi-toolkit_BINARY_DIR}")
 

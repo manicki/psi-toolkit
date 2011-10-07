@@ -49,5 +49,5 @@ endif(USE_JAVA)
 
 add_subdirectory(t)
 
-
+install(TARGETS common DESTINATION "${psi-toolkit_BINARY_DIR}")
 
