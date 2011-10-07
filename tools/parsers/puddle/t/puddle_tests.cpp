@@ -2565,10 +2565,6 @@ BOOST_AUTO_TEST_CASE( puddle_syntok ) {
         lattice.getEdgeAnnotationItem(edge)
         );
     avi = av.begin();
-    //BOOST_CHECK_EQUAL((*avi).first, "morpho");
-    //BOOST_CHECK_EQUAL((*avi).second, "");
-    //++avi;
-    //BOOST_CHECK(avi != av.end());
     BOOST_CHECK_EQUAL((*avi).first, "discard");
     BOOST_CHECK_EQUAL((*avi).second, "0");
     ++avi;
@@ -2836,22 +2832,18 @@ BOOST_AUTO_TEST_CASE( load_rules_fr ) {
     std::string rulesFilename = ROOT_DIR "tools/parsers/puddle/data/fr/rules.fr";
     poleng::bonsai::puddle::TagsetLoader tagset_loader;
     poleng::bonsai::puddle::RuleLoader rule_loader;
-//        poleng::bonsai::puddle::TaggerPtr tagger = poleng::bonsai::puddle::TaggerPtr( new poleng::bonsai::puddle::Tagger());
 
     boost::scoped_ptr<poleng::bonsai::puddle::Puddle> puddle(new poleng::bonsai::puddle::Puddle());
 
     poleng::bonsai::puddle::TagsetPtr tagset;
     tagset = tagset_loader.load(tagsetFilename);
-//        tagger->setTagset(tagset);
     puddle->setTagset(tagset);
     rule_loader.setTagset(tagset);
     BOOST_CHECK_EQUAL(tagset->size(), (size_t) 28);
-//        puddle->setTagger(tagger);
     poleng::bonsai::puddle::RulesPtr rules =
-        rule_loader.readFromFile(rulesFilename);//, puddle->getLatticeWrapper());
+        rule_loader.readFromFile(rulesFilename);
     puddle->setRules(rules);
-    //BOOST_CHECK_EQUAL(rules->size(), (size_t) 167);
-    BOOST_CHECK_EQUAL(rules->size(), (size_t) 129);
+    BOOST_CHECK_EQUAL(rules->size(), (size_t) 167);
 
     //parsing
     BOOST_CHECK(puddle->parse(lattice));
@@ -2986,22 +2978,18 @@ BOOST_AUTO_TEST_CASE( load_rules_pl ) {
     std::string rulesFilename = ROOT_DIR "tools/parsers/puddle/data/pl/rules.pl";
     poleng::bonsai::puddle::TagsetLoader tagset_loader;
     poleng::bonsai::puddle::RuleLoader rule_loader;
-//        poleng::bonsai::puddle::TaggerPtr tagger = poleng::bonsai::puddle::TaggerPtr( new poleng::bonsai::puddle::Tagger());
 
     boost::scoped_ptr<poleng::bonsai::puddle::Puddle> puddle(new poleng::bonsai::puddle::Puddle());
 
     poleng::bonsai::puddle::TagsetPtr tagset;
     tagset = tagset_loader.load(tagsetFilename);
-//        tagger->setTagset(tagset);
     puddle->setTagset(tagset);
     rule_loader.setTagset(tagset);
     BOOST_CHECK_EQUAL(tagset->size(), (size_t) 21);
-//        puddle->setTagger(tagger);
     poleng::bonsai::puddle::RulesPtr rules =
-        rule_loader.readFromFile(rulesFilename);//, puddle->getLatticeWrapper());
+        rule_loader.readFromFile(rulesFilename);
     puddle->setRules(rules);
-    //BOOST_CHECK_EQUAL(rules->size(), (size_t) 274);
-    BOOST_CHECK_EQUAL(rules->size(), (size_t) 213);
+    BOOST_CHECK_EQUAL(rules->size(), (size_t) 274);
 
     //parsing
     BOOST_CHECK(puddle->parse(lattice));

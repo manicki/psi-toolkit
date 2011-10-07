@@ -6,28 +6,28 @@
 namespace poleng
 {
 
-namespace bonsai
-{
-    namespace puddle
+    namespace bonsai
     {
-
-        bool Action::test(Lattice&, int,
-                RuleTokenSizes& ) {
-            return true;
-        }
-
-        bool Action::apply(Lattice&, int,
-                RuleTokenSizes& ) {
-            return true;
-        }
-
-        void Action::setType(std::string aType)
+        namespace puddle
         {
-            type = aType;
+
+            bool Action::test(Lattice&, int,
+                    RuleTokenSizes& ) {
+                return true;
+            }
+
+            bool Action::apply(Lattice&, int,
+                    RuleTokenSizes& ) {
+                return true;
+            }
+
+            void Action::setType(std::string aType)
+            {
+                type = aType;
+            }
+
         }
 
     }
-
-}
 
 }

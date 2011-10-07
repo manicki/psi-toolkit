@@ -42,11 +42,11 @@ bool TransformAction::apply(Lattice &lattice, int currentEntity,
 //    TransitionInfo *edge = util::getEdge(pg, currentEntity, before);
 //    edge->setLabel(group);
     Lattice::VertexDescriptor startVertex = lattice::getVertex(
-            lattice, currentEntity + before); //@todo: czy te numerki tu sie kupy trzymaja trzeba sprawdzic
+            lattice, before, currentEntity); //@todo: czy te numerki tu sie kupy trzymaja trzeba sprawdzic
     Lattice::VertexDescriptor headVertex = lattice::getVertex(
-            lattice, currentEntity + before);
+            lattice, before, currentEntity);
     Lattice::VertexDescriptor endVertex = lattice::getVertex(
-            lattice, currentEntity + before);
+            lattice, before, currentEntity);
     std::list<Lattice::EdgeDescriptor> startEdges = lattice::getTopEdges(
             lattice, startVertex);
     std::list<Lattice::EdgeDescriptor> headEdges = lattice::getTopEdges(

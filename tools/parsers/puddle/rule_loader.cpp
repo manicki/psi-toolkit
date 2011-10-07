@@ -91,8 +91,8 @@ std::string RuleLoader::compileNonTokens(std::string &matched) {
     Pattern regSpecial("(^|[ \\(\\)\\|])(sb|se|ns)");
 
     RegExp::GlobalReplace(&matched, regSpecialNeg,
-            "((<<t<[^<>]+<[^<>]+<[^>]+>)|(<<g<[^<>+]<[^<>]+<[^<>]+<[^>]+))");
-    RegExp::GlobalReplace(&matched, regSpecial, "\\1(<<s<[^<>]+<\\2<>)");
+            "((?:<<t<[^<>]+<[^<>]+<[^>]+>)|(?:<<g<[^<>+]<[^<>]+<[^<>]+<[^>]+))");
+    RegExp::GlobalReplace(&matched, regSpecial, "\\1(?:<<s<[^<>]+<\\2<>)");
     RegExp::GlobalReplace(&matched, regWhite, "");
     return matched;
 }
@@ -161,29 +161,38 @@ std::string RuleLoader::compileRulePattern(std::string &matched, int &size,
     }
     if (matched != "")
         compiledMatch += compileNonTokens(matched);
-    //if (compiledMatch[0] != '(' || compiledMatch[compiledMatch.size() - 1] != ')') {
-    //    std::cerr << "DOPISUJE A NAWIASOW MAM: " << bracketCount << std::endl;
-        compiledMatch = "(" + compiledMatch + ")";
-    //}
 
+    //@todo: to ponizej wydzielic do metody
     size_t i = 0;
-    int mindex = bracketCount;
+    int mindex = bracketCount + 1; //as we add brackets covering the whole compiled pattern, the counter must be incremented
     std::string s = compiledMatch;
+    std::string compiledPattern = "";
     int brackets = 0;
     int nonMatching = 0;
     while ( (s != "") && (i < s.length()) ) {
+        compiledPattern += s[i];
         if (s[i] == '(') {
             if ((i > 0) && (s[i - 1] == '\\')) {
                 i ++;
                 continue;
             }
             if ( ((i+1) < s.length()) && (s[i + 1] == '?')) {
-                nonMatching ++;
-                i ++;
-                continue;
+                if ( ((i+2) < s.length()) && (s[i + 2] != 'P')) {
+                    nonMatching ++;
+                    i ++;
+                    continue;
+                }
             }
             if (brackets == 0) {
                 matchedIndices.push_back(mindex);
+            }
+            else {
+                if ( ((i+1) < s.length()) && (s[i + 1] != '?')) {
+                    compiledPattern += "?:";
+                    nonMatching ++;
+                    i ++;
+                    continue;
+                }
             }
             mindex ++;
             brackets ++;
@@ -236,9 +245,12 @@ std::string RuleLoader::compileRulePattern(std::string &matched, int &size,
         }
         i ++;
     }
+        compiledMatch = "(" + compiledMatch + ")";
+        compiledPattern = "(" + compiledPattern + ")";
 
     bracketCount = mindex;
-    return compiledMatch;
+    //return compiledMatch;
+    return compiledPattern;
 }
 
 std::string RuleLoader::getToken(std::string &matched, std::string &before) {
@@ -609,7 +621,7 @@ void RuleLoader::compilePosCondition(std::string &comparisonOperator,
             return;
         }
         posString = boost::join(values, "|");
-        posString = "(" + posString + ")";
+        posString = "(?:" + posString + ")";
     } else {
         if (!tagset->checkPos(value)) {
             std::cerr << "Unknown part of speech: " << value << "." << std::endl;
@@ -658,7 +670,7 @@ void RuleLoader::compileBaseCondition(std::string &comparisonOperator,
     //RegExp::GlobalReplace(&value, regRpar, "\\&#41;");
 
     if (value.find("|") != std::string::npos) {
-        value = "(" + value + ")";
+        value = "(?:" + value + ")";
     }
     addConditionToPatterns(tokenPatterns, value, -1, comparisonOperator);
 }
@@ -800,7 +812,7 @@ std::string RuleLoader::generateTokenPatternsString(TokenPatterns tokenPatterns)
                 partIt != patternIt->parts.end(); ++ partIt) {
             if (partIt->condition != "") {
                 if (morphoPattern != "") {
-                    morphoPattern += "(:[^:<>]+)*";
+                    morphoPattern += "(?::[^:<>]+)*";
                 } else {
                     if (partIt != patternIt->parts.begin()) //if not the first part = not the part of speech
                         morphoPattern = "[^:<>]+";
@@ -838,20 +850,20 @@ std::string RuleLoader::generateTokenPatternsString(TokenPatterns tokenPatterns)
         if (morphoPattern == "")
             morphoPattern = "[^<>]+";
         else
-            morphoPattern += "(:([^:<>]+))*";
+            morphoPattern += "(?::(?:[^:<>]+))*";
         pattern += "<";
         pattern += basePattern;
         pattern += "<";
         pattern += morphoPattern;
         if (patternIt->modifier != "") {
             if (patternIt->modifier == "()")
-                pattern = "(" + pattern + ")";
+                pattern = "(?:" + pattern + ")";
             else if (patternIt->modifier == "*")
-                pattern = "(" + pattern + ")*";
+                pattern = "(?:" + pattern + ")*";
             else if (patternIt->modifier == "+")
-                pattern = "(" + pattern + ")+";
+                pattern = "(?:" + pattern + ")+";
             else if (patternIt->modifier == "?")
-                pattern = "(" + pattern + ")?";
+                pattern = "(?:" + pattern + ")?";
         }
         ss << pattern;
     }
@@ -862,7 +874,8 @@ std::string RuleLoader::generateTokenPatternsString(TokenPatterns tokenPatterns)
         //without the final asterisk, the pattern would only match tokens
         //with single interpretations
         if (result == "(<[^<>]+<[^<>]+)")
-            result += "*";
+        //    result += "*";
+            result = "(?:<[^<>]+<[^<>]+)*";
     }
     return result;
 }
@@ -1515,7 +1528,9 @@ RulePtr RuleLoader::parseRuleString(std::string &ruleString, bool &wrong) {
             chars += line;
         }
     }
+
     if (bracketCount > 16) {
+        std::cerr << "Rule '" << ruleName << "' is to complex. Skipping." << std::endl;
         wrong = true;
     }
     bool repeat = false;

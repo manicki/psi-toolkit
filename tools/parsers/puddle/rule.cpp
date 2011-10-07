@@ -122,8 +122,6 @@ int Rule::matchPattern(std::string &sentenceString,
         if ( RegExp::FindAndConsumeN( &sentence_str, *pattern, matched, num_groups ) ) { // @todo: tu nie bedzie chyba while tylko if, skoro bedzie parametrem odkad szukac, a nie ktore ogolnie dopasowanie ma byc wziete na warsztat
 #endif
             //while (boost::u32regex_search(start, end, matched, *pattern, flags)) {
-            //int prefix_len = matchedS[0].begin() - sentence_str.begin();
-            //int prefix_len = matchedS[0].begin() - orig_str.begin();
             int prefix_len = matchedS[0].data() - orig_str.data();
             int suffix_start = matchedS[0].data() +
                 matchedS[0].size() - orig_str.data();
@@ -147,7 +145,7 @@ int Rule::matchPattern(std::string &sentenceString,
                             namedGroups.begin(); namedGroupIt != namedGroups.end();
                             ++ namedGroupIt) {
                         std::string groupName = namedGroupIt->first;
-                        int groupIndex = namedGroupIt->second;
+                        int groupIndex = namedGroupIt->second - 1;
                         NegativePatterns::iterator negPatternIt =
                             negativePatterns.find(groupName);
                         if (negPatternIt != negativePatterns.end()) {

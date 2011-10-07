@@ -2,9 +2,6 @@
 #define SYNTOKACTION_H__
 
 #include "action.hpp"
-//#include "token.hpp"
-//#include "syntok.hpp"
-
 #include "add_action.hpp"
 
 namespace poleng
@@ -19,25 +16,18 @@ namespace puddle
 class SyntokAction : public Action
 {
     public:
-        //SyntokAction(int aStart, int aEnd, std::vector<int> aTokenIndexes, std::vector<InterpretationPair> aMorphology, std::string aRuleName, std::string uMorphology);
         SyntokAction(int aStart, int aEnd, std::vector<int> aTokenIndices,
                 std::vector<Morphology> aMorphology, std::string aRuleName,
                 std::string uMorphology);
         ~SyntokAction();
-        //bool apply(Entities &entities, Edges &edges, int currentEntity, std::vector<int> matchedTokensSize);
-        //bool apply(ParseGraphPtr pg, Lattice &lattice, int currentEntity,
         bool apply(Lattice &lattice, int currentEntity,
                 RuleTokenSizes &ruleTokenSizes);
-        //bool test(Entities entities, int currentEntity, std::vector<int> matchedTokensSize);
-        //bool test(ParseGraphPtr pg, Lattice &lattice, int currentEntity,
         bool test(Lattice&, int, RuleTokenSizes &ruleTokenSizes);
 
         int getStart() const;
         void setStart(int aStart);
         int getEnd() const;
         void setEnd(int aEnd);
-        //std::vector<InterpretationPair> getMorphology();
-        //void setMorphology(std::vector<InterpretationPair> aMorphology);
         std::vector<Morphology> getMorphology() const;
         void setMorphology(std::vector<Morphology> aMorphology);
         std::vector<int> getTokenIndices() const;
@@ -52,8 +42,15 @@ class SyntokAction : public Action
         void setVerbose() { verbose = true; }
         void setSyntok() { syntok = true; }
     private:
+        void init(int aStart, int aEnd, std::vector<int> aTokenIndices,
+                std::vector<Morphology> aMorphology, std::string aRuleName,
+                std::string uMorphology);
+        std::vector<std::string> generateBaseForms(Lattice &lattice,
+                std::list<Lattice::EdgeSequence> edgeSequences);
+        std::string generateOrth(Lattice &lattice,
+                std::list<Lattice::EdgeSequence> edgeSequences);
+
         std::vector<int> tokenIndices;
-        //std::vector<InterpretationPair> morphology;
         std::vector<Morphology> morphology;
         size_t start, end;
 
@@ -62,9 +59,7 @@ class SyntokAction : public Action
         bool verbose;
         bool syntok;
 
-        std::string morphology_;
-
-//        LatticeWrapperPtr latticeWrapper;
+        std::string morphology_; //@todo: po co to jest?
 };
 
 typedef boost::shared_ptr<SyntokAction> SyntokActionPtr;
