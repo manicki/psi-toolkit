@@ -56,6 +56,7 @@ bool GroupAction::apply(Lattice &lattice, int currentEntity,
         lattice::getEdgesRange(
             lattice, startVertex, endVertex
             );
+    //int headEdgeIndex = realHead - realStart
     lattice::addParseEdges(
             lattice,
             startEdges,
@@ -63,7 +64,7 @@ bool GroupAction::apply(Lattice &lattice, int currentEntity,
             this->group,
             headEdges,
             groupPartitions,
-            head - 1
+            realHead //head - 1
             );
 
     return true;

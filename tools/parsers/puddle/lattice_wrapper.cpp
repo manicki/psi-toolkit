@@ -60,12 +60,6 @@ namespace poleng {
                         std::string base = getBase(lattice, edge);
                         std::string partOfSpeech = getPartOfSpeech(lattice, edge);
                         std::string morphology = getMorphologyString(lattice, edge);
-                        //std::string morphology = partOfSpeech;
-                        //for (std::list< std::pair<std::string, std::string> >::iterator avit =
-                        //        av.begin(); avit != av.end(); avit ++) {
-                        //    morphology += ":" + avit->second;
-                        //    std::cerr << "dodaje: " << avit->second << std::endl;
-                        //}
 
                         std::map<int, SentenceToken>::iterator edgesMapIt =
                             edgesMap.find(start);
@@ -1069,8 +1063,9 @@ namespace poleng {
                                 break;
                             }
                         }
-                        if (lemmaTagFound)
+                        if (lemmaTagFound) {
                             return lemmaEdge;
+                        }
                         else {
                             //@todo: raczej rzucic wyjatek
                             Lattice::EdgeDescriptor emptyEdge;

@@ -318,7 +318,6 @@ std::string RuleMatcher::generateSentenceString(Lattice &lattice, int startVerte
     if (startVertex == 0)
         ss << "<<s<0<0<sb<>";
 
-    //Lattice::VertexDescriptor vertex = lattice.getFirstVertex();
     Lattice::VertexDescriptor vertex = lattice.getVertexForRawCharIndex(startVertex);
     while (vertex < lattice.getLastVertex() ) {
         std::list<Lattice::EdgeDescriptor> edges = lattice::getTopEdges(
