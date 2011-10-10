@@ -19,6 +19,7 @@ public:
     PipeRunner(std::vector<std::string> args);
 
     int run(std::istream&, std::ostream&);
+    int run(const std::string& inputFilePath, const std::string& outputFilePath);
 
 private:
     PipelineSpecification pipelineSpecification_;
@@ -37,7 +38,7 @@ private:
     std::vector<std::string> splitPipeline_(const std::string& pipeline);
 
     static const std::string PIPELINE_SEPARATOR;
-
+    static const std::string PIPELINE_STANDARD_INPUT_OR_OUTPUT_FILE_NAME;
 
     struct PipelineNode {
         ProcessorFactory* factory_;
@@ -102,6 +103,12 @@ private:
         Lattice& lattice,
         std::istream& in, std::ostream& out);
     bool goToNextNode_(PipelineGraph::vertex_descriptor& current);
+
+    std::istream * createInputStreamOrReturnStandardInput(const std::string & path);
+    std::ostream * createOutputStreamOrReturnStandardOutput(const std::string & path);
+
+    void closeStreamWithStandardInputOrOutputCheck(std::ios * stream, const std::string & path);
+    bool isStandardInputOrOutputFileName(const std::string & path);
 };
 
 #endif
