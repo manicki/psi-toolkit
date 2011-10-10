@@ -1,6 +1,7 @@
 #include "pipe_runner.hpp"
 
 #include <iostream>
+#include <sstream>
 #include <list>
 #include <boost/scoped_ptr.hpp>
 #include <boost/scoped_array.hpp>
@@ -315,4 +316,13 @@ void PipeRunner::closeStreamWithStandardInputOrOutputCheck(std::ios * stream, co
 
 bool PipeRunner::isStandardInputOrOutputFileName(const std::string & path) {
     return (path == PIPELINE_STANDARD_INPUT_OR_OUTPUT_FILE_NAME);
+}
+
+std::string PipeRunner::run(const std::string & inputString) {
+    std::istringstream inputStream (inputString, std::istringstream::in);
+    std::ostringstream outputStream;
+
+    run(inputStream, outputStream);
+
+    return outputStream.str();
 }

@@ -20,7 +20,8 @@ public:
 
     int run(std::istream&, std::ostream&);
     int run(const std::string& inputFilePath, const std::string& outputFilePath);
-
+    std::string run(const std::string & inputString);
+    
 private:
     PipelineSpecification pipelineSpecification_;
 
