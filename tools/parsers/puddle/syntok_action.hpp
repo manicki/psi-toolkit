@@ -24,9 +24,9 @@ class SyntokAction : public Action
                 RuleTokenSizes &ruleTokenSizes);
         bool test(Lattice&, int, RuleTokenSizes &ruleTokenSizes);
 
-        int getStart() const;
+//        int getStart() const;
         void setStart(int aStart);
-        int getEnd() const;
+//        int getEnd() const;
         void setEnd(int aEnd);
         std::vector<Morphology> getMorphology() const;
         void setMorphology(std::vector<Morphology> aMorphology);

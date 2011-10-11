@@ -403,18 +403,18 @@ void JoinAction::setHead(int aHead)
     head = aHead; // - 1;
 }
 
-int JoinAction::getStart() const {
-    return start;
-}
+//int JoinAction::getStart() const {
+//    return start;
+//}
 
 void JoinAction::setStart(int aStart)
 {
     start = aStart;
 }
 
-int JoinAction::getEnd() const {
-    return end;
-}
+//int JoinAction::getEnd() const {
+//    return end;
+//}
 
 void JoinAction::setEnd(int aEnd)
 {

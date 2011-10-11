@@ -76,17 +76,17 @@ bool SyntokAction::test(Lattice &, int,
     return false;
 }
 
-int SyntokAction::getStart() const {
-    return start;
-}
+//int SyntokAction::getStart() const {
+//    return start;
+//}
 
 void SyntokAction::setStart(int aStart) {
     start = aStart;
 }
 
-int SyntokAction::getEnd() const {
-    return end;
-}
+//int SyntokAction::getEnd() const {
+//    return end;
+//}
 
 void SyntokAction::setEnd(int aEnd) {
     end = aEnd;

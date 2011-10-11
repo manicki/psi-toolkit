@@ -99,17 +99,17 @@ void GroupAction::setHead(unsigned int aHead) {
     head = aHead;
 }
 
-unsigned int GroupAction::getStart() const {
-    return start;
-}
+//unsigned int GroupAction::getStart() const {
+//    return start;
+//}
 
 void GroupAction::setStart(unsigned int aStart) {
     start = aStart;
 }
 
-unsigned int GroupAction::getEnd() const {
-    return end;
-}
+//unsigned int GroupAction::getEnd() const {
+//    return end;
+//}
 
 void GroupAction::setEnd(unsigned int aEnd) {
     end = aEnd;
