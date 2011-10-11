@@ -58,7 +58,6 @@ namespace poleng {
                         //           ai, "discard") == "1")
                         //    continue; //skip discarded edges
                         std::string base = getBase(lattice, edge);
-                        std::string partOfSpeech = getPartOfSpeech(lattice, edge);
                         std::string morphology = getMorphologyString(lattice, edge);
 
                         std::map<int, SentenceToken>::iterator edgesMapIt =
@@ -178,7 +177,6 @@ namespace poleng {
                         if (isDiscarded(lattice, edge))
                             continue; //skip discarded edges
                         std::string base = getBase(lattice, edge);
-                        std::string partOfSpeech = getPartOfSpeech(lattice, edge);
                         std::string morphology = lattice::getMorphologyString(
                                 lattice, edge);
                         //std::string morpho = lattice.getAnnotationItemManager().getValue(
@@ -638,7 +636,7 @@ namespace poleng {
                             seqIt != groupSequences.end();
                             ++ seqIt) {
                         if (sequenceContainsEdge(lattice, *seqIt, *edgeIt)) {
-                            bool firstPartition = true;
+//                            bool firstPartition = true;
                             Lattice::InOutEdgesIterator outEdgesIt = lattice.outEdges(
                                     startVertex, lattice.getLayerTagManager().getMask(tags));
                             while (outEdgesIt.hasNext()) {
@@ -652,7 +650,7 @@ namespace poleng {
                                     //there is already such an edge. add another partition
                                     //@todo: to tak nie dziala. nowa partition powinno dodawac samo addEdge, ale nie robi tego. na razie jest wiec jedna partition zawsze
 
-                                    firstPartition = false;
+//                                    firstPartition = false;
                                     break;
                                 }
                             }
@@ -717,10 +715,10 @@ namespace poleng {
                                 *morphIt);
                         size_t delimPos = morphoString.find(":");
                         std::string partOfSpeech = morphoString.substr(0, delimPos);
-                        std::string morpho = "";
-                        if ( (delimPos != std::string::npos) &&
-                                (delimPos < morphoString.size()) )
-                            morpho = morphoString.substr(delimPos + 1, std::string::npos);
+//                        std::string morpho = "";
+//                        if ( (delimPos != std::string::npos) &&
+//                                (delimPos < morphoString.size()) )
+//                            morpho = morphoString.substr(delimPos + 1, std::string::npos);
                         std::string lexeme = *baseIt + "_" + partOfSpeech;
 
                         Lattice::EdgeDescriptor lexemeEdge;
@@ -834,11 +832,11 @@ namespace poleng {
                             ++ morphIt) {
                         std::string morphoString = util::getMorphologyString(
                                 *morphIt);
-                        std::string morpho = "";
+//                        std::string morpho = "";
                         size_t delimPos = morphoString.find(":");
                         std::string partOfSpeech = morphoString.substr(0, delimPos);
-                        if (delimPos != std::string::npos)
-                            morpho = morphoString.substr(delimPos + 1, std::string::npos);
+//                        if (delimPos != std::string::npos)
+//                            morpho = morphoString.substr(delimPos + 1, std::string::npos);
                         std::string lexeme = *baseIt + "_" + partOfSpeech;
 
                         Lattice::EdgeDescriptor lexemeEdge;
