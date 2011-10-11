@@ -9,20 +9,6 @@ namespace poleng {
 
         namespace puddle {
 
-            enum DeleteConditionType {
-                //ORTH_CONDITION, - nie ma chyba warunkow delete orth!~ bo bez sensu
-                BASE_CONDITION,
-                MORPHOLOGY_CONDITION
-            };
-
-            class DeleteCondition {
-                public:
-                    DeleteConditionType type;
-                    bool negation;
-                    std::string pattern;
-            };
-            typedef std::vector<DeleteCondition> DeleteConditions;
-
             class DeleteAction : public Action {
                 public:
                     //DeleteAction(std::string aPattern, int aTokenIndex, std::string uPattern);
@@ -47,6 +33,8 @@ namespace poleng {
                     void setVerbose() { verbose = true; }
 
                 private:
+                    void init(DeleteConditions aConditions, int aTokenIndex,
+                            std::string uPattern);
                     //PatternPtr pattern;
                     //std::string patternString;
                     int tokenIndex;
