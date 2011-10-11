@@ -77,7 +77,7 @@ class Puddle : public Annotator {
 //        bool initTagger(std::string filename);
 //        void setStdoutOutput() { this->xmlWriter->setStdoutOutput(); }
         void setFlag(std::string flag);
-        bool getFlag(std::string flag) const;
+//        bool getFlag(std::string flag) const;
         //@todo: parseString, parseTaggedString mogą wrócić, tylko kwestia taggera/lematyzatora pozostaje. sama lattice zen da sie zrobic.
         //@todo: czy parse ma zwracac nowa lattice czy dodawac do wejscioewj to jest juz kwestia do przemyslenia
 //        ParseGraphPtr parseString(std::string line);

@@ -386,18 +386,18 @@ void AttachAction::setHead(int aHead)
     head = aHead; // - 1;
 }
 
-int AttachAction::getStart() const {
-    return start;
-}
+//int AttachAction::getStart() const {
+//    return start;
+//}
 
 void AttachAction::setStart(int aStart)
 {
     start = aStart;
 }
 
-int AttachAction::getEnd() const {
-    return end;
-}
+//int AttachAction::getEnd() const {
+//    return end;
+//}
 
 void AttachAction::setEnd(int aEnd)
 {
