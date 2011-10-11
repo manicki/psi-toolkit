@@ -28,6 +28,9 @@ public:
 
         virtual std::list<std::string> doProvidedLayerTags();
 
+        virtual std::string doGetContinuation(
+            const boost::program_options::variables_map& options) const;
+
         std::map<std::string,std::string> parseMappingOption_(
             const std::string& mappingOption,
             const std::string& lang);

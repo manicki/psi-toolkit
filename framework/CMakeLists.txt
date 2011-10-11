@@ -1,8 +1,13 @@
-add_library(framework
+add_library(framework SHARED
     factories_keeper.cpp
     main_factories_keeper.cpp
     pipe_runner.cpp
 )
+
+target_link_libraries(framework ${Boost_LIBRARIES} pthread mpfd-parser ${BASE_TARGETS} pcre pcrecpp tools-parsers-puddle)
+if (WITH_RE2)
+    target_link_libraries(framework re2)
+endif(WITH_RE2)
 
 foreach(dir ${formats_SUBDIRS})
     include_directories("${psi-toolkit_SOURCE_DIR}/formats/${dir}")
@@ -15,7 +20,7 @@ foreach(dir ${tools_DIRS})
 endforeach(dir)
 
 add_executable(psi-pipe psi-pipe.cpp)
-target_link_libraries(psi-pipe framework ${Boost_LIBRARIES} common formats-psi formats-simple formats-txt formats-utt tools-tokenizers-tp tools-segmenters-srx)
+target_link_libraries(psi-pipe ${Boost_LIBRARIES} framework common)
 
 if(USE_JAVA)
     include_directories("${psi-toolkit_SOURCE_DIR}/tools/lemmatizers/morfologik")
@@ -48,5 +53,5 @@ if(USE_PUDDLE)
 
 endif(USE_PUDDLE)
 
-install(TARGETS psi-pipe DESTINATION "${psi-toolkit_BINARY_DIR}")
+install(TARGETS framework psi-pipe DESTINATION "${psi-toolkit_BINARY_DIR}")
 install(FILES DESTINATION "${psi-toolkit_BINARY_DIR}")

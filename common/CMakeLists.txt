@@ -4,7 +4,7 @@ if(USE_JAVA)
     )
 endif(USE_JAVA)
 
-add_library(common
+add_library(common SHARED
     annotation_item.cpp
     annotation_item_manager.cpp
     annotator.cpp
@@ -42,8 +42,6 @@ add_library(common
     ${common-java-files}
 )
 
-target_link_libraries(common ${Boost_LIBRARIES})
-
 if(USE_JAVA)
     target_link_libraries(common ${JAVA_JVM_LIBRARY})
     add_subdirectory(j)
@@ -51,5 +49,5 @@ endif(USE_JAVA)
 
 add_subdirectory(t)
 
-
+install(TARGETS common DESTINATION "${psi-toolkit_BINARY_DIR}")
 

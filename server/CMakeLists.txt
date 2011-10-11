@@ -1,4 +1,4 @@
-add_library(server
+add_library(server SHARED
     psi_request_handler.cpp
     psi_server.cpp
     index_site.cpp
@@ -32,3 +32,5 @@ install(FILES DESTINATION "${psi-toolkit_BINARY_DIR}")
 
 add_subdirectory(mpfd-parser)
 add_subdirectory(server)
+
+install(TARGETS server DESTINATION "${psi-toolkit_BINARY_DIR}")

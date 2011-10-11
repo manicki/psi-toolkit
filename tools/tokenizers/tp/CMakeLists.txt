@@ -1,4 +1,4 @@
-add_library(tools-tokenizers-tp
+add_library(tools-tokenizers-tp SHARED
 	tp_token_cutter.cpp
 	tp_tokenizer.cpp
         tp_basic_tokenizer_rule_set.cpp
@@ -11,3 +11,4 @@ target_link_libraries(
 
 add_subdirectory(t)
 
+install(TARGETS tools-tokenizers-tp DESTINATION "${psi-toolkit_BINARY_DIR}")

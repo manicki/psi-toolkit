@@ -1,4 +1,5 @@
-add_library(formats-txt 
+add_library(formats-txt SHARED
 	txt_lattice_reader.cpp
 )
-target_link_libraries(formats-txt common)
+
+install(TARGETS formats-txt DESTINATION "${psi-toolkit_BINARY_DIR}")

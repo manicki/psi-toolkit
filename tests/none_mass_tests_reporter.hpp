@@ -27,7 +27,7 @@ public:
     }
 
     virtual void finish() {
-        outStream_ << tests_ << " tests run, " << failures_ << " failures_ " << std::endl;
+        outStream_ << tests_ << " tests run, " << failures_ << " failures " << std::endl;
     }
 };
 

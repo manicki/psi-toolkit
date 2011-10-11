@@ -1,0 +1,21 @@
+Requirements
+============
+
+* cmake
+* Boost library
+* PCRE library
+
+Installation procedure
+======================
+
+Linux
+-----
+
+cd psi-toolkit
+cd prj
+cmake -DUSE_JAVA=OFF .. # ...=ON if morfologik is needed
+make
+make install
+
+running:
+./psi-pipe tp-tokenizer --lang pl

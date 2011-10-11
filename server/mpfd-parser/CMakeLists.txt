@@ -1,4 +1,4 @@
-add_library(mpfd-parser
+add_library(mpfd-parser SHARED
     Parser.cpp
     Field.cpp
     Exception.cpp
@@ -6,3 +6,5 @@ add_library(mpfd-parser
 
 set_target_properties(mpfd-parser PROPERTIES
     COMPILE_FLAGS "-I${psi-toolkit_SOURCE_DIR}/server/mpdf-parser")
+
+install(TARGETS mpfd-parser DESTINATION "${psi-toolkit_BINARY_DIR}")

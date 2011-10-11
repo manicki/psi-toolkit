@@ -63,6 +63,12 @@ std::list<std::string> TpTokenizer::Factory::doProvidedLayerTags() {
     return layerTags;
 }
 
+std::string TpTokenizer::Factory::doGetContinuation(
+    const boost::program_options::variables_map& /* options */) const {
+
+    return "simple-writer";
+}
+
 std::map<std::string,std::string> TpTokenizer::Factory::parseMappingOption_(
     const std::string& mappingOption,
     const std::string& lang) {

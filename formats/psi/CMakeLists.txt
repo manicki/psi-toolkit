@@ -1,5 +1,7 @@
-add_library(formats-psi
-    psi_lattice_reader.cpp
-    psi_lattice_writer.cpp
+add_library(formats-psi SHARED
+	psi_lattice_reader.cpp
+	psi_lattice_writer.cpp
 )
-target_link_libraries(formats-psi ${Boost_LIBRARIES} common)
+
+install(TARGETS formats-psi DESTINATION "${psi-toolkit_BINARY_DIR}")
+
