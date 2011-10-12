@@ -1,0 +1,5 @@
+$ echo 'Prof. Nowak ma kota' | psi-pipe tp-tokenizer --lang pl 2> /dev/null
+Prof.
+Nowak
+ma
+kota
