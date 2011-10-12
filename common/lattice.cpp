@@ -704,7 +704,7 @@ Lattice::EdgeDescriptor Lattice::EdgeSequence::Iterator::next() {
     if (ei_ == edgeSequence_.links.end()) {
         throw NoEdgeException("EdgeSequence::Iterator has no next edges.");
     }
-    return *ei_;
+    return *(ei_++);
 }
 
 Lattice::EdgeDescriptor Lattice::EdgeSequence::firstEdge() const {
