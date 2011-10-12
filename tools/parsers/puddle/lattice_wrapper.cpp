@@ -1246,11 +1246,12 @@ namespace poleng {
                 Lattice::VertexDescriptor startVertex =
                     lattice.getEdgeBeginIndex(edge);
                 AnnotationItem annotationItem = lattice.getEdgeAnnotationItem(edge);
-                for (Lattice::EdgeSequence::Iterator edgeIt = sequence.begin();
-                        edgeIt != sequence.end(); ++ edgeIt) {
-                    if (lattice.getEdgeBeginIndex(*edgeIt) == startVertex) {
+                Lattice::EdgeSequence::Iterator edgeIt(lattice, sequence);
+                while (edgeIt.hasNext()) {
+                    Lattice::EdgeDescriptor ed = edgeIt.next();
+                    if (lattice.getEdgeBeginIndex(ed) == startVertex) {
                         if (areAnnotationItemsEqual(lattice, annotationItem,
-                                    lattice.getEdgeAnnotationItem(*edgeIt))) {
+                                    lattice.getEdgeAnnotationItem(ed))) {
                             return true;
                         }
                         return false;
