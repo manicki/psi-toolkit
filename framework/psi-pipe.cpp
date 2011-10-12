@@ -6,7 +6,18 @@ int main(int argc, char* argv[]) {
         exit(1);
     }
 
-    PipeRunner pipeRunner(argc, argv);
+    int exit_code = 1;
 
-    return pipeRunner.run(std::cin, std::cout);
+    try {
+        PipeRunner pipeRunner(argc, argv);
+        exit_code = pipeRunner.run(std::cin, std::cout);
+    }
+    catch(std::exception& ex) {
+        std::cerr << ex.what() << std::endl
+                  << "ABORTED!" << std::endl;
+
+        return 1;
+    }
+
+    return exit_code;
 }

@@ -8,10 +8,16 @@ void FactoriesKeeper::takeProcessorFactory(ProcessorFactory* processorFactory) {
     nameToFactoryMap_[processorFactory->getName()] = boost::shared_ptr<ProcessorFactory>(processorFactory);
 }
 
-
 ProcessorFactory& FactoriesKeeper::getProcessorFactory(std::string processorName) {
-    return *nameToFactoryMap_[processorName];
+    if (nameToFactoryMap_.count(processorName))
+        return *nameToFactoryMap_[processorName];
+
+    throw UnknownProcessorException(processorName);
 }
 
+FactoriesKeeper::UnknownProcessorException::UnknownProcessorException(
+    const std::string& processorName)
+    :Exception(std::string("unknown processor `") + processorName + "`") {
+}
 
 
