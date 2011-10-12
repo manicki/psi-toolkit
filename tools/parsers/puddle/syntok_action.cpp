@@ -174,9 +174,6 @@ std::string SyntokAction::generateOrth(Lattice &lattice,
     Lattice::EdgeSequence::Iterator edgeIt(lattice, edgeSequences.front());
     while (edgeIt.hasNext()) {
         Lattice::EdgeDescriptor ed = edgeIt.next();
-    // for (Lattice::EdgeSequence::Iterator edgeIt = edgeSequences.front().begin();
-            // edgeIt != edgeSequences.front().end();
-            // ++ edgeIt) {
         if (index != lattice.getEdgeBeginIndex(ed)) {
             concatenatedOrth += " ";
             index ++;

@@ -100,7 +100,6 @@ public:
 
     class EdgeSequence {
     public:
-        // typedef std::vector<EdgeDescriptor>::const_iterator Iterator;
         class Iterator {
         public:
             Iterator(const Lattice & lattice, const EdgeSequence & edgeSequence);
