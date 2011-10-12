@@ -146,21 +146,21 @@ std::vector<std::string> SyntokAction::generateBaseForms(Lattice &lattice,
             ++ sequenceIt) {
         std::string baseForm = "";
         int index = lattice.getEdgeBeginIndex(sequenceIt->firstEdge());
-        for (Lattice::EdgeSequence::Iterator edgeIt = sequenceIt->begin();
-                edgeIt != sequenceIt->end();
-                ++ edgeIt) {
-            AnnotationItem ai = lattice.getEdgeAnnotationItem(*edgeIt);
-            if (lattice::isDiscarded(lattice, *edgeIt))
+        Lattice::EdgeSequence::Iterator edgeIt(lattice, *sequenceIt);
+        while (edgeIt.hasNext()) {
+            Lattice::EdgeDescriptor ed = edgeIt.next();
+            AnnotationItem ai = lattice.getEdgeAnnotationItem(ed);
+            if (lattice::isDiscarded(lattice, ed))
                 continue;
 
-            std::string base = lattice::getBase(lattice, *edgeIt);
+            std::string base = lattice::getBase(lattice, ed);
 
-            if (index != lattice.getEdgeBeginIndex(*edgeIt)) {
+            if (index != lattice.getEdgeBeginIndex(ed)) {
                 baseForm += " ";
                 index ++;
             }
             baseForm += base;
-            index += lattice.getEdgeLength(*edgeIt);
+            index += lattice.getEdgeLength(ed);
         }
         baseForms.push_back(baseForm);
     }
@@ -171,15 +171,18 @@ std::string SyntokAction::generateOrth(Lattice &lattice,
         std::list<Lattice::EdgeSequence> edgeSequences) {
     std::string concatenatedOrth = "";
     int index = lattice.getEdgeBeginIndex(edgeSequences.front().firstEdge());
-    for (Lattice::EdgeSequence::Iterator edgeIt = edgeSequences.front().begin();
-            edgeIt != edgeSequences.front().end();
-            ++ edgeIt) {
-        if (index != lattice.getEdgeBeginIndex(*edgeIt)) {
+    Lattice::EdgeSequence::Iterator edgeIt(lattice, edgeSequences.front());
+    while (edgeIt.hasNext()) {
+        Lattice::EdgeDescriptor ed = edgeIt.next();
+    // for (Lattice::EdgeSequence::Iterator edgeIt = edgeSequences.front().begin();
+            // edgeIt != edgeSequences.front().end();
+            // ++ edgeIt) {
+        if (index != lattice.getEdgeBeginIndex(ed)) {
             concatenatedOrth += " ";
             index ++;
         }
-        concatenatedOrth += lattice.getEdgeText(*edgeIt);
-        index += lattice.getEdgeLength(*edgeIt);
+        concatenatedOrth += lattice.getEdgeText(ed);
+        index += lattice.getEdgeLength(ed);
     }
     return concatenatedOrth;
 }
