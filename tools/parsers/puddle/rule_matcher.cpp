@@ -30,6 +30,7 @@ void RuleMatcher::applyRules(std::string &sentenceString,
 
     while (ir != rules->end()) {
         //int currentMatch = 0;
+        sentenceString = generateSentenceString(lattice);
         int currentEntity;
         std::string before = "";
         std::string after = "";

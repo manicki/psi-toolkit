@@ -22,6 +22,8 @@ namespace poleng {
                 bool getSyntokActionParams(RuleTokenSizes &ruleTokenSizes,
                         unsigned int start, unsigned int end,
                         int &realStart, int &realEnd);
+                int getDeleteActionParams(RuleTokenSizes &ruleTokenSizes,
+                        int tokenIndex);
 
             }
         }

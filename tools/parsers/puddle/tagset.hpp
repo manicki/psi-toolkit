@@ -37,9 +37,9 @@ class Tagset
         Tagset(std::string &filename);
         ~Tagset();
         bool checkMorphology(std::string &morphology);
-        int getNumberOfAttributes();
+        int getNumberOfAttributes() const;
         int getAttributeIndex(std::string &attribute);
-        size_t size();
+        size_t size() const;
         std::string getAttributeAtIndex(std::string &pos, int index);
         std::vector<std::string> getAttributeValues(std::string &attribute);
 

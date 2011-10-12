@@ -21,6 +21,20 @@ namespace poleng {
             typedef RegExp Pattern;
             typedef boost::shared_ptr<Pattern> PatternPtr;
 
+            enum DeleteConditionType {
+                //ORTH_CONDITION, - nie ma chyba warunkow delete orth!~ bo bez sensu
+                BASE_CONDITION,
+                MORPHOLOGY_CONDITION
+            };
+
+            class DeleteCondition {
+                public:
+                    DeleteConditionType type;
+                    bool negation;
+                    std::string pattern;
+            };
+            typedef std::vector<DeleteCondition> DeleteConditions;
+
             typedef std::map<std::string, std::string> Morphology;
 
             typedef utf8::iterator<std::string::iterator> utf8iterator; //@todo: zmienic to na utf8::unchecked::iterator w wersji "produkcyjnej"? gdzie bedzie wowczas sprawdzenie poprawnosci utf8 wejsciowego?

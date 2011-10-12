@@ -175,11 +175,11 @@ bool Tagset::checkMorphology(std::string &morphology) {
         return false;
 }
 
-int Tagset::getNumberOfAttributes() {
+int Tagset::getNumberOfAttributes() const {
     return attrList.size();
 }
 
-size_t Tagset::size() {
+size_t Tagset::size() const {
     return partsOfSpeech.size();
 }
 
@@ -456,7 +456,6 @@ std::map<std::string, std::string> Tagset::getAttributes(
     std::vector<std::string> valuesVector;
     boost::split(valuesVector, morphologyString, boost::is_any_of(attrSeparator));
 
-    std::string base = "";
     std::string pos = "";
     int attribute_start = 0;
     std::vector<std::string> attributes;

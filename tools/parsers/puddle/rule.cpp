@@ -260,7 +260,6 @@ int Rule::countEntities(std::string matched) {
     int p = 0;
 
     StringPiece tmpMatched = matched;
-    std::string str;
     while ( RegExp::FindAndConsumeN( &tmpMatched, "^<<[tsg]<\\d+<\\d+[^>]+>", 0, 0) ) {
         p ++;
     }

@@ -28,9 +28,9 @@ namespace poleng
                     unsigned int getHead() const;
                     void setGroup(std::string aGroup);
                     void setHead(unsigned int aHead);
-                    unsigned int getStart() const;
+//                    unsigned int getStart() const;
                     void setStart(unsigned int aStart);
-                    unsigned int getEnd() const;
+//                    unsigned int getEnd() const;
                     void setEnd(unsigned int aEnd);
                     std::string getRuleName() const;
                     void setRuleName(std::string aRuleName);

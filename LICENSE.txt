@@ -1,0 +1,9 @@
+psi-toolkit is available under GPL, some parts (libraries generated in
+common/, formats/, tools/) are also available under LGPL.
+
+The following libraries were incorporated into psi-toolkit:
+
+* MPFD Parser by Grigory D Gorelov (GPL) - http://grigory.info/MPFDParser/
+* UTF8-CPP (specific licence, see utf8/utf8.h) -
+  http://utfcpp.sourceforge.net/
+

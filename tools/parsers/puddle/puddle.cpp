@@ -506,21 +506,21 @@ void Puddle::setFlag (std::string flag)
     }
 }
 
-bool Puddle::getFlag (std::string flag) const {
-    if (flag == "syntok")
-        return syntok;
-    else if (flag == "verbose")
-        return verbose;
-    else if (flag == "no-repeat")
-        return norepeats;
-    else if (flag == "ambig")
-        return disamb;
-    else
-    {
-        std::cerr << "Unknown flag: " << flag << "." << std::endl;
-        return false;
-    }
-}
+//bool Puddle::getFlag (std::string flag) const {
+//    if (flag == "syntok")
+//        return syntok;
+//    else if (flag == "verbose")
+//        return verbose;
+//    else if (flag == "no-repeat")
+//        return norepeats;
+//    else if (flag == "ambig")
+//        return disamb;
+//    else
+//    {
+//        std::cerr << "Unknown flag: " << flag << "." << std::endl;
+//        return false;
+//    }
+//}
 
 
 }
