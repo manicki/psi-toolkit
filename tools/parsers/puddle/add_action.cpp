@@ -90,24 +90,25 @@ bool AddAction::apply(Lattice &lattice, int currentEntity,
             lattice, startVertex, endVertex);
     for (std::list<Lattice::EdgeSequence>::iterator sequenceIt = edgeSequences.begin();
             sequenceIt != edgeSequences.end(); ++ sequenceIt) {
-        for (Lattice::EdgeSequence::Iterator edgeIt = sequenceIt->begin();
-                edgeIt != sequenceIt->end(); ++ edgeIt) {
-            AnnotationItem ai = lattice.getEdgeAnnotationItem(*edgeIt);
+        Lattice::EdgeSequence::Iterator edgeIt(lattice, *sequenceIt);
+        while (edgeIt.hasNext()) {
+            Lattice::EdgeDescriptor ed = edgeIt.next();
+            AnnotationItem ai = lattice.getEdgeAnnotationItem(ed);
             //if (lattice.getAnnotationItemManager().getValue(ai, "discard") == "1")
-            if (lattice::isDiscarded(lattice, *edgeIt))
+            if (lattice::isDiscarded(lattice, ed))
                 continue; //skip discarded interpretations
             if (! allBaseForms) {
                 std::vector<std::string> baseForms;
                 baseForms.push_back(base);
-                lattice::addNewVariantEdges(lattice, *edgeIt,
+                lattice::addNewVariantEdges(lattice, ed,
                         baseForms, interpretations);
             } else {
                 std::vector<std::string> baseForms;
 //                std::string baseForm = lattice.getAnnotationItemManager().
 //                    getValue(ai, "base");
-                std::string baseForm = lattice::getBase(lattice, *edgeIt);
+                std::string baseForm = lattice::getBase(lattice, ed);
                 baseForms.push_back(baseForm);
-                lattice::addNewVariantEdges(lattice, *edgeIt,
+                lattice::addNewVariantEdges(lattice, ed,
                         baseForms, interpretations);
             }
         }
@@ -397,37 +398,38 @@ bool AddAction::test(Lattice &lattice, int currentEntity,
             lattice, startVertex, endVertex);
     for (std::list<Lattice::EdgeSequence>::iterator sequenceIt = edgeSequences.begin();
             sequenceIt != edgeSequences.end(); ++ sequenceIt) {
-    for (Lattice::EdgeSequence::Iterator edgeIt = sequenceIt->begin();
-            edgeIt != sequenceIt->end(); ++ edgeIt) {
-        AnnotationItem ai = lattice.getEdgeAnnotationItem(*edgeIt);
-        //if (lattice.getAnnotationItemManager().getValue(ai, "discard") == "1")
-        if (lattice::isDiscarded(lattice, *edgeIt))
-            continue; //skip discarded interpretations
-        std::string edgeBase = lattice::getBase(lattice, *edgeIt);
-        if (! allBaseForms) {
-            //if (lattice.getAnnotationItemManager().getValue(ai, "base") !=
-            //        base)
-            if (edgeBase != base)
-                continue; //take the next variant
-        }
-        bool interpretationFound = false;
-        for (std::vector<Morphology>::iterator morph_it =
-                interpretations.begin();
-                morph_it != interpretations.end();
-                ++ morph_it) {
-            //if (lattice.getAnnotationItemManager().getValue(ai, "base") ==
-            //        *morph_it) {
-            //if (edgeBase == *morph_it) {
-            if (edgeBase == morph_it->begin()->second) { //@todo: poprawic to na porownanie z napisem zrobionym z mapy. swoja droga, ten warunek to ma sens?
-                interpretationFound = true;
+        Lattice::EdgeSequence::Iterator edgeIt(lattice, *sequenceIt);
+        while (edgeIt.hasNext()) {
+            Lattice::EdgeDescriptor ed = edgeIt.next();
+            AnnotationItem ai = lattice.getEdgeAnnotationItem(ed);
+            //if (lattice.getAnnotationItemManager().getValue(ai, "discard") == "1")
+            if (lattice::isDiscarded(lattice, ed))
+                continue; //skip discarded interpretations
+            std::string edgeBase = lattice::getBase(lattice, ed);
+            if (! allBaseForms) {
+                //if (lattice.getAnnotationItemManager().getValue(ai, "base") !=
+                //        base)
+                if (edgeBase != base)
+                    continue; //take the next variant
+            }
+            bool interpretationFound = false;
+            for (std::vector<Morphology>::iterator morph_it =
+                    interpretations.begin();
+                    morph_it != interpretations.end();
+                    ++ morph_it) {
+                //if (lattice.getAnnotationItemManager().getValue(ai, "base") ==
+                //        *morph_it) {
+                //if (edgeBase == *morph_it) {
+                if (edgeBase == morph_it->begin()->second) { //@todo: poprawic to na porownanie z napisem zrobionym z mapy. swoja droga, ten warunek to ma sens?
+                    interpretationFound = true;
+                    break;
+                }
+            }
+            if (interpretationFound) { //if the interpration in the token found, finish testing and do not add the interpration again
+                ret = false;
                 break;
             }
         }
-        if (interpretationFound) { //if the interpration in the token found, finish testing and do not add the interpration again
-            ret = false;
-            break;
-        }
-    }
     }
 
     //old version below
