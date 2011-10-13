@@ -7,7 +7,12 @@ make install
 ./tests/mass-tests .. --xml mass-tests-results.xml
 
 cd ..
+
+# Warning: requires following perl packages:
+# TAP::Formatter::JUnit
+# TAP::Harness
 ./tests/perl-test-runner.sh
+
 cd prj
 
 PATH=".:${PATH}" PERL5LIB="../../cltu:${PERL5LIB}" perl ../../cltu/cltu.pl ../framework/t/general.ush --log cltu.log
