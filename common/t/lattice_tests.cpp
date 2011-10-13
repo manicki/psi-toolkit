@@ -19,7 +19,12 @@ BOOST_AUTO_TEST_CASE( lattice_simple ) {
     Lattice::EdgesSortedBySourceIterator ei
         = lattice.edgesSortedBySource(lattice.getLayerTagManager().anyTag());
     BOOST_CHECK(ei.hasNext());
-    BOOST_CHECK_EQUAL(lattice.getAnnotationCategory(ei.next()), "'A");
+    Lattice::EdgeDescriptor firstEdge = ei.next();
+    BOOST_CHECK_EQUAL(
+        lattice.getEdgeBeginIndex(firstEdge),
+        lattice.getVertexRawCharIndex(lattice.getFirstVertex())
+    );
+    BOOST_CHECK_EQUAL(lattice.getAnnotationCategory(firstEdge), "'A");
     BOOST_CHECK(ei.hasNext());
     BOOST_CHECK_EQUAL(lattice.getAnnotationCategory(ei.next()), "'l");
     BOOST_CHECK(ei.hasNext());
@@ -39,7 +44,12 @@ BOOST_AUTO_TEST_CASE( lattice_simple ) {
     BOOST_CHECK(ei.hasNext());
     BOOST_CHECK_EQUAL(lattice.getAnnotationCategory(ei.next()), "'t");
     BOOST_CHECK(ei.hasNext());
-    BOOST_CHECK_EQUAL(lattice.getAnnotationCategory(ei.next()), "'a");
+    Lattice::EdgeDescriptor lastEdge = ei.next();
+    BOOST_CHECK_EQUAL(
+        lattice.getEdgeEndIndex(lastEdge),
+        lattice.getVertexRawCharIndex(lattice.getLastVertex())
+    );
+    BOOST_CHECK_EQUAL(lattice.getAnnotationCategory(lastEdge), "'a");
     BOOST_CHECK(!ei.hasNext());
 
     Lattice::VertexDescriptor pre_ala = lattice.getFirstVertex();

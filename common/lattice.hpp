@@ -501,9 +501,10 @@ private:
 
     void runCutterOnEdge_(Cutter& cutter, EdgeDescriptor edge, LayerTagMask mask);
 
-    EdgeSequence cutSequenceByTextLength_(const EdgeSequence& partition,
-                                          EdgeSequence::Iterator& sequenceIterator,
-                                          int length);
+    EdgeSequence cutSequenceByTextLength_(
+        EdgeSequence::Iterator& sequenceIterator,
+        int length
+    );
 
     struct HashFun {
         HASH_WRAPPER_EXTRA_STUFF
