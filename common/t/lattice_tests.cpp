@@ -186,7 +186,7 @@ BOOST_AUTO_TEST_CASE( get_path ) {
     Lattice::InOutEdgesIterator iter = lattice.outEdges(vertex, symbolMask);
     BOOST_CHECK(!iter.hasNext());
 
-    BOOST_CHECK_EQUAL(sequence.size(), 11U);
+    BOOST_CHECK_EQUAL(sequence.size(lattice), 11U);
 }
 
 BOOST_AUTO_TEST_CASE( cutter ) {

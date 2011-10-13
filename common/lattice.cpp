@@ -61,7 +61,7 @@ Lattice::VertexDescriptor Lattice::addLooseVertex() {
     return -nLooseVertices_;
 }
 
-Lattice::VertexDescriptor Lattice::getVertexForRawCharIndex(int ix) {
+Lattice::VertexDescriptor Lattice::getVertexForRawCharIndex(int ix) const {
     if (ix < 0) {
         throw NoVertexException("Raw char index below zero is incorrect.");
     }
@@ -465,7 +465,7 @@ const std::string Lattice::getEdgeText(EdgeDescriptor edge) const {
     return allText_.substr(getEdgeBeginIndex(edge), getEdgeLength(edge));
 }
 
-const std::string Lattice::getSequenceText(const EdgeSequence& sequence) const {
+std::string Lattice::getSequenceText(const EdgeSequence& sequence) {
     std::string r;
     EdgeSequence::Iterator esi(*this, sequence);
     while (esi.hasNext()) {
@@ -474,7 +474,7 @@ const std::string Lattice::getSequenceText(const EdgeSequence& sequence) const {
     return r;
 }
 
-const std::string Lattice::getPartitionText(const Partition& partition) const {
+std::string Lattice::getPartitionText(const Partition& partition) {
     return getSequenceText(partition.getSequence());
 }
 
@@ -673,39 +673,77 @@ Lattice::EdgeSequence::EdgeSequence() {
 }
 
 Lattice::EdgeSequence::Iterator::Iterator(
-    const Lattice & lattice,
+    Lattice & lattice,
     const EdgeSequence & edgeSequence
 ) :
     lattice_(lattice),
     edgeSequence_(edgeSequence),
-    ei_(edgeSequence.links.begin())
+    ei_(edgeSequence.links.begin()),
+    si_(edgeSequence.begin)
 { }
 
 bool Lattice::EdgeSequence::Iterator::hasNext() {
-    return ei_ != edgeSequence_.links.end();
+    if (edgeSequence_.links.empty()) {
+        return si_ < edgeSequence_.end;
+    } else {
+        return ei_ != edgeSequence_.links.end();
+    }
 }
 
 Lattice::EdgeDescriptor Lattice::EdgeSequence::Iterator::next() {
-    if (ei_ == edgeSequence_.links.end()) {
-        throw NoEdgeException("EdgeSequence::Iterator has no next edges.");
+    if (edgeSequence_.links.empty()) {
+        if (si_ >= edgeSequence_.end) {
+            throw NoEdgeException("EdgeSequence::Iterator has no next edges.");
+        }
+        int currentSymbol = si_;
+        si_ += lattice_.symbolLength_(si_);
+        return lattice_.firstOutEdge(
+            lattice_.getVertexForRawCharIndex(currentSymbol),
+            lattice_.getLayerTagManager().getMask("symbol")
+        );
+    } else {
+        if (ei_ == edgeSequence_.links.end()) {
+            throw NoEdgeException("EdgeSequence::Iterator has no next edges.");
+        }
+        return *(ei_++);
     }
-    return *(ei_++);
 }
 
-Lattice::EdgeDescriptor Lattice::EdgeSequence::firstEdge() const {
-    return links.front();
+Lattice::EdgeDescriptor Lattice::EdgeSequence::firstEdge(Lattice & lattice) const {
+    if (links.empty()) {
+        return lattice.firstOutEdge(
+            lattice.getVertexForRawCharIndex(begin),
+            lattice.getLayerTagManager().getMask("symbol")
+        );
+    } else {
+        return links.front();
+    }
 }
 
-Lattice::EdgeDescriptor Lattice::EdgeSequence::lastEdge() const {
-    return links.back();
+Lattice::EdgeDescriptor Lattice::EdgeSequence::lastEdge(Lattice & lattice) const {
+    if (links.empty()) {
+        return lattice.firstInEdge(
+            lattice.getVertexForRawCharIndex(end),
+            lattice.getLayerTagManager().getMask("symbol")
+        );
+    } else {
+        return links.back();
+    }
 }
 
 bool Lattice::EdgeSequence::empty() const {
-    return links.empty();
+    return links.empty() && begin >= end;
 }
 
-size_t Lattice::EdgeSequence::size() const {
-    return links.size();
+size_t Lattice::EdgeSequence::size(Lattice & lattice) const {
+    if (links.empty()) {
+        return utf8::distance(
+            lattice.getAllText().begin() + begin,
+            lattice.getAllText().begin() + end
+        );
+    } else {
+        return links.size();
+    }
 }
 
 Lattice::EdgeSequence::Builder& Lattice::EdgeSequence::Builder::addEdge(EdgeDescriptor edge) {
@@ -737,37 +775,17 @@ Lattice::Partition::Partition(LayerTagCollection aTagList,
     sequence_(aSequence), tagList_(aTagList), score_(aScore), ruleId_(aRuleId) {
 }
 
-size_t Lattice::Partition::size() const {
-    return sequence_.size();
-}
-
-
-Lattice::EdgeDescriptor Lattice::Partition::firstEdge() const {
-    return sequence_.firstEdge();
-}
-
-Lattice::EdgeDescriptor Lattice::Partition::lastEdge() const {
-    return sequence_.lastEdge();
-}
 
 const Lattice::EdgeSequence& Lattice::Partition::getSequence() const {
     return sequence_;
 }
 
-Lattice::VertexDescriptor Lattice::firstSequenceVertex_(const EdgeSequence& sequence) const {
-    return getEdgeSource(sequence.firstEdge());
+Lattice::VertexDescriptor Lattice::firstSequenceVertex_(const EdgeSequence& sequence) {
+    return getEdgeSource(sequence.firstEdge(*this));
 }
 
-Lattice::VertexDescriptor Lattice::lastSequenceVertex_(const EdgeSequence& sequence) const {
-    return getEdgeTarget(sequence.lastEdge());
-}
-
-Lattice::VertexDescriptor Lattice::firstPartitionVertex_(const Partition& partition) const {
-    return firstSequenceVertex_(partition.getSequence());
-}
-
-Lattice::VertexDescriptor Lattice::lastPartitionVertex_(const Partition& partition) const {
-    return lastSequenceVertex_(partition.getSequence());
+Lattice::VertexDescriptor Lattice::lastSequenceVertex_(const EdgeSequence& sequence) {
+    return getEdgeTarget(sequence.lastEdge(*this));
 }
 
 void Lattice::runCutterOnEdge_(Cutter& cutter, EdgeDescriptor edge, LayerTagMask mask) {
