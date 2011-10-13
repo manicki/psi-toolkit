@@ -1,6 +1,7 @@
 #include "pipe_runner.hpp"
 
 #include <iostream>
+#include <sstream>
 #include <list>
 #include <boost/scoped_ptr.hpp>
 #include <boost/scoped_array.hpp>
@@ -249,4 +250,79 @@ std::vector<std::string> PipeRunner::splitPipeline_(const std::string& pipeline)
     // the first element should be the name of the program
     boost::split(strs, pipeline, boost::is_any_of(" "));
     return strs;
+}
+
+const std::string PipeRunner::PIPELINE_STANDARD_INPUT_OR_OUTPUT_FILE_NAME = "-";
+
+int PipeRunner::run(const std::string& inputFilePath, const std::string& outputFilePath) {
+
+    int resultStatus;
+
+    std::istream * inputStream =
+        createInputStreamOrReturnStandardInput(inputFilePath);
+    if (!inputStream) {
+        return 1;
+    }
+
+    std::ostream * outputStream =
+        createOutputStreamOrReturnStandardOutput(outputFilePath);
+    if (!outputStream) {
+        return 1;
+    }
+
+    resultStatus = run(*inputStream, *outputStream);
+
+    closeStreamWithStandardInputOrOutputCheck(inputStream, inputFilePath);
+    closeStreamWithStandardInputOrOutputCheck(outputStream, outputFilePath);
+
+    return resultStatus;
+}
+
+std::istream * PipeRunner::createInputStreamOrReturnStandardInput(const std::string & path) {
+    if (isStandardInputOrOutputFileName(path)) {
+        return &(std::cin);
+    } else {
+        std::ifstream * fileStream = new std::ifstream();
+        fileStream->open(path.c_str());
+        if (fileStream->is_open()) {
+            return fileStream;
+        } else {
+            return NULL;
+        }
+    }
+}
+
+std::ostream * PipeRunner::createOutputStreamOrReturnStandardOutput(const std::string & path) {
+    if (isStandardInputOrOutputFileName(path)) {
+        return &(std::cout);
+    } else {
+        std::ofstream * fileStream = new std::ofstream();
+        fileStream->open(path.c_str());
+        if (fileStream->is_open()) {
+            return fileStream;
+        } else {
+            return NULL;
+        }
+    }
+}
+
+
+void PipeRunner::closeStreamWithStandardInputOrOutputCheck(std::ios * stream, const std::string & path) {
+    if (!isStandardInputOrOutputFileName(path)) {
+        delete stream;
+    }
+}
+
+
+bool PipeRunner::isStandardInputOrOutputFileName(const std::string & path) {
+    return (path == PIPELINE_STANDARD_INPUT_OR_OUTPUT_FILE_NAME);
+}
+
+std::string PipeRunner::run(const std::string & inputString) {
+    std::istringstream inputStream (inputString, std::istringstream::in);
+    std::ostringstream outputStream;
+
+    run(inputStream, outputStream);
+
+    return outputStream.str();
 }

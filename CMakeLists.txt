@@ -95,7 +95,7 @@ endif(USE_PUDDLE)
 
 set(TARGETS ${BASE_TARGETS} psi-pipe)
 
-set(DIRS common formats tools framework utf8 server)
+set(DIRS common formats tools framework utf8 server bindings)
 foreach(dir ${DIRS})
     include_directories("${psi-toolkit_SOURCE_DIR}/${dir}")
     link_directories("${psi-toolkit_BINARY_DIR}/${dir}")
