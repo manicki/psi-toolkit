@@ -33,64 +33,6 @@ bool DeleteAction::apply(Lattice &lattice, int currentEntity,
     }
 
     lattice::deleteEdges(lattice, vertex, count, conditions);
-    //int offset = currentEntity + before;
-//    int offset = vertex;
-//    int vertexI = 0;
-//    while (vertexI < count) {
-//        vertex = lattice::getVertex(lattice, offset + vertexI);
-//    //for (vertex = lattice::getVertex(lattice, currentEntity + before);
-//    //        vertex < (currentEntity + before + count); vertex ++) {
-//        std::list<Lattice::EdgeDescriptor> edges =
-//            lattice::getTopEdges(lattice, vertex);
-//        for (std::list<Lattice::EdgeDescriptor>::iterator edgeIt = edges.begin();
-//                edgeIt != edges.end(); ++ edgeIt) {
-//            AnnotationItem annotationItem = lattice.getEdgeAnnotationItem(*edgeIt);
-//            if (lattice::isDiscarded(lattice, *edgeIt))
-//                continue; //skip discarded edges
-//
-//            for (DeleteConditions::iterator cond_it = conditions.begin();
-//                    cond_it != conditions.end(); ++ cond_it) {
-//                if (cond_it->type == BASE_CONDITION) {
-//                    std::string tokenBase = lattice::getBase(lattice, *edgeIt);
-//                    //std::string tokenBase = lattice.getAnnotationItemManager().
-//                    //    getValue(annotationItem, "base");
-//                    if (cond_it->negation) {
-//                        //if (RE2::FullMatch(tokenBase, cond_it->pattern)) {
-//                        if (RegExp::FullMatch(tokenBase, cond_it->pattern)) {
-//                            lattice.getAnnotationItemManager().setValue(
-//                                    annotationItem, "discard", "1");
-//                            //@todo: to nie wplywa na krate, bo nie zmienia tego w krawedzi naprawde
-//                        }
-//                    } else {
-//                        //if (!RE2::FullMatch(tokenBase, cond_it->pattern)) {
-//                        if (!RegExp::FullMatch(tokenBase, cond_it->pattern)) {
-//                            lattice.getAnnotationItemManager().setValue(
-//                                    annotationItem, "discard", "1");
-//                            //@todo: to nie wplywa na krate, bo nie zmienia tego w krawedzi naprawde
-//                        }
-//                    }
-//                } else if (cond_it->type == MORPHOLOGY_CONDITION) {
-////                    std::string tokenMorphology = lattice.getAnnotationItemManager().
-////                        getValue(annotationItem, "morpho");
-//                    //std::string tokenMorphology =
-//                    //    lattice::getPartOfSpeech(lattice, *edgeIt);
-//                    //std::string morpho = lattice.getAnnotationItemManager().
-//                    //    getValue(annotationItem, "morpho");
-//                    //if (morpho != "")
-//                    //    tokenMorphology += ":" + morpho;
-//                    std::string tokenMorphology = lattice::getMorphologyString(
-//                            lattice, *edgeIt);
-//                    //if (!RE2::FullMatch(tokenMorphology, cond_it->pattern)) {
-//                    if (!RegExp::FullMatch(tokenMorphology, cond_it->pattern)) {
-//                        lattice.getAnnotationItemManager().setValue(
-//                                annotationItem, "discard", "1");
-//                        //@todo: to nie wplywa na krate, bo nie zmienia tego w krawedzi naprawde
-//                    }
-//                }
-//            }
-//        }
-//        vertexI ++;
-//    }
 
     return true;
 }
@@ -101,8 +43,8 @@ bool DeleteAction::test(Lattice &lattice,
 
     int count = ruleTokenSizes[tokenIndex - 1];
     if (count == 0) {
-        if (verbose)
-            std::cerr << "Nothing matched to " << tokenIndex << " in delete ...." << std::endl;
+//        if (verbose)
+//            std::cerr << "Nothing matched to " << tokenIndex << " in delete ...." << std::endl;
         return true;
     }
     int before = 0;
@@ -117,20 +59,53 @@ bool DeleteAction::test(Lattice &lattice,
     //Lattice::VertexDescriptor vertex = currentEntity; //@todo: tymczasowo. to nie uwzglednia lewego kontekstu
     Lattice::VertexDescriptor vertex = lattice::getVertex(lattice,
             before, currentEntity);
-    //if (before > 0) {
-    //    vertex += lattice::getVertex(lattice,
     //@todo: czy to sprawdzenie jest nadal konieczne? ta funkcja getVertex nie robi czegos takiego?
     while (lattice::getTopEdges(lattice, vertex).size() == 0) { //if there is no edge at a given position, proceed to the next vertex, as it may be a whitespace
         before ++;
         vertex = currentEntity + before;
     }
+    bool foundToDelete = foundEdgesToDelete(lattice, vertex, count);
 
+    //@todo: ten warunek to tak ma byc? w ogole ten test musi byc taki zlozony?
+    if (foundToDelete) {
+        ret = true;
+    } else {
+        ret = true;
+    }
+
+    return ret;
+}
+
+DeleteConditions DeleteAction::getConditions() const {
+    return conditions;
+}
+
+int DeleteAction::getTokenIndex() const {
+    return tokenIndex;
+}
+
+void DeleteAction::setTokenIndex(int aTokenIndex) {
+    tokenIndex = aTokenIndex;
+}
+
+std::string DeleteAction::getUPattern() const {
+    return pattern_;
+}
+
+void DeleteAction::init(DeleteConditions aConditions, int aTokenIndex,
+                    std::string uPattern) {
+    tokenIndex = aTokenIndex;
+    pattern_ = uPattern;
+    conditions = aConditions;
+    verbose = false;
+    type = "delete";
+}
+
+bool DeleteAction::foundEdgesToDelete(Lattice &lattice,
+        Lattice::VertexDescriptor vertex, int count) {
     bool foundToDelete = false;
-    //int offset = currentEntity + before;
     int offset = vertex;
     int vertexI = 0;
-    //for (vertex = currentEntity + before;
-    //        vertex < (currentEntity + before + count); vertex ++) {
     while (vertexI < count) {
         vertex = lattice::getVertex(lattice, offset + vertexI);
         std::list<Lattice::EdgeDescriptor> edges =
@@ -179,40 +154,9 @@ bool DeleteAction::test(Lattice &lattice,
         }
         vertexI ++;
     }
-
-    if (foundToDelete) {
-        ret = true;
-    } else {
-        ret = true;
-    }
-
-    return ret;
+    return foundToDelete;
 }
 
-DeleteConditions DeleteAction::getConditions() const {
-    return conditions;
-}
-
-int DeleteAction::getTokenIndex() const {
-    return tokenIndex;
-}
-
-void DeleteAction::setTokenIndex(int aTokenIndex) {
-    tokenIndex = aTokenIndex;
-}
-
-std::string DeleteAction::getUPattern() const {
-    return pattern_;
-}
-
-void DeleteAction::init(DeleteConditions aConditions, int aTokenIndex,
-                    std::string uPattern) {
-    tokenIndex = aTokenIndex;
-    pattern_ = uPattern;
-    conditions = aConditions;
-    verbose = false;
-    type = "delete";
-}
 
 }
 

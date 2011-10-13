@@ -11,19 +11,12 @@ namespace poleng {
 
             class DeleteAction : public Action {
                 public:
-                    //DeleteAction(std::string aPattern, int aTokenIndex, std::string uPattern);
                     DeleteAction(DeleteConditions aConditions, int aTokenIndex,
                             std::string uPattern);
-                    //bool apply(Entities &entities, Edges &edges, int currentEntity, std::vector<int> matchedTokensSize);
-                    //bool apply(ParseGraphPtr pg, Lattice &lattice,
                     bool apply(Lattice &lattice, int currentEntity,
                             RuleTokenSizes &ruleTokenSizes);
-                    //bool test(Entities entities, int currentEntity, std::vector<int> matchedTokensSize);
-                    //bool test(ParseGraphPtr pg, Lattice &lattice,
                     bool test(Lattice &lattice, int currentEntity,
                             RuleTokenSizes &ruleTokenSizes);
-                    //void setPattern(std::string aPattern);
-                    //std::string getPattern();
                     std::string getUPattern() const;
                     int getTokenIndex() const;
                     void setTokenIndex(int aTokenIndex);
@@ -35,15 +28,13 @@ namespace poleng {
                 private:
                     void init(DeleteConditions aConditions, int aTokenIndex,
                             std::string uPattern);
-                    //PatternPtr pattern;
-                    //std::string patternString;
+                    bool foundEdgesToDelete(Lattice &lattice,
+                            Lattice::VertexDescriptor vertex, int count);
                     int tokenIndex;
-                    //bool nothingToDelete;
                     std::string type;
                     bool verbose;
                     std::string pattern_;
                     DeleteConditions conditions;
-//                    LatticeWrapperPtr latticeWrapper;
             };
 
             typedef boost::shared_ptr<DeleteAction> DeleteActionPtr;

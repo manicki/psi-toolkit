@@ -24,6 +24,8 @@ namespace poleng {
                         int &realStart, int &realEnd);
                 int getDeleteActionParams(RuleTokenSizes &ruleTokenSizes,
                         int tokenIndex);
+                int getAddActionParams(RuleTokenSizes &ruleTokenSizes,
+                        int tokenIndex);
 
             }
         }
