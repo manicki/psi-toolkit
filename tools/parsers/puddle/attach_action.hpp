@@ -2,9 +2,6 @@
 #define ATTACHACTION_H__
 
 #include "action.hpp"
-//#include "group.hpp"
-//#include "token.hpp"
-//#include "syntok.hpp"
 
 namespace poleng
 {
@@ -18,9 +15,11 @@ namespace puddle
 class AttachAction : public Action
 {
     public:
-        AttachAction(std::string aGroup, int aStart, int aEnd, int aHead, std::string aRuleName);
+        AttachAction(std::string aGroup, int aStart, int aEnd, int aHead,
+                std::string aRuleName);
         ~AttachAction();
-        bool apply(Lattice &lattice, int currentEntity, RuleTokenSizes &ruleTokenSizes);
+        bool apply(Lattice &lattice, int currentEntity,
+                RuleTokenSizes &ruleTokenSizes);
         bool test(Lattice &lattice, int, RuleTokenSizes &ruleTokenSizes);
         std::string getGroup() const;
         int getHead() const;
@@ -37,6 +36,8 @@ class AttachAction : public Action
 
         void setVerbose() { verbose = true; }
     private:
+        void init(std::string aGroup, int aStart, int aEnd, int aHead,
+                std::string aRuleName);
         std::string group;
         size_t head;
         size_t start, end;

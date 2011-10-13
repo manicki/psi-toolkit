@@ -113,10 +113,6 @@ public:
 
         EdgeSequence();
 
-        std::vector<EdgeDescriptor>::const_iterator begin() const { return links.begin(); }
-
-        std::vector<EdgeDescriptor>::const_iterator end () const { return links.begin(); }
-
         EdgeDescriptor firstEdge() const;
 
         EdgeDescriptor lastEdge() const;
@@ -137,6 +133,8 @@ public:
 
     private:
         std::vector<EdgeDescriptor> links;
+        std::string symbols;
+
         EdgeSequence(const std::vector<EdgeDescriptor>& aLinks);
     };
 
@@ -161,10 +159,6 @@ public:
         size_t size() const;
 
         typedef EdgeSequence::Iterator Iterator;
-
-        std::vector<EdgeDescriptor>::const_iterator begin() const { return sequence_.begin(); }
-
-        std::vector<EdgeDescriptor>::const_iterator end() const { return sequence_.end(); }
 
         EdgeDescriptor firstEdge() const;
 

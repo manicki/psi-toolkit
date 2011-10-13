@@ -252,6 +252,17 @@ namespace poleng {
                     return before;
                 }
 
+                int getAddActionParams(RuleTokenSizes &ruleTokenSizes,
+                        int tokenIndex) {
+                    int before = 0;
+                    int i = 0;
+                    while (i < (tokenIndex - 1)) {
+                        before += ruleTokenSizes[i];
+                        i ++;
+                    }
+                    return before;
+                }
+
             }
         }
 
