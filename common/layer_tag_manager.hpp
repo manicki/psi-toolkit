@@ -45,7 +45,7 @@ public:
     /**
      * returns a layer tag mask that matches any tag
      */
-    LayerTagMask anyTag() {
+    LayerTagMask anyTag() const {
         return LayerTagMask(true);
     }
 
