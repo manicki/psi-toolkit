@@ -109,7 +109,7 @@ private:
     std::ostream * createOutputStreamOrReturnStandardOutput(const std::string & path);
 
     void closeStreamWithStandardInputOrOutputCheck(std::ios * stream, const std::string & path);
-    bool isStandardInputOrOutputFileName(const std::string & path);
+    bool isStandardInputOrOutputFileName(const std::string & path) const;
 };
 
 #endif
