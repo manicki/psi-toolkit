@@ -11,5 +11,6 @@ prj/tests
 prj/test-results.xml
 prj/valgrind.xml
 prj/valgrindTestResults.xml
+prj/cltu.log
 server/t/reports/*
 *.so

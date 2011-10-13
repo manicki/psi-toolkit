@@ -91,6 +91,9 @@ namespace poleng {
                     void removeParseEdges(Lattice &lattice,
                             Lattice::VertexDescriptor start,
                             Lattice::VertexDescriptor end);
+                    void deleteEdges(Lattice &lattice,
+                            Lattice::VertexDescriptor vertex, int count,
+                            DeleteConditions conditions);
                     std::string getBase(Lattice &lattice,
                             Lattice::EdgeDescriptor edge);
                     std::string getPartOfSpeech(Lattice &lattice,
@@ -122,6 +125,9 @@ namespace poleng {
                             LayerTagMask mask,
                             std::string category, std::string text);
                     bool isDiscarded(Lattice &lattice,
+                            Lattice::EdgeDescriptor edge);
+                    bool sequenceContainsEdge(Lattice &lattice,
+                            Lattice::EdgeSequence sequence,
                             Lattice::EdgeDescriptor edge);
 
                     bool areAnnotationItemsEqual(Lattice &lattice,

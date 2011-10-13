@@ -467,12 +467,9 @@ const std::string Lattice::getEdgeText(EdgeDescriptor edge) const {
 
 const std::string Lattice::getSequenceText(const EdgeSequence& sequence) const {
     std::string r;
-    for (
-        EdgeSequence::Iterator it = sequence.begin();
-        it != sequence.end();
-        ++it
-    ) {
-        r += getEdgeText(*it);
+    EdgeSequence::Iterator esi(*this, sequence);
+    while (esi.hasNext()) {
+        r += getEdgeText(esi.next());
     }
     return r;
 }
@@ -675,12 +672,24 @@ const LayerTagCollection& Lattice::getSymbolTag_() const {
 Lattice::EdgeSequence::EdgeSequence() {
 }
 
-Lattice::EdgeSequence::Iterator Lattice::EdgeSequence::begin() const {
-    return links.begin();
+Lattice::EdgeSequence::Iterator::Iterator(
+    const Lattice & lattice,
+    const EdgeSequence & edgeSequence
+) :
+    lattice_(lattice),
+    edgeSequence_(edgeSequence),
+    ei_(edgeSequence.links.begin())
+{ }
+
+bool Lattice::EdgeSequence::Iterator::hasNext() {
+    return ei_ != edgeSequence_.links.end();
 }
 
-Lattice::EdgeSequence::Iterator Lattice::EdgeSequence::end() const {
-    return links.end();
+Lattice::EdgeDescriptor Lattice::EdgeSequence::Iterator::next() {
+    if (ei_ == edgeSequence_.links.end()) {
+        throw NoEdgeException("EdgeSequence::Iterator has no next edges.");
+    }
+    return *(ei_++);
 }
 
 Lattice::EdgeDescriptor Lattice::EdgeSequence::firstEdge() const {
@@ -728,15 +737,6 @@ size_t Lattice::Partition::size() const {
 }
 
 
-Lattice::Partition::Iterator Lattice::Partition::begin() const {
-    return sequence_.begin();
-}
-
-Lattice::Partition::Iterator Lattice::Partition::end() const {
-    return sequence_.end();
-}
-
-
 Lattice::EdgeDescriptor Lattice::Partition::firstEdge() const {
     return sequence_.firstEdge();
 }
@@ -777,7 +777,8 @@ void Lattice::runCutterOnEdge_(Cutter& cutter, EdgeDescriptor edge, LayerTagMask
     std::string text = getSequenceText(sequence);
 
     size_t pos = 0;
-    EdgeSequence::Iterator sequenceIter = sequence.begin();
+
+    EdgeSequence::Iterator sequenceIter(*this, sequence);
 
     LayerTagCollection tags = layerTagManager_.createTagCollection(cutter.layerTags());
 
@@ -808,12 +809,10 @@ Lattice::EdgeSequence Lattice::cutSequenceByTextLength_(
 
     EdgeSequence::Builder sequenceBuilder;
 
-    for (
-        ;
-        sequenceIterator != sequence.end() && lengthGathered < length;
-        lengthGathered += getEdgeText(*sequenceIterator).length(), ++sequenceIterator
-    ) {
-        sequenceBuilder.addEdge(*sequenceIterator);
+    while (sequenceIterator.hasNext() && lengthGathered < length) {
+        EdgeDescriptor ed = sequenceIterator.next();
+        sequenceBuilder.addEdge(ed);
+        lengthGathered += getEdgeText(ed).length();
     }
 
     return sequenceBuilder.build();

@@ -32,9 +32,9 @@ class JoinAction : public Action
         int getHead() const;
         void setGroup(std::string aGroup);
         void setHead(int aHead);
-        int getStart() const;
+//        int getStart() const;
         void setStart(int aStart);
-        int getEnd() const;
+//        int getEnd() const;
         void setEnd(int aEnd);
         std::string getRuleName() const;
         void setRuleName(std::string aRuleName);

@@ -228,8 +228,7 @@ namespace poleng {
                     realStart = 0;
                     realEnd = 0;
                     size_t i = 0;
-                    while (i < ruleTokenSizes.size())
-                    {
+                    while (i < ruleTokenSizes.size()) {
                         if (i < start)
                             realStart += ruleTokenSizes[i];
                         if (i <= end)
@@ -240,6 +239,17 @@ namespace poleng {
                     }
                     realEnd --;
                     return true;
+                }
+
+                int getDeleteActionParams(RuleTokenSizes &ruleTokenSizes,
+                        int tokenIndex) {
+                    int before = 0;
+                    int i = 0;
+                    while (i < (tokenIndex - 1)) {
+                        before += ruleTokenSizes[i];
+                        i ++;
+                    }
+                    return before;
                 }
 
             }

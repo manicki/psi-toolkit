@@ -100,13 +100,22 @@ public:
 
     class EdgeSequence {
     public:
-        typedef std::vector<EdgeDescriptor>::const_iterator Iterator;
+        class Iterator {
+        public:
+            Iterator(const Lattice & lattice, const EdgeSequence & edgeSequence);
+            bool hasNext();
+            EdgeDescriptor next();
+        private:
+            const Lattice & lattice_;
+            const EdgeSequence & edgeSequence_;
+            std::vector<EdgeDescriptor>::const_iterator ei_;
+        };
 
         EdgeSequence();
 
-        Iterator begin() const;
+        std::vector<EdgeDescriptor>::const_iterator begin() const { return links.begin(); }
 
-        Iterator end () const;
+        std::vector<EdgeDescriptor>::const_iterator end () const { return links.begin(); }
 
         EdgeDescriptor firstEdge() const;
 
@@ -124,6 +133,8 @@ public:
             std::vector<EdgeDescriptor> links;
         };
 
+        friend class Iterator;
+
     private:
         std::vector<EdgeDescriptor> links;
         EdgeSequence(const std::vector<EdgeDescriptor>& aLinks);
@@ -132,6 +143,16 @@ public:
     class Partition {
 
     public:
+        class Iterator {
+        public:
+            Iterator(const Lattice & lattice, const Partition & partition)
+                : iter_(lattice, partition.getSequence()) { }
+            bool hasNext() { return iter_.hasNext(); }
+            EdgeDescriptor next() { return iter_.next(); }
+        private:
+            EdgeSequence::Iterator iter_;
+        };
+
         Partition(LayerTagCollection aTagList,
                   EdgeSequence aSequence = EdgeSequence(),
                   Score aScore = 0,
@@ -141,9 +162,9 @@ public:
 
         typedef EdgeSequence::Iterator Iterator;
 
-        Iterator begin() const;
+        std::vector<EdgeDescriptor>::const_iterator begin() const { return sequence_.begin(); }
 
-        Iterator end() const;
+        std::vector<EdgeDescriptor>::const_iterator end() const { return sequence_.end(); }
 
         EdgeDescriptor firstEdge() const;
 
