@@ -724,6 +724,11 @@ Lattice::EdgeSequence::EdgeSequence(const std::vector<EdgeDescriptor>& aLinks) {
     links = aLinks;
 }
 
+Lattice::EdgeSequence::EdgeSequence(int aBegin, int aEnd) {
+    begin = aBegin;
+    end = aEnd;
+}
+
 
 Lattice::Partition::Partition(LayerTagCollection aTagList,
                               EdgeSequence aSequence,

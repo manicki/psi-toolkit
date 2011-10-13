@@ -133,9 +133,11 @@ public:
 
     private:
         std::vector<EdgeDescriptor> links;
-        std::string symbols;
+        int begin;
+        int end;
 
         EdgeSequence(const std::vector<EdgeDescriptor>& aLinks);
+        EdgeSequence(int aBegin, int aEnd);
     };
 
     class Partition {
