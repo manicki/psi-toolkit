@@ -532,14 +532,10 @@ namespace poleng {
                     for (std::list<Lattice::Partition>::iterator partIt =
                             partitions.begin();
                             partIt != partitions.end(); ++ partIt) {
-                        nontopEdges.insert(nontopEdges.end(),
-                                partIt->begin(),
-                                partIt->end()
-                                );
-                        // Lattice::Partition::Iterator lpi(lattice, *partIt);
-                        // while (lpi.hasNext()) {
-                            // nontopEdges.insert(nontopEdges.end(), lpi.next());
-                        // }
+                        Lattice::Partition::Iterator lpi(lattice, *partIt);
+                        while (lpi.hasNext()) {
+                            nontopEdges.insert(nontopEdges.end(), lpi.next());
+                        }
                     }
                 }
                 nontopEdges.unique(EdgeUnique());
