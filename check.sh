@@ -6,6 +6,10 @@ make install
 
 ./tests/mass-tests .. --xml mass-tests-results.xml
 
+cd ..
+./tests/perl-test-runner.sh
+cd prj
+
 PATH=".:${PATH}" PERL5LIB="../../cltu:${PERL5LIB}" perl ../../cltu/cltu.pl ../framework/t/general.ush --log cltu.log
 
 valgrind --xml=yes --xml-file=valgrind.xml --suppressions=./memcpy.supp ./tests/test_runner
