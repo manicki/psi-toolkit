@@ -789,7 +789,7 @@ void Lattice::runCutterOnEdge_(Cutter& cutter, EdgeDescriptor edge, LayerTagMask
 
         int itemLength = (pos == std::string::npos ? text.length() : pos) - prevPos;
 
-        EdgeSequence itemSequence = cutSequenceByTextLength_(sequence, sequenceIter, itemLength);
+        EdgeSequence itemSequence = cutSequenceByTextLength_(sequenceIter, itemLength);
 
         addEdge(firstSequenceVertex_(itemSequence),
                 lastSequenceVertex_(itemSequence),
@@ -801,7 +801,6 @@ void Lattice::runCutterOnEdge_(Cutter& cutter, EdgeDescriptor edge, LayerTagMask
 }
 
 Lattice::EdgeSequence Lattice::cutSequenceByTextLength_(
-    const EdgeSequence& sequence,
     EdgeSequence::Iterator& sequenceIterator,
     int length
 ) {
