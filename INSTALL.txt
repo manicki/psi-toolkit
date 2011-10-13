@@ -5,6 +5,12 @@ Requirements
 * Boost library
 * PCRE library
 
+Optional
+--------
+
+* RE2 - for faster regular expressions
+* SWIG - for integration with scripting languages (e.g. Perl, Python)
+
 Installation procedure
 ======================
 
