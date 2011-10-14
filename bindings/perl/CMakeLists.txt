@@ -18,6 +18,13 @@ if (SWIG_FOUND)
     set_source_files_properties(${filename} PROPERTIES SWIG_FLAGS "")
   endforeach(filename)
 
+  set(CXX_FILES PSIToolkitSimplePERL_wrap.cxx)
+
+  # turning off warnings in generated files
+  foreach(filename ${CXX_FILES})
+    set_source_files_properties(${filename} PROPERTIES COMPILE_FLAGS "-w")
+  endforeach(filename)
+
   swig_add_module(Simple perl PSIToolkitSimple.i)
 
   swig_link_libraries(Simple
