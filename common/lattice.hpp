@@ -130,6 +130,8 @@ public:
         private:
             Lattice & lattice_;
             std::vector<EdgeDescriptor> links;
+            int begin;
+            int end;
         };
 
         friend class Iterator;

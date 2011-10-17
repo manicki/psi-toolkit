@@ -747,15 +747,31 @@ size_t Lattice::EdgeSequence::size(Lattice & lattice) const {
 }
 
 Lattice::EdgeSequence::Builder& Lattice::EdgeSequence::Builder::addEdge(EdgeDescriptor edge) {
+    if (begin <= end && lattice_.isEdgeHidden(edge)) {
+        if (links.empty()) {
+            begin = lattice_.getEdgeBeginIndex(edge);
+            end = lattice_.getEdgeEndIndex(edge);
+        } else if (lattice_.getEdgeBeginIndex(edge) == end) {
+            end = lattice_.getEdgeEndIndex(edge);
+        } else {
+            end = 0;
+        }
+    } else {
+        begin = 1;
+        end = 0;
+    }
+
     links.push_back(edge);
 
     return *this;
 }
 
 Lattice::EdgeSequence Lattice::EdgeSequence::Builder::build() {
-    Lattice::EdgeSequence seq(links);
-
-    return seq;
+    if (begin < end) {
+        return Lattice::EdgeSequence(begin, end);
+    } else {
+        return Lattice::EdgeSequence(links);
+    }
 }
 
 Lattice::EdgeSequence::EdgeSequence(const std::vector<EdgeDescriptor>& aLinks) {
