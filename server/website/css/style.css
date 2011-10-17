@@ -1,6 +1,6 @@
 html, body { height: 100%; }
 body { background: url("/img/bg-gradient.jpg") repeat-x #FFFFFF;
-    font-family: Verdana, sans-serif; font-size: 14px; }
+    font-family: Verdana, sans-serif; font-size: 13px; }
 
 #wrapper { width: 900px; margin: 0 auto -100px; min-height: 100%; }
 #content { overflow:auto; padding-bottom: 100px; }
@@ -15,14 +15,15 @@ p { padding: 5px 0; }
 #menu li { float: left; height: 40px; line-height: 40px; padding: 0 20px;
     border-left: 2px solid #666; }
 #menu li a { text-decoration: none; color: #335599; }
+#menu li a:hover { text-decoration: underline; }
 
 /* Forms */
 
 .box input, .box textarea { display: table; margin: 0 auto; padding: 5px; width: 784px;
-    -moz-border-radius: 5px; border-radius: 5px; border: 1px solid #CCCCCC; }
-.box input:focus, .box textarea:focus { background-color: #FFFFFF; border: 1px solid #888888; }
+    -moz-border-radius: 5px; border-radius: 5px; border: 1px solid #CCCCCC; font-size: 12px; }
+.box input:focus, .box textarea:focus { background-color: #FFFFFF; border: 1px solid #888888;}
 
-#pipe { }
+#pipe {  }
 #inputs { margin-top: -1px; }
 #input-file input { width: 620px; margin: 21px auto; }
 
@@ -31,7 +32,9 @@ p { padding: 5px 0; }
     -webkit-border-radius: 8px; -moz-border-radius: 8px; border-radius: 8px; border: 1px solid #DEDEDE;}
 #submit:hover { background-color: #1b4394; }
 
-input.input-radio {visibility: hidden; display: none; }
+input.input-radio { visibility: hidden; display: none; }
+
+input.alert { color: #FF0000; }
 
 /* Boxes */
 
