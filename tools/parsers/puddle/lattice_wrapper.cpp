@@ -984,7 +984,7 @@ namespace poleng {
                     }
                 } else {
                     Lattice::EdgeDescriptor lexemeEdge =
-                        lattice.getEdgePartitions(edge).front().firstEdge();
+                        lattice.getEdgePartitions(edge).front().firstEdge(lattice);
                     std::list<std::string> tags =
                         lattice.getLayerTagManager().getTagNames(
                                 lattice.getEdgeLayerTags(lexemeEdge)
@@ -1035,7 +1035,7 @@ namespace poleng {
                     }
                 } else {
                     Lattice::EdgeDescriptor lexemeEdge =
-                        lattice.getEdgePartitions(edge).front().firstEdge();
+                        lattice.getEdgePartitions(edge).front().firstEdge(lattice);
                     std::list<std::string> tags =
                         lattice.getLayerTagManager().getTagNames(
                                 lattice.getEdgeLayerTags(lexemeEdge)
@@ -1050,7 +1050,7 @@ namespace poleng {
                     }
                     if (lexemeTagFound) {
                         Lattice::EdgeDescriptor lemmaEdge =
-                            lattice.getEdgePartitions(lexemeEdge).front().firstEdge();
+                            lattice.getEdgePartitions(lexemeEdge).front().firstEdge(lattice);
                         std::list<std::string> tags =
                             lattice.getLayerTagManager().getTagNames(
                                     lattice.getEdgeLayerTags(lemmaEdge)

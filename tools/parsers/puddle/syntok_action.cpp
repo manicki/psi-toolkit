@@ -145,7 +145,7 @@ std::vector<std::string> SyntokAction::generateBaseForms(Lattice &lattice,
             sequenceIt != edgeSequences.end();
             ++ sequenceIt) {
         std::string baseForm = "";
-        int index = lattice.getEdgeBeginIndex(sequenceIt->firstEdge());
+        int index = lattice.getEdgeBeginIndex(sequenceIt->firstEdge(lattice));
         Lattice::EdgeSequence::Iterator edgeIt(lattice, *sequenceIt);
         while (edgeIt.hasNext()) {
             Lattice::EdgeDescriptor ed = edgeIt.next();
@@ -170,7 +170,7 @@ std::vector<std::string> SyntokAction::generateBaseForms(Lattice &lattice,
 std::string SyntokAction::generateOrth(Lattice &lattice,
         std::list<Lattice::EdgeSequence> edgeSequences) {
     std::string concatenatedOrth = "";
-    int index = lattice.getEdgeBeginIndex(edgeSequences.front().firstEdge());
+    int index = lattice.getEdgeBeginIndex(edgeSequences.front().firstEdge(lattice));
     Lattice::EdgeSequence::Iterator edgeIt(lattice, edgeSequences.front());
     while (edgeIt.hasNext()) {
         Lattice::EdgeDescriptor ed = edgeIt.next();

@@ -102,24 +102,25 @@ public:
     public:
         class Iterator {
         public:
-            Iterator(const Lattice & lattice, const EdgeSequence & edgeSequence);
+            Iterator(Lattice & lattice, const EdgeSequence & edgeSequence);
             bool hasNext();
             EdgeDescriptor next();
         private:
-            const Lattice & lattice_;
+            Lattice & lattice_;
             const EdgeSequence & edgeSequence_;
             std::vector<EdgeDescriptor>::const_iterator ei_;
+            int si_;
         };
 
         EdgeSequence();
 
-        EdgeDescriptor firstEdge() const;
+        EdgeDescriptor firstEdge(Lattice & lattice) const;
 
-        EdgeDescriptor lastEdge() const;
+        EdgeDescriptor lastEdge(Lattice & lattice) const;
 
         bool empty() const;
 
-        size_t size() const;
+        size_t size(Lattice & lattice) const;
 
         class Builder {
         public:
@@ -133,9 +134,11 @@ public:
 
     private:
         std::vector<EdgeDescriptor> links;
-        std::string symbols;
+        int begin;
+        int end;
 
         EdgeSequence(const std::vector<EdgeDescriptor>& aLinks);
+        EdgeSequence(int aBegin, int aEnd);
     };
 
     class Partition {
@@ -143,7 +146,7 @@ public:
     public:
         class Iterator {
         public:
-            Iterator(const Lattice & lattice, const Partition & partition)
+            Iterator(Lattice & lattice, const Partition & partition)
                 : iter_(lattice, partition.getSequence()) { }
             bool hasNext() { return iter_.hasNext(); }
             EdgeDescriptor next() { return iter_.next(); }
@@ -156,15 +159,13 @@ public:
                   Score aScore = 0,
                   int aRuleId = -1);
 
-        size_t size() const;
-
         typedef EdgeSequence::Iterator Iterator;
 
-        EdgeDescriptor firstEdge() const;
-
-        EdgeDescriptor lastEdge() const;
-
         const EdgeSequence& getSequence() const;
+
+        EdgeDescriptor firstEdge(Lattice & lattice) const { return sequence_.firstEdge(lattice); }
+
+        EdgeDescriptor lastEdge(Lattice & lattice) const { return sequence_.lastEdge(lattice); }
 
     private:
         EdgeSequence sequence_;
@@ -335,7 +336,7 @@ public:
     /**
      * Gets the vertex for ix-th character of text
      */
-    VertexDescriptor getVertexForRawCharIndex(int ix);
+    VertexDescriptor getVertexForRawCharIndex(int ix) const;
 
     /**
      * Gets the first vertex (the same as getVertexForRawCharIndex(0))
@@ -415,8 +416,8 @@ public:
 
     const std::string& getAllText() const;
     const std::string getEdgeText(EdgeDescriptor edge) const;
-    const std::string getSequenceText(const EdgeSequence& sequence) const;
-    const std::string getPartitionText(const Partition& partition) const;
+    std::string getSequenceText(const EdgeSequence& sequence);
+    std::string getPartitionText(const Partition& partition);
 
     const std::string getAnnotationText(EdgeDescriptor edge);
     const std::string getAnnotationCategory(EdgeDescriptor edge);
@@ -494,10 +495,8 @@ private:
     size_t symbolLength_(int ix) const;
     const LayerTagCollection& getSymbolTag_() const;
 
-    VertexDescriptor firstSequenceVertex_(const EdgeSequence& sequence) const;
-    VertexDescriptor lastSequenceVertex_(const EdgeSequence& sequence) const;
-    VertexDescriptor firstPartitionVertex_(const Partition& partition) const;
-    VertexDescriptor lastPartitionVertex_(const Partition& partition) const;
+    VertexDescriptor firstSequenceVertex_(const EdgeSequence& sequence);
+    VertexDescriptor lastSequenceVertex_(const EdgeSequence& sequence);
 
     void runCutterOnEdge_(Cutter& cutter, EdgeDescriptor edge, LayerTagMask mask);
 
