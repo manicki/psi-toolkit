@@ -14,3 +14,5 @@ runner.cpp
 runner
 psi-pipe
 psi-server
+bindings
+PSIToolkit

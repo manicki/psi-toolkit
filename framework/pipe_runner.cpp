@@ -314,7 +314,7 @@ void PipeRunner::closeStreamWithStandardInputOrOutputCheck(std::ios * stream, co
 }
 
 
-bool PipeRunner::isStandardInputOrOutputFileName(const std::string & path) {
+bool PipeRunner::isStandardInputOrOutputFileName(const std::string & path) const {
     return (path == PIPELINE_STANDARD_INPUT_OR_OUTPUT_FILE_NAME);
 }
 
