@@ -124,7 +124,7 @@ public:
 
         class Builder {
         public:
-            Builder(Lattice & lattice) : lattice_(lattice) { }
+            Builder(Lattice & lattice) : lattice_(lattice), begin(0), end(0) { }
             Builder& addEdge(EdgeDescriptor edge);
             EdgeSequence build();
         private:
