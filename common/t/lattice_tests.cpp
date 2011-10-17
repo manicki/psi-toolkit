@@ -71,7 +71,7 @@ BOOST_AUTO_TEST_CASE( lattice_simple ) {
     AnnotationItem blank_token("blank");
 
     {
-        Lattice::EdgeSequence::Builder ala_builder;
+        Lattice::EdgeSequence::Builder ala_builder(lattice);
         ala_builder.addEdge(lattice.firstOutEdge(
                                 lattice.getVertexForRawCharIndex(0),
                                 rawMask));
@@ -86,7 +86,7 @@ BOOST_AUTO_TEST_CASE( lattice_simple ) {
     }
 
     {
-        Lattice::EdgeSequence::Builder first_blank_builder;
+        Lattice::EdgeSequence::Builder first_blank_builder(lattice);
         first_blank_builder.addEdge(lattice.firstOutEdge(
                                         lattice.getVertexForRawCharIndex(3),
                                         rawMask));
@@ -94,7 +94,7 @@ BOOST_AUTO_TEST_CASE( lattice_simple ) {
     }
 
     {
-        Lattice::EdgeSequence::Builder ma_builder;
+        Lattice::EdgeSequence::Builder ma_builder(lattice);
         ma_builder.addEdge(lattice.firstOutEdge(
                                lattice.getVertexForRawCharIndex(4),
                                rawMask));
@@ -105,7 +105,7 @@ BOOST_AUTO_TEST_CASE( lattice_simple ) {
     }
 
     {
-        Lattice::EdgeSequence::Builder second_blank_builder;
+        Lattice::EdgeSequence::Builder second_blank_builder(lattice);
         second_blank_builder.addEdge(lattice.firstOutEdge(
                                          lattice.getVertexForRawCharIndex(6),
                                          rawMask));
@@ -113,7 +113,7 @@ BOOST_AUTO_TEST_CASE( lattice_simple ) {
     }
 
     {
-        Lattice::EdgeSequence::Builder kota_builder;
+        Lattice::EdgeSequence::Builder kota_builder(lattice);
         kota_builder.addEdge(lattice.firstOutEdge(
                                  lattice.getVertexForRawCharIndex(7),
                                  rawMask));
@@ -365,7 +365,7 @@ BOOST_AUTO_TEST_CASE( variant_edges ) {
     AnnotationItem word_token("word");
     AnnotationItem blank_token("blank");
 
-    Lattice::EdgeSequence::Builder ananas_builder;
+    Lattice::EdgeSequence::Builder ananas_builder(lattice);
     for (int i = 0; i < 6; i ++) {
         ananas_builder.addEdge(lattice.firstOutEdge(
                                    lattice.getVertexForRawCharIndex(i),
@@ -374,7 +374,7 @@ BOOST_AUTO_TEST_CASE( variant_edges ) {
     }
     lattice.addEdge(pre_ananas, post_ananas, word_token, token_tag, ananas_builder.build());
 
-    Lattice::EdgeSequence::Builder ananas_lemma_builder;
+    Lattice::EdgeSequence::Builder ananas_lemma_builder(lattice);
     ananas_lemma_builder.addEdge(lattice.firstOutEdge(lattice.getVertexForRawCharIndex(0), tokenMask));
     AnnotationItem ai_ananas_sg("ananas"); // singular masculinie noun variant
     lattice.getAnnotationItemManager().setValue(ai_ananas_sg, "base", "ananas");
@@ -454,7 +454,7 @@ BOOST_AUTO_TEST_CASE( edges_layer_tags ) {
     AnnotationItem word_token("word");
     AnnotationItem blank_token("blank");
 
-    Lattice::EdgeSequence::Builder ananas_builder;
+    Lattice::EdgeSequence::Builder ananas_builder(lattice);
     for (int i = 0; i < 6; i ++) {
         ananas_builder.addEdge(lattice.firstOutEdge(
                                    lattice.getVertexForRawCharIndex(i),
@@ -507,7 +507,7 @@ BOOST_AUTO_TEST_CASE( edges_tags_combining ) {
     AnnotationItem word_token("word");
     AnnotationItem blank_token("blank");
 
-    Lattice::EdgeSequence::Builder ananas_builder;
+    Lattice::EdgeSequence::Builder ananas_builder(lattice);
     for (int i = 0; i < 6; i ++) {
         ananas_builder.addEdge(lattice.firstOutEdge(
                                    lattice.getVertexForRawCharIndex(i),
@@ -548,7 +548,7 @@ BOOST_AUTO_TEST_CASE( edges_scores_combining ) {
     AnnotationItem word_token("word");
     AnnotationItem blank_token("blank");
 
-    Lattice::EdgeSequence::Builder ananas_builder;
+    Lattice::EdgeSequence::Builder ananas_builder(lattice);
     for (int i = 0; i < 6; i ++) {
         ananas_builder.addEdge(lattice.firstOutEdge(
                                    lattice.getVertexForRawCharIndex(i),

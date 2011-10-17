@@ -105,7 +105,7 @@ public:
                 Lattice::Score score,
                 int ruleId) {
 
-                Lattice::EdgeSequence::Builder seqBuilder;
+                Lattice::EdgeSequence::Builder seqBuilder(lattice_);
                 seqBuilder.addEdge(tokenEdge_);
 
                 AnnotationItem item("word", correction);
@@ -126,7 +126,7 @@ public:
                 Lattice::Score score,
                 int ruleId) {
 
-                Lattice::EdgeSequence::Builder seqBuilder;
+                Lattice::EdgeSequence::Builder seqBuilder(lattice_);
                 seqBuilder.addEdge(lastCorrection_);
 
                 AnnotationItem item("word", normalization);
@@ -148,7 +148,7 @@ public:
                 Lattice::Score score,
                 int ruleId) {
 
-                Lattice::EdgeSequence::Builder seqBuilder;
+                Lattice::EdgeSequence::Builder seqBuilder(lattice_);
                 seqBuilder.addEdge(lastNormalization_);
 
                 AnnotationItem item("word", lemma);
@@ -169,7 +169,7 @@ public:
                 Lattice::Score score,
                 int ruleId) {
 
-                Lattice::EdgeSequence::Builder seqBuilder;
+                Lattice::EdgeSequence::Builder seqBuilder(lattice_);
                 seqBuilder.addEdge(lastLemma_);
 
                 lastLexeme_ =
@@ -188,7 +188,7 @@ public:
                 Lattice::Score score,
                 int ruleId) {
 
-                Lattice::EdgeSequence::Builder seqBuilder;
+                Lattice::EdgeSequence::Builder seqBuilder(lattice_);
                 seqBuilder.addEdge(lastLexeme_);
 
                 lattice_.addEdge(

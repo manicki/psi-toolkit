@@ -378,7 +378,7 @@ void prepareSimpleLattice_(Lattice & lattice) {
     AnnotationItem blank_token("blank");
 
     {
-        Lattice::EdgeSequence::Builder ala_builder;
+        Lattice::EdgeSequence::Builder ala_builder(lattice);
         ala_builder.addEdge(lattice.firstOutEdge(
                                 lattice.getVertexForRawCharIndex(0),
                                 rawMask));
@@ -393,7 +393,7 @@ void prepareSimpleLattice_(Lattice & lattice) {
     }
 
     {
-        Lattice::EdgeSequence::Builder first_blank_builder;
+        Lattice::EdgeSequence::Builder first_blank_builder(lattice);
         first_blank_builder.addEdge(lattice.firstOutEdge(
                                         lattice.getVertexForRawCharIndex(3),
                                         rawMask));
@@ -401,7 +401,7 @@ void prepareSimpleLattice_(Lattice & lattice) {
     }
 
     {
-        Lattice::EdgeSequence::Builder ma_builder;
+        Lattice::EdgeSequence::Builder ma_builder(lattice);
         ma_builder.addEdge(lattice.firstOutEdge(
                                lattice.getVertexForRawCharIndex(4),
                                rawMask));
@@ -412,7 +412,7 @@ void prepareSimpleLattice_(Lattice & lattice) {
     }
 
     {
-        Lattice::EdgeSequence::Builder second_blank_builder;
+        Lattice::EdgeSequence::Builder second_blank_builder(lattice);
         second_blank_builder.addEdge(lattice.firstOutEdge(
                                          lattice.getVertexForRawCharIndex(6),
                                          rawMask));
@@ -420,7 +420,7 @@ void prepareSimpleLattice_(Lattice & lattice) {
     }
 
     {
-        Lattice::EdgeSequence::Builder slonia_builder;
+        Lattice::EdgeSequence::Builder slonia_builder(lattice);
         slonia_builder.addEdge(lattice.firstOutEdge(
                                    lattice.getVertexForRawCharIndex(7),
                                    rawMask));
@@ -477,7 +477,7 @@ void prepareAdvancedLattice_(Lattice & lattice) {
     lattice.getAnnotationItemManager().setValue(aiAla, "type", "word");
 
 
-    Lattice::EdgeSequence::Builder alaBuilder;
+    Lattice::EdgeSequence::Builder alaBuilder(lattice);
     alaBuilder.addEdge(lattice.firstOutEdge(
                            lattice.getVertexForRawCharIndex(0),
                            rawMask));
@@ -502,7 +502,7 @@ void prepareAdvancedLattice_(Lattice & lattice) {
     lattice.getAnnotationItemManager().setValue(aiAlaLemma, "pos", "R:4");
     lattice.getAnnotationItemManager().setValue(aiAlaLemma, "morpho", "ŻMP");
 
-    Lattice::EdgeSequence::Builder alaLemmaBuilder;
+    Lattice::EdgeSequence::Builder alaLemmaBuilder(lattice);
     alaLemmaBuilder.addEdge(edgeAla);
 
     Lattice::EdgeDescriptor edgeAlaLemma
@@ -520,7 +520,7 @@ void prepareAdvancedLattice_(Lattice & lattice) {
     lattice.getAnnotationItemManager().setValue(aiRzeczownik, "L", "1");
     lattice.getAnnotationItemManager().setValue(aiRzeczownik, "P", "mian");
 
-    Lattice::EdgeSequence::Builder rzeczownikBuilder;
+    Lattice::EdgeSequence::Builder rzeczownikBuilder(lattice);
     rzeczownikBuilder.addEdge(edgeAlaLemma);
 
     Lattice::EdgeDescriptor edgeRzeczownik
@@ -532,7 +532,7 @@ void prepareAdvancedLattice_(Lattice & lattice) {
     AnnotationItem aiBlank("' '", " ");
     lattice.getAnnotationItemManager().setValue(aiBlank, "type", "blank");
 
-    Lattice::EdgeSequence::Builder blankBuilder;
+    Lattice::EdgeSequence::Builder blankBuilder(lattice);
     blankBuilder.addEdge(lattice.firstOutEdge(
                              lattice.getVertexForRawCharIndex(3),
                              rawMask));
@@ -546,7 +546,7 @@ void prepareAdvancedLattice_(Lattice & lattice) {
     AnnotationItem aiMa("'ma'", "ma");
     lattice.getAnnotationItemManager().setValue(aiMa, "type", "word");
 
-    Lattice::EdgeSequence::Builder maBuilder;
+    Lattice::EdgeSequence::Builder maBuilder(lattice);
     maBuilder.addEdge(lattice.firstOutEdge(
                           lattice.getVertexForRawCharIndex(4),
                           rawMask));
@@ -563,7 +563,7 @@ void prepareAdvancedLattice_(Lattice & lattice) {
 
     lattice.addEdge(postMa, preMarkup, aiNbsp, rawTag);
 
-    Lattice::EdgeSequence::Builder nbspBlankBuilder;
+    Lattice::EdgeSequence::Builder nbspBlankBuilder(lattice);
     nbspBlankBuilder.addEdge(lattice.firstOutEdge(
                                  lattice.getVertexForRawCharIndex(6),
                                  rawMask));
@@ -592,7 +592,7 @@ void prepareAdvancedLattice_(Lattice & lattice) {
     lattice.getAnnotationItemManager().setValue(aiKta, "type", "word");
 
     {
-        Lattice::EdgeSequence::Builder ktaBuilder;
+        Lattice::EdgeSequence::Builder ktaBuilder(lattice);
         ktaBuilder.addEdge(lattice.firstOutEdge(
                                lattice.getVertexForRawCharIndex(15),
                                rawMask));
@@ -625,7 +625,7 @@ void prepareAdvancedLattice_(Lattice & lattice) {
     LayerTagCollection
         tokenCorrectorTag = lattice.getLayerTagManager().createTagCollection(tokenCorrectorStr);
 
-    Lattice::EdgeSequence::Builder kotaBuilder;
+    Lattice::EdgeSequence::Builder kotaBuilder(lattice);
     kotaBuilder.addEdge(edgeCorrectedK);
     kotaBuilder.addEdge(edgeCorrectedO);
     kotaBuilder.addEdge(lattice.firstOutEdge(
@@ -643,7 +643,7 @@ void prepareAdvancedLattice_(Lattice & lattice) {
     lattice.getAnnotationItemManager().setValue(aiFrazaRzecz, "L", "1");
     lattice.getAnnotationItemManager().setValue(aiFrazaRzecz, "P", "dop");
 
-    Lattice::EdgeSequence::Builder frazaRzeczBuilder;
+    Lattice::EdgeSequence::Builder frazaRzeczBuilder(lattice);
     frazaRzeczBuilder.addEdge(edgeKota);
 
     Lattice::EdgeDescriptor edgeFrazaRzecz
@@ -658,7 +658,7 @@ void prepareAdvancedLattice_(Lattice & lattice) {
         = lattice.addEdge(postKota, postMarkup, aiClose, markupHtmlTag);
 
 
-    Lattice::EdgeSequence::Builder frazaRzecz2Builder;
+    Lattice::EdgeSequence::Builder frazaRzecz2Builder(lattice);
     frazaRzecz2Builder.addEdge(edgeMarkupOpen);
     frazaRzecz2Builder.addEdge(edgeFrazaRzecz);
     frazaRzecz2Builder.addEdge(edgeMarkupClose);
@@ -672,7 +672,7 @@ void prepareAdvancedLattice_(Lattice & lattice) {
     lattice.getAnnotationItemManager().setValue(aiFrazaCzas, "O", "3");
     lattice.getAnnotationItemManager().setValue(aiFrazaCzas, "L", "1");
 
-    Lattice::EdgeSequence::Builder frazaCzasBuilder;
+    Lattice::EdgeSequence::Builder frazaCzasBuilder(lattice);
     frazaCzasBuilder.addEdge(edgeMa);
     frazaCzasBuilder.addEdge(edgeNbsp);
     frazaCzasBuilder.addEdge(edgeFrazaRzecz2);
@@ -684,7 +684,7 @@ void prepareAdvancedLattice_(Lattice & lattice) {
     AnnotationItem aiPelnaFrCzas("pełna_fraza_czasownikowa");
     lattice.getAnnotationItemManager().setValue(aiPelnaFrCzas, "C", "teraźniejszy");
 
-    Lattice::EdgeSequence::Builder pelnaFrCzasBuilder;
+    Lattice::EdgeSequence::Builder pelnaFrCzasBuilder(lattice);
     pelnaFrCzasBuilder.addEdge(edgeRzeczownik);
     pelnaFrCzasBuilder.addEdge(edgeBlank);
     pelnaFrCzasBuilder.addEdge(edgeFrazaCzas);
@@ -698,7 +698,7 @@ void prepareAdvancedLattice_(Lattice & lattice) {
     AnnotationItem aiStop("'.'", ".");
     lattice.getAnnotationItemManager().setValue(aiStop, "type", "punct");
 
-    Lattice::EdgeSequence::Builder stopBuilder;
+    Lattice::EdgeSequence::Builder stopBuilder(lattice);
     stopBuilder.addEdge(lattice.firstOutEdge(
                             lattice.getVertexForRawCharIndex(22),
                             rawMask));
@@ -716,7 +716,7 @@ void prepareAdvancedLattice_(Lattice & lattice) {
 
     AnnotationItem aiZdanie("zdanie");
 
-    Lattice::EdgeSequence::Builder zdanieBuilder;
+    Lattice::EdgeSequence::Builder zdanieBuilder(lattice);
     zdanieBuilder.addEdge(edgePelnaFrCzas);
     zdanieBuilder.addEdge(edgeStop);
 

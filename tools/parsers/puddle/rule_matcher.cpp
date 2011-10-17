@@ -297,7 +297,7 @@ void RuleMatcher::addPosEdges(Lattice &lattice) {
             AnnotationItem ai(partOfSpeech);
             lattice.getAnnotationItemManager().setValue(ai, "discard", "0");
             lattice.getAnnotationItemManager().setValue(ai, "head", "0");
-            Lattice::EdgeSequence::Builder seqBuilder;
+            Lattice::EdgeSequence::Builder seqBuilder(lattice);
             seqBuilder.addEdge(edge);
             lattice.addEdge(
                     start,

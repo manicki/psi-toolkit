@@ -130,7 +130,7 @@ void UTTLatticeReader::Worker::doRun() {
 
                 LayerTagMask rawMask = lattice_.getLayerTagManager().getMask("symbol");
 
-                Lattice::EdgeSequence::Builder seqBuilder;
+                Lattice::EdgeSequence::Builder seqBuilder(lattice_);
 
                 Lattice::VertexDescriptor currentVertex = from;
                 while (currentVertex != to) {
@@ -191,7 +191,7 @@ void UTTLatticeReader::Worker::doRun() {
 
                 LayerTagMask tokenMask = lattice_.getLayerTagManager().getMask("token");
 
-                Lattice::EdgeSequence::Builder sentenceBuilder;
+                Lattice::EdgeSequence::Builder sentenceBuilder(lattice_);
                 for (int i = beginningOfSentencePosition; i < endPosition; ++i) {
                     try {
                         sentenceBuilder.addEdge(

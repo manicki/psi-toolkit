@@ -562,7 +562,7 @@ namespace poleng {
                                 edges.begin(); edgeIt != edges.end(); ++ edgeIt) {
                             for (std::list<Lattice::EdgeSequence>::iterator seqIt =
                                     ranges.begin(); seqIt != ranges.end(); ++ seqIt) {
-                                Lattice::EdgeSequence::Builder rangeBuilder;
+                                Lattice::EdgeSequence::Builder rangeBuilder(lattice);
                                 Lattice::EdgeSequence::Iterator rangeIt(lattice, *seqIt);
                                 while (rangeIt.hasNext()) {
                                     rangeBuilder.addEdge(rangeIt.next());
@@ -574,7 +574,7 @@ namespace poleng {
                     } else {
                         for (std::list<Lattice::EdgeDescriptor>::iterator edgeIt =
                                 edges.begin(); edgeIt != edges.end(); ++ edgeIt) {
-                            Lattice::EdgeSequence::Builder rangeBuilder;
+                            Lattice::EdgeSequence::Builder rangeBuilder(lattice);
                             rangeBuilder.addEdge(*edgeIt);
                             tmpRanges.push_back(rangeBuilder.build());
                         }
@@ -695,7 +695,7 @@ namespace poleng {
                         LayerTagCollection token_tag
                             = lattice.getLayerTagManager().createSingletonTagCollection("token");
                         LayerTagMask tokenMask = lattice.getLayerTagManager().getMask(token_tag);
-                        Lattice::EdgeSequence::Builder lemmaBuilder;
+                        Lattice::EdgeSequence::Builder lemmaBuilder(lattice);
                         lemmaBuilder.addEdge(lattice.firstOutEdge(startVertex, tokenMask));
                         AnnotationItem aiLemma("word", *baseIt);
                         LayerTagCollection tagsLemma = lattice.getLayerTagManager().
@@ -724,7 +724,7 @@ namespace poleng {
                         Lattice::EdgeDescriptor lexemeEdge;
                         if (! matchLexemeEdge(lattice, startVertex,
                                     partOfSpeech, lexeme)) {
-                            Lattice::EdgeSequence::Builder lexemeBuilder;
+                            Lattice::EdgeSequence::Builder lexemeBuilder(lattice);
                             lexemeBuilder.addEdge(lemmaEdge);
                             AnnotationItem aiLexeme(partOfSpeech, lexeme);
                             LayerTagCollection tagsLexeme = lattice.getLayerTagManager().
@@ -769,7 +769,7 @@ namespace poleng {
                             }
 
                         } else { //adding a 'form' edge
-                            Lattice::EdgeSequence::Builder formBuilder;
+                            Lattice::EdgeSequence::Builder formBuilder(lattice);
                             formBuilder.addEdge(lexemeEdge);
                             AnnotationItem annotationItem(partOfSpeech, lexeme);
                             //lattice.getAnnotationItemManager().setValue(
@@ -815,7 +815,7 @@ namespace poleng {
                         LayerTagCollection token_tag
                             = lattice.getLayerTagManager().createSingletonTagCollection("token");
                         LayerTagMask tokenMask = lattice.getLayerTagManager().getMask(token_tag);
-                        Lattice::EdgeSequence::Builder lemmaBuilder;
+                        Lattice::EdgeSequence::Builder lemmaBuilder(lattice);
                         lemmaBuilder.addEdge(lattice.firstOutEdge(startVertex, tokenMask));
                         AnnotationItem aiLemma("word", *baseIt);
                         LayerTagCollection tagsLemma = lattice.getLayerTagManager().
@@ -842,7 +842,7 @@ namespace poleng {
                         Lattice::EdgeDescriptor lexemeEdge;
                         if (! matchLexemeEdge(lattice, startVertex,
                                     partOfSpeech, lexeme)) {
-                            Lattice::EdgeSequence::Builder lexemeBuilder;
+                            Lattice::EdgeSequence::Builder lexemeBuilder(lattice);
                             lexemeBuilder.addEdge(lemmaEdge);
                             AnnotationItem aiLexeme(partOfSpeech, lexeme);
                             LayerTagCollection tagsLexeme = lattice.getLayerTagManager().
@@ -854,7 +854,7 @@ namespace poleng {
                             lexemeEdge = getLexemeEdge(lattice, startVertex,
                                     partOfSpeech, lexeme);
 
-                        Lattice::EdgeSequence::Builder formBuilder;
+                        Lattice::EdgeSequence::Builder formBuilder(lattice);
                         formBuilder.addEdge(lexemeEdge);
                         AnnotationItem annotationItem(partOfSpeech, lexeme);
                         //lattice.getAnnotationItemManager().setValue(

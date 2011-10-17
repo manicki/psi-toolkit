@@ -498,7 +498,7 @@ void Lattice::runCutter(Cutter& cutter, LayerTagMask mask, LayerTagMask superMas
 Lattice::EdgeSequence Lattice::getPath(VertexDescriptor& vertex, LayerTagMask mask) {
     bool nextVertexFound = true;
 
-    Lattice::EdgeSequence::Builder pathBuilder;
+    Lattice::EdgeSequence::Builder pathBuilder(*this);
 
     do {
         InOutEdgesIterator iter = outEdges(vertex, mask);
@@ -831,7 +831,7 @@ Lattice::EdgeSequence Lattice::cutSequenceByTextLength_(
 ) {
     int lengthGathered = 0;
 
-    EdgeSequence::Builder sequenceBuilder;
+    EdgeSequence::Builder sequenceBuilder(*this);
 
     while (sequenceIterator.hasNext() && lengthGathered < length) {
         EdgeDescriptor ed = sequenceIterator.next();

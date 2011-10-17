@@ -182,7 +182,7 @@ void PsiLatticeReader::Worker::doRun() {
 
             if (item.annotationItem.partitions.empty()) {
 
-                Lattice::EdgeSequence::Builder seqBuilder;
+                Lattice::EdgeSequence::Builder seqBuilder(lattice_);
                 if (!lattice_.getLayerTagManager().match(tagsMask, "symbol")) {
                     while (currentVertex != to) {
                         currentEdge = lattice_.firstOutEdge(currentVertex, rawMask);
@@ -200,7 +200,7 @@ void PsiLatticeReader::Worker::doRun() {
                 if (parse(partsBegin, partsEnd, partsGrammar, partsItem)) {
 
                     BOOST_FOREACH(std::string part, partsItem) {
-                        Lattice::EdgeSequence::Builder seqBuilder;
+                        Lattice::EdgeSequence::Builder seqBuilder(lattice_);
                         std::vector<int> partItem;
                         std::string::const_iterator partBegin = part.begin();
                         std::string::const_iterator partEnd = part.end();
@@ -229,7 +229,7 @@ void PsiLatticeReader::Worker::doRun() {
 
                 } else {
 
-                    seqBuilders.push_back(Lattice::EdgeSequence::Builder());
+                    seqBuilders.push_back(Lattice::EdgeSequence::Builder(lattice_));
 
                 }
 

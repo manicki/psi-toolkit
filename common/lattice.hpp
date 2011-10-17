@@ -124,9 +124,11 @@ public:
 
         class Builder {
         public:
+            Builder(Lattice & lattice) : lattice_(lattice) { }
             Builder& addEdge(EdgeDescriptor edge);
             EdgeSequence build();
         private:
+            Lattice & lattice_;
             std::vector<EdgeDescriptor> links;
         };
 
