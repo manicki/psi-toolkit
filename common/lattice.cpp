@@ -669,7 +669,7 @@ const LayerTagCollection& Lattice::getSymbolTag_() const {
     return symbolTag_;
 }
 
-Lattice::EdgeSequence::EdgeSequence() {
+Lattice::EdgeSequence::EdgeSequence() : begin(0), end(0) {
 }
 
 Lattice::EdgeSequence::Iterator::Iterator(
@@ -760,6 +760,8 @@ Lattice::EdgeSequence Lattice::EdgeSequence::Builder::build() {
 
 Lattice::EdgeSequence::EdgeSequence(const std::vector<EdgeDescriptor>& aLinks) {
     links = aLinks;
+    begin = 0;
+    end = 0;
 }
 
 Lattice::EdgeSequence::EdgeSequence(int aBegin, int aEnd) {
