@@ -29,6 +29,8 @@ add_library(tools-parsers-puddle SHARED
     ${common-bonsai-files}
 )
 
+target_link_libraries(tools-parsers-puddle ${Boost_LIBRARIES})
+
 add_subdirectory(t)
 
 install(TARGETS tools-parsers-puddle DESTINATION "${psi-toolkit_BINARY_DIR}")
