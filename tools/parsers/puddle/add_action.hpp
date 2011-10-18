@@ -19,7 +19,7 @@ class AddAction : public Action
 {
     public:
         AddAction(std::vector<Morphology> aInterpretations, std::string aBase,
-                int aTokenIndex, std::string uInterpretation);
+                int aTokenIndex);
         ~AddAction();
         bool apply(Lattice &lattice, int currentEntity, RuleTokenSizes &ruleTokenSizes);
         bool test(Lattice &lattice, int currentEntity, RuleTokenSizes &ruleTokenSizes);
@@ -29,14 +29,13 @@ class AddAction : public Action
         std::string getBase() const;
         void setTokenIndex(int aTokenIndex);
         int getTokenIndex() const;
-        std::string getUInterpretation() const;
 
         std::string getType() { return type;}
 
         void setVerbose() { verbose = true; }
     private:
         void init(std::vector<Morphology> aInterpretations, std::string aBase,
-                int aTokenIndex, std::string uInterpretation);
+                int aTokenIndex);
         bool checkInterpretationsToAdd(Lattice &lattice,
                 Lattice::VertexDescriptor startVertex,
                 Lattice::VertexDescriptor endVertex);
@@ -47,7 +46,6 @@ class AddAction : public Action
         int tokenIndex;
         std::string type;
         bool verbose;
-        std::string interpretation_;
 };
 
 typedef boost::shared_ptr<AddAction> AddActionPtr;

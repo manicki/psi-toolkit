@@ -17,8 +17,7 @@ class SyntokAction : public Action
 {
     public:
         SyntokAction(int aStart, int aEnd, std::vector<int> aTokenIndices,
-                std::vector<Morphology> aMorphology, std::string aRuleName,
-                std::string uMorphology);
+                std::vector<Morphology> aMorphology, std::string aRuleName);
         ~SyntokAction();
         bool apply(Lattice &lattice, int currentEntity,
                 RuleTokenSizes &ruleTokenSizes);
@@ -37,14 +36,11 @@ class SyntokAction : public Action
 
         std::string getType() { return type; }
 
-        std::string getUMorphology() const;
-
         void setVerbose() { verbose = true; }
         void setSyntok() { syntok = true; }
     private:
         void init(int aStart, int aEnd, std::vector<int> aTokenIndices,
-                std::vector<Morphology> aMorphology, std::string aRuleName,
-                std::string uMorphology);
+                std::vector<Morphology> aMorphology, std::string aRuleName);
         std::vector<std::string> generateBaseForms(Lattice &lattice,
                 std::list<Lattice::EdgeSequence> edgeSequences);
         std::string generateOrth(Lattice &lattice,
@@ -58,8 +54,6 @@ class SyntokAction : public Action
         std::string type;
         bool verbose;
         bool syntok;
-
-        std::string morphology_; //@todo: po co to jest?
 };
 
 typedef boost::shared_ptr<SyntokAction> SyntokActionPtr;

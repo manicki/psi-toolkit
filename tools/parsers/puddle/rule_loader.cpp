@@ -1328,7 +1328,6 @@ void RuleLoader::addConditionToPatterns(TokenPatterns &tokenPatterns,
 
 DeleteActionPtr RuleLoader::createDeleteAction(std::string &conditionsString,
         int tokenIndex) {
-    std::string uncompiled = conditionsString;
     DeleteConditions conditions;
 
     while (conditionsString != "") {
@@ -1341,7 +1340,7 @@ DeleteActionPtr RuleLoader::createDeleteAction(std::string &conditionsString,
         }
     }
     DeleteActionPtr action = DeleteActionPtr( new DeleteAction(
-                conditions, tokenIndex, uncompiled ) );
+                conditions, tokenIndex ) );
     return action;
 }
 
@@ -1358,7 +1357,7 @@ AddActionPtr RuleLoader::createAddAction(std::string &interpretation,
         compileAddInterpretation(interpretation);
 
     AddActionPtr action = AddActionPtr( new AddAction(
-                interpretations, base, tokenIndex, interpretation ) );
+                interpretations, base, tokenIndex) );//, interpretation ) );
     return action;
 }
 
@@ -1367,7 +1366,6 @@ UnifyActionPtr RuleLoader::createUnifyAction(std::string &attributesString,
     std::vector<std::string> patterns;
     std::vector<std::string> attributes;
     std::vector<int> tokens;
-    std::vector<std::string> attributes_;
 
     std::vector<std::string> attributesVector;
     boost::split(attributesVector, attributesString, boost::is_any_of(" "));
@@ -1382,7 +1380,6 @@ UnifyActionPtr RuleLoader::createUnifyAction(std::string &attributesString,
             std::string pattern = "^[^:]+(:[^:]+)*:(" + valuesString
                 + ")(:[^:]+)*$";
             patterns.push_back(pattern);
-            attributes_.push_back(aa);
         } else {
             std::cout << "Unknown attribute: " << aa << "." << std::endl;
         }
@@ -1398,7 +1395,7 @@ UnifyActionPtr RuleLoader::createUnifyAction(std::string &attributesString,
         }
     }
     UnifyActionPtr action = UnifyActionPtr( new UnifyAction(
-                patterns, attributes, tokens, attributes_ ) );
+                patterns, attributes, tokens) );
     return action;
 }
 
@@ -1413,7 +1410,7 @@ SyntokActionPtr RuleLoader::createSyntokAction(std::string &interpretationString
 
     SyntokActionPtr action = SyntokActionPtr( new SyntokAction(
                 ruleLeftSize, ruleLeftSize + ruleMatchSize - 1, tokens,
-                interpretations, ruleName, interpretationString ) );
+                interpretations, ruleName ) );
     return action;
 }
 

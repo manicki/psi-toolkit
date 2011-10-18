@@ -100,11 +100,8 @@ class Rule
         void addAction(ActionPtr action);
         void deleteAction(size_t index);
 
-        std::string makeReadable();
-
     private:
         std::string name;
-//        std::vector<TransitionInfo> elements;
         PatternPtr pattern;
 #if HAVE_RE2
         NegativePatterns negativePatterns;
@@ -119,7 +116,6 @@ class Rule
         std::vector<std::string> tokensPatterns;
         std::vector<std::string> tokensModifiers;
         std::vector<bool> tokensRequired;
-//        std::vector<int> matchedTokensSize;
         std::vector<int> matchedIndices;
 
         bool repeat;

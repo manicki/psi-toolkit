@@ -7,9 +7,8 @@ namespace poleng {
     namespace bonsai {
         namespace puddle {
 
-            DeleteAction::DeleteAction(DeleteConditions aConditions, int aTokenIndex,
-                    std::string uPattern) {
-                init(aConditions, aTokenIndex, uPattern);
+            DeleteAction::DeleteAction(DeleteConditions aConditions, int aTokenIndex) {
+                init(aConditions, aTokenIndex);
             }
 
 bool DeleteAction::apply(Lattice &lattice, int currentEntity,
@@ -88,14 +87,8 @@ void DeleteAction::setTokenIndex(int aTokenIndex) {
     tokenIndex = aTokenIndex;
 }
 
-std::string DeleteAction::getUPattern() const {
-    return pattern_;
-}
-
-void DeleteAction::init(DeleteConditions aConditions, int aTokenIndex,
-                    std::string uPattern) {
+void DeleteAction::init(DeleteConditions aConditions, int aTokenIndex) {
     tokenIndex = aTokenIndex;
-    pattern_ = uPattern;
     conditions = aConditions;
     verbose = false;
     type = "delete";

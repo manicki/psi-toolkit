@@ -11,8 +11,8 @@ namespace bonsai
     {
 
 AddAction::AddAction(std::vector<Morphology> aInterpretations, std::string aBase,
-        int aTokenIndex, std::string uInterpretation) {
-    init (aInterpretations, aBase, aTokenIndex, uInterpretation);
+        int aTokenIndex) {//, std::string uInterpretation) {
+    init (aInterpretations, aBase, aTokenIndex);//, uInterpretation);
 }
 
 AddAction::~AddAction() { }
@@ -82,18 +82,18 @@ int AddAction::getTokenIndex() const {
     return tokenIndex;
 }
 
-std::string AddAction::getUInterpretation() const {
-    return interpretation_;
-}
+//std::string AddAction::getUInterpretation() const {
+//    return interpretation_;
+//}
 
 void AddAction::init(std::vector<Morphology> aInterpretations, std::string aBase,
-        int aTokenIndex, std::string uInterpretation) {
+        int aTokenIndex) {//, std::string uInterpretation) {
     base = aBase;
     tokenIndex = aTokenIndex;
     type = "add";
     verbose = false;
     interpretations = aInterpretations;
-    interpretation_ = uInterpretation; //@todo: to jest gdzie w ogole tu potrzebne? czy w syntoku?
+//    interpretation_ = uInterpretation; //@todo: to jest gdzie w ogole tu potrzebne? czy w syntoku?
 }
 
     //check whether the interpretation(s) (with the given or all base forms

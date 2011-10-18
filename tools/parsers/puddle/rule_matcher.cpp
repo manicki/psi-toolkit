@@ -24,13 +24,10 @@ void RuleMatcher::setRules(RulesPtr aRules) {
     rules = aRules;
 }
 
-//void RuleMatcher::applyRules(std::string &sentenceString,
-//        Lattice &lattice) {
 void RuleMatcher::applyRules(Lattice &lattice) {
     Rules::iterator ir = rules->begin();
 
     while (ir != rules->end()) {
-        //int currentMatch = 0;
         std::string sentenceString = generateSentenceString(lattice);
         int currentEntity;
         std::string before = "";
@@ -42,8 +39,6 @@ void RuleMatcher::applyRules(Lattice &lattice) {
         while ( (currentEntity = (*ir)->matchPattern(tmpSentenceString,
                         before, after, afterIndex, match) ) > -1 )
         {
-          //  currentMatch ++;
-
             prev_before = before;
             bool structureChanged = false;
             RuleTokenSizes ruleTokenSizes;
@@ -53,8 +48,6 @@ void RuleMatcher::applyRules(Lattice &lattice) {
                 if ((*ir)->apply(sentenceString, lattice, currentEntity,
                             ruleTokenSizes)) {
                     sentenceString = generateSentenceString(lattice, currentEntity);
-                    //if (sentenceString != oldSentenceString)
-                    //    currentMatch --;
                     structureChanged = true;
                 }
             }

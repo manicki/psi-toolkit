@@ -12,8 +12,8 @@ namespace bonsai
 
 UnifyAction::UnifyAction(std::vector<std::string> aUnifiedPatterns,
         std::vector<std::string> aUnifiedAttributes,
-        std::vector<int> aTokenIndices, std::vector<std::string> uAttributes) {
-    init(aUnifiedPatterns, aUnifiedAttributes, aTokenIndices, uAttributes);
+        std::vector<int> aTokenIndices) {
+    init(aUnifiedPatterns, aUnifiedAttributes, aTokenIndices);
 }
 
 
@@ -467,22 +467,15 @@ void UnifyAction::setTokenIndices(std::vector<int> aTokenIndices) {
     tokenIndices =  aTokenIndices;
 }
 
-std::vector<std::string> UnifyAction::getUAttributes() const {
-    return attributes_;
-}
-
 void UnifyAction::init(std::vector<std::string> aUnifiedPatterns,
         std::vector<std::string> aUnifiedAttributes,
-        std::vector<int> aTokenIndices, std::vector<std::string> uAttributes) {
+        std::vector<int> aTokenIndices) {
     nullAgreement = true; //@todo: to ma byc parametrem parsera
 
     type = "unify";
     verbose = false;
 
     tokenIndices = aTokenIndices;
-
-    attributes_ = aUnifiedAttributes;
-
     unifiedAttributes = aUnifiedAttributes;
     unifiedPatterns = aUnifiedPatterns;
 }

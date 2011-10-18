@@ -21,8 +21,7 @@ class UnifyAction : public Action
     public:
         UnifyAction(std::vector<std::string> aUnifiedPatterns,
                 std::vector<std::string> aUnifiedAttributes,
-                std::vector<int> aTokenIndices,
-                std::vector<std::string> uAttributes);
+                std::vector<int> aTokenIndices);
         ~UnifyAction();
         bool apply(Lattice &lattice, int currentEntity,
                 RuleTokenSizes &ruleTokenSizes);
@@ -36,8 +35,6 @@ class UnifyAction : public Action
         std::vector<int> getTokenIndices() const;
         void setTokenIndices(std::vector<int> aTokenIndices);
 
-        std::vector<std::string> getUAttributes() const;
-
         std::string rule;
 
         std::string getType() { return type;}
@@ -46,14 +43,12 @@ class UnifyAction : public Action
     private:
         void init(std::vector<std::string> aUnifiedPatterns,
                 std::vector<std::string> aUnifiedAttributes,
-                std::vector<int> aTokenIndices,
-                std::vector<std::string> uAttributes);
+                std::vector<int> aTokenIndices);
         std::vector<int> tokenIndices;
 
         bool nullAgreement; // true = jak w czesci mowy atrybut nie wystepuje, to traktuj jako dajacy sie z unifikowac, false = jak w czesci mowy nie ma atrybutu, to nie da sie zunifikowac
         std::string type;
         bool verbose;
-        std::vector<std::string> attributes_;
 
         std::vector<std::string> unifiedPatterns;
         std::vector<std::string> unifiedAttributes;

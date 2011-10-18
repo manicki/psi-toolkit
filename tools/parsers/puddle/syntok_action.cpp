@@ -12,9 +12,8 @@ namespace bonsai
     {
 
 SyntokAction::SyntokAction(int aStart, int aEnd, std::vector<int> aTokenIndices,
-        std::vector<Morphology> aMorphology, std::string aRuleName,
-        std::string uMorphology) {
-    init(aStart, aEnd, aTokenIndices, aMorphology, aRuleName, uMorphology);
+        std::vector<Morphology> aMorphology, std::string aRuleName) {
+    init(aStart, aEnd, aTokenIndices, aMorphology, aRuleName);
 }
 
 SyntokAction::~SyntokAction() { }
@@ -68,9 +67,9 @@ bool SyntokAction::apply(Lattice &lattice, int currentEntity,
 
 bool SyntokAction::test(Lattice &, int,
         RuleTokenSizes &ruleTokenSizes) {
-    for (std::vector<int>::iterator i = ruleTokenSizes.begin();
-            i != ruleTokenSizes.end(); ++ i) {
-        if (*i > 0)
+    for (std::vector<int>::iterator sizeIt = ruleTokenSizes.begin();
+            sizeIt != ruleTokenSizes.end(); ++ sizeIt) {
+        if (*sizeIt > 0)
             return true;
     }
     return false;
@@ -116,13 +115,8 @@ void SyntokAction::setRuleName(std::string aRuleName) {
     ruleName = aRuleName;
 }
 
-std::string SyntokAction::getUMorphology() const {
-    return morphology_;
-}
-
 void SyntokAction::init(int aStart, int aEnd, std::vector<int> aTokenIndices,
-        std::vector<Morphology> aMorphology, std::string aRuleName,
-        std::string uMorphology) {
+        std::vector<Morphology> aMorphology, std::string aRuleName) {
     type = "syntok";
     start = aStart;
     end = aEnd;
@@ -131,7 +125,6 @@ void SyntokAction::init(int aStart, int aEnd, std::vector<int> aTokenIndices,
     syntok = false;
     tokenIndices = aTokenIndices;
     morphology = aMorphology;
-    morphology_ = uMorphology;
 }
 
     //gets the base forms of all matched tokens. permutates those forms

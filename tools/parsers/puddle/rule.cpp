@@ -379,68 +379,6 @@ void Rule::deleteAction(size_t index)
         actions->erase(actions->begin() + index);
 }
 
-std::string Rule::makeReadable()
-{
-    std::stringstream ss;
-    ss << "Rule \"" << name << "\"" << std::endl;
-
-    if (leftCount > 0)
-    {
-        ss << left_ << std::endl;
-    }
-    ss << match_ << std::endl;
-    if (rightCount > 0)
-    {
-        ss << right_ << std::endl;
-    }
-    ss << "Eval: ";
-    for (Actions::iterator a = actions->begin(); a != actions->end(); ++ a)
-    {
-        if ((*a)->getType() == "delete")
-            ss << "delete(" << (boost::dynamic_pointer_cast<DeleteAction>(*a))->getUPattern() << ", " << (boost::dynamic_pointer_cast<DeleteAction>(*a))->getTokenIndex() << ");" << std::endl;
-        else if ((*a)->getType() == "add")
-        {
-            ss << "add(" << (boost::dynamic_pointer_cast<AddAction>(*a))->getUInterpretation() << ", " << "\"";
-            if ((boost::dynamic_pointer_cast<AddAction>(*a))->getBase() != "[^<>]+")
-                ss << (boost::dynamic_pointer_cast<AddAction>(*a))->getBase();
-            else
-                ss << "base";
-            ss << "\"" << ", " << (boost::dynamic_pointer_cast<AddAction>(*a))->getTokenIndex() << ");" << std::endl;
-        }
-        else if ((*a)->getType() == "unify")
-        {
-            ss << "unify(";
-            std::vector<std::string> attributes = (boost::dynamic_pointer_cast<UnifyAction>(*a))->getUAttributes();
-            std::vector<int> indices = (boost::dynamic_pointer_cast<UnifyAction>(*a))->getTokenIndices();
-
-            for (std::vector<std::string>::iterator it = attributes.begin(); it != attributes.end(); ++ it)
-            {
-                if (it != attributes.begin())
-                    ss << " ";
-                ss << *it;
-            }
-            for (std::vector<int>::iterator it = indices.begin(); it != indices.end(); ++ it)
-                ss << ", " << *it;
-            ss << ");" << std::endl;
-        }
-        else if ((*a)->getType() == "syntok")
-        {
-            ss << "syntok(\"" << (boost::dynamic_pointer_cast<SyntokAction>(*a))->getUMorphology() << "\");" << std::endl;
-        }
-        else if ((*a)->getType() == "group")
-            ss << "group(" << (boost::dynamic_pointer_cast<GroupAction>(*a))->getGroup() << ", " << (boost::dynamic_pointer_cast<GroupAction>(*a))->getHead() << ");" << std::endl;
-        else if ((*a)->getType() == "join")
-            ss << "join(" << (boost::dynamic_pointer_cast<JoinAction>(*a))->getGroup() << ", " << (boost::dynamic_pointer_cast<JoinAction>(*a))->getHead() << ");" << std::endl;
-        else if ((*a)->getType() == "attach")
-            ss << "attach(" << (boost::dynamic_pointer_cast<AttachAction>(*a))->getGroup() << ", " << (boost::dynamic_pointer_cast<AttachAction>(*a))->getHead() << ");" << std::endl;
-        else if ((*a)->getType() == "transform")
-            ss << "transform(" << (boost::dynamic_pointer_cast<TransformAction>(*a))->getElement() << ", " << (boost::dynamic_pointer_cast<TransformAction>(*a))->getGroup() << ");" << std::endl;
-    }
-
-    return ss.str();
-}
-
-
         int Rule::getPatternStart(std::string &pattern) {
             int r = -1;
 

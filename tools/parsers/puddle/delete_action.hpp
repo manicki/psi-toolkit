@@ -11,13 +11,11 @@ namespace poleng {
 
             class DeleteAction : public Action {
                 public:
-                    DeleteAction(DeleteConditions aConditions, int aTokenIndex,
-                            std::string uPattern);
+                    DeleteAction(DeleteConditions aConditions, int aTokenIndex);
                     bool apply(Lattice &lattice, int currentEntity,
                             RuleTokenSizes &ruleTokenSizes);
                     bool test(Lattice &lattice, int currentEntity,
                             RuleTokenSizes &ruleTokenSizes);
-                    std::string getUPattern() const;
                     int getTokenIndex() const;
                     void setTokenIndex(int aTokenIndex);
                     DeleteConditions getConditions() const;
@@ -26,8 +24,7 @@ namespace poleng {
                     void setVerbose() { verbose = true; }
 
                 private:
-                    void init(DeleteConditions aConditions, int aTokenIndex,
-                            std::string uPattern);
+                    void init(DeleteConditions aConditions, int aTokenIndex);
                     bool foundEdgesToDelete(Lattice &lattice,
                             Lattice::VertexDescriptor vertex, int count);
                     int tokenIndex;
