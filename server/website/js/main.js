@@ -1,5 +1,4 @@
-
-$().ready(function()
+$(document).ready(function()
 {
     $('textarea.resizable:not(.processed)').TextAreaResizer();
 
