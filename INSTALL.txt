@@ -25,4 +25,5 @@ make
 make install
 
 running:
+e.g. simple tokenisation:
 ./psi-pipe tp-tokenizer --lang pl
