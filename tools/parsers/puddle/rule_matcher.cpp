@@ -24,13 +24,14 @@ void RuleMatcher::setRules(RulesPtr aRules) {
     rules = aRules;
 }
 
-void RuleMatcher::applyRules(std::string &sentenceString,
-        Lattice &lattice) {
+//void RuleMatcher::applyRules(std::string &sentenceString,
+//        Lattice &lattice) {
+void RuleMatcher::applyRules(Lattice &lattice) {
     Rules::iterator ir = rules->begin();
 
     while (ir != rules->end()) {
         //int currentMatch = 0;
-        sentenceString = generateSentenceString(lattice);
+        std::string sentenceString = generateSentenceString(lattice);
         int currentEntity;
         std::string before = "";
         std::string after = "";

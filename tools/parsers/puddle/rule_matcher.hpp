@@ -18,8 +18,9 @@ namespace poleng {
                 public:
                     RuleMatcher();
                     ~RuleMatcher();
-                    void applyRules(std::string &sentenceString,
-                            Lattice &lattice);
+                    //void applyRules(std::string &sentenceString,
+                    //        Lattice &lattice);
+                    void applyRules(Lattice &lattice);
 
                     void setRules(RulesPtr aRules);
 
