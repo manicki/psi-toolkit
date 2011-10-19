@@ -35,7 +35,6 @@ namespace poleng {
                     bool norepeats;
                     bool syntok; //@todo: do czego to jest?
 
-                    void unescapeSpecialChars(Lattice &lattice) const; //@todo: const bo ta funkcja na razie nic nie robi, a cppcheck pokazuje bledy
                     void addPosEdges(Lattice &lattice);
 
                     TagsetPtr tagset;

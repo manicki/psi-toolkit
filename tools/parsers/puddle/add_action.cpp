@@ -11,11 +11,9 @@ namespace bonsai
     {
 
 AddAction::AddAction(std::vector<Morphology> aInterpretations, std::string aBase,
-        int aTokenIndex) {//, std::string uInterpretation) {
-    init (aInterpretations, aBase, aTokenIndex);//, uInterpretation);
+        int aTokenIndex) {
+    init (aInterpretations, aBase, aTokenIndex);
 }
-
-AddAction::~AddAction() { }
 
 bool AddAction::apply(Lattice &lattice, int currentEntity,
         RuleTokenSizes &ruleTokenSizes) {
@@ -41,8 +39,8 @@ bool AddAction::test(Lattice &lattice, int currentEntity,
 
     int count = ruleTokenSizes[tokenIndex - 1];
     if (count == 0) {
-        if (verbose)
-            std::cerr << "Nothing matched to " << tokenIndex << " in add ...." << std::endl;
+//        if (verbose)
+//            std::cerr << "Nothing matched to " << tokenIndex << " in add ...." << std::endl;
         return true;
     }
     int before = util::getAddActionParams(ruleTokenSizes, tokenIndex);
@@ -58,42 +56,12 @@ bool AddAction::test(Lattice &lattice, int currentEntity,
     return ret;
 }
 
-void AddAction::setInterpretations(std::vector<Morphology> aInterpretations) {
-    interpretations = aInterpretations;
-}
-
-std::vector<Morphology> AddAction::getInterpretations() const {
-    return interpretations;
-}
-
-void AddAction::setBase(std::string aBase) {
-    base = aBase;
-}
-
-std::string AddAction::getBase() const {
-    return base;
-}
-
-void AddAction::setTokenIndex(int aTokenIndex) {
-    tokenIndex = aTokenIndex;
-}
-
-int AddAction::getTokenIndex() const {
-    return tokenIndex;
-}
-
-//std::string AddAction::getUInterpretation() const {
-//    return interpretation_;
-//}
-
 void AddAction::init(std::vector<Morphology> aInterpretations, std::string aBase,
-        int aTokenIndex) {//, std::string uInterpretation) {
+        int aTokenIndex) {
     base = aBase;
     tokenIndex = aTokenIndex;
     type = "add";
-    verbose = false;
     interpretations = aInterpretations;
-//    interpretation_ = uInterpretation; //@todo: to jest gdzie w ogole tu potrzebne? czy w syntoku?
 }
 
     //check whether the interpretation(s) (with the given or all base forms

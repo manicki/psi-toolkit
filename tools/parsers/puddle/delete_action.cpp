@@ -75,22 +75,9 @@ bool DeleteAction::test(Lattice &lattice,
     return ret;
 }
 
-DeleteConditions DeleteAction::getConditions() const {
-    return conditions;
-}
-
-int DeleteAction::getTokenIndex() const {
-    return tokenIndex;
-}
-
-void DeleteAction::setTokenIndex(int aTokenIndex) {
-    tokenIndex = aTokenIndex;
-}
-
 void DeleteAction::init(DeleteConditions aConditions, int aTokenIndex) {
     tokenIndex = aTokenIndex;
     conditions = aConditions;
-    verbose = false;
     type = "delete";
 }
 

@@ -26,6 +26,8 @@ namespace poleng {
                         int tokenIndex);
                 int getAddActionParams(RuleTokenSizes &ruleTokenSizes,
                         int tokenIndex);
+                int getTransformActionParams(RuleTokenSizes &ruleTokenSizes,
+                        int element);
 
             }
         }

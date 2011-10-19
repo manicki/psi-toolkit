@@ -19,8 +19,6 @@ GroupAction::GroupAction(std::string aGroup, unsigned int aStart,
     init(aGroup, aStart, aEnd, aHead, aRuleName);
 }
 
-GroupAction::~GroupAction() { } //@todo: wywalac te destruktory czy nie?
-
 //@todo: zmienic chyba te nazwe currentEntity na cos wlasciwszego
 bool GroupAction::apply(Lattice &lattice, int currentEntity,
         RuleTokenSizes &ruleTokenSizes) {
@@ -83,46 +81,6 @@ bool GroupAction::test(Lattice &lattice, int,
     return true;
 }
 
-std::string GroupAction::getGroup() const {
-    return group;
-}
-
-unsigned int GroupAction::getHead() const {
-    return head;
-}
-
-void GroupAction::setGroup(std::string aGroup) {
-    group = aGroup;
-}
-
-void GroupAction::setHead(unsigned int aHead) {
-    head = aHead;
-}
-
-//unsigned int GroupAction::getStart() const {
-//    return start;
-//}
-
-void GroupAction::setStart(unsigned int aStart) {
-    start = aStart;
-}
-
-//unsigned int GroupAction::getEnd() const {
-//    return end;
-//}
-
-void GroupAction::setEnd(unsigned int aEnd) {
-    end = aEnd;
-}
-
-std::string GroupAction::getRuleName() const {
-    return ruleName;
-}
-
-void GroupAction::setRuleName(std::string aRuleName) {
-    ruleName = aRuleName;
-}
-
 void GroupAction::init(std::string aGroup, unsigned int aStart,
         unsigned int aEnd, unsigned int aHead,
         std::string aRuleName) {
@@ -139,7 +97,6 @@ void GroupAction::init(std::string aGroup, unsigned int aStart,
     }
     type = "group";
     ruleName = aRuleName;
-    verbose = false;
 }
 
 

@@ -16,10 +16,8 @@ TransformAction::TransformAction(std::string aGroup, int aElement, std::string a
 {
     group = aGroup;
     element = aElement; // - 1;
-//    std::cout << "Grupe zalozylem od " << start << " do " << end << " z glowa w: " << head << " dla reguly: " << aRuleName <<  std::endl;
     type = "transform";
     ruleName = aRuleName;
-    verbose = false;
 }
 
 TransformAction::~TransformAction()
@@ -29,18 +27,8 @@ TransformAction::~TransformAction()
 bool TransformAction::apply(Lattice &lattice, int currentEntity,
         RuleTokenSizes &ruleTokenSizes) {
 
-    int before = 0;
-    int i = 0;
-    while (i < (element - 1))
-    {
-        before += ruleTokenSizes[i];
-        i ++;
-    }
+    int before = util::getTransformActionParams(ruleTokenSizes, element);
 
-//    Group *gr = (Group*)(entities[currentEntity + before]);
-
-//    TransitionInfo *edge = util::getEdge(pg, currentEntity, before);
-//    edge->setLabel(group);
     Lattice::VertexDescriptor startVertex = lattice::getVertex(
             lattice, before, currentEntity); //@todo: czy te numerki tu sie kupy trzymaja trzeba sprawdzic
     Lattice::VertexDescriptor headVertex = lattice::getVertex(
@@ -67,59 +55,25 @@ bool TransformAction::apply(Lattice &lattice, int currentEntity,
             groupPartitions,
             element - 1
             );
-/*    Edges::iterator e = edges.begin();
-    int index = -1;
-    i = 0;
-    while (e != edges.end())
-    {
-        if ((*e)->getId() == gr->getId())
-        {
-            index = i;
-            (*e)->setLabel(group);
-            break;
-        }
-        i ++;
-        e ++;
-    }
-
-        if (index < 0)
-        {
-            std::cerr << "Could not find edge to transform. Id: " << gr->getId() << "." << std::endl;
-            return false;
-        }*/
-
     return true;
 }
 
-//bool TransformAction::test(Entities entities, int currentEntity, std::vector<int> matchedTokensSize)
-//bool TransformAction::test(ParseGraphPtr pg, Lattice &lattice,
 bool TransformAction::test(Lattice &lattice, int currentEntity,
         RuleTokenSizes &ruleTokenSizes) {
-    //if (entities.size() < element)
-    //if ( (pg->num_vertices() - 1) < element ) {
     if ( (lattice.getLastVertex()) < element ) {
         return false;
     }
-    if (ruleTokenSizes[element - 1] == 0)
-    {
-        std::cerr << "Element transform: " << element - 1 << " empty!" << std::endl;
+    if (ruleTokenSizes[element - 1] == 0) {
+        //@todo: throw
+//        std::cerr << "Element transform: " << element - 1 << " empty!" << std::endl;
         return false;
     }
 
-    int before = 0;
-    int i = 0;
-    while (i < (element - 1))
-    {
-        before += ruleTokenSizes[i];
-        i ++;
-    }
+    int before = util::getTransformActionParams(ruleTokenSizes, element);
 
-    //if (entities[currentEntity + before]->getType() != "group")
-//    TransitionInfo *edge = util::getEdge(pg, currentEntity, before);
-//    if (edge->getType() != "group") {
     //Lattice::VertexDescriptor vertex = currentEntity + before;
     Lattice::VertexDescriptor vertex = lattice::getVertex(lattice,
-            currentEntity + before);
+            before, currentEntity);
     //@todo: czy to sprawdzenie jest nadal konieczne? ta funkcja getVertex nie robi czegos takiego?
     while (lattice::getTopEdges(lattice, vertex).size() == 0) { //if there is no edge at a given position, proceed to the next vertex, as it may be a whitespace
         before ++;
@@ -138,33 +92,6 @@ bool TransformAction::test(Lattice &lattice, int currentEntity,
     return true;
 }
 
-std::string TransformAction::getGroup() const {
-    return group;
-}
-
-int TransformAction::getElement() const {
-    return element;
-    //return (head + 1);
-}
-
-void TransformAction::setGroup(std::string aGroup)
-{
-    group = aGroup;
-}
-
-void TransformAction::setElement(int aElement)
-{
-    element = aElement; // - 1;
-}
-
-std::string TransformAction::getRuleName() const {
-    return ruleName;
-}
-
-void TransformAction::setRuleName(std::string aRuleName)
-{
-    ruleName = aRuleName;
-}
 
 }
 

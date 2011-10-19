@@ -18,8 +18,6 @@ AttachAction::AttachAction(std::string aGroup, int aStart, int aEnd, int aHead,
     init(aGroup, aStart, aEnd, aHead, aRuleName);
 }
 
-AttachAction::~AttachAction() { }
-
 bool AttachAction::apply(Lattice &lattice, int currentEntity,
         RuleTokenSizes &ruleTokenSizes) {
     int realStart;
@@ -70,46 +68,6 @@ bool AttachAction::test(Lattice &lattice, int,
     return true;
 }
 
-std::string AttachAction::getGroup() const {
-    return group;
-}
-
-int AttachAction::getHead() const {
-    return head;
-}
-
-void AttachAction::setGroup(std::string aGroup) {
-    group = aGroup;
-}
-
-void AttachAction::setHead(int aHead) {
-    head = aHead;
-}
-
-//int AttachAction::getStart() const {
-//    return start;
-//}
-
-void AttachAction::setStart(int aStart) {
-    start = aStart;
-}
-
-//int AttachAction::getEnd() const {
-//    return end;
-//}
-
-void AttachAction::setEnd(int aEnd) {
-    end = aEnd;
-}
-
-std::string AttachAction::getRuleName() const {
-    return ruleName;
-}
-
-void AttachAction::setRuleName(std::string aRuleName) {
-    ruleName = aRuleName;
-}
-
 void AttachAction::init(std::string aGroup, int aStart, int aEnd, int aHead,
         std::string aRuleName) {
     group = aGroup;
@@ -124,7 +82,6 @@ void AttachAction::init(std::string aGroup, int aStart, int aEnd, int aHead,
     }
     type = "attach";
     ruleName = aRuleName;
-    verbose = false;
 }
 
 }

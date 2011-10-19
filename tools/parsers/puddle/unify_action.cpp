@@ -16,9 +16,6 @@ UnifyAction::UnifyAction(std::vector<std::string> aUnifiedPatterns,
     init(aUnifiedPatterns, aUnifiedAttributes, aTokenIndices);
 }
 
-
-UnifyAction::~UnifyAction() { }
-
 bool UnifyAction::apply(Lattice &lattice, int currentEntity,
         RuleTokenSizes &ruleTokenSizes) {
 
@@ -442,38 +439,12 @@ bool UnifyAction::test(Lattice &lattice, int currentEntity,
 //    return toApply;
 }
 
-
-std::vector<std::string> UnifyAction::getPatterns() const {
-    return unifiedPatterns;
-}
-
-void UnifyAction::setPatterns(std::vector<std::string> aPatterns) {
-    unifiedPatterns = aPatterns;
-}
-
-std::vector<std::string> UnifyAction::getAttributes() const {
-    return unifiedAttributes;
-}
-
-void UnifyAction::setAttributes(std::vector<std::string> aAttributes) {
-    unifiedAttributes = aAttributes;
-}
-
-std::vector<int> UnifyAction::getTokenIndices() const {
-    return tokenIndices;
-}
-
-void UnifyAction::setTokenIndices(std::vector<int> aTokenIndices) {
-    tokenIndices =  aTokenIndices;
-}
-
 void UnifyAction::init(std::vector<std::string> aUnifiedPatterns,
         std::vector<std::string> aUnifiedAttributes,
         std::vector<int> aTokenIndices) {
     nullAgreement = true; //@todo: to ma byc parametrem parsera
 
     type = "unify";
-    verbose = false;
 
     tokenIndices = aTokenIndices;
     unifiedAttributes = aUnifiedAttributes;

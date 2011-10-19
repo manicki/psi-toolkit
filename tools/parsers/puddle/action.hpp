@@ -20,18 +20,15 @@ namespace poleng
             class Action
             {
                 public:
-                    Action() { type = "abstract"; verbose = false; }
-                    virtual ~Action() {}
+                    Action() { type = "abstract"; }
+                    virtual ~Action() { }
                     virtual bool test(Lattice&, int, RuleTokenSizes&);
                     virtual bool apply(Lattice&, int, RuleTokenSizes&);
                     virtual std::string getType() { return type; }
                     virtual void setType(std::string aType);
 
-                    virtual void setVerbose() { verbose = true; }
-
-                private:
+                protected:
                     std::string type;
-                    bool verbose;
             };
 
             typedef boost::shared_ptr<Action> ActionPtr;

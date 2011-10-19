@@ -5,9 +5,6 @@
 #include <sstream>
 #include <boost/lexical_cast.hpp>
 
-//#include "TransitionGraph.hpp"
-//#include "ParseGraph.hpp"
-
 namespace poleng
 {
 
@@ -20,8 +17,6 @@ JoinAction::JoinAction(std::string aGroup, int aStart, int aEnd, int aHead,
         std::string aRuleName) {
     init(aGroup, aStart, aEnd, aHead, aRuleName);
 }
-
-JoinAction::~JoinAction() { }
 
 bool JoinAction::apply(Lattice &lattice, int currentEntity,
         RuleTokenSizes &ruleTokenSizes) {
@@ -73,46 +68,6 @@ bool JoinAction::test(Lattice &lattice, int,
     return true;
 }
 
-std::string JoinAction::getGroup() const {
-    return group;
-}
-
-int JoinAction::getHead() const {
-    return head;
-}
-
-void JoinAction::setGroup(std::string aGroup) {
-    group = aGroup;
-}
-
-void JoinAction::setHead(int aHead) {
-    head = aHead;
-}
-
-//int JoinAction::getStart() const {
-//    return start;
-//}
-
-void JoinAction::setStart(int aStart) {
-    start = aStart;
-}
-
-//int JoinAction::getEnd() const {
-//    return end;
-//}
-
-void JoinAction::setEnd(int aEnd) {
-    end = aEnd;
-}
-
-std::string JoinAction::getRuleName() const {
-    return ruleName;
-}
-
-void JoinAction::setRuleName(std::string aRuleName) {
-    ruleName = aRuleName;
-}
-
 void JoinAction::init(std::string aGroup, int aStart, int aEnd, int aHead,
         std::string aRuleName) {
     group = aGroup;
@@ -127,7 +82,6 @@ void JoinAction::init(std::string aGroup, int aStart, int aEnd, int aHead,
     }
     type = "join";
     ruleName = aRuleName;
-    verbose = false;
 }
 
 

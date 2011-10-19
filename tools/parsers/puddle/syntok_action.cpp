@@ -16,8 +16,6 @@ SyntokAction::SyntokAction(int aStart, int aEnd, std::vector<int> aTokenIndices,
     init(aStart, aEnd, aTokenIndices, aMorphology, aRuleName);
 }
 
-SyntokAction::~SyntokAction() { }
-
 //bool SyntokAction::apply(Entities &entities, Edges &edges, int currentEntity, std::vector<int> matchedTokensSize)
 //@todo: opisac dokladnie, co konkretnie po kolei jest robione w ramach implementacji tej akcji (i z kazda akcja co jest robione). pobranie czego, wyliczenie czego, zebranie jakich form, dodanie jakich krawedzi, zastapienie/usuniecie czego, skad
 //1. ustalenie skad zaczynamy
@@ -75,53 +73,12 @@ bool SyntokAction::test(Lattice &, int,
     return false;
 }
 
-//int SyntokAction::getStart() const {
-//    return start;
-//}
-
-void SyntokAction::setStart(int aStart) {
-    start = aStart;
-}
-
-//int SyntokAction::getEnd() const {
-//    return end;
-//}
-
-void SyntokAction::setEnd(int aEnd) {
-    end = aEnd;
-}
-
-std::vector<Morphology> SyntokAction::getMorphology() const {
-    return morphology;
-}
-
-void SyntokAction::setMorphology(std::vector<Morphology> aMorphology) {
-    morphology = aMorphology;
-}
-
-std::vector<int> SyntokAction::getTokenIndices() const {
-    return tokenIndices;
-}
-
-void SyntokAction::setTokenIndices(std::vector<int> aTokenIndices) {
-    tokenIndices = aTokenIndices;
-}
-
-std::string SyntokAction::getRuleName() const {
-    return ruleName;
-}
-
-void SyntokAction::setRuleName(std::string aRuleName) {
-    ruleName = aRuleName;
-}
-
 void SyntokAction::init(int aStart, int aEnd, std::vector<int> aTokenIndices,
         std::vector<Morphology> aMorphology, std::string aRuleName) {
     type = "syntok";
     start = aStart;
     end = aEnd;
     ruleName = aRuleName;
-    verbose = false;
     syntok = false;
     tokenIndices = aTokenIndices;
     morphology = aMorphology;
