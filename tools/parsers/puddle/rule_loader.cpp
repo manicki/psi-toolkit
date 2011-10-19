@@ -150,7 +150,7 @@ std::string RuleLoader::compileRulePattern(std::string &matched, int &size,
 #endif
 
         if (matched != "") {
-            if (matched[0] == '+' || matched[0] == '*') {
+            if (matched[0] == '+' || matched[0] == '*' || matched[0] == '?') {
                 compiledToken = "(" + compiledToken + matched[0] + ")";
                 matched = matched.substr(1, std::string::npos);
             }
@@ -231,9 +231,9 @@ std::string RuleLoader::compileRulePattern(std::string &matched, int &size,
                         ruleTokenRequirements.push_back(false);
                     else
                         ruleTokenRequirements.push_back(true);
-                    if (s != "" && s[0] == tested) {
-                        s = s.substr(1, std::string::npos);
-                    }
+                    //if (s != "" && s[0] == tested) {
+                    //    s = s.substr(1, std::string::npos);
+                    //}
                 } else {
                     ruleTokenModifiers.push_back("");
                     ruleTokenRequirements.push_back(true);
