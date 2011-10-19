@@ -951,12 +951,12 @@ Eval:  add("conj:phrase",  base, 1);
 ###### token based rules #####
 
 Rule "to"
-Match: [base~"to"] [pos~"subst|adj|apron|ppas|pact" && orth!~"ma"];
+Match: [base~"to"] [pos~"subst|adj|ppas|pact" && orth!~"ma"];
 Eval:  unify(gender number case, 1, 2);
        #delete(pos~"ZRw",1);
 
 Rule "to2"
-Match: [pos~"subst|adj|apron|ppas|pact" && orth!~"ma"] [base~"to"];
+Match: [pos~"subst|adj|ppas|pact" && orth!~"ma"] [base~"to"];
 Eval:  unify(gender number case, 1, 2);
        delete(pos~"pron",2);
 
@@ -1148,20 +1148,20 @@ Eval:  group(NE, 1);
 ###### adjective rules #####
 
 Rule "AP1.1: Adverb + at least 1 adjective"
-Match: [pos~"adv"]* ([pos~"adj"] | [pos~"apron" && orth!~"ma"]) ([pos~"adj"] | [pos~"apron" && orth!~"ma"])+;
+Match: [pos~"adv"]* ([pos~"adj" && orth!~"ma"]) ([pos~"adj" && orth!~"ma"])+;
 Eval:  unify(case gender number, 2, 3);
        delete(pos!~"adv", 1);
        delete(pos!~"adj|apron", 2);
        group(AP, 2);
 
 Rule "AP1.2: Adverb + 1 adjective (back-up rule)"
-Match: [pos~"adv"]* ([pos~"adj"] | [pos~"apron" && orth!~"ma"]);
+Match: [pos~"adv"]* ([pos~"adj" && orth!~"ma"]);
 Eval:  delete(pos!~"adv", 1);
        delete(pos!~"adj|apron", 2);
        group(AP, 2);
 
 Rule "AP1.3: Adverb + 2 adjective (back-up rule)"
-Match: [pos~"adv"]* ([pos~"adj"] | [pos~"apron" && orth!~"ma"]) ([pos~"adj"] | [pos~"apron" && orth!~"ma"]);
+Match: [pos~"adv"]* ([pos~"adj" && orth!~"ma"]) ([pos~"adj" && orth!~"ma"]);
 Eval:  unify(case gender number, 2, 3);
        delete(pos!~"adv", 1);
        delete(pos!~"adj|apron", 2);
@@ -1170,7 +1170,7 @@ Eval:  unify(case gender number, 2, 3);
 
 Rule "AP2.1: Participle as adjective (after noun)"
 #Left:  (([pos~"subst"] ([pos~"adj"]|[pos~"apron"]|[pos~"LP"])*)|[type=NP]);
-Left:  (([pos~"subst"] [pos~"adj|apron" && orth!~"ma"]*)|[type=NP]);
+Left:  (([pos~"subst"] [pos~"adj" && orth!~"ma"]*)|[type=NP]);
 Match: [pos~"adv"]* [pos~"ppas|pact"] [pos~"pron" && base~"się"]? [pos~"adv"]*;
 Right: ([pos!~"subst|prep|adj|pron" && orth!~"ma"] | se);
 Eval:  unify(case gender number, 1, 3);
@@ -1180,7 +1180,7 @@ Eval:  unify(case gender number, 1, 3);
 Rule "AP2.2: Participle as adjective (before noun)"
 Match: [pos~"adv"]* [pos~"ppas|pact"] [pos~"pron" && base~"się"]? [pos~"adv"]*;
 #Right: ((([pos~"adj"]|[pos~"apron"]|[pos~"LP"])* [pos~"subst"])|[type=NP]);
-Right: (([pos~"adj|apron" && orth!~"ma"]* [pos~"subst"])|[type=NP]);
+Right: (([pos~"adj" && orth!~"ma"]* [pos~"subst"])|[type=NP]);
 Eval:  unify(case gender number, 2, 5);
        delete(pos!~"ppas|pact", 2);
        group(AP, 2);
