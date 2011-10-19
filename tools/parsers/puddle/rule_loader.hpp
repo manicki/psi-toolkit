@@ -46,17 +46,17 @@ class RuleLoader {
 
 #if HAVE_RE2
         std::string compileRulePattern(std::string &matched, int &size,
-                std::vector<std::string> &tokensPatterns,
-                std::vector<std::string> &tokensModifiers,
-                std::vector<bool> &tokensRequired,
-                std::vector<int> &matchedIndices, int &bracketCount,
+                RuleTokenPatterns &ruleTokenPatterns,
+                RuleTokenModifiers &ruleTokenModifiers,
+                RuleTokenRequirements &ruleTokenRequirements,
+                RulePatternIndices &rulePatternIndices, int &bracketCount,
                 NegativePatternStrings &negativePatterns);
 #else
         std::string compileRulePattern(std::string &matched, int &size,
-                std::vector<std::string> &tokensPatterns,
-                std::vector<std::string> &tokensModifiers,
-                std::vector<bool> &tokensRequired,
-                std::vector<int> &matchedIndices, int &bracketCount);
+                RuleTokenPatterns &ruleTokenPatterns,
+                RuleTokenModifiers &ruleTokenModifiers,
+                RuleTokenRequirements &ruleTokenRequirements,
+                RulePatternIndices &rulePatternIndices, int &bracketCount);
 #endif
 
     private:

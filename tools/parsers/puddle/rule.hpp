@@ -25,60 +25,46 @@ namespace bonsai
 namespace puddle
 {
 
-#if HAVE_RE2
-    typedef std::map<std::string, std::string> NegativePatternStrings;
-    typedef std::map<std::string, PatternPtr> NegativePatterns;
-#endif
-
 class Rule
 {
     public:
-        Rule();
 #if HAVE_RE2
         Rule(std::string aName, std::string aCompiled, int aLeftCount,
                 int aMatchCount, int aRightCount, ActionsPtr aActions,
-                std::vector<std::string> aTokensPatterns,
-                std::vector<std::string> aTokensModifiers,
-                std::vector<bool> aTokensRequired,
-                std::vector<int> aMatchedIndices, bool aRepeat,
+                RuleTokenPatterns aRuleTokenPatterns,
+                RuleTokenModifiers aRuleTokenModifiers,
+                RuleTokenRequirements aRuleTokenRequirements,
+                RulePatternIndices aRulePatternIndices, bool aRepeat,
                 std::string aLeft, std::string aMatch, std::string aRight,
-                NegativePatternStrings aNegativePatterns); //@todo: zmienic tu typy, bo mnie krew zaleje
+                NegativePatternStrings aNegativePatterns);
 #else
         Rule(std::string aName, std::string aCompiled, int aLeftCount,
                 int aMatchCount, int aRightCount, ActionsPtr aActions,
-                std::vector<std::string> aTokensPatterns,
-                std::vector<std::string> aTokensModifiers,
-                std::vector<bool> aTokensRequired,
-                std::vector<int> aMatchedIndices, bool aRepeat,
+                RuleTokenPatterns aRuleTokenPatterns,
+                RuleTokenModifiers aRuleTokenModifiers,
+                RuleTokenRequirements aRuleTokenRequirements,
+                RulePatternIndices aRulePatternIndices, bool aRepeat,
                 std::string aLeft, std::string aMatch, std::string aRight);
 #endif
-        ~Rule();
 
-        //bool test(std::string &sentence, Entities &entities, int currentEntity);
-        //bool test(std::string &sentenceString, ParseGraphPtr pg, int currentEntity);
+        int matchPattern(std::string &sentenceString,
+                int &afterIndex, std::vector<StringPiece> &match);
         bool test(std::string &sentenceString, Lattice &lattice,
-                int currentEntity, std::vector<StringPiece> &match,
+                int matchedStartIndex, std::vector<StringPiece> &match,
                 RuleTokenSizes &ruleTokenSizes);
-        //bool apply(std::string &sentence, Entities &entities, Edges &edges, int currentEntity);
-        //bool apply(std::string &sentenceString, ParseGraphPtr pg, Lattice &lattice, int currentEntity);
         bool apply(std::string &sentenceString, Lattice &lattice,
-                int currentEntity, RuleTokenSizes &ruleTokenSizes);
+                int matchedStartIndex, RuleTokenSizes &ruleTokenSizes);
 
         std::string getName() const;
-        PatternPtr getPattern() const;
         int getLeftCount() const;
         int getMatchCount() const;
         int getRightCount() const;
-        std::string getCompiled() const;
-        ActionsPtr getActions() const;
         bool getRepeat() const;
 
-        void setName(std::string aName);
         void setPattern(std::string aCompiled);
         void setLeftCount(int aCount);
         void setMatchCount(int aCount);
         void setRightCount(int aCount);
-        void setActions(Actions aActions);
         void setRepeat(bool aRepeat);
 
         void setMatch(std::string aMatch);
@@ -88,14 +74,10 @@ class Rule
         std::string getLeft() const;
         std::string getRight() const;
 
-        void setTokensPatterns(std::vector<std::string> aTokensPatterns);
-        void setTokensModifiers(std::vector<std::string> aTokensModifiers);
-        void setTokensRequired(std::vector<bool> aTokensRequired);
-        void setMatchedIndices(std::vector<int> aMatchedIndices);
-
-        int matchPattern(std::string &sentence,
-                std::string &beforeMatched, std::string &afterMatched,
-                int &afterIndex, std::vector<StringPiece> &match);
+        void setRuleTokenPatterns(RuleTokenPatterns aRuleTokenPatterns);
+        void setRuleTokenModifiers(RuleTokenModifiers aRuleTokenModifiers);
+        void setRuleTokenRequirements(RuleTokenRequirements aRuleTokenRequirements);
+        void setRulePatternIndices(RulePatternIndices aRulePatternIndices);
 
         void addAction(ActionPtr action);
         void deleteAction(size_t index);
@@ -111,17 +93,20 @@ class Rule
         ActionsPtr actions;
         int leftCount, matchCount, rightCount;
         std::string beforeMatch;
-        int countEntities(std::string matched);
+        int countTokensMatched(std::string matched);
 
-        std::vector<std::string> tokensPatterns;
-        std::vector<std::string> tokensModifiers;
-        std::vector<bool> tokensRequired;
-        std::vector<int> matchedIndices;
+        RuleTokenPatterns ruleTokenPatterns;
+        RuleTokenModifiers ruleTokenModifiers;
+        RuleTokenRequirements ruleTokenRequirements;
+        RulePatternIndices rulePatternIndices;
 
         bool repeat;
 
-        int getPatternStart(std::string &pattern); //wcale nie powiedziane, ze to bedzie wyciagac (tylko lub w ogole) start, wiec funkcja z nazwa wlacznie ulegac ma zmianom
-        int getPatternEnd(std::string &pattern); //wcale nie powiedziane, ze to bedzie wyciagac (tylko lub w ogole) start, wiec funkcja z nazwa wlacznie ulegac ma zmianom
+        int getPatternStart(std::string &pattern);
+        int getPatternEnd(std::string &pattern);
+
+        bool requiredTokensMatched(std::vector<StringPiece> &match,
+                RuleTokenSizes &ruleTokenSizes);
 };
 
 typedef boost::shared_ptr<Rule> RulePtr;

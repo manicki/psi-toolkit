@@ -6,8 +6,6 @@
 #include "group_action.hpp"
 #include <exception>
 
-//#include <re2/re2.h>
-
 namespace poleng
 {
 
@@ -16,90 +14,104 @@ namespace bonsai
     namespace puddle
     {
 
-Rule::Rule()
-{
-    actions = ActionsPtr( new Actions );
-    pattern = PatternPtr( new Pattern("") );
-    repeat = false;
-
-    left_ = "";
-    match_ = "";
-    right_ = "";
-
-    leftCount = 0;
-    matchCount = 0;
-    rightCount = 0;
-}
-
 #if HAVE_RE2
-Rule::Rule( std::string aName, std::string aCompiled, int aLeftCount,
-            int aMatchCount, int aRightCount, ActionsPtr aActions,
-            std::vector<std::string> aTokensPatterns, std::vector<std::string> aTokensModifiers,
-            std::vector<bool> aTokensRequired, std::vector<int> aMatchedIndices,
-            bool aRepeat, std::string aLeft, std::string aMatch, std::string aRight,
-            NegativePatternStrings aNegativePatterns ) {
+        Rule::Rule( std::string aName, std::string aCompiled, int aLeftCount,
+                int aMatchCount, int aRightCount, ActionsPtr aActions,
+                RuleTokenPatterns aRuleTokenPatterns,
+                RuleTokenModifiers aRuleTokenModifiers,
+                RuleTokenRequirements aRuleTokenRequirements,
+                RulePatternIndices aRulePatternIndices,
+                bool aRepeat, std::string aLeft, std::string aMatch, std::string aRight,
+                NegativePatternStrings aNegativePatterns ) {
 #else
-Rule::Rule( std::string aName, std::string aCompiled, int aLeftCount,
-            int aMatchCount, int aRightCount, ActionsPtr aActions,
-            std::vector<std::string> aTokensPatterns, std::vector<std::string> aTokensModifiers,
-            std::vector<bool> aTokensRequired, std::vector<int> aMatchedIndices,
-            bool aRepeat, std::string aLeft, std::string aMatch, std::string aRight) {
+       Rule::Rule( std::string aName, std::string aCompiled, int aLeftCount,
+               int aMatchCount, int aRightCount, ActionsPtr aActions,
+               RuleTokenPatterns aRuleTokenPatterns,
+               RuleTokenModifiers aRuleTokenModifiers,
+               RuleTokenRequirements aRuleTokenRequirements,
+               RulePatternIndices aRulePatternIndices,
+               bool aRepeat, std::string aLeft, std::string aMatch, std::string aRight) {
 #endif
 
-    tokensPatterns = aTokensPatterns;
-    tokensModifiers = aTokensModifiers;
-    tokensRequired = aTokensRequired;
-    matchedIndices = aMatchedIndices,
+           ruleTokenPatterns = aRuleTokenPatterns;
+           ruleTokenModifiers = aRuleTokenModifiers;
+           ruleTokenRequirements = aRuleTokenRequirements;
+           rulePatternIndices = aRulePatternIndices;
 
-    pattern = PatternPtr( new Pattern("") );
-    actions = aActions;
+           pattern = PatternPtr( new Pattern("") );
+           actions = aActions;
 
-    name = aName;
-    setPattern(aCompiled);
-    leftCount = aLeftCount;
-    matchCount = aMatchCount;
-    rightCount = aRightCount;
+           name = aName;
+           setPattern(aCompiled);
+           leftCount = aLeftCount;
+           matchCount = aMatchCount;
+           rightCount = aRightCount;
 
-    repeat = aRepeat;
+           repeat = aRepeat;
 
-    left_ = aLeft;
-    match_ = aMatch;
-    right_ = aRight;
+           left_ = aLeft;
+           match_ = aMatch;
+           right_ = aRight;
 
 #if HAVE_RE2
-    for (NegativePatternStrings::iterator negPatIt =
-            aNegativePatterns.begin(); negPatIt != aNegativePatterns.end();
-            ++ negPatIt) {
-        PatternPtr negativePattern = PatternPtr(new Pattern( negPatIt->second ));
-        negativePatterns.insert(std::pair<std::string, PatternPtr>(
-                    negPatIt->first, negativePattern) );
-    }
+           for (NegativePatternStrings::iterator negPatIt =
+                   aNegativePatterns.begin(); negPatIt != aNegativePatterns.end();
+                   ++ negPatIt) {
+               PatternPtr negativePattern = PatternPtr(new Pattern( negPatIt->second ));
+               negativePatterns.insert(std::pair<std::string, PatternPtr>(
+                           negPatIt->first, negativePattern) );
+           }
 #endif
-}
+       }
 
-Rule::~Rule() {
-}
-
-bool Rule::apply(std::string &, Lattice &lattice, int currentEntity,
+bool Rule::apply(std::string &, Lattice &lattice, int matchedStartIndex,
         RuleTokenSizes &ruleTokenSizes) {
     bool ret = false;
-    Actions::iterator i = actions->begin();
-    while (i != actions->end()) {
-        if ((*i)->apply(lattice, currentEntity, ruleTokenSizes)) {
+    for (Actions::iterator actionIt = actions->begin();
+            actionIt != actions->end(); ++ actionIt) {
+        if ( (*actionIt)->apply(lattice, matchedStartIndex, ruleTokenSizes) ) {
             ret = true;
         }
-        ++ i;
     }
     return ret;
 }
 
+bool Rule::test(std::string &, Lattice &lattice, int matchedStartIndex,
+        std::vector<StringPiece> &match, RuleTokenSizes &ruleTokenSizes) {
+
+    ruleTokenSizes.clear();
+    ruleTokenSizes.assign(rulePatternIndices.size(), 0);
+
+    if (! requiredTokensMatched(match, ruleTokenSizes) )
+        return false;
+
+    for (Actions::iterator actionIt = actions->begin();
+            actionIt != actions->end(); ++ actionIt) {
+        if ( (*actionIt)->test(lattice, matchedStartIndex, ruleTokenSizes)
+                == false) {
+            int limit;
+            int lastIndex = leftCount + matchCount - 1;
+            if (ruleTokenModifiers[lastIndex] == "+" ||
+                    ruleTokenModifiers[lastIndex] == "") {
+                limit = 1;
+            } else {
+                limit = 0;
+            }
+            if (ruleTokenSizes[lastIndex] > limit) {
+                ruleTokenSizes[lastIndex] --;
+                continue;
+            }
+            return false;
+        }
+    }
+
+    return true;
+}
+
 int Rule::matchPattern(std::string &sentenceString,
-        std::string &beforeMatched, std::string &afterMatched,
         int &afterIndex, std::vector<StringPiece> &match) {
 
-//    int matchCount = 0;
-
-    int num_groups = pattern->NumberOfCapturingGroups();// + 1;
+    int num_groups = pattern->NumberOfCapturingGroups();
 #if HAVE_RE2
     std::map<std::string, int> namedGroups = pattern->NamedCapturingGroups();
 #endif
@@ -112,81 +124,72 @@ int Rule::matchPattern(std::string &sentenceString,
     StringPiece sentence_str(sentenceString);
     StringPiece orig_str(sentenceString);
 
-    std::string before = "";
     try {
-        //while ( pattern->Match( sentence_str, start, end,
-        //                        RE2::UNANCHORED, matched, num_groups ) ) { // @todo: tu nie bedzie chyba while tylko if, skoro bedzie parametrem odkad szukac, a nie ktore ogolnie dopasowanie ma byc wziete na warsztat
+        std::string before = "";
 #if HAVE_RE2
-        while ( RegExp::FindAndConsumeN( &sentence_str, *pattern, matched, num_groups ) ) { // @todo: tu nie bedzie chyba while tylko if, skoro bedzie parametrem odkad szukac, a nie ktore ogolnie dopasowanie ma byc wziete na warsztat
+        while ( RegExp::FindAndConsumeN( &sentence_str, *pattern, matched,
+                    num_groups ) ) {
 #else
-        if ( RegExp::FindAndConsumeN( &sentence_str, *pattern, matched, num_groups ) ) { // @todo: tu nie bedzie chyba while tylko if, skoro bedzie parametrem odkad szukac, a nie ktore ogolnie dopasowanie ma byc wziete na warsztat
+        if ( RegExp::FindAndConsumeN( &sentence_str, *pattern, matched,
+                    num_groups ) ) {
 #endif
-            //while (boost::u32regex_search(start, end, matched, *pattern, flags)) {
             int prefix_len = matchedS[0].data() - orig_str.data();
             int suffix_start = matchedS[0].data() +
                 matchedS[0].size() - orig_str.data();
-            std::string prefix = sentenceString.substr(0, prefix_len); //@todo: czy od start do prefix_len?
-            std::string suffix = sentenceString.substr(suffix_start, std::string::npos);
+            std::string prefix = sentenceString.substr(0, prefix_len);
+            std::string suffix =
+                sentenceString.substr(suffix_start, std::string::npos);
             before += prefix;
-            //start = matched[0].second;
-            //        start = prefix_len + 1;
             std::string matching = "";
-    //        if (matchCount == matchNumber) {
-                matching = matchedS[0].as_string();
+            matching = matchedS[0].as_string();
 
-                for (int i = 0; i < num_groups; i ++) {
-                    match.push_back(matchedS[i]);
-                }
+            for (int i = 0; i < num_groups; i ++) {
+                match.push_back(matchedS[i]);
+            }
 
 #if HAVE_RE2
-                if (! namedGroups.empty()) {
-                    bool negPatternMatched = false;
-                    for (std::map<std::string, int>::iterator namedGroupIt =
-                            namedGroups.begin(); namedGroupIt != namedGroups.end();
-                            ++ namedGroupIt) {
-                        std::string groupName = namedGroupIt->first;
-                        int groupIndex = namedGroupIt->second - 1;
-                        NegativePatterns::iterator negPatternIt =
-                            negativePatterns.find(groupName);
-                        if (negPatternIt != negativePatterns.end()) {
-                            std::string submatch = matchedS[groupIndex].as_string();
-                            if (RegExp::FullMatch(submatch, *(negPatternIt->second) )) {
-                                negPatternMatched = true;
-                                break;
-                            }
+            if (! namedGroups.empty()) {
+                bool negPatternMatched = false;
+                for (std::map<std::string, int>::iterator namedGroupIt =
+                        namedGroups.begin(); namedGroupIt != namedGroups.end();
+                        ++ namedGroupIt) {
+                    std::string groupName = namedGroupIt->first;
+                    int groupIndex = namedGroupIt->second - 1;
+                    NegativePatterns::iterator negPatternIt =
+                        negativePatterns.find(groupName);
+                    if (negPatternIt != negativePatterns.end()) {
+                        std::string submatch = matchedS[groupIndex].as_string();
+                        submatch = util::unescapeSpecialChars(submatch);
+                        if (RegExp::FullMatch(submatch, *(negPatternIt->second) )) {
+                            negPatternMatched = true;
+                            break;
                         }
                     }
-                    if (negPatternMatched) {
-                        before += matchedS[0].as_string();
-                        sentence_str.set(suffix.c_str());
-                        continue;
-                    }
                 }
+                if (negPatternMatched) {
+                    before += matchedS[0].as_string();
+                    sentence_str.set(suffix.c_str());
+                    continue;
+                }
+            }
 #endif
 
-                if (matching == "") {
-                    delete[] matchedS;
-                    for (int argIt = 0; argIt < num_groups; argIt ++)
-                        delete matched[argIt];
-                    delete[] matched;
-                    return -1;
-                }
-                beforeMatched = before;
-                afterMatched = suffix;
-                int r = getPatternEnd(before); // + 1; //@todo: ten +1 wynika ze sposobu numerowania? w kazdym razie tak jest, zeby bylo w akcjach potem dokadlnie tak, jak wczesniej bylo. moze to sie uda zmienic po wymienieniu calosci
-                if (before == "")
-                    r = getPatternStart(matching);
-                afterIndex = getPatternStart(afterMatched);
+            if (matching == "") {
                 delete[] matchedS;
                 for (int argIt = 0; argIt < num_groups; argIt ++)
                     delete matched[argIt];
                 delete[] matched;
-                return r;
-           // }
-           // else {
-           //     before += matchedS[0].as_string();
-           // }
-            matchCount ++;
+                return -1;
+            }
+            int r = getPatternEnd(before);
+            if (before == "")
+                r = getPatternStart(matching);
+            afterIndex = getPatternStart(suffix);
+            delete[] matchedS;
+            for (int argIt = 0; argIt < num_groups; argIt ++)
+                delete matched[argIt];
+            delete[] matched;
+            return r;
         }
         }
         catch (std::exception &e) {
@@ -205,58 +208,8 @@ int Rule::matchPattern(std::string &sentenceString,
         return -1;
     }
 
-bool Rule::test(std::string &, Lattice &lattice, int currentEntity,
-        std::vector<StringPiece> &match, RuleTokenSizes &ruleTokenSizes) {
 
-    ruleTokenSizes.clear();
-    ruleTokenSizes.assign(matchedIndices.size(), 0);
-
-    std::vector<int>::iterator it = matchedIndices.begin();
-    int i = 0;
-    int j = 0; //@todo: dac tej zmiennej jakas lepsza nazwe
-    while (it != matchedIndices.end()) {
-        std::string part = match[*it].as_string();
-        if ((part == "") && (tokensRequired[i])) {
-            return false;
-        }
-        ruleTokenSizes.at(i) = countEntities(part);
-        if (tokensRequired[i] && ruleTokenSizes[i] == 0) {
-            return false;
-        }
-        j += ruleTokenSizes.at(i);
-        i ++;
-        ++ it;
-    }
-    if (j == 0) {
-        return false;
-    }
-
-    bool ret = true;
-    Actions::iterator ia = actions->begin();
-    while (ia != actions->end()) {
-        if ((*ia)->test(lattice, currentEntity, ruleTokenSizes) == false) {
-            int limit;
-            int lastIndex = leftCount + matchCount - 1;
-            if (tokensModifiers[lastIndex] == "+" ||
-                    tokensModifiers[lastIndex] == "") {
-                limit = 1;
-            } else {
-                limit = 0;
-            }
-            if (ruleTokenSizes[lastIndex] > limit) {
-                ruleTokenSizes[lastIndex] --;
-                continue;
-            }
-            ret = false;
-            break;
-        }
-        ++ ia;
-    }
-
-    return ret;
-}
-
-int Rule::countEntities(std::string matched) {
+int Rule::countTokensMatched(std::string matched) {
     int p = 0;
 
     StringPiece tmpMatched = matched;
@@ -270,14 +223,6 @@ std::string Rule::getName() const {
     return name;
 }
 
-PatternPtr Rule::getPattern() const {
-    return pattern;
-}
-
-std::string Rule::getCompiled() const {
-    return compiled;
-}
-
 int Rule::getLeftCount() const {
     return leftCount;
 }
@@ -288,15 +233,6 @@ int Rule::getMatchCount() const {
 
 int Rule::getRightCount() const {
     return rightCount;
-}
-
-ActionsPtr Rule::getActions() const {
-    return actions;
-}
-
-void Rule::setName(std::string aName)
-{
-    name = aName;
 }
 
 void Rule::setPattern(std::string aCompiled) {
@@ -314,10 +250,6 @@ void Rule::setMatchCount(int aCount) {
 
 void Rule::setRightCount(int aCount) {
     rightCount = aCount;
-}
-
-void Rule::setActions(Actions aActions) {
-    *actions = aActions;
 }
 
 void Rule::setRepeat(bool aRepeat) {
@@ -340,20 +272,20 @@ void Rule::setRight(std::string aRight) {
     right_ = aRight;
 }
 
-void Rule::setTokensPatterns(std::vector<std::string> aTokensPatterns) {
-    tokensPatterns = aTokensPatterns;
+void Rule::setRuleTokenPatterns(RuleTokenPatterns aRuleTokenPatterns) {
+    ruleTokenPatterns = aRuleTokenPatterns;
 }
 
-void Rule::setTokensModifiers(std::vector<std::string> aTokensModifiers) {
-    tokensModifiers = aTokensModifiers;
+void Rule::setRuleTokenModifiers(RuleTokenModifiers aRuleTokenModifiers) {
+    ruleTokenModifiers = aRuleTokenModifiers;
 }
 
-void Rule::setTokensRequired(std::vector<bool> aTokensRequired) {
-    tokensRequired = aTokensRequired;
+void Rule::setRuleTokenRequirements(RuleTokenRequirements aRuleTokenRequirements) {
+    ruleTokenRequirements = aRuleTokenRequirements;
 }
 
-void Rule::setMatchedIndices(std::vector<int> aMatchedIndices) {
-    matchedIndices = aMatchedIndices;
+void Rule::setRulePatternIndices(RulePatternIndices aRulePatternIndices) {
+    rulePatternIndices = aRulePatternIndices;
 }
 
 std::string Rule::getMatch() const {
@@ -368,13 +300,11 @@ std::string Rule::getRight() const {
     return right_;
 }
 
-void Rule::addAction(ActionPtr action)
-{
+void Rule::addAction(ActionPtr action) {
     actions->push_back(action);
 }
 
-void Rule::deleteAction(size_t index)
-{
+void Rule::deleteAction(size_t index) {
     if (index < actions->size())
         actions->erase(actions->begin() + index);
 }
@@ -403,6 +333,28 @@ void Rule::deleteAction(size_t index)
             return r;
         }
 
+        bool Rule::requiredTokensMatched(std::vector<StringPiece> &match,
+                RuleTokenSizes &ruleTokenSizes) {
+            int index = 0;
+            int tokensMatched = 0;
+            for (RulePatternIndices::iterator indexIt = rulePatternIndices.begin();
+                    indexIt != rulePatternIndices.end(); ++ indexIt) {
+                std::string part = match[*indexIt].as_string();
+                if ((part == "") && (ruleTokenRequirements[index])) {
+                    return false;
+                }
+                ruleTokenSizes.at(index) = countTokensMatched(part);
+                if (ruleTokenRequirements[index] && ruleTokenSizes[index] == 0) {
+                    return false;
+                }
+                tokensMatched += ruleTokenSizes.at(index);
+                index ++;
+            }
+            if (tokensMatched == 0) {
+                return false;
+            }
+            return true;
+        }
 }
 
 }

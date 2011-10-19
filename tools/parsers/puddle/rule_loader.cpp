@@ -110,17 +110,17 @@ std::string RuleLoader::compileRuleName(std::string matched) {
 
 #if HAVE_RE2
 std::string RuleLoader::compileRulePattern(std::string &matched, int &size,
-        std::vector<std::string> &tokensPatterns,
-        std::vector<std::string> &tokensModifiers,
-        std::vector<bool> &tokensRequired,
-        std::vector<int> &matchedIndices, int &bracketCount,
+        RuleTokenPatterns &ruleTokenPatterns,
+        RuleTokenModifiers &ruleTokenModifiers,
+        RuleTokenRequirements &ruleTokenRequirements,
+        RulePatternIndices &rulePatternIndices, int &bracketCount,
         NegativePatternStrings &negativePatterns) {
 #else
 std::string RuleLoader::compileRulePattern(std::string &matched, int &size,
-        std::vector<std::string> &tokensPatterns,
-        std::vector<std::string> &tokensModifiers,
-        std::vector<bool> &tokensRequired,
-        std::vector<int> &matchedIndices, int &bracketCount) {
+        RuleTokenPatterns &ruleTokenPatterns,
+        RuleTokenModifiers &ruleTokenModifiers,
+        RuleTokenRequirements &ruleTokenRequirements,
+        RulePatternIndices &rulePatternIndices, int &bracketCount) {
 #endif
     Pattern regMatch("^(Match|Left|Right)\\s*:\\s*");
     Pattern regWhite("\\s+");
@@ -184,7 +184,7 @@ std::string RuleLoader::compileRulePattern(std::string &matched, int &size,
                 }
             }
             if (brackets == 0) {
-                matchedIndices.push_back(mindex);
+                rulePatternIndices.push_back(mindex);
             }
             else {
                 if ( ((i+1) < s.length()) && (s[i + 1] != '?')) {
@@ -226,19 +226,19 @@ std::string RuleLoader::compileRulePattern(std::string &matched, int &size,
                 if (tested == '?' || tested == '*' || tested == '+') {
                     std::string tmp = "";
                     tmp += tested;
-                    tokensModifiers.push_back(tmp);
+                    ruleTokenModifiers.push_back(tmp);
                     if (tested != '+')
-                        tokensRequired.push_back(false);
+                        ruleTokenRequirements.push_back(false);
                     else
-                        tokensRequired.push_back(true);
+                        ruleTokenRequirements.push_back(true);
                     if (s != "" && s[0] == tested) {
                         s = s.substr(1, std::string::npos);
                     }
                 } else {
-                    tokensModifiers.push_back("");
-                    tokensRequired.push_back(true);
+                    ruleTokenModifiers.push_back("");
+                    ruleTokenRequirements.push_back(true);
                 }
-                tokensPatterns.push_back(pattern);
+                ruleTokenPatterns.push_back(pattern);
                 i = 0;
                 continue;
             }
@@ -1425,10 +1425,10 @@ RulePtr RuleLoader::parseRuleString(std::string &ruleString, bool &wrong) {
     int bracketCount = 0;
     wrong = false;
 
-    std::vector<std::string> tokensPatterns;
-    std::vector<std::string> tokensModifiers;
-    std::vector<bool> tokensRequired;
-    std::vector<int> matchedIndices;
+    RuleTokenPatterns ruleTokenPatterns;
+    RuleTokenModifiers ruleTokenModifiers;
+    RuleTokenRequirements ruleTokenRequirements;
+    RulePatternIndices rulePatternIndices;
 
 #if HAVE_RE2
     NegativePatternStrings negativePatterns;
@@ -1462,12 +1462,14 @@ RulePtr RuleLoader::parseRuleString(std::string &ruleString, bool &wrong) {
                     rulePatternLeft = chars;
 #if HAVE_RE2
                     rulePattern = this->compileRulePattern(chars, ruleLeftSize,
-                            tokensPatterns, tokensModifiers, tokensRequired,
-                            matchedIndices, bracketCount, negativePatterns);
+                            ruleTokenPatterns, ruleTokenModifiers,
+                            ruleTokenRequirements, rulePatternIndices,
+                            bracketCount, negativePatterns);
 #else
                     rulePattern = this->compileRulePattern(chars, ruleLeftSize,
-                            tokensPatterns, tokensModifiers, tokensRequired,
-                            matchedIndices, bracketCount);
+                            ruleTokenPatterns, ruleTokenModifiers,
+                            ruleTokenRequirements, rulePatternIndices,
+                            bracketCount);
 #endif
                     chars = "";
                 } else {
@@ -1482,12 +1484,14 @@ RulePtr RuleLoader::parseRuleString(std::string &ruleString, bool &wrong) {
                 rulePatternMatch = chars;
 #if HAVE_RE2
                 rulePattern += this->compileRulePattern(chars, ruleMatchSize,
-                        tokensPatterns, tokensModifiers, tokensRequired,
-                        matchedIndices, bracketCount, negativePatterns);
+                        ruleTokenPatterns, ruleTokenModifiers,
+                        ruleTokenRequirements, rulePatternIndices,
+                        bracketCount, negativePatterns);
 #else
                 rulePattern += this->compileRulePattern(chars, ruleMatchSize,
-                        tokensPatterns, tokensModifiers, tokensRequired,
-                        matchedIndices, bracketCount);
+                        ruleTokenPatterns, ruleTokenModifiers,
+                        ruleTokenRequirements, rulePatternIndices,
+                        bracketCount);
 #endif
                 chars = "";
             }
@@ -1499,23 +1503,27 @@ RulePtr RuleLoader::parseRuleString(std::string &ruleString, bool &wrong) {
                     rulePatternMatch = chars;
 #if HAVE_RE2
                     rulePattern += this->compileRulePattern(chars, ruleMatchSize,
-                            tokensPatterns, tokensModifiers, tokensRequired,
-                            matchedIndices, bracketCount, negativePatterns);
+                            ruleTokenPatterns, ruleTokenModifiers,
+                            ruleTokenRequirements, rulePatternIndices,
+                            bracketCount, negativePatterns);
 #else
                     rulePattern += this->compileRulePattern(chars, ruleMatchSize,
-                            tokensPatterns, tokensModifiers, tokensRequired,
-                            matchedIndices, bracketCount);
+                            ruleTokenPatterns, ruleTokenModifiers,
+                            ruleTokenRequirements, rulePatternIndices,
+                            bracketCount);
 #endif
                 } else {
                     rulePatternRight = chars;
 #if HAVE_RE2
                     rulePattern += this->compileRulePattern(chars, ruleRightSize,
-                            tokensPatterns, tokensModifiers, tokensRequired,
-                            matchedIndices, bracketCount, negativePatterns);
+                            ruleTokenPatterns, ruleTokenModifiers,
+                            ruleTokenRequirements, rulePatternIndices,
+                            bracketCount, negativePatterns);
 #else
                     rulePattern += this->compileRulePattern(chars, ruleRightSize,
-                            tokensPatterns, tokensModifiers, tokensRequired,
-                            matchedIndices, bracketCount);
+                            ruleTokenPatterns, ruleTokenModifiers,
+                            ruleTokenRequirements, rulePatternIndices,
+                            bracketCount);
 #endif
                 }
                 chars = "";
@@ -1537,15 +1545,15 @@ RulePtr RuleLoader::parseRuleString(std::string &ruleString, bool &wrong) {
 #if HAVE_RE2
     RulePtr rule = RulePtr( new Rule(ruleName, rulePattern,
                 ruleLeftSize, ruleMatchSize, ruleRightSize,
-                actions, tokensPatterns, tokensModifiers,
-                tokensRequired, matchedIndices, repeat,
+                actions, ruleTokenPatterns, ruleTokenModifiers,
+                ruleTokenRequirements, rulePatternIndices, repeat,
                 rulePatternLeft, rulePatternMatch, rulePatternRight,
                 negativePatterns) );
 #else
     RulePtr rule = RulePtr( new Rule(ruleName, rulePattern,
                 ruleLeftSize, ruleMatchSize, ruleRightSize,
-                actions, tokensPatterns, tokensModifiers,
-                tokensRequired, matchedIndices, repeat,
+                actions, ruleTokenPatterns, ruleTokenModifiers,
+                ruleTokenRequirements, rulePatternIndices, repeat,
                 rulePatternLeft, rulePatternMatch, rulePatternRight) );
 #endif
     return rule;
