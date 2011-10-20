@@ -72,7 +72,7 @@ std::string SimpleLatticeWriter::doInfo() {
 SimpleLatticeWriter::Worker::Worker(SimpleLatticeWriter& processor,
                                  std::ostream& outputStream,
                                  Lattice& lattice):
-    WriterWorker(outputStream, lattice), processor_(processor) {
+    AligningWriterWorker(outputStream, lattice), processor_(processor) {
 }
 
 void SimpleLatticeWriter::Worker::doRun() {

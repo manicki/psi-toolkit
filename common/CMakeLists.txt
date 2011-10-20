@@ -5,6 +5,7 @@ if(USE_JAVA)
 endif(USE_JAVA)
 
 add_library(common SHARED
+    aligning_writer_worker.cpp
     annotation_item.cpp
     annotation_item_manager.cpp
     annotator.cpp

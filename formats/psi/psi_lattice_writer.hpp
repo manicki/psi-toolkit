@@ -5,6 +5,7 @@
 
 #include "lattice_writer.hpp"
 #include "lattice_writer_factory.hpp"
+#include "aligning_writer_worker.hpp"
 #include "psi_quoter.hpp"
 
 class PsiLatticeWriter : public LatticeWriter {
@@ -26,7 +27,7 @@ public:
 private:
     virtual std::string doInfo();
 
-    class Worker : public WriterWorker {
+    class Worker : public AligningWriterWorker {
     public:
         Worker(PsiLatticeWriter& processor,
                std::ostream& outputStream,

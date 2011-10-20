@@ -8,6 +8,7 @@
 #include "lattice_iter_writer.hpp"
 #include "lattice_writer.hpp"
 #include "lattice_writer_factory.hpp"
+#include "aligning_writer_worker.hpp"
 #include "psi_quoter.hpp"
 #include "simple_lattice_writer_stream_output_iterator.hpp"
 
@@ -64,7 +65,7 @@ public:
 private:
     virtual std::string doInfo();
 
-    class Worker : public WriterWorker {
+    class Worker : public AligningWriterWorker {
     public:
         Worker(SimpleLatticeWriter& processor,
                std::ostream& outputStream,

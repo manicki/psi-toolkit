@@ -41,7 +41,7 @@ std::string PsiLatticeWriter::doInfo() {
 PsiLatticeWriter::Worker::Worker(PsiLatticeWriter& processor,
                                  std::ostream& outputStream,
                                  Lattice& lattice):
-    WriterWorker(outputStream, lattice), processor_(processor) {
+    AligningWriterWorker(outputStream, lattice), processor_(processor) {
 }
 
 void PsiLatticeWriter::Worker::doRun() {
