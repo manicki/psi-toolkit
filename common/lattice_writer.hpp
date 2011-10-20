@@ -16,14 +16,18 @@
 class LatticeWriter : public Processor {
 
 public:
-    void writeLattice(Lattice& lattice, std::ostream& outputStream);
+    void writeLattice(Lattice& lattice, std::ostream& outputStream) {
+        boost::scoped_ptr<WriterWorker> worker(doCreateWriterWorker(outputStream, lattice));
+        worker->run();
+    }
 
     /**
      * Gets format name (eg. "UTT", "BIN" etc.)
      */
     virtual std::string getFormatName() = 0;
 
-    virtual ~LatticeWriter();
+    virtual ~LatticeWriter() {
+    }
 
 private:
     virtual WriterWorker* doCreateWriterWorker(std::ostream& outputStream, Lattice& lattice) = 0;

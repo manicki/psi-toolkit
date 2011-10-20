@@ -19,7 +19,6 @@ add_library(common SHARED
     lattice_reader.cpp
     lattice_reader_factory.cpp
     lattice_worker.cpp
-    lattice_writer.cpp
     lattice_writer_factory.cpp
     lattice_writer_output_iterator.cpp
     layer_tag_collection.cpp
