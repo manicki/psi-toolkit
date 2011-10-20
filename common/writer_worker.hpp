@@ -5,22 +5,23 @@
 
 #include "lattice_worker.hpp"
 
+template<typename Sink>
 class WriterWorker : public LatticeWorker {
 
 public:
-    WriterWorker(std::ostream& outputStream, Lattice& lattice)
-        :LatticeWorker(lattice), outputStream_(outputStream) {
+    WriterWorker(Sink& sink, Lattice& lattice)
+        :LatticeWorker(lattice), sink_(sink) {
     }
 
     virtual ~WriterWorker() {
     }
 
-    std::ostream& getOutputStream() {
-        return outputStream_;
+    Sink& getOutputStream() {
+        return sink_;
     }
 
 private:
-    std::ostream& outputStream_;
+    std::ostream& sink_;
 };
 
 #endif

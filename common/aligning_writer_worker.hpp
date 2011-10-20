@@ -3,7 +3,7 @@
 
 #include "writer_worker.hpp"
 
-class AligningWriterWorker : public WriterWorker {
+class AligningWriterWorker : public WriterWorker<std::ostream> {
 
 public:
     AligningWriterWorker(std::ostream& outputStream, Lattice& lattice);

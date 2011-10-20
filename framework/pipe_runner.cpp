@@ -14,30 +14,20 @@
 #include "logging.hpp"
 
 PipeRunner::PipeRunner(const std::string& pipeline) {
-    parseIntoGraph_(splitPipeline_(pipeline), false);
+    parseIntoGraph_<std::ostream>(splitPipeline_(pipeline), false);
 }
 
 PipeRunner::PipeRunner(int argc, char* argv[]) {
     std::vector<std::string> args(argv, argv + argc);
-    parseIntoGraph_(args, true);
+    parseIntoGraph_<std::ostream>(args, true);
 }
 
 PipeRunner::PipeRunner(std::vector<std::string> args) {
-    parseIntoGraph_(args, false);
+    parseIntoGraph_<std::ostream>(args, false);
 }
 
 int PipeRunner::run(std::istream& in, std::ostream& out) {
-    Lattice lattice;
-
-    PipelineGraph::vertex_descriptor current = firstNode;
-
-    do {
-        runPipelineNode_(current, lattice, in, out);
-        if (!goToNextNode_(current))
-            break;
-    } while (1);
-
-    return 0;
+    return run_<std::ostream>(in,out);
 }
 
 const std::string PipeRunner::PIPELINE_SEPARATOR = "!";
@@ -46,10 +36,11 @@ ProcessorFactory& PipeRunner::getFactory_(const PipelineElementSpecification& el
     return MainFactoriesKeeper::getInstance().getProcessorFactory(elementSpec.processorName);
 }
 
+template<typename Sink>
 void PipeRunner::parseIntoGraph_(std::vector<std::string> args, bool isTheFirstArgProgramName) {
     parseIntoPipelineSpecification_(args, isTheFirstArgProgramName, pipelineSpecification_);
     pipelineSpecification2Graph_(pipelineSpecification_, firstNode, lastNode);
-    completeGraph_();
+    completeGraph_<Sink>();
 }
 
 void PipeRunner::parseIntoPipelineSpecification_(
@@ -109,9 +100,10 @@ void PipeRunner::pipelineSpecification2Graph_(
     lastVertex = currentVertex;
 }
 
+template<typename Sink>
 void PipeRunner::completeGraph_() {
     checkReader_();
-    checkWriter_();
+    checkWriter_<Sink>();
 }
 
 void PipeRunner::checkReader_() {
@@ -123,6 +115,7 @@ void PipeRunner::checkReader_() {
         prepend_("txt-reader --line-by-line");
 }
 
+template<typename Sink>
 void PipeRunner::checkWriter_() {
     PipelineNode& lastPipelineNode = pipelineGraph_[lastNode];
 
@@ -131,8 +124,8 @@ void PipeRunner::checkWriter_() {
     if (!continuation.empty())
         append_(continuation);
 
-    const LatticeWriterFactory* writer =
-        dynamic_cast<const LatticeWriterFactory*>(
+    const LatticeWriterFactory<Sink>* writer =
+        dynamic_cast<const LatticeWriterFactory<Sink> *>(
             pipelineGraph_[firstNode].getFactory());
 
     if (!writer)
@@ -166,7 +159,22 @@ void PipeRunner::append_(const std::string& pipeline) {
     boost::add_edge(prevLast, appFirst, emptyString, pipelineGraph_);
 }
 
+template<typename Sink>
+int PipeRunner::run_(std::istream& in, Sink& out) {
+    Lattice lattice;
 
+    PipelineGraph::vertex_descriptor current = firstNode;
+
+    do {
+        runPipelineNode_<Sink>(current, lattice, in, out);
+        if (!goToNextNode_(current))
+            break;
+    } while (1);
+
+    return 0;
+}
+
+template<typename Sink>
 void PipeRunner::runPipelineNode_(
     PipelineGraph::vertex_descriptor current,
     Lattice& lattice, std::istream& in, std::ostream& out) {
@@ -181,8 +189,8 @@ void PipeRunner::runPipelineNode_(
         reader->readIntoLattice(in, lattice);
     }
     else if (current == lastNode) {
-        boost::shared_ptr<LatticeWriter> writer =
-            boost::dynamic_pointer_cast<LatticeWriter>(
+        boost::shared_ptr<LatticeWriter<Sink> > writer =
+            boost::dynamic_pointer_cast<LatticeWriter<Sink> >(
                 currentPipelineNode.getProcessor());
         writer->writeLattice(lattice, out);
     }

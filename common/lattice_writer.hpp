@@ -11,13 +11,14 @@
 #include "processor.hpp"
 
 /*!
-  Lattice writer takes a lattice and writes its content to a stream in some format.
+  Lattice writer takes a lattice and writes its content to a sink (e.g. a stream) in some format.
 */
+template<typename Sink>
 class LatticeWriter : public Processor {
 
 public:
-    void writeLattice(Lattice& lattice, std::ostream& outputStream) {
-        boost::scoped_ptr<WriterWorker> worker(doCreateWriterWorker(outputStream, lattice));
+    void writeLattice(Lattice& lattice, Sink& sink) {
+        boost::scoped_ptr<WriterWorker<Sink> > worker(doCreateWriterWorker(sink, lattice));
         worker->run();
     }
 
@@ -30,7 +31,7 @@ public:
     }
 
 private:
-    virtual WriterWorker* doCreateWriterWorker(std::ostream& outputStream, Lattice& lattice) = 0;
+    virtual WriterWorker<Sink>* doCreateWriterWorker(Sink& sink, Lattice& lattice) = 0;
 
 };
 

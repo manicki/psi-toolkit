@@ -12,14 +12,14 @@
 #include "psi_quoter.hpp"
 #include "simple_lattice_writer_stream_output_iterator.hpp"
 
-class SimpleLatticeWriter : public LatticeWriter {
+class SimpleLatticeWriter : public LatticeWriter<std::ostream> {
 
 public:
     virtual std::string getFormatName();
 
-    class Factory : public LatticeWriterFactory {
+    class Factory : public LatticeWriterFactory<std::ostream> {
     private:
-        virtual LatticeWriter* doCreateLatticeWriter(
+        virtual LatticeWriter<std::ostream>* doCreateLatticeWriter(
             const boost::program_options::variables_map& options);
 
         virtual boost::program_options::options_description doOptionsHandled();
@@ -78,7 +78,7 @@ private:
         SimpleLatticeWriter& processor_;
     };
 
-    virtual WriterWorker* doCreateWriterWorker(std::ostream& outputStream, Lattice& lattice) {
+    virtual WriterWorker<std::ostream>* doCreateWriterWorker(std::ostream& outputStream, Lattice& lattice) {
         return new Worker(*this, outputStream, lattice);
     }
 

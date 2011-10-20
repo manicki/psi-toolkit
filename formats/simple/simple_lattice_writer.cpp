@@ -5,7 +5,7 @@ std::string SimpleLatticeWriter::getFormatName() {
     return "simple";
 }
 
-LatticeWriter* SimpleLatticeWriter::Factory::doCreateLatticeWriter(
+LatticeWriter<std::ostream>* SimpleLatticeWriter::Factory::doCreateLatticeWriter(
     const boost::program_options::variables_map& options
 ) {
     PsiQuoter quoter;

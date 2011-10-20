@@ -4,14 +4,15 @@
 #include "processor_factory.hpp"
 #include "lattice_writer.hpp"
 
+template<typename Sink>
 class LatticeWriterFactory : public ProcessorFactory {
 
 public:
     /**
      * Creates a lattice writer with the options specified.
      */
-    LatticeWriter* createLatticeWriter(const boost::program_options::variables_map& options) {
-        return dynamic_cast<LatticeWriter*>(createProcessor(options));
+    LatticeWriter<Sink>* createLatticeWriter(const boost::program_options::variables_map& options) {
+        return dynamic_cast<LatticeWriter<Sink>*>(createProcessor(options));
     }
 
     virtual ~LatticeWriterFactory() {
@@ -19,11 +20,11 @@ public:
 
 private:
 
-    virtual LatticeWriter* doCreateProcessor(const boost::program_options::variables_map& options) {
+    virtual LatticeWriter<Sink>* doCreateProcessor(const boost::program_options::variables_map& options) {
         return doCreateLatticeWriter(options);
     }
 
-    virtual LatticeWriter* doCreateLatticeWriter(const boost::program_options::variables_map& options) = 0;
+    virtual LatticeWriter<Sink>* doCreateLatticeWriter(const boost::program_options::variables_map& options) = 0;
 
     std::string doGetContinuation(
         const boost::program_options::variables_map& /*options*/) const {

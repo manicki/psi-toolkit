@@ -21,11 +21,13 @@ public:
     int run(std::istream&, std::ostream&);
     int run(const std::string& inputFilePath, const std::string& outputFilePath);
     std::string run(const std::string & inputString);
-    
+
 private:
     PipelineSpecification pipelineSpecification_;
 
+    template<typename Sink>
     void parseIntoGraph_(std::vector<std::string> args, bool isTheFirstArgProgramName);
+
     void parseIntoPipelineSpecification_(
         std::vector<std::string> args, bool isTheFirstArgProgramName,
         PipelineSpecification& pipelineSpec);
@@ -93,16 +95,25 @@ private:
         PipelineGraph::vertex_descriptor& firstVertex,
         PipelineGraph::vertex_descriptor& lastVertex);
 
+    template<typename Sink>
     void completeGraph_();
+
     void checkReader_();
+
+    template<typename Sink>
     void checkWriter_();
     void prepend_(const std::string& pipeline);
     void append_(const std::string& pipeline);
 
+    template<typename Sink>
+    int run_(std::istream&, Sink&);
+
+    template<typename Sink>
     void runPipelineNode_(
         PipelineGraph::vertex_descriptor current,
         Lattice& lattice,
         std::istream& in, std::ostream& out);
+
     bool goToNextNode_(PipelineGraph::vertex_descriptor& current);
 
     std::istream * createInputStreamOrReturnStandardInput(const std::string & path);

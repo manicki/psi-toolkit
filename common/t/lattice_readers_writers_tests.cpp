@@ -131,7 +131,7 @@ BOOST_AUTO_TEST_CASE( psi_lattice_writer_simple ) {
     Lattice lattice;
     prepareSimpleLattice_(lattice);
 
-    boost::scoped_ptr<LatticeWriter> writer(new PsiLatticeWriter());
+    boost::scoped_ptr<LatticeWriter<std::ostream> > writer(new PsiLatticeWriter());
 
     std::ostringstream osstr;
     writer->writeLattice(lattice, osstr);
@@ -153,7 +153,7 @@ BOOST_AUTO_TEST_CASE( psi_lattice_writer_advanced ) {
     Lattice lattice;
     prepareAdvancedLattice_(lattice);
 
-    boost::scoped_ptr<LatticeWriter> writer(new PsiLatticeWriter());
+    boost::scoped_ptr<LatticeWriter<std::ostream> > writer(new PsiLatticeWriter());
 
     // writer->writeLattice(lattice, std::cout);
 
@@ -180,7 +180,7 @@ BOOST_AUTO_TEST_CASE( psi_lattice_reader_reflexive ) {
 
     reader->readIntoLattice(ROOT_DIR "formats/psi/t/files/pl_sample_nocomments.txt", lattice);
 
-    boost::scoped_ptr<LatticeWriter> writer(new PsiLatticeWriter());
+    boost::scoped_ptr<LatticeWriter<std::ostream> > writer(new PsiLatticeWriter());
 
     // writer->writeLattice(lattice, std::cout);
 
@@ -208,7 +208,7 @@ BOOST_AUTO_TEST_CASE( simple_lattice_writer ) {
     std::map<std::string, std::string> tagsSeparators;
     tagsSeparators["token"] = ";";
 
-    boost::scoped_ptr<LatticeWriter> writer(new SimpleLatticeWriter(
+    boost::scoped_ptr<LatticeWriter<std::ostream> > writer(new SimpleLatticeWriter(
                                                 false, //linear
                                                 false, //no-alts
                                                 true, //with-blank
@@ -243,7 +243,7 @@ BOOST_AUTO_TEST_CASE( simple_lattice_writer_linear ) {
     std::map<std::string, std::string> tagsSeparators;
     tagsSeparators["token"] = ";";
 
-    boost::scoped_ptr<LatticeWriter> writer(new SimpleLatticeWriter(
+    boost::scoped_ptr<LatticeWriter<std::ostream> > writer(new SimpleLatticeWriter(
                                                 true, //linear
                                                 false, //no-alts
                                                 true, //with-blank
@@ -278,7 +278,7 @@ BOOST_AUTO_TEST_CASE( simple_lattice_writer_advanced ) {
     std::map<std::string, std::string> tagsSeparators;
     // tagsSeparators["splitter"] = "\n";
 
-    boost::scoped_ptr<LatticeWriter> writer(new SimpleLatticeWriter(
+    boost::scoped_ptr<LatticeWriter<std::ostream> > writer(new SimpleLatticeWriter(
                                                 false, //linear
                                                 false, //no-alts
                                                 true, //with-blank
