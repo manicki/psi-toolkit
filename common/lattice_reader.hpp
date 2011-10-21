@@ -14,11 +14,6 @@ class LatticeReader : public Processor {
 
 public:
 
-    class CannotOpenFileException : public std::runtime_error {
-    public:
-        CannotOpenFileException() : std::runtime_error("cannot open a file") { }
-    };
-
     /**
      * Reads from `inputStream` into `lattice`. If lattice is not empty,
      * new edges will be appended at the end of lattice.
@@ -26,15 +21,6 @@ public:
     void readIntoLattice(std::istream& inputStream, Lattice& lattice) {
         boost::scoped_ptr<ReaderWorker> worker(doCreateReaderWorker(inputStream, lattice));
         worker->run();
-    }
-
-    /**
-     * Reads from file `fileName` into `lattice`. If lattice is not empty,
-     * new edges will be appended at the end of lattice.
-     */
-    void readIntoLattice(const std::string& fileName, Lattice& lattice) {
-        std::ifstream inputStream(fileName.c_str());
-        readIntoLattice(inputStream, lattice);
     }
 
     /**

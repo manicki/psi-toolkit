@@ -2,10 +2,10 @@
 #define TXT_LATTICE_READER_HDR
 
 
-#include "lattice_reader.hpp"
+#include "stream_lattice_reader.hpp"
 #include "lattice_reader_factory.hpp"
 
-class TxtLatticeReader : public LatticeReader {
+class TxtLatticeReader : public StreamLatticeReader {
 
 public:
     virtual std::string getFormatName();

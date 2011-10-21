@@ -16,7 +16,7 @@
 
 #include "utf8.h"
 
-#include "lattice_reader.hpp"
+#include "stream_lattice_reader.hpp"
 #include "lattice_reader_factory.hpp"
 #include "quoter.hpp"
 #include "utt_quoter.hpp"
@@ -137,7 +137,7 @@ struct UTTLRAVGrammar : public qi::grammar<
 };
 
 
-class UTTLatticeReader : public LatticeReader {
+class UTTLatticeReader : public StreamLatticeReader {
 
 public:
 

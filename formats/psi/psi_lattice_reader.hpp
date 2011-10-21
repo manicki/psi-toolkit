@@ -18,7 +18,7 @@
 #include <boost/spirit/include/phoenix_operator.hpp>
 #include <boost/spirit/include/qi.hpp>
 
-#include "lattice_reader.hpp"
+#include "stream_lattice_reader.hpp"
 #include "lattice_reader_factory.hpp"
 #include "quoter.hpp"
 #include "psi_quoter.hpp"
@@ -273,7 +273,7 @@ struct PsiLRPartitionGrammar : public qi::grammar<
 };
 
 
-class PsiLatticeReader : public LatticeReader {
+class PsiLatticeReader : public StreamLatticeReader {
 
 public:
 
