@@ -375,6 +375,19 @@ public:
                            Score score = 0.0,
                            int ruleId = -1);
 
+    EdgeDescriptor addPartitionToEdge(EdgeDescriptor edge,
+                                      LayerTagCollection tags,
+                                      EdgeSequence sequence = EdgeSequence(),
+                                      Score score = 0.0,
+                                      int ruleId = -1);
+
+    /**
+     * Discard the given edge.
+     *
+     * The edge won't be removed - will be labeled with `discarded` tag.
+     */
+    void discard(EdgeDescriptor edge);
+
     // return outgoing edges which has at least one layer tag from `mask`
     InOutEdgesIterator outEdges(
         VertexDescriptor vertex,
@@ -595,7 +608,7 @@ private:
     EdgeCounterHash edgeCounterHash_;
 
     LayerTagCollection symbolTag_;
-
+    LayerTagCollection discardedTag_;
 };
 
 
