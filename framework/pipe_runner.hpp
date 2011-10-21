@@ -117,11 +117,13 @@ private:
 
     bool goToNextNode_(PipelineGraph::vertex_descriptor& current);
 
-    std::istream * createInputStreamOrReturnStandardInput(const std::string & path);
-    std::ostream * createOutputStreamOrReturnStandardOutput(const std::string & path);
+    static std::istream* createInputStreamOrReturnStandardInput(const std::string & path);
+    static std::ostream* createOutputStreamOrReturnStandardOutput(const std::string & path);
 
-    void closeStreamWithStandardInputOrOutputCheck(std::ios * stream, const std::string & path);
-    bool isStandardInputOrOutputFileName(const std::string & path) const;
+    static void closeStreamWithStandardInputOrOutputCheck(std::ios * stream,
+                                                          const std::string & path);
+
+    static bool isStandardInputOrOutputFileName(const std::string & path);
 };
 
 #endif
