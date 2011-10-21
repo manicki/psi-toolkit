@@ -2,7 +2,7 @@
 #define PUDDLE_TYPES_H__
 
 #include "regexp.hpp"
-#include "utf8.h"
+#include "utf8/utf8.h"
 #include <string>
 #include <vector>
 #include <map>

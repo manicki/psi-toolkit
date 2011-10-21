@@ -4,6 +4,8 @@ project(psi-toolkit CXX)
 
 SET(CMAKE_INSTALL_RPATH "${psi-toolkit_BINARY_DIR}")
 
+include_directories(${psi-toolkit_SOURCE_DIR})
+
 # Finds and includes external libraries
 set(Boost_USE_STATIC_LIBS OFF)
 set(Boost_USE_STATIC_RUNTIME OFF)
@@ -67,6 +69,11 @@ message(STATUS "Using bonsai ParseGraph with puddle shallow parser ${USE_BONSAI_
 
 option(BONSAI_PATH "Bonsai common path file (required while using ParseGraph)" "/home/user/poleng4/src/bonsai/common")
 message(STATUS "Bonsai common path file (required while using ParseGraph) ${BONSAI_PATH}")
+
+find_package(SWIG)
+if(SWIG_FOUND)
+  set(HAVE_PERL_BINDINGS 1)
+endif(SWIG_FOUND)
 
 # Sets compiler flags
 set(CMAKE_CXX_FLAGS "-g -Wall -Wundef -Wnon-virtual-dtor -Wextra")

@@ -13,6 +13,10 @@
 
 #include "logging.hpp"
 
+#if HAVE_PERL_BINDINGS
+#include "perl_lattice_writer_output.hpp"
+#endif
+
 PipeRunner::PipeRunner(const std::string& pipeline) {
     parseIntoGraph_<std::istream,std::ostream>(splitPipeline_(pipeline), false);
 }
@@ -178,7 +182,7 @@ int PipeRunner::run_(Source& in, Sink& out) {
 template<typename Source, typename Sink>
 void PipeRunner::runPipelineNode_(
     PipelineGraph::vertex_descriptor current,
-    Lattice& lattice, std::istream& in, std::ostream& out) {
+    Lattice& lattice, std::istream& in, Sink & out) {
 
     PipelineNode& currentPipelineNode = pipelineGraph_[current];
     currentPipelineNode.createProcessor();
@@ -335,3 +339,13 @@ std::string PipeRunner::run(const std::string & inputString) {
 
     return outputStream.str();
 }
+
+#if HAVE_PERL_BINDINGS
+void PipeRunner::run_for_perl_(const std::string& inputString, AV* outputPointer) {
+    std::istringstream inputStream (inputString, std::istringstream::in);
+    PerlLatticeWriterOutput output(outputPointer);
+
+    DEBUG("INPUT PIPE: "  + inputString);
+    run_<PerlLatticeWriterOutput>(inputStream, output);
+}
+#endif
