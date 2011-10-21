@@ -5,11 +5,12 @@
 
 #include "lattice_worker.hpp"
 
+template<typename Source>
 class ReaderWorker : public LatticeWorker {
 
 public:
-    ReaderWorker(std::istream& inputStream, Lattice& lattice)
-        :LatticeWorker(lattice), inputStream_(inputStream) {
+    ReaderWorker(Source& source, Lattice& lattice)
+        :LatticeWorker(lattice), inputStream_(source) {
     }
 
     virtual ~ReaderWorker() {

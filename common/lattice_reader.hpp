@@ -10,16 +10,17 @@
 #include "reader_worker.hpp"
 #include "processor.hpp"
 
+template<typename Source>
 class LatticeReader : public Processor {
 
 public:
 
     /**
-     * Reads from `inputStream` into `lattice`. If lattice is not empty,
+     * Reads from `source` into `lattice`. If lattice is not empty,
      * new edges will be appended at the end of lattice.
      */
-    void readIntoLattice(std::istream& inputStream, Lattice& lattice) {
-        boost::scoped_ptr<ReaderWorker> worker(doCreateReaderWorker(inputStream, lattice));
+    void readIntoLattice(Source& source, Lattice& lattice) {
+        boost::scoped_ptr<ReaderWorker<Source> > worker(doCreateReaderWorker(source, lattice));
         worker->run();
     }
 
@@ -32,7 +33,7 @@ public:
     }
 
 private:
-    virtual ReaderWorker* doCreateReaderWorker(std::istream& inputStream, Lattice& lattice) = 0;
+    virtual ReaderWorker<Source>* doCreateReaderWorker(Source& source, Lattice& lattice) = 0;
 
 };
 

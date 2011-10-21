@@ -25,7 +25,7 @@ public:
 private:
     PipelineSpecification pipelineSpecification_;
 
-    template<typename Sink>
+    template<typename Source, typename Sink>
     void parseIntoGraph_(std::vector<std::string> args, bool isTheFirstArgProgramName);
 
     void parseIntoPipelineSpecification_(
@@ -95,9 +95,10 @@ private:
         PipelineGraph::vertex_descriptor& firstVertex,
         PipelineGraph::vertex_descriptor& lastVertex);
 
-    template<typename Sink>
+    template<typename Source, typename Sink>
     void completeGraph_();
 
+    template<typename Source>
     void checkReader_();
 
     template<typename Sink>
@@ -105,10 +106,10 @@ private:
     void prepend_(const std::string& pipeline);
     void append_(const std::string& pipeline);
 
-    template<typename Sink>
-    int run_(std::istream&, Sink&);
+    template<typename Source, typename Sink>
+    int run_(Source&, Sink&);
 
-    template<typename Sink>
+    template<typename Source, typename Sink>
     void runPipelineNode_(
         PipelineGraph::vertex_descriptor current,
         Lattice& lattice,

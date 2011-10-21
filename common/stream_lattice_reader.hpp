@@ -3,7 +3,7 @@
 
 #include "lattice_reader.hpp"
 
-class StreamLatticeReader : public LatticeReader {
+class StreamLatticeReader : public LatticeReader<std::istream> {
 
 public:
 

@@ -13,7 +13,7 @@ std::string PsiLatticeReader::doInfo() {
 PsiLatticeReader::Factory::~Factory() {
 }
 
-LatticeReader* PsiLatticeReader::Factory::doCreateLatticeReader(
+LatticeReader<std::istream>* PsiLatticeReader::Factory::doCreateLatticeReader(
     const boost::program_options::variables_map&) {
     return new PsiLatticeReader();
 }

@@ -282,12 +282,12 @@ public:
      */
     std::string getFormatName();
 
-    class Factory : public LatticeReaderFactory {
+    class Factory : public LatticeReaderFactory<std::istream> {
     public:
         virtual ~Factory();
 
     private:
-        virtual LatticeReader* doCreateLatticeReader(
+        virtual LatticeReader<std::istream>* doCreateLatticeReader(
             const boost::program_options::variables_map& options);
 
         virtual boost::program_options::options_description doOptionsHandled();
@@ -298,7 +298,7 @@ public:
 private:
     virtual std::string doInfo();
 
-    class Worker : public ReaderWorker {
+    class Worker : public ReaderWorker<std::istream> {
     public:
         Worker(PsiLatticeReader& processor,
                std::istream& inputStream,
@@ -310,7 +310,7 @@ private:
         PsiLatticeReader& processor_;
     };
 
-    virtual ReaderWorker* doCreateReaderWorker(std::istream& inputStream, Lattice& lattice) {
+    virtual ReaderWorker<std::istream>* doCreateReaderWorker(std::istream& inputStream, Lattice& lattice) {
         return new Worker(*this, inputStream, lattice);
     }
 

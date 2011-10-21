@@ -4,24 +4,26 @@
 #include "processor_factory.hpp"
 #include "lattice_reader.hpp"
 
+template<typename Source>
 class LatticeReaderFactory : public ProcessorFactory {
 
 public:
     /**
      * Creates a lattice reader with the options specified.
      */
-    LatticeReader* createLatticeReader(const boost::program_options::variables_map& options) {
-        return dynamic_cast<LatticeReader*>(createProcessor(options));
+    LatticeReader<Source>* createLatticeReader(
+        const boost::program_options::variables_map& options) {
+        return dynamic_cast<LatticeReader<Source>*>(createProcessor(options));
     }
 
 private:
 
-    virtual LatticeReader* doCreateProcessor(
+    virtual LatticeReader<Source>* doCreateProcessor(
         const boost::program_options::variables_map& options) {
         return doCreateLatticeReader(options);
     }
 
-    virtual LatticeReader* doCreateLatticeReader(
+    virtual LatticeReader<Source>* doCreateLatticeReader(
         const boost::program_options::variables_map& options) = 0;
 
     virtual std::string doGetContinuation(
