@@ -234,7 +234,7 @@ void PsiLatticeReader::Worker::doRun() {
                         partitionsElements.push_back(PsiLRPartitionElements(
                             seqBuilder,
                             tags,
-                            partItem.score == 0.0 ? item.annotationItem.score : partItem.score
+                            !partItem.score ? item.annotationItem.score : partItem.score.get()
                         ));
                     }
 

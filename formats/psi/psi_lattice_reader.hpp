@@ -251,14 +251,14 @@ struct PsiLRPartitionsGrammar : public qi::grammar<
 
 struct PsiLRPartitionItem {
     std::vector<int> edgeNumbers;
-    double score;
+    boost::optional<double> score;
 };
 
 
 BOOST_FUSION_ADAPT_STRUCT(
     PsiLRPartitionItem,
     (std::vector<int>, edgeNumbers)
-    (double, score)
+    (boost::optional<double>, score)
 )
 
 
@@ -280,15 +280,14 @@ struct PsiLRPartitionGrammar : public qi::grammar<
             ;
 
         score
-            = qi::eps[qi::_val = 0.0]
-            >> -('<' >> qi::double_[qi::_val = qi::_1] >> '>')
+            %= -('<' >> qi::double_ >> '>')
             ;
 
     }
 
     qi::rule<std::string::const_iterator, PsiLRPartitionItem()> start;
     qi::rule<std::string::const_iterator, int()> edge;
-    qi::rule<std::string::const_iterator, double()> score;
+    qi::rule<std::string::const_iterator, boost::optional<double>()> score;
 
 };
 
