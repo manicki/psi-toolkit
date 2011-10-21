@@ -346,6 +346,6 @@ void PipeRunner::run_for_perl_(const std::string& inputString, AV* outputPointer
     PerlLatticeWriterOutput output(outputPointer);
 
     DEBUG("INPUT PIPE: "  + inputString);
-    run_<PerlLatticeWriterOutput>(inputStream, output);
+    run_<std::istream,PerlLatticeWriterOutput>(inputStream, output);
 }
 #endif
