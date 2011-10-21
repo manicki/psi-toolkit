@@ -798,6 +798,14 @@ const Lattice::EdgeSequence& Lattice::Partition::getSequence() const {
     return sequence_;
 }
 
+const LayerTagCollection& Lattice::Partition::getTagList() const {
+    return tagList_;
+}
+
+const Lattice::Score& Lattice::Partition::getScore() const {
+    return score_;
+}
+
 Lattice::VertexDescriptor Lattice::firstSequenceVertex_(const EdgeSequence& sequence) {
     return getEdgeSource(sequence.firstEdge(*this));
 }

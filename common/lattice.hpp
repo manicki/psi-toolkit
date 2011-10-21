@@ -167,6 +167,10 @@ public:
 
         const EdgeSequence& getSequence() const;
 
+        const LayerTagCollection& getTagList() const;
+
+        const Score& getScore() const;
+
         EdgeDescriptor firstEdge(Lattice & lattice) const { return sequence_.firstEdge(lattice); }
 
         EdgeDescriptor lastEdge(Lattice & lattice) const { return sequence_.lastEdge(lattice); }
