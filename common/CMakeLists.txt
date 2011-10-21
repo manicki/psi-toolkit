@@ -17,7 +17,6 @@ add_library(common SHARED
     language_dependent_annotator_factory.cpp
     lattice.cpp
     lattice_iter_writer.cpp
-    lattice_reader_factory.cpp
     lattice_worker.cpp
     lattice_writer_output_iterator.cpp
     layer_tag_collection.cpp
