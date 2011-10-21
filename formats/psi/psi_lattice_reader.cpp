@@ -176,7 +176,6 @@ void PsiLatticeReader::Worker::doRun() {
             // Defining partitions.
 
             LayerTagMask rawMask = lattice_.getLayerTagManager().getMask("symbol");
-            // std::list<Lattice::EdgeSequence::Builder> seqBuilders;
             std::list<PsiLRPartitionElements> partitionsElements;
             Lattice::VertexDescriptor currentVertex = from;
             Lattice::EdgeDescriptor currentEdge;
@@ -191,7 +190,6 @@ void PsiLatticeReader::Worker::doRun() {
                         currentVertex = lattice_.getEdgeTarget(currentEdge);
                     }
                 }
-                // seqBuilders.push_back(seqBuilder);
                 partitionsElements.push_back(PsiLRPartitionElements(
                     seqBuilder,
                     tags,
@@ -230,17 +228,19 @@ void PsiLatticeReader::Worker::doRun() {
                                 currentVertex = lattice_.getEdgeTarget(currentEdge);
                             }
                         }
-                        // seqBuilders.push_back(seqBuilder);
                         partitionsElements.push_back(PsiLRPartitionElements(
                             seqBuilder,
-                            tags,
-                            !partItem.score ? item.annotationItem.score : partItem.score.get()
+                            partItem.tags.empty()
+                                ? tags
+                                : lattice_.getLayerTagManager().createTagCollection(partItem.tags),
+                            !partItem.score
+                                ? item.annotationItem.score
+                                : partItem.score.get()
                         ));
                     }
 
                 } else {
 
-                    // seqBuilders.push_back(Lattice::EdgeSequence::Builder(lattice_));
                     partitionsElements.push_back(PsiLRPartitionElements(
                         Lattice::EdgeSequence::Builder(lattice_),
                         tags,
