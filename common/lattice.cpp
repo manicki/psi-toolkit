@@ -2,12 +2,14 @@
 
 Lattice::Lattice() :
     nLooseVertices_(0),
-    symbolTag_(layerTagManager_.createSingletonTagCollection("symbol"))
+    symbolTag_(layerTagManager_.createSingletonTagCollection("symbol")),
+    discardedTag_(layerTagManager_.createSingletonTagCollection("discarded"))
 { }
 
 Lattice::Lattice(std::string text) :
     nLooseVertices_(0),
-    symbolTag_(layerTagManager_.createSingletonTagCollection("symbol"))
+    symbolTag_(layerTagManager_.createSingletonTagCollection("symbol")),
+    discardedTag_(layerTagManager_.createSingletonTagCollection("discarded"))
 {
     appendString(text);
 }
@@ -231,6 +233,27 @@ Lattice::EdgeDescriptor Lattice::addEdge(
 
     return (insertResult.first)->second;
 }
+
+Lattice::EdgeDescriptor Lattice::addPartitionToEdge(
+    EdgeDescriptor edge,
+    LayerTagCollection tags,
+    EdgeSequence sequence,
+    Score score,
+    int ruleId) {
+    // FIXME - ineffective! addEdge must be refactored
+    return addEdge(getEdgeSource(edge),
+                   getEdgeTarget(edge),
+                   getEdgeAnnotationItem(edge),
+                   tags,
+                   sequence,
+                   score,
+                   ruleId);
+}
+
+void Lattice::discard(EdgeDescriptor edge) {
+    addPartitionToEdge(edge, discardedTag_, EdgeSequence(), std::numeric_limits<Score>::min());
+}
+
 
 Lattice::InOutEdgesIterator Lattice::outEdges(
     Lattice::VertexDescriptor vertex,
