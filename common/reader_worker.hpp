@@ -8,9 +8,12 @@
 class ReaderWorker : public LatticeWorker {
 
 public:
-    ReaderWorker(std::istream& inputStream, Lattice& lattice);
+    ReaderWorker(std::istream& inputStream, Lattice& lattice)
+        :LatticeWorker(lattice), inputStream_(inputStream) {
+    }
 
-    virtual ~ReaderWorker();
+    virtual ~ReaderWorker() {
+    }
 
 protected:
     std::istream& inputStream_;

@@ -31,7 +31,6 @@ add_library(common SHARED
     psi_exception.cpp
     psi_quoter.cpp
     quoter.cpp
-    reader_worker.cpp
     regexp.cpp
     segment_glob.cpp
     utt_like_quoter.cpp
