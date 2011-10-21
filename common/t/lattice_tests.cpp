@@ -9,6 +9,8 @@
 
 BOOST_AUTO_TEST_SUITE( lattice )
 
+void initAndTokenize_(Lattice& lattice, const std::string& paragraph, bool addSymbols=true);
+
 BOOST_AUTO_TEST_CASE( lattice_simple ) {
     Lattice lattice("Ala ma kota");
 
@@ -201,21 +203,7 @@ BOOST_AUTO_TEST_CASE( get_path ) {
 
 BOOST_AUTO_TEST_CASE( cutter ) {
     Lattice lattice;
-    std::string paragraph("szybki zielony rower");
-    lattice.appendStringWithSymbols(paragraph);
-
-    LayerTagCollection textTags(
-        lattice.getLayerTagManager().createSingletonTagCollection("text"));
-    AnnotationItem item("TEXT", paragraph);
-    lattice.addEdge(lattice.getFirstVertex(), lattice.getLastVertex(),
-                    item, textTags);
-
-    BySpacesCutter cutter;
-
-    LayerTagMask symbolMask = lattice.getLayerTagManager().getMask("symbol");
-    LayerTagMask textMask = lattice.getLayerTagManager().getMask("text");
-
-    lattice.runCutter(cutter, symbolMask, textMask);
+    initAndTokenize_(lattice, "szybki zielony rower");
 
     LayerTagMask tokenMask = lattice.getLayerTagManager().getMask("token");
 
@@ -260,21 +248,8 @@ BOOST_AUTO_TEST_CASE( cutter ) {
 }
 
 BOOST_AUTO_TEST_CASE( cutter_on_no_symbols ) {
-    Lattice lattice("<a>");
-
-    BySpacesCutter cutter;
-
-    LayerTagMask symbolMask = lattice.getLayerTagManager().getMask("symbol");
-    LayerTagMask textMask = lattice.getLayerTagManager().getMask("text");
-
-    LayerTagCollection textTags(
-        lattice.getLayerTagManager().createSingletonTagCollection("text"));
-    AnnotationItem item("TEXT", "<a>");
-    lattice.addEdge(lattice.getFirstVertex(), lattice.getLastVertex(),
-                    item, textTags);
-
-
-    lattice.runCutter(cutter, symbolMask, textMask);
+    Lattice lattice;
+    initAndTokenize_(lattice, "<a>", false);
 
     LayerTagMask tokenMask = lattice.getLayerTagManager().getMask("token");
 
@@ -285,21 +260,7 @@ BOOST_AUTO_TEST_CASE( cutter_on_no_symbols ) {
 
 BOOST_AUTO_TEST_CASE( lemmatizer ) {
     Lattice lattice;
-    std::string paragraph = "prowokacjami";
-    lattice.appendStringWithSymbols(paragraph);
-
-    BySpacesCutter cutter;
-
-    LayerTagMask symbolMask = lattice.getLayerTagManager().getMask("symbol");
-    LayerTagMask textMask = lattice.getLayerTagManager().getMask("text");
-
-    LayerTagCollection textTags(
-        lattice.getLayerTagManager().createSingletonTagCollection("text"));
-    AnnotationItem item("TEXT", paragraph);
-    lattice.addEdge(lattice.getFirstVertex(), lattice.getLastVertex(),
-                    item, textTags);
-
-    lattice.runCutter(cutter, symbolMask, textMask);
+    initAndTokenize_(lattice, "prowokacjami");
 
     boost::program_options::variables_map noOptions;
     LemmatizerAnnotator<FakeLemmatizer> annotator(noOptions);
@@ -828,6 +789,25 @@ BOOST_AUTO_TEST_CASE( correction_replace_advanced ) {
     BOOST_CHECK(ei.hasNext());
     ed = ei.next();
     BOOST_CHECK_EQUAL(lattice.getAnnotationCategory(ed), "'r");
+}
+
+void initAndTokenize_(Lattice& lattice, const std::string& paragraph, bool addSymbols) {
+
+    if (addSymbols)
+        lattice.appendStringWithSymbols(paragraph);
+
+    LayerTagCollection textTags(
+        lattice.getLayerTagManager().createSingletonTagCollection("text"));
+    AnnotationItem item("TEXT", paragraph);
+    lattice.addEdge(lattice.getFirstVertex(), lattice.getLastVertex(),
+                    item, textTags);
+
+    BySpacesCutter cutter;
+
+    LayerTagMask symbolMask = lattice.getLayerTagManager().getMask("symbol");
+    LayerTagMask textMask = lattice.getLayerTagManager().getMask("text");
+
+    lattice.runCutter(cutter, symbolMask, textMask);
 }
 
 BOOST_AUTO_TEST_SUITE_END()
