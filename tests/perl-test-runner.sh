@@ -3,7 +3,7 @@
 echo '========================================================'
 
 PERL_BINDINGS_DIR=`pwd`/bindings/perl
-PRJ_DIR=`pwd`/prj
+PRJ_DIR=`pwd`/bin
 
 if [[ -e $PRJ_DIR/libSimple.so ]]; then
 
@@ -19,7 +19,7 @@ if [[ -d $TEST_OUTPUT_DIR ]]; then
 fi
 
 mkdir -p $TEST_OUTPUT_DIR
-    
+
 export PERL_TEST_HARNESS_DUMP_TAP=$TEST_OUTPUT_DIR
 
 cd $PRJ_DIR

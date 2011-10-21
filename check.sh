@@ -1,6 +1,6 @@
 #!/bin/bash
 
-TARGET_DIR=prj
+TARGET_DIR=bin
 
 mkdir -p $TARGET_DIR
 
