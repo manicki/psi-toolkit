@@ -206,7 +206,6 @@ BOOST_AUTO_TEST_CASE( cutter ) {
     initAndTokenize_(lattice, "szybki zielony rower");
 
     LayerTagMask tokenMask = lattice.getLayerTagManager().getMask("token");
-
     Lattice::EdgesSortedBySourceIterator tokenIter = lattice.edgesSortedBySource(tokenMask);
 
     {
@@ -809,5 +808,40 @@ void initAndTokenize_(Lattice& lattice, const std::string& paragraph, bool addSy
 
     lattice.runCutter(cutter, symbolMask, textMask);
 }
+
+BOOST_AUTO_TEST_CASE( discard ) {
+    Lattice lattice;
+
+    {
+        initAndTokenize_(lattice, "Ala ma kota");
+
+        LayerTagMask tokenMask = lattice.getLayerTagManager().getMask("token");
+        Lattice::EdgesSortedBySourceIterator tokenIter = lattice.edgesSortedBySource(tokenMask);
+
+        BOOST_CHECK(tokenIter.hasNext());
+        tokenIter.next();
+        BOOST_CHECK(tokenIter.hasNext());
+        tokenIter.next();
+
+        Lattice::EdgeDescriptor maEdge = tokenIter.next();
+        AnnotationItem item = lattice.getEdgeAnnotationItem(maEdge);
+        BOOST_CHECK_EQUAL(item.getText(), "ma");
+
+        lattice.discard(maEdge);
+    }
+
+    {
+        LayerTagMask discardedMask = lattice.getLayerTagManager().getMask("discarded");
+        Lattice::EdgesSortedBySourceIterator discardedIter = lattice.edgesSortedBySource(discardedMask);
+
+        BOOST_CHECK(discardedIter.hasNext());
+        Lattice::EdgeDescriptor discardedEdge = discardedIter.next();
+        AnnotationItem discardedItem = lattice.getEdgeAnnotationItem(discardedEdge);
+        BOOST_CHECK_EQUAL(discardedItem.getText(), "ma");
+        BOOST_CHECK_EQUAL(discardedItem.getCategory(), "word");
+        BOOST_CHECK(!discardedIter.hasNext());
+    }
+}
+
 
 BOOST_AUTO_TEST_SUITE_END()
