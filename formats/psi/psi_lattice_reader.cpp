@@ -201,11 +201,11 @@ void PsiLatticeReader::Worker::doRun() {
 
                     BOOST_FOREACH(std::string part, partsItem) {
                         Lattice::EdgeSequence::Builder seqBuilder(lattice_);
-                        std::vector<int> partItem;
+                        PsiLRPartitionItem partItem;
                         std::string::const_iterator partBegin = part.begin();
                         std::string::const_iterator partEnd = part.end();
                         if (parse(partBegin, partEnd, partGrammar, partItem)) {
-                            BOOST_FOREACH(int edgeNumber, partItem) {
+                            BOOST_FOREACH(int edgeNumber, partItem.edgeNumbers) {
                                 if (edgeNumber < 1) {
                                     if (currentVertex == to) {
                                         throw FileFormatException(
