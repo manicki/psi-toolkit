@@ -182,10 +182,10 @@ void PsiLatticeWriter::Worker::doRun() {
                 == lattice_.getLayerTagManager().createSingletonTagCollection("symbol")
         );
         bool partitionBeginning = false;
-        std::string partStr = "";
+        std::stringstream partSs;
         BOOST_FOREACH(Lattice::Partition partition, partitions) {
-            if (partStr != "") {
-                partStr += ",";
+            if (!partSs.str().empty()) {
+                partSs << ",";
             }
             std::stringstream linkSs;
             partitionBeginning = true;
@@ -212,10 +212,14 @@ void PsiLatticeWriter::Worker::doRun() {
                     linkSs << (*mi).second;
                 }
             }
-            partStr += linkSs.str();
+            partSs << linkSs.str();
+            Lattice::Score partitionScore = partition.getScore();
+            if (partitionScore != score) {
+                partSs << "<" << partitionScore << ">";
+            }
         }
         if (!isDefaultPartition) {
-            aiSs << "[" << partStr << "]";
+            aiSs << "[" << partSs.str() << "]";
         }
 
         alignOutput_(aiSs.str());
