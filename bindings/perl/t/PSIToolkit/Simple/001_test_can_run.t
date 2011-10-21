@@ -23,6 +23,8 @@ binmode(STDERR, ":utf8");
 
 _test_run_pipe_from_string();
 
+_test_run_pipe_from_string_return_list();
+
 END:
 done_testing();
 
@@ -47,6 +49,25 @@ Nowak
 .
 ENDEXPECTED
     is($actual_result, $expected_result, "_test_run_pipe_from_string($text_to_process)");
+}
+
+sub _test_run_pipe_from_string_return_list {
+    my $command = "tp-tokenizer --lang pl";
+    my $runner = PSIToolkit::Simple::PipeRunner->new($command);
+
+    my $text_to_process = 'Pan prof. dr hab. Jan Nowak.';
+    my $actual_result = $runner->run_with_array_return($text_to_process);
+    my $expected_result = [
+        'Pan',
+        'prof.',
+        'dr',
+        'hab.',
+        'Jan',
+        'Nowak',
+        '.',
+    ];
+
+    is_deeply($actual_result, $expected_result, "_test_run_pipe_from_string_return_list($text_to_process)");
 }
 
 1;
