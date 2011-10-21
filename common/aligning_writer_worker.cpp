@@ -1,7 +1,7 @@
 #include "aligning_writer_worker.hpp"
 
 AligningWriterWorker::AligningWriterWorker(std::ostream& outputStream, Lattice& lattice)
-    :WriterWorker(outputStream, lattice), currentPos_(0) {
+    :WriterWorker<std::ostream>(outputStream, lattice), currentPos_(0) {
 }
 
 AligningWriterWorker::~AligningWriterWorker() {

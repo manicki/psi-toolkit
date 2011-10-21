@@ -18,7 +18,8 @@ Linux
 -----
 
 cd psi-toolkit
-cd prj
+mkdir -p bin
+cd bin
 cmake -DUSE_JAVA=OFF .. # <- note dots here
 # or cmake -DUSE_JAVA=ON if morfologik is needed
 make
