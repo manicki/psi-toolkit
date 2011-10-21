@@ -42,7 +42,7 @@ std::string TxtLatticeReader::Factory::doGetName() {
 TxtLatticeReader::Worker::Worker(TxtLatticeReader& processor,
                                  std::istream& inputStream,
                                  Lattice& lattice):
-    ReaderWorker(inputStream, lattice),
+    ReaderWorker<std::istream>(inputStream, lattice),
     processor_(processor),
     textTags_(lattice_.getLayerTagManager().createTagCollectionFromList(
                   boost::assign::list_of("text")("txt-reader"))) {

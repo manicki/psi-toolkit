@@ -40,7 +40,7 @@ std::string PsiLatticeReader::Factory::doGetName() {
 PsiLatticeReader::Worker::Worker(PsiLatticeReader& processor,
                                  std::istream& inputStream,
                                  Lattice& lattice):
-    ReaderWorker(inputStream, lattice), processor_(processor) {
+    ReaderWorker<std::istream>(inputStream, lattice), processor_(processor) {
 }
 
 void PsiLatticeReader::Worker::doRun() {
