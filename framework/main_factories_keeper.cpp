@@ -10,6 +10,7 @@
 #include "tp_tokenizer.hpp"
 #include "srx_segmenter.hpp"
 #include "lemmatizer_annotator.hpp"
+
 #if HAVE_POSTGRESQL
 #include "lex_db_lemmatizer.hpp"
 #endif
@@ -18,6 +19,10 @@
 #endif
 #if HAVE_PUDDLE
 #include "puddle.hpp"
+#endif
+
+#if HAVE_PERL_BINDINGS
+#include "perl_simple_lattice_writer.hpp"
 #endif
 
 MainFactoriesKeeper::MainFactoriesKeeper() {
@@ -36,6 +41,10 @@ MainFactoriesKeeper::MainFactoriesKeeper() {
 #endif
 #if HAVE_PUDDLE
       keeper_.takeProcessorFactory(new poleng::bonsai::puddle::Puddle::Factory());
+#endif
+
+#if HAVE_PERL_BINDINGS
+    keeper_.takeProcessorFactory(new PerlSimpleLatticeWriter::Factory());
 #endif
 }
 

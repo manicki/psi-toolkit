@@ -1,6 +1,6 @@
 #include "segment_glob.hpp"
 
-#include "utf8.h"
+#include "utf8/utf8.h"
 
 SegmentGlob::SegmentGlob(const std::string& glob):glob_(glob) {
     checkIfFixed_();

@@ -3,5 +3,6 @@
 #cmakedefine01 HAVE_RE2
 #cmakedefine01 HAVE_PCRE
 #cmakedefine01 HAVE_PUDDLE
+#cmakedefine01 HAVE_PERL_BINDINGS
 #define ROOT_DIR "../"
 #cmakedefine01 _WITH_BONSAI_PARSEGRAPH

@@ -13,7 +13,7 @@
 #include <boost/graph/adjacency_list.hpp>
 #include <boost/graph/topological_sort.hpp>
 
-#include "utf8.h"
+#include "utf8/utf8.h"
 
 #include "annotation_item.hpp"
 #include "annotation_item_manager.hpp"

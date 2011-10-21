@@ -1,6 +1,7 @@
 #ifndef PIPE_RUNNER_HDR
 #define PIPE_RUNNER_HDR
 
+#include "config.h"
 #include <boost/shared_ptr.hpp>
 #include <boost/graph/adjacency_list.hpp>
 
@@ -10,6 +11,11 @@
 #include "lattice_reader_factory.hpp"
 #include "lattice_writer_factory.hpp"
 #include "annotator_factory.hpp"
+
+#if HAVE_PERL_BINDINGS
+#include "EXTERN.h"
+#include "perl.h"
+#endif
 
 class PipeRunner {
 
@@ -21,6 +27,10 @@ public:
     int run(std::istream&, std::ostream&);
     int run(const std::string& inputFilePath, const std::string& outputFilePath);
     std::string run(const std::string & inputString);
+
+#if HAVE_PERL_BINDINGS
+    void run_for_perl_(const std::string& inputString, AV * outputPointer);
+#endif
 
 private:
     PipelineSpecification pipelineSpecification_;
@@ -112,7 +122,7 @@ private:
     void runPipelineNode_(
         PipelineGraph::vertex_descriptor current,
         Lattice& lattice,
-        std::istream& in, std::ostream& out);
+        std::istream& in, Sink & out);
 
     bool goToNextNode_(PipelineGraph::vertex_descriptor& current);
 

@@ -13,6 +13,12 @@ if (WITH_RE2)
     target_link_libraries(server re2)
 endif(WITH_RE2)
 
+if(HAVE_PERL_BINDINGS)
+    target_link_libraries(server formats-perl-simple)  
+    find_package(PerlLibs)
+    include_directories(${PERL_INCLUDE_PATH})
+endif(HAVE_PERL_BINDINGS)
+
 set_target_properties(server PROPERTIES LINK_FLAGS "-lpthread")
 
 include_directories("${psi-toolkit_SOURCE_DIR}/server/server")

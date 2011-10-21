@@ -3,6 +3,7 @@ add_executable(
  test_runner.cpp
 )
 
+
 target_link_libraries(
  test_runner
  -Wl,-whole-archive
@@ -16,6 +17,13 @@ target_link_libraries(
 if (WITH_RE2)
     target_link_libraries(test_runner re2)
 endif(WITH_RE2)
+
+if(HAVE_PERL_BINDINGS)
+    target_link_libraries(test_runner formats-perl-simple)
+    find_package(PerlLibs)
+    include_directories(${PERL_INCLUDE_PATH})
+
+endif(HAVE_PERL_BINDINGS)
 
 add_executable(
  mass-tests
@@ -36,4 +44,9 @@ if (WITH_RE2)
     target_link_libraries(mass-tests re2)
 endif(WITH_RE2)
 
+if(HAVE_PERL_BINDINGS)
+    target_link_libraries(mass-tests formats-perl-simple)  
+    find_package(PerlLibs)
+    include_directories(${PERL_INCLUDE_PATH})
+endif(HAVE_PERL_BINDINGS)
 

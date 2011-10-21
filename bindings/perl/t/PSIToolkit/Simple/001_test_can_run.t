@@ -21,9 +21,10 @@ binmode(STDOUT, ":utf8");
 binmode(STDIN, ":utf8");
 binmode(STDERR, ":utf8");
 
-_test_run_pipe_from_string();
+#_test_run_pipe_from_string();
+#_test_run_pipe_from_string_return_list();
 
-_test_run_pipe_from_string_return_list();
+_test_run_pipe_run_for_perl();
 
 END:
 done_testing();
@@ -68,6 +69,25 @@ sub _test_run_pipe_from_string_return_list {
     ];
 
     is_deeply($actual_result, $expected_result, "_test_run_pipe_from_string_return_list($text_to_process)");
+}
+
+sub _test_run_pipe_run_for_perl {
+    my $command = "tp-tokenizer --lang pl ! perl-simple-writer";
+    my $runner = PSIToolkit::Simple::PipeRunner->new($command);
+
+    my $text_to_process = 'Pan prof. dr hab. Jan Nowak.';
+    my $actual_result = $runner->run_for_perl($text_to_process);
+    my $expected_result = [
+        'Pan',
+        'prof.',
+        'dr',
+        'hab.',
+        'Jan',
+        'Nowak',
+        '.',
+    ];
+
+    is_deeply($actual_result, $expected_result, "_test_run_pipe_run_for_perl($text_to_process)");
 }
 
 1;

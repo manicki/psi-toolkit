@@ -14,7 +14,7 @@
 #include <boost/spirit/include/phoenix_operator.hpp>
 #include <boost/spirit/include/qi.hpp>
 
-#include "utf8.h"
+#include "utf8/utf8.h"
 
 #include "lattice_reader.hpp"
 #include "lattice_reader_factory.hpp"

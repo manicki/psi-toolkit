@@ -21,7 +21,7 @@ public:
     }
 
 private:
-    std::ostream& sink_;
+    Sink & sink_;
 };
 
 #endif
