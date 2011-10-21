@@ -40,7 +40,7 @@ std::string UTTLatticeReader::Factory::doGetName() {
 UTTLatticeReader::Worker::Worker(UTTLatticeReader& processor,
                                  std::istream& inputStream,
                                  Lattice& lattice):
-    ReaderWorker(inputStream, lattice), processor_(processor) {
+    ReaderWorker<std::istream>(inputStream, lattice), processor_(processor) {
 }
 
 void UTTLatticeReader::Worker::doRun() {
