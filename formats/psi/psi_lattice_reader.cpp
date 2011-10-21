@@ -176,7 +176,8 @@ void PsiLatticeReader::Worker::doRun() {
             // Defining partitions.
 
             LayerTagMask rawMask = lattice_.getLayerTagManager().getMask("symbol");
-            std::list<Lattice::EdgeSequence::Builder> seqBuilders;
+            // std::list<Lattice::EdgeSequence::Builder> seqBuilders;
+            std::list<PsiLRPartitionElements> partitionsElements;
             Lattice::VertexDescriptor currentVertex = from;
             Lattice::EdgeDescriptor currentEdge;
 
@@ -190,7 +191,12 @@ void PsiLatticeReader::Worker::doRun() {
                         currentVertex = lattice_.getEdgeTarget(currentEdge);
                     }
                 }
-                seqBuilders.push_back(seqBuilder);
+                // seqBuilders.push_back(seqBuilder);
+                partitionsElements.push_back(PsiLRPartitionElements(
+                    seqBuilder,
+                    tags,
+                    item.annotationItem.score
+                ));
 
             } else {
 
@@ -224,12 +230,22 @@ void PsiLatticeReader::Worker::doRun() {
                                 currentVertex = lattice_.getEdgeTarget(currentEdge);
                             }
                         }
-                        seqBuilders.push_back(seqBuilder);
+                        // seqBuilders.push_back(seqBuilder);
+                        partitionsElements.push_back(PsiLRPartitionElements(
+                            seqBuilder,
+                            tags,
+                            partItem.score == 0.0 ? item.annotationItem.score : partItem.score
+                        ));
                     }
 
                 } else {
 
-                    seqBuilders.push_back(Lattice::EdgeSequence::Builder(lattice_));
+                    // seqBuilders.push_back(Lattice::EdgeSequence::Builder(lattice_));
+                    partitionsElements.push_back(PsiLRPartitionElements(
+                        Lattice::EdgeSequence::Builder(lattice_),
+                        tags,
+                        item.annotationItem.score
+                    ));
 
                 }
 
@@ -238,14 +254,15 @@ void PsiLatticeReader::Worker::doRun() {
 
             // Adding edge.
 
-            BOOST_FOREACH(Lattice::EdgeSequence::Builder builder, seqBuilders) {
+            // BOOST_FOREACH(Lattice::EdgeSequence::Builder builder, seqBuilders) {
+            BOOST_FOREACH(PsiLRPartitionElements partitionElements, partitionsElements) {
                 edgeOrdinalMap[item.ordinal] = lattice_.addEdge(
                     from,
                     to,
                     annotationItem,
-                    tags,
-                    builder.build(),
-                    item.annotationItem.score
+                    partitionElements.tags,
+                    partitionElements.builder.build(),
+                    partitionElements.score
                 );
             }
 

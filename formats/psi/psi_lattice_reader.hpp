@@ -293,6 +293,23 @@ struct PsiLRPartitionGrammar : public qi::grammar<
 };
 
 
+struct PsiLRPartitionElements {
+    Lattice::EdgeSequence::Builder builder;
+    LayerTagCollection tags;
+    Lattice::Score score;
+
+    PsiLRPartitionElements(
+        Lattice::EdgeSequence::Builder aBuilder,
+        LayerTagCollection aTags,
+        Lattice::Score aScore
+    ) :
+        builder(aBuilder),
+        tags(aTags),
+        score(aScore)
+    { }
+};
+
+
 class PsiLatticeReader : public LatticeReader {
 
 public:
