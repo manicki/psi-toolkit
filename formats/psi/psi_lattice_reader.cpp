@@ -230,8 +230,12 @@ void PsiLatticeReader::Worker::doRun() {
                         }
                         partitionsElements.push_back(PsiLRPartitionElements(
                             seqBuilder,
-                            tags,
-                            !partItem.score ? item.annotationItem.score : partItem.score.get()
+                            partItem.tags.empty()
+                                ? tags
+                                : lattice_.getLayerTagManager().createTagCollection(partItem.tags),
+                            !partItem.score
+                                ? item.annotationItem.score
+                                : partItem.score.get()
                         ));
                     }
 
