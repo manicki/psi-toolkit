@@ -17,8 +17,6 @@ add_library(common SHARED
     language_dependent_annotator_factory.cpp
     lattice.cpp
     lattice_iter_writer.cpp
-    lattice_reader.cpp
-    lattice_reader_factory.cpp
     lattice_worker.cpp
     lattice_writer_output_iterator.cpp
     layer_tag_collection.cpp
@@ -33,9 +31,9 @@ add_library(common SHARED
     psi_exception.cpp
     psi_quoter.cpp
     quoter.cpp
-    reader_worker.cpp
     regexp.cpp
     segment_glob.cpp
+    stream_lattice_reader.cpp
     utt_like_quoter.cpp
     xml_property_tree.cpp
     ${common-java-files}

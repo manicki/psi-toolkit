@@ -14,20 +14,20 @@
 #include "logging.hpp"
 
 PipeRunner::PipeRunner(const std::string& pipeline) {
-    parseIntoGraph_<std::ostream>(splitPipeline_(pipeline), false);
+    parseIntoGraph_<std::istream,std::ostream>(splitPipeline_(pipeline), false);
 }
 
 PipeRunner::PipeRunner(int argc, char* argv[]) {
     std::vector<std::string> args(argv, argv + argc);
-    parseIntoGraph_<std::ostream>(args, true);
+    parseIntoGraph_<std::istream,std::ostream>(args, true);
 }
 
 PipeRunner::PipeRunner(std::vector<std::string> args) {
-    parseIntoGraph_<std::ostream>(args, false);
+    parseIntoGraph_<std::istream,std::ostream>(args, false);
 }
 
 int PipeRunner::run(std::istream& in, std::ostream& out) {
-    return run_<std::ostream>(in,out);
+    return run_<std::istream,std::ostream>(in,out);
 }
 
 const std::string PipeRunner::PIPELINE_SEPARATOR = "!";
@@ -36,11 +36,11 @@ ProcessorFactory& PipeRunner::getFactory_(const PipelineElementSpecification& el
     return MainFactoriesKeeper::getInstance().getProcessorFactory(elementSpec.processorName);
 }
 
-template<typename Sink>
+template<typename Source, typename Sink>
 void PipeRunner::parseIntoGraph_(std::vector<std::string> args, bool isTheFirstArgProgramName) {
     parseIntoPipelineSpecification_(args, isTheFirstArgProgramName, pipelineSpecification_);
     pipelineSpecification2Graph_(pipelineSpecification_, firstNode, lastNode);
-    completeGraph_<Sink>();
+    completeGraph_<Source,Sink>();
 }
 
 void PipeRunner::parseIntoPipelineSpecification_(
@@ -100,15 +100,16 @@ void PipeRunner::pipelineSpecification2Graph_(
     lastVertex = currentVertex;
 }
 
-template<typename Sink>
+template<typename Source, typename Sink>
 void PipeRunner::completeGraph_() {
-    checkReader_();
+    checkReader_<Source>();
     checkWriter_<Sink>();
 }
 
+template<typename Source>
 void PipeRunner::checkReader_() {
-    const LatticeReaderFactory* reader =
-        dynamic_cast<const LatticeReaderFactory*>(
+    const LatticeReaderFactory<Source>* reader =
+        dynamic_cast<const LatticeReaderFactory<Source>*>(
             pipelineGraph_[firstNode].getFactory());
 
     if (!reader)
@@ -159,14 +160,14 @@ void PipeRunner::append_(const std::string& pipeline) {
     boost::add_edge(prevLast, appFirst, emptyString, pipelineGraph_);
 }
 
-template<typename Sink>
-int PipeRunner::run_(std::istream& in, Sink& out) {
+template<typename Source, typename Sink>
+int PipeRunner::run_(Source& in, Sink& out) {
     Lattice lattice;
 
     PipelineGraph::vertex_descriptor current = firstNode;
 
     do {
-        runPipelineNode_<Sink>(current, lattice, in, out);
+        runPipelineNode_<Source,Sink>(current, lattice, in, out);
         if (!goToNextNode_(current))
             break;
     } while (1);
@@ -174,7 +175,7 @@ int PipeRunner::run_(std::istream& in, Sink& out) {
     return 0;
 }
 
-template<typename Sink>
+template<typename Source, typename Sink>
 void PipeRunner::runPipelineNode_(
     PipelineGraph::vertex_descriptor current,
     Lattice& lattice, std::istream& in, std::ostream& out) {
@@ -183,8 +184,8 @@ void PipeRunner::runPipelineNode_(
     currentPipelineNode.createProcessor();
 
     if (current == firstNode) {
-        boost::shared_ptr<LatticeReader> reader =
-            boost::dynamic_pointer_cast<LatticeReader>(
+        boost::shared_ptr<LatticeReader<Source> > reader =
+            boost::dynamic_pointer_cast<LatticeReader<Source> >(
                 currentPipelineNode.getProcessor());
         reader->readIntoLattice(in, lattice);
     }
@@ -322,7 +323,7 @@ void PipeRunner::closeStreamWithStandardInputOrOutputCheck(std::ios * stream, co
 }
 
 
-bool PipeRunner::isStandardInputOrOutputFileName(const std::string & path) const {
+bool PipeRunner::isStandardInputOrOutputFileName(const std::string & path) {
     return (path == PIPELINE_STANDARD_INPUT_OR_OUTPUT_FILE_NAME);
 }
 

@@ -21,7 +21,7 @@ BOOST_AUTO_TEST_SUITE( utt_lattice_reader )
 BOOST_AUTO_TEST_CASE( utt_lattice_reader ) {
     Lattice lattice("");
 
-  LatticeReader * reader = new UTTLatticeReader();
+    boost::scoped_ptr<StreamLatticeReader> reader(new UTTLatticeReader());
 
   reader->readIntoLattice("../formats/utt/t/files/fr_simple_puddle_input.txt", lattice);
 
@@ -122,9 +122,6 @@ BOOST_AUTO_TEST_CASE( utt_lattice_reader ) {
   BOOST_CHECK_EQUAL(lattice.getAnnotationText(sei.next()),
   "Karol Józef Wojtyła est élu pape de l'Église catholique romaine le 16 octobre 1978.");
   BOOST_CHECK(!sei.hasNext());
-
-  delete reader;
-
 }
 
 BOOST_AUTO_TEST_CASE( psi_lattice_writer_simple ) {
@@ -176,7 +173,7 @@ BOOST_AUTO_TEST_CASE( psi_lattice_reader_reflexive ) {
 
     Lattice lattice("");
 
-    boost::scoped_ptr<LatticeReader> reader(new PsiLatticeReader());
+    boost::scoped_ptr<StreamLatticeReader> reader(new PsiLatticeReader());
 
     reader->readIntoLattice(ROOT_DIR "formats/psi/t/files/pl_sample_nocomments.txt", lattice);
 

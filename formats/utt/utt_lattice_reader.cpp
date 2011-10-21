@@ -13,7 +13,7 @@ std::string UTTLatticeReader::doInfo() {
 UTTLatticeReader::Factory::~Factory() {
 }
 
-LatticeReader* UTTLatticeReader::Factory::doCreateLatticeReader(
+LatticeReader<std::istream>* UTTLatticeReader::Factory::doCreateLatticeReader(
     const boost::program_options::variables_map&) {
     return new UTTLatticeReader();
 }

@@ -10,36 +10,30 @@
 #include "reader_worker.hpp"
 #include "processor.hpp"
 
+template<typename Source>
 class LatticeReader : public Processor {
 
 public:
 
-    class CannotOpenFileException : public std::runtime_error {
-    public:
-        CannotOpenFileException() : std::runtime_error("cannot open a file") { }
-    };
-
     /**
-     * Reads from `inputStream` into `lattice`. If lattice is not empty,
+     * Reads from `source` into `lattice`. If lattice is not empty,
      * new edges will be appended at the end of lattice.
      */
-    void readIntoLattice(std::istream& inputStream, Lattice& lattice);
-
-    /**
-     * Reads from file `fileName` into `lattice`. If lattice is not empty,
-     * new edges will be appended at the end of lattice.
-     */
-    void readIntoLattice(const std::string& fileName, Lattice& lattice);
+    void readIntoLattice(Source& source, Lattice& lattice) {
+        boost::scoped_ptr<ReaderWorker<Source> > worker(doCreateReaderWorker(source, lattice));
+        worker->run();
+    }
 
     /**
      * Gets format name (eg. "UTT", "BIN" etc.)
      */
     virtual std::string getFormatName() = 0;
 
-    virtual ~LatticeReader();
+    virtual ~LatticeReader() {
+    }
 
 private:
-    virtual ReaderWorker* doCreateReaderWorker(std::istream& inputStream, Lattice& lattice) = 0;
+    virtual ReaderWorker<Source>* doCreateReaderWorker(Source& source, Lattice& lattice) = 0;
 
 };
 
