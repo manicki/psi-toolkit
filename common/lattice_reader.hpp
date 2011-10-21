@@ -6,6 +6,8 @@
 #include <stdexcept>
 #include <string>
 
+#include <boost/scoped_ptr.hpp>
+
 #include "lattice.hpp"
 #include "reader_worker.hpp"
 #include "processor.hpp"
