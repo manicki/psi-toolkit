@@ -213,6 +213,18 @@ void PsiLatticeWriter::Worker::doRun() {
                 }
             }
             partSs << linkSs.str();
+            std::list<std::string> partitionTagNames
+                = lattice_.getLayerTagManager().getTagNames(partition.getTagList());
+            if (partitionTagNames != tagNames) {
+                std::string partitionTagStr = "";
+                BOOST_FOREACH(std::string partitionTagName, partitionTagNames) {
+                    if (!partitionTagStr.empty()) {
+                        partitionTagStr += ",";
+                    }
+                    partitionTagStr += partitionTagName;
+                }
+                partSs << "(" << partitionTagStr << ")";
+            }
             Lattice::Score partitionScore = partition.getScore();
             if (partitionScore != score) {
                 partSs << "<" << partitionScore << ">";
