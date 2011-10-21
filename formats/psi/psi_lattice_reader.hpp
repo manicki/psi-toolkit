@@ -238,13 +238,29 @@ struct PsiLRPartitionsGrammar : public qi::grammar<
 
         start
             %= '['
-            >> +(qi::char_ - ']' - ',') % ','
+            >> partition % ','
             >> ']'
+            ;
+
+        partition
+            = qi::eps[qi::_val = ""]
+            >> +(qi::char_ - '(' - '<' - ']' - ',')[qi::_val += qi::_1]
+            >> -(
+                qi::char_('(')[qi::_val += qi::_1]
+                >> +(qi::char_ - ')')[qi::_val += qi::_1]
+                >> qi::char_(')')[qi::_val += qi::_1]
+                )
+            >> -(
+                qi::char_('<')[qi::_val += qi::_1]
+                >> +(qi::char_ - '>')[qi::_val += qi::_1]
+                >> qi::char_('>')[qi::_val += qi::_1]
+                )
             ;
 
     }
 
     qi::rule<std::string::const_iterator, std::vector<std::string>()> start;
+    qi::rule<std::string::const_iterator, std::string()> partition;
 
 };
 
