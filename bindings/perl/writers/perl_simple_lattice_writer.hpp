@@ -32,18 +32,35 @@ public:
         bool linear,
         bool noAlts,
         bool withBlank,
-        std::string basicTag
+        std::string basicTag,
+        std::set<std::string> higherOrderTags
     ) :
         linear_(linear),
         noAlts_(noAlts),
         withBlank_(withBlank),
-        basicTag_(basicTag)
+        basicTag_(basicTag),
+        higherOrderTags_(higherOrderTags)
     { }
 
-    bool isLinear() const { return linear_; }
-    bool isNoAlts() const { return noAlts_; }
-    bool isWithBlank() const { return withBlank_; }
-    std::string getBasicTag() const { return basicTag_; }
+    bool isLinear() const {
+        return linear_;
+    }
+
+    bool isNoAlts() const {
+        return noAlts_;
+    }
+
+    bool isWithBlank() const {
+        return withBlank_;
+    }
+
+    std::string getBasicTag() const {
+        return basicTag_;
+    }
+
+    std::set<std::string> getHigherOrderTags() const {
+        return higherOrderTags_;
+    }
 
 private:
     virtual std::string doInfo();
@@ -69,6 +86,7 @@ private:
     bool noAlts_;
     bool withBlank_;
     std::string basicTag_;
+    std::set<std::string> higherOrderTags_;
 };
 
 #endif

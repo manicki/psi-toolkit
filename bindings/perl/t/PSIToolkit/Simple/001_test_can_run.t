@@ -22,9 +22,13 @@ binmode(STDIN, ":utf8");
 binmode(STDERR, ":utf8");
 
 _test_run_pipe_from_string();
-_test_run_pipe_from_string_return_list();
 
 _test_run_pipe_run_for_perl();
+_test_run_pipe_run_for_perl_with_alternatives1();
+_test_run_pipe_run_for_perl_with_alternatives2();
+
+# @ignore (bug is in inner psi-pipe)
+#_test_run_pipe_run_for_perl_with_alternatives_empty_text();
 
 END:
 done_testing();
@@ -36,10 +40,7 @@ done_testing();
 
 sub _test_run_pipe_from_string {
     my $command = "tp-tokenizer --lang pl";
-    my $runner = PSIToolkit::Simple::PipeRunner->new($command);
-
     my $text_to_process = 'Pan prof. dr hab. Jan Nowak.';
-    my $actual_result = $runner->run($text_to_process);
     my $expected_result = <<'ENDEXPECTED';
 Pan
 prof.
@@ -49,34 +50,21 @@ Jan
 Nowak
 .
 ENDEXPECTED
-    is($actual_result, $expected_result, "_test_run_pipe_from_string($text_to_process)");
+
+    _run_test_on_command_run($command, $text_to_process, $expected_result);
 }
 
-sub _test_run_pipe_from_string_return_list {
-    my $command = "tp-tokenizer --lang pl";
+sub _run_test_on_command_run {
+    my ($command, $text_to_process, $expected_result) = @_;
     my $runner = PSIToolkit::Simple::PipeRunner->new($command);
 
-    my $text_to_process = 'Pan prof. dr hab. Jan Nowak.';
-    my $actual_result = $runner->run_with_array_return($text_to_process);
-    my $expected_result = [
-        'Pan',
-        'prof.',
-        'dr',
-        'hab.',
-        'Jan',
-        'Nowak',
-        '.',
-    ];
-
-    is_deeply($actual_result, $expected_result, "_test_run_pipe_from_string_return_list($text_to_process)");
+    my $actual_result = $runner->run($text_to_process);
+    is($actual_result, $expected_result, "PipeRunner::run($text_to_process) for command($command)");
 }
 
 sub _test_run_pipe_run_for_perl {
     my $command = "tp-tokenizer --lang pl ! perl-simple-writer";
-    my $runner = PSIToolkit::Simple::PipeRunner->new($command);
-
     my $text_to_process = 'Pan prof. dr hab. Jan Nowak.';
-    my $actual_result = $runner->run_for_perl($text_to_process);
     my $expected_result = [
         'Pan',
         'prof.',
@@ -87,7 +75,50 @@ sub _test_run_pipe_run_for_perl {
         '.',
     ];
 
-    is_deeply($actual_result, $expected_result, "_test_run_pipe_run_for_perl($text_to_process)");
+    _run_test_on_command_run_for_perl($command, $text_to_process, $expected_result);
 }
+
+
+sub _test_run_pipe_run_for_perl_with_alternatives1 {
+    my $command = "tp-tokenizer --lang pl ! perl-simple-writer --tag symbol --spec token";
+    my $text_to_process = 'A';
+    my $expected_result = [
+        [ 'A' ],
+    ];
+
+    _run_test_on_command_run_for_perl($command, $text_to_process, $expected_result);
+}
+
+
+sub _test_run_pipe_run_for_perl_with_alternatives2 {
+    my $command = "tp-tokenizer --lang pl ! perl-simple-writer --tag symbol --spec token";
+    my $text_to_process = 'Ale ile';
+    my $expected_result = [
+        [ 'A', 'l', 'e' ],
+        ['i', 'l', 'e'],
+    ];
+
+    _run_test_on_command_run_for_perl($command, $text_to_process, $expected_result);
+}
+
+sub _test_run_pipe_run_for_perl_with_alternatives_empty_text {
+    my $command = "tp-tokenizer --lang pl ! perl-simple-writer --tag symbol --spec token";
+    my $text_to_process = '';
+    my $expected_result = [
+        [],
+    ];
+
+    _run_test_on_command_run_for_perl($command, $text_to_process, $expected_result);
+}
+
+sub _run_test_on_command_run_for_perl {
+    my ($command, $text_to_process, $expected_result) = @_;
+    my $runner = PSIToolkit::Simple::PipeRunner->new($command);
+
+    my $actual_result = $runner->run_for_perl($text_to_process);
+
+    is_deeply($actual_result, $expected_result, "PipeRunner::run_for_perl($text_to_process) for command($command)");
+}
+
 
 1;

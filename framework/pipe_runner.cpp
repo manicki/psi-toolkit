@@ -349,6 +349,6 @@ SV * PipeRunner::run_for_perl(const std::string & inputString) {
 
     run_<std::istream,PerlLatticeWriterOutput>(inputStream, output);
 
-    return newRV_noinc((SV *) outputArray);
+    return newRV_inc((SV *) outputArray);
 }
 #endif

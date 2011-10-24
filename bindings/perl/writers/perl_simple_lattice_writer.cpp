@@ -11,17 +11,14 @@ LatticeWriter<PerlLatticeWriterOutput>* PerlSimpleLatticeWriter::Factory::doCrea
 ) {
     PsiQuoter quoter;
 
-    std::map<std::string, std::string> tagsSeparators;
+    std::set<std::string> higherOrderTags;
     if (options.count("spec")) {
         std::vector<std::string> spec = options["spec"].as< std::vector<std::string> >();
         std::vector<std::string>::iterator si = spec.begin();
         while (si != spec.end()) {
             std::string tag = quoter.unescape(*si);
-            ++si;
-            if (si == spec.end()) {
-                break;
-            }
-            tagsSeparators[tag] = quoter.unescape(*si);
+            higherOrderTags.insert(tag);
+
             ++si;
         }
     }
@@ -30,7 +27,8 @@ LatticeWriter<PerlLatticeWriterOutput>* PerlSimpleLatticeWriter::Factory::doCrea
         options.count("linear"),
         options.count("no-alts"),
         options.count("with-blank"),
-        quoter.unescape(options["tag"].as<std::string>())
+        quoter.unescape(options["tag"].as<std::string>()),
+        higherOrderTags
         );
 }
 
@@ -46,6 +44,8 @@ boost::program_options::options_description PerlSimpleLatticeWriter::Factory::do
             "does not skip edges with whitespace text")
         ("tag", boost::program_options::value<std::string>()->default_value("token"),
             "basic tag")
+        ("spec", boost::program_options::value< std::vector<std::string> >()->multitoken(),
+            "specification of higher-order tags")
         ;
 
     return optionsDescription;
@@ -64,7 +64,8 @@ std::string PerlSimpleLatticeWriter::doInfo() {
 PerlSimpleLatticeWriter::Worker::Worker(PerlSimpleLatticeWriter & processor,
                                  PerlLatticeWriterOutput & output,
                                  Lattice& lattice):
-    WriterWorker<PerlLatticeWriterOutput>(output, lattice), processor_(processor) {
+    WriterWorker<PerlLatticeWriterOutput>(output, lattice),
+    processor_(processor) {
 }
 
 void PerlSimpleLatticeWriter::Worker::doRun() {
@@ -73,7 +74,10 @@ void PerlSimpleLatticeWriter::Worker::doRun() {
         getOutputStream()
         );
 
-    std::vector<std::string> emptyHandledTags;
+    std::vector<std::string> handledTags;
+    BOOST_FOREACH(std::string higherOrderTag, processor_.getHigherOrderTags()) {
+        handledTags.push_back(higherOrderTag);
+    }
                 
     LatticeIterWriter writer(
         lattice_,
@@ -82,7 +86,7 @@ void PerlSimpleLatticeWriter::Worker::doRun() {
         processor_.isNoAlts(),
         processor_.isWithBlank(),
         processor_.getBasicTag(),
-        emptyHandledTags
+        handledTags
     );
 
     writer.run();

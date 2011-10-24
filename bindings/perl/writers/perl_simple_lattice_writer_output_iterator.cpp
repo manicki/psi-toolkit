@@ -17,15 +17,19 @@ void PerlSimpleLatticeWriterOutputIterator::doPutElement(const std::string& elem
 }
 
 void PerlSimpleLatticeWriterOutputIterator::doOpenAlternative() {
+    output_.openNewSubArray();
 }
 
 void PerlSimpleLatticeWriterOutputIterator::doCloseAlternative() {
+    output_.closeSubArrayWithFlattenOneElement();
 }
 
 void PerlSimpleLatticeWriterOutputIterator::doOpenGroup(const std::string& group) {
+    output_.openNewSubArray();
 }
 
 void PerlSimpleLatticeWriterOutputIterator::doCloseGroup(const std::string& group) {
+    output_.closeSubArray();
 }
 
 void PerlSimpleLatticeWriterOutputIterator::doFlush() {
