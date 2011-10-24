@@ -12,15 +12,9 @@ class PipeRunner {
     int run(const std::string& in, const std::string&);
     std::string run(const std::string & inputString);
 
-    void run_for_perl_(const std::string& inputString, AV * outputPointer);
+    SV * run_for_perl(const std::string& inputString);
 
-    %extend {
-        SV * run_for_perl(const std::string & inputString) {
-            AV * outputArray = newAV();
-            $self->PipeRunner::run_for_perl_(inputString, outputArray);
-            return newRV_noinc((SV *) outputArray);
-        }
-        
+    %extend {        
         SV * run_with_array_return(const std::string & inputString) {
             AV * resultArray = newAV();
 

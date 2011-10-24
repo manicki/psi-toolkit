@@ -21,8 +21,8 @@ binmode(STDOUT, ":utf8");
 binmode(STDIN, ":utf8");
 binmode(STDERR, ":utf8");
 
-#_test_run_pipe_from_string();
-#_test_run_pipe_from_string_return_list();
+_test_run_pipe_from_string();
+_test_run_pipe_from_string_return_list();
 
 _test_run_pipe_run_for_perl();
 

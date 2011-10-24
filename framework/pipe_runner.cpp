@@ -341,11 +341,14 @@ std::string PipeRunner::run(const std::string & inputString) {
 }
 
 #if HAVE_PERL_BINDINGS
-void PipeRunner::run_for_perl_(const std::string& inputString, AV* outputPointer) {
-    std::istringstream inputStream (inputString, std::istringstream::in);
-    PerlLatticeWriterOutput output(outputPointer);
+SV * PipeRunner::run_for_perl(const std::string & inputString) {
+    AV * outputArray = newAV();
 
-    DEBUG("INPUT PIPE: "  + inputString);
+    std::istringstream inputStream (inputString, std::istringstream::in);
+    PerlLatticeWriterOutput output(outputArray);
+
     run_<std::istream,PerlLatticeWriterOutput>(inputStream, output);
+
+    return newRV_noinc((SV *) outputArray);
 }
 #endif

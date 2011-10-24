@@ -29,7 +29,7 @@ public:
     std::string run(const std::string & inputString);
 
 #if HAVE_PERL_BINDINGS
-    void run_for_perl_(const std::string& inputString, AV * outputPointer);
+    SV * run_for_perl(const std::string & inputString);
 #endif
 
 private:
