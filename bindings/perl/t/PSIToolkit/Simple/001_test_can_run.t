@@ -27,6 +27,9 @@ _test_run_pipe_run_for_perl();
 _test_run_pipe_run_for_perl_with_alternatives1();
 _test_run_pipe_run_for_perl_with_alternatives2();
 
+# @ignore (compilation with java is needed)
+#_test_run_pipe_run_for_perl_with_alternatives_with_morfologik();
+
 # @ignore (bug is in inner psi-pipe)
 #_test_run_pipe_run_for_perl_with_alternatives_empty_text();
 
@@ -111,12 +114,26 @@ sub _test_run_pipe_run_for_perl_with_alternatives_empty_text {
     _run_test_on_command_run_for_perl($command, $text_to_process, $expected_result);
 }
 
+
+sub _test_run_pipe_run_for_perl_with_alternatives_with_morfologik {
+    my $command = "tp-tokenizer --lang pl ! srx-segmenter --lang pl ! morfologik  ! perl-simple-writer --tag lemma ";
+    my $text_to_process = 'Ala i kot.';
+    my $expected_result = [
+        ['Al', 'Ala'],
+        'i',
+        ['kot', 'kota'],
+    ];
+
+    _run_test_on_command_run_for_perl($command, $text_to_process, $expected_result);
+}
+
 sub _run_test_on_command_run_for_perl {
     my ($command, $text_to_process, $expected_result) = @_;
     my $runner = PSIToolkit::Simple::PipeRunner->new($command);
 
     my $actual_result = $runner->run_for_perl($text_to_process);
 
+    print STDERR ("ACTUAL: " . Dumper($actual_result));
     is_deeply($actual_result, $expected_result, "PipeRunner::run_for_perl($text_to_process) for command($command)");
 }
 
