@@ -10,6 +10,7 @@ Optional
 
 * RE2 - for faster regular expressions
 * SWIG - for integration with scripting languages (e.g. Perl, Python)
+* Perl library: development files - (Ubuntu package: libperl-dev) - for Perl bindings
 
 Installation procedure
 ======================
