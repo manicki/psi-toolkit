@@ -22,8 +22,10 @@ namespace poleng
                 public:
                     Action() { type = "abstract"; }
                     virtual ~Action() { }
-                    virtual bool test(Lattice&, int, RuleTokenSizes&);
-                    virtual bool apply(Lattice&, int, RuleTokenSizes&);
+                    virtual bool test(Lattice&, int, RuleTokenSizes&,
+                            std::list<Lattice::EdgeSequence>&);
+                    virtual bool apply(Lattice&, int, RuleTokenSizes&,
+                            std::list<Lattice::EdgeSequence>&);
                     virtual std::string getType() { return type; }
                     virtual void setType(std::string aType);
 

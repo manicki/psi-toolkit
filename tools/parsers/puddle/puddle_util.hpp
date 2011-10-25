@@ -28,6 +28,9 @@ namespace poleng {
                         int tokenIndex);
                 int getTransformActionParams(RuleTokenSizes &ruleTokenSizes,
                         int element);
+                bool getRuleBoundaries(RuleTokenSizes &ruleTokenSizes,
+                        unsigned int start, unsigned int end,
+                        int &realStart, int &realEnd);
 
             }
         }

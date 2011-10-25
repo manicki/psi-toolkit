@@ -28,10 +28,6 @@ class UnifyAction : public Action
         bool test(Lattice &lattice, int currentEntity,
                 RuleTokenSizes &ruleTokenSizes,
                 std::list<Lattice::EdgeSequence> &rulePartitions);
-//        bool apply(Lattice &lattice, int currentEntity,
-//                RuleTokenSizes &ruleTokenSizes);
-//        bool test(Lattice &lattice, int currentEntity,
-//                RuleTokenSizes &ruleTokenSizes);
 
     private:
         void init(std::vector<std::string> aUnifiedPatterns,

@@ -51,9 +51,11 @@ class Rule
                 int &afterIndex, std::vector<StringPiece> &match);
         bool test(std::string &sentenceString, Lattice &lattice,
                 int matchedStartIndex, std::vector<StringPiece> &match,
-                RuleTokenSizes &ruleTokenSizes);
+                RuleTokenSizes &ruleTokenSizes,
+                std::list<Lattice::EdgeSequence> &rulePartitions);
         bool apply(std::string &sentenceString, Lattice &lattice,
-                int matchedStartIndex, RuleTokenSizes &ruleTokenSizes);
+                int matchedStartIndex, RuleTokenSizes &ruleTokenSizes,
+                std::list<Lattice::EdgeSequence> &rulePartitions);
 
         std::string getName() const;
         int getLeftCount() const;

@@ -37,11 +37,12 @@ void RuleMatcher::applyRules(Lattice &lattice) {
                         afterIndex, match) ) > -1 ) {
             bool structureChanged = false;
             RuleTokenSizes ruleTokenSizes;
+            std::list<Lattice::EdgeSequence> rulePartitions;
             std::string oldSentenceString = sentenceString;
             if ( (*ruleIt)->test(sentenceString, lattice, matchedStartIndex,
-                        match, ruleTokenSizes) ) {
+                        match, ruleTokenSizes, rulePartitions) ) {
                 if ((*ruleIt)->apply(sentenceString, lattice, matchedStartIndex,
-                            ruleTokenSizes)) {
+                            ruleTokenSizes, rulePartitions) ) {
                     sentenceString = generateSentenceString(lattice,
                             matchedStartIndex);
                     structureChanged = true;

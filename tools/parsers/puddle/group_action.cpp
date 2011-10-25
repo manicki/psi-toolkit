@@ -21,7 +21,8 @@ GroupAction::GroupAction(std::string aGroup, unsigned int aStart,
 
 //@todo: zmienic chyba te nazwe currentEntity na cos wlasciwszego
 bool GroupAction::apply(Lattice &lattice, int currentEntity,
-        RuleTokenSizes &ruleTokenSizes) {
+        RuleTokenSizes &ruleTokenSizes,
+        std::list<Lattice::EdgeSequence> &rulePartitions) {
 
     int realStart;
     int realEnd;
@@ -43,17 +44,16 @@ bool GroupAction::apply(Lattice &lattice, int currentEntity,
     Lattice::VertexDescriptor endVertex = lattice::getVertex(
             lattice, realEnd, currentEntity);
     //Lattice::VertexDescriptor endVertex = currentEntity + realEnd; //@todo: rozwiazanie tymczasowe. nie uwzglednia to chyba lewego kontekstu
-    //Lattice::EdgeDescriptor edgeStart2 = lattice.firstOutEdge(startVertex,
     std::list<Lattice::EdgeDescriptor> startEdges = lattice::getTopEdges(
             lattice, startVertex);
     std::list<Lattice::EdgeDescriptor> headEdges = lattice::getTopEdges(
             lattice, headVertex);
     std::list<Lattice::EdgeDescriptor> endEdges = lattice::getTopEdges(
             lattice, endVertex);
-    std::list<Lattice::EdgeSequence> groupPartitions =
-        lattice::getEdgesRange(
-            lattice, startVertex, endVertex
-            );
+    //std::list<Lattice::EdgeSequence> groupPartitions =
+    //    lattice::getEdgesRange(
+    //        lattice, startVertex, endVertex
+    //        );
     //int headEdgeIndex = realHead - realStart
     lattice::addParseEdges(
             lattice,
@@ -61,15 +61,17 @@ bool GroupAction::apply(Lattice &lattice, int currentEntity,
             endEdges,
             this->group,
             headEdges,
-            groupPartitions,
-            realHead //head - 1
+            //groupPartitions,
+            rulePartitions,
+            realHead
             );
 
     return true;
 }
 
 bool GroupAction::test(Lattice &lattice, int,
-        RuleTokenSizes &ruleTokenSizes) {
+        RuleTokenSizes &ruleTokenSizes,
+        std::list<Lattice::EdgeSequence>&) {
     if ( ( (size_t) lattice.getLastVertex() ) < head) {
         return false;
     }
@@ -88,8 +90,7 @@ void GroupAction::init(std::string aGroup, unsigned int aStart,
     start = aStart;
     end = aEnd;
     head = aHead;
-    if ((head > (end+1)) || (head <= start))
-    {
+    if ((head > (end+1)) || (head <= start)) {
         if (start == end)
             head = 0;
         else

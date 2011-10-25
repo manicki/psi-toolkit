@@ -204,7 +204,7 @@ bool UnifyAction::apply(Lattice &lattice, int currentEntity,
 
 bool UnifyAction::test(Lattice &lattice, int currentEntity,
         RuleTokenSizes &ruleTokenSizes,
-        std::list<Lattice::EdgeSequence> &rulePartitions) {
+        std::list<Lattice::EdgeSequence>&) {
 
     bool toApply = true;
     std::vector<std::string>::iterator attribute_it = unifiedAttributes.begin();

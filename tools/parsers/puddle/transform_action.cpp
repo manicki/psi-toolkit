@@ -25,7 +25,8 @@ TransformAction::~TransformAction()
 }
 
 bool TransformAction::apply(Lattice &lattice, int currentEntity,
-        RuleTokenSizes &ruleTokenSizes) {
+        RuleTokenSizes &ruleTokenSizes,
+        std::list<Lattice::EdgeSequence>&) {
 
     int before = util::getTransformActionParams(ruleTokenSizes, element);
 
@@ -59,7 +60,8 @@ bool TransformAction::apply(Lattice &lattice, int currentEntity,
 }
 
 bool TransformAction::test(Lattice &lattice, int currentEntity,
-        RuleTokenSizes &ruleTokenSizes) {
+        RuleTokenSizes &ruleTokenSizes,
+        std::list<Lattice::EdgeSequence>&) {
     if ( (lattice.getLastVertex()) < element ) {
         return false;
     }

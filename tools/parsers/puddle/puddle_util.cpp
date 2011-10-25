@@ -209,6 +209,25 @@ namespace poleng {
                     return before;
                 }
 
+                bool getRuleBoundaries(RuleTokenSizes &ruleTokenSizes,
+                        unsigned int start, unsigned int end,
+                        int &realStart, int &realEnd) {
+                    realStart = 0;
+                    realEnd = 0;
+                    size_t i = 0;
+                    while (i < ruleTokenSizes.size()) {
+                        if (i < start)
+                            realStart += ruleTokenSizes[i];
+                        if (i <= end)
+                            realEnd += ruleTokenSizes[i];
+                        else
+                            break;
+                        i ++;
+                    }
+                    realEnd --;
+                    return true;
+                }
+
             }
         }
 

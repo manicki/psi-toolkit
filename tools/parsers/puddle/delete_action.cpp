@@ -12,7 +12,8 @@ namespace poleng {
             }
 
 bool DeleteAction::apply(Lattice &lattice, int currentEntity,
-        RuleTokenSizes &ruleTokenSizes) {
+        RuleTokenSizes &ruleTokenSizes,
+        std::list<Lattice::EdgeSequence>&) {
     int count = ruleTokenSizes[tokenIndex - 1];
     if (count == 0) {
 //        std::cout << "Nothing matched to " << tokenIndex << " in ...." << std::endl;
@@ -37,7 +38,8 @@ bool DeleteAction::apply(Lattice &lattice, int currentEntity,
 }
 
 bool DeleteAction::test(Lattice &lattice,
-        int currentEntity, RuleTokenSizes &ruleTokenSizes) {
+        int currentEntity, RuleTokenSizes &ruleTokenSizes,
+        std::list<Lattice::EdgeSequence>&) {
     bool ret = false;
 
     int count = ruleTokenSizes[tokenIndex - 1];

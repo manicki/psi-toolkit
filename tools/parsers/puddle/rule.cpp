@@ -65,11 +65,13 @@ namespace bonsai
        }
 
 bool Rule::apply(std::string &, Lattice &lattice, int matchedStartIndex,
-        RuleTokenSizes &ruleTokenSizes) {
+        RuleTokenSizes &ruleTokenSizes,
+        std::list<Lattice::EdgeSequence> &rulePartitions) {
     bool ret = false;
     for (Actions::iterator actionIt = actions->begin();
             actionIt != actions->end(); ++ actionIt) {
-        if ( (*actionIt)->apply(lattice, matchedStartIndex, ruleTokenSizes) ) {
+        if ( (*actionIt)->apply(lattice, matchedStartIndex, ruleTokenSizes,
+                    rulePartitions) ) {
             ret = true;
         }
     }
@@ -77,7 +79,8 @@ bool Rule::apply(std::string &, Lattice &lattice, int matchedStartIndex,
 }
 
 bool Rule::test(std::string &, Lattice &lattice, int matchedStartIndex,
-        std::vector<StringPiece> &match, RuleTokenSizes &ruleTokenSizes) {
+        std::vector<StringPiece> &match, RuleTokenSizes &ruleTokenSizes,
+        std::list<Lattice::EdgeSequence> &rulePartitions) {
 
     ruleTokenSizes.clear();
     ruleTokenSizes.assign(rulePatternIndices.size(), 0);
@@ -87,7 +90,8 @@ bool Rule::test(std::string &, Lattice &lattice, int matchedStartIndex,
 
     for (Actions::iterator actionIt = actions->begin();
             actionIt != actions->end(); ++ actionIt) {
-        if ( (*actionIt)->test(lattice, matchedStartIndex, ruleTokenSizes)
+        if ( (*actionIt)->test(lattice, matchedStartIndex, ruleTokenSizes,
+                    rulePartitions)
                 == false) {
             int limit;
             int lastIndex = leftCount + matchCount - 1;
@@ -104,6 +108,19 @@ bool Rule::test(std::string &, Lattice &lattice, int matchedStartIndex,
             return false;
         }
     }
+
+    int leftBound;
+    int rightBound;
+    int matchWidth = leftCount + matchCount - 1;
+    if (! util::getRuleBoundaries(ruleTokenSizes, leftCount, matchWidth,
+                leftBound, rightBound))
+        return false;
+    Lattice::VertexDescriptor startVertex = lattice::getVertex(
+            lattice, leftBound, matchedStartIndex);
+    Lattice::VertexDescriptor endVertex = lattice::getVertex(
+            lattice, rightBound, matchedStartIndex);
+    rulePartitions = lattice::getEdgesRange(lattice,
+            startVertex, endVertex);
 
     return true;
 }

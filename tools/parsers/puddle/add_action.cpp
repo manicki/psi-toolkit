@@ -16,7 +16,8 @@ AddAction::AddAction(std::vector<Morphology> aInterpretations, std::string aBase
 }
 
 bool AddAction::apply(Lattice &lattice, int currentEntity,
-        RuleTokenSizes &ruleTokenSizes) {
+        RuleTokenSizes &ruleTokenSizes,
+        std::list<Lattice::EdgeSequence>&) {
     int count = ruleTokenSizes[tokenIndex - 1];
     if (count == 0) {
 //        std::cout << "Nothing matched to " << tokenIndex << " in ...." << std::endl;
@@ -35,7 +36,8 @@ bool AddAction::apply(Lattice &lattice, int currentEntity,
 }
 
 bool AddAction::test(Lattice &lattice, int currentEntity,
-        RuleTokenSizes &ruleTokenSizes) {
+        RuleTokenSizes &ruleTokenSizes,
+        std::list<Lattice::EdgeSequence>&) {
 
     int count = ruleTokenSizes[tokenIndex - 1];
     if (count == 0) {

@@ -19,7 +19,8 @@ JoinAction::JoinAction(std::string aGroup, int aStart, int aEnd, int aHead,
 }
 
 bool JoinAction::apply(Lattice &lattice, int currentEntity,
-        RuleTokenSizes &ruleTokenSizes) {
+        RuleTokenSizes &ruleTokenSizes,
+        std::list<Lattice::EdgeSequence>&) {
     int realStart;
     int realEnd;
     int realHead;
@@ -57,7 +58,8 @@ bool JoinAction::apply(Lattice &lattice, int currentEntity,
 }
 
 bool JoinAction::test(Lattice &lattice, int,
-        RuleTokenSizes &ruleTokenSizes) {
+        RuleTokenSizes &ruleTokenSizes,
+        std::list<Lattice::EdgeSequence>&) {
     if ( ( (size_t) lattice.getLastVertex() ) < head ) {
         return false;
     }

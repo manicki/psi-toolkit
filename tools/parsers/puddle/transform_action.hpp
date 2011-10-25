@@ -18,9 +18,15 @@ class TransformAction : public Action
         TransformAction(std::string aGroup, int aElement, std::string aRuleName);
         ~TransformAction();
         bool apply(Lattice &lattice, int currentEntity,
-                RuleTokenSizes &ruleTokenSizes);
+                RuleTokenSizes &ruleTokenSizes,
+                std::list<Lattice::EdgeSequence> &rulePartitions);
         bool test(Lattice &lattice, int currentEntity,
-                RuleTokenSizes &ruleTokenSizes);
+                RuleTokenSizes &ruleTokenSizes,
+                std::list<Lattice::EdgeSequence> &rulePartitions);
+//        bool apply(Lattice &lattice, int currentEntity,
+//                RuleTokenSizes &ruleTokenSizes);
+//        bool test(Lattice &lattice, int currentEntity,
+//                RuleTokenSizes &ruleTokenSizes);
 
     private:
         std::string group;

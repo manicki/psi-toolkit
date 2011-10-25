@@ -19,9 +19,15 @@ namespace poleng
                             unsigned int aEnd, unsigned int aHead,
                             std::string aRuleName);
                     bool apply(Lattice &lattice, int currentEntity,
-                            RuleTokenSizes &ruleTokenSizes);
-                    bool test(Lattice &lattice, int,
-                            RuleTokenSizes &TokenSizes);
+                            RuleTokenSizes &ruleTokenSizes,
+                            std::list<Lattice::EdgeSequence> &rulePartitions);
+                    bool test(Lattice &lattice, int currentEntity,
+                            RuleTokenSizes &ruleTokenSizes,
+                            std::list<Lattice::EdgeSequence> &rulePartitions);
+//                    bool apply(Lattice &lattice, int currentEntity,
+//                            RuleTokenSizes &ruleTokenSizes);
+//                    bool test(Lattice &lattice, int,
+//                            RuleTokenSizes &TokenSizes);
 
                 private:
                     void init(std::string aGroup, unsigned int aStart,

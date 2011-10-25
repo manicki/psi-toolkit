@@ -12,12 +12,12 @@ namespace poleng
         {
 
             bool Action::test(Lattice&, int,
-                    RuleTokenSizes& ) {
+                    RuleTokenSizes&, std::list<Lattice::EdgeSequence>&) {
                 return true;
             }
 
             bool Action::apply(Lattice&, int,
-                    RuleTokenSizes& ) {
+                    RuleTokenSizes&, std::list<Lattice::EdgeSequence>&) {
                 return true;
             }
 

@@ -22,7 +22,8 @@ SyntokAction::SyntokAction(int aStart, int aEnd, std::vector<int> aTokenIndices,
 //2. zebranie scalonych form bazowych
 //3. wstawienie nowej krawedzi typu token albo grup (w zaleznosci od przelacznika) NOWOSC: wczesniej bylo, ze albo dawaj krawedz group albo nic. teraz musi byc krawedz ,jak graf to jedyna struktura. ewentualnei mozna dac na koniec opcje, wywal syntoki z grafu, przeliczyc reszte grafu
 bool SyntokAction::apply(Lattice &lattice, int currentEntity,
-        RuleTokenSizes &ruleTokenSizes) {
+        RuleTokenSizes &ruleTokenSizes,
+        std::list<Lattice::EdgeSequence>&) {
     int realStart;
     int realEnd;
     util::getSyntokActionParams(ruleTokenSizes, start, end, realStart, realEnd);
@@ -64,7 +65,8 @@ bool SyntokAction::apply(Lattice &lattice, int currentEntity,
 }
 
 bool SyntokAction::test(Lattice &, int,
-        RuleTokenSizes &ruleTokenSizes) {
+        RuleTokenSizes &ruleTokenSizes,
+        std::list<Lattice::EdgeSequence>&) {
     for (std::vector<int>::iterator sizeIt = ruleTokenSizes.begin();
             sizeIt != ruleTokenSizes.end(); ++ sizeIt) {
         if (*sizeIt > 0)
