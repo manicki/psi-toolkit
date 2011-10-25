@@ -19,32 +19,6 @@ namespace poleng {
 
             namespace lattice {
 
-            class EdgeNonTop {
-                private:
-                    std::list<Lattice::EdgeDescriptor> nontopEdges;
-                public:
-                    EdgeNonTop(std::list<Lattice::EdgeDescriptor> aNontopEdges)
-                        : nontopEdges(aNontopEdges) {}
-                    bool operator() (const Lattice::EdgeDescriptor &value) {
-                        for (std::list<Lattice::EdgeDescriptor>::iterator it =
-                                nontopEdges.begin(); it != nontopEdges.end();
-                                ++ it) {
-                            //if (*it == value)
-                            if (! ((*it < value) || (value < *it)) )
-                                return true;
-                        }
-                        return false;
-                    }
-            };
-
-            class EdgeUnique {
-                public:
-                    bool operator() (const Lattice::EdgeDescriptor &first,
-                            const Lattice::EdgeDescriptor &second) const {
-                        return (! ((first < second) || (second < first)) );
-                    }
-            };
-
 
             std::string readInputLattice(Lattice &lattice);
             std::string readMorfologikLattice(Lattice &lattice);
@@ -129,6 +103,10 @@ namespace poleng {
                     bool sequenceContainsEdge(Lattice &lattice,
                             Lattice::EdgeSequence sequence,
                             Lattice::EdgeDescriptor edge);
+                    std::list<Lattice::EdgeSequence> getPartitionsContainingEdges(
+                            Lattice &lattice,
+                            std::list<Lattice::EdgeSequence> &partitions,
+                            std::list<Lattice::EdgeDescriptor> edges);
 
                     bool areAnnotationItemsEqual(Lattice &lattice,
                             AnnotationItem a,
@@ -136,6 +114,76 @@ namespace poleng {
 
                     std::string getMorphologyString(Lattice &lattice,
                             Lattice::EdgeDescriptor edge);
+                    Morphology getMorphology(Lattice &lattice,
+                            Lattice::EdgeDescriptor edge);
+
+            class EdgeNonTop {
+                private:
+                    Lattice &lattice;
+                    std::list<Lattice::EdgeDescriptor> nontopEdges;
+                    int maxStart, maxEnd;
+                public:
+                    EdgeNonTop(Lattice &aLattice,
+                            std::list<Lattice::EdgeDescriptor> aNontopEdges)
+                        : lattice(aLattice), nontopEdges(aNontopEdges) {
+                            maxStart = lattice.getLastVertex();
+                            maxEnd = 0;
+                            for (std::list<Lattice::EdgeDescriptor>::iterator it =
+                                    nontopEdges.begin();
+                                    it != nontopEdges.end();
+                                    ++ it) {
+                                int start = lattice.getEdgeBeginIndex(*it);
+                                int length = lattice.getEdgeLength(*it);
+                                if (start < maxStart)
+                                    maxStart = start;
+                                if ( (start + length) > maxEnd)
+                                    maxEnd = start + length;
+                            }
+                        }
+                    bool operator() (const Lattice::EdgeDescriptor &value) {
+                        Lattice::VertexDescriptor start =
+                            lattice.getEdgeBeginIndex(value);
+                        Lattice::VertexDescriptor length =
+                            lattice.getEdgeLength(value);
+                        if (start > maxStart)
+                            return true;
+                        if ( (start + length) < maxEnd)
+                            return true;
+                        AnnotationItem annotationItem =
+                            lattice.getEdgeAnnotationItem(value);
+                        for (std::list<Lattice::EdgeDescriptor>::iterator it =
+                                nontopEdges.begin(); it != nontopEdges.end();
+                                ++ it) {
+                            if (start == lattice.getEdgeBeginIndex(*it)) {
+                                if (length == lattice.getEdgeLength(*it)) {
+                                    if (areAnnotationItemsEqual(lattice, annotationItem,
+                                                lattice.getEdgeAnnotationItem(*it))) {
+                                        return true;
+                                    }
+                                }
+                            }
+                        }
+                                return false;
+//                        for (std::list<Lattice::EdgeDescriptor>::iterator it =
+//                                nontopEdges.begin(); it != nontopEdges.end();
+//                                ++ it) {
+//                            //if (*it == value)
+//                            if (! ((*it < value) || (value < *it)) )
+//                                return true;
+//                        }
+//                        return false;
+                    }
+            };
+
+            class EdgeUnique {
+                public:
+                    bool operator() (const Lattice::EdgeDescriptor &first,
+                            const Lattice::EdgeDescriptor &second) const {
+                        return (! ((first < second) || (second < first)) );
+                    }
+            };
+
+
             }
         }
     }

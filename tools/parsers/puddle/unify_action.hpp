@@ -23,9 +23,15 @@ class UnifyAction : public Action
                 std::vector<std::string> aUnifiedAttributes,
                 std::vector<int> aTokenIndices);
         bool apply(Lattice &lattice, int currentEntity,
-                RuleTokenSizes &ruleTokenSizes);
+                RuleTokenSizes &ruleTokenSizes,
+                std::list<Lattice::EdgeSequence> &rulePartitions);
         bool test(Lattice &lattice, int currentEntity,
-                RuleTokenSizes &ruleTokenSizes);
+                RuleTokenSizes &ruleTokenSizes,
+                std::list<Lattice::EdgeSequence> &rulePartitions);
+//        bool apply(Lattice &lattice, int currentEntity,
+//                RuleTokenSizes &ruleTokenSizes);
+//        bool test(Lattice &lattice, int currentEntity,
+//                RuleTokenSizes &ruleTokenSizes);
 
     private:
         void init(std::vector<std::string> aUnifiedPatterns,

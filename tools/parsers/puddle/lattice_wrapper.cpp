@@ -177,7 +177,7 @@ namespace poleng {
                         if (isDiscarded(lattice, edge))
                             continue; //skip discarded edges
                         std::string base = getBase(lattice, edge);
-                        std::string morphology = lattice::getMorphologyString(
+                        std::string morphology = getMorphologyString(
                                 lattice, edge);
                         //std::string morpho = lattice.getAnnotationItemManager().getValue(
                         //        ai, "morpho");
@@ -539,7 +539,7 @@ namespace poleng {
                     }
                 }
                 nontopEdges.unique(EdgeUnique());
-                edges.remove_if(EdgeNonTop(nontopEdges));
+                edges.remove_if(EdgeNonTop(lattice, nontopEdges));
                 return edges;
             }
 
@@ -1167,10 +1167,33 @@ namespace poleng {
                         av.begin(); avit != av.end(); ++ avit) {
                     if (avit->first == "discard")
                         continue;
+                    if (avit->first == "head" || avit->first == "orth")
+                        continue;
                     morpho += ":";
                     morpho += avit->second;
                 }
                 return morpho;
+            }
+
+            Morphology getMorphology(Lattice &lattice,
+                    Lattice::EdgeDescriptor edge) {
+                Morphology morphology;
+                std::string partOfSpeech = getPartOfSpeech(lattice, edge);
+                morphology.insert(std::pair<std::string, std::string>("pos",
+                            partOfSpeech));
+                AnnotationItem ai = lattice.getEdgeAnnotationItem(edge);
+                std::list< std::pair<std::string, std::string> > av
+                    = lattice.getAnnotationItemManager().getValues(ai);
+                for (std::list< std::pair<std::string, std::string> >::iterator avit = //@todo: sortowanie tego
+                        av.begin(); avit != av.end(); ++ avit) {
+                    if (avit->first == "discard")
+                        continue;
+                    if (avit->first == "head" || avit->first == "orth")
+                        continue;
+                    morphology.insert(std::pair<std::string, std::string>(
+                                avit->first, avit->second));
+                }
+                return morphology;
             }
 
             bool isDiscarded(Lattice &lattice, Lattice::EdgeDescriptor edge) {
@@ -1195,7 +1218,7 @@ namespace poleng {
                 int offset = vertex;
                 int vertexI = 0;
                 while (vertexI < count) {
-                    vertex = lattice::getVertex(lattice, offset + vertexI);
+                    vertex = getVertex(lattice, offset + vertexI);
                     std::list<Lattice::EdgeDescriptor> edges =
                         lattice::getTopEdges(lattice, vertex);
                     for (std::list<Lattice::EdgeDescriptor>::iterator edgeIt = edges.begin();
@@ -1222,7 +1245,7 @@ namespace poleng {
                                     }
                                 }
                             } else if (cond_it->type == MORPHOLOGY_CONDITION) {
-                                std::string tokenMorphology = lattice::getMorphologyString(
+                                std::string tokenMorphology = getMorphologyString(
                                         lattice, *edgeIt);
                                 if (!RegExp::FullMatch(tokenMorphology, cond_it->pattern)) {
                                     lattice.getAnnotationItemManager().setValue(
@@ -1254,6 +1277,34 @@ namespace poleng {
                     }
                 }
                 return false;
+            }
+
+            std::list<Lattice::EdgeSequence> getPartitionsContainingEdges(
+                    Lattice &lattice,
+                    std::list<Lattice::EdgeSequence> &partitions,
+                    std::list<Lattice::EdgeDescriptor> edges) {
+                if (edges.size() == 0)
+                    return partitions;
+                std::list<Lattice::EdgeSequence> result;
+                std::list<Lattice::EdgeSequence>::iterator seqIt =
+                        partitions.begin();
+                while (seqIt != partitions.end()) {
+                    bool containsAllEdges = true;
+                    for (std::list<Lattice::EdgeDescriptor>::iterator edgeIt =
+                            edges.begin();
+                            edgeIt != edges.end();
+                            ++ edgeIt) {
+                        if (! sequenceContainsEdge(lattice, *seqIt, *edgeIt)) {
+                            containsAllEdges = false;
+                            break;
+                        }
+                    }
+                    if (containsAllEdges) {
+                        result.push_back(*seqIt);
+                    }
+                    ++ seqIt;
+                }
+                return result;
             }
 
             }
