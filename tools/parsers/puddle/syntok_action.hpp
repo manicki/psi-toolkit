@@ -18,15 +18,12 @@ class SyntokAction : public Action
     public:
         SyntokAction(int aStart, int aEnd, std::vector<int> aTokenIndices,
                 std::vector<Morphology> aMorphology, std::string aRuleName);
-        bool apply(Lattice &lattice, int currentEntity,
+        bool apply(Lattice &lattice, int matchedStartIndex,
                 RuleTokenSizes &ruleTokenSizes,
                 std::list<Lattice::EdgeSequence> &rulePartitions);
-        bool test(Lattice &lattice, int currentEntity,
+        bool test(Lattice &lattice, int matchedStartIndex,
                 RuleTokenSizes &ruleTokenSizes,
                 std::list<Lattice::EdgeSequence> &rulePartitions);
-//        bool apply(Lattice &lattice, int currentEntity,
-//                RuleTokenSizes &ruleTokenSizes);
-//        bool test(Lattice&, int, RuleTokenSizes &ruleTokenSizes);
 
         void setSyntok() { syntok = true; }
     private:

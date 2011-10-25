@@ -10,7 +10,6 @@ add_library(tools-parsers-puddle SHARED
 	puddle.cpp
 	tagset_loader.cpp
 	rule_loader.cpp
-	tagger.cpp
 	tagset.cpp
 	action.cpp
 	add_action.cpp

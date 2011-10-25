@@ -11,7 +11,7 @@ namespace poleng {
                 init(aConditions, aTokenIndex);
             }
 
-bool DeleteAction::apply(Lattice &lattice, int currentEntity,
+bool DeleteAction::apply(Lattice &lattice, int matchedStartIndex,
         RuleTokenSizes &ruleTokenSizes,
         std::list<Lattice::EdgeSequence>&) {
     int count = ruleTokenSizes[tokenIndex - 1];
@@ -22,14 +22,14 @@ bool DeleteAction::apply(Lattice &lattice, int currentEntity,
 
     int before = util::getDeleteActionParams(ruleTokenSizes, tokenIndex);
     //Lattice::VertexDescriptor vertex = lattice::getVertex(lattice,
-    //        currentEntity + before);
-    //Lattice::VertexDescriptor vertex = currentEntity; //@todo: tymczasowo. to nie uwzglednia lewego kontekstu
+    //        matchedStartIndex + before);
+    //Lattice::VertexDescriptor vertex = matchedStartIndex; //@todo: tymczasowo. to nie uwzglednia lewego kontekstu
     Lattice::VertexDescriptor vertex = lattice::getVertex(lattice,
-            before, currentEntity);
+            before, matchedStartIndex);
     //@todo: czy to sprawdzenie jest nadal konieczne? ta funkcja getVertex nie robi czegos takiego?
     while (lattice::getTopEdges(lattice, vertex).size() == 0) { //if there is no edge at a given position, proceed to the next vertex, as it may be a whitespace
         before ++;
-        vertex = currentEntity + before;
+        vertex = matchedStartIndex + before;
     }
 
     lattice::deleteEdges(lattice, vertex, count, conditions);
@@ -38,7 +38,7 @@ bool DeleteAction::apply(Lattice &lattice, int currentEntity,
 }
 
 bool DeleteAction::test(Lattice &lattice,
-        int currentEntity, RuleTokenSizes &ruleTokenSizes,
+        int matchedStartIndex, RuleTokenSizes &ruleTokenSizes,
         std::list<Lattice::EdgeSequence>&) {
     bool ret = false;
 
@@ -54,16 +54,16 @@ bool DeleteAction::test(Lattice &lattice,
         before += ruleTokenSizes[i];
         i ++;
     }
-    //Lattice::VertexDescriptor vertex = currentEntity + before;
+    //Lattice::VertexDescriptor vertex = matchedStartIndex + before;
     //Lattice::VertexDescriptor vertex = lattice::getVertex(lattice,
-    //        currentEntity + before);
-    //Lattice::VertexDescriptor vertex = currentEntity; //@todo: tymczasowo. to nie uwzglednia lewego kontekstu
+    //        matchedStartIndex + before);
+    //Lattice::VertexDescriptor vertex = matchedStartIndex; //@todo: tymczasowo. to nie uwzglednia lewego kontekstu
     Lattice::VertexDescriptor vertex = lattice::getVertex(lattice,
-            before, currentEntity);
+            before, matchedStartIndex);
     //@todo: czy to sprawdzenie jest nadal konieczne? ta funkcja getVertex nie robi czegos takiego?
     while (lattice::getTopEdges(lattice, vertex).size() == 0) { //if there is no edge at a given position, proceed to the next vertex, as it may be a whitespace
         before ++;
-        vertex = currentEntity + before;
+        vertex = matchedStartIndex + before;
     }
     bool foundToDelete = foundEdgesToDelete(lattice, vertex, count);
 

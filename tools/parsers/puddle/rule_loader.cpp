@@ -24,8 +24,6 @@ RuleLoader::RuleLoader() {
     initProperties();
 }
 
-RuleLoader::~RuleLoader() { }
-
         void RuleLoader::initProperties() {
             verbose = false;
             syntok = false; //czy true?

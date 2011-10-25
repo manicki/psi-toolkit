@@ -3,22 +3,17 @@
 
 #include <iostream>
 
-namespace poleng
-{
+namespace poleng {
 
-namespace bonsai
-{
-    namespace puddle
-    {
+namespace bonsai {
+    namespace puddle {
 
 
 RuleMatcher::RuleMatcher() {
-    syntok = true;
-    disamb = false;
-    norepeats = false;
+    initProperties();
 }
 
-RuleMatcher::~RuleMatcher() { }
+//RuleMatcher::~RuleMatcher() { }
 
 void RuleMatcher::setRules(RulesPtr aRules) {
     rules = aRules;
@@ -188,21 +183,23 @@ std::string RuleMatcher::generateSentenceString(Lattice &lattice, int startVerte
     return ss.str();
 }
 
-void RuleMatcher::setSyntok() {
+//void RuleMatcher::setSyntok() {
+//    syntok = true;
+//}
+//
+//void RuleMatcher::setNoSyntok() {
+//    syntok = false;
+//}
+//
+//void RuleMatcher::setNoRepeats() {
+//    norepeats = true;
+//}
+
+void RuleMatcher::initProperties() {
     syntok = true;
+    norepeats = false;
 }
 
-void RuleMatcher::setNoSyntok() {
-    syntok = false;
-}
-
-void RuleMatcher::setDisamb() {
-    disamb = true;
-}
-
-void RuleMatcher::setNoRepeats() {
-    norepeats = true;
-}
 
 }
 

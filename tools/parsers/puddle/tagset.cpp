@@ -18,21 +18,11 @@ namespace bonsai
     {
 
 Tagset::Tagset() {
-#if _WITH_BONSAI_PARSEGRAPH
-    desc_terminals = false;
-    desc_nonterminals = false;
-    desc_separator = "#";
-#endif
+    initProperties();
 }
 
-Tagset::~Tagset() { }
-
 Tagset::Tagset(std::string &filename) {
-#if _WITH_BONSAI_PARSEGRAPH
-    desc_terminals = false;
-    desc_nonterminals = false;
-    desc_separator = "#";
-#endif
+    initProperties();
     readFromFile(filename);
 }
 
@@ -473,13 +463,15 @@ std::map<std::string, std::string> Tagset::getAttributes(
                     partsOfSpeech.find(pos);
                 attributes = pi->second;
             }
-            std::vector<std::string>::iterator ai = attributes.begin() + attribute_start;
+            std::vector<std::string>::iterator ai = attributes.begin() +
+                attribute_start;
             while (ai != attributes.end()) {
                 std::string attr = *ai;
                 if (attr[0] == '[' && attr[attr.size() - 1] == ']')
                     attr = attr.substr(1, attr.size() - 2);
                 if (checkAttributeValue(attr, val)) {
-                    results.insert(std::pair<std::string, std::string>(attr, val));
+                    results.insert(std::pair<std::string, std::string>(
+                                attr, val));
                     attribute_start ++;
                     break;
                 } else {
@@ -506,7 +498,8 @@ std::vector<std::string> Tagset::getOpenClasses() const {
             Pattern reg(regexp);
             std::vector<std::string> result;
             for (std::map<std::string,
-                    std::vector<std::string> >::iterator pos_it = partsOfSpeech.begin();
+                    std::vector<std::string> >::iterator pos_it =
+                    partsOfSpeech.begin();
                     pos_it != partsOfSpeech.end(); ++ pos_it) {
                 if (RegExp::FullMatch(pos_it->first, reg))
                     result.push_back(pos_it->first);
@@ -518,7 +511,8 @@ std::vector<std::string> Tagset::getOpenClasses() const {
             Pattern reg(regexp);
             std::vector<std::string> result;
             for (std::map<std::string,
-                    std::vector<std::string> >::iterator pos_it = partsOfSpeech.begin();
+                    std::vector<std::string> >::iterator pos_it =
+                    partsOfSpeech.begin();
                     pos_it != partsOfSpeech.end(); ++ pos_it) {
                 if (!RegExp::FullMatch(pos_it->first, reg))
                     result.push_back(pos_it->first);
@@ -529,7 +523,8 @@ std::vector<std::string> Tagset::getOpenClasses() const {
         std::vector<std::string> Tagset::getPosExcept(std::string pos) {
             std::vector<std::string> result;
             for (std::map<std::string,
-                    std::vector<std::string> >::iterator pos_it = partsOfSpeech.begin();
+                    std::vector<std::string> >::iterator pos_it =
+                    partsOfSpeech.begin();
                     pos_it != partsOfSpeech.end(); ++ pos_it) {
                 if (pos_it->first != pos)
                     result.push_back(pos_it->first);
@@ -537,8 +532,8 @@ std::vector<std::string> Tagset::getOpenClasses() const {
             return result;
         }
 
-        std::vector<std::string> Tagset::getAttributeValuesMatching(std::string attribute,
-                std::string regexp) {
+        std::vector<std::string> Tagset::getAttributeValuesMatching(
+                std::string attribute, std::string regexp) {
             Pattern reg(regexp);
             std::vector<std::string> result;
             std::map<std::string, std::vector<std::string> >::iterator attr_it =
@@ -554,8 +549,8 @@ std::vector<std::string> Tagset::getOpenClasses() const {
             return result;
         }
 
-        std::vector<std::string> Tagset::getAttributeValuesNotMatching(std::string attribute,
-                std::string regexp) {
+        std::vector<std::string> Tagset::getAttributeValuesNotMatching(
+                std::string attribute, std::string regexp) {
             RegExp reg(regexp);
             std::vector<std::string> result;
             std::map<std::string, std::vector<std::string> >::iterator attr_it =
@@ -571,8 +566,8 @@ std::vector<std::string> Tagset::getOpenClasses() const {
             return result;
         }
 
-        std::vector<std::string> Tagset::getAttributeValuesExcept(std::string attribute,
-                std::string value) {
+        std::vector<std::string> Tagset::getAttributeValuesExcept(
+                std::string attribute, std::string value) {
             std::vector<std::string> result;
             std::map<std::string, std::vector<std::string> >::iterator attr_it =
                 attributes.find(attribute);
@@ -615,7 +610,8 @@ std::vector<std::string> Tagset::getOpenClasses() const {
             boost::split(valuesVector, valuesString, boost::is_any_of(" \t\n"));
 
             std::vector<std::string> attrValues;
-            for (std::vector<std::string>::iterator valueIt = valuesVector.begin();
+            for (std::vector<std::string>::iterator valueIt =
+                    valuesVector.begin();
                     valueIt != valuesVector.end(); ++ valueIt) {
                 std::string value = boost::algorithm::trim_copy(*valueIt);
                 attrValues.push_back(value);
@@ -629,8 +625,7 @@ std::vector<std::string> Tagset::getOpenClasses() const {
 
         void Tagset::parsePartOfSpeech(std::string &partOfSpeech,
                 std::string &attributesString) {
-            if (partsOfSpeech.find(partOfSpeech) != partsOfSpeech.end())
-            {
+            if (partsOfSpeech.find(partOfSpeech) != partsOfSpeech.end()) {
                 std::cerr << "Part of speech: " << partOfSpeech
                     << " already defined. Skipping." << std::endl;
                 return;
@@ -680,7 +675,6 @@ void Tagset::generateProperMorphologyLabels() {
     for (std::map<std::string, std::vector<std::string> >::iterator
             posIt = partsOfSpeech.begin(); posIt != partsOfSpeech.end(); ++ posIt) {
         std::vector<Morphology> morphologies;
-        //morphologies.push_back(posIt->first);
         Morphology posMorphology;
         posMorphology.insert(std::pair<std::string, std::string>(
                     "pos", posIt->first));
@@ -705,8 +699,6 @@ void Tagset::generateProperMorphologyLabels() {
                     newMorphology.insert(std::pair<std::string, std::string>(
                                 attribute, *valueIt));
                     morphologiesTmp.push_back(newMorphology);
-                    //std::string newMorphology = *morphologyIt + ":" + *valueIt;
-                    //morphologiesTmp.push_back(newMorphology);
                 }
             }
             if (!optional) {
@@ -721,10 +713,17 @@ void Tagset::generateProperMorphologyLabels() {
         for (std::vector<Morphology>::iterator morphologyIt = morphologies.begin();
                 morphologyIt != morphologies.end(); ++ morphologyIt) {
             std::string morphoString = util::getMorphologyString(*morphologyIt);
-            //properMorphologyLabels.insert(*morphologyIt);
             properMorphologyLabels.insert(morphoString);
         }
     }
+}
+
+void Tagset::initProperties() {
+#if _WITH_BONSAI_PARSEGRAPH
+    desc_terminals = false;
+    desc_nonterminals = false;
+    desc_separator = "#";
+#endif
 }
 
 

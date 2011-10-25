@@ -18,7 +18,7 @@ AttachAction::AttachAction(std::string aGroup, int aStart, int aEnd, int aHead,
     init(aGroup, aStart, aEnd, aHead, aRuleName);
 }
 
-bool AttachAction::apply(Lattice &lattice, int currentEntity,
+bool AttachAction::apply(Lattice &lattice, int matchedStartIndex,
         RuleTokenSizes &ruleTokenSizes,
         std::list<Lattice::EdgeSequence>&) {
     int realStart;
@@ -29,11 +29,11 @@ bool AttachAction::apply(Lattice &lattice, int currentEntity,
         return false;
 
     Lattice::VertexDescriptor startVertex = lattice::getVertex(
-            lattice, realStart, currentEntity);
+            lattice, realStart, matchedStartIndex);
     Lattice::VertexDescriptor headVertex = lattice::getVertex(
-            lattice, realHead, currentEntity);
+            lattice, realHead, matchedStartIndex);
     Lattice::VertexDescriptor endVertex = lattice::getVertex(
-            lattice, realEnd, currentEntity);
+            lattice, realEnd, matchedStartIndex);
     std::list<Lattice::EdgeDescriptor> startEdges = lattice::getTopEdges(
             lattice, startVertex);
     std::list<Lattice::EdgeDescriptor> headEdges = lattice::getTopEdges(

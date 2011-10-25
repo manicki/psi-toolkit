@@ -10,8 +10,6 @@
 #include "puddle_types.hpp"
 #include "puddle_util.hpp"
 
-//using namespace puddle;
-
 #define DESC_ORTH 0
 #define DESC_BASE 1
 #define DESC_MORPHO 2
@@ -35,7 +33,6 @@ class Tagset
         bool checkAttributeValue(std::string &attribute, std::string &value);
         Tagset();
         Tagset(std::string &filename);
-        ~Tagset();
         bool checkMorphology(std::string &morphology);
         int getNumberOfAttributes() const;
         int getAttributeIndex(std::string &attribute);
@@ -53,21 +50,26 @@ class Tagset
         std::vector<std::string> getGroupDesc(std::string group);
         std::vector<std::string> getTokenDesc(std::string pos);
 #endif
-        std::map<std::string, std::string> getAttributes(std::string morphologyString, bool buffer = false);
+        std::map<std::string, std::string> getAttributes(
+                std::string morphologyString, bool buffer = false);
 
         std::vector<std::string> getOpenClasses() const;
 
         std::vector<std::string> getPosMatching(std::string regexp);
         std::vector<std::string> getPosNotMatching(std::string regexp);
         std::vector<std::string> getPosExcept(std::string pos);
-        std::vector<std::string> getAttributeValuesMatching(std::string attribute, std::string regexp);
-        std::vector<std::string> getAttributeValuesNotMatching(std::string attribute, std::string regexp);
-        std::vector<std::string> getAttributeValuesExcept(std::string attribute, std::string value);
+        std::vector<std::string> getAttributeValuesMatching(
+                std::string attribute, std::string regexp);
+        std::vector<std::string> getAttributeValuesNotMatching(
+                std::string attribute, std::string regexp);
+        std::vector<std::string> getAttributeValuesExcept(
+                std::string attribute, std::string value);
 
         std::vector<std::string> getAttributes();
         std::vector<std::string> getPartsOfSpeech();
 
     private:
+        void initProperties();
 
         void parseAttribute(std::string &attribute, std::string &valuesString);
         void parsePartOfSpeech(std::string &partOfSpeech,

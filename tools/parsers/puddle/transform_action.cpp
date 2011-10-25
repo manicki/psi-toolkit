@@ -12,30 +12,23 @@ namespace bonsai
     namespace puddle
     {
 
-TransformAction::TransformAction(std::string aGroup, int aElement, std::string aRuleName) //, LatticeWrapperPtr aLatticeWrapper)
-{
-    group = aGroup;
-    element = aElement; // - 1;
-    type = "transform";
-    ruleName = aRuleName;
+TransformAction::TransformAction(std::string aGroup, int aElement,
+        std::string aRuleName) {
+    init(aGroup, aElement, aRuleName);
 }
 
-TransformAction::~TransformAction()
-{
-}
-
-bool TransformAction::apply(Lattice &lattice, int currentEntity,
+bool TransformAction::apply(Lattice &lattice, int matchedStartIndex,
         RuleTokenSizes &ruleTokenSizes,
         std::list<Lattice::EdgeSequence>&) {
 
     int before = util::getTransformActionParams(ruleTokenSizes, element);
 
     Lattice::VertexDescriptor startVertex = lattice::getVertex(
-            lattice, before, currentEntity); //@todo: czy te numerki tu sie kupy trzymaja trzeba sprawdzic
+            lattice, before, matchedStartIndex); //@todo: czy te numerki tu sie kupy trzymaja trzeba sprawdzic
     Lattice::VertexDescriptor headVertex = lattice::getVertex(
-            lattice, before, currentEntity);
+            lattice, before, matchedStartIndex);
     Lattice::VertexDescriptor endVertex = lattice::getVertex(
-            lattice, before, currentEntity);
+            lattice, before, matchedStartIndex);
     std::list<Lattice::EdgeDescriptor> startEdges = lattice::getTopEdges(
             lattice, startVertex);
     std::list<Lattice::EdgeDescriptor> headEdges = lattice::getTopEdges(
@@ -59,7 +52,7 @@ bool TransformAction::apply(Lattice &lattice, int currentEntity,
     return true;
 }
 
-bool TransformAction::test(Lattice &lattice, int currentEntity,
+bool TransformAction::test(Lattice &lattice, int matchedStartIndex,
         RuleTokenSizes &ruleTokenSizes,
         std::list<Lattice::EdgeSequence>&) {
     if ( (lattice.getLastVertex()) < element ) {
@@ -73,13 +66,13 @@ bool TransformAction::test(Lattice &lattice, int currentEntity,
 
     int before = util::getTransformActionParams(ruleTokenSizes, element);
 
-    //Lattice::VertexDescriptor vertex = currentEntity + before;
+    //Lattice::VertexDescriptor vertex = matchedStartIndex + before;
     Lattice::VertexDescriptor vertex = lattice::getVertex(lattice,
-            before, currentEntity);
+            before, matchedStartIndex);
     //@todo: czy to sprawdzenie jest nadal konieczne? ta funkcja getVertex nie robi czegos takiego?
     while (lattice::getTopEdges(lattice, vertex).size() == 0) { //if there is no edge at a given position, proceed to the next vertex, as it may be a whitespace
         before ++;
-        vertex = currentEntity + before;
+        vertex = matchedStartIndex + before;
     }
 
     std::list<Lattice::EdgeDescriptor> edges = lattice::getTopEdges(
@@ -94,6 +87,13 @@ bool TransformAction::test(Lattice &lattice, int currentEntity,
     return true;
 }
 
+void TransformAction::init(std::string aGroup, int aElement,
+        std::string aRuleName) {
+    group = aGroup;
+    element = aElement;
+    type = "transform";
+    ruleName = aRuleName;
+}
 
 }
 

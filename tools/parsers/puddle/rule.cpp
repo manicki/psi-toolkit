@@ -3,7 +3,6 @@
 
 #include <iostream>
 
-#include "group_action.hpp"
 #include <exception>
 
 namespace poleng
@@ -15,7 +14,7 @@ namespace bonsai
     {
 
 #if HAVE_RE2
-        Rule::Rule( std::string aName, std::string aCompiled, int aLeftCount,
+        Rule::Rule( std::string aName, std::string aCompiledPattern, int aLeftCount,
                 int aMatchCount, int aRightCount, ActionsPtr aActions,
                 RuleTokenPatterns aRuleTokenPatterns,
                 RuleTokenModifiers aRuleTokenModifiers,
@@ -24,7 +23,7 @@ namespace bonsai
                 bool aRepeat, std::string aLeft, std::string aMatch, std::string aRight,
                 NegativePatternStrings aNegativePatterns ) {
 #else
-       Rule::Rule( std::string aName, std::string aCompiled, int aLeftCount,
+       Rule::Rule( std::string aName, std::string aCompiledPattern, int aLeftCount,
                int aMatchCount, int aRightCount, ActionsPtr aActions,
                RuleTokenPatterns aRuleTokenPatterns,
                RuleTokenModifiers aRuleTokenModifiers,
@@ -33,25 +32,10 @@ namespace bonsai
                bool aRepeat, std::string aLeft, std::string aMatch, std::string aRight) {
 #endif
 
-           ruleTokenPatterns = aRuleTokenPatterns;
-           ruleTokenModifiers = aRuleTokenModifiers;
-           ruleTokenRequirements = aRuleTokenRequirements;
-           rulePatternIndices = aRulePatternIndices;
-
-           pattern = PatternPtr( new Pattern("") );
-           actions = aActions;
-
-           name = aName;
-           setPattern(aCompiled);
-           leftCount = aLeftCount;
-           matchCount = aMatchCount;
-           rightCount = aRightCount;
-
-           repeat = aRepeat;
-
-           left_ = aLeft;
-           match_ = aMatch;
-           right_ = aRight;
+           init(aName, aCompiledPattern, aLeftCount, aMatchCount, aRightCount,
+                   aActions, aRuleTokenPatterns, aRuleTokenModifiers,
+                   aRuleTokenRequirements, aRulePatternIndices, aRepeat,
+                   aLeft, aMatch, aRight);
 
 #if HAVE_RE2
            for (NegativePatternStrings::iterator negPatIt =
@@ -141,7 +125,6 @@ int Rule::matchPattern(std::string &sentenceString,
     StringPiece sentence_str(sentenceString);
     StringPiece orig_str(sentenceString);
 
-    try {
         std::string before = "";
 #if HAVE_RE2
         while ( RegExp::FindAndConsumeN( &sentence_str, *pattern, matched,
@@ -208,15 +191,6 @@ int Rule::matchPattern(std::string &sentenceString,
             delete[] matched;
             return r;
         }
-        }
-        catch (std::exception &e) {
-            std::cerr << "Exception in puddle: " << e.what() << std::endl;
-            delete[] matchedS;
-            for (int argIt = 0; argIt < num_groups; argIt ++)
-                delete matched[argIt];
-            delete[] matched;
-            return -1;
-        }
         delete[] matchedS;
         for (int argIt = 0; argIt < num_groups; argIt ++)
             delete matched[argIt];
@@ -252,9 +226,9 @@ int Rule::getRightCount() const {
     return rightCount;
 }
 
-void Rule::setPattern(std::string aCompiled) {
-    pattern = PatternPtr(new Pattern(aCompiled));
-    compiled = aCompiled;
+void Rule::setPattern(std::string aCompiledPattern) {
+    pattern = PatternPtr(new Pattern(aCompiledPattern));
+    compiledPattern = aCompiledPattern;
 }
 
 void Rule::setLeftCount(int aCount) {
@@ -372,6 +346,37 @@ void Rule::deleteAction(size_t index) {
             }
             return true;
         }
+
+void Rule::init(std::string aName, std::string aCompiledPattern, int aLeftCount,
+        int aMatchCount, int aRightCount, ActionsPtr aActions,
+        RuleTokenPatterns aRuleTokenPatterns,
+        RuleTokenModifiers aRuleTokenModifiers,
+        RuleTokenRequirements aRuleTokenRequirements,
+        RulePatternIndices aRulePatternIndices,
+        bool aRepeat, std::string aLeft, std::string aMatch,
+        std::string aRight) {
+           ruleTokenPatterns = aRuleTokenPatterns;
+           ruleTokenModifiers = aRuleTokenModifiers;
+           ruleTokenRequirements = aRuleTokenRequirements;
+           rulePatternIndices = aRulePatternIndices;
+
+           pattern = PatternPtr( new Pattern("") );
+           actions = aActions;
+
+           name = aName;
+           setPattern(aCompiledPattern);
+           leftCount = aLeftCount;
+           matchCount = aMatchCount;
+           rightCount = aRightCount;
+
+           repeat = aRepeat;
+
+           left_ = aLeft;
+           match_ = aMatch;
+           right_ = aRight;
+}
+
+
 }
 
 }

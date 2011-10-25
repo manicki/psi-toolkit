@@ -809,16 +809,16 @@ BOOST_AUTO_TEST_CASE( puddle_add ) {
     std::string rulesFilename = ROOT_DIR "tools/parsers/puddle/t/files/rules_add.fr";
     poleng::bonsai::puddle::TagsetLoader tagset_loader;
     poleng::bonsai::puddle::RuleLoader rule_loader;
-    poleng::bonsai::puddle::TaggerPtr tagger = poleng::bonsai::puddle::TaggerPtr( new poleng::bonsai::puddle::Tagger());
+//    poleng::bonsai::puddle::TaggerPtr tagger = poleng::bonsai::puddle::TaggerPtr( new poleng::bonsai::puddle::Tagger());
 
     boost::scoped_ptr<poleng::bonsai::puddle::Puddle> puddle(new poleng::bonsai::puddle::Puddle());
 
     poleng::bonsai::puddle::TagsetPtr tagset;
     tagset = tagset_loader.load(tagsetFilename);
-    tagger->setTagset(tagset);
+//    tagger->setTagset(tagset);
     puddle->setTagset(tagset);
     rule_loader.setTagset(tagset);
-    puddle->setTagger(tagger);
+//    puddle->setTagger(tagger);
     poleng::bonsai::puddle::RulesPtr rules =
         rule_loader.readFromFile(rulesFilename);
     puddle->setRules(rules);
@@ -1083,16 +1083,16 @@ BOOST_AUTO_TEST_CASE( puddle_group ) {
     std::string rulesFilename = ROOT_DIR "tools/parsers/puddle/t/files/rules_group.fr";
     poleng::bonsai::puddle::TagsetLoader tagset_loader;
     poleng::bonsai::puddle::RuleLoader rule_loader;
-    poleng::bonsai::puddle::TaggerPtr tagger = poleng::bonsai::puddle::TaggerPtr( new poleng::bonsai::puddle::Tagger());
+//    poleng::bonsai::puddle::TaggerPtr tagger = poleng::bonsai::puddle::TaggerPtr( new poleng::bonsai::puddle::Tagger());
 
     boost::scoped_ptr<poleng::bonsai::puddle::Puddle> puddle(new poleng::bonsai::puddle::Puddle());
 
     poleng::bonsai::puddle::TagsetPtr tagset;
     tagset = tagset_loader.load(tagsetFilename);
-    tagger->setTagset(tagset);
+//    tagger->setTagset(tagset);
     puddle->setTagset(tagset);
     rule_loader.setTagset(tagset);
-    puddle->setTagger(tagger);
+//    puddle->setTagger(tagger);
     poleng::bonsai::puddle::RulesPtr rules =
         rule_loader.readFromFile(rulesFilename);
     puddle->setRules(rules);
@@ -2092,16 +2092,16 @@ BOOST_AUTO_TEST_CASE( puddle_syntok ) {
     std::string rulesFilename = ROOT_DIR "tools/parsers/puddle/t/files/rules_syntok.fr";
     poleng::bonsai::puddle::TagsetLoader tagset_loader;
     poleng::bonsai::puddle::RuleLoader rule_loader;
-    poleng::bonsai::puddle::TaggerPtr tagger = poleng::bonsai::puddle::TaggerPtr( new poleng::bonsai::puddle::Tagger());
+//    poleng::bonsai::puddle::TaggerPtr tagger = poleng::bonsai::puddle::TaggerPtr( new poleng::bonsai::puddle::Tagger());
 
     boost::scoped_ptr<poleng::bonsai::puddle::Puddle> puddle(new poleng::bonsai::puddle::Puddle());
 
     poleng::bonsai::puddle::TagsetPtr tagset;
     tagset = tagset_loader.load(tagsetFilename);
-    tagger->setTagset(tagset);
+//    tagger->setTagset(tagset);
     puddle->setTagset(tagset);
     rule_loader.setTagset(tagset);
-    puddle->setTagger(tagger);
+//    puddle->setTagger(tagger);
     poleng::bonsai::puddle::RulesPtr rules =
         rule_loader.readFromFile(rulesFilename);
     puddle->setRules(rules);

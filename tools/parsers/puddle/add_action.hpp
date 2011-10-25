@@ -20,10 +20,10 @@ class AddAction : public Action
     public:
         AddAction(std::vector<Morphology> aInterpretations, std::string aBase,
                 int aTokenIndex);
-        bool apply(Lattice &lattice, int currentEntity,
+        bool apply(Lattice &lattice, int matchedStartIndex,
                 RuleTokenSizes &ruleTokenSizes,
                 std::list<Lattice::EdgeSequence> &rulePartitions);
-        bool test(Lattice &lattice, int currentEntity,
+        bool test(Lattice &lattice, int matchedStartIndex,
                 RuleTokenSizes &ruleTokenSizes,
                 std::list<Lattice::EdgeSequence> &rulePartitions);
 

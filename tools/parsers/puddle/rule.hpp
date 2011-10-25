@@ -29,7 +29,7 @@ class Rule
 {
     public:
 #if HAVE_RE2
-        Rule(std::string aName, std::string aCompiled, int aLeftCount,
+        Rule(std::string aName, std::string aCompiledPattern, int aLeftCount,
                 int aMatchCount, int aRightCount, ActionsPtr aActions,
                 RuleTokenPatterns aRuleTokenPatterns,
                 RuleTokenModifiers aRuleTokenModifiers,
@@ -38,7 +38,7 @@ class Rule
                 std::string aLeft, std::string aMatch, std::string aRight,
                 NegativePatternStrings aNegativePatterns);
 #else
-        Rule(std::string aName, std::string aCompiled, int aLeftCount,
+        Rule(std::string aName, std::string aCompiledPattern, int aLeftCount,
                 int aMatchCount, int aRightCount, ActionsPtr aActions,
                 RuleTokenPatterns aRuleTokenPatterns,
                 RuleTokenModifiers aRuleTokenModifiers,
@@ -63,7 +63,7 @@ class Rule
         int getRightCount() const;
         bool getRepeat() const;
 
-        void setPattern(std::string aCompiled);
+        void setPattern(std::string aCompiledPattern);
         void setLeftCount(int aCount);
         void setMatchCount(int aCount);
         void setRightCount(int aCount);
@@ -85,12 +85,21 @@ class Rule
         void deleteAction(size_t index);
 
     private:
+        void init(std::string aName, std::string aCompiledPattern, int aLeftCount,
+                int aMatchCount, int aRightCount, ActionsPtr aActions,
+                RuleTokenPatterns aRuleTokenPatterns,
+                RuleTokenModifiers aRuleTokenModifiers,
+                RuleTokenRequirements aRuleTokenRequirements,
+                RulePatternIndices aRulePatternIndices,
+                bool aRepeat, std::string aLeft, std::string aMatch,
+                std::string aRight);
+
         std::string name;
         PatternPtr pattern;
 #if HAVE_RE2
         NegativePatterns negativePatterns;
 #endif
-        std::string compiled;
+        std::string compiledPattern;
         std::string left_, match_, right_;
         ActionsPtr actions;
         int leftCount, matchCount, rightCount;

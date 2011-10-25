@@ -16,18 +16,18 @@ UnifyAction::UnifyAction(std::vector<std::string> aUnifiedPatterns,
     init(aUnifiedPatterns, aUnifiedAttributes, aTokenIndices);
 }
 
-bool UnifyAction::apply(Lattice &lattice, int currentEntity,
+bool UnifyAction::apply(Lattice &lattice, int matchedStartIndex,
         RuleTokenSizes &ruleTokenSizes,
         std::list<Lattice::EdgeSequence> &rulePartitions) {
 
     std::vector<std::vector<std::string> > unifiedInterpretations =
-        generateInterpretationsVector(lattice, ruleTokenSizes, currentEntity);
+        generateInterpretationsVector(lattice, ruleTokenSizes, matchedStartIndex);
 
     std::set<std::string> unifiedStrings = generateUnifiedInterpretationStrings(
             unifiedInterpretations);
 
     std::vector<std::list<Lattice::EdgeDescriptor> > edgesToKeep =
-        generateUnifiedEdgesList(lattice, ruleTokenSizes, currentEntity,
+        generateUnifiedEdgesList(lattice, ruleTokenSizes, matchedStartIndex,
                 unifiedStrings);
 
     std::list<Lattice::EdgeSequence> newRulePartitions;
@@ -47,11 +47,11 @@ bool UnifyAction::apply(Lattice &lattice, int currentEntity,
     return true;
 }
 
-bool UnifyAction::test(Lattice &lattice, int currentEntity,
+bool UnifyAction::test(Lattice &lattice, int matchedStartIndex,
         RuleTokenSizes &ruleTokenSizes,
         std::list<Lattice::EdgeSequence>&) {
 
-    bool toApply = isUnifyingPossible(lattice, currentEntity, ruleTokenSizes);
+    bool toApply = isUnifyingPossible(lattice, matchedStartIndex, ruleTokenSizes);
     return toApply;
 }
 
@@ -68,7 +68,7 @@ void UnifyAction::init(std::vector<std::string> aUnifiedPatterns,
 }
 
 std::vector<std::vector<std::string> > UnifyAction::generateInterpretationsVector(
-        Lattice &lattice, RuleTokenSizes &ruleTokenSizes, int currentEntity) {
+        Lattice &lattice, RuleTokenSizes &ruleTokenSizes, int matchedStartIndex) {
     std::vector<std::vector<std::string> > unifiedInterpretations;
 
     for (std::vector<int>::iterator index_it = tokenIndices.begin();
@@ -79,13 +79,13 @@ std::vector<std::vector<std::string> > UnifyAction::generateInterpretationsVecto
                     count, before) )
             continue;
 
-        //Lattice::VertexDescriptor vertex = currentEntity + before;
+        //Lattice::VertexDescriptor vertex = matchedStartIndex + before;
         Lattice::VertexDescriptor vertex = lattice::getVertex(lattice,
-                before, currentEntity);
+                before, matchedStartIndex);
         //@todo: czy to sprawdzenie jest nadal konieczne? ta funkcja getVertex nie robi czegos takiego?
         while (lattice::getTopEdges(lattice, vertex).size() == 0) {
             before ++;
-            vertex = currentEntity + before;
+            vertex = matchedStartIndex + before;
         }
 
         int offset = vertex;
@@ -142,7 +142,7 @@ std::set<std::string> UnifyAction::generateUnifiedInterpretationStrings(
 
 std::vector<std::list<Lattice::EdgeDescriptor> >
 UnifyAction::generateUnifiedEdgesList(Lattice &lattice,
-        RuleTokenSizes &ruleTokenSizes, int currentEntity,
+        RuleTokenSizes &ruleTokenSizes, int matchedStartIndex,
         std::set<std::string> unifiedStrings) {
     std::vector<std::list<Lattice::EdgeDescriptor> > edgesToKeep;
     for (std::set<std::string>::iterator uniPatternIt =
@@ -159,13 +159,13 @@ UnifyAction::generateUnifiedEdgesList(Lattice &lattice,
                         count, before) )
                 continue;
 
-            //Lattice::VertexDescriptor vertex = currentEntity + before;
+            //Lattice::VertexDescriptor vertex = matchedStartIndex + before;
             Lattice::VertexDescriptor vertex = lattice::getVertex(lattice,
-                    before, currentEntity);
+                    before, matchedStartIndex);
             //@todo: czy to sprawdzenie jest nadal konieczne? ta funkcja getVertex nie robi czegos takiego?
             while (lattice::getTopEdges(lattice, vertex).size() == 0) {
                 before ++;
-                vertex = currentEntity + before;
+                vertex = matchedStartIndex + before;
             }
 
             int offset = vertex;
@@ -236,7 +236,7 @@ UnifyAction::generateUnifiedEdgesList(Lattice &lattice,
     return edgesToKeep;
 }
 
-bool UnifyAction::isUnifyingPossible(Lattice &lattice, int currentEntity,
+bool UnifyAction::isUnifyingPossible(Lattice &lattice, int matchedStartIndex,
         RuleTokenSizes &ruleTokenSizes) {
     bool toApply = true;
     std::vector<std::string>::iterator attribute_it = unifiedAttributes.begin();
@@ -254,13 +254,13 @@ bool UnifyAction::isUnifyingPossible(Lattice &lattice, int currentEntity,
                         count, before) )
                 continue;
 
-            //Lattice::VertexDescriptor vertex = currentEntity + before;
+            //Lattice::VertexDescriptor vertex = matchedStartIndex + before;
             Lattice::VertexDescriptor vertex = lattice::getVertex(lattice,
-                    before, currentEntity);
+                    before, matchedStartIndex);
             //@todo: czy to sprawdzenie jest nadal konieczne? ta funkcja getVertex nie robi czegos takiego?
             while (lattice::getTopEdges(lattice, vertex).size() == 0) {
                 before ++;
-                vertex = currentEntity + before;
+                vertex = matchedStartIndex + before;
             }
 
             int offset = vertex;

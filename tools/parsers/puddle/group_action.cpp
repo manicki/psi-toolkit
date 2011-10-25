@@ -19,8 +19,7 @@ GroupAction::GroupAction(std::string aGroup, unsigned int aStart,
     init(aGroup, aStart, aEnd, aHead, aRuleName);
 }
 
-//@todo: zmienic chyba te nazwe currentEntity na cos wlasciwszego
-bool GroupAction::apply(Lattice &lattice, int currentEntity,
+bool GroupAction::apply(Lattice &lattice, int matchedStartIndex,
         RuleTokenSizes &ruleTokenSizes,
         std::list<Lattice::EdgeSequence> &rulePartitions) {
 
@@ -32,18 +31,18 @@ bool GroupAction::apply(Lattice &lattice, int currentEntity,
         return false;
 
     Lattice::VertexDescriptor startVertex = lattice::getVertex(
-            lattice, realStart, currentEntity);
-    //Lattice::VertexDescriptor startVertex = currentEntity + realStart; //@todo: rozwiazanie tymczasowe. nie uwzglednia to chyba lewego kontekstu
+            lattice, realStart, matchedStartIndex);
+    //Lattice::VertexDescriptor startVertex = matchedStartIndex + realStart; //@todo: rozwiazanie tymczasowe. nie uwzglednia to chyba lewego kontekstu
     //Lattice::VertexDescriptor headVertex = lattice::getVertex(
-    //        lattice, currentEntity + realHead);
+    //        lattice, matchedStartIndex + realHead);
     Lattice::VertexDescriptor headVertex = lattice::getVertex(
-            lattice, realHead, currentEntity);
-    //Lattice::VertexDescriptor headVertex = currentEntity + realHead; //@todo: rozwiazanie tymczasowe. nie uwzglednia to chyba lewego kontekstu
+            lattice, realHead, matchedStartIndex);
+    //Lattice::VertexDescriptor headVertex = matchedStartIndex + realHead; //@todo: rozwiazanie tymczasowe. nie uwzglednia to chyba lewego kontekstu
     //Lattice::VertexDescriptor endVertex = lattice::getVertex(
-    //        lattice, currentEntity + realEnd);
+    //        lattice, matchedStartIndex + realEnd);
     Lattice::VertexDescriptor endVertex = lattice::getVertex(
-            lattice, realEnd, currentEntity);
-    //Lattice::VertexDescriptor endVertex = currentEntity + realEnd; //@todo: rozwiazanie tymczasowe. nie uwzglednia to chyba lewego kontekstu
+            lattice, realEnd, matchedStartIndex);
+    //Lattice::VertexDescriptor endVertex = matchedStartIndex + realEnd; //@todo: rozwiazanie tymczasowe. nie uwzglednia to chyba lewego kontekstu
     std::list<Lattice::EdgeDescriptor> startEdges = lattice::getTopEdges(
             lattice, startVertex);
     std::list<Lattice::EdgeDescriptor> headEdges = lattice::getTopEdges(
@@ -61,7 +60,6 @@ bool GroupAction::apply(Lattice &lattice, int currentEntity,
             endEdges,
             this->group,
             headEdges,
-            //groupPartitions,
             rulePartitions,
             realHead
             );

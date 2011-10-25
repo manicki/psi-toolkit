@@ -18,10 +18,10 @@ class UnifyAction : public Action
         UnifyAction(std::vector<std::string> aUnifiedPatterns,
                 std::vector<std::string> aUnifiedAttributes,
                 std::vector<int> aTokenIndices);
-        bool apply(Lattice &lattice, int currentEntity,
+        bool apply(Lattice &lattice, int matchedStartIndex,
                 RuleTokenSizes &ruleTokenSizes,
                 std::list<Lattice::EdgeSequence> &rulePartitions);
-        bool test(Lattice &lattice, int currentEntity,
+        bool test(Lattice &lattice, int matchedStartIndex,
                 RuleTokenSizes &ruleTokenSizes,
                 std::list<Lattice::EdgeSequence> &rulePartitions);
 
@@ -31,14 +31,14 @@ class UnifyAction : public Action
                 std::vector<int> aTokenIndices);
         std::vector<std::vector<std::string> > generateInterpretationsVector(
                 Lattice &lattice, RuleTokenSizes &ruleTokenSizes,
-                int currentEntity);
+                int matchedStartIndex);
         std::set<std::string> generateUnifiedInterpretationStrings(
                 std::vector<std::vector<std::string> > unifiedInterpretations);
         std::vector<std::list<Lattice::EdgeDescriptor> >
             generateUnifiedEdgesList(Lattice &lattice,
                     RuleTokenSizes &ruleTokenSizes, int CurrentEntity,
                     std::set<std::string> unifiedStrings);
-        bool isUnifyingPossible(Lattice &lattice, int currentEntity,
+        bool isUnifyingPossible(Lattice &lattice, int matchedStartIndex,
                 RuleTokenSizes &ruleTokenSizes);
 
         std::vector<int> tokenIndices;
