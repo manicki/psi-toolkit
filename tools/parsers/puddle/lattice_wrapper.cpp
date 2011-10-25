@@ -172,8 +172,6 @@ namespace poleng {
                         std::string category = ai.getCategory();
                         std::list< std::pair<std::string, std::string> > av
                             = lattice.getAnnotationItemManager().getValues(ai);
-                        //if (lattice.getAnnotationItemManager().getValue(
-                        //            ai, "discard") == "1")
                         if (isDiscarded(lattice, edge))
                             continue; //skip discarded edges
                         std::string base = getBase(lattice, edge);
@@ -305,8 +303,6 @@ namespace poleng {
 
                     if (type == "token" || type == "group") {
                         std::string orth = lattice.getEdgeText(edge);
-                        //if (lattice.getAnnotationItemManager().getValue(
-                        //            ai, "discard") == "1")
                         if (isDiscarded(lattice, edge))
                             continue; //skip discarded edges
                         std::string base = lattice::getBase(lattice, edge);
@@ -521,8 +517,6 @@ namespace poleng {
                 while (edgeIt.hasNext()) {
                     Lattice::EdgeDescriptor edge = edgeIt.next();
                     AnnotationItem ai = lattice.getEdgeAnnotationItem(edge);
-                    //if (lattice.getAnnotationItemManager().getValue(
-                    //            ai, "discard") == "1")
                     if (isDiscarded(lattice, edge))
                         continue;
 
@@ -885,9 +879,10 @@ namespace poleng {
                     }
                     for (std::list<Lattice::EdgeDescriptor>::iterator edgeIt =
                             edges.begin(); edgeIt != edges.end(); ++ edgeIt) {
-                        AnnotationItem ai = lattice.getEdgeAnnotationItem(*edgeIt);
-                        lattice.getAnnotationItemManager().setValue(
-                                ai, "discard", "1");
+                        lattice.discard(*edgeIt);
+                        //AnnotationItem ai = lattice.getEdgeAnnotationItem(*edgeIt);
+                        //lattice.getAnnotationItemManager().setValue(
+                        //        ai, "discard", "1");
                     }
                     vertex += lattice.getEdgeLength(edges.front());
                 }
@@ -1211,7 +1206,7 @@ namespace poleng {
                 int offset = vertex;
                 int vertexI = 0;
                 while (vertexI < count) {
-                    vertex = getVertex(lattice, offset + vertexI);
+                    vertex = getVertex(lattice, vertexI, offset);
                     std::list<Lattice::EdgeDescriptor> edges =
                         lattice::getTopEdges(lattice, vertex);
                     for (std::list<Lattice::EdgeDescriptor>::iterator edgeIt = edges.begin();
@@ -1226,23 +1221,26 @@ namespace poleng {
                                 std::string tokenBase = lattice::getBase(lattice, *edgeIt);
                                 if (cond_it->negation) {
                                     if (RegExp::FullMatch(tokenBase, cond_it->pattern)) {
-                                        lattice.getAnnotationItemManager().setValue(
-                                                annotationItem, "discard", "1");
+                                        //lattice.getAnnotationItemManager().setValue(
+                                        //        annotationItem, "discard", "1");
+                                        lattice.discard(*edgeIt);
                                         //@todo: to nie wplywa na krate, bo nie zmienia tego w krawedzi naprawde
                                     }
                                 } else {
                                     if (!RegExp::FullMatch(tokenBase, cond_it->pattern)) {
-                                        lattice.getAnnotationItemManager().setValue(
-                                                annotationItem, "discard", "1");
+                                        //lattice.getAnnotationItemManager().setValue(
+                                        //        annotationItem, "discard", "1");
+                                        lattice.discard(*edgeIt);
                                         //@todo: to nie wplywa na krate, bo nie zmienia tego w krawedzi naprawde
                                     }
                                 }
                             } else if (cond_it->type == MORPHOLOGY_CONDITION) {
                                 std::string tokenMorphology = getMorphologyString(
                                         lattice, *edgeIt);
-                                if (!RegExp::FullMatch(tokenMorphology, cond_it->pattern)) {
-                                    lattice.getAnnotationItemManager().setValue(
-                                            annotationItem, "discard", "1");
+                                if (RegExp::FullMatch(tokenMorphology, cond_it->pattern)) {
+                                    //lattice.getAnnotationItemManager().setValue(
+                                    //        annotationItem, "discard", "1");
+                                    lattice.discard(*edgeIt);
                                     //@todo: to nie wplywa na krate, bo nie zmienia tego w krawedzi naprawde
                                 }
                             }
