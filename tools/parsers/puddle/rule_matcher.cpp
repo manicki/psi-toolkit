@@ -30,7 +30,6 @@ void RuleMatcher::applyRules(Lattice &lattice) {
         std::string sentenceString = generateSentenceString(lattice);
         int matchedStartIndex;
         int afterIndex = 0;
-        std::string prev_before = "";
         std::vector<StringPiece> match;
         std::string tmpSentenceString = sentenceString;
         while ( (matchedStartIndex = (*ruleIt)->matchPattern(tmpSentenceString,

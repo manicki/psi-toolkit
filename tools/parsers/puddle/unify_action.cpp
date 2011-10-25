@@ -145,7 +145,7 @@ bool UnifyAction::apply(Lattice &lattice, int currentEntity,
                     patternMatched = false;
                     break;
                 }
-                if (matchingSequences.size() > 0) {
+                if (! matchingSequences.empty()) {
                     std::vector<std::list<Lattice::EdgeDescriptor> > newMatchingSequences;
                     for (std::vector<std::list<
                             Lattice::EdgeDescriptor> >::iterator listIt =

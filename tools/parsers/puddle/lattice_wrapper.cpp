@@ -715,10 +715,6 @@ namespace poleng {
                                 *morphIt);
                         size_t delimPos = morphoString.find(":");
                         std::string partOfSpeech = morphoString.substr(0, delimPos);
-//                        std::string morpho = "";
-//                        if ( (delimPos != std::string::npos) &&
-//                                (delimPos < morphoString.size()) )
-//                            morpho = morphoString.substr(delimPos + 1, std::string::npos);
                         std::string lexeme = *baseIt + "_" + partOfSpeech;
 
                         Lattice::EdgeDescriptor lexemeEdge;
@@ -832,11 +828,8 @@ namespace poleng {
                             ++ morphIt) {
                         std::string morphoString = util::getMorphologyString(
                                 *morphIt);
-//                        std::string morpho = "";
                         size_t delimPos = morphoString.find(":");
                         std::string partOfSpeech = morphoString.substr(0, delimPos);
-//                        if (delimPos != std::string::npos)
-//                            morpho = morphoString.substr(delimPos + 1, std::string::npos);
                         std::string lexeme = *baseIt + "_" + partOfSpeech;
 
                         Lattice::EdgeDescriptor lexemeEdge;
@@ -1283,7 +1276,7 @@ namespace poleng {
                     Lattice &lattice,
                     std::list<Lattice::EdgeSequence> &partitions,
                     std::list<Lattice::EdgeDescriptor> edges) {
-                if (edges.size() == 0)
+                if (edges.empty())
                     return partitions;
                 std::list<Lattice::EdgeSequence> result;
                 std::list<Lattice::EdgeSequence>::iterator seqIt =
