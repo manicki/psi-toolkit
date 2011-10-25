@@ -3,10 +3,6 @@
 
 #include "action.hpp"
 
-#include <string>
-#include <vector>
-#include <set>
-
 namespace poleng
 {
 
@@ -33,6 +29,18 @@ class UnifyAction : public Action
         void init(std::vector<std::string> aUnifiedPatterns,
                 std::vector<std::string> aUnifiedAttributes,
                 std::vector<int> aTokenIndices);
+        std::vector<std::vector<std::string> > generateInterpretationsVector(
+                Lattice &lattice, RuleTokenSizes &ruleTokenSizes,
+                int currentEntity);
+        std::set<std::string> generateUnifiedInterpretationStrings(
+                std::vector<std::vector<std::string> > unifiedInterpretations);
+        std::vector<std::list<Lattice::EdgeDescriptor> >
+            generateUnifiedEdgesList(Lattice &lattice,
+                    RuleTokenSizes &ruleTokenSizes, int CurrentEntity,
+                    std::set<std::string> unifiedStrings);
+        bool isUnifyingPossible(Lattice &lattice, int currentEntity,
+                RuleTokenSizes &ruleTokenSizes);
+
         std::vector<int> tokenIndices;
 
         bool nullAgreement; // true = jak w czesci mowy atrybut nie wystepuje, to traktuj jako dajacy sie z unifikowac, false = jak w czesci mowy nie ma atrybutu, to nie da sie zunifikowac

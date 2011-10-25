@@ -20,20 +20,64 @@ bool UnifyAction::apply(Lattice &lattice, int currentEntity,
         RuleTokenSizes &ruleTokenSizes,
         std::list<Lattice::EdgeSequence> &rulePartitions) {
 
+    std::vector<std::vector<std::string> > unifiedInterpretations =
+        generateInterpretationsVector(lattice, ruleTokenSizes, currentEntity);
+
+    std::set<std::string> unifiedStrings = generateUnifiedInterpretationStrings(
+            unifiedInterpretations);
+
+    std::vector<std::list<Lattice::EdgeDescriptor> > edgesToKeep =
+        generateUnifiedEdgesList(lattice, ruleTokenSizes, currentEntity,
+                unifiedStrings);
+
+    std::list<Lattice::EdgeSequence> newRulePartitions;
+    for (std::vector<std::list<Lattice::EdgeDescriptor> >::iterator listIt =
+            edgesToKeep.begin(); listIt != edgesToKeep.end(); ++ listIt) {
+        std::list<Lattice::EdgeSequence> tmpPartitions =
+            lattice::getPartitionsContainingEdges(lattice, rulePartitions,
+                    *listIt);
+        newRulePartitions.insert(newRulePartitions.end(),
+                tmpPartitions.begin(), tmpPartitions.end());
+    }
+    if (! newRulePartitions.empty()) {
+        rulePartitions = newRulePartitions;
+        return true;
+    }
+
+    return true;
+}
+
+bool UnifyAction::test(Lattice &lattice, int currentEntity,
+        RuleTokenSizes &ruleTokenSizes,
+        std::list<Lattice::EdgeSequence>&) {
+
+    bool toApply = isUnifyingPossible(lattice, currentEntity, ruleTokenSizes);
+    return toApply;
+}
+
+void UnifyAction::init(std::vector<std::string> aUnifiedPatterns,
+        std::vector<std::string> aUnifiedAttributes,
+        std::vector<int> aTokenIndices) {
+    nullAgreement = true; //@todo: to ma byc parametrem parsera
+
+    type = "unify";
+
+    tokenIndices = aTokenIndices;
+    unifiedAttributes = aUnifiedAttributes;
+    unifiedPatterns = aUnifiedPatterns;
+}
+
+std::vector<std::vector<std::string> > UnifyAction::generateInterpretationsVector(
+        Lattice &lattice, RuleTokenSizes &ruleTokenSizes, int currentEntity) {
     std::vector<std::vector<std::string> > unifiedInterpretations;
+
     for (std::vector<int>::iterator index_it = tokenIndices.begin();
             index_it != tokenIndices.end(); ++ index_it) {
 
-        int count = ruleTokenSizes[*index_it - 1];
-        if (count == 0) {
+        int count, before;
+        if (! util::getUnifyActionTokenParams(ruleTokenSizes, *index_it,
+                    count, before) )
             continue;
-        }
-        int before = 0;
-        int i = 0;
-        while (i < (*index_it - 1)) {
-            before += ruleTokenSizes[i];
-            i ++;
-        }
 
         //Lattice::VertexDescriptor vertex = currentEntity + before;
         Lattice::VertexDescriptor vertex = lattice::getVertex(lattice,
@@ -80,6 +124,11 @@ bool UnifyAction::apply(Lattice &lattice, int currentEntity,
         }
     }
 
+    return unifiedInterpretations;
+}
+
+std::set<std::string> UnifyAction::generateUnifiedInterpretationStrings(
+        std::vector<std::vector<std::string> > unifiedInterpretations) {
     std::set<std::string> unifiedStrings;
     for (std::vector<std::vector<std::string> >::iterator interpIt =
             unifiedInterpretations.begin();
@@ -88,7 +137,13 @@ bool UnifyAction::apply(Lattice &lattice, int currentEntity,
         std::string unifiedString = boost::algorithm::join(*interpIt, ":([^:]+:)*");
         unifiedStrings.insert(unifiedString);
     }
+    return unifiedStrings;
+}
 
+std::vector<std::list<Lattice::EdgeDescriptor> >
+UnifyAction::generateUnifiedEdgesList(Lattice &lattice,
+        RuleTokenSizes &ruleTokenSizes, int currentEntity,
+        std::set<std::string> unifiedStrings) {
     std::vector<std::list<Lattice::EdgeDescriptor> > edgesToKeep;
     for (std::set<std::string>::iterator uniPatternIt =
             unifiedStrings.begin();
@@ -99,16 +154,10 @@ bool UnifyAction::apply(Lattice &lattice, int currentEntity,
         for (std::vector<int>::iterator index_it = tokenIndices.begin();
                 index_it != tokenIndices.end(); ++ index_it) {
 
-            int count = ruleTokenSizes[*index_it - 1];
-            if (count == 0) {
+            int count, before;
+            if (! util::getUnifyActionTokenParams(ruleTokenSizes, *index_it,
+                        count, before) )
                 continue;
-            }
-            int before = 0;
-            int i = 0;
-            while (i < (*index_it - 1)) {
-                before += ruleTokenSizes[i];
-                i ++;
-            }
 
             //Lattice::VertexDescriptor vertex = currentEntity + before;
             Lattice::VertexDescriptor vertex = lattice::getVertex(lattice,
@@ -184,28 +233,11 @@ bool UnifyAction::apply(Lattice &lattice, int currentEntity,
                     matchingSequences.end());
         }
     }
-
-    std::list<Lattice::EdgeSequence> newRulePartitions;
-    for (std::vector<std::list<Lattice::EdgeDescriptor> >::iterator listIt =
-            edgesToKeep.begin(); listIt != edgesToKeep.end(); ++ listIt) {
-        std::list<Lattice::EdgeSequence> tmpPartitions =
-            lattice::getPartitionsContainingEdges(lattice, rulePartitions,
-                    *listIt);
-        newRulePartitions.insert(newRulePartitions.end(),
-                tmpPartitions.begin(), tmpPartitions.end());
-    }
-    if (! newRulePartitions.empty()) {
-        rulePartitions = newRulePartitions;
-        return true;
-    }
-
-    return true;
+    return edgesToKeep;
 }
 
-bool UnifyAction::test(Lattice &lattice, int currentEntity,
-        RuleTokenSizes &ruleTokenSizes,
-        std::list<Lattice::EdgeSequence>&) {
-
+bool UnifyAction::isUnifyingPossible(Lattice &lattice, int currentEntity,
+        RuleTokenSizes &ruleTokenSizes) {
     bool toApply = true;
     std::vector<std::string>::iterator attribute_it = unifiedAttributes.begin();
     for (std::vector<std::string>::iterator pattern_it = unifiedPatterns.begin();
@@ -217,16 +249,10 @@ bool UnifyAction::test(Lattice &lattice, int currentEntity,
         for (std::vector<int>::iterator index_it = tokenIndices.begin();
                 index_it != tokenIndices.end(); ++ index_it) {
 
-            int count = ruleTokenSizes[*index_it - 1];
-            if (count == 0) {
+            int count, before;
+            if (! util::getUnifyActionTokenParams(ruleTokenSizes, *index_it,
+                        count, before) )
                 continue;
-            }
-            int before = 0;
-            int i = 0;
-            while (i < (*index_it - 1)) {
-                before += ruleTokenSizes[i];
-                i ++;
-            }
 
             //Lattice::VertexDescriptor vertex = currentEntity + before;
             Lattice::VertexDescriptor vertex = lattice::getVertex(lattice,
@@ -293,28 +319,9 @@ bool UnifyAction::test(Lattice &lattice, int currentEntity,
         }
         if (! toApply)
             break;
-//        else {
-//            std::vector<std::string> attributeUnifiedValues(
-//                    refValues.begin(), refValues.end());
-//            unifiedValues.insert(std::pair<std::string, std::vector<std::string> >(
-//                        *attribute_it, attributeUnifiedValues
-//                        ));
-//        }
         ++ attribute_it;
     }
     return toApply;
-}
-
-void UnifyAction::init(std::vector<std::string> aUnifiedPatterns,
-        std::vector<std::string> aUnifiedAttributes,
-        std::vector<int> aTokenIndices) {
-    nullAgreement = true; //@todo: to ma byc parametrem parsera
-
-    type = "unify";
-
-    tokenIndices = aTokenIndices;
-    unifiedAttributes = aUnifiedAttributes;
-    unifiedPatterns = aUnifiedPatterns;
 }
 
 

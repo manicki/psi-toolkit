@@ -209,6 +209,21 @@ namespace poleng {
                     return before;
                 }
 
+                bool getUnifyActionTokenParams(RuleTokenSizes &ruleTokenSizes,
+                        int index, int &count, int &before) {
+                    count = ruleTokenSizes[index - 1];
+                    if (count == 0) {
+                        return false;
+                    }
+                    before = 0;
+                    int i = 0;
+                    while (i < (index - 1)) {
+                        before += ruleTokenSizes[i];
+                        i ++;
+                    }
+                    return true;
+                }
+
                 bool getRuleBoundaries(RuleTokenSizes &ruleTokenSizes,
                         unsigned int start, unsigned int end,
                         int &realStart, int &realEnd) {
