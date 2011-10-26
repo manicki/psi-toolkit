@@ -12,10 +12,12 @@ namespace poleng {
             class DeleteAction : public Action {
                 public:
                     DeleteAction(DeleteConditions aConditions, int aTokenIndex);
-                    bool apply(Lattice &lattice, int currentEntity,
-                            RuleTokenSizes &ruleTokenSizes);
-                    bool test(Lattice &lattice, int currentEntity,
-                            RuleTokenSizes &ruleTokenSizes);
+                    bool apply(Lattice &lattice, int matchedStartIndex,
+                            RuleTokenSizes &ruleTokenSizes,
+                            std::list<Lattice::EdgeSequence> &rulePartitions);
+                    bool test(Lattice &lattice, int matchedStartIndex,
+                            RuleTokenSizes &ruleTokenSizes,
+                            std::list<Lattice::EdgeSequence> &rulePartitions);
 
                 private:
                     void init(DeleteConditions aConditions, int aTokenIndex);

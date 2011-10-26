@@ -33,7 +33,6 @@ typedef std::vector<TokenPattern> TokenPatterns;
 class RuleLoader {
     public:
         RuleLoader();
-        ~RuleLoader();
 
         void setTagset(TagsetPtr aTagset);
         RulesPtr readFromFile(std::string &filename);

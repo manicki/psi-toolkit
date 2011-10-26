@@ -3,22 +3,17 @@
 
 #include <iostream>
 
-namespace poleng
-{
+namespace poleng {
 
-namespace bonsai
-{
-    namespace puddle
-    {
+namespace bonsai {
+    namespace puddle {
 
 
 RuleMatcher::RuleMatcher() {
-    syntok = true;
-    disamb = false;
-    norepeats = false;
+    initProperties();
 }
 
-RuleMatcher::~RuleMatcher() { }
+//RuleMatcher::~RuleMatcher() { }
 
 void RuleMatcher::setRules(RulesPtr aRules) {
     rules = aRules;
@@ -30,18 +25,18 @@ void RuleMatcher::applyRules(Lattice &lattice) {
         std::string sentenceString = generateSentenceString(lattice);
         int matchedStartIndex;
         int afterIndex = 0;
-        std::string prev_before = "";
         std::vector<StringPiece> match;
         std::string tmpSentenceString = sentenceString;
         while ( (matchedStartIndex = (*ruleIt)->matchPattern(tmpSentenceString,
                         afterIndex, match) ) > -1 ) {
             bool structureChanged = false;
             RuleTokenSizes ruleTokenSizes;
+            std::list<Lattice::EdgeSequence> rulePartitions;
             std::string oldSentenceString = sentenceString;
             if ( (*ruleIt)->test(sentenceString, lattice, matchedStartIndex,
-                        match, ruleTokenSizes) ) {
+                        match, ruleTokenSizes, rulePartitions) ) {
                 if ((*ruleIt)->apply(sentenceString, lattice, matchedStartIndex,
-                            ruleTokenSizes)) {
+                            ruleTokenSizes, rulePartitions) ) {
                     sentenceString = generateSentenceString(lattice,
                             matchedStartIndex);
                     structureChanged = true;
@@ -188,21 +183,23 @@ std::string RuleMatcher::generateSentenceString(Lattice &lattice, int startVerte
     return ss.str();
 }
 
-void RuleMatcher::setSyntok() {
+//void RuleMatcher::setSyntok() {
+//    syntok = true;
+//}
+//
+//void RuleMatcher::setNoSyntok() {
+//    syntok = false;
+//}
+//
+//void RuleMatcher::setNoRepeats() {
+//    norepeats = true;
+//}
+
+void RuleMatcher::initProperties() {
     syntok = true;
+    norepeats = false;
 }
 
-void RuleMatcher::setNoSyntok() {
-    syntok = false;
-}
-
-void RuleMatcher::setDisamb() {
-    disamb = true;
-}
-
-void RuleMatcher::setNoRepeats() {
-    norepeats = true;
-}
 
 }
 

@@ -3,25 +3,23 @@
 
 #include "action.hpp"
 
-namespace poleng
-{
+namespace poleng {
 
-    namespace bonsai
-    {
+    namespace bonsai {
 
-        namespace puddle
-        {
+        namespace puddle {
 
-            class GroupAction : public Action
-            {
+            class GroupAction : public Action {
                 public:
                     GroupAction(std::string aGroup, unsigned int aStart,
                             unsigned int aEnd, unsigned int aHead,
                             std::string aRuleName);
-                    bool apply(Lattice &lattice, int currentEntity,
-                            RuleTokenSizes &ruleTokenSizes);
-                    bool test(Lattice &lattice, int,
-                            RuleTokenSizes &TokenSizes);
+                    bool apply(Lattice &lattice, int matchedStartIndex,
+                            RuleTokenSizes &ruleTokenSizes,
+                            std::list<Lattice::EdgeSequence> &rulePartitions);
+                    bool test(Lattice &lattice, int matchedStartIndex,
+                            RuleTokenSizes &ruleTokenSizes,
+                            std::list<Lattice::EdgeSequence> &rulePartitions);
 
                 private:
                     void init(std::string aGroup, unsigned int aStart,

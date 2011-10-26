@@ -14,8 +14,7 @@ namespace bonsai
         class TagsetLoader
         {
             public:
-                TagsetLoader();
-                ~TagsetLoader();
+                TagsetLoader() {}
                 TagsetPtr load(std::string filename);
 #if _WITH_BONSAI_PARSEGRAPH
                 TagsetPtr load(std::string filename, std::string desc_filename);

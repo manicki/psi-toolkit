@@ -16,10 +16,12 @@ class JoinAction : public Action
 {
     public:
         JoinAction(std::string aGroup, int aStart, int aEnd, int aHead, std::string aRuleName);
-        bool apply(Lattice &lattice, int currentEntity,
-                RuleTokenSizes &ruleTokenSizes);
-        bool test(Lattice &lattice, int,
-                RuleTokenSizes &ruleTokenSizes);
+        bool apply(Lattice &lattice, int matchedStartIndex,
+                RuleTokenSizes &ruleTokenSizes,
+                std::list<Lattice::EdgeSequence> &rulePartitions);
+        bool test(Lattice &lattice, int matchedStartIndex,
+                RuleTokenSizes &ruleTokenSizes,
+                std::list<Lattice::EdgeSequence> &rulePartitions);
 
     private:
         void init(std::string aGroup, int aStart, int aEnd, int aHead,

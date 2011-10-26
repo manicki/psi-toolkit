@@ -9,24 +9,14 @@ namespace bonsai
 namespace puddle
 {
 
-    TagsetLoader::TagsetLoader()
-    {
-    }
-
-    TagsetLoader::~TagsetLoader()
-    {
-    }
-
-    TagsetPtr TagsetLoader::load(std::string filename)
-    {
+    TagsetPtr TagsetLoader::load(std::string filename) {
         TagsetPtr tagset = TagsetPtr(new Tagset());
         tagset->readFromFile(filename);
         return tagset;
     }
 
 #if _WITH_BONSAI_PARSEGRAPH
-    TagsetPtr TagsetLoader::load(std::string filename, std::string desc_filename)
-    {
+    TagsetPtr TagsetLoader::load(std::string filename, std::string desc_filename) {
         TagsetPtr tagset = TagsetPtr(new Tagset());
         tagset->readFromFile(filename);
         tagset->readDescFromFile(desc_filename);

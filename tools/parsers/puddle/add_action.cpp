@@ -15,8 +15,9 @@ AddAction::AddAction(std::vector<Morphology> aInterpretations, std::string aBase
     init (aInterpretations, aBase, aTokenIndex);
 }
 
-bool AddAction::apply(Lattice &lattice, int currentEntity,
-        RuleTokenSizes &ruleTokenSizes) {
+bool AddAction::apply(Lattice &lattice, int matchedStartIndex,
+        RuleTokenSizes &ruleTokenSizes,
+        std::list<Lattice::EdgeSequence>&) {
     int count = ruleTokenSizes[tokenIndex - 1];
     if (count == 0) {
 //        std::cout << "Nothing matched to " << tokenIndex << " in ...." << std::endl;
@@ -25,17 +26,18 @@ bool AddAction::apply(Lattice &lattice, int currentEntity,
     int before = util::getAddActionParams(ruleTokenSizes, tokenIndex);
 
     Lattice::VertexDescriptor startVertex = lattice::getVertex(lattice,
-            before, currentEntity);
+            before, matchedStartIndex);
     Lattice::VertexDescriptor endVertex = lattice::getVertex(lattice,
-            before + count - 1, currentEntity);
+            before + count - 1, matchedStartIndex);
 
     addEdges(lattice, startVertex, endVertex);
 
     return true;
 }
 
-bool AddAction::test(Lattice &lattice, int currentEntity,
-        RuleTokenSizes &ruleTokenSizes) {
+bool AddAction::test(Lattice &lattice, int matchedStartIndex,
+        RuleTokenSizes &ruleTokenSizes,
+        std::list<Lattice::EdgeSequence>&) {
 
     int count = ruleTokenSizes[tokenIndex - 1];
     if (count == 0) {
@@ -48,9 +50,9 @@ bool AddAction::test(Lattice &lattice, int currentEntity,
     bool ret = true; //@todo: moze by tak zmienic ret w akcjach na cos w stylu to_apply
 
     Lattice::VertexDescriptor startVertex = lattice::getVertex(lattice,
-            before, currentEntity);
+            before, matchedStartIndex);
     Lattice::VertexDescriptor endVertex = lattice::getVertex(lattice,
-            before + count - 1, currentEntity);
+            before + count - 1, matchedStartIndex);
     ret = checkInterpretationsToAdd(lattice, startVertex, endVertex);
 
     return ret;

@@ -3,16 +3,12 @@
 
 #include "rule_loader.hpp"
 
-namespace poleng
-{
+namespace poleng {
 
-namespace bonsai
-{
-    namespace puddle
-    {
+namespace bonsai {
+    namespace puddle {
 
-class RuleModifier
-{
+class RuleModifier {
     public:
         RuleModifier();
         void addRule(std::string ruleString);
@@ -40,6 +36,8 @@ class RuleModifier
         RulesPtr rules;
         RuleLoader *ruleCompiler;
 };
+
+typedef boost::shared_ptr<RuleModifier> RuleModifierPtr;
 
 }
 

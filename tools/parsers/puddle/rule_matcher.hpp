@@ -17,21 +17,21 @@ namespace poleng {
             class RuleMatcher {
                 public:
                     RuleMatcher();
-                    ~RuleMatcher();
+//                    ~RuleMatcher();
                     void applyRules(Lattice &lattice);
 
                     void setRules(RulesPtr aRules);
 
                     void setSyntok();
                     void setNoSyntok();
-                    void setDisamb();
                     void setNoRepeats();
 
                     void setTagset(TagsetPtr tagset_) { tagset = tagset_; }
 
                 private:
+                    void initProperties();
+
                     RulesPtr rules;
-                    bool disamb; //@todo: do czego to jest?
                     bool norepeats;
                     bool syntok; //@todo: do czego to jest?
 
@@ -42,6 +42,7 @@ namespace poleng {
                             int startVertex = 0);
             };
 
+            typedef boost::shared_ptr<RuleMatcher> RuleMatcherPtr;
         }
 
     }

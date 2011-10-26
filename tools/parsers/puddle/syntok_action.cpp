@@ -16,21 +16,21 @@ SyntokAction::SyntokAction(int aStart, int aEnd, std::vector<int> aTokenIndices,
     init(aStart, aEnd, aTokenIndices, aMorphology, aRuleName);
 }
 
-//bool SyntokAction::apply(Entities &entities, Edges &edges, int currentEntity, std::vector<int> matchedTokensSize)
 //@todo: opisac dokladnie, co konkretnie po kolei jest robione w ramach implementacji tej akcji (i z kazda akcja co jest robione). pobranie czego, wyliczenie czego, zebranie jakich form, dodanie jakich krawedzi, zastapienie/usuniecie czego, skad
 //1. ustalenie skad zaczynamy
 //2. zebranie scalonych form bazowych
 //3. wstawienie nowej krawedzi typu token albo grup (w zaleznosci od przelacznika) NOWOSC: wczesniej bylo, ze albo dawaj krawedz group albo nic. teraz musi byc krawedz ,jak graf to jedyna struktura. ewentualnei mozna dac na koniec opcje, wywal syntoki z grafu, przeliczyc reszte grafu
-bool SyntokAction::apply(Lattice &lattice, int currentEntity,
-        RuleTokenSizes &ruleTokenSizes) {
+bool SyntokAction::apply(Lattice &lattice, int matchedStartIndex,
+        RuleTokenSizes &ruleTokenSizes,
+        std::list<Lattice::EdgeSequence>&) {
     int realStart;
     int realEnd;
     util::getSyntokActionParams(ruleTokenSizes, start, end, realStart, realEnd);
 
     Lattice::VertexDescriptor startVertex = lattice::getVertex(
-            lattice, realStart, currentEntity);
+            lattice, realStart, matchedStartIndex);
     Lattice::VertexDescriptor endVertex = lattice::getVertex(
-            lattice, realEnd, currentEntity);
+            lattice, realEnd, matchedStartIndex);
     std::list<Lattice::EdgeDescriptor> startEdges = lattice::getTopEdges(
             lattice, startVertex);
     std::list<Lattice::EdgeDescriptor> endEdges = lattice::getTopEdges(
@@ -64,7 +64,8 @@ bool SyntokAction::apply(Lattice &lattice, int currentEntity,
 }
 
 bool SyntokAction::test(Lattice &, int,
-        RuleTokenSizes &ruleTokenSizes) {
+        RuleTokenSizes &ruleTokenSizes,
+        std::list<Lattice::EdgeSequence>&) {
     for (std::vector<int>::iterator sizeIt = ruleTokenSizes.begin();
             sizeIt != ruleTokenSizes.end(); ++ sizeIt) {
         if (*sizeIt > 0)
