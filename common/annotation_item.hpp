@@ -8,6 +8,8 @@
 #include <boost/dynamic_bitset.hpp>
 #include <boost/foreach.hpp>
 
+#include "string_frag.hpp"
+
 
 class AnnotationItem {
 
@@ -48,7 +50,7 @@ public:
 private:
 
     std::string category_;
-    std::string text_;
+    StringFrag text_;
     std::vector<std::string> values_;
     boost::dynamic_bitset<> attributes_;
 

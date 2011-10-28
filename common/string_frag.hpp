@@ -3,6 +3,13 @@
 
 class StringFrag {
 public:
+    StringFrag() :
+        contents_(""),
+        src_(contents_),
+        begin_(0),
+        len_(0)
+    { }
+
     StringFrag(
         std::string & src,
         unsigned short int begin,
@@ -15,14 +22,15 @@ public:
     { }
 
     StringFrag(
-        std::string & contents
+        std::string contents
     ) :
         contents_(contents),
+        src_(contents_),
         begin_(0),
-        len_(0)
+        len_((unsigned short int) contents.length())
     { }
 
-    std::string str() {
+    std::string str() const {
         if (contents_.empty()) return src_.substr(begin_, len_);
         return contents_;
     }
