@@ -1,24 +1,35 @@
 #include <string>
 
 
-class Substring {
+class StringFrag {
 public:
-    Substring(
-        const std::string source,
-        char begin,
-        char len
+    StringFrag(
+        std::string & src,
+        unsigned short int begin,
+        unsigned short int len
     ) :
-        source_(source),
+        contents_(""),
+        src_(src),
         begin_(begin),
         len_(len)
     { }
 
-    std::string toString() {
-        return source_.substr(begin_, len_);
+    StringFrag(
+        std::string & contents
+    ) :
+        contents_(contents),
+        begin_(0),
+        len_(0)
+    { }
+
+    std::string str() {
+        if (contents_.empty()) return src_.substr(begin_, len_);
+        return contents_;
     }
 
 private:
-    std::string source_;
+    std::string contents_;
+    std::string & src_;
     unsigned short int begin_;
     unsigned short int len_;
 };
