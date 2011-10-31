@@ -34,13 +34,13 @@ bool AttachAction::apply(Lattice &lattice, int matchedStartIndex,
             lattice, realHead, matchedStartIndex);
     Lattice::VertexDescriptor endVertex = lattice::getVertex(
             lattice, realEnd, matchedStartIndex);
+    lattice::removeParseEdges(lattice, headVertex, headVertex + 1);
     std::list<Lattice::EdgeDescriptor> startEdges = lattice::getTopEdges(
             lattice, startVertex);
     std::list<Lattice::EdgeDescriptor> headEdges = lattice::getTopEdges(
             lattice, headVertex);
     std::list<Lattice::EdgeDescriptor> endEdges = lattice::getTopEdges(
             lattice, endVertex);
-    lattice::removeParseEdges(lattice, headVertex, headVertex + 1);
     std::list<Lattice::EdgeSequence> groupPartitions =
         lattice::getEdgesRange(
                 lattice, startVertex, endVertex
@@ -52,7 +52,8 @@ bool AttachAction::apply(Lattice &lattice, int matchedStartIndex,
             this->group,
             headEdges,
             groupPartitions,
-            head - 1
+            realHead
+            //head - 1
             );
     return true;
 }

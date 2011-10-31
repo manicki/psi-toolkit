@@ -69,7 +69,11 @@ class Tagset
         std::vector<std::string> getPartsOfSpeech();
 
     private:
+#if _WITH_BONSAI_PARSEGRAPH
         void initProperties();
+#else
+        void initProperties() const;
+#endif
 
         void parseAttribute(std::string &attribute, std::string &valuesString);
         void parsePartOfSpeech(std::string &partOfSpeech,

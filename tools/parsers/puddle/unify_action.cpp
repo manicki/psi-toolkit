@@ -40,6 +40,8 @@ bool UnifyAction::apply(Lattice &lattice, int matchedStartIndex,
                 tmpPartitions.begin(), tmpPartitions.end());
     }
     if (! newRulePartitions.empty()) {
+        discardUnunifiedEdges(lattice, ruleTokenSizes, matchedStartIndex,
+                edgesToKeep);
         rulePartitions = newRulePartitions;
         return true;
     }
@@ -322,6 +324,77 @@ bool UnifyAction::isUnifyingPossible(Lattice &lattice, int matchedStartIndex,
         ++ attribute_it;
     }
     return toApply;
+}
+
+void UnifyAction::discardUnunifiedEdges(Lattice &lattice,
+        RuleTokenSizes &ruleTokenSizes, int matchedStartIndex,
+        std::vector<std::list<Lattice::EdgeDescriptor> > edgesToKeep) {
+
+    std::vector<std::set<std::string> > unifiedMorphoStrings;
+    for (std::vector<int>::iterator indexIt = tokenIndices.begin();
+            indexIt != tokenIndices.end(); ++ indexIt) {
+        std::set<std::string> tmpSet;
+        unifiedMorphoStrings.push_back(tmpSet);
+    }
+
+    for (std::vector<std::list<Lattice::EdgeDescriptor> >::iterator listIt =
+            edgesToKeep.begin();
+            listIt != edgesToKeep.end();
+            ++ listIt) {
+        int tokenCounter = 0;
+        for (std::list<Lattice::EdgeDescriptor>::iterator edgeIt = listIt->begin();
+                edgeIt != listIt->end(); ++ edgeIt) {
+            std::string morphologyString = lattice::getMorphologyString(
+                    lattice, *edgeIt);
+            unifiedMorphoStrings[tokenCounter].insert(morphologyString);
+            tokenCounter ++;
+        }
+    }
+
+    int tokenCounter = 0;
+    for (std::vector<int>::iterator index_it = tokenIndices.begin();
+            index_it != tokenIndices.end(); ++ index_it) {
+
+        int count, before;
+        if (! util::getUnifyActionTokenParams(ruleTokenSizes, *index_it,
+                    count, before) ) {
+            tokenCounter ++;
+            continue;
+        }
+
+        //Lattice::VertexDescriptor vertex = matchedStartIndex + before;
+        Lattice::VertexDescriptor vertex = lattice::getVertex(lattice,
+                before, matchedStartIndex);
+        //@todo: czy to sprawdzenie jest nadal konieczne? ta funkcja getVertex nie robi czegos takiego?
+        while (lattice::getTopEdges(lattice, vertex).size() == 0) {
+            before ++;
+            vertex = matchedStartIndex + before;
+        }
+
+        std::set<std::string> morphologyStrings =
+            unifiedMorphoStrings[tokenCounter];
+
+        int offset = vertex;
+        int vertexI = 0;
+        while (vertexI < count) {
+            vertex = lattice::getVertex(lattice, offset + vertexI);
+            std::list<Lattice::EdgeDescriptor> edges =
+                lattice::getTopEdges(lattice, vertex);
+            for (std::list<Lattice::EdgeDescriptor>::iterator edgeIt =
+                    edges.begin();
+                    edgeIt != edges.end(); ++ edgeIt) {
+                std::string morphologyString = lattice::getMorphologyString(
+                        lattice, *edgeIt);
+                if (morphologyStrings.find(morphologyString) == morphologyStrings.end()) {
+                    lattice.discard(*edgeIt);
+                }
+            }
+            vertexI ++;
+        }
+
+        tokenCounter ++;
+    }
+
 }
 
 

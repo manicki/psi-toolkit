@@ -303,8 +303,9 @@ namespace poleng {
 
                     if (type == "token" || type == "group") {
                         std::string orth = lattice.getEdgeText(edge);
-                        if (isDiscarded(lattice, edge))
+                        if (isDiscarded(lattice, edge)) {
                             continue; //skip discarded edges
+                        }
                         std::string base = lattice::getBase(lattice, edge);
                         std::string partOfSpeech = getPartOfSpeech(lattice, edge);
                         //std::string morpho = lattice.getAnnotationItemManager().getValue(
@@ -516,7 +517,7 @@ namespace poleng {
                     lattice.outEdges(start, mask);
                 while (edgeIt.hasNext()) {
                     Lattice::EdgeDescriptor edge = edgeIt.next();
-                    AnnotationItem ai = lattice.getEdgeAnnotationItem(edge);
+//                    AnnotationItem ai = lattice.getEdgeAnnotationItem(edge);
                     if (isDiscarded(lattice, edge))
                         continue;
 
@@ -637,8 +638,9 @@ namespace poleng {
                                 Lattice::EdgeDescriptor newEdge = outEdgesIt.next();
                                 Lattice::VertexDescriptor readEnd = startVertex +
                                     lattice.getEdgeLength(newEdge);
-                                if (readEnd != endVertex)
+                                if (readEnd != endVertex) {
                                     continue;
+                                }
                                 if (areAnnotationItemsEqual(lattice, annotationItem,
                                             lattice.getEdgeAnnotationItem(newEdge))) {
                                     //there is already such an edge. add another partition
@@ -738,8 +740,6 @@ namespace poleng {
                                         annotationItem, attribIt->first, attribIt->second);
                             }
                             lattice.getAnnotationItemManager().setValue(
-                                    annotationItem, "discard", "0");
-                            lattice.getAnnotationItemManager().setValue(
                                     annotationItem, "orth", concatenatedOrth);
                             lattice.getAnnotationItemManager().setValue(
                                     annotationItem, "head", "0"); //@todo: czy tego tu inaczej jakos nie trzeba zrobic
@@ -771,8 +771,6 @@ namespace poleng {
                                 lattice.getAnnotationItemManager().setValue(
                                         annotationItem, attribIt->first, attribIt->second);
                             }
-                            lattice.getAnnotationItemManager().setValue(
-                                    annotationItem, "discard", "0");
 
                             lattice.addEdge(startVertex, endVertex, annotationItem,
                                     tags, formBuilder.build());
@@ -844,8 +842,6 @@ namespace poleng {
                         Lattice::EdgeSequence::Builder formBuilder(lattice);
                         formBuilder.addEdge(lexemeEdge);
                         AnnotationItem annotationItem(partOfSpeech, lexeme);
-                        //lattice.getAnnotationItemManager().setValue(
-                        //        annotationItem, "morpho", morpho);
                         for (Morphology::iterator attribIt = morphIt->begin();
                                 attribIt != morphIt->end(); ++ attribIt) {
                             if (attribIt->first == "pos")
@@ -853,8 +849,6 @@ namespace poleng {
                             lattice.getAnnotationItemManager().setValue(
                                     annotationItem, attribIt->first, attribIt->second);
                         }
-                        lattice.getAnnotationItemManager().setValue(
-                                annotationItem, "discard", "0");
 
                         lattice.addEdge(startVertex, endVertex, annotationItem,
                                 tags, formBuilder.build());
@@ -880,9 +874,6 @@ namespace poleng {
                     for (std::list<Lattice::EdgeDescriptor>::iterator edgeIt =
                             edges.begin(); edgeIt != edges.end(); ++ edgeIt) {
                         lattice.discard(*edgeIt);
-                        //AnnotationItem ai = lattice.getEdgeAnnotationItem(*edgeIt);
-                        //lattice.getAnnotationItemManager().setValue(
-                        //        ai, "discard", "1");
                     }
                     vertex += lattice.getEdgeLength(edges.front());
                 }
@@ -897,8 +888,9 @@ namespace poleng {
                     lattice.getAnnotationItemManager().getValues(a);
                 std::list<std::pair<std::string, std::string> > valuesB =
                     lattice.getAnnotationItemManager().getValues(b);
-                if (valuesA.size() != valuesB.size())
+                if (valuesA.size() != valuesB.size()) {
                     return false;
+                }
                 std::list< std::pair<std::string, std::string> >::iterator avi =
                     valuesA.begin();
                 std::list< std::pair<std::string, std::string> >::iterator bvi =
@@ -1153,8 +1145,8 @@ namespace poleng {
                     = lattice.getAnnotationItemManager().getValues(ai);
                 for (std::list< std::pair<std::string, std::string> >::iterator avit = //@todo: sortowanie tego
                         av.begin(); avit != av.end(); ++ avit) {
-                    if (avit->first == "discard")
-                        continue;
+//                    if (avit->first == "discard")
+//                        continue;
                     if (avit->first == "head" || avit->first == "orth")
                         continue;
                     morpho += ":";
@@ -1174,8 +1166,8 @@ namespace poleng {
                     = lattice.getAnnotationItemManager().getValues(ai);
                 for (std::list< std::pair<std::string, std::string> >::iterator avit = //@todo: sortowanie tego
                         av.begin(); avit != av.end(); ++ avit) {
-                    if (avit->first == "discard")
-                        continue;
+//                    if (avit->first == "discard")
+//                        continue;
                     if (avit->first == "head" || avit->first == "orth")
                         continue;
                     morphology.insert(std::pair<std::string, std::string>(
@@ -1185,19 +1177,26 @@ namespace poleng {
             }
 
             bool isDiscarded(Lattice &lattice, Lattice::EdgeDescriptor edge) {
-                AnnotationItem ai = lattice.getEdgeAnnotationItem(edge);
-                std::list< std::pair<std::string, std::string> > av
-                    = lattice.getAnnotationItemManager().getValues(ai);
-                for (std::list< std::pair<std::string, std::string> >::iterator avit =
-                        av.begin(); avit != av.end(); ++ avit) {
-                    if (avit->first == "discard") {
-                        if (avit->second == "1")
-                            return true;
-                        else
-                            return false;
-                    }
-                }
-                return false;
+                LayerTagMask mask = lattice.getLayerTagManager().getMask(
+                        lattice.getEdgeLayerTags(edge));
+                if (lattice.getLayerTagManager().match(mask, "discarded"))
+                    return true;
+                else
+                    return false;
+//
+//                AnnotationItem ai = lattice.getEdgeAnnotationItem(edge);
+//                std::list< std::pair<std::string, std::string> > av
+//                    = lattice.getAnnotationItemManager().getValues(ai);
+//                for (std::list< std::pair<std::string, std::string> >::iterator avit =
+//                        av.begin(); avit != av.end(); ++ avit) {
+//                    if (avit->first == "discard") {
+//                        if (avit->second == "1")
+//                            return true;
+//                        else
+//                            return false;
+//                    }
+//                }
+//                return false;
             }
 
             void deleteEdges(Lattice &lattice, Lattice::VertexDescriptor vertex,
