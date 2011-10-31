@@ -1,4 +1,5 @@
-#include <boost/filesystem.hpp>
+#include <unistd.h>
+
 #include <boost/algorithm/string/join.hpp>
 
 #include "server_runner.hpp"
@@ -46,6 +47,8 @@ void ServerRunner::setOptionsDescription() {
             "Set root of website files");
 
     optionsDescription.add_options()
+        ("daemon", "Run as a daemon")
+        ("leave-standard-descriptors-when-daemonizing", "Don't redirect standard input, standard output and standard error to /dev/null when daemonizing")
         ("help", "Produce help message")
         ("version", "Show version")
         ("verbose", "Run verbosely");
@@ -62,7 +65,7 @@ int ServerRunner::run() {
             options["address"].as<std::string>(),
             options["port"].as<std::string>(),
             options["threads"].as<std::string>(),
-            options["root"].as<std::string>()
+            rootDir_.native()
         );
 
         std::cout << psiServer.info();
@@ -84,7 +87,6 @@ int ServerRunner::run() {
 }
 
 int ServerRunner::executeOptions() {
-
     if (options.count("help")) {
         std::cout << optionsDescription << std::endl;
         return 1;
@@ -95,21 +97,48 @@ int ServerRunner::executeOptions() {
         return 1;
     }
 
-    if (options.count("root")) {
-        boost::filesystem::path p(options["root"].as<std::string>() + "/index.html");
+    if (setRootDirectory_() != 0)
+        return 1;
 
-        if (!boost::filesystem::exists(p)) {
-            std::cout << "Set path to website root directory "
-                << options["root"].as<std::string>()
-                << " does not contain the index.html file. "
-                << "Use the --root option to specify valid root path. " << std::endl;
-            return 1;
-        }
+    if (options.count("daemon"))
+        daemonize_(options.count("leave-standard-descriptors-when-daemonizing") > 0);
+
+    return 0;
+}
+
+int ServerRunner::setRootDirectory_() {
+    boost::filesystem::path rootAsGiven(options["root"].as<std::string>());
+
+    rootDir_ =
+        // A daemon changes its current directory, so an absolute path
+        // must be specified.
+        (options.count("daemon")
+         ? boost::filesystem::absolute(rootAsGiven)
+         : rootAsGiven);
+
+    boost::filesystem::path p(rootDir_ / "index.html");
+
+    if (!boost::filesystem::exists(p)) {
+        std::cerr << "Set path to website root directory "
+                  << rootDir_
+                  << " does not contain the index.html file. "
+                  << "Use the --root option to specify valid root path. " << std::endl;
+        return 1;
     }
 
     return 0;
 }
 
+void ServerRunner::daemonize_(bool leaveStandardDescriptors) {
+    if (daemon(0, leaveStandardDescriptors) != 0) {
+        char* errorMessage = strerror(errno);
+        std::cerr << "cannot daemonize: " << errorMessage << std::endl;
+    }
+}
+
 std::string ServerRunner::annotatorOptionsAsString() {
     return boost::algorithm::join(annotatorOptions, " ");
 }
+
+
+
