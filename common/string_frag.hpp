@@ -6,8 +6,8 @@ public:
     StringFrag() :
         contents_(""),
         src_(contents_),
-        begin_(0),
-        len_(0)
+        begin_(std::string::npos),
+        len_(std::string::npos)
     { }
 
     StringFrag(
@@ -31,9 +31,9 @@ public:
     { }
 
     std::string str() const {
-        // if (begin_ != std::string::npos) {
-            // return src_.substr(begin_, len_);
-        // }
+        if (begin_ != std::string::npos) {
+            return src_.substr(begin_, len_);
+        }
         return contents_;
     }
 
