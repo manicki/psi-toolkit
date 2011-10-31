@@ -1,6 +1,6 @@
 #!/bin/bash
 
-TARGET_DIR=bin
+TARGET_DIR=build
 
 mkdir -p $TARGET_DIR
 

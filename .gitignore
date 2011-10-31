@@ -6,6 +6,6 @@ psi-pipe
 test_runner
 common/config.h
 cppcheck-result.xml
-bin/*
+build/*
 server/t/reports/*
 *.so
