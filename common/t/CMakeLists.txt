@@ -7,8 +7,8 @@ endif(USE_JAVA)
 
 
 add_library(common-tests
-	by_spaces_cutter.cpp
-	fake_lemmatizer.cpp
+    by_spaces_cutter.cpp
+    fake_lemmatizer.cpp
         segment_glob_tests.cpp
         annotation_item_tests.cpp
         ant_like_path_glob_tests.cpp
@@ -19,6 +19,7 @@ add_library(common-tests
         object_cache_tests.cpp
         quoter_tests.cpp
         regexp_tests.cpp
+        string_frag_tests.cpp
         xml_property_tree_tests.cpp
         ${COMMON_TESTS_EXTRAS}
 )
