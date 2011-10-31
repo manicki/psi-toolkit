@@ -12,8 +12,8 @@ public:
 
     StringFrag(
         std::string & src,
-        unsigned short int begin,
-        unsigned short int len
+        size_t begin,
+        size_t len
     ) :
         contents_(""),
         src_(src),
@@ -26,18 +26,20 @@ public:
     ) :
         contents_(contents),
         src_(contents_),
-        begin_(0),
-        len_((unsigned short int) contents.length())
+        begin_(std::string::npos),
+        len_(std::string::npos)
     { }
 
     std::string str() const {
-        if (contents_.empty()) return src_.substr(begin_, len_);
+        // if (begin_ != std::string::npos) {
+            // return src_.substr(begin_, len_);
+        // }
         return contents_;
     }
 
 private:
     std::string contents_;
     std::string & src_;
-    unsigned short int begin_;
-    unsigned short int len_;
+    size_t begin_;
+    size_t len_;
 };
