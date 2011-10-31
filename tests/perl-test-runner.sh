@@ -3,7 +3,7 @@
 echo '========================================================'
 
 PERL_BINDINGS_DIR=`pwd`/bindings/perl
-PRJ_DIR=`pwd`/bin
+PRJ_DIR=`pwd`/build
 
 if [[ -e $PRJ_DIR/libSimple.so ]]; then
 
