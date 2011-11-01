@@ -4,5 +4,7 @@
 #cmakedefine01 HAVE_PCRE
 #cmakedefine01 HAVE_PUDDLE
 #cmakedefine01 HAVE_PERL_BINDINGS
-#define ROOT_DIR "../"
 #cmakedefine01 _WITH_BONSAI_PARSEGRAPH
+#cmakedefine01 IS_INSTALLABLE
+#cmakedefine INSTALL_DATA_DIR "@INSTALL_DATA_DIR@"
+#define ROOT_DIR "../"

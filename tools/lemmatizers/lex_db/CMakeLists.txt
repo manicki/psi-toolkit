@@ -3,4 +3,4 @@ add_library(lex-db SHARED
 )
 target_link_libraries(lex-db common pqxx)
 
-install(TARGETS lex-db DESTINATION "${psi-toolkit_BINARY_DIR}")
+install(TARGETS lex-db DESTINATION lib/)

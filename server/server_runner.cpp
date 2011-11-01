@@ -6,6 +6,7 @@
 
 #include "config.h"
 #include "logging.hpp"
+#include "configurator.hpp"
 
 ServerRunner::ServerRunner(int argc, char * argv[])
     : optionsDescription("PsiServer options"){
@@ -43,8 +44,11 @@ void ServerRunner::setOptionsDescription() {
             "Set port number")
         ("threads", boost::program_options::value<std::string>()->default_value("1"),
             "Specify number of threads")
-        ("root", boost::program_options::value<std::string>()->default_value(ROOT_DIR "server/website"),
-            "Set root of website files");
+        ("root", boost::program_options::value<std::string>()->default_value(
+            (Configurator::getInstance().isRunAsInstalled()
+             ? INSTALL_DATA_DIR "server/website"
+             : ROOT_DIR "server/website"),
+            "Set root of website files"));
 
     optionsDescription.add_options()
         ("daemon", "Run as a daemon")

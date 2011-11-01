@@ -39,7 +39,7 @@ swig_link_libraries(Simple
 
 link_directories("${psi-toolkit_BINARY_DIR}/bindings/perl/PSIToolkit")
 
-install(TARGETS Simple DESTINATION "${psi-toolkit_BINARY_DIR}")
+install(TARGETS Simple DESTINATION share/perl5/site_perl/PSIToolkit)
 INSTALL(FILES
   ${CMAKE_SWIG_CURRENT_LANG_BINDINGS_DIRECTORY}/Simple.pm
-  DESTINATION "${psi-toolkit_BINARY_DIR}/PSIToolkit")
+  DESTINATION share/perl5/site_perl)

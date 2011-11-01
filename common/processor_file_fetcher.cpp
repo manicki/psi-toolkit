@@ -1,13 +1,19 @@
 #include "processor_file_fetcher.hpp"
 
+#include "configurator.hpp"
+
 ProcessorFileFetcher::ProcessorFileFetcher(boost::filesystem::path sourceFilePath) {
     initDirectoryParams_(sourceFilePath);
 }
 
 void ProcessorFileFetcher::initDirectoryParams_(boost::filesystem::path sourceFilePath) {
 
-    if (boost::filesystem::is_regular_file(sourceFilePath))
+    boost::filesystem::path lastComponent;
+
+    if (boost::filesystem::is_regular_file(sourceFilePath)) {
+        lastComponent = sourceFilePath.filename();
         sourceFilePath = sourceFilePath.parent_path();
+    }
 
     sourceFilePath = sourceFilePath.relative_path();
 
@@ -28,12 +34,18 @@ void ProcessorFileFetcher::initDirectoryParams_(boost::filesystem::path sourceFi
         }
         else if (found)
             sourcePath /= (i);
+
+        if (!lastComponent.empty())
+            lastComponent = seg;
     }
 
     if (!found)
         throw Exception(std::string("unexpected source path `") + sourceFilePath.string() + "'");
 
-    boost::filesystem::path itsData = getRootDir_() / sourcePath / "data";
+    boost::filesystem::path itsData =
+        (Configurator::getInstance().isRunAsInstalled()
+         ? getDataDir_() / lastComponent
+         : boost::filesystem::path("..") / sourcePath / "data");
 
     addParam("ITSDATA",  itsData.string());
 }

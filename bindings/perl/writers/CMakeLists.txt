@@ -12,4 +12,4 @@ include(${SWIG_USE_FILE})
 find_package(PerlLibs)
 include_directories(${PERL_INCLUDE_PATH})
 
-install(TARGETS formats-perl-simple DESTINATION "${psi-toolkit_BINARY_DIR}")
+install(TARGETS formats-perl-simple DESTINATION lib/)
