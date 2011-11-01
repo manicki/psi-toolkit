@@ -381,7 +381,7 @@ BOOST_AUTO_TEST_CASE( puddle_unify ) {
     poleng::bonsai::puddle::TagsetLoader tagset_loader;
     poleng::bonsai::puddle::RuleLoader rule_loader;
 
-    poleng::bonsai::puddle::Puddle *puddle = new poleng::bonsai::puddle::Puddle();
+    boost::scoped_ptr<poleng::bonsai::puddle::Puddle> puddle(new poleng::bonsai::puddle::Puddle());
 
     poleng::bonsai::puddle::TagsetPtr tagset;
     tagset = tagset_loader.load(tagsetFilename);
@@ -605,7 +605,7 @@ BOOST_AUTO_TEST_CASE( puddle_delete ) {
     poleng::bonsai::puddle::TagsetLoader tagset_loader;
     poleng::bonsai::puddle::RuleLoader rule_loader;
 
-    poleng::bonsai::puddle::Puddle *puddle = new poleng::bonsai::puddle::Puddle();
+    boost::scoped_ptr<poleng::bonsai::puddle::Puddle> puddle(new poleng::bonsai::puddle::Puddle());
 
     poleng::bonsai::puddle::TagsetPtr tagset;
     tagset = tagset_loader.load(tagsetFilename);
@@ -1286,7 +1286,7 @@ BOOST_AUTO_TEST_CASE( puddle_join ) {
     poleng::bonsai::puddle::TagsetLoader tagset_loader;
     poleng::bonsai::puddle::RuleLoader rule_loader;
 
-    poleng::bonsai::puddle::Puddle *puddle = new poleng::bonsai::puddle::Puddle();
+    boost::scoped_ptr<poleng::bonsai::puddle::Puddle> puddle(new poleng::bonsai::puddle::Puddle());
 
     poleng::bonsai::puddle::TagsetPtr tagset;
     tagset = tagset_loader.load(tagsetFilename);
@@ -1588,7 +1588,7 @@ BOOST_AUTO_TEST_CASE( puddle_attach ) {
     poleng::bonsai::puddle::TagsetLoader tagset_loader;
     poleng::bonsai::puddle::RuleLoader rule_loader;
 
-    poleng::bonsai::puddle::Puddle *puddle = new poleng::bonsai::puddle::Puddle();
+    boost::scoped_ptr<poleng::bonsai::puddle::Puddle> puddle(new poleng::bonsai::puddle::Puddle());
 
     poleng::bonsai::puddle::TagsetPtr tagset;
     tagset = tagset_loader.load(tagsetFilename);
@@ -1849,7 +1849,7 @@ BOOST_AUTO_TEST_CASE( puddle_transform ) {
     poleng::bonsai::puddle::TagsetLoader tagset_loader;
     poleng::bonsai::puddle::RuleLoader rule_loader;
 
-    poleng::bonsai::puddle::Puddle *puddle = new poleng::bonsai::puddle::Puddle();
+    boost::scoped_ptr<poleng::bonsai::puddle::Puddle> puddle(new poleng::bonsai::puddle::Puddle());
 
     poleng::bonsai::puddle::TagsetPtr tagset;
     tagset = tagset_loader.load(tagsetFilename);
