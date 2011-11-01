@@ -718,14 +718,15 @@ void Tagset::generateProperMorphologyLabels() {
     }
 }
 
-void Tagset::initProperties() {
 #if _WITH_BONSAI_PARSEGRAPH
+void Tagset::initProperties() {
     desc_terminals = false;
     desc_nonterminals = false;
     desc_separator = "#";
-#endif
 }
-
+#else
+void Tagset::initProperties() const { }
+#endif
 
 
 }
