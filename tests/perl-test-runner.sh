@@ -10,9 +10,11 @@ if [[ -e $PRJ_DIR/bindings/perl/PSIToolkit/libSimple.so ]]; then
 echo 'Start testing Perl bindings.'
 echo ''
 
-PATH=.:${PRJ_DIR}:${PATH}
+export PATH=.:${PRJ_DIR}:${PATH}
 # the second path because libSimple.so is looked for in @INC directories
-PERL5LIB=${PRJ_DIR}/bindings/perl:${PRJ_DIR}/bindings/perl/PSIToolkit:${PERL5LIB}
+export PERL5LIB=${PRJ_DIR}/bindings/perl:${PRJ_DIR}/bindings/perl/PSIToolkit:${PERL5LIB}
+
+echo "PERL5LIB is $PERL5LIB"
 
 TEST_OUTPUT_DIR=$PRJ_DIR/perl-test-results
 if [[ -d $TEST_OUTPUT_DIR ]]; then
