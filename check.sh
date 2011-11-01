@@ -5,7 +5,7 @@ TARGET_DIR=build
 mkdir -p $TARGET_DIR
 
 cd $TARGET_DIR
-make install
+make
 ./tests/test_runner --log_format=XML --log_level=all --log_sink=test-results.xml
 
 ./tests/mass-tests .. --xml mass-tests-results.xml

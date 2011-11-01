@@ -37,6 +37,7 @@ swig_link_libraries(Simple
   tools-parsers-puddle
   framework)
 
+link_directories("${psi-toolkit_BINARY_DIR}/bindings/perl/PSIToolkit")
 
 install(TARGETS Simple DESTINATION "${psi-toolkit_BINARY_DIR}")
 INSTALL(FILES
