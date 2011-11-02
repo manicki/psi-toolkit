@@ -12,7 +12,7 @@ void ProcessorFileFetcher::initDirectoryParams_(boost::filesystem::path sourceFi
 
     bool takenFromSourceFile = false;
 
-    if (boost::filesystem::is_regular_file(sourceFilePath)) {
+    if (sourceFilePath.extension() == ".cpp") {
         lastComponent = sourceFilePath.filename();
         lastComponent = removeExtension_(lastComponent);
         takenFromSourceFile = true;
