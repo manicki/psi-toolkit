@@ -14,7 +14,7 @@ void ProcessorFileFetcher::initDirectoryParams_(boost::filesystem::path sourceFi
 
     if (boost::filesystem::is_regular_file(sourceFilePath)) {
         lastComponent = sourceFilePath.filename();
-        lastComponent.replace_extension();
+        lastComponent = removeExtension_(lastComponent);
         takenFromSourceFile = true;
 
         sourceFilePath = sourceFilePath.parent_path();
@@ -62,3 +62,15 @@ boost::filesystem::path ProcessorFileFetcher::underscores2minuses_(
 
     return boost::filesystem::path(segmentAsString);
 }
+
+boost::filesystem::path ProcessorFileFetcher::removeExtension_(
+    const boost::filesystem::path& segment) {
+    std::string segmentAsString = segment.string();
+
+    // removing .cpp
+    segmentAsString = segmentAsString.substr(0, segmentAsString.length()-4);
+
+    return boost::filesystem::path(segmentAsString);
+}
+
+
