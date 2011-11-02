@@ -10,8 +10,12 @@ void ProcessorFileFetcher::initDirectoryParams_(boost::filesystem::path sourceFi
 
     boost::filesystem::path lastComponent;
 
+    bool takenFromSourceFile = false;
+
     if (boost::filesystem::is_regular_file(sourceFilePath)) {
         lastComponent = sourceFilePath.filename();
+        takenFromSourceFile = true;
+
         sourceFilePath = sourceFilePath.parent_path();
     }
 
@@ -35,7 +39,7 @@ void ProcessorFileFetcher::initDirectoryParams_(boost::filesystem::path sourceFi
         else if (found)
             sourcePath /= (i);
 
-        if (!lastComponent.empty())
+        if (!takenFromSourceFile)
             lastComponent = seg;
     }
 
@@ -44,8 +48,16 @@ void ProcessorFileFetcher::initDirectoryParams_(boost::filesystem::path sourceFi
 
     boost::filesystem::path itsData =
         (Configurator::getInstance().isRunAsInstalled()
-         ? getDataDir_() / lastComponent
+         ? getDataDir_() / underscores2minuses_(lastComponent)
          : boost::filesystem::path("..") / sourcePath / "data");
 
     addParam("ITSDATA",  itsData.string());
+}
+
+boost::filesystem::path ProcessorFileFetcher::underscores2minuses_(
+    const boost::filesystem::path& segment) {
+    std::string segmentAsString = segment.string();
+    std::replace(segmentAsString.begin(), segmentAsString.end(), '_', '-');
+
+    return boost::filesystem::path(segmentAsString);
 }
