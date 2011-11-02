@@ -97,7 +97,7 @@ int ServerRunner::executeOptions() {
     }
 
     if (options.count("version")) {
-        std::cout << "PsiServer version 0.1" << std::endl;
+        std::cout << "PsiServer version 0.2" << std::endl;
         return 1;
     }
 
