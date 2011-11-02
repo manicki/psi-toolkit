@@ -1,6 +1,6 @@
-
 $(document).ready(function()
 {
+    var preloaderTimestamp = 3000;
     var messages = [];
 
     function clearMessages() {
@@ -19,6 +19,12 @@ $(document).ready(function()
             return true;
         }
         return false;
+    };
+
+    function showPreloader() {
+        setTimeout( function() {
+            $("#message").addClass("preloader");
+	    }, preloaderTimestamp);
     };
 
     $("form").submit(function() {
@@ -41,6 +47,9 @@ $(document).ready(function()
 
         if (showMessage()) {
             return false;
+        }
+        else {
+           showPreloader();
         }
         $(this).submit();
     });
