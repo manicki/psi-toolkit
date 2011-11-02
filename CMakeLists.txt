@@ -15,7 +15,7 @@ set(PSITOOLKIT_INSTALL_DATA_DIR share/psi-toolkit)
 set(INSTALL_DATA_DIR "${CMAKE_INSTALL_PREFIX}/${PSITOOLKIT_INSTALL_DATA_DIR}")
 
 option(IS_INSTALLABLE "Is prepared for install" OFF)
-message(IS_INSTALLABLE "Is preapred for install ${IS_INSTALLABLE}")
+message(STATUS "Is prepared for install ${IS_INSTALLABLE}")
 
 option(USE_JAVA "Compiling Java components" OFF)
 message(STATUS "Compiling Java components ${USE_JAVA}")
