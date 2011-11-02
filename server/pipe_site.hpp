@@ -1,6 +1,7 @@
 #include <string>
 
 #include "template_site.hpp"
+#include "output_saver.hpp"
 
 class PipeSite : public TemplateSite
 {
@@ -23,10 +24,14 @@ private:
 
     const std::string initialText;
     const std::string initialPipe;
+    std::string initialOutput;
 
     std::string getOrSetDefaultData(const char* name, std::string initialValue);
 
     std::string getInput();
     std::string runPipe(std::string);
+
+    OutputSaver outputSaver;
+    void createFileFromOutput(std::string output);
 };
 

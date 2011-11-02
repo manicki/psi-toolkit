@@ -33,5 +33,11 @@ $(document).ready(function()
         switchBookmark("input-file");
     }
 
+    var downloadFilePath = options.attr("file_to_download");
+    if (downloadFilePath != "") {
+        var infoDownload = "Click here to download the output file";
+        $("#download").append("<a href=\"" + downloadFilePath + "\">" + infoDownload + "</a>");
+    }
+
 });
 
