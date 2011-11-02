@@ -45,9 +45,9 @@ void ServerRunner::setOptionsDescription() {
         ("threads", boost::program_options::value<std::string>()->default_value("1"),
             "Specify number of threads")
         ("root", boost::program_options::value<std::string>()->default_value(
-            (Configurator::getInstance().isRunAsInstalled()
-             ? INSTALL_DATA_DIR "server/website"
-             : ROOT_DIR "server/website"),
+            (boost::filesystem::path(
+                Configurator::getInstance().isRunAsInstalled() ? INSTALL_DATA_DIR : ROOT_DIR)
+             / "server/website").string(),
             "Set root of website files"));
 
     optionsDescription.add_options()
@@ -116,7 +116,7 @@ int ServerRunner::setRootDirectory_() {
     rootDir_ =
         // A daemon changes its current directory, so an absolute path
         // must be specified.
-        (options.count("daemon")
+        (options.count("daemon") && !rootAsGiven.has_root_directory()
          ? boost::filesystem::current_path() / rootAsGiven
          : rootAsGiven);
 
