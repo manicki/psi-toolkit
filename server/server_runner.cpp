@@ -69,7 +69,7 @@ int ServerRunner::run() {
             options["address"].as<std::string>(),
             options["port"].as<std::string>(),
             options["threads"].as<std::string>(),
-            rootDir_.native()
+            rootDir_.string()
         );
 
         std::cout << psiServer.info();
@@ -117,7 +117,7 @@ int ServerRunner::setRootDirectory_() {
         // A daemon changes its current directory, so an absolute path
         // must be specified.
         (options.count("daemon")
-         ? boost::filesystem::absolute(rootAsGiven)
+         ? boost::filesystem::current_path() / rootAsGiven
          : rootAsGiven);
 
     boost::filesystem::path p(rootDir_ / "index.html");
