@@ -14,6 +14,7 @@ void ProcessorFileFetcher::initDirectoryParams_(boost::filesystem::path sourceFi
 
     if (boost::filesystem::is_regular_file(sourceFilePath)) {
         lastComponent = sourceFilePath.filename();
+        lastComponent.replace_extension();
         takenFromSourceFile = true;
 
         sourceFilePath = sourceFilePath.parent_path();
