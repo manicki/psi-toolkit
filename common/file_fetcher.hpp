@@ -66,6 +66,8 @@ protected:
 private:
     std::string replaceParams_(const std::string& fileSpec) const;
 
+    std::string paramsToString_() const;
+
     std::map<std::string, std::string> params_;
 
 };
