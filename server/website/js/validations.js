@@ -34,7 +34,7 @@ $(document).ready(function()
             }
         }
         else {
-            if (!$("#input-file").val()) {
+            if (!$("#input-file input").val()) {
                 addMessage("Select file with text to process.");
             }
         }
