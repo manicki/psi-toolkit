@@ -6,6 +6,7 @@ add_library(server SHARED
     session.cpp
     session_manager.cpp
     server_runner.cpp
+    output_saver.cpp
 )
 
 target_link_libraries(server ${Boost_LIBRARIES} pthread mpfd-parser ${BASE_TARGETS} pcre pcrecpp tools-parsers-puddle)
