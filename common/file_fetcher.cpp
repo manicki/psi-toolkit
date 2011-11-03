@@ -58,10 +58,6 @@ std::string FileFetcher::replaceParams_(const std::string& fileSpec) const {
     return finalFileSpec;
 }
 
-boost::filesystem::path FileFetcher::getDataDir_() {
-    return boost::filesystem::path(INSTALL_DATA_DIR);
-}
-
 std::string FileFetcher::paramsToString_() const {
     typedef std::map<std::string,std::string> this_map_type;
 

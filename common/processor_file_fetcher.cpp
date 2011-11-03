@@ -48,19 +48,12 @@ void ProcessorFileFetcher::initDirectoryParams_(boost::filesystem::path sourceFi
         throw Exception(std::string("unexpected source path `") + sourceFilePath.string() + "'");
 
     boost::filesystem::path itsData =
-        (Configurator::getInstance().isRunAsInstalled()
-         ? getDataDir_() / underscores2minuses_(lastComponent)
-         : boost::filesystem::path("..") / sourcePath / "data");
+        Configurator::getInstance().getFinalPath(
+            lastComponent,
+            sourcePath,
+            boost::filesystem::path("data"));
 
     addParam("ITSDATA",  itsData.string());
-}
-
-boost::filesystem::path ProcessorFileFetcher::underscores2minuses_(
-    const boost::filesystem::path& segment) {
-    std::string segmentAsString = segment.string();
-    std::replace(segmentAsString.begin(), segmentAsString.end(), '_', '-');
-
-    return boost::filesystem::path(segmentAsString);
 }
 
 boost::filesystem::path ProcessorFileFetcher::removeExtension_(

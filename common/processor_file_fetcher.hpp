@@ -13,9 +13,6 @@ public:
 private:
     void initDirectoryParams_(boost::filesystem::path sourceFilePath);
 
-    boost::filesystem::path underscores2minuses_(
-        const boost::filesystem::path& segment);
-
     boost::filesystem::path removeExtension_(
         const boost::filesystem::path& segment);
 

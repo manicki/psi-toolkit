@@ -60,9 +60,6 @@ public:
             *outputIterator++ = *fiter;
     }
 
-protected:
-    static boost::filesystem::path getDataDir_();
-
 private:
     std::string replaceParams_(const std::string& fileSpec) const;
 
