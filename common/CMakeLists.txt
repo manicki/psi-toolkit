@@ -48,4 +48,3 @@ endif(USE_JAVA)
 add_subdirectory(t)
 
 install(TARGETS common DESTINATION lib/)
-
