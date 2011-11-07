@@ -488,11 +488,27 @@ const std::string Lattice::getEdgeText(EdgeDescriptor edge) const {
     return allText_.substr(getEdgeBeginIndex(edge), getEdgeLength(edge));
 }
 
+const StringFrag Lattice::getEdgeTextAsStringFrag(EdgeDescriptor edge) const {
+    if (isLooseVertex(getEdgeSource(edge)) || isLooseVertex(getEdgeTarget(edge))) {
+        return StringFrag("@"); // temporarily for edges with loose vertices
+    }
+    return StringFrag(allText_, getEdgeBeginIndex(edge), getEdgeLength(edge));
+}
+
 std::string Lattice::getSequenceText(const EdgeSequence& sequence) {
     std::string r;
     EdgeSequence::Iterator esi(*this, sequence);
     while (esi.hasNext()) {
         r += getEdgeText(esi.next());
+    }
+    return r;
+}
+
+StringFrag Lattice::getSequenceTextAsStringFrag(const EdgeSequence& sequence) {
+    StringFrag r;
+    EdgeSequence::Iterator esi(*this, sequence);
+    while (esi.hasNext()) {
+        r.append(getEdgeTextAsStringFrag(esi.next()));
     }
     return r;
 }
