@@ -10,6 +10,13 @@ public:
         len_(std::string::npos)
     { }
 
+    StringFrag(const StringFrag & other) :
+        contents_(other.contents_),
+        src_(other.src_),
+        begin_(other.begin_),
+        len_(other.len_)
+    { }
+
     StringFrag(
         const std::string & src,
         size_t begin,
@@ -29,6 +36,14 @@ public:
         begin_(std::string::npos),
         len_(std::string::npos)
     { }
+
+    StringFrag & operator=(const StringFrag & other) {
+        if (this != &other) {
+            this->StringFrag::~StringFrag();
+            new (this) StringFrag(other);
+        }
+        return *this;
+    }
 
     std::string str() const {
         if (begin_ == std::string::npos) {
