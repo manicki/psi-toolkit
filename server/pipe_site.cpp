@@ -11,7 +11,8 @@
 
 PipeSite::PipeSite(PsiServer& server, const std::string & pipe)
     : TemplateSite(server),
-    initialText("Ala ma kota"), initialPipe(pipe.c_str())
+    initialText("Ala ma kota"), initialPipe(pipe.c_str()), initialOutput(""),
+    outputSaver(std::string(psiServer_.websiteRoot))
 {
     registerIncludesAndActions();
 }
@@ -44,7 +45,11 @@ char * PipeSite::pipeText() {
 }
 
 char * PipeSite::outputText() {
-    std::string output = getOrSetDefaultData("output-text", runPipe(initialText));
+    if (initialOutput.empty()) {
+        initialOutput = runPipe(initialText);
+    }
+
+    std::string output = getOrSetDefaultData("output-text", initialOutput);
     output = std::string("<pre>") + output + std::string("</pre>");
 
     return stringToChar(output);
@@ -66,9 +71,11 @@ char * PipeSite::actionPipe() {
 
 char * PipeSite::hiddenOptions() {
     std::string fileOnOff = psiServer_.session()->getData("radio-file");
+    std::string outputFile = psiServer_.session()->getData("output-file");
 
     std::string opts =
         std::string("<div input_file=\"") + fileOnOff
+        + std::string("\" file_to_download=\"") + outputFile
         + std::string("\" />");
 
     psiServer_.session()->clearData("radio-file");
@@ -98,6 +105,11 @@ std::string PipeSite::getInput() {
     return input;
 }
 
+void PipeSite::createFileFromOutput(std::string output) {
+    std::string filename = outputSaver.storeOutput(output);
+    psiServer_.session()->setData("output-file", filename);
+}
+
 std::string PipeSite::runPipe(std::string input) {
     std::string pipe = psiServer_.session()->getData("pipe-text");
 
@@ -115,6 +127,8 @@ std::string PipeSite::runPipe(std::string input) {
         INFO("... running");
         p.run(iss, oss);
         INFO("... OK");
+
+        createFileFromOutput(oss.str());
     }
     catch(std::exception& e) {
         oss << "There are some problems: " << e.what() << std::endl
@@ -123,4 +137,3 @@ std::string PipeSite::runPipe(std::string input) {
 
     return oss.str();
 }
-

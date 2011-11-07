@@ -7,10 +7,13 @@
 #include <boost/filesystem/fstream.hpp>
 #include <boost/foreach.hpp>
 
+#include "configurator.hpp"
 #include "batch_runner.hpp"
 #include "logging.hpp"
 
 MassTester::MassTester(int argc, char* argv[]) {
+    Configurator::getInstance().setRunAsInstalled(false);
+
     boost::program_options::options_description optionsDescription = optionsHandled();
 
     boost::program_options::positional_options_description positionalDescription;

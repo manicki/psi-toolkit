@@ -6,6 +6,9 @@ body { background: url("/img/bg-gradient.jpg") repeat-x #FFFFFF;
 #content { overflow:auto; padding-bottom: 100px; }
 p { padding: 5px 0; }
 
+a { text-decoration: none; color: #335599; }
+a:hover { text-decoration: underline; }
+
 /* Header */
 
 #header { min-height: 50px; line-height: 20px; }
@@ -14,8 +17,6 @@ p { padding: 5px 0; }
 #menu { float: right; }
 #menu li { float: left; height: 40px; line-height: 40px; padding: 0 20px;
     border-left: 2px solid #666; }
-#menu li a { text-decoration: none; color: #335599; }
-#menu li a:hover { text-decoration: underline; }
 
 /* Forms */
 
@@ -46,7 +47,9 @@ input.alert { color: #FF0000; }
 /* Output */
 
 pre { font-family: monospace; font-size: 12px;
-    border-width: 1px; border-style: solid; padding: 8px; margin-bottom: 50px; }
+    border-width: 1px; border-style: solid; padding: 8px; }
+
+#download { margin-bottom: 50px; }
 
 /* Input bookmarks */
 
@@ -80,3 +83,7 @@ div.grippie { width: 760px; height: 8px; overflow: hidden; margin-left: 20px; cu
 
 div#psis-hidden-options, div#psis-hidden-options div { visibility: hidden; display: none; }
 
+/* Message box */
+
+.preloader { visibility: visible; display: block; min-height: 20px;
+    background: url("/img/preloader.gif") no-repeat center; }

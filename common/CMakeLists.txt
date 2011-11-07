@@ -11,6 +11,7 @@ add_library(common SHARED
     annotator.cpp
     annotator_factory.cpp
     ant_like_path_glob.cpp
+    configurator.cpp
     cutter.cpp
     escaping.cpp
     file_fetcher.cpp
@@ -46,5 +47,4 @@ endif(USE_JAVA)
 
 add_subdirectory(t)
 
-install(TARGETS common DESTINATION "${psi-toolkit_BINARY_DIR}")
-
+install(TARGETS common DESTINATION lib/)

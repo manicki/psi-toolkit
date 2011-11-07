@@ -32,4 +32,5 @@ target_link_libraries(tools-parsers-puddle ${Boost_LIBRARIES})
 
 add_subdirectory(t)
 
-install(TARGETS tools-parsers-puddle DESTINATION "${psi-toolkit_BINARY_DIR}")
+install(TARGETS tools-parsers-puddle DESTINATION lib/)
+install(DIRECTORY data/ DESTINATION ${PSITOOLKIT_INSTALL_DATA_DIR}/puddle)

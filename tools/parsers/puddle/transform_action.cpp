@@ -29,13 +29,13 @@ bool TransformAction::apply(Lattice &lattice, int matchedStartIndex,
             lattice, before, matchedStartIndex);
     Lattice::VertexDescriptor endVertex = lattice::getVertex(
             lattice, before, matchedStartIndex);
+    lattice::removeParseEdges(lattice, headVertex, headVertex + 1);
     std::list<Lattice::EdgeDescriptor> startEdges = lattice::getTopEdges(
             lattice, startVertex);
     std::list<Lattice::EdgeDescriptor> headEdges = lattice::getTopEdges(
             lattice, headVertex);
     std::list<Lattice::EdgeDescriptor> endEdges = lattice::getTopEdges(
             lattice, endVertex);
-    lattice::removeParseEdges(lattice, headVertex, headVertex + 1);
     std::list<Lattice::EdgeSequence> groupPartitions =
         lattice::getEdgesRange(
                 lattice, startVertex, endVertex

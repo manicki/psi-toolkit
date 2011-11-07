@@ -3,4 +3,4 @@ add_library(formats-utt SHARED
 	utt_quoter.cpp
 )
 
-install(TARGETS formats-utt DESTINATION "${psi-toolkit_BINARY_DIR}")
+install(TARGETS formats-utt DESTINATION lib/)

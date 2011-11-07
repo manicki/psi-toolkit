@@ -6,6 +6,7 @@
 
 #include "config.h"
 #include "logging.hpp"
+#include "configurator.hpp"
 
 ServerRunner::ServerRunner(int argc, char * argv[])
     : optionsDescription("PsiServer options"){
@@ -43,8 +44,11 @@ void ServerRunner::setOptionsDescription() {
             "Set port number")
         ("threads", boost::program_options::value<std::string>()->default_value("1"),
             "Specify number of threads")
-        ("root", boost::program_options::value<std::string>()->default_value(ROOT_DIR "server/website"),
-            "Set root of website files");
+        ("root", boost::program_options::value<std::string>()->default_value(
+            (boost::filesystem::path(
+                Configurator::getInstance().isRunAsInstalled() ? INSTALL_DATA_DIR : ROOT_DIR)
+             / "server/website").string(),
+            "Set root of website files"));
 
     optionsDescription.add_options()
         ("daemon", "Run as a daemon")
@@ -65,7 +69,7 @@ int ServerRunner::run() {
             options["address"].as<std::string>(),
             options["port"].as<std::string>(),
             options["threads"].as<std::string>(),
-            rootDir_.native()
+            rootDir_.string()
         );
 
         std::cout << psiServer.info();
@@ -93,7 +97,7 @@ int ServerRunner::executeOptions() {
     }
 
     if (options.count("version")) {
-        std::cout << "PsiServer version 0.1" << std::endl;
+        std::cout << "PsiServer version 0.2" << std::endl;
         return 1;
     }
 
@@ -112,8 +116,8 @@ int ServerRunner::setRootDirectory_() {
     rootDir_ =
         // A daemon changes its current directory, so an absolute path
         // must be specified.
-        (options.count("daemon")
-         ? boost::filesystem::absolute(rootAsGiven)
+        (options.count("daemon") && !rootAsGiven.has_root_directory()
+         ? boost::filesystem::current_path() / rootAsGiven
          : rootAsGiven);
 
     boost::filesystem::path p(rootDir_ / "index.html");

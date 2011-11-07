@@ -65,5 +65,6 @@ if(HAVE_PERL_BINDINGS)
 
 endif(HAVE_PERL_BINDINGS)
 
-install(TARGETS framework psi-pipe DESTINATION "${psi-toolkit_BINARY_DIR}")
+install(TARGETS framework DESTINATION lib/)
+install(TARGETS psi-pipe DESTINATION bin/)
 install(FILES DESTINATION "${psi-toolkit_BINARY_DIR}")

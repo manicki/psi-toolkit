@@ -19,10 +19,10 @@ boost::filesystem::path FileFetcher::getOneFile(
     getFiles(fileSpec, std::back_inserter(files));
 
     if (files.empty())
-        throw Exception("no file `" + fileSpec + "'");
+        throw Exception("no file `" + fileSpec + "' [" + paramsToString_() + "]");
     else if (files.size() > 1)
         throw Exception("too many files matching `" + fileSpec + "'"
-                        + "specification");
+                        + "specification [" + paramsToString_() + "]");
     else
         return *(files.begin());
 }
@@ -58,6 +58,17 @@ std::string FileFetcher::replaceParams_(const std::string& fileSpec) const {
     return finalFileSpec;
 }
 
-boost::filesystem::path FileFetcher::getRootDir_() {
-    return boost::filesystem::path(ROOT_DIR);
+std::string FileFetcher::paramsToString_() const {
+    typedef std::map<std::string,std::string> this_map_type;
+
+    std::string r;
+
+    BOOST_FOREACH(const this_map_type::value_type& paramPair, params_) {
+        if (!r.empty())
+            r += ' ';
+
+        r += paramPair.first + '=' + paramPair.second;
+    }
+
+    return r;
 }

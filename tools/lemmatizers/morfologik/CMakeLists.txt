@@ -6,4 +6,5 @@ target_link_libraries(tools-lemmatizers-morfologik common ${JAVA_JVM_LIBRARY})
 
 add_subdirectory(t)
 
-install(TARGETS tools-lemmatizers-morfologik DESTINATION "${psi-toolkit_BINARY_DIR}")
+install(TARGETS tools-lemmatizers-morfologik DESTINATION lib/)
+install(FILES j/morfologik-stemming-1.5.0.jar DESTINATION ${PSITOOLKIT_INSTALL_DATA_DIR}/morfologik/)

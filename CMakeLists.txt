@@ -2,7 +2,7 @@ cmake_minimum_required(VERSION 2.8)
 
 project(psi-toolkit CXX)
 
-SET(CMAKE_INSTALL_RPATH "${psi-toolkit_BINARY_DIR}")
+SET(CMAKE_INSTALL_RPATH "${CMAKE_INSTALL_PREFIX}/lib")
 
 include_directories(${psi-toolkit_SOURCE_DIR})
 
@@ -10,6 +10,12 @@ include_directories(${psi-toolkit_SOURCE_DIR})
 set(Boost_USE_STATIC_LIBS OFF)
 set(Boost_USE_STATIC_RUNTIME OFF)
 find_package(Boost COMPONENTS program_options graph serialization filesystem system thread unit_test_framework prg_exec_monitor REQUIRED)
+
+set(PSITOOLKIT_INSTALL_DATA_DIR share/psi-toolkit)
+set(INSTALL_DATA_DIR "${CMAKE_INSTALL_PREFIX}/${PSITOOLKIT_INSTALL_DATA_DIR}")
+
+option(IS_INSTALLABLE "Is prepared for install" OFF)
+message(STATUS "Is prepared for install ${IS_INSTALLABLE}")
 
 option(USE_JAVA "Compiling Java components" OFF)
 message(STATUS "Compiling Java components ${USE_JAVA}")

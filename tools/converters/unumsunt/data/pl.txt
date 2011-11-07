@@ -1,0 +1,95 @@
+
+@TAGSET poleng sinflection:string form:string ssyntax:string
+
+    @set POSTAGS = [C LG LP LZ P PR PS PR R S So WY Z ZD ZP ZR ZS]
+    @set GENDERS = [Mo Mż Mn Ż N]
+    @set CASES = [M D C B N Ms W]
+    @set NUMBERS = [M P]
+    @set DEGREES = [R W N]
+
+    sinflection =~ (POSTAGS)(:([a-z0-9]+))?
+    pos=$1, flags=$2
+
+    pos=R
+        flags =~ ([0-5])(p?)(m?)
+        lexeme-gender=$1, singulare-tantum=non-empty($2), plurale-tantum=non-empty($3)
+        !test canon=komputer
+
+        form =~ (GENDERS)(CASES)(NUMBERS)
+        gender=$1, case=$2, number = $3
+        gender=lexeme-gender
+
+    pos=P
+        flags =~ (s?)(n?)
+        degreeable = non-empty($1), uninflected = non-empty($2)
+
+        empty(uninflected)
+            form =~ P({GENDERS}{CASES}{NUMBERS})(DEGREES)
+            adj-gnc=$1, degree=$2
+
+            form = PPRED
+
+        uninflected
+            empty(form)
+
+    pos =~ [P,ZP]
+        adj-gnc = MżMP
+        (gender = [Mo Mż Mn], case = [M W] ; gender = Mn, case = B), number = P
+        @test form=niebieski
+
+@tagset poleng-internal category:string attrs:avm
+
+@tagset polex:string
+
+    @set POSTAGS = [ADJ V N]
+    @set GENDERS = [p a i f n]
+    @set NUMBERS = [p s]
+    @set CASES = [n g d a i l v]
+    @set DEGREES = [c p s]
+
+    polex =~ (POSTAGS)/(.*)
+    pos=$1, morpho=$2
+
+    pos=N
+        morpho =~ G(GENDERS)N(NUMBERS)C(CASES)
+        G=$1, N=$2, C=$3
+        !test form=kobiety
+            @exception
+            morpho =~ G\*NpC(CASES)
+            G=*, N=p, C=$1
+            !test form=żarnami
+
+            @exception
+            polex =~ N/G\?N([ps])C([ngdailv])
+            pos=N, G=?, N=$1, C=$2
+            canon =~ /pędziwiatr|osioł/
+            !test form=osłów
+
+            @exception
+            @broken morpho =~ C()()(CASES)
+            @shouldbe pos=NV, morpho =~ G(GENDERS)N(NUMBERS)C(CASES)
+            @broken G=N, G=n, N=s, C=$3
+            @shouldbe pos=NV,C=$3
+            canon=poluzowanie
+            !test form=poluzowania
+
+    pos=ADJ
+        morpho =~ D(DEGREES)NpC(CASES+)
+        D=$1, G=split(GENDERS), N=p, C=split($2)
+        !test szybkimi
+
+
+@tagset ipi-pan:string
+@tagset morfologik:string
+@tagset scrabble:string
+@similar ipipan morfologik
+
+polex: C=n
+poleng: case=M
+poleng-internal: P=mian
+ipi-pan: nom
+
+polex: D=p
+poleng: degree=R
+poleng-internal: Stopień=równy
+ipi-pan: pos

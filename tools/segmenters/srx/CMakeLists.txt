@@ -5,4 +5,5 @@ add_library(tools-segmenters-srx SHARED
 
 add_subdirectory(t)
 
-install(TARGETS tools-segmenters-srx DESTINATION "${psi-toolkit_BINARY_DIR}")
+install(TARGETS tools-segmenters-srx DESTINATION lib/)
+install(DIRECTORY data/ DESTINATION ${PSITOOLKIT_INSTALL_DATA_DIR}/srx-segmenter)

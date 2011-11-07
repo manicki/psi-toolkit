@@ -1,6 +1,6 @@
-
 $(document).ready(function()
 {
+    var preloaderTimestamp = 3000;
     var messages = [];
 
     function clearMessages() {
@@ -21,6 +21,12 @@ $(document).ready(function()
         return false;
     };
 
+    function showPreloader() {
+        setTimeout( function() {
+            $("#message").addClass("preloader");
+	    }, preloaderTimestamp);
+    };
+
     $("form").submit(function() {
         clearMessages();
 
@@ -34,13 +40,16 @@ $(document).ready(function()
             }
         }
         else {
-            if (!$("#input-file").val()) {
+            if (!$("#input-file input").val()) {
                 addMessage("Select file with text to process.");
             }
         }
 
         if (showMessage()) {
             return false;
+        }
+        else {
+           showPreloader();
         }
         $(this).submit();
     });

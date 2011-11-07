@@ -1,8 +1,17 @@
 #include "java_virtual_machine.hpp"
 
+#include "configurator.hpp"
+
 jint const JavaVirtualMachine::JNI_VERSION = JNI_VERSION_1_6;
 // Each class path is separated by colon (:)
-std::string JavaVirtualMachine::javaClassPath = ":./common/j/common-j.jar:../tools/lemmatizers/morfologik/j/morfologik-stemming-1.5.0.jar";
+std::string JavaVirtualMachine::javaClassPath =
+    ":./common/j/common-j.jar:"
+    + Configurator::getInstance().getFinalPath(
+        boost::filesystem::path("morfologik"),
+        boost::filesystem::path("tools/lemmatizers/morfologik"),
+        boost::filesystem::path("j")).string()
+    + "/morfologik-stemming-1.5.0.jar";
+
 std::string JavaVirtualMachine::javaLibraryPath = "";
 
 JavaVirtualMachine* JavaVirtualMachine::jvmInstance = NULL;

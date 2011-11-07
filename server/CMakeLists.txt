@@ -6,6 +6,7 @@ add_library(server SHARED
     session.cpp
     session_manager.cpp
     server_runner.cpp
+    output_saver.cpp
 )
 
 target_link_libraries(server ${Boost_LIBRARIES} pthread mpfd-parser ${BASE_TARGETS} pcre pcrecpp tools-parsers-puddle)
@@ -14,7 +15,7 @@ if (WITH_RE2)
 endif(WITH_RE2)
 
 if(HAVE_PERL_BINDINGS)
-    target_link_libraries(server formats-perl-simple)  
+    target_link_libraries(server formats-perl-simple)
     find_package(PerlLibs)
     include_directories(${PERL_INCLUDE_PATH})
 endif(HAVE_PERL_BINDINGS)
@@ -33,10 +34,11 @@ link_directories("${psi-toolkit_BINARY_DIR}/server")
 add_executable(psi-server psi-server.cpp)
 target_link_libraries(psi-server ${Boost_LIBRARIES} server http-server)
 
-install(TARGETS psi-server DESTINATION "${psi-toolkit_BINARY_DIR}")
+install(TARGETS psi-server DESTINATION bin/)
 install(FILES DESTINATION "${psi-toolkit_BINARY_DIR}")
 
 add_subdirectory(mpfd-parser)
 add_subdirectory(server)
 
-install(TARGETS server DESTINATION "${psi-toolkit_BINARY_DIR}")
+install(TARGETS server DESTINATION lib/)
+install(DIRECTORY website/ DESTINATION ${PSITOOLKIT_INSTALL_DATA_DIR}/server/website)

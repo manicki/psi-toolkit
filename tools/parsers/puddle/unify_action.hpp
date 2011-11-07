@@ -40,6 +40,9 @@ class UnifyAction : public Action
                     std::set<std::string> unifiedStrings);
         bool isUnifyingPossible(Lattice &lattice, int matchedStartIndex,
                 RuleTokenSizes &ruleTokenSizes);
+        void discardUnunifiedEdges(Lattice &lattice,
+                RuleTokenSizes &ruleTokenSizes, int matchedStartIndex,
+                std::vector<std::list<Lattice::EdgeDescriptor> > edgesToKeep);
 
         std::vector<int> tokenIndices;
 

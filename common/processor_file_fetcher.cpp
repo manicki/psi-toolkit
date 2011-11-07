@@ -1,13 +1,24 @@
 #include "processor_file_fetcher.hpp"
 
+#include "configurator.hpp"
+
 ProcessorFileFetcher::ProcessorFileFetcher(boost::filesystem::path sourceFilePath) {
     initDirectoryParams_(sourceFilePath);
 }
 
 void ProcessorFileFetcher::initDirectoryParams_(boost::filesystem::path sourceFilePath) {
 
-    if (boost::filesystem::is_regular_file(sourceFilePath))
+    boost::filesystem::path lastComponent;
+
+    bool takenFromSourceFile = false;
+
+    if (sourceFilePath.extension() == ".cpp") {
+        lastComponent = sourceFilePath.filename();
+        lastComponent = removeExtension_(lastComponent);
+        takenFromSourceFile = true;
+
         sourceFilePath = sourceFilePath.parent_path();
+    }
 
     sourceFilePath = sourceFilePath.relative_path();
 
@@ -28,12 +39,31 @@ void ProcessorFileFetcher::initDirectoryParams_(boost::filesystem::path sourceFi
         }
         else if (found)
             sourcePath /= (i);
+
+        if (!takenFromSourceFile)
+            lastComponent = seg;
     }
 
     if (!found)
         throw Exception(std::string("unexpected source path `") + sourceFilePath.string() + "'");
 
-    boost::filesystem::path itsData = getRootDir_() / sourcePath / "data";
+    boost::filesystem::path itsData =
+        Configurator::getInstance().getFinalPath(
+            lastComponent,
+            sourcePath,
+            boost::filesystem::path("data"));
 
     addParam("ITSDATA",  itsData.string());
 }
+
+boost::filesystem::path ProcessorFileFetcher::removeExtension_(
+    const boost::filesystem::path& segment) {
+    std::string segmentAsString = segment.string();
+
+    // removing .cpp
+    segmentAsString = segmentAsString.substr(0, segmentAsString.length()-4);
+
+    return boost::filesystem::path(segmentAsString);
+}
+
+
