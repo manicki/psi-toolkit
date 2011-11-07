@@ -1,11 +1,9 @@
-#define BOOST_TEST_DYN_LINK
-#define BOOST_TEST_MODULE psi_query
-#include <iostream>
-#include <boost/test/unit_test.hpp>
+#include "tests.hpp"
 
 #include "../DFSA.hpp"
 #include "../Algorithms.hpp"
 
+BOOST_AUTO_TEST_SUITE( psi_query )
 
 BOOST_AUTO_TEST_CASE(reverse_test)
 {
@@ -58,4 +56,4 @@ BOOST_AUTO_TEST_CASE(reverse_test)
     
 }
 
-
+BOOST_AUTO_TEST_SUITE_END()

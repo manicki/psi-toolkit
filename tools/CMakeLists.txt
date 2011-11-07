@@ -2,6 +2,7 @@ add_subdirectory(tokenizers)
 add_subdirectory(segmenters)
 add_subdirectory(lemmatizers)
 add_subdirectory(parsers)
+add_subdirectory(datastructures)
 
 set(tools_DIRS
 	tokenizers/tp
