@@ -4,17 +4,25 @@ AnnotationItem BySpacesCutter::doCutOff(const std::string& text, size_t& positio
     size_t spacePosition = text.find(' ', positionInText);
 
     if (spacePosition == positionInText) {
+        StringFrag spaceSF(
+            text,
+            positionInText,
+            1
+        );
         ++positionInText;
-        return AnnotationItem("blank", " ");
+        return AnnotationItem("blank", spaceSF);
     }
     else {
-        std::string token = text.substr(positionInText,
-                                        (spacePosition == std::string::npos ?
-                                         std::string::npos :
-                                         spacePosition - positionInText));
-
+        StringFrag tokenSF(
+            text,
+            positionInText,
+            (spacePosition == std::string::npos
+                ? std::string::npos
+                : spacePosition - positionInText
+            )
+        );
         positionInText = spacePosition;
-        return AnnotationItem("word", token);
+        return AnnotationItem("word", tokenSF);
     }
 }
 
