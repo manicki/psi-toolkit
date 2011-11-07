@@ -19,7 +19,14 @@ public:
         attributes_(32)
     { }
 
+    /* DEPRECATED! */
     AnnotationItem(const std::string& category, const std::string& text) :
+        category_(category),
+        text_(text),
+        attributes_(32)
+    { }
+
+    AnnotationItem(const std::string& category, StringFrag text) :
         category_(category),
         text_(text),
         attributes_(32)
@@ -30,7 +37,7 @@ public:
         attributes_(size % 32 == 0 ? size : size + 32 - size % 32)
     { }
 
-    AnnotationItem(const std::string& category, const std::string& text, int size) :
+    AnnotationItem(const std::string& category, StringFrag text, int size) :
         category_(category),
         text_(text),
         attributes_(size % 32 == 0 ? size : size + 32 - size % 32)
