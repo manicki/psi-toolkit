@@ -52,7 +52,7 @@ public:
         return src_.substr(begin_, len_);
     }
 
-    void append(StringFrag & other) {
+    void append(const StringFrag & other) {
         if (
             begin_ != std::string::npos &&
             other.begin_ != std::string::npos &&

@@ -437,7 +437,9 @@ public:
 
     const std::string& getAllText() const;
     const std::string getEdgeText(EdgeDescriptor edge) const;
+    const StringFrag getEdgeTextAsStringFrag(EdgeDescriptor edge) const;
     std::string getSequenceText(const EdgeSequence& sequence);
+    StringFrag getSequenceTextAsStringFrag(const EdgeSequence& sequence);
     std::string getPartitionText(const Partition& partition);
 
     const std::string getAnnotationText(EdgeDescriptor edge);
