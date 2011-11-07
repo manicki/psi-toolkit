@@ -38,9 +38,14 @@ public:
     }
 
     void append(StringFrag & other) {
-        if (begin_ == std::string::npos && other.begin_ == std::string::npos) {
-            contents_ += other.contents_;
-        } else if (src_ == other.src_ && begin_ + len_ == other.begin_) {
+        if (
+            begin_ != std::string::npos &&
+            other.begin_ != std::string::npos &&
+            len_ != std::string::npos &&
+            other.len_ != std::string::npos &&
+            src_ == other.src_ &&
+            begin_ + len_ == other.begin_
+        ) {
             len_ += other.len_;
         } else {
             contents_ = str() + other.str();
