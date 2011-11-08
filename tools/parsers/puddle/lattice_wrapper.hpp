@@ -6,6 +6,7 @@
 #include "lattice.hpp"
 #include "tagset.hpp"
 #include "puddle_util.hpp"
+#include "puddle_exceptions.hpp"
 #if _WITH_BONSAI_PARSEGRAPH
 #include "ParseGraph.hpp"
 #endif

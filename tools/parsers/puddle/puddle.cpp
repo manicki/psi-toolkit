@@ -25,15 +25,11 @@ namespace puddle {
             std::string tagsetPathString = tagsetPath.string();
             tagset = tagset_loader.load(tagsetPathString);
             if (tagset->size() == 0) {
-                std::cerr << "Tagset not loaded." << std::endl;
-                //@todo: wyjatek
-            //    return 1;
+                throw PuddleNoTagsetException("No tagset loaded");
             }
             rule_loader.setTagset(tagset);
         } else {
-            std::cerr << "Tagset not given." << std::endl;
-        //    //return 1;
-        //    //@todo: wyjatek
+            throw PuddleNoTagsetException("No tagset loaded");
         }
 
         RulesPtr rules;
@@ -44,14 +40,10 @@ namespace puddle {
             std::string rulesPathString = rulesPath.string();
             rules = rule_loader.readFromFile(rulesPathString);
             if (rules->size() == 0) {
-                std::cerr << "Rules not loaded. " << std::endl;
-                //return 1;
-                //@todo: wyjatek
+                throw PuddleNoRulesException("No rules loaded");
             }
         } else {
-            std::cerr << "Rules not given." << std::endl;
-            //return 1;
-            //@todo: wyjatek
+            throw PuddleNoRulesException("No rules loaded");
         }
         Puddle *puddle = new Puddle(tagset, rules);
 
@@ -129,8 +121,8 @@ Puddle::Puddle(TagsetPtr tagset_, RulesPtr rules_) {
 
 void Puddle::setTagset(bonsai::puddle::TagsetPtr tagset_) {
     if (tagset_->size() == 0) {
-//        std::cerr << "Could not load tagset." << std::endl;
-        return;
+        throw PuddleNoTagsetException("No tagset loaded");
+//        return;
     }
     this->tagset = tagset_;
 #if _WITH_BONSAI_PARSEGRAPH

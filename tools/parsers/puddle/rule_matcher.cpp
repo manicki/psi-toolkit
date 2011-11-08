@@ -13,8 +13,6 @@ RuleMatcher::RuleMatcher() {
     initProperties();
 }
 
-//RuleMatcher::~RuleMatcher() { }
-
 void RuleMatcher::setRules(RulesPtr aRules) {
     rules = aRules;
 }
