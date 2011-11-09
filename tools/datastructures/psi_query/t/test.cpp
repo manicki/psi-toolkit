@@ -1,13 +1,12 @@
-#include "tests.hpp"
+#include "../../../../tests/tests.hpp"
 
 #include "../DFSA.hpp"
 #include "../Algorithms.hpp"
 
 BOOST_AUTO_TEST_SUITE( psi_query )
 
-BOOST_AUTO_TEST_CASE(reverse_test)
+BOOST_AUTO_TEST_CASE(DFSA_test)
 {
-
 	psi::DFSA<> fsa;
     psi::State q0 = fsa.addState();
     psi::State q1 = fsa.addState();
@@ -39,21 +38,20 @@ BOOST_AUTO_TEST_CASE(reverse_test)
     std::string test3 = "abb";
     std::string test4 = "acbaabaac";
     
-    BOOST_CHECK(fsa.in(test1.begin(), test1.end()) == 1);
-    BOOST_CHECK(fsa.in(test2.begin(), test2.end()) == 0);
-    BOOST_CHECK(fsa.in(test3.begin(),test3.end()) == 1);
-    BOOST_CHECK(fsa.in(test4.begin(),test4.end()) == 1);
+    BOOST_CHECK_EQUAL(fsa.in(test1.begin(), test1.end()) , 1);
+    BOOST_CHECK_EQUAL(fsa.in(test2.begin(), test2.end()) , 0);
+    BOOST_CHECK_EQUAL(fsa.in(test3.begin(),test3.end()) , 1);
+    BOOST_CHECK_EQUAL(fsa.in(test4.begin(),test4.end()) , 1);
     psi::reverse(fsa);
     
-    BOOST_CHECK(fsa.in(test1.begin(), test1.end()) == 0);
-    BOOST_CHECK(fsa.in(test2.begin(), test2.end()) == 0);
+    BOOST_CHECK_EQUAL(fsa.in(test1.begin(), test1.end()) , 0);
+    BOOST_CHECK_EQUAL(fsa.in(test2.begin(), test2.end()) , 0);
     
     //State test///////////////////////////////////////
-    BOOST_CHECK(fsa.isStartState(q0) == 1);
-    BOOST_CHECK(fsa.isEndState(q0) == 0);
-    BOOST_CHECK(fsa.isEndState(q3) == 1);
+    BOOST_CHECK_EQUAL(fsa.isStartState(q0) , 1);
+    BOOST_CHECK_EQUAL(fsa.isEndState(q0) , 0);
+    BOOST_CHECK_EQUAL(fsa.isEndState(q3) , 1);
     ///////////////////////////////////////////////////
-    
 }
 
 BOOST_AUTO_TEST_SUITE_END()
