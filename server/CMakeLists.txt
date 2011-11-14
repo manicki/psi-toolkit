@@ -3,6 +3,7 @@ add_library(server SHARED
     psi_server.cpp
     index_site.cpp
     pipe_site.cpp
+    guid_generator.cpp
     session.cpp
     session_manager.cpp
     server_runner.cpp
