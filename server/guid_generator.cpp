@@ -78,12 +78,13 @@ std::string GUIDGenerator::zeroPadNumber(int num)
     return result;
 }
 
-int GUIDGenerator::determineLength(int len)
+int GUIDGenerator::determineLength(int len) const
 {
     return len < GUID_MIN_SIZE ? GUID_MIN_SIZE : len;
 }
 
-int GUIDGenerator::determineRandomLength() {
+int GUIDGenerator::determineRandomLength() const
+{
     int currSize = _withDate ? GUID_PAD_SIZE + GUID_DATE_SIZE + 2 : GUID_PAD_SIZE + 1;
     return _length - currSize;
 }

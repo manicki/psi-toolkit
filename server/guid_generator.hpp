@@ -24,8 +24,8 @@ private:
     std::string nextNumber();
     std::string zeroPadNumber(int num);
     
-    int determineLength(int len);
-    int determineRandomLength();
+    int determineLength(int len) const;
+    int determineRandomLength() const;
 
 };
 
