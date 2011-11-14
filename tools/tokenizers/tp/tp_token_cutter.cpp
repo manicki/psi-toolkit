@@ -29,6 +29,11 @@ AnnotationItem TpTokenCutter::doCutOff(const std::string& text, size_t& position
     return defaultToken(text, positionInText);
 }
 
+AnnotationItem TpTokenCutter::doCutOff(const StringFrag text, size_t& positionInText) {
+    // TODO
+    return doCutOff(text.str(), positionInText);
+}
+
 AnnotationItem TpTokenCutter::defaultToken(const std::string& text, size_t& positionInText) {
     return AnnotationItem(
         DEFAULT_CATEGORY,

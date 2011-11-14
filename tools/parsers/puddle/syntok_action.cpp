@@ -40,7 +40,6 @@ bool SyntokAction::apply(Lattice &lattice, int matchedStartIndex,
         lattice::getEdgesRange(
                 lattice, startVertex, endVertex
                 );
-    std::cerr << "sekwencyj: " << edgeSequences.size() << std::endl;
     std::vector<std::string> baseForms = generateBaseForms(lattice,
             edgeSequences);
     std::string concatenatedOrth = generateOrth(lattice, edgeSequences);
@@ -103,7 +102,6 @@ std::vector<std::string> SyntokAction::generateBaseForms(Lattice &lattice,
             Lattice::EdgeDescriptor ed = edgeIt.next();
             AnnotationItem ai = lattice.getEdgeAnnotationItem(ed);
             if (lattice::isDiscarded(lattice, ed)) {
-                std::cerr << "opuszczam base: " << lattice::getBase(lattice, ed) << std::endl;
                 continue;
             }
 
@@ -116,7 +114,6 @@ std::vector<std::string> SyntokAction::generateBaseForms(Lattice &lattice,
             baseForm += base;
             index += lattice.getEdgeLength(ed);
         }
-        std::cerr << "dorzucam: " << baseForm << std::endl;
         baseForms.push_back(baseForm);
     }
     return baseForms;

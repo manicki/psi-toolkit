@@ -35,6 +35,7 @@ add_library(common SHARED
     regexp.cpp
     segment_glob.cpp
     stream_lattice_reader.cpp
+    string_frag.cpp
     utt_like_quoter.cpp
     xml_property_tree.cpp
     ${common-java-files}

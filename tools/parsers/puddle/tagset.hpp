@@ -9,6 +9,7 @@
 #include <boost/shared_ptr.hpp>
 #include "puddle_types.hpp"
 #include "puddle_util.hpp"
+#include "puddle_exceptions.hpp"
 
 #define DESC_ORTH 0
 #define DESC_BASE 1

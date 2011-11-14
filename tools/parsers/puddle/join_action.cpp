@@ -25,8 +25,12 @@ bool JoinAction::apply(Lattice &lattice, int matchedStartIndex,
     int realEnd;
     int realHead;
     if (! util::getGroupActionParams(ruleTokenSizes, start, head, end,
-                realStart, realHead, realEnd))
-        return false;
+                realStart, realHead, realEnd)) {
+        throw PuddleRuleElementNotMatchedException(
+                "Group head element " + boost::lexical_cast<std::string>(head)
+                + " is empty"
+                );
+    }
 
     Lattice::VertexDescriptor startVertex = lattice::getVertex(
             lattice, realStart, matchedStartIndex);
@@ -52,7 +56,6 @@ bool JoinAction::apply(Lattice &lattice, int matchedStartIndex,
             this->group,
             headEdges,
             groupPartitions,
-            //head - 1
             realHead
             );
     return true;
@@ -65,8 +68,10 @@ bool JoinAction::test(Lattice &lattice, int,
         return false;
     }
     if (ruleTokenSizes[head - 1] == 0) {
-//        std::cerr << "Element join: " << head - 1 << " empty!" << std::endl;
-        return false;
+        throw PuddleRuleElementNotMatchedException(
+                "Group head element " + boost::lexical_cast<std::string>(head)
+                + " is empty"
+                );
     }
     return true;
 }

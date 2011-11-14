@@ -29,8 +29,7 @@ Tagset::Tagset(std::string &filename) {
 void Tagset::readFromFile (std::string &filename) {
     std::ifstream tagsetFile(filename.c_str());
     if (!tagsetFile) {
-        std::cerr << "Could not open tagset file: " << filename << "." << std::endl;
-        return;
+        throw PuddleIOException("Could not open tagset file '" +filename + "'.");
     }
 
     bool attr = false;
@@ -92,10 +91,10 @@ void Tagset::readFromFile (std::string &filename) {
             if (open) {
                 parseOpenClasses(line);
             } else {
-                std::cerr << "Wrong line: " << line << std::endl;
+                throw PuddleTagsetSyntaxException("Wrong line '" + line + "'.");
             }
         } else {
-            std::cerr << "Wrong line: " << line << std::endl;
+            throw PuddleTagsetSyntaxException("Wrong line '" + line + "'.");
         }
     }
 
@@ -214,8 +213,7 @@ std::vector<std::string> Tagset::getAttributeValues(std::string &attribute) {
 void Tagset::readDescFromFile(std::string &filename) {
     std::ifstream tagsetFile(filename.c_str());
     if (!tagsetFile) {
-        std::cerr << "Could not open description file: " << filename << "." << std::endl;
-        return;
+        throw PuddleIOException("Could not open description file '" + filename + "'.");
     }
 
     Pattern regKeyVal( "\\s*([^\\s]+)\\s*=\\s*([^\\s].*)?\\s*(#.*)?" );
@@ -282,7 +280,7 @@ void Tagset::readDescFromFile(std::string &filename) {
                         else if (val == "morpho")
                             desc_order.push_back(DESC_MORPHO);
                         else {
-                            std::cerr << "Unknown order value: " << val << std::endl;
+                            throw PuddleTagsetSyntaxException("Unknown order value '" + val + "'.");
                         }
                     }
                     continue;
@@ -292,7 +290,7 @@ void Tagset::readDescFromFile(std::string &filename) {
                     else if (value == "0")
                         includepos = false;
                     else
-                        std::cerr << "Unknown value: " << value << " of option: " << key << std::endl;
+                        throw PuddleTagsetSyntaxException("Unknown value '" + value + "' of the option '" + key + "'.");
                     continue;
                 } else if (key == "desc-terminals") {
                     if (value == "1")
@@ -300,7 +298,7 @@ void Tagset::readDescFromFile(std::string &filename) {
                     else if (value == "0")
                         desc_terminals = false;
                     else
-                        std::cerr << "Unknown value: " << value << " of option: " << key << std::endl;
+                        throw PuddleTagsetSyntaxException("Unknown value '" + value + "' of the option '" + key + "'.");
                     continue;
                 } else if (key == "desc-nonterminals") {
                     if (value == "1")
@@ -308,13 +306,12 @@ void Tagset::readDescFromFile(std::string &filename) {
                     else if (value == "0")
                         desc_nonterminals = false;
                     else
-                        std::cerr << "Unknown value: " << value << " of option: " << key << std::endl;
+                        throw PuddleTagsetSyntaxException("Unknown value '" + value + "' of the option '" + key + "'.");
                     continue;
                 } else if (key == "separator") {
                     desc_separator = value;
                 } else {
-                    std::cerr << "Unknown option: " << key << std::endl;
-                    continue;
+                    throw PuddleTagsetSyntaxException("Unknown option '" + key + "'.");
                 }
             }
         }
@@ -325,8 +322,7 @@ void Tagset::readDescFromFile(std::string &filename) {
             if (RegExp::FullMatch(line, regKeyVal, &pos, &values)) {
                 std::map<std::string, std::vector<std::string> >::iterator p = partsOfSpeech.find(pos);
                 if (p == partsOfSpeech.end()) {
-                    std::cerr << "Unknown part of speech: " << pos << std::endl;
-                    continue;
+                    throw PuddleTagsetSyntaxException("Unknown part of speech '" + pos + "'.");
                 }
 
                 std::vector<std::string> patterns;
@@ -344,8 +340,7 @@ void Tagset::readDescFromFile(std::string &filename) {
                     std::string val = boost::algorithm::trim_copy(*val_it);
                     std::map<std::string, std::vector<std::string> >::iterator q = attributes.find(val);
                     if (q == attributes.end()) {
-                        std::cerr << "Unknown attribute: " << val << std::endl;
-                        continue;
+                        throw PuddleTagsetSyntaxException("Unknown attribute '" + val + "'.");
                     }
                     std::string pattern = "";
                     for (std::vector<std::string>::iterator it = q->second.begin();
@@ -377,8 +372,7 @@ void Tagset::readDescFromFile(std::string &filename) {
                     std::map<std::string, std::vector<std::string> >::iterator p =
                         attributes.find(val);
                     if (p == attributes.end()) {
-                        std::cerr << "Unknown attribute: " << val << std::endl;
-                        continue;
+                        throw PuddleTagsetSyntaxException("Unknown attribute '" + val + "'.");
                     }
 
                     std::string pattern = "";
@@ -602,9 +596,8 @@ std::vector<std::string> Tagset::getOpenClasses() const {
         void Tagset::parseAttribute(std::string &attribute,
                 std::string &valuesString) {
             if (attributes.find(attribute) != attributes.end()) {
-                std::cerr << "Attribute: " << attribute <<
-                    " already defined. Skipping." << std::endl;
-                return;
+                throw PuddleTagsetSyntaxException("Attribute '" + attribute +
+                    "' already defined.");
             }
             std::vector<std::string> valuesVector;
             boost::split(valuesVector, valuesString, boost::is_any_of(" \t\n"));
@@ -626,9 +619,8 @@ std::vector<std::string> Tagset::getOpenClasses() const {
         void Tagset::parsePartOfSpeech(std::string &partOfSpeech,
                 std::string &attributesString) {
             if (partsOfSpeech.find(partOfSpeech) != partsOfSpeech.end()) {
-                std::cerr << "Part of speech: " << partOfSpeech
-                    << " already defined. Skipping." << std::endl;
-                return;
+                throw PuddleTagsetSyntaxException("Part of speech '" + partOfSpeech
+                    + "' already defined.");
             }
 
             std::vector<std::string> posAttrs;
@@ -663,8 +655,8 @@ std::vector<std::string> Tagset::getOpenClasses() const {
                 if (it != partsOfSpeech.end()) {
                     open_classes.push_back(class_name);
                 } else {
-                    std::cerr << "Unknown class: " <<
-                        class_name << " given as an open class name." << std::endl;
+                    throw PuddleTagsetSyntaxException("Unknown class:'" +
+                        class_name + "' given as an open class name.");
                 }
             }
         }

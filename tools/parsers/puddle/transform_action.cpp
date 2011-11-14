@@ -59,9 +59,10 @@ bool TransformAction::test(Lattice &lattice, int matchedStartIndex,
         return false;
     }
     if (ruleTokenSizes[element - 1] == 0) {
-        //@todo: throw
-//        std::cerr << "Element transform: " << element - 1 << " empty!" << std::endl;
-        return false;
+        throw PuddleRuleElementNotMatchedException(
+                "Rule element " + boost::lexical_cast<std::string>(element)
+                + " is empty"
+                );
     }
 
     int before = util::getTransformActionParams(ruleTokenSizes, element);

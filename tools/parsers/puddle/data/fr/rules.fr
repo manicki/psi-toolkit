@@ -715,13 +715,13 @@ Eval:   group(COORD, 3);
 
 
 Rule "Ssub L1"
-Left:   [base~"(,|:|;)"]
+Left:   [base~"(,|:|;)"];
 Match:  ([pos!~"interp"]|[type="AP"]|[type="AdP"]|[type="COORD"]|[type="NP"]|[type="PP"]|[type="Srel"]|[type="Ssub"]|[type="Sint"]|[type="VN"]|[type="VPinf"]|[type="VPpart"])*  [type="VN"] ([pos!~"interp"]|[type="AP"]|[type="AdP"]|[type="COORD"]|[type="NP"]|[type="PP"]|[type="Srel"]|[type="Ssub"]|[type="Sint"]|[type="VN"]|[type="VPinf"]|[type="VPpart"])+;
 Right:  ([base~"(,|:|;|.)"] | [type="COORD"]|[type="Ssub"]|[type="Srel"]);
 Eval:   group(Ssub, 3);
 
 Rule "Ssub L1"
-Left:   [base~"(,|:|;)"]
+Left:   [base~"(,|:|;)"];
 Match:  ([pos!~"interp"]|[type="AP"]|[type="AdP"]|[type="COORD"]|[type="NP"]|[type="PP"]|[type="Srel"]|[type="Ssub"]|[type="Sint"]|[type="VN"]|[type="VPinf"]|[type="VPpart"])+  [type="VN"] ([pos!~"interp"]|[type="AP"]|[type="AdP"]|[type="COORD"]|[type="NP"]|[type="PP"]|[type="Srel"]|[type="Ssub"]|[type="Sint"]|[type="VN"]|[type="VPinf"]|[type="VPpart"])*;
 Right:  ([base~"(,|:|;|.)"] | [type="COORD"]|[type="Ssub"]|[type="Srel"]);
 Eval:   group(Ssub, 3);
