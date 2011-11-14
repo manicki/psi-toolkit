@@ -4,10 +4,12 @@
 
 BOOST_AUTO_TEST_CASE( string_frag_simple ) {
     std::string source("Lorem ipsum dolor sit amet, consectetur adipiscing elit.");
-    StringFrag sf1(source.substr(0, 10));
+    std::string sub1 = source.substr(0, 10);
+    StringFrag sf1(sub1);
     StringFrag sf2(source, 0, 10);
     BOOST_CHECK_EQUAL(sf1.str(), sf2.str());
-    StringFrag sf3(source.substr(10, 10));
+    std::string sub2 = source.substr(10, 10);
+    StringFrag sf3(sub2);
     StringFrag sf4(source, 10, 10);
     sf1.append(sf4);
     sf2.append(sf4);
@@ -21,7 +23,8 @@ BOOST_AUTO_TEST_CASE( string_frag_frag ) {
     std::string source("Lorem ipsum dolor sit amet, consectetur adipiscing elit.");
     StringFrag sf(source, 2, 16);
     StringFrag sf1(sf, 4, 8);
-    StringFrag sf2(source.substr(2, 16), 4, 8);
+    std::string sub = source.substr(2, 16);
+    StringFrag sf2(sub, 4, 8);
     BOOST_CHECK_EQUAL(sf1.str(), sf2.str());
 }
 
