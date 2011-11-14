@@ -1,3 +1,7 @@
+#ifndef STRING_FRAG_HDR
+#define STRING_FRAG_HDR
+
+
 #include <string>
 
 
@@ -75,3 +79,6 @@ private:
     size_t begin_;
     size_t len_;
 };
+
+
+#endif
