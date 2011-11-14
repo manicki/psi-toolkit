@@ -220,6 +220,11 @@ private:
         }
     }
 
+    virtual AnnotationItem doCutOff(const StringFrag text, size_t& positionInText) {
+        // TODO
+        return doCutOff(text.str(), positionInText);
+    }
+
     virtual int doMaximumFragmentLength() {
         return 1000;
     }
