@@ -60,6 +60,8 @@ public:
 
     size_t find(char c, size_t pos = 0) const;
 
+    size_t length() const;
+
 private:
     std::string contents_;
     const std::string & src_;

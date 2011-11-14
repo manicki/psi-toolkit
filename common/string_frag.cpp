@@ -39,3 +39,10 @@ size_t StringFrag::find(char c, size_t pos) const {
     }
     return src_.find(c, begin_ + pos) - begin_;
 }
+
+size_t StringFrag::length() const {
+    if (begin_ == std::string::npos) {
+        return contents_.length();
+    }
+    return len_;
+}

@@ -862,7 +862,8 @@ void Lattice::runCutterOnEdge_(Cutter& cutter, EdgeDescriptor edge, LayerTagMask
     if (sequence.empty())
         return;
 
-    std::string text = getSequenceText(sequence);
+    // std::string text = getSequenceText(sequence);
+    StringFrag text = getSequenceTextAsStringFrag(sequence);
 
     size_t pos = 0;
 
