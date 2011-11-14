@@ -3,7 +3,7 @@
 
 #include <iostream>
 
-std::string SessionManager::cookieIdentifier = "PSISESID";
+std::string SessionManager::cookieIdentifier = "PSISESSIONID";
 int SessionManager::sessionIdLength = 25;
 
 std::string SessionManager::SessionId(std::string cookies) {
