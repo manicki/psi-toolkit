@@ -3,7 +3,7 @@
 
 #include <iostream>
 
-std::string SessionManager::cookieIdentifier = "PSISESSIONID";
+std::string SessionManager::cookieIdentifier = "PSISESID";
 int SessionManager::sessionIdLength = 25;
 
 std::string SessionManager::SessionId(std::string cookies) {
@@ -30,7 +30,7 @@ SessionManager* SessionManager::Instance() {
     return sessionManagerInstance_;
 }
 
-SessionManager::SessionManager() {
+SessionManager::SessionManager() : guidGenerator(sessionIdLength, true) {
     currentSessionId = "";
 }
 
@@ -84,32 +84,6 @@ void SessionManager::addSession(Session * session) {
     INFO(info);
 }
 
-
 std::string SessionManager::generateNewId() {
-    std::string id = "";
-
-    char time_buff[15];
-    time_t now = time(NULL);
-    strftime(time_buff, 15, "%y%m%d-%H%M%S-", localtime(&now));
-    id += time_buff;
-
-    char rand_buff[sessionIdLength - 15];
-    randomString(rand_buff, sessionIdLength - 15);
-    id += rand_buff;
-
-    return id;
+    return guidGenerator.getGUID();
 }
-
-void SessionManager::randomString(char *s, const int len) {
-     for (int i = 0; i < len; ++i) {
-         int randomChar = rand()%(26+26+10);
-         if (randomChar < 26)
-             s[i] = 'a' + randomChar;
-         else if (randomChar < 26+26)
-             s[i] = 'A' + randomChar - 26;
-         else
-             s[i] = '0' + randomChar - 26 - 26;
-     }
-     s[len] = 0;
- }
-
