@@ -32,3 +32,10 @@ void StringFrag::append(const StringFrag & other) {
         len_ = std::string::npos;
     }
 }
+
+size_t StringFrag::find(char c, size_t pos) const {
+    if (begin_ == std::string::npos) {
+        return contents_.find(c, pos);
+    }
+    return src_.find(c, begin_ + pos) - begin_;
+}

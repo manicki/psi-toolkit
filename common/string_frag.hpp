@@ -58,6 +58,8 @@ public:
 
     void append(const StringFrag & other);
 
+    size_t find(char c, size_t pos = 0) const;
+
 private:
     std::string contents_;
     const std::string & src_;
