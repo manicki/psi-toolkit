@@ -33,6 +33,17 @@ public:
     { }
 
     StringFrag(
+        const StringFrag & sf,
+        size_t begin,
+        size_t len
+    ) :
+        contents_(""),
+        src_(sf.src_),
+        begin_(sf.begin_ + begin),
+        len_(len)
+    { }
+
+    StringFrag(
         std::string contents
     ) :
         contents_(contents),
