@@ -27,9 +27,9 @@ if (SWIG_FOUND)
     set_source_files_properties(${filename} PROPERTIES COMPILE_FLAGS "-w")
   endforeach(filename)
 
-  swig_add_module(Simple python PSIToolkitSimple.i)
+  swig_add_module(PSIToolkit python PSIToolkitSimple.i)
 
-  swig_link_libraries(Simple
+  swig_link_libraries(PSIToolkit
     common
     formats-utt
     formats-simple
