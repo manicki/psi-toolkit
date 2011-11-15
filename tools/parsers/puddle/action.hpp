@@ -5,8 +5,9 @@
 #include <string>
 #include <vector>
 #include <boost/shared_ptr.hpp>
-#include "puddle_util.hpp"
 #include "lattice_wrapper.hpp"
+#include "puddle_exceptions.hpp"
+#include "puddle_util.hpp"
 
 namespace poleng
 {

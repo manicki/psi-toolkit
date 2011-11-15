@@ -41,9 +41,7 @@ RulesPtr RuleLoader::readFromFile(std::string &filename) {
 
     std::ifstream ruleFile(filename.c_str());
     if (!ruleFile) {
-        std::cerr << "Could not open rules file: " <<
-            filename << "." << std::endl;
-        return rules;
+        throw PuddleIOException("Could not open rules file: '" + filename + "'.");
     }
 
     std::string ruleString = "";
@@ -62,10 +60,8 @@ RulesPtr RuleLoader::readFromFile(std::string &filename) {
         line = boost::algorithm::trim_copy(line);
         if (line.find("Rule") == 0) {
             if (ruleString != "") {
-                bool wrong = false;
-                RulePtr rule = parseRuleString(ruleString, wrong);
-                if (!wrong)
-                    rules->push_back(rule);
+                RulePtr rule = parseRuleString(ruleString);
+                rules->push_back(rule);
                 ruleString = line;
             }
         } else {
@@ -75,10 +71,8 @@ RulesPtr RuleLoader::readFromFile(std::string &filename) {
         }
     }
     if (ruleString != "") {
-        bool wrong = false;
-        RulePtr rule = parseRuleString(ruleString, wrong);
-        if (! wrong)
-            rules->push_back(rule);
+        RulePtr rule = parseRuleString(ruleString);
+        rules->push_back(rule);
     }
     return rules;
 }
@@ -101,8 +95,7 @@ std::string RuleLoader::compileRuleName(std::string matched) {
     if (RegExp::FullMatch(matched, regRuleName, &container)) {
         return container;
     } else {
-        std::cerr << "Wrong rule declaration: " << matched << "." << std::endl;
-        return "";
+        throw PuddleRuleSyntaxException("Wrong rule declaration: '" + matched + "'.");
     }
 }
 
@@ -126,14 +119,14 @@ std::string RuleLoader::compileRulePattern(std::string &matched, int &size,
     RegExp::Replace(&matched, regMatch, "");
 
     if ((matched == "") || (RegExp::FullMatch(matched, regWhite)))  {
-        std::cerr << "No patterns defined in section." << std::endl;
-        return "null";
+        throw PuddleRuleSyntaxException("No patterns defined in section.");
     }
 
     if (matched[matched.size() - 1] == ';') {
         matched = matched.substr(0, matched.size() - 1);
     }  else {
-        //@todo: tu komunikat, ze blad skladni, nie ma srednika na koncu!
+        throw PuddleRuleSyntaxException(
+                "Syntax error, no semicolon at the end of the pattern section");
     }
 
     size = countTokens(matched);
@@ -405,8 +398,7 @@ std::string RuleLoader::compileToken(std::string &token,
     if ((token[0] == '[') && (token[token.size() - 1] == ']')) {
         token = token.substr(1, token.size() - 2);
     } else {
-        std::cerr << "Illegal token: " << token << std::endl;
-        return "";
+        throw PuddleRuleSyntaxException("Illegal token '" + token + "'.");
     }
     bool tokenMatch = false;
     std::string orth = "";
@@ -464,7 +456,7 @@ std::string RuleLoader::compileToken(std::string &token,
             orth = compileOrthCondition(compOperator, value, icase);
 #endif
             if (orth == "") {
-                std::cerr << "EROR!" << std::endl;
+                throw PuddleRuleSyntaxException("No orth condition given");
             }
         } else {  //attribute condition, e.g. number~"pl"
             compileAttributeCondition(key, compOperator, value, tokenPatterns);
@@ -504,8 +496,7 @@ std::string RuleLoader::getKey(std::string &token) {
         prev_it --;
     }
     if (it == end) {
-        std::cerr << "Illegal token specification: " << token << std::endl;
-        return "";
+        throw PuddleRuleSyntaxException("Illegal token specification '" + token + "'.");
     }
     std::string key(begin.base(), it.base());
     boost::algorithm::trim(key);
@@ -599,8 +590,7 @@ std::string RuleLoader::getOperator(std::string &token) {
         it ++;
     }
     if (it == end) {
-        std::cerr << "Illegal token specification: " << token << std::endl;
-        return "";
+        throw PuddleRuleSyntaxException("Illegal token specification '" + token + "'.");
     }
     std::string op(begin.base(), it.base());
     token = std::string( it.base(), end.base() );
@@ -614,16 +604,15 @@ void RuleLoader::compilePosCondition(std::string &comparisonOperator,
     if (value.find_first_of(".|*+?[]") != std::string::npos) {
         std::vector<std::string> values = tagset->getPosMatching(value);
         if (values.empty()) {
-            std::cerr << "No parts of speech identifiers matching regular expression: \""
-                << value << "\"." << std::endl;
-            return;
+            throw PuddleRuleSyntaxException(
+                    "No parts of speech identifiers matching the regular expression '"
+                + value + "'.");
         }
         posString = boost::join(values, "|");
         posString = "(?:" + posString + ")";
     } else {
         if (!tagset->checkPos(value)) {
-            std::cerr << "Unknown part of speech: " << value << "." << std::endl;
-            return;
+            throw PuddleRuleSyntaxException("Unknown part of speech '" + value + "'.");
         }
         posString = value;
     }
@@ -678,18 +667,16 @@ void RuleLoader::compileAttributeCondition(std::string &key,
         TokenPatterns &tokenPatterns) {
     int attributeIndex = tagset->getAttributeIndex(key);
     if (attributeIndex == -1) {
-        std::cerr << "No such attribute: " << key << "." << std::endl;
-        return;
+        throw PuddleRuleSyntaxException("No such attribute '" + key + "'.");
     }
-    attributeIndex += 1; //part of speech preceds attributes in token pattern parts vector
+    attributeIndex += 1; //part of speech precedes attributes in token pattern parts vector
     std::string attributeString;
     if (value.find_first_of(".|*+?") != std::string::npos) {
         std::vector<std::string> values =
             tagset->getAttributeValuesMatching(key, value);
         if (values.empty()) {
-            std::cerr << "No values of " << key <<
-                " matching regular expression: '" << value << "'." << std::endl;
-            return;
+            throw PuddleRuleSyntaxException("No values of '" + key +
+                "' matching the regular expression: '" + value + "'.");
         }
         attributeString = boost::algorithm::join(values, "|");
     } else {
@@ -763,10 +750,8 @@ std::string RuleLoader::compileOrthCondition(std::string &comparisonOperator,
         result = "(?!" + value + ")[^<>]+";
 #endif
     }
-    else
-    {
-        std::cerr << "Unknown comparison operator: " << comparisonOperator << "." << std::endl;
-        return "";
+    else {
+        throw PuddleRuleSyntaxException("Unknown comparison operator '" + comparisonOperator + "'.");
     }
     return result;
 }
@@ -907,8 +892,7 @@ ActionsPtr RuleLoader::compileRuleAction(std::string &matched, int ruleLeftSize,
     ActionsPtr actions = ActionsPtr( new Actions() );
 
     if ((matched == "") || (RegExp::FullMatch(matched, regWhite))) {
-        std::cerr << "No actions defined in Eval section." << std::endl;
-        return actions;
+        throw PuddleRuleSyntaxException("No actions defined in Eval section.");
     }
 
     int ruleMatchWidth = ruleLeftSize + ruleMatchSize - 1;
@@ -968,7 +952,7 @@ ActionsPtr RuleLoader::compileRuleAction(std::string &matched, int ruleLeftSize,
                     ruleMatchSize, ruleName);
             actions->push_back(action);
         } else {
-            std::cerr << "Unknown action: " << actionString << "." << std::endl;
+            throw PuddleRuleSyntaxException("Unknown action '" + actionString + "'.");
         }
     }
     return actions;
@@ -987,9 +971,9 @@ bool RuleLoader::compileDeleteCondition(std::string &key,
             else
                 values = tagset->getPosNotMatching(value);
             if (values.empty()) {
-                std::cerr << "No parts of speech identifiers matching the regular expression: \""
-                    << value << "\"." << std::endl;
-                return false;
+                throw PuddleRuleSyntaxException(
+                        "No parts of speech identifiers matching the regular expression '"
+                    + value + "'.");
             }
             regexpString = boost::algorithm::join(values, "|");
         } else {
@@ -1015,9 +999,9 @@ bool RuleLoader::compileDeleteCondition(std::string &key,
             else
                 values = tagset->getAttributeValuesNotMatching(key, value);
             if (values.empty()) {
-                std::cerr << "No values of " << key << " matching the regular expression: \""
-                    << value << "\"." << std::endl;
-                return false;
+                throw PuddleRuleSyntaxException(
+                        "No values of '" + key + "' matching the regular expression '"
+                    + value + "'.");
             }
             regexpString = boost::algorithm::join(values, "|");
         } else {
@@ -1068,9 +1052,8 @@ std::vector<Morphology> RuleLoader::compileAddInterpretation(std::string &patter
                 //morphologies.push_back(value);
                 pos = value;
             } else {
-                std::cerr << "Unknown part of speech: " << value
-                    << "." << std::endl;
-                return interpretations;
+                throw PuddleRuleSyntaxException("Unknown part of speech '" + value
+                    + "'.");
             }
         } else {
             std::string attribute = tagset->getAttributeAtIndex(pos, index - 1);
@@ -1085,20 +1068,17 @@ std::vector<Morphology> RuleLoader::compileAddInterpretation(std::string &patter
                         valueIt != valuesVector.end(); ++valueIt) {
                     if (tagset->checkAttributeValue(attribute, *valueIt))
                         values.push_back(*valueIt);
-                    else
-                    {
-                        std::cerr << "Unknown value: " << *valueIt
-                            << " of attribute: " << attribute << "." << std::endl;
-                        return interpretations;
+                    else {
+                        throw PuddleRuleSyntaxException("Unknown value '" + *valueIt
+                            + "' of attribute '" + attribute + "'.");
                     }
                 }
             } else {
                 if (tagset->checkAttributeValue(attribute, value))
                     values.push_back(value);
                 else {
-                    std::cerr << "Unknown value: " << value <<
-                        " of attribute: " << attribute << "." << std::endl;
-                    return interpretations;
+                    throw PuddleRuleSyntaxException("Unknown value '" + value +
+                        "' of the attribute '" + attribute + "'.");
                 }
             }
             std::vector<Morphology> newMorphologies;
@@ -1111,7 +1091,6 @@ std::vector<Morphology> RuleLoader::compileAddInterpretation(std::string &patter
                     morphology.insert(std::pair<std::string, std::string>(
                                 attribute, *valueIt));
                     newMorphologies.push_back(morphology);
-                    //newMorphologies.push_back(*morphoIt + ":" + *valueIt);
                 }
             }
             morphologies = newMorphologies;
@@ -1125,9 +1104,8 @@ std::vector<Morphology> RuleLoader::compileAddInterpretation(std::string &patter
         if (tagset->checkMorphology(morphoString)) {
             interpretations.push_back(*m);
         } else {
-            std::cerr << "The morphology is not valid: " << morphoString
-                << std::endl;
-            return interpretations;
+            throw PuddleRuleSyntaxException("The morphology is not valid '" +
+                    morphoString + "',");
         }
     }
     return interpretations;
@@ -1143,8 +1121,7 @@ void RuleLoader::setSyntok() {
 
 
 RulePtr RuleLoader::compileRule(std::string ruleString) {
-    bool wrong = false;
-    return parseRuleString(ruleString, wrong);
+    return parseRuleString(ruleString);
 }
 
 ActionPtr RuleLoader::compileAction(std::string actionString, RulePtr rule) {
@@ -1318,9 +1295,8 @@ void RuleLoader::addConditionToPatterns(TokenPatterns &tokenPatterns,
             }
         }
     } else {
-        std::cerr << "Unknown comparison operator: " << comparisonOperator
-            << "." << std::endl;
-        return;
+        throw PuddleRuleSyntaxException("Unknown comparison operator '"
+                + comparisonOperator + "'.");
     }
 }
 
@@ -1367,19 +1343,19 @@ UnifyActionPtr RuleLoader::createUnifyAction(std::string &attributesString,
 
     std::vector<std::string> attributesVector;
     boost::split(attributesVector, attributesString, boost::is_any_of(" "));
-    for (std::vector<std::string>::iterator ait = attributesVector.begin();
-            ait != attributesVector.end(); ++ ait) {
-        std::string aa = boost::algorithm::trim_copy(*ait);
-        if (tagset->checkAttribute(aa)) {
-            attributes.push_back(aa);
+    for (std::vector<std::string>::iterator attribIt = attributesVector.begin();
+            attribIt != attributesVector.end(); ++ attribIt) {
+        std::string attrib = boost::algorithm::trim_copy(*attribIt);
+        if (tagset->checkAttribute(attrib)) {
+            attributes.push_back(attrib);
             std::vector<std::string> values =
-                tagset->getAttributeValues(aa);
+                tagset->getAttributeValues(attrib);
             std::string valuesString = boost::algorithm::join(values, "|");
             std::string pattern = "^[^:]+(:[^:]+)*:(" + valuesString
                 + ")(:[^:]+)*$";
             patterns.push_back(pattern);
         } else {
-            std::cout << "Unknown attribute: " << aa << "." << std::endl;
+            throw PuddleRuleSyntaxException("Unknown attribute '" + attrib + "'.");
         }
     }
     std::string tokenSeparator = ",";
@@ -1412,7 +1388,7 @@ SyntokActionPtr RuleLoader::createSyntokAction(std::string &interpretationString
     return action;
 }
 
-RulePtr RuleLoader::parseRuleString(std::string &ruleString, bool &wrong) {
+RulePtr RuleLoader::parseRuleString(std::string &ruleString) {
     std::string ruleName;
     std::string rulePattern;
     std::string rulePatternLeft, rulePatternMatch, rulePatternRight;
@@ -1421,7 +1397,6 @@ RulePtr RuleLoader::parseRuleString(std::string &ruleString, bool &wrong) {
     bool hasLeft = false;
     bool hasRight = false;
     int bracketCount = 0;
-    wrong = false;
 
     RuleTokenPatterns ruleTokenPatterns;
     RuleTokenModifiers ruleTokenModifiers;
@@ -1448,9 +1423,8 @@ RulePtr RuleLoader::parseRuleString(std::string &ruleString, bool &wrong) {
         }
         else if (line.find("Left:") == 0) {
             if (chars != "") {
-                std::cerr << "Unexpected characters before Left context declaration: "
-                    << chars << std::endl;
-                chars = "";
+                throw PuddleRuleSyntaxException(
+                        "Unexpected characters before Left context declaration '" + chars + "'.");
             }
             chars += line;
             hasLeft = true;
@@ -1471,9 +1445,8 @@ RulePtr RuleLoader::parseRuleString(std::string &ruleString, bool &wrong) {
 #endif
                     chars = "";
                 } else {
-                    std::cerr << "Unexpected characters before Match declaration: "
-                        << chars << std::endl;
-                    chars = "";
+                    throw PuddleRuleSyntaxException("Unexpected characters before Match declaration '"
+                        + chars + "'.");
                 }
             }
             chars += line;
@@ -1533,8 +1506,7 @@ RulePtr RuleLoader::parseRuleString(std::string &ruleString, bool &wrong) {
     }
 
     if (bracketCount > 16) {
-        std::cerr << "Rule '" << ruleName << "' is to complex. Skipping." << std::endl;
-        wrong = true;
+        throw PuddleRuleSyntaxException("Rule '" + ruleName + "' is to complex.");
     }
     bool repeat = false;
     ActionsPtr actions = this->compileRuleAction(chars,

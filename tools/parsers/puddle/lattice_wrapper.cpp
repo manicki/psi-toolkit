@@ -980,13 +980,10 @@ namespace poleng {
                     if (lexemeTagFound) {
                         return lexemeEdge;
                     } else {
-                        //@todo: raczej rzucic wyjatek
-                        Lattice::EdgeDescriptor emptyEdge;
-                        return emptyEdge;
+                        throw PuddleNoLexemeEdgeException("No lexeme edge");
                     }
                 }
-                Lattice::EdgeDescriptor emptyEdge;
-                return emptyEdge;
+                throw PuddleNoLexemeEdgeException("No lexeme edge");
             }
 
             Lattice::EdgeDescriptor getLemmaEdge(
@@ -1047,18 +1044,13 @@ namespace poleng {
                             return lemmaEdge;
                         }
                         else {
-                            //@todo: raczej rzucic wyjatek
-                            Lattice::EdgeDescriptor emptyEdge;
-                            return emptyEdge;
+                            throw PuddleNoLexemeEdgeException("No lemma edge");
                         }
                     } else {
-                        //@todo: raczej rzucic wyjatek
-                        Lattice::EdgeDescriptor emptyEdge;
-                        return emptyEdge;
+                        throw PuddleNoLexemeEdgeException("No lexeme edge");
                     }
                 }
-                Lattice::EdgeDescriptor emptyEdge;
-                return emptyEdge;
+                throw PuddleNoLemmaEdgeException("No lemma edge");
             }
 
             bool matchLemmaEdge(Lattice &lattice,
@@ -1132,8 +1124,10 @@ namespace poleng {
                         return edge;
                     }
                 }
-                Lattice::EdgeDescriptor edge; //@todo: wyjatek
-                return edge;
+                throw PuddleNoMatchingEdgeException(
+                        "No edge of category '" + category + "' with text '"
+                        + text + "' found."
+                        );
             }
 
             std::string getMorphologyString(Lattice &lattice,
@@ -1145,8 +1139,6 @@ namespace poleng {
                     = lattice.getAnnotationItemManager().getValues(ai);
                 for (std::list< std::pair<std::string, std::string> >::iterator avit = //@todo: sortowanie tego
                         av.begin(); avit != av.end(); ++ avit) {
-//                    if (avit->first == "discard")
-//                        continue;
                     if (avit->first == "head" || avit->first == "orth")
                         continue;
                     morpho += ":";

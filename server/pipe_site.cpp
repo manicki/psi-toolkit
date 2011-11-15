@@ -56,11 +56,6 @@ char * PipeSite::outputText() {
 }
 
 char * PipeSite::actionPipe() {
-    //FIXME:
-    //check if pipe and/or input are empty, if true then set default values and
-    //show appropriate messages
-    std::string pipe = psiServer_.session()->getData("pipe-text");
-
     std::string input = getInput();
 
     std::string output = runPipe(input);

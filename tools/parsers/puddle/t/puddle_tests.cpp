@@ -718,7 +718,7 @@ BOOST_AUTO_TEST_CASE( puddle_delete ) {
     BOOST_CHECK(avi == av.end());
     BOOST_CHECK(discardedIter.hasNext());
     discardedEdge = discardedIter.next();
-    discardedItem = lattice.getEdgeAnnotationItem(discardedEdge);
+    discardedItem = lattice.getEdgeAnnotationItem(discardedEdge); // StringFrag assignment
     BOOST_CHECK_EQUAL(discardedItem.getText(), "noir_subst");
     BOOST_CHECK_EQUAL(discardedItem.getCategory(), "subst");
     av = lattice.getAnnotationItemManager().getValues(

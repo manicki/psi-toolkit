@@ -1,0 +1,15 @@
+
+* remove trailing spaces at the end of each line of code (check the
+  appropriate option in your editor)
+
+* DO NOT USE TAB CHARACTERS, set TAB to 4 spaces in your editor
+
+* use CamelCaseWithFirstLetterUpperCase for class names
+
+* use camelCaseWithFirstLetterLowerCase for methods and local variables
+
+* use camelCaseWithFirstLetterLowerCaseAndTrailingUnderscore_ for
+  private variables
+
+* use Java-like coding conventions for braces
+

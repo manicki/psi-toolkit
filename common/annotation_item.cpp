@@ -12,12 +12,12 @@ std::string AnnotationItem::getCategory() const {
 }
 
 std::string AnnotationItem::getText() const {
-    return text_;
+    return text_.str();
 }
 
 long AnnotationItem::getHash() const {
     std::string str = category_;
-    str += text_;
+    str += text_.str();
     BOOST_FOREACH(const std::string & av, values_) {
         str += av;
     }
