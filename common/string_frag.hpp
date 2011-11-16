@@ -62,6 +62,8 @@ public:
 
     size_t find(char c, size_t pos = 0) const;
 
+    size_t length() const;
+
     bool valid() const;
 
 private:
