@@ -4,6 +4,8 @@
 
 #include <string>
 
+#include "exceptions.hpp"
+
 
 class StringFrag {
 public:
@@ -26,7 +28,7 @@ public:
         size_t begin,
         size_t len
     ) :
-        contents_(""),
+        contents_(src.substr(begin, 4)),
         src_(src),
         begin_(begin),
         len_(len)
@@ -37,7 +39,7 @@ public:
         size_t begin,
         size_t len
     ) :
-        contents_(""),
+        contents_(sf.src_.substr(sf.begin_ + begin, 4)),
         src_(sf.src_),
         begin_(sf.begin_ + begin),
         len_(len)
