@@ -28,7 +28,7 @@ public:
      * `sf` is a string frag. A cutter advances the `positionInText`
      * by the length of the cut-off fragment.
      */
-    AnnotationItem cutOff(const StringFrag text, size_t& positionInText);
+    AnnotationItem cutOff(const StringFrag& text, size_t& positionInText);
 
     /**
      * Maximum fragment (in bytes) to be cut off by the cutter.
@@ -41,7 +41,7 @@ public:
 
 private:
     virtual AnnotationItem doCutOff(const std::string& text, size_t& positionInText) = 0;
-    virtual AnnotationItem doCutOff(const StringFrag text, size_t& positionInText) = 0;
+    virtual AnnotationItem doCutOff(const StringFrag& text, size_t& positionInText) = 0;
     virtual int doMaximumFragmentLength() = 0;
     virtual std::list<std::string> doLayerTags() = 0;
 };

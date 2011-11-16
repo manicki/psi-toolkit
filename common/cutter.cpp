@@ -4,7 +4,7 @@ AnnotationItem Cutter::cutOff(const std::string& text, size_t& positionInText) {
     return doCutOff(text, positionInText);
 }
 
-AnnotationItem Cutter::cutOff(const StringFrag text, size_t& positionInText) {
+AnnotationItem Cutter::cutOff(const StringFrag& text, size_t& positionInText) {
     return doCutOff(text, positionInText);
 }
 
