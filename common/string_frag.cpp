@@ -10,7 +10,7 @@ StringFrag & StringFrag::operator=(const StringFrag & other) {
 }
 
 std::string StringFrag::str() const {
-    if (begin_ == std::string::npos) {
+    if (begin_ == std::string::npos || len_ == std::string::npos) {
         return contents_;
     }
     return src_.substr(begin_, len_);
@@ -38,4 +38,14 @@ size_t StringFrag::find(char c, size_t pos) const {
         return contents_.find(c, pos);
     }
     return src_.find(c, begin_ + pos) - begin_;
+}
+
+bool StringFrag::valid() const {
+    if (
+        begin_ == std::string::npos
+        || len_ == std::string::npos
+        || (begin_ + len_ <= src_.length()
+            && src_.substr(begin_, (len_ < 4 ? len_ : 4)) == contents_)
+    ) return true;
+    return false;
 }
