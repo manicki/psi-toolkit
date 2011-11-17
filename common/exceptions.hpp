@@ -52,4 +52,10 @@ public:
 };
 
 
+class StringFragException : public Exception {
+public:
+    StringFragException(std::string message) : Exception(message) { }
+};
+
+
 #endif

@@ -220,7 +220,7 @@ private:
         }
     }
 
-    virtual AnnotationItem doCutOff(const StringFrag text, size_t& positionInText) {
+    virtual AnnotationItem doCutOff(const StringFrag& text, size_t& positionInText) {
         // TODO
         return doCutOff(text.str(), positionInText);
     }

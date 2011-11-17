@@ -76,9 +76,21 @@ message(STATUS "Using bonsai ParseGraph with puddle shallow parser ${USE_BONSAI_
 option(BONSAI_PATH "Bonsai common path file (required while using ParseGraph)" "/home/user/poleng4/src/bonsai/common")
 message(STATUS "Bonsai common path file (required while using ParseGraph) ${BONSAI_PATH}")
 
+
 find_package(SWIG)
 if(SWIG_FOUND)
-  set(HAVE_PERL_BINDINGS 1)
+  
+  set(HAVE_SWIG_BINDINGS 1)
+
+  find_package(PerlLibs)
+  if (PerlLibs_FOUND)
+    set(HAVE_PERL_BINDINGS 1)
+  endif(PerlLibs_FOUND)
+
+  find_package(PythonLibs)
+  if (PythonLibs_FOUND)
+    set(HAVE_PYTHON_BINDINGS 1)
+  endif(PythonLibs_FOUND)  
 endif(SWIG_FOUND)
 
 # Sets compiler flags

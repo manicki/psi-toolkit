@@ -18,7 +18,7 @@ AnnotationItem BySpacesCutter::doCutOff(const std::string& text, size_t& positio
     }
 }
 
-AnnotationItem BySpacesCutter::doCutOff(const StringFrag text, size_t& positionInText) {
+AnnotationItem BySpacesCutter::doCutOff(const StringFrag& text, size_t& positionInText) {
     // TODO
     return doCutOff(text.str(), positionInText);
     /*
