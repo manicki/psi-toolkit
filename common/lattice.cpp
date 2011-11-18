@@ -3,14 +3,16 @@
 Lattice::Lattice() :
     nLooseVertices_(0),
     symbolTag_(layerTagManager_.createSingletonTagCollection("symbol")),
-    discardedTag_(layerTagManager_.createSingletonTagCollection("discarded"))
-{ }
+    discardedTag_(layerTagManager_.createSingletonTagCollection("discarded")) {
+
+    resizeImplicitEdgesStructures_();
+}
 
 Lattice::Lattice(std::string text) :
     nLooseVertices_(0),
     symbolTag_(layerTagManager_.createSingletonTagCollection("symbol")),
-    discardedTag_(layerTagManager_.createSingletonTagCollection("discarded"))
-{
+    discardedTag_(layerTagManager_.createSingletonTagCollection("discarded")) {
+
     appendString(text);
 }
 
@@ -18,9 +20,8 @@ Lattice::~Lattice() { }
 
 void Lattice::appendString(std::string text) {
     allText_ += text;
-    implicitOutEdges_.resize(allText_.length() + 1);
-    hiddenImplicitOutEdges_.resize(allText_.length() + 1);
-    visibleImplicitOutEdges_.resize(allText_.length() + 1);
+
+    resizeImplicitEdgesStructures_();
 }
 
 void Lattice::addSymbols(VertexDescriptor startVertex, VertexDescriptor endVertex) {
@@ -651,8 +652,6 @@ void Lattice::correctionReplace(VertexDescriptor from, VertexDescriptor to, std:
     }
 }
 
-
-
 int Lattice::addTagCollectionIndex_(LayerTagCollection tags) {
     TagCollectionsBimapLeftIterator li = indexedTagCollections_.left.find(tags);
     if (li != indexedTagCollections_.left.end()) {
@@ -680,6 +679,12 @@ int Lattice::addTagCollectionIndex_(LayerTagCollection tags) {
         indexedTagCollections_.insert(TagCollectionsBimapItem(tags, ix));
         return ix;
     }
+}
+
+void Lattice::resizeImplicitEdgesStructures_() {
+    implicitOutEdges_.resize(allText_.length()+1);
+    hiddenImplicitOutEdges_.resize(allText_.length()+1);
+    visibleImplicitOutEdges_.resize(allText_.length()+1);
 }
 
 Lattice::VertexDescriptor Lattice::priorVertex_(Lattice::VertexDescriptor vertex) {

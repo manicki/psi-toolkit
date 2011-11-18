@@ -513,6 +513,8 @@ private:
 
     int addTagCollectionIndex_(LayerTagCollection tags);
 
+    void resizeImplicitEdgesStructures_();
+
     VertexDescriptor priorVertex_(VertexDescriptor vertex);
 
     size_t symbolLength_(int ix) const;
