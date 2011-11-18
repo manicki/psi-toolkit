@@ -1,5 +1,7 @@
 #include "lattice.hpp"
 
+#include "string_helpers.hpp"
+
 Lattice::Lattice() :
     nLooseVertices_(0),
     symbolTag_(layerTagManager_.createSingletonTagCollection("symbol")),
@@ -702,11 +704,7 @@ Lattice::VertexDescriptor Lattice::priorVertex_(Lattice::VertexDescriptor vertex
 }
 
 size_t Lattice::symbolLength_(int ix) const {
-    std::string::const_iterator iter = allText_.begin() + ix;
-    std::string::const_iterator end = allText_.end();
-    std::string symbol;
-    utf8::append(utf8::next(iter, end), std::back_inserter(symbol));
-    return symbol.length();
+    return symbolLength(allText_, ix);
 }
 
 const LayerTagCollection& Lattice::getSymbolTag_() const {

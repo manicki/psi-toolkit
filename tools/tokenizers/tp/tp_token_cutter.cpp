@@ -1,6 +1,7 @@
 #include "tp_token_cutter.hpp"
 
 #include "logging.hpp"
+#include "string_helpers.hpp"
 
 TpTokenCutter::TpTokenCutter(TPBasicTokenizerRuleSet& ruleSet):ruleSet_(ruleSet) {
 }
@@ -35,9 +36,14 @@ AnnotationItem TpTokenCutter::doCutOff(const StringFrag& text, size_t& positionI
 }
 
 AnnotationItem TpTokenCutter::defaultToken(const std::string& text, size_t& positionInText) {
+
+    size_t oldPosition = positionInText;
+    size_t len = symbolLength(text, oldPosition);
+    positionInText += len;
+
     return AnnotationItem(
         DEFAULT_CATEGORY,
-        text.substr(positionInText++, 1));
+        text.substr(oldPosition, len));
 }
 
 int TpTokenCutter::doMaximumFragmentLength() {
