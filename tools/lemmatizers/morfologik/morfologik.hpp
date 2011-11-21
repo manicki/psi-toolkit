@@ -65,9 +65,8 @@ public:
 
 private:
 
-    int level;
     AnnotationItemManager * annotationManager;
-//  LemmatizerOutputIterator * outputIterator;
+    int level;
 
     void stemsOnLemmaLevel(const std::string &, LemmatizerOutputIterator &);
     void stemsOnLexemeLevel(const std::string &, LemmatizerOutputIterator &);
@@ -115,11 +114,7 @@ private:
     const char * getTagsByJNI(jobject);
 
     MorfologikTagsParser tagsParser;
-/*
-    std::list<AnnotationItem> createAnnotation(
-        std::string & stem, std::string & tag
-    );
-*/
+
 };
 
 #endif
