@@ -9,7 +9,9 @@ class MainFactoriesKeeper {
 public:
     ProcessorFactory& getProcessorFactory(std::string processorName);
     boost::program_options::options_description getProcessorOptions(std::string processorName);
+
     std::vector<std::string> getProcessorNames();
+    std::map<std::string, boost::program_options::options_description> getProcessorNameToOptionMap();
 
 // singleton pattern used here
     static MainFactoriesKeeper& getInstance();

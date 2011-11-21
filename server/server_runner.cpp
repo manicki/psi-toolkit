@@ -98,13 +98,14 @@ int ServerRunner::executeOptions() {
     if (options.count("help")) {
         std::cout << optionsDescription << std::endl;
 
-        MainFactoriesKeeper& keeper = MainFactoriesKeeper::getInstance();
-        std::vector<std::string>::iterator it;
-        std::vector<std::string> processors = keeper.getProcessorNames();
+        // put all helps
+        std::map<std::string, boost::program_options::options_description>
+            nameToOptionMap = MainFactoriesKeeper::getInstance().getProcessorNameToOptionMap();
+        std::map<std::string, boost::program_options::options_description>::iterator it;
 
-        for (it = processors.begin(); it != processors.end(); ++it) {
-            std::cout << *it << std::endl;
-            std::cout << keeper.getProcessorOptions(*it) << std::endl;
+        for (it = nameToOptionMap.begin(); it != nameToOptionMap.end(); ++it) {
+            std::cout << it->first << std::endl;
+            std::cout << it->second << std::endl;
         }
 
         return 1;
