@@ -58,7 +58,11 @@ void Morfologik::lemmatize(const std::string & word,
 }
 
 boost::program_options::options_description Morfologik::optionsHandled() {
-    boost::program_options::options_description desc;
+    boost::program_options::options_description desc(
+        //"Morfologik is a Polish morphological analyzer written in Java.\n"
+        //"\n"
+        "Allowed options:"
+    );
 
     return desc;
 }

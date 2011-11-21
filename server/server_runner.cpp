@@ -3,14 +3,19 @@
 #include <boost/algorithm/string/join.hpp>
 
 #include "server_runner.hpp"
+#include "main_factories_keeper.hpp"
 
 #include "config.h"
 #include "logging.hpp"
 #include "configurator.hpp"
 
 ServerRunner::ServerRunner(int argc, char * argv[])
-    : optionsDescription("PsiServer options"){
-
+    : optionsDescription(
+    "PsiServer is a simple multithreading web server allowed use of the PSI-Toolkit\n"
+    "pipe through the web page interface.\n"
+    "\n"
+    "PsiServer options:"
+){
     options = parseOptions(argc, argv);
 }
 
@@ -53,7 +58,7 @@ void ServerRunner::setOptionsDescription() {
     optionsDescription.add_options()
         ("daemon", "Run as a daemon")
         ("leave-standard-descriptors-when-daemonizing", "Don't redirect standard input, standard output and standard error to /dev/null when daemonizing")
-        ("help", "Produce help message")
+        ("help", "Produce help message for each processor")
         ("version", "Show version")
         ("verbose", "Run verbosely");
 }
@@ -76,7 +81,6 @@ int ServerRunner::run() {
 
         // register all websites
         IndexSite index(psiServer);
-
         std::string opts = annotatorOptions.empty() ? DEFAULT_PIPE : annotatorOptionsAsString();
         PipeSite pipe(psiServer, opts);
 
@@ -84,7 +88,7 @@ int ServerRunner::run() {
         psiServer.run();
     }
     catch (std::exception& e) {
-        std::cerr << "Exception: " << e.what() << "\n";
+        ERROR("Exception: " << e.what() << std::endl);
     }
 
     return 0;
@@ -93,6 +97,16 @@ int ServerRunner::run() {
 int ServerRunner::executeOptions() {
     if (options.count("help")) {
         std::cout << optionsDescription << std::endl;
+
+        MainFactoriesKeeper& keeper = MainFactoriesKeeper::getInstance();
+        std::vector<std::string>::iterator it;
+        std::vector<std::string> processors = keeper.getProcessorNames();
+
+        for (it = processors.begin(); it != processors.end(); ++it) {
+            std::cout << *it << std::endl;
+            std::cout << keeper.getProcessorOptions(*it) << std::endl;
+        }
+
         return 1;
     }
 
@@ -123,10 +137,10 @@ int ServerRunner::setRootDirectory_() {
     boost::filesystem::path p(rootDir_ / "index.html");
 
     if (!boost::filesystem::exists(p)) {
-        std::cerr << "Set path to website root directory "
-                  << rootDir_
-                  << " does not contain the index.html file. "
-                  << "Use the --root option to specify valid root path. " << std::endl;
+        ERROR("Set path to website root directory " << rootDir_
+              << " does not contain the index.html file. \n"
+              << "Use the --root option to specify valid root path. "
+              << std::endl);
         return 1;
     }
 
@@ -136,7 +150,7 @@ int ServerRunner::setRootDirectory_() {
 void ServerRunner::daemonize_(bool leaveStandardDescriptors) {
     if (daemon(0, leaveStandardDescriptors) != 0) {
         char* errorMessage = strerror(errno);
-        std::cerr << "cannot daemonize: " << errorMessage << std::endl;
+        ERROR("cannot daemonize: " << errorMessage << std::endl);
     }
 }
 

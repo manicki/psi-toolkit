@@ -2,11 +2,14 @@
 #define MAIN_FACTORIES_KEEPER_HDR
 
 #include "factories_keeper.hpp"
+#include <boost/program_options/options_description.hpp>
 
 class MainFactoriesKeeper {
 
 public:
     ProcessorFactory& getProcessorFactory(std::string processorName);
+    boost::program_options::options_description getProcessorOptions(std::string processorName);
+    std::vector<std::string> getProcessorNames();
 
 // singleton pattern used here
     static MainFactoriesKeeper& getInstance();

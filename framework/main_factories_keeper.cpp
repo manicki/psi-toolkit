@@ -52,6 +52,14 @@ ProcessorFactory& MainFactoriesKeeper::getProcessorFactory(std::string processor
     return keeper_.getProcessorFactory(processorName);
 }
 
+boost::program_options::options_description MainFactoriesKeeper::getProcessorOptions(std::string processorName) {
+    return keeper_.getProcessorFactory(processorName).optionsHandled();
+}
+
+std::vector<std::string> MainFactoriesKeeper::getProcessorNames() {
+    return keeper_.getProcessorNames();
+};
+
 MainFactoriesKeeper& MainFactoriesKeeper::getInstance() {
     static MainFactoriesKeeper instance;
     return instance;
