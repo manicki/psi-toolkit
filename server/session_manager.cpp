@@ -47,14 +47,14 @@ bool SessionManager::isSession(std::string & id) {
 Session * SessionManager::getSession(std::string & id) {
     std::map<std::string, Session>::iterator found = sessions_.find(id);
 
-    Session * session = new Session(generateNewId());
+    //Session * session = new Session(generateNewId());
     if (found != sessions_.end()) {
-        session = &(found->second);
+        return &(found->second);
     }
     else {
         ERROR("Attempted to get session that not exists!");
     }
-    return session;
+    return (new Session(generateNewId()));
 }
 
 Session * SessionManager::newSession() {
