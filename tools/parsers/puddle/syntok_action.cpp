@@ -35,6 +35,9 @@ bool SyntokAction::apply(Lattice &lattice, int matchedStartIndex,
             lattice, startVertex);
     std::list<Lattice::EdgeDescriptor> endEdges = lattice::getTopEdges(
             lattice, endVertex);
+    if (startEdges.empty() || endEdges.empty()) {
+        return false;
+    }
 
     std::list<Lattice::EdgeSequence> edgeSequences =
         lattice::getEdgesRange(

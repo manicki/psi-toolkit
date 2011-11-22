@@ -517,7 +517,6 @@ namespace poleng {
                     lattice.outEdges(start, mask);
                 while (edgeIt.hasNext()) {
                     Lattice::EdgeDescriptor edge = edgeIt.next();
-//                    AnnotationItem ai = lattice.getEdgeAnnotationItem(edge);
                     if (isDiscarded(lattice, edge))
                         continue;
 
@@ -533,6 +532,7 @@ namespace poleng {
                         }
                     }
                 }
+
                 nontopEdges.unique(EdgeUnique());
                 edges.remove_if(EdgeNonTop(lattice, nontopEdges));
                 return edges;
@@ -1212,27 +1212,18 @@ namespace poleng {
                                 std::string tokenBase = lattice::getBase(lattice, *edgeIt);
                                 if (cond_it->negation) {
                                     if (RegExp::FullMatch(tokenBase, cond_it->pattern)) {
-                                        //lattice.getAnnotationItemManager().setValue(
-                                        //        annotationItem, "discard", "1");
                                         lattice.discard(*edgeIt);
-                                        //@todo: to nie wplywa na krate, bo nie zmienia tego w krawedzi naprawde
                                     }
                                 } else {
                                     if (!RegExp::FullMatch(tokenBase, cond_it->pattern)) {
-                                        //lattice.getAnnotationItemManager().setValue(
-                                        //        annotationItem, "discard", "1");
                                         lattice.discard(*edgeIt);
-                                        //@todo: to nie wplywa na krate, bo nie zmienia tego w krawedzi naprawde
                                     }
                                 }
                             } else if (cond_it->type == MORPHOLOGY_CONDITION) {
                                 std::string tokenMorphology = getMorphologyString(
                                         lattice, *edgeIt);
                                 if (RegExp::FullMatch(tokenMorphology, cond_it->pattern)) {
-                                    //lattice.getAnnotationItemManager().setValue(
-                                    //        annotationItem, "discard", "1");
                                     lattice.discard(*edgeIt);
-                                    //@todo: to nie wplywa na krate, bo nie zmienia tego w krawedzi naprawde
                                 }
                             }
                         }
