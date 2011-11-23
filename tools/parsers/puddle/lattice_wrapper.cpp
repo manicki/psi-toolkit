@@ -641,8 +641,10 @@ namespace poleng {
                                 if (readEnd != endVertex) {
                                     continue;
                                 }
-                                if (areAnnotationItemsEqual(lattice, annotationItem,
-                                            lattice.getEdgeAnnotationItem(newEdge))) {
+                                //if (areAnnotationItemsEqual(lattice, annotationItem,
+                                //            lattice.getEdgeAnnotationItem(newEdge))) {
+                                if (annotationItem ==
+                                            lattice.getEdgeAnnotationItem(newEdge)) {
                                     //there is already such an edge. add another partition
                                     //@todo: to tak nie dziala. nowa partition powinno dodawac samo addEdge, ale nie robi tego. na razie jest wiec jedna partition zawsze
 
@@ -879,32 +881,32 @@ namespace poleng {
                 }
             }
 
-            bool areAnnotationItemsEqual(Lattice &lattice,
-                    AnnotationItem a,
-                    AnnotationItem b) {
-                if (a.getCategory() != b.getCategory())
-                    return false;
-                std::list<std::pair<std::string, std::string> > valuesA =
-                    lattice.getAnnotationItemManager().getValues(a);
-                std::list<std::pair<std::string, std::string> > valuesB =
-                    lattice.getAnnotationItemManager().getValues(b);
-                if (valuesA.size() != valuesB.size()) {
-                    return false;
-                }
-                std::list< std::pair<std::string, std::string> >::iterator avi =
-                    valuesA.begin();
-                std::list< std::pair<std::string, std::string> >::iterator bvi =
-                    valuesB.begin();
-                while (avi != valuesA.end()) {
-                    if (avi->first != bvi->first)
-                        return false;
-                    if (avi->second != bvi->second)
-                        return false;
-                    ++ avi;
-                    ++ bvi;
-                }
-                return true;
-            }
+//            bool areAnnotationItemsEqual(Lattice &lattice,
+//                    AnnotationItem a,
+//                    AnnotationItem b) {
+//                if (a.getCategory() != b.getCategory())
+//                    return false;
+//                std::list<std::pair<std::string, std::string> > valuesA =
+//                    lattice.getAnnotationItemManager().getValues(a);
+//                std::list<std::pair<std::string, std::string> > valuesB =
+//                    lattice.getAnnotationItemManager().getValues(b);
+//                if (valuesA.size() != valuesB.size()) {
+//                    return false;
+//                }
+//                std::list< std::pair<std::string, std::string> >::iterator avi =
+//                    valuesA.begin();
+//                std::list< std::pair<std::string, std::string> >::iterator bvi =
+//                    valuesB.begin();
+//                while (avi != valuesA.end()) {
+//                    if (avi->first != bvi->first)
+//                        return false;
+//                    if (avi->second != bvi->second)
+//                        return false;
+//                    ++ avi;
+//                    ++ bvi;
+//                }
+//                return true;
+//            }
 
 
             std::string getBase(Lattice &lattice,
@@ -1242,8 +1244,10 @@ namespace poleng {
                 while (edgeIt.hasNext()) {
                     Lattice::EdgeDescriptor ed = edgeIt.next();
                     if (lattice.getEdgeBeginIndex(ed) == startVertex) {
-                        if (areAnnotationItemsEqual(lattice, annotationItem,
-                                    lattice.getEdgeAnnotationItem(ed))) {
+                        //if (areAnnotationItemsEqual(lattice, annotationItem,
+                        //            lattice.getEdgeAnnotationItem(ed))) {
+                        if (annotationItem ==
+                                    lattice.getEdgeAnnotationItem(ed)) {
                             return true;
                         }
                         return false;

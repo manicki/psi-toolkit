@@ -109,9 +109,9 @@ namespace poleng {
                             std::list<Lattice::EdgeSequence> &partitions,
                             std::list<Lattice::EdgeDescriptor> edges);
 
-                    bool areAnnotationItemsEqual(Lattice &lattice,
-                            AnnotationItem a,
-                            AnnotationItem b);
+//                    bool areAnnotationItemsEqual(Lattice &lattice,
+//                            AnnotationItem a,
+//                            AnnotationItem b);
 
                     std::string getMorphologyString(Lattice &lattice,
                             Lattice::EdgeDescriptor edge);
@@ -157,8 +157,10 @@ namespace poleng {
                                 ++ it) {
                             if (start == lattice.getEdgeBeginIndex(*it)) {
                                 if (length == lattice.getEdgeLength(*it)) {
-                                    if (areAnnotationItemsEqual(lattice, annotationItem,
-                                                lattice.getEdgeAnnotationItem(*it))) {
+                                    //if (areAnnotationItemsEqual(lattice, annotationItem,
+                                    //            lattice.getEdgeAnnotationItem(*it))) {
+                                    if (annotationItem ==
+                                                lattice.getEdgeAnnotationItem(*it)) {
                                         return true;
                                     }
                                 }
