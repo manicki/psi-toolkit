@@ -52,8 +52,8 @@ void ServerRunner::setOptionsDescription() {
         ("root", boost::program_options::value<std::string>()->default_value(
             (boost::filesystem::path(
                 Configurator::getInstance().isRunAsInstalled() ? INSTALL_DATA_DIR : ROOT_DIR)
-             / "server/website").string(),
-            "Set root of website files"));
+             / "server/website").string()),
+            "Set root of website files");
 
     optionsDescription.add_options()
         ("daemon", "Run as a daemon")
@@ -97,17 +97,7 @@ int ServerRunner::run() {
 int ServerRunner::executeOptions() {
     if (options.count("help")) {
         std::cout << optionsDescription << std::endl;
-
-        // put all helps
-        std::map<std::string, boost::program_options::options_description>
-            nameToOptionMap = MainFactoriesKeeper::getInstance().getProcessorNameToOptionMap();
-        std::map<std::string, boost::program_options::options_description>::iterator it;
-
-        for (it = nameToOptionMap.begin(); it != nameToOptionMap.end(); ++it) {
-            std::cout << it->first << std::endl;
-            std::cout << it->second << std::endl;
-        }
-
+        //TODO
         return 1;
     }
 
