@@ -3,15 +3,17 @@
 void HelpFormatter::formatOneProcessorHelp(
     std::string processorName, std::ostream& output)
 {
-    formatOneProcessorHelp(processorName, getProcessorOptions(processorName), output);
+    doFormatOneProcessorHelp(processorName, getProcessorOptions(processorName), output);
 }
+
+HelpFormatter::~HelpFormatter() { }
 
 void HelpFormatter::formatHelps(std::ostream& output)
 {
     std::vector<std::string> processors = MainFactoriesKeeper::getInstance().getProcessorNames();
 
     for (unsigned int i = 0; i < processors.size(); i++) {
-        output << processors[i] << std::endl;
+        output << std::endl;
         formatOneProcessorHelp(processors[i], output);
     }
 }

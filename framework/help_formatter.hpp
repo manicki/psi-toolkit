@@ -17,10 +17,10 @@ public:
 
 protected:
 
-    virtual void formatOneProcessorHelp(
+    virtual void doFormatOneProcessorHelp(
         std::string processorName,
         boost::program_options::options_description options,
-        std::ostream& output) = 0;
+        std::ostream& output) =0;
 
     boost::program_options::options_description getProcessorOptions(
         std::string processorName);

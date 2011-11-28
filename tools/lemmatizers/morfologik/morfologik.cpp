@@ -60,7 +60,7 @@ void Morfologik::lemmatize(const std::string & word,
 }
 
 boost::program_options::options_description Morfologik::optionsHandled() {
-    boost::program_options::options_description desc("Allowed options:");
+    boost::program_options::options_description desc("Allowed options");
 
     desc.add_options()
         ("level", boost::program_options::value<int>()->default_value(3),

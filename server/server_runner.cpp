@@ -5,16 +5,17 @@
 #include "server_runner.hpp"
 #include "main_factories_keeper.hpp"
 
+#include "console_help_formatter.hpp"
+
 #include "config.h"
 #include "logging.hpp"
 #include "configurator.hpp"
 
 ServerRunner::ServerRunner(int argc, char * argv[])
     : optionsDescription(
-    "PsiServer is a simple multithreading web server allowed use of the PSI-Toolkit\n"
-    "pipe through the web page interface.\n"
-    "\n"
-    "PsiServer options:"
+    //"PsiServer is a simple multithreading web server allowed use of the PSI-Toolkit\n"
+    //"pipe through the web page interface.\n"
+    "PSIServer options"
 ){
     options = parseOptions(argc, argv);
 }
@@ -97,7 +98,10 @@ int ServerRunner::run() {
 int ServerRunner::executeOptions() {
     if (options.count("help")) {
         std::cout << optionsDescription << std::endl;
-        //TODO
+
+        HelpFormatter* helpFormatter = new ConsoleHelpFormatter();
+        helpFormatter->formatHelps(std::cout);
+
         return 1;
     }
 

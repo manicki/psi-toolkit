@@ -3,14 +3,17 @@
 
 #include "help_formatter.hpp"
 
-class HtmlHelpFormatter : HelpFormatter {
+class HtmlHelpFormatter : public HelpFormatter {
+
+public:
+    ~HtmlHelpFormatter();
 
 private:
 
-    void formatOneProcessorHelp(
+    void doFormatOneProcessorHelp(
         std::string processorName,
         boost::program_options::options_description options,
-        std::ostream output);
+        std::ostream& output);
 
 };
 

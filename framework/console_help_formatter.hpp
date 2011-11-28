@@ -3,14 +3,16 @@
 
 #include "help_formatter.hpp"
 
-class ConsoleHelpFormatter : HelpFormatter {
+class ConsoleHelpFormatter : public HelpFormatter {
 
-private:
+public:
+    ~ConsoleHelpFormatter();
 
-    void formatOneProcessorHelp(
+protected:
+    void doFormatOneProcessorHelp(
         std::string processorName,
         boost::program_options::options_description options,
-        std::ostream output);
+        std::ostream& output);
 
 };
 
