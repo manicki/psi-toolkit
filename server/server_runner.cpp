@@ -106,6 +106,7 @@ int ServerRunner::executeOptions() {
 
         HelpFormatter* helpFormatter = new ConsoleHelpFormatter;
         helpFormatter->formatHelps(std::cout);
+        delete helpFormatter;
 
         return 1;
     }

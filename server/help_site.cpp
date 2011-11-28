@@ -16,6 +16,7 @@ char * HelpSite::processorHelps() {
 
     HelpFormatter* htmlFormatter = new HtmlHelpFormatter;
     htmlFormatter->formatHelps(streamForHelps);
+    delete htmlFormatter;
 
     return stringToChar(streamForHelps.str());
 }
