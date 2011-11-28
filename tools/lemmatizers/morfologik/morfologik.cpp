@@ -9,7 +9,9 @@ std::string Morfologik::tagSeparator = "+";
 Morfologik::Morfologik(const boost::program_options::variables_map& options)
     : annotationManager(NULL), level(3)
 {
-    setLevel(options["level"].as<int>());
+    if (options.count("level") > 0) {
+        setLevel(options["level"].as<int>());
+    }
     jenv = NULL;
 
     JavaVirtualMachine *jvm = JavaVirtualMachine::Instance();
