@@ -6,16 +6,9 @@ class HelpSite : public TemplateSite
 {
 
 public:
-
-    HelpSite(PsiServer& server, std::map<std::string,
-        boost::program_options::options_description> descriptions);
+    HelpSite(PsiServer& servers);
 
     char * processorHelps();
-
-private:
-
-    std::map<std::string, boost::program_options::options_description> optionsDescriptions_;
-    void registerIncludesAndActions();
 
 };
 

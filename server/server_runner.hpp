@@ -5,9 +5,6 @@
 #include <boost/filesystem.hpp>
 #include <sstream>
 
-#include "index_site.hpp"
-#include "pipe_site.hpp"
-
 class ServerRunner {
 
 public:

@@ -11,6 +11,10 @@
 #include "logging.hpp"
 #include "configurator.hpp"
 
+#include "index_site.hpp"
+#include "pipe_site.hpp"
+#include "help_site.hpp"
+
 ServerRunner::ServerRunner(int argc, char * argv[])
     : optionsDescription(
     //"PsiServer is a simple multithreading web server allowed use of the PSI-Toolkit\n"
@@ -84,6 +88,7 @@ int ServerRunner::run() {
         IndexSite index(psiServer);
         std::string opts = annotatorOptions.empty() ? DEFAULT_PIPE : annotatorOptionsAsString();
         PipeSite pipe(psiServer, opts);
+        HelpSite help(psiServer);
 
         // run server
         psiServer.run();
@@ -99,7 +104,7 @@ int ServerRunner::executeOptions() {
     if (options.count("help")) {
         std::cout << optionsDescription << std::endl;
 
-        HelpFormatter* helpFormatter = new ConsoleHelpFormatter();
+        HelpFormatter* helpFormatter = new ConsoleHelpFormatter;
         helpFormatter->formatHelps(std::cout);
 
         return 1;

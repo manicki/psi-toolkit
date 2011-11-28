@@ -5,7 +5,7 @@
 
         <ul id="menu">
             <li><a href="#">About</a></li>
-            <li><a href="#">Psi-Toolkit</a></li>
-            <li><a href="#">Help</a></li>
+            <li><a href="index.html">Psi-Toolkit</a></li>
+            <li><a href="help.html">Help</a></li>
         </ul>
     </div>
