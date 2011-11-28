@@ -20,4 +20,13 @@ FactoriesKeeper::UnknownProcessorException::UnknownProcessorException(
     :Exception(std::string("unknown processor `") + processorName + "`") {
 }
 
+std::vector<std::string> FactoriesKeeper::getProcessorNames() {
+    std::vector<std::string> names;
 
+    std::map<std::string, boost::shared_ptr<ProcessorFactory> >::iterator it;
+    for(it = nameToFactoryMap_.begin(); it != nameToFactoryMap_.end(); ++it) {
+        names.push_back(it->first);
+    }
+
+    return names;
+}

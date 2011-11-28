@@ -13,6 +13,7 @@ public:
     void takeProcessorFactory(ProcessorFactory* processorFactory);
 
     ProcessorFactory& getProcessorFactory(std::string processorName);
+    std::vector<std::string> getProcessorNames();
 
     class Exception : public PsiException  {
     public:

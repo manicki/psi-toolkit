@@ -1,6 +1,9 @@
 add_library(framework SHARED
     factories_keeper.cpp
     main_factories_keeper.cpp
+    help_formatter.cpp
+    console_help_formatter.cpp
+    html_help_formatter.cpp
     pipe_runner.cpp
 )
 

@@ -9,6 +9,10 @@ p { padding: 5px 0; }
 a { text-decoration: none; color: #335599; }
 a:hover { text-decoration: underline; }
 
+h3 { font-size: 14px; color: #1b4394; }
+
+pre { font-family: monospace; font-size: 12px; }
+
 /* Header */
 
 #header { min-height: 50px; line-height: 20px; }
@@ -46,9 +50,7 @@ input.alert { color: #FF0000; }
 
 /* Output */
 
-pre { font-family: monospace; font-size: 12px;
-    border-width: 1px; border-style: solid; padding: 8px; }
-
+#output pre { border-width: 1px; border-style: solid; padding: 8px; }
 #download { margin-bottom: 50px; }
 
 /* Input bookmarks */
@@ -87,3 +89,8 @@ div#psis-hidden-options, div#psis-hidden-options div { visibility: hidden; displ
 
 .preloader { visibility: visible; display: block; min-height: 20px;
     background: url("/img/preloader.gif") no-repeat center; }
+
+/* Help list */
+
+#help-list { margin: 20px 0; }
+#help-list pre { padding: 20px; }

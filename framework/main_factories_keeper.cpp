@@ -52,6 +52,10 @@ ProcessorFactory& MainFactoriesKeeper::getProcessorFactory(std::string processor
     return keeper_.getProcessorFactory(processorName);
 }
 
+std::vector<std::string> MainFactoriesKeeper::getProcessorNames() {
+    return keeper_.getProcessorNames();
+}
+
 MainFactoriesKeeper& MainFactoriesKeeper::getInstance() {
     static MainFactoriesKeeper instance;
     return instance;
