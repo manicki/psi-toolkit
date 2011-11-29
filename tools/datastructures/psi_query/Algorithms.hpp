@@ -9,7 +9,8 @@
 namespace psi {
  
     template <typename FSA>
-    struct Reverser {
+    class Reverser {
+      public:
         typedef typename FSA::state_type state_type;
         typedef typename FSA::arc_type arc_type;
         typedef typename FSA::arc_iterator_type arc_iterator_type;
@@ -44,12 +45,14 @@ namespace psi {
                 return std::set<arc_type, ArcSorter>();
         }
         
+      private:
         const FSA &m_fsa;
         std::map<state_type, std::set<arc_type, ArcSorter> > reversedArcs;
     };
  
     template <typename FSA>
-    struct Copier {
+    class Copier {
+      public:
         typedef typename FSA::state_type state_type;
         typedef typename FSA::arc_type arc_type;
         typedef typename FSA::arc_iterator_type arc_iterator_type;
@@ -72,11 +75,13 @@ namespace psi {
             return arcs;
         }
         
+      private:
         const FSA &m_fsa;
     };
     
     template <typename FSA>
-    struct EpsRemover {
+    class EpsRemover {
+      public:
         typedef typename FSA::state_type state_type;
         typedef typename FSA::arc_type arc_type;
         typedef typename FSA::arc_iterator_type arc_iterator_type;
@@ -105,11 +110,13 @@ namespace psi {
             return arcs;
         }
         
+      private:
         const FSA &m_fsa;
     };
     
     template <typename FSA>
-    struct Determinizer {
+    class Determinizer {
+      public:
         typedef std::set<typename FSA::state_type> state_type;
         typedef Arc<typename FSA::arc_type::symbol_type, state_type> arc_type;
         
@@ -136,7 +143,7 @@ namespace psi {
                 for(typename FSA::arc_iterator_type ait = arcRange.first; ait != arcRange.second; ait++) {
                     arc_type& arc = arcsMap[ait->getSymbol()];
                     arc.setSymbol(ait->getSymbol());
-                    arc.getDest().insert(ait->getDest());
+                    arc.getDest().insert(ait->getDest());                    
                 }
             }
             
@@ -147,6 +154,7 @@ namespace psi {
             return arcs;
         }
         
+      private:
         const FSA &m_fsa;
     };
     

@@ -22,7 +22,7 @@ namespace psi {
         typedef StateT state_type;
         typedef ArcT arc_type;
         typedef typename ArcT::symbol_type symbol_type;
-        typedef typename Arcs::const_iterator arc_iterator_type;
+        typedef typename Arcs::iterator arc_iterator_type;
     
       private:      
         States m_states;
