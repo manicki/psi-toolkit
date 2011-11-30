@@ -52,6 +52,10 @@ int BySpacesCutter::doMaximumFragmentLength() {
     return 1000;
 }
 
+int BySpacesCutter::doSegmentLengthSoftLimit() {
+    return 0;
+}
+
 std::list<std::string> BySpacesCutter::doLayerTags() {
     std::list<std::string> tags;
     tags.push_back(std::string("token"));

@@ -229,6 +229,10 @@ private:
         return 1000;
     }
 
+    virtual int doSegmentLengthSoftLimit() {
+        return 600;
+    }
+
     virtual std::list<std::string> doLayerTags() {
         std::list<std::string>  tags;
         tags.push_back(std::string("segment"));

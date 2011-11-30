@@ -50,6 +50,10 @@ int TpTokenCutter::doMaximumFragmentLength() {
     return 1000;
 }
 
+int TpTokenCutter::doSegmentLengthSoftLimit() {
+    return 950;
+}
+
 std::list<std::string > TpTokenCutter::doLayerTags() {
     std::list<std::string>  tags;
     tags.push_back(std::string("token"));
