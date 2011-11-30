@@ -3,9 +3,11 @@
 
 #include <list>
 #include <string>
+#include <queue>
 
 #include "annotation_item.hpp"
 #include "string_frag.hpp"
+#include "psi_exception.hpp"
 
 /**
  * Base class for classes that cut off fragments of texts (e.g. tokenizers
@@ -32,18 +34,66 @@ public:
 
     /**
      * Maximum fragment (in bytes) to be cut off by the cutter.
+     *
+     * No segment will ever exceed this limit.
+     *
+     * 0 if no limit is imposed.
      */
-    int maximumFragmentLength();
+    size_t segmentLengthHardLimit();
+
+    /**
+     * Soft limit on the segment length (in bytes), i.e. in case
+     * this limit exceeded the cutter will cut off at the following space.
+     *
+     * 0 if no limit is imposed.
+     */
+    size_t segmentLengthSoftLimit();
 
     std::list<std::string> layerTags();
 
     virtual ~Cutter();
 
+    class Exception : public PsiException {
+    public:
+        Exception(const std::string& msg): PsiException(msg) {
+        }
+
+        virtual ~Exception() throw() {}
+    };
+
 private:
     virtual AnnotationItem doCutOff(const std::string& text, size_t& positionInText) = 0;
     virtual AnnotationItem doCutOff(const StringFrag& text, size_t& positionInText) = 0;
-    virtual int doMaximumFragmentLength() = 0;
+    virtual size_t doSegmentLengthHardLimit() = 0;
+    virtual size_t doSegmentLengthSoftLimit() = 0;
     virtual std::list<std::string> doLayerTags() = 0;
+
+    bool shouldFragmentQueueBeUsed_();
+    AnnotationItem getFirstItemInFragmentQueue_(const std::string& text, size_t& positionInText);
+    bool areLimitsBroken_(size_t segmentLength);
+    bool isSoftLimitBroken_(size_t segmentLength);
+    bool isSoftLimitSet_();
+    bool isHardLimitBroken_(size_t segmentLength);
+    bool isHardLimitSet_();
+
+    void fragmentSegment_(
+        const AnnotationItem& item,
+        const std::string& text,
+        size_t positionInText,
+        size_t segmentLength);
+
+    size_t findSoftLimitCutPoint_(
+        const std::string& text,
+        size_t cutPoint,
+        size_t maxCutPoint);
+
+    size_t findHardLimitCutPoint_(
+        const std::string& text,
+        size_t cutPoint);
+
+    bool isSoftLimitCharacter_(char c);
+
+    std::queue<AnnotationItem> fragmentedSegmentsQueue_;
 };
 
 
