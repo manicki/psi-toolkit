@@ -48,11 +48,11 @@ AnnotationItem BySpacesCutter::doCutOff(const StringFrag& text, size_t& position
     */
 }
 
-int BySpacesCutter::doMaximumFragmentLength() {
+size_t BySpacesCutter::doSegmentLengthHardLimit() {
     return 1000;
 }
 
-int BySpacesCutter::doSegmentLengthSoftLimit() {
+size_t BySpacesCutter::doSegmentLengthSoftLimit() {
     return 0;
 }
 

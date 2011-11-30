@@ -35,11 +35,11 @@ AnnotationItem Cutter::cutOff(const StringFrag& text, size_t& positionInText) {
     return doCutOff(text, positionInText);
 }
 
-int Cutter::maximumFragmentLength() {
-    return doMaximumFragmentLength();
+size_t Cutter::segmentLengthHardLimit() {
+    return doSegmentLengthHardLimit();
 }
 
-int Cutter::segmentLengthSoftLimit() {
+size_t Cutter::segmentLengthSoftLimit() {
     return doSegmentLengthSoftLimit();
 }
 
@@ -83,11 +83,11 @@ bool Cutter::isSoftLimitSet_() {
 }
 
 bool Cutter::isHardLimitBroken_(size_t segmentLength) {
-    return isHardLimitSet_() && segmentLength > maximumFragmentLength();
+    return isHardLimitSet_() && segmentLength > segmentLengthHardLimit();
 }
 
 bool Cutter::isHardLimitSet_() {
-    return maximumFragmentLength() != 0;
+    return segmentLengthHardLimit() != 0;
 }
 
 void Cutter::fragmentSegment_(
@@ -151,7 +151,7 @@ size_t Cutter::findHardLimitCutPoint_(
 
     const size_t UTF8_MAX_LENGTH = 4;
 
-    size_t hardLimitPos = cutPoint + maximumFragmentLength();
+    size_t hardLimitPos = cutPoint + segmentLengthHardLimit();
 
     size_t candidatePos =
         (hardLimitPos > UTF8_MAX_LENGTH

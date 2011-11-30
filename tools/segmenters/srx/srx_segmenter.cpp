@@ -225,11 +225,11 @@ private:
         return doCutOff(text.str(), positionInText);
     }
 
-    virtual int doMaximumFragmentLength() {
+    virtual size_t doSegmentLengthHardLimit() {
         return 1000;
     }
 
-    virtual int doSegmentLengthSoftLimit() {
+    virtual size_t doSegmentLengthSoftLimit() {
         return 600;
     }
 

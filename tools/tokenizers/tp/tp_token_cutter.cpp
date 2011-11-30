@@ -46,11 +46,11 @@ AnnotationItem TpTokenCutter::defaultToken(const std::string& text, size_t& posi
         text.substr(oldPosition, len));
 }
 
-int TpTokenCutter::doMaximumFragmentLength() {
+size_t TpTokenCutter::doSegmentLengthHardLimit() {
     return 1000;
 }
 
-int TpTokenCutter::doSegmentLengthSoftLimit() {
+size_t TpTokenCutter::doSegmentLengthSoftLimit() {
     return 950;
 }
 

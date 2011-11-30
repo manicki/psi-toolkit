@@ -34,10 +34,20 @@ public:
 
     /**
      * Maximum fragment (in bytes) to be cut off by the cutter.
+     *
+     * No segment will ever exceed this limit.
+     *
+     * 0 if no limit is imposed.
      */
-    int maximumFragmentLength();
+    size_t segmentLengthHardLimit();
 
-    int segmentLengthSoftLimit();
+    /**
+     * Soft limit on the segment length (in bytes), i.e. in case
+     * this limit exceeded the cutter will cut off at the following space.
+     *
+     * 0 if no limit is imposed.
+     */
+    size_t segmentLengthSoftLimit();
 
     std::list<std::string> layerTags();
 
@@ -54,8 +64,8 @@ public:
 private:
     virtual AnnotationItem doCutOff(const std::string& text, size_t& positionInText) = 0;
     virtual AnnotationItem doCutOff(const StringFrag& text, size_t& positionInText) = 0;
-    virtual int doMaximumFragmentLength() = 0;
-    virtual int doSegmentLengthSoftLimit() = 0;
+    virtual size_t doSegmentLengthHardLimit() = 0;
+    virtual size_t doSegmentLengthSoftLimit() = 0;
     virtual std::list<std::string> doLayerTags() = 0;
 
     bool shouldFragmentQueueBeUsed_();
