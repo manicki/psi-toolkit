@@ -56,6 +56,8 @@ int main(int argc, char** argv) {
     dfsa = ndfsa;
     dfsa.print();
 
+    std::cout << std::endl;
+
     std::cout << s1 << " : " << dfsa.in(s1.begin(), s1.end()) << std::endl;
     std::cout << s2 << " : " << dfsa.in(s2.begin(), s2.end()) << std::endl;
     std::cout << s3 << " : " << dfsa.in(s3.begin(), s3.end()) << std::endl;
