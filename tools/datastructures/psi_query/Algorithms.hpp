@@ -3,7 +3,6 @@
 
 #include <map>
 #include <vector>
-#include <cassert>
 #include <boost/foreach.hpp>
 
 namespace psi {
@@ -93,7 +92,7 @@ namespace psi {
         }
         
         bool finalFn(state_type p) const {
-            BOOST_FOREACH(state_type q, epsClosure(m_fsa, p))
+            BOOST_FOREACH(state_type q, m_fsa.epsClosure(p))
                 if(m_fsa.isEndState(q))
                     return true;
             return false;
@@ -101,7 +100,7 @@ namespace psi {
         
         std::set<arc_type, ArcSorter> arcFn(State p) const {
             std::set<arc_type, ArcSorter> arcs;
-            BOOST_FOREACH(state_type q, epsClosure(m_fsa, p)) {
+            BOOST_FOREACH(state_type q, m_fsa.epsClosure(p)) {
                 ArcRange<arc_iterator_type> arcRange = m_fsa.getArcs(q);
                 for(arc_iterator_type ait = arcRange.first; ait != arcRange.second; ait++)
                     if(ait->getSymbol() != EPS) 
@@ -160,7 +159,7 @@ namespace psi {
     
       
     template <typename Wrapper, typename FSA>
-    void traverse(Wrapper wrapper, FSA &fsa) {
+    void traverse(Wrapper &wrapper, FSA &fsa) {
         typedef typename Wrapper::state_type WrapperState;
         typedef typename Wrapper::arc_type WrapperArc;
         
@@ -204,18 +203,17 @@ namespace psi {
  
     template <typename FSA>
     void reverse(FSA &fsa) {
-        FSA* temp = new FSA();
-        traverse(Reverser<FSA>(fsa), *temp);
-        fsa.swap(*temp);
-        delete temp;
+        FSA temp;
+        Reverser<FSA> rvr(fsa);
+        traverse(rvr, temp);
+        fsa.swap(temp);
     }
     
     template <typename FSA>
     void reachable(FSA &fsa) {
-        FSA* temp = new FSA();
-        traverse(Copier<FSA>(fsa), *temp);
-        fsa.swap(*temp);
-        delete temp;
+        FSA temp;
+        traverse(Copier<FSA>(fsa), temp);
+        fsa.swap(temp);
     }
     
     template <typename FSA>
@@ -226,41 +224,19 @@ namespace psi {
     }
     
     template <typename FSA>
-    std::set<typename FSA::state_type> epsClosure(FSA &fsa, typename FSA::state_type q) {
-        std::set<typename FSA::state_type> closure;
-        std::vector<typename FSA::state_type> queue;
-        
-        closure.insert(q);
-        queue.push_back(q);
-        while(!queue.empty()) {
-            typename FSA::state_type s = queue.back();
-            queue.pop_back();
-            
-            ArcRange<typename FSA::arc_iterator_type> arcs = fsa.getArcs(s);
-            for(typename FSA::arc_iterator_type ait = arcs.first; ait != arcs.second; ait++) {
-                if(ait->getSymbol() == EPS && !closure.count(ait->getDest())) {
-                    closure.insert(ait->getDest());
-                    queue.push_back(ait->getDest());
-                }
-            }
-        }    
-        return closure;
-    }
-    
-    template <typename FSA>
     void epsRemove(FSA &fsa) {
-        FSA* temp = new FSA();
-        traverse(EpsRemover<FSA>(fsa), *temp);
-        fsa.swap(*temp);
-        delete temp;
+        FSA temp;
+        EpsRemover<FSA> epsrm(fsa);
+        traverse(epsrm, temp);
+        fsa.swap(temp);
     }
     
     template <typename FSA>
     void determinize(FSA &fsa) {
-        FSA* temp = new FSA();
-        traverse(Determinizer<FSA>(fsa), *temp);
-        fsa.swap(*temp);
-        delete temp;
+        FSA temp;
+        Determinizer<FSA> dtr(fsa);
+        traverse(dtr, temp);
+        fsa.swap(temp);
     }
     
     template <typename FSA>
