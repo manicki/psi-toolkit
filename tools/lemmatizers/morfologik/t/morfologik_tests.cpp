@@ -106,7 +106,7 @@ BOOST_AUTO_TEST_CASE( lexeme_level ) {
         AnnotationItem prowokacjamiItem = lattice.getEdgeAnnotationItem(prowokacjamiForm);
 
         BOOST_CHECK_EQUAL(prowokacjamiItem.getCategory(), "subst");
-        BOOST_CHECK_EQUAL(prowokacjamiItem.getText(), "prowokacja_subst");
+        BOOST_CHECK_EQUAL(prowokacjamiItem.getText(), "prowokacjami");
 
         AnnotationItemManager annItmMng = lattice.getAnnotationItemManager();
         std::list<std::pair<std::string, std::string> > formValues =

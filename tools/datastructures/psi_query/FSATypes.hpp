@@ -1,5 +1,5 @@
-#ifndef DFSATYPES_HPP__
-#define DFSATYPES_HPP__
+#ifndef FSATYPES_HPP__
+#define FSATYPES_HPP__
 
 #include <vector>
 #include <set>

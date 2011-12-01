@@ -225,8 +225,12 @@ private:
         return doCutOff(text.str(), positionInText);
     }
 
-    virtual int doMaximumFragmentLength() {
+    virtual size_t doSegmentLengthHardLimit() {
         return 1000;
+    }
+
+    virtual size_t doSegmentLengthSoftLimit() {
+        return 600;
     }
 
     virtual std::list<std::string> doLayerTags() {

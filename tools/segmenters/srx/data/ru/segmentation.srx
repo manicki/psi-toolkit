@@ -21,11 +21,7 @@
 
 
 			<languagerule languagerulename="ru">
-                                   <!-- Zbyt dlugi segment -->
-				<rule break="yes">
-					<beforebreak>(?:.|\n){600}</beforebreak>
-					<afterbreak>\s</afterbreak>
-				</rule>
+
 				<rule break="no">
 					<beforebreak>^\s*(?:[А-Я]\.)+</beforebreak>
 					<afterbreak>\s[а-я]</afterbreak>

@@ -76,7 +76,9 @@ private:
         const std::string & stem, std::string & tag
     );
     AnnotationItem createFormAnnotation(
-        AnnotationItem & lexemeItem, std::map<std::string, std::string> &
+        AnnotationItem & lexemeItem,
+        const std::string& word,
+        std::map<std::string, std::string> &
     );
 
     std::set<std::string> getLemmasFromStems(
