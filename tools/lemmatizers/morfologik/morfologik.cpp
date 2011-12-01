@@ -197,7 +197,7 @@ void Morfologik::stemsOnFormLevel(
                 std::vector<std::map<std::string, std::string> >::iterator frm;
 
                 for (frm = forms.begin(); frm != forms.end(); ++frm) {
-                    AnnotationItem frmItm = createFormAnnotation(lexItm, *frm);
+                    AnnotationItem frmItm = createFormAnnotation(lexItm, word, *frm);
                     outputIterator.addForm(frmItm);
                 }
             }
@@ -207,16 +207,18 @@ void Morfologik::stemsOnFormLevel(
 }
 
 AnnotationItem Morfologik::createFormAnnotation(
-    AnnotationItem & lexemeItem, std::map<std::string, std::string> & attributes
+    AnnotationItem & lexemeItem,
+    const std::string& word,
+    std::map<std::string, std::string> & attributes
 ) {
 
-    AnnotationItem formItem = lexemeItem;
+    AnnotationItem formItem(lexemeItem, word);
 
     std::map<std::string, std::string>::iterator atr;
     for (atr = attributes.begin(); atr != attributes.end(); ++atr) {
-        annotationManager->setValue(lexemeItem, atr->first, atr->second);
+        annotationManager->setValue(formItem, atr->first, atr->second);
     }
-    return lexemeItem;
+    return formItem;
 }
 
 std::vector<std::string> Morfologik::simpleStem(const std::string & word) {
