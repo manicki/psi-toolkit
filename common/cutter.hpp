@@ -33,6 +33,11 @@ public:
     AnnotationItem cutOff(const StringFrag& text, size_t& positionInText);
 
     /**
+     * Resets the cutter so that it can be run on another text.
+     */
+    void reset();
+
+    /**
      * Maximum fragment (in bytes) to be cut off by the cutter.
      *
      * No segment will ever exceed this limit.
@@ -64,6 +69,7 @@ public:
 private:
     virtual AnnotationItem doCutOff(const std::string& text, size_t& positionInText) = 0;
     virtual AnnotationItem doCutOff(const StringFrag& text, size_t& positionInText) = 0;
+    virtual void doReset() = 0;
     virtual size_t doSegmentLengthHardLimit() = 0;
     virtual size_t doSegmentLengthSoftLimit() = 0;
     virtual std::list<std::string> doLayerTags() = 0;

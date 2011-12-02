@@ -1,5 +1,7 @@
 #!/bin/bash
 
+# Arch packages needed for running this: python-distribute, python-nose
+
 TARGET_DIR=build
 
 mkdir -p $TARGET_DIR

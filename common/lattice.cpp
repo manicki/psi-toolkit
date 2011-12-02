@@ -532,6 +532,7 @@ void Lattice::runCutter(Cutter& cutter, LayerTagMask mask, LayerTagMask superMas
     EdgesSortedBySourceIterator edgeIter(*this, superMask);
 
     while (edgeIter.hasNext()) {
+        cutter.reset();
         runCutterOnEdge_(cutter, edgeIter.next(), mask);
     }
 }

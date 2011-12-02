@@ -225,6 +225,16 @@ private:
         return doCutOff(text.str(), positionInText);
     }
 
+    virtual void doReset() {
+        BOOST_FOREACH(RuleApplication& ruleApplication, breakingRuleApplications_) {
+            ruleApplication = RuleApplication();
+        }
+
+        BOOST_FOREACH(RuleApplication& ruleApplication, nonBreakingRuleApplications_) {
+            ruleApplication = RuleApplication();
+        }
+    }
+
     virtual size_t doSegmentLengthHardLimit() {
         return 1000;
     }

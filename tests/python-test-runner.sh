@@ -1,1 +1,1 @@
-nosetests --with-xunit ../bindings/python/Test/test.py
+nosetests --with-xunit bindings/python/Test/test.py
