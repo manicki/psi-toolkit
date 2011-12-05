@@ -1,4 +1,9 @@
 #include "processor_factory.hpp"
+#include "processor_file_fetcher.hpp"
+#include "logging.hpp"
+
+#include <sstream>
+#include <fstream>
 
 Processor* ProcessorFactory::createProcessor(const boost::program_options::variables_map& options) {
     return doCreateProcessor(options);
@@ -52,9 +57,27 @@ std::string ProcessorFactory::getDescription() {
 }
 
 std::string ProcessorFactory::doGetDescription() {
-    std::string res("filepath to description: ");
-    res += doGetFile().string();
-    return res;
+    std::string description("");
+
+    ProcessorFileFetcher fileFetcher(doGetFile());
+    try {
+        boost::filesystem::path pathToDescriptionFile
+            = fileFetcher.getOneFile("%ITSDATA%/description.txt");
+        description = getFileContent(pathToDescriptionFile);
+    }
+    catch (FileFetcher::Exception& err) {
+        WARN("An error occured when trying to open the processor's description file: " << err.what());
+    }
+
+    return description;
+}
+
+std::string ProcessorFactory::getFileContent(boost::filesystem::path path) {
+
+    std::stringstream content;
+    content << std::ifstream( path.string().c_str() ).rdbuf();
+
+    return content.str();
 }
 
 ProcessorFactory::~ProcessorFactory() {

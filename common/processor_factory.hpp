@@ -87,6 +87,8 @@ private:
 
     virtual std::string doGetDescription();
 
+    std::string getFileContent(boost::filesystem::path path);
+
 };
 
 #endif
