@@ -858,6 +858,11 @@ BOOST_AUTO_TEST_CASE( edge_self_reference ) {
         lattice.addEdge(from, to, item, tags, builder.build()),
         EdgeSelfReferenceException
     );
+
+    BOOST_CHECK_THROW(
+        lattice.addPartitionToEdge(edge, tags, builder.build()),
+        EdgeSelfReferenceException
+    );
 }
 
 
