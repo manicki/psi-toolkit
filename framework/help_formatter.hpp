@@ -19,8 +19,12 @@ protected:
 
     virtual void doFormatOneProcessorHelp(
         std::string processorName,
+        std::string description,
         boost::program_options::options_description options,
         std::ostream& output) =0;
+
+    std::string getProcessorDescription(
+        std::string processorName);
 
     boost::program_options::options_description getProcessorOptions(
         std::string processorName);

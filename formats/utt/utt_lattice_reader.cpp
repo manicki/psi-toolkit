@@ -36,6 +36,9 @@ std::string UTTLatticeReader::Factory::doGetName() {
     return "utt-reader";
 }
 
+boost::filesystem::path UTTLatticeReader::Factory::doGetFile() {
+    return __FILE__;
+}
 
 UTTLatticeReader::Worker::Worker(UTTLatticeReader& processor,
                                  std::istream& inputStream,

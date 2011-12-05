@@ -65,6 +65,10 @@ namespace puddle {
         return "puddle";
     }
 
+    boost::filesystem::path Puddle::Factory::doGetFile() {
+        return __FILE__;
+    }
+
     std::list<std::list<std::string> > Puddle::Factory::doRequiredLayerTags() {
         return std::list<std::list<std::string> >();
     }

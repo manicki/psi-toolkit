@@ -41,6 +41,10 @@ std::string SrxSegmenter::Factory::doGetName() {
     return "srx-segmenter";
 }
 
+boost::filesystem::path SrxSegmenter::Factory::doGetFile() {
+    return __FILE__;
+}
+
 std::list<std::list<std::string> > SrxSegmenter::Factory::doRequiredLayerTags() {
     return std::list<std::list<std::string> >();
 }

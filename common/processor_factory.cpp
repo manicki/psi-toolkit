@@ -10,6 +10,7 @@ boost::program_options::options_description ProcessorFactory::optionsHandled() {
 
 std::string ProcessorFactory::getContinuation(
     const boost::program_options::variables_map& options) const {
+
     return doGetContinuation(options);
 }
 
@@ -37,9 +38,23 @@ double ProcessorFactory::doGetEstimatedTime(
     return -1.0;
 }
 
+boost::filesystem::path ProcessorFactory::getFile() {
+    return doGetFile();
+}
+
 
 std::string ProcessorFactory::getName() {
     return doGetName();
+}
+
+std::string ProcessorFactory::getDescription() {
+    return doGetDescription();
+}
+
+std::string ProcessorFactory::doGetDescription() {
+    std::string res("filepath to description: ");
+    res += doGetFile().string();
+    return res;
 }
 
 ProcessorFactory::~ProcessorFactory() {

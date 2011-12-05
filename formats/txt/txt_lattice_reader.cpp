@@ -38,6 +38,9 @@ std::string TxtLatticeReader::Factory::doGetName() {
     return "txt-reader";
 }
 
+boost::filesystem::path TxtLatticeReader::Factory::doGetFile() {
+    return __FILE__;
+}
 
 TxtLatticeReader::Worker::Worker(TxtLatticeReader& processor,
                                  std::istream& inputStream,

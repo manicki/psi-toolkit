@@ -3,6 +3,7 @@
 
 #include <boost/program_options/options_description.hpp>
 #include <boost/program_options/variables_map.hpp>
+#include <boost/filesystem.hpp>
 
 #include "java_virtual_machine.hpp"
 #include "morfologik_tags_parser.hpp"
@@ -18,7 +19,10 @@ class Morfologik {
 public:
 
     Morfologik(const boost::program_options::variables_map& options);
+
     static std::string getName();
+    static boost::filesystem::path getFile();
+
     std::list<std::string> getLayerTags();
 
     void lemmatize(
