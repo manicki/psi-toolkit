@@ -1,4 +1,3 @@
-
 echo '========================================================'
 
 PYTHON_BINDINGS_DIR=`pwd`/bindings/python

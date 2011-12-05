@@ -100,6 +100,10 @@ std::string LexDbLemmatizer::getName() {
     return "lex-db";
 }
 
+boost::filesystem::path LexDbLemmatizer::getFile() {
+    return __FILE__;
+}
+
 std::list<std::string> LexDbLemmatizer::getLayerTags() {
     std::list<std::string> layerTags;
 

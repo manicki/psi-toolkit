@@ -64,6 +64,9 @@ std::string SimpleLatticeWriter::Factory::doGetName() {
     return "simple-writer";
 }
 
+boost::filesystem::path SimpleLatticeWriter::Factory::doGetFile() {
+    return __FILE__;
+}
 
 std::string SimpleLatticeWriter::doInfo() {
     return "Simple writer";

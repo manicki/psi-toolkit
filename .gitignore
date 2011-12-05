@@ -9,4 +9,5 @@ cppcheck-result.xml
 build/*
 server/t/reports/*
 *.so
+server/website/storage/*
 \#*\#

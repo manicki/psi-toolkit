@@ -123,6 +123,12 @@ Lattice::EdgeDescriptor Lattice::addEdge(
         needToAddEdge = true;
     } else {
         EdgeDescriptor edge = (insertResult.first)->second;
+        EdgeSequence::Iterator sequenceIter(*this, sequence);
+        while (sequenceIter.hasNext()) {
+            if (sequenceIter.next() == edge) {
+                throw EdgeSelfReferenceException("Cannot add an edge referencing itself.");
+            }
+        }
         LayerTagCollection oldTags = getEdgeLayerTags(edge);
         Score oldScore = getEdgeScore(edge);
         if (tags != oldTags) {
@@ -532,6 +538,7 @@ void Lattice::runCutter(Cutter& cutter, LayerTagMask mask, LayerTagMask superMas
     EdgesSortedBySourceIterator edgeIter(*this, superMask);
 
     while (edgeIter.hasNext()) {
+        cutter.reset();
         runCutterOnEdge_(cutter, edgeIter.next(), mask);
     }
 }

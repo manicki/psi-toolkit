@@ -101,6 +101,10 @@ namespace poleng {
                             std::string category, std::string text);
                     bool isDiscarded(Lattice &lattice,
                             Lattice::EdgeDescriptor edge);
+                    bool isTokenEdge(Lattice &lattice,
+                            Lattice::EdgeDescriptor edge);
+                    bool isBlankTokenEdge(Lattice &lattice,
+                            Lattice::EdgeDescriptor edge);
                     bool sequenceContainsEdge(Lattice &lattice,
                             Lattice::EdgeSequence sequence,
                             Lattice::EdgeDescriptor edge);
@@ -183,6 +187,20 @@ namespace poleng {
                     bool operator() (const Lattice::EdgeDescriptor &first,
                             const Lattice::EdgeDescriptor &second) const {
                         return (! ((first < second) || (second < first)) );
+                    }
+            };
+
+            class EdgeNonToken {
+                private:
+                    Lattice &lattice;
+                public:
+                    EdgeNonToken(Lattice &aLattice)
+                        : lattice(aLattice) { }
+                    bool operator() (const Lattice::EdgeDescriptor &value) {
+                        if (isTokenEdge(lattice, value))
+                            return true;
+                        else
+                            return false;
                     }
             };
 

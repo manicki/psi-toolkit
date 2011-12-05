@@ -27,6 +27,10 @@ std::string Morfologik::getName() {
     return "morfologik";
 }
 
+boost::filesystem::path Morfologik::getFile() {
+    return __FILE__;
+}
+
 std::list<std::string> Morfologik::getLayerTags() {
     std::list<std::string> layerTags;
 

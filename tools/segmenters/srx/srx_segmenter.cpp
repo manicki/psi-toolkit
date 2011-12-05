@@ -41,6 +41,10 @@ std::string SrxSegmenter::Factory::doGetName() {
     return "srx-segmenter";
 }
 
+boost::filesystem::path SrxSegmenter::Factory::doGetFile() {
+    return __FILE__;
+}
+
 std::list<std::list<std::string> > SrxSegmenter::Factory::doRequiredLayerTags() {
     return std::list<std::list<std::string> >();
 }
@@ -223,6 +227,16 @@ private:
     virtual AnnotationItem doCutOff(const StringFrag& text, size_t& positionInText) {
         // TODO
         return doCutOff(text.str(), positionInText);
+    }
+
+    virtual void doReset() {
+        BOOST_FOREACH(RuleApplication& ruleApplication, breakingRuleApplications_) {
+            ruleApplication = RuleApplication();
+        }
+
+        BOOST_FOREACH(RuleApplication& ruleApplication, nonBreakingRuleApplications_) {
+            ruleApplication = RuleApplication();
+        }
     }
 
     virtual size_t doSegmentLengthHardLimit() {

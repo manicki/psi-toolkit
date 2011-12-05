@@ -3,6 +3,7 @@
 
 #include <boost/program_options/options_description.hpp>
 #include <boost/program_options/variables_map.hpp>
+#include <boost/filesystem.hpp>
 
 #include "processor.hpp"
 
@@ -52,6 +53,16 @@ public:
      */
     std::string getName();
 
+    /**
+     * Returns the path to the given processor source file based on the __FILE__ variable.
+     */
+    boost::filesystem::path getFile();
+
+    /**
+     * Loads and returns the processor's description from markdown file.
+     */
+    std::string getDescription();
+
     virtual ~ProcessorFactory();
 
 private:
@@ -70,8 +81,13 @@ private:
     virtual double doGetEstimatedTime(
         const boost::program_options::variables_map& options) const;
 
+    virtual boost::filesystem::path doGetFile() = 0;
 
     virtual std::string doGetName() = 0;
+
+    virtual std::string doGetDescription();
+
+    std::string getFileContent(boost::filesystem::path path);
 
 };
 

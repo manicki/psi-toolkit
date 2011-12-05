@@ -35,6 +35,9 @@ AnnotationItem TpTokenCutter::doCutOff(const StringFrag& text, size_t& positionI
     return doCutOff(text.str(), positionInText);
 }
 
+void TpTokenCutter::doReset() {
+}
+
 AnnotationItem TpTokenCutter::defaultToken(const std::string& text, size_t& positionInText) {
 
     size_t oldPosition = positionInText;

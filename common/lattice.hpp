@@ -202,6 +202,13 @@ public:
             }
             return implicitIndex < other.implicitIndex;
         }
+
+        bool operator==(EdgeDescriptor other) const {
+            if (implicitIndex < 0 && other.implicitIndex < 0) {
+                return descriptor == other.descriptor;
+            }
+            return implicitIndex == other.implicitIndex;
+        }
     };
 
     struct EdgeDescriptorWrapperToFoolBoost146OrGnu461 : public Graph::edge_descriptor {

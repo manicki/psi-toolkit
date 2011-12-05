@@ -25,8 +25,8 @@ BOOST_AUTO_TEST_CASE( puddle ) {
     LayerTagMask lemmaMask = lattice.getLayerTagManager().getMask(lemma_tag);
     LayerTagMask lexemeMask = lattice.getLayerTagManager().getMask(lexeme_tag);
     LayerTagMask formMask = lattice.getLayerTagManager().getMask(form_tag);
-    AnnotationItem word_token("word");
-    AnnotationItem blank_token("blank");
+    AnnotationItem word_token("T");
+    AnnotationItem blank_token("B");
     AnnotationItem ai("base");
 
     Lattice::VertexDescriptor pre_blanc = lattice.getFirstVertex();
@@ -297,8 +297,8 @@ BOOST_AUTO_TEST_CASE( puddle_unify ) {
     Lattice::VertexDescriptor pre_noirs = lattice.getVertexForRawCharIndex(7);
     Lattice::VertexDescriptor post_noirs = lattice.getLastVertex();
 
-    AnnotationItem word_token("word");
-    AnnotationItem blank_token("blank");
+    AnnotationItem word_token("T");
+    AnnotationItem blank_token("B");
 
     Lattice::EdgeSequence::Builder ananas_builder(lattice);
     for (int i = 0; i < 6; i ++) {
@@ -521,8 +521,8 @@ BOOST_AUTO_TEST_CASE( puddle_delete ) {
     Lattice::VertexDescriptor pre_noirs = lattice.getVertexForRawCharIndex(7);
     Lattice::VertexDescriptor post_noirs = lattice.getLastVertex();
 
-    AnnotationItem word_token("word");
-    AnnotationItem blank_token("blank");
+    AnnotationItem word_token("T");
+    AnnotationItem blank_token("B");
 
     Lattice::EdgeSequence::Builder ananas_builder(lattice);
     for (int i = 0; i < 6; i ++) {
@@ -760,8 +760,8 @@ BOOST_AUTO_TEST_CASE( puddle_add ) {
     Lattice::VertexDescriptor pre_noirs = lattice.getVertexForRawCharIndex(7);
     Lattice::VertexDescriptor post_noirs = lattice.getLastVertex();
 
-    AnnotationItem word_token("word");
-    AnnotationItem blank_token("blank");
+    AnnotationItem word_token("T");
+    AnnotationItem blank_token("B");
 
     Lattice::EdgeSequence::Builder ananas_builder(lattice);
     for (int i = 0; i < 6; i ++) {
@@ -1001,8 +1001,8 @@ BOOST_AUTO_TEST_CASE( puddle_group ) {
     Lattice::VertexDescriptor pre_noirs = lattice.getVertexForRawCharIndex(7);
     Lattice::VertexDescriptor post_noirs = lattice.getLastVertex();
 
-    AnnotationItem word_token("word");
-    AnnotationItem blank_token("blank");
+    AnnotationItem word_token("T");
+    AnnotationItem blank_token("B");
 
     Lattice::EdgeSequence::Builder ananas_builder(lattice);
     for (int i = 0; i < 6; i ++) {
@@ -1204,8 +1204,8 @@ BOOST_AUTO_TEST_CASE( puddle_join ) {
     Lattice::VertexDescriptor pre_noirs = lattice.getVertexForRawCharIndex(7);
     Lattice::VertexDescriptor post_noirs = lattice.getLastVertex();
 
-    AnnotationItem word_token("word");
-    AnnotationItem blank_token("blank");
+    AnnotationItem word_token("T");
+    AnnotationItem blank_token("B");
 
     Lattice::EdgeSequence::Builder ananas_builder(lattice);
     for (int i = 0; i < 6; i ++) {
@@ -1506,8 +1506,8 @@ BOOST_AUTO_TEST_CASE( puddle_attach ) {
     Lattice::VertexDescriptor pre_noirs = lattice.getVertexForRawCharIndex(7);
     Lattice::VertexDescriptor post_noirs = lattice.getLastVertex();
 
-    AnnotationItem word_token("word");
-    AnnotationItem blank_token("blank");
+    AnnotationItem word_token("T");
+    AnnotationItem blank_token("B");
 
     Lattice::EdgeSequence::Builder ananas_builder(lattice);
     for (int i = 0; i < 6; i ++) {
@@ -1776,8 +1776,8 @@ BOOST_AUTO_TEST_CASE( puddle_transform ) {
     Lattice::VertexDescriptor pre_noirs = lattice.getVertexForRawCharIndex(7);
     Lattice::VertexDescriptor post_noirs = lattice.getLastVertex();
 
-    AnnotationItem word_token("word");
-    AnnotationItem blank_token("blank");
+    AnnotationItem word_token("T");
+    AnnotationItem blank_token("B");
 
     Lattice::EdgeSequence::Builder ananas_builder(lattice);
     for (int i = 0; i < 6; i ++) {
@@ -2001,8 +2001,8 @@ BOOST_AUTO_TEST_CASE( puddle_syntok ) {
     Lattice::VertexDescriptor post_d = lattice.getVertexForRawCharIndex(7);
     Lattice::VertexDescriptor post_etat = lattice.getLastVertex();
 
-    AnnotationItem word_token("word");
-    AnnotationItem blank_token("blank");
+    AnnotationItem word_token("T");
+    AnnotationItem blank_token("B");
 
     Lattice::EdgeSequence::Builder coup_builder(lattice);
     for (int i = 0; i < 4; i ++) {
@@ -2778,8 +2778,8 @@ BOOST_AUTO_TEST_CASE( load_rules_fr ) {
     LayerTagMask lemmaMask = lattice.getLayerTagManager().getMask(lemma_tag);
     LayerTagMask lexemeMask = lattice.getLayerTagManager().getMask(lexeme_tag);
     LayerTagMask formMask = lattice.getLayerTagManager().getMask(form_tag);
-    AnnotationItem word_token("word");
-    AnnotationItem blank_token("blank");
+    AnnotationItem word_token("T");
+    AnnotationItem blank_token("B");
     AnnotationItem ai("base");
 
     Lattice::VertexDescriptor pre_blanc = lattice.getFirstVertex();
@@ -2884,8 +2884,8 @@ BOOST_AUTO_TEST_CASE( load_rules_pl ) {
     LayerTagMask lemmaMask = lattice.getLayerTagManager().getMask(lemma_tag);
     LayerTagMask lexemeMask = lattice.getLayerTagManager().getMask(lexeme_tag);
     LayerTagMask formMask = lattice.getLayerTagManager().getMask(form_tag);
-    AnnotationItem word_token("word");
-    AnnotationItem blank_token("blank");
+    AnnotationItem word_token("T");
+    AnnotationItem blank_token("B");
     AnnotationItem ai("base");
 
     Lattice::VertexDescriptor pre_ala = lattice.getFirstVertex();

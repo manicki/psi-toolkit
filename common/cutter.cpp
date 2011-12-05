@@ -35,6 +35,12 @@ AnnotationItem Cutter::cutOff(const StringFrag& text, size_t& positionInText) {
     return doCutOff(text, positionInText);
 }
 
+void Cutter::reset() {
+    fragmentedSegmentsQueue_ = std::queue<AnnotationItem>();
+
+    doReset();
+}
+
 size_t Cutter::segmentLengthHardLimit() {
     return doSegmentLengthHardLimit();
 }
