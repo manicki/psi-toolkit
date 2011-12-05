@@ -17,6 +17,7 @@ TxtLatticeReader::Factory::~Factory() {
 
 LatticeReader<std::istream>* TxtLatticeReader::Factory::doCreateLatticeReader(
     const boost::program_options::variables_map&) {
+        // TODO implement program options
     return new TxtLatticeReader();
 }
 
