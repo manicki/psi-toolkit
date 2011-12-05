@@ -93,4 +93,25 @@ class PipeSiteTest < Test::Unit::TestCase
         File.delete file_name
     end
 
+    def test_if_element_to_download_exists
+        @browser.div(:id => 'download').exists?
+    end
+
+    def test_if_downloading_a_file_with_output_works
+        txt = "Marysia ma rysia"
+
+        # submit some text
+        input  = @browser.text_field(:name => 'input-text')
+        input.set txt
+        btn = @browser.button(:name => 'pipe-submit')
+        btn.click
+
+        # compare pipe output and generated file content
+        output = @browser.pre.text
+        file = @browser.div(:id => 'download').link.download
+        file_content = file.readlines.join
+
+        assert output, file_content
+    end
+
 end
