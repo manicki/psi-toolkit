@@ -49,6 +49,10 @@ std::string TpTokenizer::Factory::doGetName() {
     return "tp-tokenizer";
 }
 
+boost::filesystem::path TpTokenizer::Factory::doGetFile() {
+    return __FILE__;
+}
+
 std::list<std::list<std::string> > TpTokenizer::Factory::doRequiredLayerTags() {
     return std::list<std::list<std::string> >();
 }

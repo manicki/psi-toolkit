@@ -1,15 +1,19 @@
 #include "help_formatter.hpp"
 
 void HelpFormatter::formatOneProcessorHelp(
-    std::string processorName, std::ostream& output)
-{
-    doFormatOneProcessorHelp(processorName, getProcessorOptions(processorName), output);
+    std::string processorName, std::ostream& output) {
+
+    doFormatOneProcessorHelp(
+        processorName,
+        getProcessorDescription(processorName),
+        getProcessorOptions(processorName),
+        output
+    );
 }
 
 HelpFormatter::~HelpFormatter() { }
 
-void HelpFormatter::formatHelps(std::ostream& output)
-{
+void HelpFormatter::formatHelps(std::ostream& output) {
     std::vector<std::string> processors = MainFactoriesKeeper::getInstance().getProcessorNames();
 
     for (unsigned int i = 0; i < processors.size(); i++) {
@@ -18,8 +22,12 @@ void HelpFormatter::formatHelps(std::ostream& output)
     }
 }
 
+std::string HelpFormatter::getProcessorDescription(std::string processorName) {
+    return MainFactoriesKeeper::getInstance().getProcessorFactory(processorName).getDescription();
+}
+
 boost::program_options::options_description HelpFormatter::getProcessorOptions(
-    std::string processorName)
-{
+    std::string processorName) {
+
     return MainFactoriesKeeper::getInstance().getProcessorFactory(processorName).optionsHandled();
 }

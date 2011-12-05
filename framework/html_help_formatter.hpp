@@ -12,6 +12,7 @@ private:
 
     void doFormatOneProcessorHelp(
         std::string processorName,
+        std::string description,
         boost::program_options::options_description options,
         std::ostream& output);
 

@@ -31,6 +31,10 @@ std::string PsiLatticeReader::Factory::doGetName() {
     return "psi-reader";
 }
 
+boost::filesystem::path PsiLatticeReader::Factory::doGetFile() {
+    return __FILE__;
+}
+
 
 PsiLatticeReader::Worker::Worker(PsiLatticeReader& processor,
                                  std::istream& inputStream,

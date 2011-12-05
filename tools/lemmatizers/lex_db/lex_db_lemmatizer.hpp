@@ -21,6 +21,7 @@ public:
                    LemmatizerOutputIterator& outputIterator);
 
     static std::string getName();
+    boost::filesystem::path getFile();
 
     std::list<std::string> getLayerTags();
 
