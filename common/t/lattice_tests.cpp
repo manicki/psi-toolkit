@@ -843,5 +843,22 @@ BOOST_AUTO_TEST_CASE( discard ) {
     }
 }
 
+BOOST_AUTO_TEST_CASE( edge_self_reference ) {
+    Lattice lattice("a");
+    Lattice::VertexDescriptor from = lattice.getFirstVertex();
+    Lattice::VertexDescriptor to = lattice.getLastVertex();
+    AnnotationItem item("item");
+    LayerTagCollection tags(lattice.getLayerTagManager().createSingletonTagCollection("tag"));
+    Lattice::EdgeDescriptor edge = lattice.addEdge(from, to, item, tags);
+
+    Lattice::EdgeSequence::Builder builder(lattice);
+    builder.addEdge(edge);
+
+    BOOST_CHECK_THROW(
+        lattice.addEdge(from, to, item, tags, builder.build()),
+        EdgeSelfReferenceException
+    );
+}
+
 
 BOOST_AUTO_TEST_SUITE_END()
