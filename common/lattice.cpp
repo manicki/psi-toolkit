@@ -10,7 +10,7 @@ Lattice::Lattice() :
     resizeImplicitEdgesStructures_();
 }
 
-Lattice::Lattice(std::string text) :
+Lattice::Lattice(const std::string & text) :
     nLooseVertices_(0),
     symbolTag_(layerTagManager_.createSingletonTagCollection("symbol")),
     discardedTag_(layerTagManager_.createSingletonTagCollection("discarded")) {
@@ -20,7 +20,7 @@ Lattice::Lattice(std::string text) :
 
 Lattice::~Lattice() { }
 
-void Lattice::appendString(std::string text) {
+void Lattice::appendString(const std::string & text) {
     allText_ += text;
 
     resizeImplicitEdgesStructures_();
@@ -45,7 +45,7 @@ void Lattice::addSymbols(VertexDescriptor startVertex, VertexDescriptor endVerte
     }
 }
 
-void Lattice::appendStringWithSymbols(std::string text) {
+void Lattice::appendStringWithSymbols(const std::string & text) {
     Lattice::VertexDescriptor joinPoint = getLastVertex();
     appendString(text);
     addSymbols(joinPoint, getLastVertex());

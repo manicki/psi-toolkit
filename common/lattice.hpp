@@ -336,15 +336,15 @@ public:
      * represented as an edge labeled with layer tag `raw` and category `c`
      * (where c is the given character)
      */
-    Lattice(std::string text);
+    Lattice(const std::string & text);
 
     ~Lattice();
 
-    void appendString(std::string text);
+    void appendString(const std::string & text);
 
     void addSymbols(VertexDescriptor startVertex, VertexDescriptor endVertex);
 
-    void appendStringWithSymbols(std::string text);
+    void appendStringWithSymbols(const std::string & text);
 
     VertexDescriptor addLooseVertex();
 
