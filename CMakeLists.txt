@@ -79,7 +79,7 @@ message(STATUS "Bonsai common path file (required while using ParseGraph) ${BONS
 
 find_package(SWIG)
 if(SWIG_FOUND)
-  
+
   set(HAVE_SWIG_BINDINGS 1)
 
   find_package(PerlLibs)
@@ -90,13 +90,13 @@ if(SWIG_FOUND)
   find_package(PythonLibs)
   if (PythonLibs_FOUND)
     set(HAVE_PYTHON_BINDINGS 1)
-  endif(PythonLibs_FOUND)  
+  endif(PythonLibs_FOUND)
 endif(SWIG_FOUND)
 
 # Sets compiler flags
 set(CMAKE_CXX_FLAGS "-g -Wall -Wundef -Wnon-virtual-dtor -Wextra")
 
-set(BASE_TARGETS common framework formats-psi formats-simple formats-txt formats-utt tools-tokenizers-tp tools-segmenters-srx)
+set(BASE_TARGETS common framework formats-psi formats-simple formats-txt formats-utt tools-tokenizers-tp tools-segmenters-srx tools-recognizers-langguesser)
 
 set(TESTS_TARGETS common-tests tools-tokenizers-tp-tests tools-segmenters-srx-tests tools-datastructures-psi_query-tests)
 
