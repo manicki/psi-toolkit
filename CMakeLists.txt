@@ -89,9 +89,9 @@ if(SWIG_FOUND)
   endif(PERLLIBS_FOUND)
 
   find_package(PythonLibs)
-  if (PythonLibs_FOUND)
+  if (PYTHONLIBS_FOUND)
     set(HAVE_PYTHON_BINDINGS 1)
-  endif(PythonLibs_FOUND)
+  endif(PYTHONLIBS_FOUND)
 endif(SWIG_FOUND)
 
 # Sets compiler flags

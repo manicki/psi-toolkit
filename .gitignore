@@ -11,3 +11,4 @@ server/t/reports/*
 *.so
 server/website/storage/*
 \#*\#
+bindings/python/Test/__pycache__
