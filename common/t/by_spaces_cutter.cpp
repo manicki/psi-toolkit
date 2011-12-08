@@ -27,9 +27,6 @@ AnnotationItem BySpacesCutter::doCutOff(const std::string& text, size_t& positio
 }
 
 AnnotationItem BySpacesCutter::doCutOff(const StringFrag text, size_t& positionInText) {
-    // TODO
-    return doCutOff(text.str(), positionInText);
-    /*
     size_t spacePosition = text.find(' ', positionInText);
 
     if (spacePosition == positionInText) {
@@ -53,7 +50,6 @@ AnnotationItem BySpacesCutter::doCutOff(const StringFrag text, size_t& positionI
         positionInText = spacePosition;
         return AnnotationItem("word", tokenSF);
     }
-    */
 }
 
 int BySpacesCutter::doMaximumFragmentLength() {
