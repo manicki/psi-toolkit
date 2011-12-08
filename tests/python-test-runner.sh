@@ -1,7 +1,7 @@
 echo '========================================================'
 
 PYTHON_BINDINGS_DIR=`pwd`/bindings/python
-PRJ_DIR=`pwd`/prj
+PRJ_DIR=`pwd`/build
 
 if [[ -e $PRJ_DIR/bindings/python/PSIToolkit.py ]]; then
 
