@@ -41,6 +41,10 @@ void StringFrag::append(const StringFrag & other) {
         begin_ + len_ == other.begin_
     ) {
         len_ += other.len_;
+        contents_ = src_.substr(begin_, std::min(len_,(size_t)4));
+    } else if (contents_=="" && this != &other) {
+        this->StringFrag::~StringFrag();
+        new (this) StringFrag(other);
     } else {
         contents_ = str() + other.str();
         begin_ = std::string::npos;
