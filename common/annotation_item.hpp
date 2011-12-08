@@ -48,6 +48,8 @@ public:
 
     std::string getText() const;
 
+    StringFrag getTextAsStringFrag() const;
+
     long getHash() const;
 
     bool operator==(const AnnotationItem& other) const;

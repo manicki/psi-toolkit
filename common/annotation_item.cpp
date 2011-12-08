@@ -15,6 +15,10 @@ std::string AnnotationItem::getText() const {
     return text_.str();
 }
 
+StringFrag AnnotationItem::getTextAsStringFrag() const {
+    return text_;
+}
+
 long AnnotationItem::getHash() const {
     std::string str = category_;
     str += text_.str();
