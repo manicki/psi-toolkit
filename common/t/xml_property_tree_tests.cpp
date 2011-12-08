@@ -5,7 +5,7 @@
 #include <boost/scoped_ptr.hpp>
 #include <boost/version.hpp>
 
-#include "config.h"
+#include "config.hpp"
 
 BOOST_AUTO_TEST_SUITE( xml_property_tree )
 

@@ -7,7 +7,7 @@
 
 #include "console_help_formatter.hpp"
 
-#include "config.h"
+#include "config.hpp"
 #include "logging.hpp"
 #include "configurator.hpp"
 

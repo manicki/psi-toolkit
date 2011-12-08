@@ -4,7 +4,7 @@
 classjava.stamp
 psi-pipe
 test_runner
-common/config.h
+common/config.hpp
 cppcheck-result.xml
 build/*
 server/t/reports/*

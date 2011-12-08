@@ -2,7 +2,6 @@
 include(${SWIG_USE_FILE})
 
 find_package(PerlLibs)
-include_directories(${PERL_INCLUDE_PATH})
 
 set(CMAKE_SWIG_FLAGS "")
 

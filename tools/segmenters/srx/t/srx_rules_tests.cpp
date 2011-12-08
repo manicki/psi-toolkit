@@ -2,7 +2,7 @@
 
 #include "../srx_rules.hpp"
 
-#include "config.h"
+#include "config.hpp"
 
 #include <vector>
 

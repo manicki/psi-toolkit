@@ -1,7 +1,7 @@
 #ifndef PUDDLE_LATTICE_WRAPPER_H__
 #define PUDDLE_LATTICE_WRAPPER_H__
 
-#include "config.h"
+#include "config.hpp"
 
 #include "lattice.hpp"
 #include "tagset.hpp"

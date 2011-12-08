@@ -1,7 +1,7 @@
 #ifndef PIPE_RUNNER_HDR
 #define PIPE_RUNNER_HDR
 
-#include "config.h"
+#include "config.hpp"
 #include <boost/shared_ptr.hpp>
 #include <boost/graph/adjacency_list.hpp>
 

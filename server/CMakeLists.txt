@@ -19,7 +19,6 @@ endif(WITH_RE2)
 if(HAVE_PERL_BINDINGS)
     target_link_libraries(server formats-perl-simple)
     find_package(PerlLibs)
-    include_directories(${PERL_INCLUDE_PATH})
 endif(HAVE_PERL_BINDINGS)
 
 set_target_properties(server PROPERTIES LINK_FLAGS "-lpthread")

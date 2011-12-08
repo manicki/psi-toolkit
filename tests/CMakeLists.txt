@@ -21,7 +21,6 @@ endif(WITH_RE2)
 if(HAVE_PERL_BINDINGS)
     target_link_libraries(test_runner formats-perl-simple)
     find_package(PerlLibs)
-    include_directories(${PERL_INCLUDE_PATH})
 
 endif(HAVE_PERL_BINDINGS)
 
@@ -45,8 +44,7 @@ if (WITH_RE2)
 endif(WITH_RE2)
 
 if(HAVE_PERL_BINDINGS)
-    target_link_libraries(mass-tests formats-perl-simple)  
+    target_link_libraries(mass-tests formats-perl-simple)
     find_package(PerlLibs)
-    include_directories(${PERL_INCLUDE_PATH})
 endif(HAVE_PERL_BINDINGS)
 

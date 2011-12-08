@@ -1,6 +1,6 @@
 #include "main_factories_keeper.hpp"
 
-#include "config.h"
+#include "config.hpp"
 
 #include "txt_lattice_reader.hpp"
 #include "utt_lattice_reader.hpp"

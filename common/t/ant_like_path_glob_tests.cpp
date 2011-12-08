@@ -2,7 +2,7 @@
 
 #include "ant_like_path_glob.hpp"
 
-#include "config.h"
+#include "config.hpp"
 
 BOOST_AUTO_TEST_SUITE( ant_like_path_glob )
 

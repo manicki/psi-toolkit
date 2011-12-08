@@ -11,7 +11,7 @@
 #include "../../formats/simple/simple_lattice_writer_stream_output_iterator.hpp"
 #include "../../formats/utt/utt_lattice_reader.hpp"
 
-#include "config.h"
+#include "config.hpp"
 
 void prepareSimpleLattice_(Lattice & lattice);
 void prepareAdvancedLattice_(Lattice & lattice);

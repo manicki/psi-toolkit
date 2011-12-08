@@ -1,7 +1,7 @@
 #include "file_fetcher.hpp"
 
 #include "logging.hpp"
-#include "config.h"
+#include "config.hpp"
 
 #include "ant_like_path_glob.hpp"
 

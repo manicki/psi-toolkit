@@ -83,9 +83,10 @@ if(SWIG_FOUND)
   set(HAVE_SWIG_BINDINGS 1)
 
   find_package(PerlLibs)
-  if (PerlLibs_FOUND)
+  if (PERLLIBS_FOUND)
     set(HAVE_PERL_BINDINGS 1)
-  endif(PerlLibs_FOUND)
+    include_directories(${PERL_INCLUDE_PATH})
+  endif(PERLLIBS_FOUND)
 
   find_package(PythonLibs)
   if (PythonLibs_FOUND)
@@ -164,5 +165,5 @@ endif(USE_PUDDLE)
 
 add_subdirectory(tests)
 
-configure_file(${psi-toolkit_SOURCE_DIR}/common/config.h.in ${psi-toolkit_SOURCE_DIR}/common/config.h)
+configure_file(${psi-toolkit_SOURCE_DIR}/common/config.hpp.in ${psi-toolkit_SOURCE_DIR}/common/config.hpp)
 

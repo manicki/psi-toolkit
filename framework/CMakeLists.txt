@@ -64,8 +64,6 @@ if(HAVE_PERL_BINDINGS)
     find_package(SWIG)
     include(${SWIG_USE_FILE})
     find_package(PerlLibs)
-    include_directories(${PERL_INCLUDE_PATH})
-
 endif(HAVE_PERL_BINDINGS)
 
 install(TARGETS framework DESTINATION lib/)

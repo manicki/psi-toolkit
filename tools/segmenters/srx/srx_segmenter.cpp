@@ -4,7 +4,7 @@
 #include <boost/function_output_iterator.hpp>
 
 #include "logging.hpp"
-#include "config.h"
+#include "config.hpp"
 
 #include "srx_rules.hpp"
 

@@ -1,7 +1,7 @@
 #ifndef PARSER_H__
 #define PARSER_H__
 
-#include "config.h"
+#include "config.hpp"
 #include "annotator.hpp"
 #include "language_dependent_annotator_factory.hpp"
 #include "lang_specific_processor_file_fetcher.hpp"

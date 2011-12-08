@@ -3,7 +3,7 @@
 
 
 #include <string>
-#include "config.h"
+#include "config.hpp"
 #include  <stack>
 
 #if HAVE_PERL_BINDINGS
