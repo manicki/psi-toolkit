@@ -1,6 +1,7 @@
 #ifndef PERL_SIMPLE_LATTICE_WRITER_HDR
 #define PERL_SIMPLE_LATTICE_WRITER_HDR
 
+#include <boost/filesystem.hpp>
 #include <boost/foreach.hpp>
 #include <string>
 
@@ -27,7 +28,7 @@ public:
 
         virtual std::string doGetName();
 
-        virtual boost::filesystem3::path doGetFile();
+        virtual boost::filesystem::path doGetFile();
     };
 
     PerlSimpleLatticeWriter(
