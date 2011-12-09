@@ -12,6 +12,8 @@
 #ifndef LANG_GUESSER_HDR
 #define LANG_GUESSER_HDR
 
+#include "model_language.hpp"
+
 #include "annotator.hpp"
 #include "annotator_factory.hpp"
 #include "lattice_wrapper.hpp"
@@ -26,13 +28,20 @@ class LangGuesser : public Annotator {
 
 public:
 
-    class Factory : public AnnotatorFactory {
+    LangGuesser();
 
+    std::string guessLanguage(std::string text);
+    std::string guessLanguageByLetters(std::string text);
+
+    bool guessLanguage(Lattice& lattice);
+
+    class Factory : public AnnotatorFactory {
+    public:
         virtual Annotator* doCreateAnnotator(
             const boost::program_options::variables_map& options);
+
         virtual std::string doGetName();
         virtual boost::filesystem::path doGetFile();
-
         virtual boost::program_options::options_description doOptionsHandled();
 
         virtual std::list<std::list<std::string> > doRequiredLayerTags();
@@ -40,17 +49,20 @@ public:
         virtual std::list<std::string> doProvidedLayerTags();
     };
 
-    std::string guessLanguage(std::string& text);
-    bool guessLanguage(Lattice& lattice);
-
 private:
 
+    void initLanguages();
+    std::list<ModelLanguage> languages_;
+
+    static const int STAT_METHOD_MIN_LENGTH = 24;
+    static const int BFACTOR = 509;
+
     class Worker : public LatticeWorker {
-        public:
-            Worker(LangGuesser& processor, Lattice& lattice);
-        private:
-            virtual void doRun();
-            LangGuesser& processor_;
+    public:
+        Worker(LangGuesser& processor, Lattice& lattice);
+    private:
+        virtual void doRun();
+        LangGuesser& processor_;
     };
 
     virtual LatticeWorker* doCreateLatticeWorker(Lattice& lattice);

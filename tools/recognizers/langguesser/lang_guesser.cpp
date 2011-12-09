@@ -1,13 +1,44 @@
 #include "lang_guesser.hpp"
 
+LangGuesser::LangGuesser() {
+    initLanguages();
+}
+
+void LangGuesser::initLanguages() {
+    languages_.push_back(ModelLanguage("pl", "pllang.i", "ąćęłńóśźżĄĆĘŁŃÓŚŹŻ"));
+    languages_.push_back(ModelLanguage("en", "enlang.i", ""));
+    languages_.push_back(ModelLanguage("de", "delang.i", "äöüßÄÖÜ"));
+    languages_.push_back(ModelLanguage("ru", "rulang.i",
+        "абвгдеёжзийклмнопрстуфхцчшщъыьэюяАБВГДЕЁЖЗИЙКЛМНОПРСТУФХЦЧШЩЪЫЬЭЮЯ"));
+}
+
 bool LangGuesser::guessLanguage(Lattice& lattice) {
     return false;
 }
 
-std::string LangGuesser::guessLanguage(std::string& text) {
+std::string LangGuesser::guessLanguage(std::string text) {
     return std::string("unknown");
 }
 
+std::string LangGuesser::guessLanguageByLetters(std::string text) {
+    return std::string("unknown");
+}
+
+/*
+ * Implemented virtual methods
+ */
+
+LatticeWorker* LangGuesser::doCreateLatticeWorker(Lattice& lattice) {
+    return new Worker(*this, lattice);
+}
+
+std::string LangGuesser::doInfo() {
+    return std::string("language guesser");
+}
+
+/*
+ * LangGuesser::Factory
+ */
 
 Annotator* LangGuesser::Factory::doCreateAnnotator(
     const boost::program_options::variables_map& options) {
@@ -44,9 +75,9 @@ boost::program_options::options_description LangGuesser::Factory::doOptionsHandl
     return optionsDescription;
 }
 
-LatticeWorker* LangGuesser::doCreateLatticeWorker(Lattice& lattice) {
-    return new Worker(*this, lattice);
-}
+/*
+ * LangGuesser::Worker
+ */
 
 LangGuesser::Worker::Worker(LangGuesser& processor, Lattice& lattice):
     LatticeWorker(lattice), processor_(processor) {
@@ -57,6 +88,3 @@ void LangGuesser::Worker::doRun() {
     processor_.guessLanguage(lattice_);
 }
 
-std::string LangGuesser::doInfo() {
-    return std::string("language guesser");
-}

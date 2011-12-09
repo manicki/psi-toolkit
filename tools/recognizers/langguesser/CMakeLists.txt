@@ -1,4 +1,5 @@
 add_library(tools-recognizers-langguesser SHARED
+    model_language.cpp
 	lang_guesser.cpp
 )
 target_link_libraries(tools-recognizers-langguesser common ${Boost_LIBRARIES})
