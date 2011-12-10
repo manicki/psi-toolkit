@@ -247,6 +247,59 @@ namespace psi {
         reverse(fsa);
         determinize(fsa);
     }
+    
+    template <typename FSA1, typename FSA2>
+    void unify(FSA1 &dst, FSA2 &src) {
+        Copier<FSA2> copier(src);
+        traverse(copier, dst);
+    }
+    
+    template <typename FSA1, typename FSA2>
+    void concatenate(FSA1 &dst, FSA2 &src) {
+        std::set<typename FSA1::state_type> first_start  = dst.getStartStates();
+        std::set<typename FSA1::state_type> first_end    = dst.getEndStates();
+        
+        Copier<FSA2> copier(src);
+        traverse(copier, dst);
+        
+        std::set<typename FSA1::state_type> second_start = dst.getStartStates();
+        
+        BOOST_FOREACH(typename FSA1::state_type p, first_end) {
+            BOOST_FOREACH(typename FSA1::state_type q, second_start) {
+                if(!first_start.count(q)) {
+                    dst.addArc(p, typename FSA1::arc_type(EPS, q));
+                    dst.unsetStartState(q);
+                }
+            }
+            dst.unsetEndState(p);
+        }
+    }
+    
+    template <typename FSA>
+    void kleene_option(FSA &fsa) {
+        std::set<typename FSA::state_type> &start  = fsa.getStartStates();
+        std::set<typename FSA::state_type> &end    = fsa.getEndStates();
+        
+        BOOST_FOREACH(typename FSA::state_type p, start)
+            BOOST_FOREACH(typename FSA::state_type q, end)
+                fsa.addArc(p, typename FSA::arc_type(EPS, q));
+    }
+
+    template <typename FSA>
+    void kleene_plus(FSA &fsa) {
+        std::set<typename FSA::state_type> &start  = fsa.getStartStates();
+        std::set<typename FSA::state_type> &end    = fsa.getEndStates();
+        
+        BOOST_FOREACH(typename FSA::state_type p, end)
+            BOOST_FOREACH(typename FSA::state_type q, start)
+                fsa.addArc(p, typename FSA::arc_type(EPS, q));
+    }
+    
+    template <typename FSA>
+    void kleene_star(FSA &fsa) {
+        kleene_option(fsa);
+        kleene_plus(fsa);
+    }
 }
 
 #endif

@@ -34,6 +34,12 @@ namespace psi {
         
       public:
         NDFSA();
+        
+        NDFSA(symbol_type &);
+        
+        template <typename InputIterator>
+        NDFSA(InputIterator, InputIterator);
+        
         ~NDFSA();
              
         std::set<state_type> delta(std::set<state_type>, symbol_type) const;
@@ -71,6 +77,30 @@ namespace psi {
 
     template <typename StateT, typename ArcT>
     NDFSA<StateT, ArcT>::NDFSA() {}
+
+    template <typename StateT, typename ArcT>
+    NDFSA<StateT, ArcT>::NDFSA(typename ArcT::symbol_type &s) {
+        StateT q0 = addState(true);
+        StateT q1 = addState();
+        
+        addArc(q0, ArcT(q1, s));
+    }
+
+    template <typename StateT, typename ArcT>
+    template <typename InputIterator>
+    NDFSA<StateT, ArcT>::NDFSA(InputIterator it, InputIterator end) {
+        StateT q0 = addState(true);        
+        StateT p, q = q0;
+        
+        while(it != end) {
+            p = q;
+            q = addState();
+        
+            addArc(p, ArcT(*it, q));
+            it++;
+        }
+        setEndState(q);    
+    }
 
     template <typename StateT, typename ArcT>
     NDFSA<StateT, ArcT>::~NDFSA() {

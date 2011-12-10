@@ -1,40 +1,26 @@
 #include <iostream>
 #include <string>
 
+#include <vector>
+#include <boost/foreach.hpp>
+
 #include "NDFSA.hpp"
 #include "DFSA.hpp"
 #include "Algorithms.hpp"
 
 int main(int argc, char** argv) {    
+    
+    std::vector<std::string> strings;
+    strings.push_back("agentka");
+    strings.push_back("agencja");
+    
     psi::NDFSA<> ndfsa;
-
-    psi::State q0 = ndfsa.addState();
-    ndfsa.setStartState(q0);
-    
-    psi::State p, q;
-    
-    std::string s = "agentka";
-    p = q = q0;
-    for(size_t i = 0; i < s.size(); i++) {
-        p = q;
-        q = ndfsa.addState();
-        
-        ndfsa.addArc(p, psi::Arc<>(s[i], q));
+    BOOST_FOREACH( std::string s, strings ) {
+        psi::NDFSA<> strfsa(s.begin(), s.end());
+        unify(ndfsa, strfsa);
     }
-    ndfsa.setEndState(q);
-    
-    s = "agencja";
-    p = q = q0;
-    for(size_t i = 0; i < s.size(); i++) {
-        p = q;
-        q = ndfsa.addState();
-        
-        ndfsa.addArc(p, psi::Arc<>(s[i], q));
-    }
-    ndfsa.setEndState(q);
     
     ndfsa.print();
-    
     std::cout << std::endl;
     
     std::string s1 = "agencja";

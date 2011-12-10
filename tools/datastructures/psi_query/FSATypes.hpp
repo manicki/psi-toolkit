@@ -1,9 +1,5 @@
 #ifndef FSATYPES_HPP__
 #define FSATYPES_HPP__
-
-#include <vector>
-#include <set>
-#include <boost/tuple/tuple.hpp>
     
 namespace psi {
 
