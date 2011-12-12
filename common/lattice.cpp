@@ -1,26 +1,29 @@
 #include "lattice.hpp"
 
+#include "string_helpers.hpp"
+
 Lattice::Lattice() :
     nLooseVertices_(0),
     symbolTag_(layerTagManager_.createSingletonTagCollection("symbol")),
-    discardedTag_(layerTagManager_.createSingletonTagCollection("discarded"))
-{ }
+    discardedTag_(layerTagManager_.createSingletonTagCollection("discarded")) {
 
-Lattice::Lattice(std::string text) :
+    resizeImplicitEdgesStructures_();
+}
+
+Lattice::Lattice(const std::string & text) :
     nLooseVertices_(0),
     symbolTag_(layerTagManager_.createSingletonTagCollection("symbol")),
-    discardedTag_(layerTagManager_.createSingletonTagCollection("discarded"))
-{
+    discardedTag_(layerTagManager_.createSingletonTagCollection("discarded")) {
+
     appendString(text);
 }
 
 Lattice::~Lattice() { }
 
-void Lattice::appendString(std::string text) {
+void Lattice::appendString(const std::string & text) {
     allText_ += text;
-    implicitOutEdges_.resize(allText_.length() + 1);
-    hiddenImplicitOutEdges_.resize(allText_.length() + 1);
-    visibleImplicitOutEdges_.resize(allText_.length() + 1);
+
+    resizeImplicitEdgesStructures_();
 }
 
 void Lattice::addSymbols(VertexDescriptor startVertex, VertexDescriptor endVertex) {
@@ -42,7 +45,7 @@ void Lattice::addSymbols(VertexDescriptor startVertex, VertexDescriptor endVerte
     }
 }
 
-void Lattice::appendStringWithSymbols(std::string text) {
+void Lattice::appendStringWithSymbols(const std::string & text) {
     Lattice::VertexDescriptor joinPoint = getLastVertex();
     appendString(text);
     addSymbols(joinPoint, getLastVertex());
@@ -120,6 +123,12 @@ Lattice::EdgeDescriptor Lattice::addEdge(
         needToAddEdge = true;
     } else {
         EdgeDescriptor edge = (insertResult.first)->second;
+        EdgeSequence::Iterator sequenceIter(*this, sequence);
+        while (sequenceIter.hasNext()) {
+            if (sequenceIter.next() == edge) {
+                throw EdgeSelfReferenceException("Cannot add an edge referencing itself.");
+            }
+        }
         LayerTagCollection oldTags = getEdgeLayerTags(edge);
         Score oldScore = getEdgeScore(edge);
         if (tags != oldTags) {
@@ -529,6 +538,7 @@ void Lattice::runCutter(Cutter& cutter, LayerTagMask mask, LayerTagMask superMas
     EdgesSortedBySourceIterator edgeIter(*this, superMask);
 
     while (edgeIter.hasNext()) {
+        cutter.reset();
         runCutterOnEdge_(cutter, edgeIter.next(), mask);
     }
 }
@@ -651,8 +661,6 @@ void Lattice::correctionReplace(VertexDescriptor from, VertexDescriptor to, std:
     }
 }
 
-
-
 int Lattice::addTagCollectionIndex_(LayerTagCollection tags) {
     TagCollectionsBimapLeftIterator li = indexedTagCollections_.left.find(tags);
     if (li != indexedTagCollections_.left.end()) {
@@ -682,6 +690,12 @@ int Lattice::addTagCollectionIndex_(LayerTagCollection tags) {
     }
 }
 
+void Lattice::resizeImplicitEdgesStructures_() {
+    implicitOutEdges_.resize(allText_.length()+1);
+    hiddenImplicitOutEdges_.resize(allText_.length()+1);
+    visibleImplicitOutEdges_.resize(allText_.length()+1);
+}
+
 Lattice::VertexDescriptor Lattice::priorVertex_(Lattice::VertexDescriptor vertex) {
     if (vertex == 0) {
         throw NoVertexException("Beginning vertex has no prior vertex.");
@@ -697,11 +711,7 @@ Lattice::VertexDescriptor Lattice::priorVertex_(Lattice::VertexDescriptor vertex
 }
 
 size_t Lattice::symbolLength_(int ix) const {
-    std::string::const_iterator iter = allText_.begin() + ix;
-    std::string::const_iterator end = allText_.end();
-    std::string symbol;
-    utf8::append(utf8::next(iter, end), std::back_inserter(symbol));
-    return symbol.length();
+    return symbolLength(allText_, ix);
 }
 
 const LayerTagCollection& Lattice::getSymbolTag_() const {

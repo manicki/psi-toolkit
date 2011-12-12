@@ -448,15 +448,11 @@ namespace poleng {
              */
             Lattice::VertexDescriptor getVertex(Lattice &lattice,
                     int edgeIndex, int offset) {
-                LayerTagMask mask = lattice.getLayerTagManager().getMask(
-                        createUnion(
-                            lattice.getLayerTagManager().
-                            createSingletonTagCollection("form")
-                            ,
-                            lattice.getLayerTagManager().
-                            createSingletonTagCollection("parse")
-                            )
-                        );
+                std::list<std::string> tags;
+                tags.push_back("form");
+                tags.push_back("parse");
+                tags.push_back("token");
+                LayerTagMask mask = lattice.getLayerTagManager().getMask(tags);
                 return getVertex(lattice, edgeIndex, mask, offset);
             }
 
@@ -477,6 +473,13 @@ namespace poleng {
                     Lattice::EdgeDescriptor edge;
                     while (edgeIt.hasNext())
                         edge = edgeIt.next();
+                    if (isBlankTokenEdge(lattice, edge)) {
+                        vertex ++;
+                        if (vertex == lattice.getLastVertex())
+                            return lattice.getLastVertex();
+                        continue;
+                    }
+
                     vertex = lattice.getEdgeBeginIndex(edge) +
                         lattice.getEdgeLength(edge);
                     if (vertex == lattice.getLastVertex())
@@ -491,20 +494,24 @@ namespace poleng {
                         return lattice.getLastVertex();
                     edgeIt = lattice.outEdges(vertex, mask);
                 }
+                if (edgeIt.hasNext()) { //@todo: co jesli bedzie wiecej blank tokens niz 1 po sobie?
+                    Lattice::EdgeDescriptor edge = edgeIt.next();
+                    if (isBlankTokenEdge(lattice, edge)) {
+                        vertex ++;
+                        if (vertex == lattice.getLastVertex())
+                            return lattice.getLastVertex();
+                    }
+                }
                 return vertex;
             }
 
             std::list<Lattice::EdgeDescriptor> getTopEdges(
                     Lattice &lattice, Lattice::VertexDescriptor start) {
-                LayerTagMask mask = lattice.getLayerTagManager().getMask(
-                        createUnion(
-                            lattice.getLayerTagManager().
-                                createSingletonTagCollection("form")
-                                ,
-                                lattice.getLayerTagManager().
-                                    createSingletonTagCollection("parse")
-                            )
-                        );
+                std::list<std::string> tags;
+                tags.push_back("form");
+                tags.push_back("parse");
+                tags.push_back("token");
+                LayerTagMask mask = lattice.getLayerTagManager().getMask(tags);
                 return getTopEdges(lattice, start, mask);
             }
 
@@ -515,11 +522,17 @@ namespace poleng {
                 std::list<Lattice::EdgeDescriptor> nontopEdges;
                 Lattice::InOutEdgesIterator edgeIt =
                     lattice.outEdges(start, mask);
+                bool nontokenEdgeFound = false;
                 while (edgeIt.hasNext()) {
                     Lattice::EdgeDescriptor edge = edgeIt.next();
-//                    AnnotationItem ai = lattice.getEdgeAnnotationItem(edge);
                     if (isDiscarded(lattice, edge))
                         continue;
+                    if (isTokenEdge(lattice, edge)) {
+                        if (isBlankTokenEdge(lattice, edge))
+                            continue;
+                    }
+                    if (! isTokenEdge(lattice, edge))
+                        nontokenEdgeFound = true;
 
                     edges.push_back(edge);
                     std::list<Lattice::Partition> partitions =
@@ -533,8 +546,12 @@ namespace poleng {
                         }
                     }
                 }
+
                 nontopEdges.unique(EdgeUnique());
                 edges.remove_if(EdgeNonTop(lattice, nontopEdges));
+                if (nontokenEdgeFound) {
+                    edges.remove_if(EdgeNonToken(lattice));
+                }
                 return edges;
             }
 
@@ -583,15 +600,11 @@ namespace poleng {
             std::list<Lattice::EdgeSequence> getEdgesRange(Lattice &lattice,
                     Lattice::VertexDescriptor start,
                     Lattice::VertexDescriptor end) {
-                LayerTagMask mask = lattice.getLayerTagManager().getMask(
-                        createUnion(
-                            lattice.getLayerTagManager().
-                            createSingletonTagCollection("form")
-                            ,
-                            lattice.getLayerTagManager().
-                            createSingletonTagCollection("parse")
-                            )
-                        );
+                std::list<std::string> tags;
+                tags.push_back("form");
+                tags.push_back("parse");
+                tags.push_back("token");
+                LayerTagMask mask = lattice.getLayerTagManager().getMask(tags);
                 return getEdgesRange(lattice, start, end, mask);
             }
 
@@ -641,8 +654,8 @@ namespace poleng {
                                 if (readEnd != endVertex) {
                                     continue;
                                 }
-                                if (areAnnotationItemsEqual(lattice, annotationItem,
-                                            lattice.getEdgeAnnotationItem(newEdge))) {
+                                if (annotationItem ==
+                                            lattice.getEdgeAnnotationItem(newEdge)) {
                                     //there is already such an edge. add another partition
                                     //@todo: to tak nie dziala. nowa partition powinno dodawac samo addEdge, ale nie robi tego. na razie jest wiec jedna partition zawsze
 
@@ -879,50 +892,42 @@ namespace poleng {
                 }
             }
 
-            bool areAnnotationItemsEqual(Lattice &lattice,
-                    AnnotationItem a,
-                    AnnotationItem b) {
-                if (a.getCategory() != b.getCategory())
-                    return false;
-                std::list<std::pair<std::string, std::string> > valuesA =
-                    lattice.getAnnotationItemManager().getValues(a);
-                std::list<std::pair<std::string, std::string> > valuesB =
-                    lattice.getAnnotationItemManager().getValues(b);
-                if (valuesA.size() != valuesB.size()) {
-                    return false;
-                }
-                std::list< std::pair<std::string, std::string> >::iterator avi =
-                    valuesA.begin();
-                std::list< std::pair<std::string, std::string> >::iterator bvi =
-                    valuesB.begin();
-                while (avi != valuesA.end()) {
-                    if (avi->first != bvi->first)
-                        return false;
-                    if (avi->second != bvi->second)
-                        return false;
-                    ++ avi;
-                    ++ bvi;
-                }
-                return true;
-            }
-
 
             std::string getBase(Lattice &lattice,
                     Lattice::EdgeDescriptor edge) {
-                Lattice::EdgeDescriptor lemmaEdge =
-                    getLemmaEdge(lattice, edge);
-                AnnotationItem annotationItem =
-                    lattice.getEdgeAnnotationItem(lemmaEdge);
-                return annotationItem.getText();
+                if (isTokenEdge(lattice, edge)) {
+                    return lattice.getEdgeText(edge);
+                }
+                try {
+                    Lattice::EdgeDescriptor lemmaEdge =
+                        getLemmaEdge(lattice, edge);
+                    AnnotationItem annotationItem =
+                        lattice.getEdgeAnnotationItem(lemmaEdge);
+                    return annotationItem.getText();
+                }
+                catch (PuddleNoLexemeEdgeException &exception) {
+                    return lattice.getEdgeText(edge);
+                }
+                catch (PuddleNoLemmaEdgeException &exception) {
+                    return lattice.getEdgeText(edge);
+                }
             }
 
             std::string getPartOfSpeech(Lattice &lattice,
                     Lattice::EdgeDescriptor edge) {
-                Lattice::EdgeDescriptor lexemeEdge =
-                    getLexemeEdge(lattice, edge);
-                AnnotationItem annotationItem =
-                    lattice.getEdgeAnnotationItem(lexemeEdge);
-                return annotationItem.getCategory();
+                if (isTokenEdge(lattice, edge)) {
+                    return "ign"; // @todo: zrobic to lepiej. interpunkcje moze inaczej moga byc obsluzone zreszta
+                }
+                try {
+                    Lattice::EdgeDescriptor lexemeEdge =
+                        getLexemeEdge(lattice, edge);
+                    AnnotationItem annotationItem =
+                        lattice.getEdgeAnnotationItem(lexemeEdge);
+                    return annotationItem.getCategory();
+                }
+                catch (PuddleNoLexemeEdgeException &exception) {
+                    return "ign"; // @todo: zrobic to lepiej. interpunkcje moze inaczej moga byc obsluzone zreszta
+                }
             }
 
             bool isParseEdge(Lattice &lattice,
@@ -1191,6 +1196,24 @@ namespace poleng {
 //                return false;
             }
 
+            bool isTokenEdge(Lattice &lattice, Lattice::EdgeDescriptor edge) {
+                LayerTagMask mask = lattice.getLayerTagManager().getMask(
+                        lattice.getEdgeLayerTags(edge));
+                if (lattice.getLayerTagManager().match(mask, "token"))
+                    return true;
+                else
+                    return false;
+            }
+
+            bool isBlankTokenEdge(Lattice &lattice, Lattice::EdgeDescriptor edge) {
+                AnnotationItem annotationItem = lattice.getEdgeAnnotationItem(edge);
+                if (annotationItem.getCategory() == "B") {
+                    return true;
+                } else {
+                    return false;
+                }
+            }
+
             void deleteEdges(Lattice &lattice, Lattice::VertexDescriptor vertex,
                     int count, DeleteConditions conditions) {
                 //int offset = currentEntity + before;
@@ -1212,27 +1235,18 @@ namespace poleng {
                                 std::string tokenBase = lattice::getBase(lattice, *edgeIt);
                                 if (cond_it->negation) {
                                     if (RegExp::FullMatch(tokenBase, cond_it->pattern)) {
-                                        //lattice.getAnnotationItemManager().setValue(
-                                        //        annotationItem, "discard", "1");
                                         lattice.discard(*edgeIt);
-                                        //@todo: to nie wplywa na krate, bo nie zmienia tego w krawedzi naprawde
                                     }
                                 } else {
                                     if (!RegExp::FullMatch(tokenBase, cond_it->pattern)) {
-                                        //lattice.getAnnotationItemManager().setValue(
-                                        //        annotationItem, "discard", "1");
                                         lattice.discard(*edgeIt);
-                                        //@todo: to nie wplywa na krate, bo nie zmienia tego w krawedzi naprawde
                                     }
                                 }
                             } else if (cond_it->type == MORPHOLOGY_CONDITION) {
                                 std::string tokenMorphology = getMorphologyString(
                                         lattice, *edgeIt);
                                 if (RegExp::FullMatch(tokenMorphology, cond_it->pattern)) {
-                                    //lattice.getAnnotationItemManager().setValue(
-                                    //        annotationItem, "discard", "1");
                                     lattice.discard(*edgeIt);
-                                    //@todo: to nie wplywa na krate, bo nie zmienia tego w krawedzi naprawde
                                 }
                             }
                         }
@@ -1251,8 +1265,8 @@ namespace poleng {
                 while (edgeIt.hasNext()) {
                     Lattice::EdgeDescriptor ed = edgeIt.next();
                     if (lattice.getEdgeBeginIndex(ed) == startVertex) {
-                        if (areAnnotationItemsEqual(lattice, annotationItem,
-                                    lattice.getEdgeAnnotationItem(ed))) {
+                        if (annotationItem ==
+                                    lattice.getEdgeAnnotationItem(ed)) {
                             return true;
                         }
                         return false;

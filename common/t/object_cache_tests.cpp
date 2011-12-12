@@ -3,7 +3,7 @@
 #include "object_cache.hpp"
 #include "xml_property_tree.hpp"
 
-#include "config.h"
+#include "config.hpp"
 
 BOOST_AUTO_TEST_SUITE( object_cache )
 

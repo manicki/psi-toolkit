@@ -1,7 +1,7 @@
 #ifndef REGEXP_HDR
 #define REGEXP_HDR
 
-#include "config.h"
+#include "config.hpp"
 
 #if HAVE_RE2
 #include <re2/re2.h>

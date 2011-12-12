@@ -1,6 +1,6 @@
 #include "configurator.hpp"
 
-#include "config.h"
+#include "config.hpp"
 
 Configurator::Configurator():runAsInstalled_(
 #if IS_INSTALLABLE

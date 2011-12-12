@@ -1,23 +1,127 @@
+# This is a rule file for Unumsunt, a tag converter. Unumsunt is
+# specifically geared toward, but not limited to, conversion of
+# morphological tags. This file concerns various tagsets used
+# in morphological analysis of Polish.
 
-@TAGSET poleng sinflection:string form:string ssyntax:string
+# All comments start with a '#' character.
 
+# *Instructions* start with a '@' character. The instruction itself can
+# be given in lower or upper case.
+
+# @TAGSET instruction introduces a new *tagset*. The first argument
+# of a @TAGSET instruction is a tagset name, then follows a list
+# of *field* definitions. Unumsunt operates on lists of fields, each field
+# is either a string or attribute-value matrix (avm), i.e. a list of subfields.
+
+# Here is a definition of poleng-pl tagset with four string fields:
+#   * canon       - canonical (base) form of a lexeme (e.g. "komputer"),
+#   * sinflection - tag describing the lexeme as a whole (e.g. "R:3" -
+#                   noun, masculine-inanimate gender),
+#   * form        - inflected form (e.g. "komputerom"),
+#   * morpho      - morphological tag describing a specific inflected form
+#                   (e.g. "MnCM" for masculine-inanimate, dative plural).
+@TAGSET poleng-pl canon:string sinflection:string form:string morpho:string
+
+    # Unumsunt uses an *indentation-sensitive syntax*. Here follows a list
+    # of definitions of constants. As the following lines are indented, they
+    # concern the poleng-pl tagset. If there was no indentation, the constants
+    # would be global.
+
+    # @set instruction introduces a *constant*.
+
+    # Lists are written in square brackets, therefore POSTAGS is a constant
+    # list of 17 strings.
     @set POSTAGS = [C LG LP LZ P PR PS PR R S So WY Z ZD ZP ZR ZS]
     @set GENDERS = [Mo Mż Mn Ż N]
     @set CASES = [M D C B N Ms W]
     @set NUMBERS = [M P]
     @set DEGREES = [R W N]
 
-    sinflection =~ (POSTAGS)(:([a-z0-9]+))?
+    # Here follows a first rule in this rule file. A *rule* is a list
+    # of *conditions*. Each condition is written in a separate line.
+    # As the rule is indented, it will be used only for poleng-pl tagset.
+    # The rule is not used for intra-tagset conversion, but for the introduction
+    # of two auxillary poleng-pl fields. Such auxillary fields are not an explicit
+    # part of poleng-pl tagset, but they make it easier to convert poleng-pl tagset
+    # to other tagsets.
+    #
+    # The rule is composed of two conditions. The rule will be used in two directions:
+    #   * for splitting `sinflection` field into `pos` and `flags` auxillary fields,
+    #   * for combining `pos` and `flags` auxillary fields into `sinflection` field.
+    # How this works? Unumsunt has a notion of *current list of fields* (in the beginning
+    # current list of fields is the input set of fields, e.g. for poleng-pl: `canon`,
+    # `sinflection`, `form`, `morpho`). Unumsunt tries to find *applicable rules*
+    # for the given current list of fields. A rule is applicable if at least one
+    # condition is applicable (with respect to the current list of fields). A condition
+    # is applicable if all the fields specified in the conditions are *defined* and
+    # the condition holds true (note that undefined value is not the same as empty string).
+    # If a rule is applicable all the remaining conditions are checked and if any of
+    # the conditions is not fulfilled the whole conversion process fails (!). If there are
+    # undefined fields, they are assigned values so that a given condition holds true.
+    #
+    # =~ is used for regular expression matching (the whole string has to be matched).
+    # List constansts in regular expressions are interpolated into alternatives,
+    # therefore the first condition is equivalent to:
+    #      sinflection =~ (C|LG|LP|LZ|P|PR|PS|PR|R|S|So|WY|Z|ZD|ZP|ZR|ZS)(:([a-z0-9]+))?
+    # $1, $2 etc. refer to strings captured by the regexp. Comma is used
+    # as a conjunction operator.
+    sinflection =~ (POSTAGS)(?::([a-z0-9]+))?
     pos=$1, flags=$2
 
+    # Common parts of a rules can "pulled out" with indentation, the following
+    # is equivalent to:
+    #     pos=R
+    #     flags =~ ([1-5])(p?)(m?)
+    #     lexeme-gender=$1, singulare-tantum=non-empty($2), plurale-tantum=non-empty($3)
+    #     @test canon=komputer
+    #
+    #     pos=R
+    #     form =~ (GENDERS)(CASES)(NUMBERS)
+    #     gender=$1, case=$2, number=$3
+    #     gender=lexeme-gender
+    #
+    # Note that in the following rules many new auxillary fields are introduced
+    # (e.g. `lexeme-gender`, `singulare-tantum`, `gender`, `case`).
     pos=R
-        flags =~ ([0-5])(p?)(m?)
-        lexeme-gender=$1, singulare-tantum=non-empty($2), plurale-tantum=non-empty($3)
-        !test canon=komputer
+        flags =~ ([1-5])(n?)(p?)((?:zm)?)(m?)(k?)(B?)(A?)(a?)(H?)(d?)(g?)(t?)
+        # Two or more physical lines may be joined into logical lines
+        # using backslash characters.
+        lexeme-gender=$1,
+         # ?= is a special version of equality in which the field need not to
+         # be defined for the condition to be applicable.
+         uninflected?=non-empty($2),            \
+         singulare-tantum?=non-empty($3),       \
+         usually-plurale-tantum?=non-empty($4), \
+         plurale-tantum?=non-empty($5),         \
+         banan-like?=non-empty($6),             \
+         sługa-like?=non-empty($7),             \
+         biedaczysko-like?=non-empty($8),       \
+         chamisko-like?=non-empty($9),          \
+         hermafrodyta-like?=non-empty($10),     \
+         diminutive?=non-empty($11),            \
+         augmentative?=non-empty($12),          \
+         in-fixed-expressions?=non-empty($13)
+        # @test instruction is used to specify a test case -
+        # i.e. this rule must be applicable if canon=komputer in the input
+        # data.
+        @test canon=komputer
 
-        form =~ (GENDERS)(CASES)(NUMBERS)
-        gender=$1, case=$2, number = $3
+        morpho =~ (GENDERS)(CASES)(NUMBERS)
+        gender=$1, case=$2, number=$3
         gender=lexeme-gender
+        # ! is used as the operator of negation
+        !uninflected
+
+        uninflected
+        morpho = ""
+        gender=lexeme-gender
+        # ~~ is used for checking whether a value belongs to a list
+        # ; is used as the operator of alternative
+        case ~~ CASES, (plurale-tantum, number = M; !plurale-tantum, number ~~ NUMBER)
+        # '>' is used to mark a unidirectional condition, i.e. a condition
+        # such that is only checked, is not used while looking for applicable
+        # rules.
+        > canon=form
 
     pos=P
         flags =~ (s?)(n?)
@@ -37,7 +141,7 @@
         (gender = [Mo Mż Mn], case = [M W] ; gender = Mn, case = B), number = P
         @test form=niebieski
 
-@tagset poleng-internal category:string attrs:avm
+@tagset poleng-pl-internal category:string attrs:avm
 
 @tagset polex:string
 
@@ -54,6 +158,7 @@
         morpho =~ G(GENDERS)N(NUMBERS)C(CASES)
         G=$1, N=$2, C=$3
         !test form=kobiety
+
             @exception
             morpho =~ G\*NpC(CASES)
             G=*, N=p, C=$1
@@ -85,11 +190,11 @@
 @similar ipipan morfologik
 
 polex: C=n
-poleng: case=M
-poleng-internal: P=mian
+poleng-pl: case=M
+poleng-pl-internal: P=mian
 ipi-pan: nom
 
 polex: D=p
 poleng: degree=R
-poleng-internal: Stopień=równy
+poleng-pl-internal: Stopień=równy
 ipi-pan: pos

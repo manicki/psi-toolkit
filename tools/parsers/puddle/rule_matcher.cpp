@@ -131,7 +131,8 @@ std::string RuleMatcher::generateSentenceString(Lattice &lattice, int startVerte
 
         LayerTagCollection tags = lattice.getEdgeLayerTags(edge);
         LayerTagMask mask = lattice.getLayerTagManager().getMask(tags);
-        if (lattice.getLayerTagManager().match(mask, "form")) {
+        if (lattice.getLayerTagManager().match(mask, "form") ||
+                lattice.getLayerTagManager().match(mask, "token")) {
             ss << "<<t";
         } else {
             ss << "<<g";

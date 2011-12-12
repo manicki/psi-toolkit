@@ -52,4 +52,16 @@ public:
 };
 
 
+class StringFragException : public Exception {
+public:
+    StringFragException(std::string message) : Exception(message) { }
+};
+
+
+class EdgeSelfReferenceException : public Exception {
+public:
+    EdgeSelfReferenceException(std::string message) : Exception(message) { }
+};
+
+
 #endif

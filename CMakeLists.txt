@@ -76,15 +76,28 @@ message(STATUS "Using bonsai ParseGraph with puddle shallow parser ${USE_BONSAI_
 option(BONSAI_PATH "Bonsai common path file (required while using ParseGraph)" "/home/user/poleng4/src/bonsai/common")
 message(STATUS "Bonsai common path file (required while using ParseGraph) ${BONSAI_PATH}")
 
+
 find_package(SWIG)
 if(SWIG_FOUND)
-  set(HAVE_PERL_BINDINGS 1)
+
+  set(HAVE_SWIG_BINDINGS 1)
+
+  find_package(PerlLibs)
+  if (PERLLIBS_FOUND)
+    set(HAVE_PERL_BINDINGS 1)
+    include_directories(${PERL_INCLUDE_PATH})
+  endif(PERLLIBS_FOUND)
+
+  find_package(PythonLibs)
+  if (PYTHONLIBS_FOUND)
+    set(HAVE_PYTHON_BINDINGS 1)
+  endif(PYTHONLIBS_FOUND)
 endif(SWIG_FOUND)
 
 # Sets compiler flags
 set(CMAKE_CXX_FLAGS "-g -Wall -Wundef -Wnon-virtual-dtor -Wextra")
 
-set(BASE_TARGETS common framework formats-psi formats-simple formats-txt formats-utt tools-tokenizers-tp tools-segmenters-srx)
+set(BASE_TARGETS common framework formats-psi formats-simple formats-txt formats-utt tools-tokenizers-tp tools-segmenters-srx tools-recognizers-langguesser)
 
 set(TESTS_TARGETS common-tests tools-tokenizers-tp-tests tools-segmenters-srx-tests tools-datastructures-psi_query-tests)
 
@@ -152,5 +165,5 @@ endif(USE_PUDDLE)
 
 add_subdirectory(tests)
 
-configure_file(${psi-toolkit_SOURCE_DIR}/common/config.h.in ${psi-toolkit_SOURCE_DIR}/common/config.h)
+configure_file(${psi-toolkit_SOURCE_DIR}/common/config.hpp.in ${psi-toolkit_SOURCE_DIR}/common/config.hpp)
 

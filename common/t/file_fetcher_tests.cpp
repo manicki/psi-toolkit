@@ -3,7 +3,7 @@
 #include "../file_fetcher.hpp"
 #include "../lang_specific_processor_file_fetcher.hpp"
 
-#include "config.h"
+#include "config.hpp"
 
 BOOST_AUTO_TEST_SUITE( file_fetcher )
 

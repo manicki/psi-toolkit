@@ -26,7 +26,7 @@ AnnotationItem BySpacesCutter::doCutOff(const std::string& text, size_t& positio
     }
 }
 
-AnnotationItem BySpacesCutter::doCutOff(const StringFrag text, size_t& positionInText) {
+AnnotationItem BySpacesCutter::doCutOff(const StringFrag& text, size_t& positionInText) {
     size_t spacePosition = text.find(' ', positionInText);
 
     if (spacePosition == positionInText) {
@@ -52,8 +52,15 @@ AnnotationItem BySpacesCutter::doCutOff(const StringFrag text, size_t& positionI
     }
 }
 
-int BySpacesCutter::doMaximumFragmentLength() {
+void BySpacesCutter::doReset() {
+}
+
+size_t BySpacesCutter::doSegmentLengthHardLimit() {
     return 1000;
+}
+
+size_t BySpacesCutter::doSegmentLengthSoftLimit() {
+    return 0;
 }
 
 std::list<std::string> BySpacesCutter::doLayerTags() {

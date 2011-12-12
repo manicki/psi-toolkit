@@ -2,7 +2,7 @@
 
 #include "../tp_basic_tokenizer_rule_set.hpp"
 
-#include "config.h"
+#include "config.hpp"
 
 BOOST_AUTO_TEST_SUITE( tp_basic_tokenizer_rule_set )
 

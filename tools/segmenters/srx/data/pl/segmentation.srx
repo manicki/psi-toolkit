@@ -23,18 +23,6 @@
 
 
 			<languagerule languagerulename="pl">
-                                <!-- Zbyt dlugi segment -->
-				<rule break="yes">
-					<beforebreak>(?:.|\n){600}</beforebreak>
-					<afterbreak>\s</afterbreak>
-				</rule>
-
-
-				<!-- Wypunktowanie -->
-				<rule break="no">
-					<beforebreak>^\s*[0-9]+\.</beforebreak>
-					<afterbreak>\s</afterbreak>
-				</rule>
 
 				<rule break="no">
 					<beforebreak>^\s*\p{Ll}\.</beforebreak>

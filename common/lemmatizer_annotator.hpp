@@ -35,6 +35,10 @@ public:
             return L::getName();
         }
 
+        virtual boost::filesystem::path doGetFile() {
+            return L::getFile();
+        }
+
         virtual std::list<std::list<std::string> > doRequiredLayerTags() {
             return std::list<std::list<std::string> >();
         }

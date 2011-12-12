@@ -4,7 +4,7 @@
 #include <boost/function_output_iterator.hpp>
 
 #include "logging.hpp"
-#include "config.h"
+#include "config.hpp"
 
 #include "srx_rules.hpp"
 
@@ -39,6 +39,10 @@ void SrxSegmenter::Factory::doAddLanguageIndependentOptionsHandled(
 
 std::string SrxSegmenter::Factory::doGetName() {
     return "srx-segmenter";
+}
+
+boost::filesystem::path SrxSegmenter::Factory::doGetFile() {
+    return __FILE__;
 }
 
 std::list<std::list<std::string> > SrxSegmenter::Factory::doRequiredLayerTags() {
@@ -220,13 +224,27 @@ private:
         }
     }
 
-    virtual AnnotationItem doCutOff(const StringFrag text, size_t& positionInText) {
+    virtual AnnotationItem doCutOff(const StringFrag& text, size_t& positionInText) {
         // TODO
         return doCutOff(text.str(), positionInText);
     }
 
-    virtual int doMaximumFragmentLength() {
+    virtual void doReset() {
+        BOOST_FOREACH(RuleApplication& ruleApplication, breakingRuleApplications_) {
+            ruleApplication = RuleApplication();
+        }
+
+        BOOST_FOREACH(RuleApplication& ruleApplication, nonBreakingRuleApplications_) {
+            ruleApplication = RuleApplication();
+        }
+    }
+
+    virtual size_t doSegmentLengthHardLimit() {
         return 1000;
+    }
+
+    virtual size_t doSegmentLengthSoftLimit() {
+        return 600;
     }
 
     virtual std::list<std::string> doLayerTags() {

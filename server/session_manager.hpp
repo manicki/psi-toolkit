@@ -5,6 +5,7 @@
 #include <map>
 
 #include "session.hpp"
+#include "guid_generator.hpp"
 #include "server/reply.hpp"
 
 class SessionManager
@@ -32,7 +33,7 @@ private:
     static std::string cookieIdentifier;
     static int sessionIdLength;
     std::string generateNewId();
-    void randomString(char *, const int);
+    GUIDGenerator guidGenerator;
 
     std::map<std::string, Session> sessions_;
 

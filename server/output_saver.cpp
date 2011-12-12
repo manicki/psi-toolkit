@@ -13,11 +13,11 @@ std::string OutputSaver::storageDir = "storage/";
 //    : guid(1), storagePath("/") { }
 
 OutputSaver::OutputSaver(std::string rootPath)
-    : guid(0), websiteRoot(rootPath + "/") { }
+    : guidGenerator(20, true), websiteRoot(rootPath + "/") { }
 
 std::string OutputSaver::storeOutput(std::string content) {
 
-    std::string newGuid = getNewGuid();
+    std::string newGuid = guidGenerator.getGUID();
     std::string filePathToSave(websiteRoot + storageDir + newGuid + fileExtension);
     std::string filePathToReturn(storageDir + newGuid + fileExtension);
 
@@ -30,7 +30,3 @@ std::string OutputSaver::storeOutput(std::string content) {
     return filePathToReturn;
 }
 
-std::string OutputSaver::getNewGuid() {
-    guid++;
-    return boost::lexical_cast<std::string>(guid);
-}

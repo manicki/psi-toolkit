@@ -3,6 +3,7 @@
 
 #include <boost/program_options/options_description.hpp>
 #include <boost/program_options/variables_map.hpp>
+#include <boost/filesystem.hpp>
 
 #include "java_virtual_machine.hpp"
 #include "morfologik_tags_parser.hpp"
@@ -18,7 +19,10 @@ class Morfologik {
 public:
 
     Morfologik(const boost::program_options::variables_map& options);
+
     static std::string getName();
+    static boost::filesystem::path getFile();
+
     std::list<std::string> getLayerTags();
 
     void lemmatize(
@@ -65,9 +69,8 @@ public:
 
 private:
 
-    int level;
     AnnotationItemManager * annotationManager;
-//  LemmatizerOutputIterator * outputIterator;
+    int level;
 
     void stemsOnLemmaLevel(const std::string &, LemmatizerOutputIterator &);
     void stemsOnLexemeLevel(const std::string &, LemmatizerOutputIterator &);
@@ -77,7 +80,9 @@ private:
         const std::string & stem, std::string & tag
     );
     AnnotationItem createFormAnnotation(
-        AnnotationItem & lexemeItem, std::map<std::string, std::string> &
+        AnnotationItem & lexemeItem,
+        const std::string& word,
+        std::map<std::string, std::string> &
     );
 
     std::set<std::string> getLemmasFromStems(
@@ -115,11 +120,7 @@ private:
     const char * getTagsByJNI(jobject);
 
     MorfologikTagsParser tagsParser;
-/*
-    std::list<AnnotationItem> createAnnotation(
-        std::string & stem, std::string & tag
-    );
-*/
+
 };
 
 #endif

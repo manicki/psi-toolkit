@@ -6,7 +6,7 @@
 #include "tp_token_cutter.hpp"
 
 #include "logging.hpp"
-#include "config.h"
+#include "config.hpp"
 
 #include "tp_basic_tokenizer_rule_set.hpp"
 
@@ -47,6 +47,10 @@ void TpTokenizer::Factory::doAddLanguageIndependentOptionsHandled(
 
 std::string TpTokenizer::Factory::doGetName() {
     return "tp-tokenizer";
+}
+
+boost::filesystem::path TpTokenizer::Factory::doGetFile() {
+    return __FILE__;
 }
 
 std::list<std::list<std::string> > TpTokenizer::Factory::doRequiredLayerTags() {

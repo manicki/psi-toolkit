@@ -45,6 +45,9 @@ bool AttachAction::apply(Lattice &lattice, int matchedStartIndex,
             lattice, headVertex);
     std::list<Lattice::EdgeDescriptor> endEdges = lattice::getTopEdges(
             lattice, endVertex);
+    if (startEdges.empty() || headEdges.empty() || endEdges.empty()) {
+        return false;
+    }
     std::list<Lattice::EdgeSequence> groupPartitions =
         lattice::getEdgesRange(
                 lattice, startVertex, endVertex

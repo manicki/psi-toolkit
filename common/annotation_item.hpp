@@ -43,6 +43,12 @@ public:
         attributes_(size % 32 == 0 ? size : size + 32 - size % 32)
     { }
 
+    AnnotationItem(const AnnotationItem& item, const std::string& newText) :
+        category_(item.category_),
+        text_(newText),
+        values_(item.values_),
+        attributes_(item.attributes_) {
+    }
 
     std::string getCategory() const;
 

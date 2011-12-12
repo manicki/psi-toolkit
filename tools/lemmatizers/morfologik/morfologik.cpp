@@ -7,10 +7,12 @@
 std::string Morfologik::tagSeparator = "+";
 
 Morfologik::Morfologik(const boost::program_options::variables_map& options)
-    : annotationManager(NULL)
+    : annotationManager(NULL), level(3)
 {
+    if (options.count("level") > 0) {
+        setLevel(options["level"].as<int>());
+    }
     jenv = NULL;
-    level = 3;
 
     JavaVirtualMachine *jvm = JavaVirtualMachine::Instance();
     jenv = jvm->getENV();
@@ -25,6 +27,10 @@ std::string Morfologik::getName() {
     return "morfologik";
 }
 
+boost::filesystem::path Morfologik::getFile() {
+    return __FILE__;
+}
+
 std::list<std::string> Morfologik::getLayerTags() {
     std::list<std::string> layerTags;
 
@@ -35,7 +41,9 @@ std::list<std::string> Morfologik::getLayerTags() {
 }
 
 void Morfologik::setLevel(int lvl) {
-    level = lvl;
+    if (0 <= lvl && lvl <= 3) {
+        level = lvl;
+    }
 }
 
 void Morfologik::lemmatize(const std::string & word,
@@ -58,7 +66,11 @@ void Morfologik::lemmatize(const std::string & word,
 }
 
 boost::program_options::options_description Morfologik::optionsHandled() {
-    boost::program_options::options_description desc;
+    boost::program_options::options_description desc("Allowed options");
+
+    desc.add_options()
+        ("level", boost::program_options::value<int>()->default_value(3),
+            "set word processing level 0-3");
 
     return desc;
 }
@@ -189,7 +201,7 @@ void Morfologik::stemsOnFormLevel(
                 std::vector<std::map<std::string, std::string> >::iterator frm;
 
                 for (frm = forms.begin(); frm != forms.end(); ++frm) {
-                    AnnotationItem frmItm = createFormAnnotation(lexItm, *frm);
+                    AnnotationItem frmItm = createFormAnnotation(lexItm, word, *frm);
                     outputIterator.addForm(frmItm);
                 }
             }
@@ -199,16 +211,18 @@ void Morfologik::stemsOnFormLevel(
 }
 
 AnnotationItem Morfologik::createFormAnnotation(
-    AnnotationItem & lexemeItem, std::map<std::string, std::string> & attributes
+    AnnotationItem & lexemeItem,
+    const std::string& word,
+    std::map<std::string, std::string> & attributes
 ) {
 
-    AnnotationItem formItem = lexemeItem;
+    AnnotationItem formItem(lexemeItem, word);
 
     std::map<std::string, std::string>::iterator atr;
     for (atr = attributes.begin(); atr != attributes.end(); ++atr) {
-        annotationManager->setValue(lexemeItem, atr->first, atr->second);
+        annotationManager->setValue(formItem, atr->first, atr->second);
     }
-    return lexemeItem;
+    return formItem;
 }
 
 std::vector<std::string> Morfologik::simpleStem(const std::string & word) {

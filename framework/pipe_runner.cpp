@@ -191,18 +191,30 @@ void PipeRunner::runPipelineNode_(
         boost::shared_ptr<LatticeReader<Source> > reader =
             boost::dynamic_pointer_cast<LatticeReader<Source> >(
                 currentPipelineNode.getProcessor());
+
+        if (!reader)
+            throw Exception("first element of the pipeline should be a writer");
+
         reader->readIntoLattice(in, lattice);
     }
     else if (current == lastNode) {
         boost::shared_ptr<LatticeWriter<Sink> > writer =
             boost::dynamic_pointer_cast<LatticeWriter<Sink> >(
                 currentPipelineNode.getProcessor());
+
+        if (!writer)
+            throw Exception("last element of the pipeline should be a writer");
+
         writer->writeLattice(lattice, out);
     }
     else {
         boost::shared_ptr<Annotator> annotator =
             boost::dynamic_pointer_cast<Annotator>(
                 currentPipelineNode.getProcessor());
+
+        if (!annotator)
+            throw Exception("unexpected reader or writer in the middle of the pipeline");
+
         annotator->annotate(lattice);
     }
 }

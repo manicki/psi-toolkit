@@ -36,6 +36,9 @@ bool TransformAction::apply(Lattice &lattice, int matchedStartIndex,
             lattice, headVertex);
     std::list<Lattice::EdgeDescriptor> endEdges = lattice::getTopEdges(
             lattice, endVertex);
+    if (startEdges.empty() || headEdges.empty() || endEdges.empty()) {
+        return false;
+    }
     std::list<Lattice::EdgeSequence> groupPartitions =
         lattice::getEdgesRange(
                 lattice, startVertex, endVertex
@@ -70,11 +73,11 @@ bool TransformAction::test(Lattice &lattice, int matchedStartIndex,
     //Lattice::VertexDescriptor vertex = matchedStartIndex + before;
     Lattice::VertexDescriptor vertex = lattice::getVertex(lattice,
             before, matchedStartIndex);
-    //@todo: czy to sprawdzenie jest nadal konieczne? ta funkcja getVertex nie robi czegos takiego?
-    while (lattice::getTopEdges(lattice, vertex).size() == 0) { //if there is no edge at a given position, proceed to the next vertex, as it may be a whitespace
-        before ++;
-        vertex = matchedStartIndex + before;
-    }
+//    //@todo: czy to sprawdzenie jest nadal konieczne? ta funkcja getVertex nie robi czegos takiego?
+//    while (lattice::getTopEdges(lattice, vertex).size() == 0) { //if there is no edge at a given position, proceed to the next vertex, as it may be a whitespace
+//        before ++;
+//        vertex = matchedStartIndex + before;
+//    }
 
     std::list<Lattice::EdgeDescriptor> edges = lattice::getTopEdges(
             lattice, vertex);

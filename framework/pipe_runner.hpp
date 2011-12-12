@@ -1,7 +1,7 @@
 #ifndef PIPE_RUNNER_HDR
 #define PIPE_RUNNER_HDR
 
-#include "config.h"
+#include "config.hpp"
 #include <boost/shared_ptr.hpp>
 #include <boost/graph/adjacency_list.hpp>
 
@@ -11,6 +11,7 @@
 #include "lattice_reader_factory.hpp"
 #include "lattice_writer_factory.hpp"
 #include "annotator_factory.hpp"
+#include "psi_exception.hpp"
 
 #if HAVE_PERL_BINDINGS
 #include "EXTERN.h"
@@ -31,6 +32,14 @@ public:
 #if HAVE_PERL_BINDINGS
     SV * run_for_perl(const std::string & inputString);
 #endif
+
+    class Exception : public PsiException  {
+    public:
+        Exception(const std::string& msg): PsiException(msg) {
+        }
+
+        virtual ~Exception() throw() {}
+    };
 
 private:
     PipelineSpecification pipelineSpecification_;

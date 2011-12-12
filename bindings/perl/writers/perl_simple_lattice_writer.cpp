@@ -56,6 +56,9 @@ std::string PerlSimpleLatticeWriter::Factory::doGetName() {
     return "perl-simple-writer";
 }
 
+boost::filesystem::path PerlSimpleLatticeWriter::Factory::doGetFile() {
+    return __FILE__;
+}
 
 std::string PerlSimpleLatticeWriter::doInfo() {
     return "Perl simple writer";
@@ -78,7 +81,7 @@ void PerlSimpleLatticeWriter::Worker::doRun() {
     BOOST_FOREACH(std::string higherOrderTag, processor_.getHigherOrderTags()) {
         handledTags.push_back(higherOrderTag);
     }
-                
+
     LatticeIterWriter writer(
         lattice_,
         outputIterator,

@@ -32,8 +32,9 @@ void ProcessorFileFetcher::initDirectoryParams_(boost::filesystem::path sourceFi
         boost::filesystem::path seg(i);
 
         if (seg.string() == "tools"
-            || seg.string() == "formatters"
-            || seg.string() == "server") {
+            || seg.string() == "formats"
+            || seg.string() == "server"
+            || seg.string() == "bindings") {
             sourcePath /= (i);
             found = true;
         }

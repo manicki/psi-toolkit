@@ -4,8 +4,11 @@
 classjava.stamp
 psi-pipe
 test_runner
-common/config.h
+common/config.hpp
 cppcheck-result.xml
 build/*
 server/t/reports/*
 *.so
+server/website/storage/*
+\#*\#
+bindings/python/Test/__pycache__

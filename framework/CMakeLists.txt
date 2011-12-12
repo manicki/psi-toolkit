@@ -1,6 +1,9 @@
 add_library(framework SHARED
     factories_keeper.cpp
     main_factories_keeper.cpp
+    help_formatter.cpp
+    console_help_formatter.cpp
+    html_help_formatter.cpp
     pipe_runner.cpp
 )
 
@@ -61,8 +64,6 @@ if(HAVE_PERL_BINDINGS)
     find_package(SWIG)
     include(${SWIG_USE_FILE})
     find_package(PerlLibs)
-    include_directories(${PERL_INCLUDE_PATH})
-
 endif(HAVE_PERL_BINDINGS)
 
 install(TARGETS framework DESTINATION lib/)

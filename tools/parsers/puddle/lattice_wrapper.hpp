@@ -1,7 +1,7 @@
 #ifndef PUDDLE_LATTICE_WRAPPER_H__
 #define PUDDLE_LATTICE_WRAPPER_H__
 
-#include "config.h"
+#include "config.hpp"
 
 #include "lattice.hpp"
 #include "tagset.hpp"
@@ -101,6 +101,10 @@ namespace poleng {
                             std::string category, std::string text);
                     bool isDiscarded(Lattice &lattice,
                             Lattice::EdgeDescriptor edge);
+                    bool isTokenEdge(Lattice &lattice,
+                            Lattice::EdgeDescriptor edge);
+                    bool isBlankTokenEdge(Lattice &lattice,
+                            Lattice::EdgeDescriptor edge);
                     bool sequenceContainsEdge(Lattice &lattice,
                             Lattice::EdgeSequence sequence,
                             Lattice::EdgeDescriptor edge);
@@ -109,9 +113,9 @@ namespace poleng {
                             std::list<Lattice::EdgeSequence> &partitions,
                             std::list<Lattice::EdgeDescriptor> edges);
 
-                    bool areAnnotationItemsEqual(Lattice &lattice,
-                            AnnotationItem a,
-                            AnnotationItem b);
+//                    bool areAnnotationItemsEqual(Lattice &lattice,
+//                            AnnotationItem a,
+//                            AnnotationItem b);
 
                     std::string getMorphologyString(Lattice &lattice,
                             Lattice::EdgeDescriptor edge);
@@ -157,8 +161,10 @@ namespace poleng {
                                 ++ it) {
                             if (start == lattice.getEdgeBeginIndex(*it)) {
                                 if (length == lattice.getEdgeLength(*it)) {
-                                    if (areAnnotationItemsEqual(lattice, annotationItem,
-                                                lattice.getEdgeAnnotationItem(*it))) {
+                                    //if (areAnnotationItemsEqual(lattice, annotationItem,
+                                    //            lattice.getEdgeAnnotationItem(*it))) {
+                                    if (annotationItem ==
+                                                lattice.getEdgeAnnotationItem(*it)) {
                                         return true;
                                     }
                                 }
@@ -181,6 +187,20 @@ namespace poleng {
                     bool operator() (const Lattice::EdgeDescriptor &first,
                             const Lattice::EdgeDescriptor &second) const {
                         return (! ((first < second) || (second < first)) );
+                    }
+            };
+
+            class EdgeNonToken {
+                private:
+                    Lattice &lattice;
+                public:
+                    EdgeNonToken(Lattice &aLattice)
+                        : lattice(aLattice) { }
+                    bool operator() (const Lattice::EdgeDescriptor &value) {
+                        if (isTokenEdge(lattice, value))
+                            return true;
+                        else
+                            return false;
                     }
             };
 

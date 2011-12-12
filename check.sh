@@ -1,11 +1,13 @@
 #!/bin/bash
 
+# Arch packages needed for running this: python-distribute, python-nose
+
 TARGET_DIR=build
 
 mkdir -p $TARGET_DIR
 
 cd $TARGET_DIR
-make
+make -j 6
 ./tests/test_runner --log_format=XML --log_level=all --log_sink=test-results.xml
 
 ./tests/mass-tests .. --xml mass-tests-results.xml

@@ -1,6 +1,7 @@
 #include "tp_token_cutter.hpp"
 
 #include "logging.hpp"
+#include "string_helpers.hpp"
 
 TpTokenCutter::TpTokenCutter(TPBasicTokenizerRuleSet& ruleSet):ruleSet_(ruleSet) {
 }
@@ -29,19 +30,31 @@ AnnotationItem TpTokenCutter::doCutOff(const std::string& text, size_t& position
     return defaultToken(text, positionInText);
 }
 
-AnnotationItem TpTokenCutter::doCutOff(const StringFrag text, size_t& positionInText) {
+AnnotationItem TpTokenCutter::doCutOff(const StringFrag& text, size_t& positionInText) {
     // TODO
     return doCutOff(text.str(), positionInText);
 }
 
-AnnotationItem TpTokenCutter::defaultToken(const std::string& text, size_t& positionInText) {
-    return AnnotationItem(
-        DEFAULT_CATEGORY,
-        text.substr(positionInText++, 1));
+void TpTokenCutter::doReset() {
 }
 
-int TpTokenCutter::doMaximumFragmentLength() {
+AnnotationItem TpTokenCutter::defaultToken(const std::string& text, size_t& positionInText) {
+
+    size_t oldPosition = positionInText;
+    size_t len = symbolLength(text, oldPosition);
+    positionInText += len;
+
+    return AnnotationItem(
+        DEFAULT_CATEGORY,
+        text.substr(oldPosition, len));
+}
+
+size_t TpTokenCutter::doSegmentLengthHardLimit() {
     return 1000;
+}
+
+size_t TpTokenCutter::doSegmentLengthSoftLimit() {
+    return 950;
 }
 
 std::list<std::string > TpTokenCutter::doLayerTags() {

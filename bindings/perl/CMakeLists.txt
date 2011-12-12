@@ -1,5 +1,4 @@
 find_package(SWIG)
-set(HAVE_PERL_BINDINGS 1)
 
 if (HAVE_PERL_BINDINGS)
   set(WRAPPERS_CPP_DIRS writers)

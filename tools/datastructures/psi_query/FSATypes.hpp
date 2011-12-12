@@ -1,9 +1,5 @@
-#ifndef DFSATYPES_HPP__
-#define DFSATYPES_HPP__
-
-#include <vector>
-#include <set>
-#include <boost/tuple/tuple.hpp>
+#ifndef FSATYPES_HPP__
+#define FSATYPES_HPP__
     
 namespace psi {
 
@@ -29,8 +25,8 @@ namespace psi {
         Arc() {}
         Arc(SymbolT a, StateT q) : m_a(a), m_q(q) {}
         
-        inline SymbolT getSymbol() const { return m_a; }
-        inline StateT getDest() const { return m_q; }
+        inline SymbolT& getSymbol() { return m_a; }
+        inline StateT& getDest() { return m_q; }
         
         inline void setSymbol(SymbolT a) { m_a = a; }
         inline void setDest(StateT q) { m_q = q; }

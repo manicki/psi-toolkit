@@ -202,6 +202,13 @@ public:
             }
             return implicitIndex < other.implicitIndex;
         }
+
+        bool operator==(EdgeDescriptor other) const {
+            if (implicitIndex < 0 && other.implicitIndex < 0) {
+                return descriptor == other.descriptor;
+            }
+            return implicitIndex == other.implicitIndex;
+        }
     };
 
     struct EdgeDescriptorWrapperToFoolBoost146OrGnu461 : public Graph::edge_descriptor {
@@ -329,15 +336,15 @@ public:
      * represented as an edge labeled with layer tag `raw` and category `c`
      * (where c is the given character)
      */
-    Lattice(std::string text);
+    Lattice(const std::string & text);
 
     ~Lattice();
 
-    void appendString(std::string text);
+    void appendString(const std::string & text);
 
     void addSymbols(VertexDescriptor startVertex, VertexDescriptor endVertex);
 
-    void appendStringWithSymbols(std::string text);
+    void appendStringWithSymbols(const std::string & text);
 
     VertexDescriptor addLooseVertex();
 
@@ -512,6 +519,8 @@ private:
     TagCollectionsBimap indexedTagCollections_;
 
     int addTagCollectionIndex_(LayerTagCollection tags);
+
+    void resizeImplicitEdgesStructures_();
 
     VertexDescriptor priorVertex_(VertexDescriptor vertex);
 

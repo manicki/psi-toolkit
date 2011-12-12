@@ -8,5 +8,6 @@ task :test do
 	require 'psi_server_test'
 	require 'index_site_test'
     require 'pipe_site_test'
+    require 'help_site_test'
 end
 

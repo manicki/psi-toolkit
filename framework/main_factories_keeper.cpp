@@ -1,6 +1,6 @@
 #include "main_factories_keeper.hpp"
 
-#include "config.h"
+#include "config.hpp"
 
 #include "txt_lattice_reader.hpp"
 #include "utt_lattice_reader.hpp"
@@ -10,6 +10,7 @@
 #include "tp_tokenizer.hpp"
 #include "srx_segmenter.hpp"
 #include "lemmatizer_annotator.hpp"
+#include "lang_guesser.hpp"
 
 #if HAVE_POSTGRESQL
 #include "lex_db_lemmatizer.hpp"
@@ -33,6 +34,8 @@ MainFactoriesKeeper::MainFactoriesKeeper() {
     keeper_.takeProcessorFactory(new SimpleLatticeWriter::Factory());
     keeper_.takeProcessorFactory(new TpTokenizer::Factory());
     keeper_.takeProcessorFactory(new SrxSegmenter::Factory());
+    keeper_.takeProcessorFactory(new LangGuesser::Factory());
+
 #if HAVE_POSTGRESQL
     keeper_.takeProcessorFactory(new LemmatizerAnnotator<LexDbLemmatizer>::Factory());
 #endif
@@ -50,6 +53,10 @@ MainFactoriesKeeper::MainFactoriesKeeper() {
 
 ProcessorFactory& MainFactoriesKeeper::getProcessorFactory(std::string processorName) {
     return keeper_.getProcessorFactory(processorName);
+}
+
+std::vector<std::string> MainFactoriesKeeper::getProcessorNames() {
+    return keeper_.getProcessorNames();
 }
 
 MainFactoriesKeeper& MainFactoriesKeeper::getInstance() {
