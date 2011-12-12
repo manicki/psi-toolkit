@@ -6,6 +6,10 @@ size_t symbolLength(const std::string& s, int ix) {
     return symbolLength(s.c_str(), ix);
 }
 
+size_t symbolLength(const StringFrag& s, int ix) {
+    return symbolLength(s.str(), ix);
+}
+
 size_t symbolLength(const char* s, int ix) {
     return symbolLength(s + ix);
 }

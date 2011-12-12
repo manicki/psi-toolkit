@@ -3,7 +3,11 @@
 
 #include <string>
 
+#include "string_frag.hpp"
+
 size_t symbolLength(const std::string& s, int ix);
+
+size_t symbolLength(const StringFrag& s, int ix);
 
 size_t symbolLength(const char* s, int ix);
 

@@ -15,6 +15,16 @@ StringFrag & StringFrag::operator=(const StringFrag & other) {
     return *this;
 }
 
+const char & StringFrag::operator[](size_t pos) const {
+    if (!valid()) {
+        throw StringFragException("String frag invalidated (" + contents_ + "...)");
+    }
+    if (begin_ == std::string::npos || len_ == std::string::npos) {
+        return contents_[pos];
+    }
+    return src_[begin_ + pos];
+}
+
 std::string StringFrag::str() const {
     if (!valid()) {
         throw StringFragException("String frag invalidated (" + contents_ + "...)");
@@ -24,6 +34,12 @@ std::string StringFrag::str() const {
     }
     return src_.substr(begin_, len_);
 }
+
+std::string StringFrag::substr(size_t pos, size_t n) const {
+    return str().substr(pos, n);
+}
+
+
 
 void StringFrag::append(const StringFrag & other) {
     if (!valid()) {

@@ -56,7 +56,11 @@ public:
 
     StringFrag & operator=(const StringFrag & other);
 
+    const char & operator[](size_t pos) const;
+
     std::string str() const;
+
+    std::string substr(size_t pos = 0, size_t n = std::string::npos) const;
 
     void append(const StringFrag & other);
 
