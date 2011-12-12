@@ -5,18 +5,35 @@
 
 #define LOWER_LETTER(i) ( ((i) > 90 || (i) < 65) ? (i) : ((i) + 32) )
 
-std::string LangGuesser::UNKNOWN = "unknown";
+std::string LangGuesser::UNKNOWN_LANGUAGE = "unknown";
 
 LangGuesser::LangGuesser() {
     initLanguages();
 }
 
 void LangGuesser::initLanguages() {
-    languages_.push_back(ModelLanguage("pl", "pllang.i", "ąćęłńóśźżĄĆĘŁŃÓŚŹŻ"));
-    languages_.push_back(ModelLanguage("en", "enlang.i", ""));
-    languages_.push_back(ModelLanguage("de", "delang.i", "äöüßÄÖÜ"));
-    languages_.push_back(ModelLanguage("ru", "rulang.i",
-        "абвгдеёжзийклмнопрстуфхцчшщъыьэюяАБВГДЕЁЖЗИЙКЛМНОПРСТУФХЦЧШЩЪЫЬЭЮЯ"));
+
+    ProcessorFileFetcher fileFetcher(__FILE__);
+
+    languages_.push_back( Language("pl",
+        "ąćęłńóśźżĄĆĘŁŃÓŚŹŻ",
+        fileFetcher.getOneFile("%ITSDATA%/pllang.i"))
+    );
+
+    languages_.push_back( Language("en",
+        "",
+        fileFetcher.getOneFile("%ITSDATA%/enlang.i"))
+    );
+
+    languages_.push_back( Language("de",
+        "äöüßÄÖÜ",
+        fileFetcher.getOneFile("%ITSDATA%/delang.i"))
+    );
+
+    languages_.push_back( Language("ru",
+        "абвгдеёжзийклмнопрстуфхцчшщъыьэюяАБВГДЕЁЖЗИЙКЛМНОПРСТУФХЦЧШЩЪЫЬЭЮЯ",
+        fileFetcher.getOneFile("%ITSDATA%/rulang.i"))
+    );
 }
 
 bool LangGuesser::guessLanguage(Lattice& lattice) {
@@ -38,18 +55,17 @@ bool LangGuesser::guessLanguage(Lattice& lattice) {
 std::string LangGuesser::guessLanguage(std::string text) {
 
     if (text.length() == 0) {
-        return UNKNOWN;
+        return UNKNOWN_LANGUAGE;
     }
 
-    static double textFrequencyTable[ModelLanguage::FTABLE_LENGTH];
-    createFrequencyTable(text, textFrequencyTable);
+    BigramLanguageModel inputTextBigramModel(text);
 
     double dist;
     double minDist = 100000000000.0;
-    std::string minLang = UNKNOWN;
+    std::string minLang = UNKNOWN_LANGUAGE;
 
-    BOOST_FOREACH (ModelLanguage lang, languages_) {
-        dist = distance(textFrequencyTable, lang.bigramFrequencyTable);
+    BOOST_FOREACH (Language lang, languages_) {
+        dist = distance(inputTextBigramModel.frequencyTable(), lang.model.frequencyTable());
         DEBUG("LangGuesser info: " << lang.name << " => " << dist);
 
         if (dist < minDist) {
@@ -69,79 +85,14 @@ std::string LangGuesser::guessLanguageByLetters(std::string text) {
  * Private methods
  */
 
-void LangGuesser::countBigrams(std::string text, int* ctable) {
-
-    if (text.length() < 2) {
-        return;
-    }
-
-    std::string::iterator iter = text.begin();
-    std::string::iterator end = text.end();
-
-    utf8::uint32_t a = utf8::next(iter, end);
-    a = LOWER_LETTER(a);
-    utf8::uint32_t b = utf8::next(iter, end);
-    b = LOWER_LETTER(b);
-
-    while (iter != end) {
-        ++ctable[(a * BFACTOR + b * (BFACTOR * BFACTOR)) % ModelLanguage::FTABLE_LENGTH];
-        a = b;
-        b = utf8::next(iter, end);
-        b = LOWER_LETTER(b);
-    }
-}
-
-void LangGuesser::zeroCountTable(int* ctable) {
-    for (int i = 0; i < ModelLanguage::FTABLE_LENGTH; i++) {
-        ctable[i] = 0;
-    }
-}
-
-void LangGuesser::zeroFrequencyTable(double* ftable) {
-    for (int i = 0; i < ModelLanguage::FTABLE_LENGTH; i++) {
-        ftable[i] = 0.0;
-    }
-}
-
-void LangGuesser::bigramCountToFrequencyTable(int* ctable, double* ftable) {
-    int sum = sumOfCounts(ctable);
-
-    if (sum == 0) {
-        zeroFrequencyTable(ftable);
-    }
-    else {
-        for (int i = 0; i < ModelLanguage::FTABLE_LENGTH; i++) {
-            ftable[i] = double(ctable[i]) / double(sum);
-        }
-    }
-}
-
-int LangGuesser::sumOfCounts(int* ctable) {
-    int sum = 0;
-
-    for (int i = 0; i < ModelLanguage::FTABLE_LENGTH; i++) {
-        sum += ctable[i];
-    }
-
-    return sum;
-}
-
 double LangGuesser::distance(double* ftableOne, double* ftableTwo) {
     double dist = 0.0;
 
-    for(int i=0; i<ModelLanguage::FTABLE_LENGTH; ++i) {
+    for (int i=0; i<BigramLanguageModel::TABLE_SIZE; ++i) {
         dist += (ftableOne[i] - ftableTwo[i]) * (ftableOne[i] - ftableTwo[i]);
     }
 
     return dist;
-}
-
-void LangGuesser::createFrequencyTable(std::string text, double * ftable) {
-    static int ctable[ModelLanguage::FTABLE_LENGTH];
-    zeroCountTable(ctable);
-
-    countBigrams(text, ctable);
-    bigramCountToFrequencyTable(ctable, ftable);
 }
 
 /*

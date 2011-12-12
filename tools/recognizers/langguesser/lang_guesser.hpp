@@ -12,11 +12,13 @@
 #ifndef LANG_GUESSER_HDR
 #define LANG_GUESSER_HDR
 
-#include "model_language.hpp"
+#include "bigram_language_model.hpp"
 
 #include "annotator.hpp"
 #include "annotator_factory.hpp"
 #include "lattice_wrapper.hpp"
+#include "processor_file_fetcher.hpp"
+#include "logging.hpp"
 
 #include <boost/program_options/variables_map.hpp>
 #include <boost/filesystem.hpp>
@@ -35,6 +37,17 @@ public:
 
     bool guessLanguage(Lattice& lattice);
 
+    struct Language {
+        std::string name;
+        std::string letters;
+        BigramLanguageModel model;
+
+        Language(std::string lang, std::string nonStandardLetters, boost::filesystem::path file)
+            : name(lang), letters(nonStandardLetters), model(file) {
+        };
+
+    };
+
     class Factory : public AnnotatorFactory {
     public:
         virtual Annotator* doCreateAnnotator(
@@ -51,19 +64,11 @@ public:
 
 private:
 
-    static const int STAT_METHOD_MIN_LENGTH = 24;
-    static const int BFACTOR = 509;
-    static std::string UNKNOWN;
+    static const int BIGRAM_METHOD_MIN_LENGTH = 24;
+    static std::string UNKNOWN_LANGUAGE;
 
     void initLanguages();
-    std::list<ModelLanguage> languages_;
-
-    void countBigrams(std::string text, int* ctable);
-    int sumOfCounts(int* ctable);
-    void zeroCountTable(int* ctable);
-    void zeroFrequencyTable(double* ftable);
-    void bigramCountToFrequencyTable(int* ctable, double* ftable);
-    void createFrequencyTable(std::string text, double * ftable);
+    std::list<Language> languages_;
 
     double distance(double* ftableOne, double* ftableTwo);
 
