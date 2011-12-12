@@ -3,9 +3,10 @@
 #include <algorithm>
 
 #include "string_helpers.hpp"
-#include "logging.hpp"
 
-AnnotationItem Cutter::cutOff(const std::string& text, size_t& positionInText) {
+/*
+template <class StringType>
+AnnotationItem Cutter::cutOff(const StringType& text, size_t& positionInText) {
     if (shouldFragmentQueueBeUsed_())
         return getFirstItemInFragmentQueue_(text, positionInText);
 
@@ -30,10 +31,7 @@ AnnotationItem Cutter::cutOff(const std::string& text, size_t& positionInText) {
 
     return item;
 }
-
-AnnotationItem Cutter::cutOff(const StringFrag& text, size_t& positionInText) {
-    return doCutOff(text, positionInText);
-}
+*/
 
 void Cutter::reset() {
     fragmentedSegmentsQueue_ = std::queue<AnnotationItem>();
@@ -60,8 +58,10 @@ bool Cutter::shouldFragmentQueueBeUsed_() {
     return !fragmentedSegmentsQueue_.empty();
 }
 
+/*
+template <class StringType>
 AnnotationItem Cutter::getFirstItemInFragmentQueue_(
-    const std::string& text, size_t& positionInText) {
+    const StringType& text, size_t& positionInText) {
 
     AnnotationItem item = fragmentedSegmentsQueue_.front();
     fragmentedSegmentsQueue_.pop();
@@ -73,6 +73,7 @@ AnnotationItem Cutter::getFirstItemInFragmentQueue_(
 
     return item;
 }
+*/
 
 bool Cutter::areLimitsBroken_(size_t segmentLength) {
     return
@@ -96,9 +97,11 @@ bool Cutter::isHardLimitSet_() {
     return segmentLengthHardLimit() != 0;
 }
 
+/*
+template <class StringType>
 void Cutter::fragmentSegment_(
     const AnnotationItem& item,
-    const std::string& text,
+    const StringType& text,
     size_t positionInText,
     size_t segmentLength) {
 
@@ -133,7 +136,9 @@ void Cutter::fragmentSegment_(
         fragmentedSegmentsQueue_.push(fragmentItem);
     }
 }
+*/
 
+/*
 size_t Cutter::findSoftLimitCutPoint_(
     const std::string& text,
     size_t cutPoint,
@@ -150,7 +155,9 @@ size_t Cutter::findSoftLimitCutPoint_(
 
     return maxCutPoint;
 }
+*/
 
+/*
 size_t Cutter::findHardLimitCutPoint_(
     const std::string& text,
     size_t cutPoint) {
@@ -172,6 +179,7 @@ size_t Cutter::findHardLimitCutPoint_(
 
     return candidatePos;
 }
+*/
 
 bool Cutter::isSoftLimitCharacter_(char c) {
     return c == ' ';
