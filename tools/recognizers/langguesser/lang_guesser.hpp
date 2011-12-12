@@ -51,11 +51,21 @@ public:
 
 private:
 
+    static const int STAT_METHOD_MIN_LENGTH = 24;
+    static const int BFACTOR = 509;
+    static std::string UNKNOWN;
+
     void initLanguages();
     std::list<ModelLanguage> languages_;
 
-    static const int STAT_METHOD_MIN_LENGTH = 24;
-    static const int BFACTOR = 509;
+    void countBigrams(std::string text, int* ctable);
+    int sumOfCounts(int* ctable);
+    void zeroCountTable(int* ctable);
+    void zeroFrequencyTable(double* ftable);
+    void bigramCountToFrequencyTable(int* ctable, double* ftable);
+    void createFrequencyTable(std::string text, double * ftable);
+
+    double distance(double* ftableOne, double* ftableTwo);
 
     class Worker : public LatticeWorker {
     public:

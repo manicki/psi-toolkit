@@ -9,10 +9,10 @@
 ModelLanguage::ModelLanguage(std::string lang, std::string file, std::string nonStandardLetters)
     : name(lang), letters(nonStandardLetters) {
 
-    initFrequencyTable(file);
+    initBigramFrequencyTable(file);
 }
 
-void ModelLanguage::initFrequencyTable(std::string file) {
+void ModelLanguage::initBigramFrequencyTable(std::string file) {
 
     ProcessorFileFetcher fileFetcher(__FILE__);
     boost::filesystem::path pathToLangFile = fileFetcher.getOneFile("%ITSDATA%/" + file);
@@ -23,7 +23,7 @@ void ModelLanguage::initFrequencyTable(std::string file) {
     char comma; // FIXME: the last sign in each line is an unnecessary comma
 
     while (langFile.good() && counter < FTABLE_LENGTH) {
-        langFile >> frequencyTable[counter++] >> comma;
+        langFile >> bigramFrequencyTable[counter++] >> comma;
     }
 
     langFile.close();

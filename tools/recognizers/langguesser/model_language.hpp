@@ -10,10 +10,10 @@ public:
 
     const std::string name;
     const std::string letters;
-    double frequencyTable[FTABLE_LENGTH];
+    double bigramFrequencyTable[FTABLE_LENGTH];
 
 private:
 
-    void initFrequencyTable(std::string file);
+    void initBigramFrequencyTable(std::string file);
 
 };
