@@ -54,7 +54,9 @@ bool LangGuesser::guessLanguage(Lattice& lattice) {
 
     while (edgeIter.hasNext()) {
         std::string text = lattice.getEdgeAnnotationItem(edgeIter.next()).getText();
-        std::string guessedLanguage = guessLanguage(text);
+
+        std::string guessedLanguage = (text.length() < MIN_TEXT_LENGTH_FOR_BIGRAM_METHOD) ?
+            guessLanguageByLetters(text) : guessLanguage(text);
 
         DEBUG("Guessed language for text [" << text << "] is " << guessedLanguage);
     }
@@ -92,7 +94,66 @@ std::string LangGuesser::guessLanguage(std::string text) {
 }
 
 std::string LangGuesser::guessLanguageByLetters(std::string text) {
-    return UNKNOWN_LANGUAGE;
+    std::string selectedLanguage = UNKNOWN_LANGUAGE;
+
+    BOOST_FOREACH (Language lang, languages_) {
+
+        if (lang.letters.length()) {
+            bool found = false;
+            bool allWords = true;
+            bool foundInWord = false;
+            bool isWord = false;
+
+            std::string::iterator iter = text.begin();
+            std::string::iterator end = text.end();
+
+            while (iter != end) {
+                utf8::uint32_t letter = utf8::next(iter, end);
+
+                if (isOneOfTheLanguageSpecificLetters(letter, lang.letters)) {
+                    foundInWord = true;
+                    found = true;
+                }
+
+                if (letter == ' ') {
+                    if (isWord && !foundInWord) {
+                        allWords = false;
+                    }
+                    foundInWord = false;
+                    isWord = false;
+                }
+                else {
+                    isWord = true;
+                }
+
+                if (found && allWords) {
+                    if (selectedLanguage == UNKNOWN_LANGUAGE) {
+                        selectedLanguage = lang.name;
+                    }
+                    else {
+                        return selectedLanguage;
+                    }
+                }
+            }
+
+        }
+    }
+
+    return selectedLanguage;
+}
+
+bool LangGuesser::isOneOfTheLanguageSpecificLetters(utf8::uint32_t letter, std::string& letters) {
+    std::string::iterator iter = letters.begin();
+    std::string::iterator end = letters.end();
+
+    while (iter != end) {
+        utf8::uint32_t langSpecificLetter = utf8::next(iter, end);
+        if (letter == langSpecificLetter) {
+            return true;
+        }
+    }
+
+    return false;
 }
 
 double LangGuesser::distance(double* ftableOne, double* ftableTwo) {

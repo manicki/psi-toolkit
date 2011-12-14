@@ -63,12 +63,13 @@ public:
 
 private:
 
-    static const int BIGRAM_METHOD_MIN_LENGTH = 24;
+    static const unsigned int MIN_TEXT_LENGTH_FOR_BIGRAM_METHOD = 24;
     static std::string UNKNOWN_LANGUAGE;
 
     void initLanguages();
     std::list<Language> languages_;
 
+    bool isOneOfTheLanguageSpecificLetters(utf8::uint32_t letter, std::string& letters);
     double distance(double* ftableOne, double* ftableTwo);
 
     class Worker : public LatticeWorker {
