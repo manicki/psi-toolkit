@@ -1,1 +1,1 @@
-The language identification tool based on trained language bigram models.
+The language identification tool uses created language bigram models to guess the input text language. If examined text is shorter than 24 characters, the language is guessed based on the occurrences of the non standard letters in each defined language.
