@@ -12,9 +12,13 @@
 #ifndef LANG_GUESSER_HDR
 #define LANG_GUESSER_HDR
 
+#include "bigram_language_model.hpp"
+
 #include "annotator.hpp"
 #include "annotator_factory.hpp"
 #include "lattice_wrapper.hpp"
+#include "processor_file_fetcher.hpp"
+#include "logging.hpp"
 
 #include <boost/program_options/variables_map.hpp>
 #include <boost/filesystem.hpp>
@@ -26,13 +30,30 @@ class LangGuesser : public Annotator {
 
 public:
 
-    class Factory : public AnnotatorFactory {
+    LangGuesser();
 
+    std::string guessLanguage(std::string text);
+    std::string guessLanguageByLetters(std::string text);
+
+    bool guessLanguage(Lattice& lattice);
+
+    struct Language {
+        std::string name;
+        BigramLanguageModel model;
+        std::string letters;
+
+        Language(std::string lang, boost::filesystem::path file, std::string specialLetters)
+            : name(lang), model(file), letters(specialLetters) { };
+
+    };
+
+    class Factory : public AnnotatorFactory {
+    public:
         virtual Annotator* doCreateAnnotator(
             const boost::program_options::variables_map& options);
+
         virtual std::string doGetName();
         virtual boost::filesystem::path doGetFile();
-
         virtual boost::program_options::options_description doOptionsHandled();
 
         virtual std::list<std::list<std::string> > doRequiredLayerTags();
@@ -40,17 +61,22 @@ public:
         virtual std::list<std::string> doProvidedLayerTags();
     };
 
-    std::string guessLanguage(std::string& text);
-    bool guessLanguage(Lattice& lattice);
-
 private:
 
+    static const int BIGRAM_METHOD_MIN_LENGTH = 24;
+    static std::string UNKNOWN_LANGUAGE;
+
+    void initLanguages();
+    std::list<Language> languages_;
+
+    double distance(double* ftableOne, double* ftableTwo);
+
     class Worker : public LatticeWorker {
-        public:
-            Worker(LangGuesser& processor, Lattice& lattice);
-        private:
-            virtual void doRun();
-            LangGuesser& processor_;
+    public:
+        Worker(LangGuesser& processor, Lattice& lattice);
+    private:
+        virtual void doRun();
+        LangGuesser& processor_;
     };
 
     virtual LatticeWorker* doCreateLatticeWorker(Lattice& lattice);

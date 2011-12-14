@@ -1,13 +1,121 @@
+/*
+  Copyright (C) 2007-2011 Poleng Sp. z o.o.
+
+  This file is part of Translatica language identification module.
+
+  Translatica language identification module (along with bigram
+  tables) can be redistributed and/or modified under the terms of the
+  GNU Lesser General Public Licence as published by the Free Software
+  Foundation.
+*/
+
 #include "lang_guesser.hpp"
 
+#include "lattice.hpp"
+#include "logging.hpp"
+
+#define LOWER_LETTER(i) ( ((i) > 90 || (i) < 65) ? (i) : ((i) + 32) )
+
+std::string LangGuesser::UNKNOWN_LANGUAGE = "unknown";
+
+LangGuesser::LangGuesser() {
+    initLanguages();
+}
+
+void LangGuesser::initLanguages() {
+
+    ProcessorFileFetcher fileFetcher(__FILE__);
+
+    languages_.push_back( Language("pl",
+        fileFetcher.getOneFile("%ITSDATA%/pllang.i"),
+        "ąćęłńóśźżĄĆĘŁŃÓŚŹŻ")
+    );
+
+    languages_.push_back( Language("en",
+        fileFetcher.getOneFile("%ITSDATA%/enlang.i"),
+        "")
+    );
+
+    languages_.push_back( Language("de",
+        fileFetcher.getOneFile("%ITSDATA%/delang.i"),
+        "äöüßÄÖÜ")
+    );
+
+    languages_.push_back( Language("ru",
+        fileFetcher.getOneFile("%ITSDATA%/rulang.i"),
+        "абвгдеёжзийклмнопрстуфхцчшщъыьэюяАБВГДЕЁЖЗИЙКЛМНОПРСТУФХЦЧШЩЪЫЬЭЮЯ")
+    );
+}
+
 bool LangGuesser::guessLanguage(Lattice& lattice) {
+
+    LayerTagMask textMask = lattice.getLayerTagManager().getMask("text");
+    Lattice::EdgesSortedBySourceIterator edgeIter(lattice, textMask);
+
+    while (edgeIter.hasNext()) {
+        std::string text = lattice.getEdgeAnnotationItem(edgeIter.next()).getText();
+        std::string guessedLanguage = guessLanguage(text);
+
+        DEBUG("Guessed language for text [" << text << "] is " << guessedLanguage);
+    }
+
     return false;
 }
 
-std::string LangGuesser::guessLanguage(std::string& text) {
-    return std::string("unknown");
+std::string LangGuesser::guessLanguage(std::string text) {
+
+    if (text.length() == 0) {
+        return UNKNOWN_LANGUAGE;
+    }
+
+    std::string theBestLang = UNKNOWN_LANGUAGE;
+
+    BigramLanguageModel inputTextBigramModel(text);
+
+    double dist;
+    double minDist = 100000000000.0;
+    std::stringstream debugInfo;
+
+    BOOST_FOREACH (Language lang, languages_) {
+        dist = distance(inputTextBigramModel.frequencyTable(), lang.model.frequencyTable());
+        debugInfo << lang.name << " -> " << dist << ", ";
+
+        if (dist < minDist) {
+            theBestLang = lang.name;
+            minDist = dist;
+        }
+    }
+
+    DEBUG("LangGuesser debug: " << debugInfo.str());
+
+    return theBestLang;
 }
 
+std::string LangGuesser::guessLanguageByLetters(std::string text) {
+    return UNKNOWN_LANGUAGE;
+}
+
+double LangGuesser::distance(double* ftableOne, double* ftableTwo) {
+    double dist = 0.0;
+
+    for (int i=0; i<BigramLanguageModel::TABLE_SIZE; ++i) {
+        dist += (ftableOne[i] - ftableTwo[i]) * (ftableOne[i] - ftableTwo[i]);
+    }
+
+    return dist;
+}
+
+LatticeWorker* LangGuesser::doCreateLatticeWorker(Lattice& lattice) {
+    return new Worker(*this, lattice);
+}
+
+std::string LangGuesser::doInfo() {
+    return std::string("language guesser");
+}
+
+/*
+ * LangGuesser::Factory
+ */
 
 Annotator* LangGuesser::Factory::doCreateAnnotator(
     const boost::program_options::variables_map& options) {
@@ -44,9 +152,9 @@ boost::program_options::options_description LangGuesser::Factory::doOptionsHandl
     return optionsDescription;
 }
 
-LatticeWorker* LangGuesser::doCreateLatticeWorker(Lattice& lattice) {
-    return new Worker(*this, lattice);
-}
+/*
+ * LangGuesser::Worker
+ */
 
 LangGuesser::Worker::Worker(LangGuesser& processor, Lattice& lattice):
     LatticeWorker(lattice), processor_(processor) {
@@ -57,6 +165,3 @@ void LangGuesser::Worker::doRun() {
     processor_.guessLanguage(lattice_);
 }
 
-std::string LangGuesser::doInfo() {
-    return std::string("language guesser");
-}
