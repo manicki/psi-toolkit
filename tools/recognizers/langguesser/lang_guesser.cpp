@@ -1,3 +1,14 @@
+/*
+  Copyright (C) 2007-2011 Poleng Sp. z o.o.
+
+  This file is part of Translatica language identification module.
+
+  Translatica language identification module (along with bigram
+  tables) can be redistributed and/or modified under the terms of the
+  GNU Lesser General Public Licence as published by the Free Software
+  Foundation.
+*/
+
 #include "lang_guesser.hpp"
 
 #include "lattice.hpp"
@@ -16,37 +27,36 @@ void LangGuesser::initLanguages() {
     ProcessorFileFetcher fileFetcher(__FILE__);
 
     languages_.push_back( Language("pl",
-        "ąćęłńóśźżĄĆĘŁŃÓŚŹŻ",
-        fileFetcher.getOneFile("%ITSDATA%/pllang.i"))
+        fileFetcher.getOneFile("%ITSDATA%/pllang.i"),
+        "ąćęłńóśźżĄĆĘŁŃÓŚŹŻ")
     );
 
     languages_.push_back( Language("en",
-        "",
-        fileFetcher.getOneFile("%ITSDATA%/enlang.i"))
+        fileFetcher.getOneFile("%ITSDATA%/enlang.i"),
+        "")
     );
 
     languages_.push_back( Language("de",
-        "äöüßÄÖÜ",
-        fileFetcher.getOneFile("%ITSDATA%/delang.i"))
+        fileFetcher.getOneFile("%ITSDATA%/delang.i"),
+        "äöüßÄÖÜ")
     );
 
     languages_.push_back( Language("ru",
-        "абвгдеёжзийклмнопрстуфхцчшщъыьэюяАБВГДЕЁЖЗИЙКЛМНОПРСТУФХЦЧШЩЪЫЬЭЮЯ",
-        fileFetcher.getOneFile("%ITSDATA%/rulang.i"))
+        fileFetcher.getOneFile("%ITSDATA%/rulang.i"),
+        "абвгдеёжзийклмнопрстуфхцчшщъыьэюяАБВГДЕЁЖЗИЙКЛМНОПРСТУФХЦЧШЩЪЫЬЭЮЯ")
     );
 }
 
 bool LangGuesser::guessLanguage(Lattice& lattice) {
-    std::string l = "";
 
     LayerTagMask textMask = lattice.getLayerTagManager().getMask("text");
     Lattice::EdgesSortedBySourceIterator edgeIter(lattice, textMask);
 
     while (edgeIter.hasNext()) {
-        std::string txt = lattice.getEdgeAnnotationItem(edgeIter.next()).getText(),
-        l = guessLanguage(txt);
+        std::string text = lattice.getEdgeAnnotationItem(edgeIter.next()).getText();
+        std::string guessedLanguage = guessLanguage(text);
 
-        INFO("Guessed language for text [" << txt << "] is " << l);
+        DEBUG("Guessed language for text [" << text << "] is " << guessedLanguage);
     }
 
     return false;
@@ -58,32 +68,32 @@ std::string LangGuesser::guessLanguage(std::string text) {
         return UNKNOWN_LANGUAGE;
     }
 
+    std::string theBestLang = UNKNOWN_LANGUAGE;
+
     BigramLanguageModel inputTextBigramModel(text);
 
     double dist;
     double minDist = 100000000000.0;
-    std::string minLang = UNKNOWN_LANGUAGE;
+    std::stringstream debugInfo;
 
     BOOST_FOREACH (Language lang, languages_) {
         dist = distance(inputTextBigramModel.frequencyTable(), lang.model.frequencyTable());
-        DEBUG("LangGuesser info: " << lang.name << " => " << dist);
+        debugInfo << lang.name << " -> " << dist << ", ";
 
         if (dist < minDist) {
-            minLang = lang.name;
+            theBestLang = lang.name;
             minDist = dist;
         }
     }
 
-    return minLang;
+    DEBUG("LangGuesser debug: " << debugInfo.str());
+
+    return theBestLang;
 }
 
 std::string LangGuesser::guessLanguageByLetters(std::string text) {
-    return std::string("unknown");
+    return UNKNOWN_LANGUAGE;
 }
-
-/*
- * Private methods
- */
 
 double LangGuesser::distance(double* ftableOne, double* ftableTwo) {
     double dist = 0.0;
@@ -94,10 +104,6 @@ double LangGuesser::distance(double* ftableOne, double* ftableTwo) {
 
     return dist;
 }
-
-/*
- * Implemented virtual methods
- */
 
 LatticeWorker* LangGuesser::doCreateLatticeWorker(Lattice& lattice) {
     return new Worker(*this, lattice);

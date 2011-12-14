@@ -39,12 +39,11 @@ public:
 
     struct Language {
         std::string name;
-        std::string letters;
         BigramLanguageModel model;
+        std::string letters;
 
-        Language(std::string lang, std::string nonStandardLetters, boost::filesystem::path file)
-            : name(lang), letters(nonStandardLetters), model(file) {
-        };
+        Language(std::string lang, boost::filesystem::path file, std::string specialLetters)
+            : name(lang), model(file), letters(specialLetters) { };
 
     };
 
