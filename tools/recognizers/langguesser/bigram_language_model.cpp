@@ -32,11 +32,10 @@ BigramLanguageModel::BigramLanguageModel(boost::filesystem::path pathToLangFile)
     std::ifstream langFile(pathToLangFile.string().c_str(), std::ifstream::in);
 
     int i = 0;
-    char comma; // FIXME: the last sign in each line is an unnecessary comma
-
     while (langFile.good() && i < TABLE_SIZE) {
-        langFile >> table_[i++] >> comma;
+        langFile >> table_[i++];
     }
+
     langFile.close();
 }
 
