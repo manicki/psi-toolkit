@@ -24,12 +24,7 @@ if(USE_JAVA)
     enable_language(Java)
 
     find_package(Java REQUIRED)
-#   message(STATUS "Java runtime ${JAVA_RUNTIME}")
-#   message(STATUS "Java compile ${JAVA_COMPILE}")
-
     find_package(JNI REQUIRED)
-#   message(STATUS "JVM library ${JAVA_JVM_LIBRARY}")
-#   message(STATUS "JNI path ${JAVA_INCLUDE_PATH}")
 
     string(REGEX REPLACE "(.*)/libjvm.so" "\\1" LD_LIBPATH ${JAVA_JVM_LIBRARY})
     message(STATUS "You may need to set LD_LIBRARY_PATH=${LD_LIBPATH} to run installed software")
