@@ -30,12 +30,6 @@ public:
     AnnotationItem cutOff(const StringType& text, size_t& positionInText);
 
     /**
-     * `sf` is a string frag. A cutter advances the `positionInText`
-     * by the length of the cut-off fragment.
-     */
-    // AnnotationItem cutOff(const StringFrag& text, size_t& positionInText);
-
-    /**
      * Resets the cutter so that it can be run on another text.
      */
     void reset();
