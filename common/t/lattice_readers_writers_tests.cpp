@@ -13,8 +13,8 @@
 
 #include "config.hpp"
 
-void prepareSimpleLattice_(Lattice & lattice);
-void prepareAdvancedLattice_(Lattice & lattice);
+Lattice prepareSimpleLattice_();
+Lattice prepareAdvancedLattice_();
 
 BOOST_AUTO_TEST_SUITE( utt_lattice_reader )
 
@@ -125,8 +125,7 @@ BOOST_AUTO_TEST_CASE( utt_lattice_reader ) {
 }
 
 BOOST_AUTO_TEST_CASE( psi_lattice_writer_simple ) {
-    Lattice lattice;
-    prepareSimpleLattice_(lattice);
+    Lattice lattice = prepareSimpleLattice_();
 
     boost::scoped_ptr<LatticeWriter<std::ostream> > writer(new PsiLatticeWriter());
 
@@ -147,8 +146,7 @@ BOOST_AUTO_TEST_CASE( psi_lattice_writer_simple ) {
 
 
 BOOST_AUTO_TEST_CASE( psi_lattice_writer_advanced ) {
-    Lattice lattice;
-    prepareAdvancedLattice_(lattice);
+    Lattice lattice = prepareAdvancedLattice_();
 
     boost::scoped_ptr<LatticeWriter<std::ostream> > writer(new PsiLatticeWriter());
 
@@ -199,8 +197,7 @@ BOOST_AUTO_TEST_CASE( psi_lattice_reader_reflexive ) {
 
 BOOST_AUTO_TEST_CASE( simple_lattice_writer ) {
 
-    Lattice lattice;
-    prepareSimpleLattice_(lattice);
+    Lattice lattice = prepareSimpleLattice_();
 
     std::map<std::string, std::string> tagsSeparators;
     tagsSeparators["token"] = ";";
@@ -234,8 +231,7 @@ BOOST_AUTO_TEST_CASE( simple_lattice_writer ) {
 
 BOOST_AUTO_TEST_CASE( simple_lattice_writer_linear ) {
 
-    Lattice lattice;
-    prepareSimpleLattice_(lattice);
+    Lattice lattice = prepareSimpleLattice_();
 
     std::map<std::string, std::string> tagsSeparators;
     tagsSeparators["token"] = ";";
@@ -269,8 +265,7 @@ BOOST_AUTO_TEST_CASE( simple_lattice_writer_linear ) {
 
 BOOST_AUTO_TEST_CASE( simple_lattice_writer_advanced ) {
 
-    Lattice lattice;
-    prepareAdvancedLattice_(lattice);
+    Lattice lattice = prepareAdvancedLattice_();
 
     std::map<std::string, std::string> tagsSeparators;
     // tagsSeparators["splitter"] = "\n";
@@ -304,8 +299,7 @@ BOOST_AUTO_TEST_CASE( simple_lattice_writer_advanced ) {
 
 BOOST_AUTO_TEST_CASE( lattice_iter_writer ) {
 
-    Lattice lattice;
-    prepareSimpleLattice_(lattice);
+    Lattice lattice = prepareSimpleLattice_();
 
     std::vector<std::string> handledTags;
     handledTags.push_back("token");
@@ -349,9 +343,10 @@ BOOST_AUTO_TEST_CASE( lattice_iter_writer ) {
 BOOST_AUTO_TEST_SUITE_END()
 
 
-void prepareSimpleLattice_(Lattice & lattice) {
+Lattice prepareSimpleLattice_() {
 
-    lattice.appendString("Ala ma słonia");
+    std::string ltext("Ala ma słonia");
+    Lattice lattice(ltext);
     lattice.addSymbols(lattice.getFirstVertex(), lattice.getLastVertex());
 
     Lattice::VertexDescriptor pre_ala = lattice.getFirstVertex();
@@ -439,12 +434,15 @@ void prepareSimpleLattice_(Lattice & lattice) {
         lattice.addEdge(pre_slonia, post_slonia, word_token, token_tag, slonia_builder.build());
     }
 
+    return lattice;
+
 }
 
 
-void prepareAdvancedLattice_(Lattice & lattice) {
+Lattice prepareAdvancedLattice_() {
 
-    lattice.appendString("Ala ma&nbsp;<b>kta</b>.");
+    std::string ltext("Ala ma&nbsp;<b>kta</b>.");
+    Lattice lattice(ltext);
     lattice.addSymbols(
         lattice.getFirstVertex(),
         lattice.getVertexForRawCharIndex(6)
@@ -470,7 +468,7 @@ void prepareAdvancedLattice_(Lattice & lattice) {
     LayerTagMask rawMask = lattice.getLayerTagManager().getMask(rawTag);
     LayerTagMask tokenMask = lattice.getLayerTagManager().getMask(tokenTag);
 
-    AnnotationItem aiAla("'Ala'", "Ala");
+    AnnotationItem aiAla("'Ala'", StringFrag(ltext,0,3));
     lattice.getAnnotationItemManager().setValue(aiAla, "type", "word");
 
 
@@ -526,7 +524,7 @@ void prepareAdvancedLattice_(Lattice & lattice) {
 
     Lattice::VertexDescriptor preMa = lattice.getVertexForRawCharIndex(4);
 
-    AnnotationItem aiBlank("' '", " ");
+    AnnotationItem aiBlank("' '", StringFrag(ltext,3,1));
     lattice.getAnnotationItemManager().setValue(aiBlank, "type", "blank");
 
     Lattice::EdgeSequence::Builder blankBuilder(lattice);
@@ -540,7 +538,7 @@ void prepareAdvancedLattice_(Lattice & lattice) {
 
     Lattice::VertexDescriptor postMa = lattice.getVertexForRawCharIndex(6);
 
-    AnnotationItem aiMa("'ma'", "ma");
+    AnnotationItem aiMa("'ma'", StringFrag(ltext,4,2));
     lattice.getAnnotationItemManager().setValue(aiMa, "type", "word");
 
     Lattice::EdgeSequence::Builder maBuilder(lattice);
@@ -556,7 +554,7 @@ void prepareAdvancedLattice_(Lattice & lattice) {
 
     Lattice::VertexDescriptor preMarkup = lattice.getVertexForRawCharIndex(12);
 
-    AnnotationItem aiNbsp("' ", " ");
+    AnnotationItem aiNbsp("' ", StringFrag(ltext,6,1));
 
     lattice.addEdge(postMa, preMarkup, aiNbsp, rawTag);
 
@@ -585,7 +583,7 @@ void prepareAdvancedLattice_(Lattice & lattice) {
 
     Lattice::VertexDescriptor postKota = lattice.getVertexForRawCharIndex(18);
 
-    AnnotationItem aiKta("'kta'", "kta");
+    AnnotationItem aiKta("'kta'", StringFrag(ltext,15,3));
     lattice.getAnnotationItemManager().setValue(aiKta, "type", "word");
 
     {
@@ -603,17 +601,17 @@ void prepareAdvancedLattice_(Lattice & lattice) {
     }
 
 
-    AnnotationItem aiK("'k", "k");
+    AnnotationItem aiK("'k", StringFrag(ltext,15,1));
     Lattice::VertexDescriptor vdKO = lattice.addLooseVertex();
     Lattice::EdgeDescriptor edgeCorrectedK = lattice.addEdge(preKota, vdKO, aiK, rawTag);
 
 
-    AnnotationItem aiO("'o", "o");
+    AnnotationItem aiO("'o", StringFrag("o"));
     Lattice::VertexDescriptor midKota = lattice.getVertexForRawCharIndex(16);
     Lattice::EdgeDescriptor edgeCorrectedO = lattice.addEdge(vdKO, midKota, aiO, rawTag);
 
 
-    AnnotationItem aiKota("'kota'", "kota");
+    AnnotationItem aiKota("'kota'", StringFrag("kota"));
     lattice.getAnnotationItemManager().setValue(aiKota, "type", "word");
 
     std::list<std::string> tokenCorrectorStr;
@@ -692,7 +690,7 @@ void prepareAdvancedLattice_(Lattice & lattice) {
 
     Lattice::VertexDescriptor postStop = lattice.getVertexForRawCharIndex(23);
 
-    AnnotationItem aiStop("'.'", ".");
+    AnnotationItem aiStop("'.'", StringFrag(ltext,22,1));
     lattice.getAnnotationItemManager().setValue(aiStop, "type", "punct");
 
     Lattice::EdgeSequence::Builder stopBuilder(lattice);
@@ -718,6 +716,8 @@ void prepareAdvancedLattice_(Lattice & lattice) {
     zdanieBuilder.addEdge(edgeStop);
 
     lattice.addEdge(preAla, postStop, aiZdanie, parseGobioTag, zdanieBuilder.build());
+
+    return lattice;
 
 }
 
