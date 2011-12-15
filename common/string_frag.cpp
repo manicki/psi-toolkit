@@ -1,9 +1,6 @@
 #include "string_frag.hpp"
 
 
-#define STRING_FRAG_VALIDATION 0
-
-
 StringFrag & StringFrag::operator=(const StringFrag & other) {
 
 #if STRING_FRAG_VALIDATION
@@ -76,7 +73,7 @@ void StringFrag::append(const StringFrag & other) {
         begin_ + len_ == other.begin_
     ) {
         len_ += other.len_;
-        contents_ = src_.substr(begin_, std::min(len_,(size_t)4));
+        contents_ = src_.substr(begin_, std::min(len_,(size_t)ABBR_LENGTH));
     } else if (contents_=="" && this != &other) {
         this->StringFrag::~StringFrag();
         new (this) StringFrag(other);
@@ -110,10 +107,12 @@ size_t StringFrag::length() const {
 }
 
 
+#if STRING_FRAG_VALIDATION
 bool StringFrag::valid() const {
     if (
         stored_()
-        || src_.substr(begin_, (len_ < 4 ? len_ : 4)) == contents_
+        || src_.substr(begin_, (len_ < ABBR_LENGTH ? len_ : ABBR_LENGTH)) == contents_
     ) return true;
     return false;
 }
+#endif

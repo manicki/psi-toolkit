@@ -30,12 +30,6 @@ public:
     AnnotationItem cutOff(const StringType& text, size_t& positionInText);
 
     /**
-     * `sf` is a string frag. A cutter advances the `positionInText`
-     * by the length of the cut-off fragment.
-     */
-    // AnnotationItem cutOff(const StringFrag& text, size_t& positionInText);
-
-    /**
      * Resets the cutter so that it can be run on another text.
      */
     void reset();
@@ -78,7 +72,7 @@ private:
     virtual size_t doSegmentLengthSoftLimit() = 0;
     virtual std::list<std::string> doLayerTags() = 0;
 
-    bool shouldFragmentQueueBeUsed_();
+    bool shouldFragmentQueueBeUsed_() const;
 
     template <class StringType>
     AnnotationItem getFirstItemInFragmentQueue_(const StringType& text, size_t& positionInText);
@@ -107,7 +101,7 @@ private:
         const StringType& text,
         size_t cutPoint);
 
-    bool isSoftLimitCharacter_(char c);
+    bool isSoftLimitCharacter_(char c) const;
 
     std::queue<AnnotationItem> fragmentedSegmentsQueue_;
 };

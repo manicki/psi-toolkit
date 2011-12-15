@@ -43,3 +43,14 @@ BOOST_AUTO_TEST_CASE( annotation_text ) {
     BOOST_CHECK_EQUAL(ai.getCategory(), "noun");
     BOOST_CHECK_EQUAL(ai.getText(), "ala");
 };
+
+BOOST_AUTO_TEST_CASE( annotation_text_as_string_frag ) {
+    AnnotationItemManager annotationItemManager;
+    std::string text("Ala ma kota.");
+    AnnotationItem ai("noun", StringFrag(text,4,2));
+    annotationItemManager.setValue(ai, "case", "nominative");
+    annotationItemManager.setValue(ai, "number", "plural");
+    BOOST_CHECK_EQUAL(ai.getCategory(), "noun");
+    BOOST_CHECK_EQUAL(ai.getText(), "ma");
+    BOOST_CHECK_EQUAL(ai.getTextAsStringFrag().str(), "ma");
+};
