@@ -13,8 +13,8 @@
 
 #include "config.hpp"
 
-Lattice prepareSimpleLattice_();
-Lattice prepareAdvancedLattice_();
+void prepareSimpleLattice_(Lattice & lattice);
+void prepareAdvancedLattice_(Lattice & lattice);
 
 BOOST_AUTO_TEST_SUITE( utt_lattice_reader )
 
@@ -125,7 +125,8 @@ BOOST_AUTO_TEST_CASE( utt_lattice_reader ) {
 }
 
 BOOST_AUTO_TEST_CASE( psi_lattice_writer_simple ) {
-    Lattice lattice = prepareSimpleLattice_();
+    Lattice lattice;
+    prepareSimpleLattice_(lattice);
 
     boost::scoped_ptr<LatticeWriter<std::ostream> > writer(new PsiLatticeWriter());
 
@@ -146,7 +147,8 @@ BOOST_AUTO_TEST_CASE( psi_lattice_writer_simple ) {
 
 
 BOOST_AUTO_TEST_CASE( psi_lattice_writer_advanced ) {
-    Lattice lattice = prepareAdvancedLattice_();
+    Lattice lattice;
+    prepareAdvancedLattice_(lattice);
 
     boost::scoped_ptr<LatticeWriter<std::ostream> > writer(new PsiLatticeWriter());
 
@@ -197,7 +199,8 @@ BOOST_AUTO_TEST_CASE( psi_lattice_reader_reflexive ) {
 
 BOOST_AUTO_TEST_CASE( simple_lattice_writer ) {
 
-    Lattice lattice = prepareSimpleLattice_();
+    Lattice lattice;
+    prepareSimpleLattice_(lattice);
 
     std::map<std::string, std::string> tagsSeparators;
     tagsSeparators["token"] = ";";
@@ -231,7 +234,8 @@ BOOST_AUTO_TEST_CASE( simple_lattice_writer ) {
 
 BOOST_AUTO_TEST_CASE( simple_lattice_writer_linear ) {
 
-    Lattice lattice = prepareSimpleLattice_();
+    Lattice lattice;
+    prepareSimpleLattice_(lattice);
 
     std::map<std::string, std::string> tagsSeparators;
     tagsSeparators["token"] = ";";
@@ -265,7 +269,8 @@ BOOST_AUTO_TEST_CASE( simple_lattice_writer_linear ) {
 
 BOOST_AUTO_TEST_CASE( simple_lattice_writer_advanced ) {
 
-    Lattice lattice = prepareAdvancedLattice_();
+    Lattice lattice;
+    prepareAdvancedLattice_(lattice);
 
     std::map<std::string, std::string> tagsSeparators;
     // tagsSeparators["splitter"] = "\n";
@@ -299,7 +304,8 @@ BOOST_AUTO_TEST_CASE( simple_lattice_writer_advanced ) {
 
 BOOST_AUTO_TEST_CASE( lattice_iter_writer ) {
 
-    Lattice lattice = prepareSimpleLattice_();
+    Lattice lattice;
+    prepareSimpleLattice_(lattice);
 
     std::vector<std::string> handledTags;
     handledTags.push_back("token");
@@ -343,10 +349,10 @@ BOOST_AUTO_TEST_CASE( lattice_iter_writer ) {
 BOOST_AUTO_TEST_SUITE_END()
 
 
-Lattice prepareSimpleLattice_() {
+void prepareSimpleLattice_(Lattice & lattice) {
 
     std::string ltext("Ala ma słonia");
-    Lattice lattice(ltext);
+    lattice.appendString(ltext);
     lattice.addSymbols(lattice.getFirstVertex(), lattice.getLastVertex());
 
     Lattice::VertexDescriptor pre_ala = lattice.getFirstVertex();
@@ -434,15 +440,13 @@ Lattice prepareSimpleLattice_() {
         lattice.addEdge(pre_slonia, post_slonia, word_token, token_tag, slonia_builder.build());
     }
 
-    return lattice;
-
 }
 
 
-Lattice prepareAdvancedLattice_() {
+void prepareAdvancedLattice_(Lattice & lattice) {
 
     std::string ltext("Ala ma&nbsp;<b>kta</b>.");
-    Lattice lattice(ltext);
+    lattice.appendString(ltext);
     lattice.addSymbols(
         lattice.getFirstVertex(),
         lattice.getVertexForRawCharIndex(6)
@@ -716,8 +720,6 @@ Lattice prepareAdvancedLattice_() {
     zdanieBuilder.addEdge(edgeStop);
 
     lattice.addEdge(preAla, postStop, aiZdanie, parseGobioTag, zdanieBuilder.build());
-
-    return lattice;
 
 }
 

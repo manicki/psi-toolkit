@@ -21,7 +21,11 @@ Lattice::Lattice(const std::string & text) :
 Lattice::~Lattice() { }
 
 void Lattice::appendString(const std::string & text) {
-    allText_ += text;
+    if (allText_.empty()) {
+        allText_ = text;
+    } else {
+        allText_ += text;
+    }
 
     resizeImplicitEdgesStructures_();
 }
