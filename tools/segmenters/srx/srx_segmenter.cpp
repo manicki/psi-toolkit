@@ -213,19 +213,19 @@ private:
 
             return AnnotationItem(
                 DEFAULT_SENTENCE_CATEGORY,
-                text.substr(currentPosition, sentenceLength));
+                StringFrag(text, currentPosition, sentenceLength)); //TODO
         }
         else {
             size_t currentPosition = positionInText;
             positionInText = std::string::npos;
             return AnnotationItem(
                 DEFAULT_SENTENCE_CATEGORY,
-                text.substr(currentPosition));
+                StringFrag(text, currentPosition, positionInText)); //TODO
         }
     }
 
     virtual AnnotationItem doCutOff(const StringFrag& text, size_t& positionInText) {
-        // TODO
+        //TODO
         return doCutOff(text.str(), positionInText);
     }
 

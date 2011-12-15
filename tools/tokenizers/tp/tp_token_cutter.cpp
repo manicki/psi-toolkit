@@ -23,7 +23,7 @@ AnnotationItem TpTokenCutter::doCutOff(const std::string& text, size_t& position
 
             return AnnotationItem(
                 ruleSet_.getRegexCategory(i),
-                text.substr(originalPositionInText, tokenLength));
+                StringFrag(text, originalPositionInText, tokenLength)); //TODO
         }
     }
 
@@ -31,7 +31,7 @@ AnnotationItem TpTokenCutter::doCutOff(const std::string& text, size_t& position
 }
 
 AnnotationItem TpTokenCutter::doCutOff(const StringFrag& text, size_t& positionInText) {
-    // TODO
+    //TODO
     return doCutOff(text.str(), positionInText);
 }
 
@@ -46,7 +46,7 @@ AnnotationItem TpTokenCutter::defaultToken(const std::string& text, size_t& posi
 
     return AnnotationItem(
         DEFAULT_CATEGORY,
-        text.substr(oldPosition, len));
+        StringFrag(text, oldPosition, len)); //TODO
 }
 
 size_t TpTokenCutter::doSegmentLengthHardLimit() {
