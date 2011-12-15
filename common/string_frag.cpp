@@ -1,9 +1,6 @@
 #include "string_frag.hpp"
 
 
-#define STRING_FRAG_VALIDATION 0
-
-
 StringFrag & StringFrag::operator=(const StringFrag & other) {
 
 #if STRING_FRAG_VALIDATION
@@ -110,6 +107,7 @@ size_t StringFrag::length() const {
 }
 
 
+#if STRING_FRAG_VALIDATION
 bool StringFrag::valid() const {
     if (
         stored_()
@@ -117,3 +115,4 @@ bool StringFrag::valid() const {
     ) return true;
     return false;
 }
+#endif
