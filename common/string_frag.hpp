@@ -8,7 +8,12 @@
 
 
 class StringFrag {
+private:
+
+    static const int ABBR_LENGTH = 4;
+
 public:
+
     StringFrag() :
         contents_(""),
         src_(contents_),
@@ -28,7 +33,7 @@ public:
         size_t begin,
         size_t len
     ) :
-        contents_(src.substr(begin, std::min(len,(size_t)4))),
+        contents_(src.substr(begin, std::min(len,(size_t)ABBR_LENGTH))),
         src_(src),
         begin_(begin),
         len_(len)
@@ -39,7 +44,7 @@ public:
         size_t begin,
         size_t len
     ) :
-        contents_(sf.src_.substr(sf.begin_ + begin, std::min(len,(size_t)4))),
+        contents_(sf.src_.substr(sf.begin_ + begin, std::min(len,(size_t)ABBR_LENGTH))),
         src_(sf.src_),
         begin_(sf.begin_ + begin),
         len_(len)
@@ -71,6 +76,7 @@ public:
     bool valid() const;
 
 private:
+
     std::string contents_;
     const std::string & src_;
     size_t begin_;
