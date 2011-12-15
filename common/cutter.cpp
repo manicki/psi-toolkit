@@ -25,7 +25,7 @@ std::list<std::string> Cutter::layerTags() {
 Cutter::~Cutter() {
 }
 
-bool Cutter::shouldFragmentQueueBeUsed_() {
+bool Cutter::shouldFragmentQueueBeUsed_() const {
     return !fragmentedSegmentsQueue_.empty();
 }
 
@@ -51,6 +51,6 @@ bool Cutter::isHardLimitSet_() {
     return segmentLengthHardLimit() != 0;
 }
 
-bool Cutter::isSoftLimitCharacter_(char c) {
+bool Cutter::isSoftLimitCharacter_(char c) const {
     return c == ' ';
 }
