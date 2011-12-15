@@ -19,12 +19,13 @@ public:
         attributes_(32)
     { }
 
-    /* DEPRECATED! */
+    /* DEPRECATED! */ /*
     AnnotationItem(const std::string& category, const std::string& text) :
         category_(category),
         text_(text),
         attributes_(32)
     { }
+    */
 
     AnnotationItem(const std::string& category, StringFrag text) :
         category_(category),
