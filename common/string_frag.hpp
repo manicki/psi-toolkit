@@ -7,8 +7,16 @@
 #include "exceptions.hpp"
 
 
+#define STRING_FRAG_VALIDATION 0
+
+
 class StringFrag {
+private:
+
+    static const int ABBR_LENGTH = 4;
+
 public:
+
     StringFrag() :
         contents_(""),
         src_(contents_),
@@ -28,7 +36,11 @@ public:
         size_t begin,
         size_t len
     ) :
-        contents_(src.substr(begin, std::min(len,(size_t)4))),
+#if STRING_FRAG_VALIDATION
+        contents_(src.substr(begin, std::min(len,(size_t)ABBR_LENGTH))),
+#else
+        contents_(""),
+#endif
         src_(src),
         begin_(begin),
         len_(len)
@@ -39,7 +51,11 @@ public:
         size_t begin,
         size_t len
     ) :
-        contents_(sf.src_.substr(sf.begin_ + begin, std::min(len,(size_t)4))),
+#if STRING_FRAG_VALIDATION
+        contents_(sf.src_.substr(sf.begin_ + begin, std::min(len,(size_t)ABBR_LENGTH))),
+#else
+        contents_(""),
+#endif
         src_(sf.src_),
         begin_(sf.begin_ + begin),
         len_(len)
@@ -68,9 +84,12 @@ public:
 
     size_t length() const;
 
+#if STRING_FRAG_VALIDATION
     bool valid() const;
+#endif
 
 private:
+
     std::string contents_;
     const std::string & src_;
     size_t begin_;
