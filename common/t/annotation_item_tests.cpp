@@ -37,7 +37,7 @@ BOOST_AUTO_TEST_CASE( annotation_compare ) {
 
 BOOST_AUTO_TEST_CASE( annotation_text ) {
     AnnotationItemManager annotationItemManager;
-    AnnotationItem ai("noun", "ala");
+    AnnotationItem ai("noun", StringFrag("ala"));
     annotationItemManager.setValue(ai, "case", "nominative");
     annotationItemManager.setValue(ai, "number", "plural");
     BOOST_CHECK_EQUAL(ai.getCategory(), "noun");

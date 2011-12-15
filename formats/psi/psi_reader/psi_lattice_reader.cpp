@@ -151,7 +151,10 @@ void PsiLatticeReader::Worker::doRun() {
 
             // Creating annotation item.
 
-            AnnotationItem annotationItem(item.annotationItem.category, item.annotationText);
+            AnnotationItem annotationItem(
+                item.annotationItem.category,
+                StringFrag(item.annotationText)
+            );
 
             std::vector<std::string> avItem;
             std::string::const_iterator avBegin = item.annotationItem.avVector.begin();

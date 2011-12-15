@@ -9,7 +9,7 @@ void FakeLemmatizer::lemmatize(const std::string& token,
     if (token == "prowokacjami") {
         outputIterator.addLemma("prowokacja");
 
-        AnnotationItem lexeme("R", "prowokacja_R");
+        AnnotationItem lexeme("R", StringFrag("prowokacja_R"));
         annotationItemManager.setValue(lexeme, "flags", "4");
         outputIterator.addLexeme(lexeme);
 

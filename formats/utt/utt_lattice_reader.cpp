@@ -138,7 +138,7 @@ void UTTLatticeReader::Worker::doRun() {
                     currentVertex = lattice_.getEdgeTarget(currentEdge);
                 }
 
-                AnnotationItem annotationItem("'" + item.form + "'", item.form);
+                AnnotationItem annotationItem("'" + item.form + "'", StringFrag(item.form));
 
                 std::vector<std::string> aItem;
                 std::string::const_iterator aBegin = item.annotations.begin();
@@ -157,14 +157,6 @@ void UTTLatticeReader::Worker::doRun() {
                         }
                     }
                 }
-
-                // if (!item.annotations.empty()) {
-                    // lattice_.getAnnotationItemManager().setValue(
-                        // annotationItem,
-                        // "utt-annotations",
-                        // item.annotations
-                    // );
-                // }
 
                 lattice_.addEdge(
                     from,
