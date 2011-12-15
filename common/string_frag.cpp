@@ -1,9 +1,7 @@
 #include "string_frag.hpp"
 
 
-#ifndef STRING_FRAG_VALIDATION
 #define STRING_FRAG_VALIDATION 0
-#endif
 
 
 StringFrag & StringFrag::operator=(const StringFrag & other) {

@@ -3,8 +3,6 @@
 
 #include <iostream>
 
-#define STRING_FRAG_VALIDATION 1
-
 #define TRACE(M) \
     do { \
         std::cerr << M << std::endl; \
