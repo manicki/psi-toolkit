@@ -75,6 +75,10 @@ private:
     const std::string & src_;
     size_t begin_;
     size_t len_;
+
+    bool stored_() const {
+        return begin_ == std::string::npos;
+    }
 };
 
 
