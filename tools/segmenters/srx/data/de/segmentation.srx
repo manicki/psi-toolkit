@@ -35,7 +35,7 @@
 
 				<!-- Inicjały -->
 				<rule break="no">
-					<beforebreak>\p{Lu}\.</beforebreak>
+					<beforebreak>\b\p{Lu}\.</beforebreak>
 					<afterbreak>\s</afterbreak>
 				</rule>
 
