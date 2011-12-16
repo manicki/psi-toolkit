@@ -7,3 +7,11 @@ target_link_libraries(tools-recognizers-langguesser common ${Boost_LIBRARIES})
 add_subdirectory(t)
 
 install(TARGETS tools-recognizers-langguesser DESTINATION lib/)
+
+add_executable(bigram-generator bigram-generator.cpp)
+
+include_directories("${psi-toolkit_SOURCE_DIR}/tools/recognizers/langguesser")
+link_directories("${psi-toolkit_BINARY_DIR}/tools/recognizers/langguesser")
+target_link_libraries(bigram-generator ${Boost_LIBRARIES} pcre pcrecpp common tools-recognizers-langguesser )
+
+install(TARGETS bigram-generator DESTINATION bin/)
