@@ -149,10 +149,19 @@ private:
     const static std::string DEFAULT_SENTENCE_CATEGORY;
 
     virtual AnnotationItem doCutOff(const std::string& text, size_t& positionInText) {
+        return performCutOff(text, positionInText);
+    }
+
+    virtual AnnotationItem doCutOff(const StringFrag& text, size_t& positionInText) {
+        return performCutOff(text, positionInText);
+    }
+
+    template <class StringType>
+    AnnotationItem performCutOff(const StringType& text, size_t& positionInText) {
         size_t nearestBreakPoint = 0;
         size_t nearestRuleIndex = 0;
         size_t minBreakPoint =
-            positionInText + utf8::unchecked::sequence_length(text.begin() + positionInText);
+            positionInText + utf8::unchecked::sequence_length(text.data() + positionInText);
         bool candidateFound = false;
         bool candidateAccepted = false;
 
@@ -195,7 +204,7 @@ private:
                 if (!candidateAccepted)
                     minBreakPoint =
                         nearestBreakPoint
-                        + utf8::unchecked::sequence_length(text.begin() + nearestBreakPoint);
+                        + utf8::unchecked::sequence_length(text.data() + nearestBreakPoint);
             }
 
             assert (!(!candidateFound && candidateAccepted));
@@ -213,20 +222,15 @@ private:
 
             return AnnotationItem(
                 DEFAULT_SENTENCE_CATEGORY,
-                text.substr(currentPosition, sentenceLength));
+                StringFrag(text, currentPosition, sentenceLength)); //TODO
         }
         else {
             size_t currentPosition = positionInText;
             positionInText = std::string::npos;
             return AnnotationItem(
                 DEFAULT_SENTENCE_CATEGORY,
-                text.substr(currentPosition));
+                StringFrag(text, currentPosition, positionInText)); //TODO
         }
-    }
-
-    virtual AnnotationItem doCutOff(const StringFrag& text, size_t& positionInText) {
-        // TODO
-        return doCutOff(text.str(), positionInText);
     }
 
     virtual void doReset() {
@@ -254,9 +258,10 @@ private:
         return tags;
     }
 
+    template <class StringType>
     size_t updateBreakingRuleIndex_(size_t breakingRuleIndex,
                                     size_t minBreakPoint,
-                                    const std::string& text,
+                                    const StringType& text,
                                     size_t positionInText) {
         SrxSegmenter::BreakingRuleInfo& ruleInfo = segmenter_.breakingRules_[breakingRuleIndex];
 
@@ -267,8 +272,9 @@ private:
                                positionInText);
     }
 
+    template <class StringType>
     bool checkBreakPoint_(size_t breakPoint,
-                          const std::string& text,
+                          const StringType& text,
                           size_t positionInText,
                           size_t nbOfRulesToCheck) {
 
@@ -288,9 +294,10 @@ private:
         return true;
     }
 
+    template <class StringType>
     size_t updateNonBreakingRuleIndex_(size_t breakingRuleIndex,
                                        size_t minBreakPoint,
-                                       const std::string& text,
+                                       const StringType& text,
                                        size_t positionInText) {
         return updatePosition_(segmenter_.nonBreakingRules_[breakingRuleIndex],
                                nonBreakingRuleApplications_[breakingRuleIndex],
@@ -313,10 +320,11 @@ private:
     std::vector<RuleApplication> breakingRuleApplications_;
     std::vector<RuleApplication> nonBreakingRuleApplications_;
 
+    template <class StringType>
     size_t updatePosition_(boost::shared_ptr<PerlRegExp> regexp,
                            RuleApplication& ruleApplication,
                            size_t minBreakPoint,
-                           const std::string& text,
+                           const StringType& text,
                            size_t positionInText) {
 
         if (ruleApplication.startingPosition < positionInText)
@@ -325,7 +333,7 @@ private:
         while (ruleApplication.startingPosition < text.length()
                && (ruleApplication.breakingPosition == std::string::npos
                    || ruleApplication.breakingPosition < minBreakPoint)) {
-            PerlStringPiece currentText(text.c_str() + ruleApplication.startingPosition);
+            PerlStringPiece currentText(text.data() + ruleApplication.startingPosition);
             int originalLength = currentText.size();
             PerlStringPiece fragFound;
 
@@ -340,7 +348,7 @@ private:
 
                 ruleApplication.startingPosition +=
                     utf8::unchecked::sequence_length(
-                        text.begin() + ruleApplication.startingPosition);
+                        text.data() + ruleApplication.startingPosition);
             }
             else {
                 ruleApplication.breakingPosition = std::string::npos;

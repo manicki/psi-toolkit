@@ -10,17 +10,53 @@ public:
     TpTokenCutter(TPBasicTokenizerRuleSet& ruleSet);
 
 private:
+    template <class StringType>
+    AnnotationItem performCutOff(const StringType& text, size_t& positionInText);
+
     virtual AnnotationItem doCutOff(const std::string& text, size_t& positionInText);
     virtual AnnotationItem doCutOff(const StringFrag& text, size_t& positionInText);
+
     virtual void doReset();
     virtual size_t doSegmentLengthHardLimit();
     virtual size_t doSegmentLengthSoftLimit();
     virtual std::list<std::string> doLayerTags();
 
-    AnnotationItem defaultToken(const std::string& text, size_t& positionInText);
+    template <class StringType>
+    AnnotationItem defaultToken(const StringType& text, size_t& positionInText);
 
     TPBasicTokenizerRuleSet& ruleSet_;
     const static std::string DEFAULT_CATEGORY;
 };
+
+
+template <class StringType>
+AnnotationItem TpTokenCutter::performCutOff(const StringType& text, size_t& positionInText) {
+
+    size_t len = text.length() - positionInText;
+    PerlStringPiece textSp(text.data()+positionInText, len);
+
+    for (size_t i = 0; i < ruleSet_.getRegexCount(); ++i) {
+        PerlRegExp* regexp = ruleSet_.getRegex(i);
+
+        if (PerlRegExp::Consume(&textSp, *regexp)) {
+            size_t tokenLength = len - textSp.size();
+            StringFrag sf(text, positionInText, tokenLength);
+            positionInText += tokenLength;
+            return AnnotationItem(ruleSet_.getRegexCategory(i), sf);
+        }
+    }
+
+    return defaultToken(text, positionInText);
+}
+
+
+template <class StringType>
+AnnotationItem TpTokenCutter::defaultToken(const StringType& text, size_t& positionInText) {
+    size_t len = symbolLength(text, positionInText);
+    StringFrag sf(text, positionInText, len);
+    positionInText += len;
+    return AnnotationItem(DEFAULT_CATEGORY, sf);
+}
+
 
 #endif
