@@ -25,8 +25,8 @@ namespace psi {
         Arc() {}
         Arc(SymbolT a, StateT q) : m_a(a), m_q(q) {}
         
-        inline SymbolT& getSymbol() { return m_a; }
-        inline StateT& getDest() { return m_q; }
+        inline const SymbolT& getSymbol() const { return m_a; }
+        inline const StateT& getDest() const { return m_q; }
         
         inline void setSymbol(SymbolT a) { m_a = a; }
         inline void setDest(StateT q) { m_q = q; }
@@ -53,7 +53,7 @@ namespace psi {
     struct ArcSorter {
         template <typename ArcT>
         bool operator()(ArcT lhs, ArcT rhs) const {
-            return (lhs.getSymbol() < rhs.getSymbol() || lhs.getDest() < rhs.getDest());
+            return (lhs.getSymbol() < rhs.getSymbol() || (lhs.getSymbol() == rhs.getSymbol() && lhs.getDest() < rhs.getDest()));
         }
     };
     
