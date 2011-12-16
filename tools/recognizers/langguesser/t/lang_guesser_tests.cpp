@@ -22,4 +22,28 @@ BOOST_AUTO_TEST_CASE( long_text ) {
 
 }
 
+BOOST_AUTO_TEST_CASE( short_text ) {
+    LangGuesser langGuesser;
+
+    std::string lang = langGuesser.guessLanguageByLetters("Alę miało kocię");
+    BOOST_CHECK_EQUAL(lang, "pl");
+    lang = langGuesser.guessLanguageByLetters(" Alę miało kocię");
+    BOOST_CHECK_EQUAL(lang, "pl");
+    lang = langGuesser.guessLanguageByLetters("Alę miało kocię. ");
+    BOOST_CHECK_EQUAL(lang, "pl");
+
+    lang = langGuesser.guessLanguageByLetters(std::string("Ala ma kota"));
+    BOOST_CHECK_EQUAL(lang, "unknown");
+
+    lang = langGuesser.guessLanguageByLetters(std::string("Alę miał kot"));
+    BOOST_CHECK_EQUAL(lang, "unknown");
+    lang = langGuesser.guessLanguageByLetters(std::string("Ala miała kocię"));
+    BOOST_CHECK_EQUAL(lang, "unknown");
+    lang = langGuesser.guessLanguageByLetters(std::string("Alę ma kocię"));
+    BOOST_CHECK_EQUAL(lang, "unknown");
+
+    lang = langGuesser.guessLanguageByLetters(" älę miäl köt");
+    BOOST_CHECK_EQUAL(lang, "de");
+}
+
 BOOST_AUTO_TEST_SUITE_END()
