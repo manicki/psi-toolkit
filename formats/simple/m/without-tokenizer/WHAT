@@ -1,0 +1,1 @@
+txt-reader ! simple-writer --tag symbol --sep ,
