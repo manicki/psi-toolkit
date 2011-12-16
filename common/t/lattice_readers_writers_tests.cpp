@@ -351,8 +351,8 @@ BOOST_AUTO_TEST_SUITE_END()
 
 void prepareSimpleLattice_(Lattice & lattice) {
 
-    std::string ltext("Ala ma słonia");
-    lattice.appendString(ltext);
+    lattice.appendString("Ala ma słonia");
+    const std::string & ltext = lattice.getAllText();
     lattice.addSymbols(lattice.getFirstVertex(), lattice.getLastVertex());
 
     Lattice::VertexDescriptor pre_ala = lattice.getFirstVertex();
@@ -445,8 +445,8 @@ void prepareSimpleLattice_(Lattice & lattice) {
 
 void prepareAdvancedLattice_(Lattice & lattice) {
 
-    std::string ltext("Ala ma&nbsp;<b>kta</b>.");
-    lattice.appendString(ltext);
+    lattice.appendString("Ala ma&nbsp;<b>kta</b>.");
+    const std::string & ltext = lattice.getAllText();
     lattice.addSymbols(
         lattice.getFirstVertex(),
         lattice.getVertexForRawCharIndex(6)
@@ -558,7 +558,7 @@ void prepareAdvancedLattice_(Lattice & lattice) {
 
     Lattice::VertexDescriptor preMarkup = lattice.getVertexForRawCharIndex(12);
 
-    AnnotationItem aiNbsp("' ", StringFrag(ltext,6,1));
+    AnnotationItem aiNbsp("' ", StringFrag(" "));
 
     lattice.addEdge(postMa, preMarkup, aiNbsp, rawTag);
 
