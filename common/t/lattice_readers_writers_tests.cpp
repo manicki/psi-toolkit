@@ -352,7 +352,6 @@ BOOST_AUTO_TEST_SUITE_END()
 void prepareSimpleLattice_(Lattice & lattice) {
 
     lattice.appendString("Ala ma słonia");
-    const std::string & ltext = lattice.getAllText();
     lattice.addSymbols(lattice.getFirstVertex(), lattice.getLastVertex());
 
     Lattice::VertexDescriptor pre_ala = lattice.getFirstVertex();
