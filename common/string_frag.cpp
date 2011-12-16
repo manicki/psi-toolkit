@@ -108,7 +108,10 @@ size_t StringFrag::length() const {
 
 
 const char* StringFrag::data() const {
-    return str().data();
+    if (stored_()) {
+        return contents_.data();
+    }
+    return src_.data() + begin_;
 }
 
 
