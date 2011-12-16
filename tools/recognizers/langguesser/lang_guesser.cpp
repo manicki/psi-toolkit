@@ -58,7 +58,7 @@ bool LangGuesser::guessLanguage(Lattice& lattice) {
         std::string guessedLanguage = (text.length() < MIN_TEXT_LENGTH_FOR_BIGRAM_METHOD) ?
             guessLanguageByLetters(text) : guessLanguage(text);
 
-        DEBUG("Guessed language for text [" << text << "] is " << guessedLanguage);
+        INFO("Guessed language for text [" << text << "] is " << guessedLanguage);
     }
 
     return false;

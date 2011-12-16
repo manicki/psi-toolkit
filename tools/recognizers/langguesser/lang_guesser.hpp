@@ -34,7 +34,6 @@ public:
 
     std::string guessLanguage(std::string text);
     std::string guessLanguageByLetters(std::string text);
-
     bool guessLanguage(Lattice& lattice);
 
     struct Language {
