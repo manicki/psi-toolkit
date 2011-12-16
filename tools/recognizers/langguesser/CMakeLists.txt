@@ -4,4 +4,6 @@ add_library(tools-recognizers-langguesser SHARED
 )
 target_link_libraries(tools-recognizers-langguesser common ${Boost_LIBRARIES})
 
+add_subdirectory(t)
+
 install(TARGETS tools-recognizers-langguesser DESTINATION lib/)
