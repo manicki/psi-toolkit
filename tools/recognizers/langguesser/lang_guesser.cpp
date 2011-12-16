@@ -94,7 +94,6 @@ std::string LangGuesser::guessLanguage(std::string text) {
 }
 
 std::string LangGuesser::guessLanguageByLetters(std::string text) {
-    std::string selectedLanguage = UNKNOWN_LANGUAGE;
 
     BOOST_FOREACH (Language lang, languages_) {
 
@@ -118,6 +117,7 @@ std::string LangGuesser::guessLanguageByLetters(std::string text) {
                 if (letter == ' ') {
                     if (isWord && !foundInWord) {
                         allWords = false;
+                        found = false;
                     }
                     foundInWord = false;
                     isWord = false;
@@ -125,21 +125,21 @@ std::string LangGuesser::guessLanguageByLetters(std::string text) {
                 else {
                     isWord = true;
                 }
+            }
 
-                if (found && allWords) {
-                    if (selectedLanguage == UNKNOWN_LANGUAGE) {
-                        selectedLanguage = lang.name;
-                    }
-                    else {
-                        return selectedLanguage;
-                    }
-                }
+            // if there is no language specific letter within the last word
+            if (isWord && !foundInWord) {
+                found = false;
+            }
+
+            if (found && allWords) {
+                return lang.name;
             }
 
         }
     }
 
-    return selectedLanguage;
+    return UNKNOWN_LANGUAGE;
 }
 
 bool LangGuesser::isOneOfTheLanguageSpecificLetters(utf8::uint32_t letter, std::string& letters) {
