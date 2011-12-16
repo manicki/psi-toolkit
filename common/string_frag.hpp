@@ -84,6 +84,8 @@ public:
 
     size_t length() const;
 
+    const char* data() const;
+
 #if STRING_FRAG_VALIDATION
     bool valid() const;
 #endif

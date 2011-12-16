@@ -107,6 +107,11 @@ size_t StringFrag::length() const {
 }
 
 
+const char* StringFrag::data() const {
+    return str().data();
+}
+
+
 #if STRING_FRAG_VALIDATION
 bool StringFrag::valid() const {
     if (
