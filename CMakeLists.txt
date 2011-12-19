@@ -71,6 +71,13 @@ message(STATUS "Using bonsai ParseGraph with puddle shallow parser ${USE_BONSAI_
 option(BONSAI_PATH "Bonsai common path file (required while using ParseGraph)" "/home/user/poleng4/src/bonsai/common")
 message(STATUS "Bonsai common path file (required while using ParseGraph) ${BONSAI_PATH}")
 
+option(USE_STRING_FRAG_VALIDATION "Validating string frags" OFF)
+message(STATUS "Validating string frags ${USE_STRING_FRAG_VALIDATION}")
+
+if(USE_STRING_FRAG_VALIDATION)
+    set(STRING_FRAG_VALIDATION 1)
+endif(USE_STRING_FRAG_VALIDATION)
+
 
 find_package(SWIG)
 if(SWIG_FOUND)

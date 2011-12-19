@@ -4,10 +4,8 @@
 
 #include <string>
 
+#include "config.hpp"
 #include "exceptions.hpp"
-
-
-#define STRING_FRAG_VALIDATION 0
 
 
 class StringFrag {
