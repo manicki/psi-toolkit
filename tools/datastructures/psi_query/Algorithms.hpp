@@ -142,7 +142,7 @@ namespace psi {
                 for(typename FSA::arc_iterator_type ait = arcRange.first; ait != arcRange.second; ait++) {
                     arc_type& arc = arcsMap[ait->getSymbol()];
                     arc.setSymbol(ait->getSymbol());
-                    arc.getDest().insert(ait->getDest());                    
+                    const_cast<state_type&>(arc.getDest()).insert(ait->getDest());                    
                 }
             }
             
