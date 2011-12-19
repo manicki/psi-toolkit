@@ -94,11 +94,11 @@ set(CMAKE_CXX_FLAGS "-g -Wall -Wundef -Wnon-virtual-dtor -Wextra")
 
 set(BASE_TARGETS common framework formats-psi formats-simple formats-txt formats-utt tools-tokenizers-tp tools-segmenters-srx tools-recognizers-langguesser)
 
-set(TESTS_TARGETS common-tests tools-tokenizers-tp-tests tools-segmenters-srx-tests tools-datastructures-psi_query-tests)
+set(TESTS_TARGETS common-tests tools-tokenizers-tp-tests tools-segmenters-srx-tests tools-datastructures-psi_query-tests tools-recognizers-langguesser-tests)
 
 if(USE_JAVA)
     set(BASE_TARGETS ${BASE_TARGETS} tools-lemmatizers-morfologik)
-        set(TESTS_TARGETS ${TESTS_TARGETS} morfologik-tests)
+    set(TESTS_TARGETS ${TESTS_TARGETS} tools-lemmatizers-morfologik-tests)
 endif(USE_JAVA)
 
 if(USE_POSTGRESQL)
@@ -123,13 +123,8 @@ foreach(dir ${DIRS})
     add_subdirectory(${dir})
 endforeach(dir)
 
-#if(USE_JAVA)
-#   set_target_properties(psi-pipe PROPERTIES
-#       COMPILE_FLAGS "-I${psi-toolkit_SOURCE_DIR}/utf8 -I${psi-toolkit_SOURCE_DIR}/common")
-#endif(USE_JAVA)
-
 if(USE_PUDDLE)
-set_target_properties(tools-parsers-puddle PROPERTIES
+    set_target_properties(tools-parsers-puddle PROPERTIES
     COMPILE_FLAGS "-I${psi-toolkit_SOURCE_DIR}/utf8")
     if(USE_BONSAI_PARSEGRAPH)
         set_target_properties(tools-parsers-puddle PROPERTIES

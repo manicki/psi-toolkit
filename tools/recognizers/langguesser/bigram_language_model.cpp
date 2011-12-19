@@ -22,7 +22,7 @@
 
 BigramLanguageModel::BigramLanguageModel(std::string& text) {
 
-    static int countTable[TABLE_SIZE] = {0};
+    int countTable[TABLE_SIZE] = {0};
     countBigramsInText(text, countTable);
     createFrequencyTableFromCountTable(countTable);
 }
