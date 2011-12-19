@@ -21,7 +21,11 @@ Lattice::Lattice(const std::string & text) :
 Lattice::~Lattice() { }
 
 void Lattice::appendString(const std::string & text) {
-    allText_ += text;
+    if (allText_.empty()) {
+        allText_ = text;
+    } else {
+        allText_ += text;
+    }
 
     resizeImplicitEdgesStructures_();
 }
@@ -414,7 +418,10 @@ const AnnotationItem Lattice::getEdgeAnnotationItem(Lattice::EdgeDescriptor edge
     std::string::iterator end = allText_.end();
     std::string symbol;
     utf8::append(utf8::next(iter, end), std::back_inserter(symbol));
-    return AnnotationItem("'" + symbol, symbol);
+    return AnnotationItem(
+        "'" + symbol,
+        StringFrag(allText_, edge.implicitIndex, symbolLength_(edge.implicitIndex))
+    );
 }
 
 const LayerTagCollection& Lattice::getEdgeLayerTags(Lattice::EdgeDescriptor edge) const {
@@ -591,7 +598,7 @@ void Lattice::correctionInsert(VertexDescriptor here, std::string text) {
         addEdge(
             from,
             to,
-            AnnotationItem("'"+symbol, symbol),
+            AnnotationItem("'"+symbol, StringFrag(symbol)),
             getSymbolTag_()
         );
         from = to;
@@ -649,7 +656,7 @@ void Lattice::correctionReplace(VertexDescriptor from, VertexDescriptor to, std:
                 addEdge(
                     from,
                     vertex,
-                    AnnotationItem("'"+symbol, symbol),
+                    AnnotationItem("'"+symbol, StringFrag(symbol)),
                     getSymbolTag_()
                 );
             }

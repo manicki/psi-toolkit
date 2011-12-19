@@ -6,5 +6,6 @@
 #cmakedefine01 HAVE_PERL_BINDINGS
 #cmakedefine01 _WITH_BONSAI_PARSEGRAPH
 #cmakedefine01 IS_INSTALLABLE
+#cmakedefine01 STRING_FRAG_VALIDATION
 #cmakedefine INSTALL_DATA_DIR "@INSTALL_DATA_DIR@"
 #define ROOT_DIR "../"

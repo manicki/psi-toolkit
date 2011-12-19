@@ -1,55 +1,11 @@
 #include "by_spaces_cutter.hpp"
 
 AnnotationItem BySpacesCutter::doCutOff(const std::string& text, size_t& positionInText) {
-    size_t spacePosition = text.find(' ', positionInText);
-
-    if (spacePosition == positionInText) {
-        StringFrag spaceSF(
-            text,
-            positionInText,
-            1
-        );
-        ++positionInText;
-        return AnnotationItem("blank", spaceSF);
-    }
-    else {
-        StringFrag tokenSF(
-            text,
-            positionInText,
-            (spacePosition == std::string::npos
-                ? std::string::npos
-                : spacePosition - positionInText
-            )
-        );
-        positionInText = spacePosition;
-        return AnnotationItem("word", tokenSF);
-    }
+    return performCutOff(text, positionInText);
 }
 
 AnnotationItem BySpacesCutter::doCutOff(const StringFrag& text, size_t& positionInText) {
-    size_t spacePosition = text.find(' ', positionInText);
-
-    if (spacePosition == positionInText) {
-        StringFrag spaceSF(
-            text,
-            positionInText,
-            1
-        );
-        ++positionInText;
-        return AnnotationItem("blank", spaceSF);
-    }
-    else {
-        StringFrag tokenSF(
-            text,
-            positionInText,
-            (spacePosition == std::string::npos
-                ? std::string::npos
-                : spacePosition - positionInText
-            )
-        );
-        positionInText = spacePosition;
-        return AnnotationItem("word", tokenSF);
-    }
+    return performCutOff(text, positionInText);
 }
 
 void BySpacesCutter::doReset() {

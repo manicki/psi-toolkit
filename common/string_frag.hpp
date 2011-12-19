@@ -4,10 +4,8 @@
 
 #include <string>
 
+#include "config.hpp"
 #include "exceptions.hpp"
-
-
-#define STRING_FRAG_VALIDATION 0
 
 
 class StringFrag {
@@ -44,7 +42,13 @@ public:
         src_(src),
         begin_(begin),
         len_(len)
-    { }
+    {
+#if STRING_FRAG_VALIDATION
+        if (len == std::string::npos) {
+            throw StringFragException("String frag's length initialized as npos");
+        }
+#endif
+    }
 
     StringFrag(
         const StringFrag & sf,
@@ -59,7 +63,13 @@ public:
         src_(sf.src_),
         begin_(sf.begin_ + begin),
         len_(len)
-    { }
+    {
+#if STRING_FRAG_VALIDATION
+        if (len == std::string::npos) {
+            throw StringFragException("String frag's length initialized as npos");
+        }
+#endif
+    }
 
     StringFrag(
         std::string contents
@@ -83,6 +93,8 @@ public:
     size_t find(char c, size_t pos = 0) const;
 
     size_t length() const;
+
+    const char* data() const;
 
 #if STRING_FRAG_VALIDATION
     bool valid() const;

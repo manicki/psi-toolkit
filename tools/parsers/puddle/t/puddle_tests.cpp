@@ -84,13 +84,13 @@ BOOST_AUTO_TEST_CASE( puddle ) {
 
     Lattice::EdgeSequence::Builder blanc_lemma_builder(lattice);
     blanc_lemma_builder.addEdge(lattice.firstOutEdge(lattice.getVertexForRawCharIndex(0), tokenMask));
-    AnnotationItem ai_blanc_lemma("word", "blanc");
+    AnnotationItem ai_blanc_lemma("word", StringFrag("blanc"));
     lattice.addEdge(pre_blanc, post_blanc, ai_blanc_lemma, lemma_tag, blanc_lemma_builder.build());
     Lattice::EdgeSequence::Builder blanc_lexeme_builder(lattice);
     blanc_lexeme_builder.addEdge(lattice.firstOutEdge(lattice.getVertexForRawCharIndex(0), lemmaMask));
-    AnnotationItem ai_blanc_lexeme_adj("adj", "blanc_adj");
+    AnnotationItem ai_blanc_lexeme_adj("adj", StringFrag("blanc_adj"));
     lattice.addEdge(pre_blanc, post_blanc, ai_blanc_lexeme_adj, lexeme_tag, blanc_lexeme_builder.build());
-    AnnotationItem ai_blanc_lexeme_subst("subst", "blanc_subst");
+    AnnotationItem ai_blanc_lexeme_subst("subst", StringFrag("blanc_subst"));
     lattice.addEdge(pre_blanc, post_blanc, ai_blanc_lexeme_subst, lexeme_tag, blanc_lexeme_builder.build());
     Lattice::EdgeSequence::Builder blanc_form_adj_builder(lattice);
     Lattice::EdgeSequence::Builder blanc_form_subst_builder(lattice);
@@ -104,26 +104,26 @@ BOOST_AUTO_TEST_CASE( puddle ) {
         else if (category == "subst")
             blanc_form_subst_builder.addEdge(edge);
     }
-    AnnotationItem ai_blanc_form_adj("adj", "blanc_adj");
+    AnnotationItem ai_blanc_form_adj("adj", StringFrag("blanc_adj"));
     lattice.getAnnotationItemManager().setValue(ai_blanc_form_adj, "number", "sg");
     lattice.getAnnotationItemManager().setValue(ai_blanc_form_adj, "gender", "m");
     lattice.addEdge(pre_blanc, post_blanc, ai_blanc_form_adj, form_tag, blanc_form_adj_builder.build());
-    AnnotationItem ai_blanc_form_subst("subst", "blanc_subst");
+    AnnotationItem ai_blanc_form_subst("subst", StringFrag("blanc_subst"));
     lattice.getAnnotationItemManager().setValue(ai_blanc_form_subst, "number", "sg");
     lattice.getAnnotationItemManager().setValue(ai_blanc_form_subst, "gender", "m");
     lattice.addEdge(pre_blanc, post_blanc, ai_blanc_form_subst, form_tag, blanc_form_subst_builder.build());
 
     Lattice::EdgeSequence::Builder chat_lemma_builder(lattice);
     chat_lemma_builder.addEdge(lattice.firstOutEdge(lattice.getVertexForRawCharIndex(6), tokenMask));
-    AnnotationItem ai_chat_lemma("word", "chat");
+    AnnotationItem ai_chat_lemma("word", StringFrag("chat"));
     lattice.addEdge(pre_chat, post_chat, ai_chat_lemma, lemma_tag, chat_lemma_builder.build());
     Lattice::EdgeSequence::Builder chat_lexeme_builder(lattice);
     chat_lexeme_builder.addEdge(lattice.firstOutEdge(lattice.getVertexForRawCharIndex(6), lemmaMask));
-    AnnotationItem ai_chat_lexeme("subst", "chat_subst");
+    AnnotationItem ai_chat_lexeme("subst", StringFrag("chat_subst"));
     lattice.addEdge(pre_chat, post_chat, ai_chat_lexeme, lexeme_tag, chat_lexeme_builder.build());
     Lattice::EdgeSequence::Builder chat_form_builder(lattice);
     chat_form_builder.addEdge(lattice.firstOutEdge(lattice.getVertexForRawCharIndex(6), lexemeMask));
-    AnnotationItem ai_chat_form("subst", "chat_subst");
+    AnnotationItem ai_chat_form("subst", StringFrag("chat_subst"));
     lattice.getAnnotationItemManager().setValue(ai_chat_form, "number", "sg");
     lattice.getAnnotationItemManager().setValue(ai_chat_form, "gender", "m");
     lattice.addEdge(pre_chat, post_chat, ai_chat_form, form_tag, chat_form_builder.build());
@@ -327,32 +327,32 @@ BOOST_AUTO_TEST_CASE( puddle_unify ) {
 
     Lattice::EdgeSequence::Builder ananas_lemma_builder(lattice);
     ananas_lemma_builder.addEdge(lattice.firstOutEdge(lattice.getVertexForRawCharIndex(0), tokenMask));
-    AnnotationItem ai_ananas_lemma("word", "ananas");
+    AnnotationItem ai_ananas_lemma("word", StringFrag("ananas"));
     lattice.addEdge(pre_ananas, post_ananas, ai_ananas_lemma, lemma_tag, ananas_lemma_builder.build());
     Lattice::EdgeSequence::Builder ananas_lexeme_builder(lattice);
     ananas_lexeme_builder.addEdge(lattice.firstOutEdge(lattice.getVertexForRawCharIndex(0), lemmaMask));
-    AnnotationItem ai_ananas_lexeme("subst", "ananas_subst");
+    AnnotationItem ai_ananas_lexeme("subst", StringFrag("ananas_subst"));
     lattice.addEdge(pre_ananas, post_ananas, ai_ananas_lexeme, lexeme_tag, ananas_lexeme_builder.build());
     Lattice::EdgeSequence::Builder ananas_form_builder(lattice);
     ananas_form_builder.addEdge(lattice.firstOutEdge(lattice.getVertexForRawCharIndex(0), lexemeMask));
-    AnnotationItem ai_ananas_sg_form("subst", "ananas_subst");
+    AnnotationItem ai_ananas_sg_form("subst", StringFrag("ananas_subst"));
     lattice.getAnnotationItemManager().setValue(ai_ananas_sg_form, "number", "sg");
     lattice.getAnnotationItemManager().setValue(ai_ananas_sg_form, "gender", "m");
     lattice.addEdge(pre_ananas, post_ananas, ai_ananas_sg_form, form_tag, ananas_form_builder.build());
-    AnnotationItem ai_ananas_pl_form("subst", "ananas_subst");
+    AnnotationItem ai_ananas_pl_form("subst", StringFrag("ananas_subst"));
     lattice.getAnnotationItemManager().setValue(ai_ananas_pl_form, "number", "pl");
     lattice.getAnnotationItemManager().setValue(ai_ananas_pl_form, "gender", "m");
     lattice.addEdge(pre_ananas, post_ananas, ai_ananas_pl_form, form_tag, ananas_form_builder.build());
 
     Lattice::EdgeSequence::Builder noirs_lemma_builder(lattice);
     noirs_lemma_builder.addEdge(lattice.firstOutEdge(lattice.getVertexForRawCharIndex(7), tokenMask));
-    AnnotationItem ai_noirs_lemma("word", "noir");
+    AnnotationItem ai_noirs_lemma("word", StringFrag("noir"));
     lattice.addEdge(pre_noirs, post_noirs, ai_noirs_lemma, lemma_tag, noirs_lemma_builder.build());
     Lattice::EdgeSequence::Builder noirs_lexeme_builder(lattice);
     noirs_lexeme_builder.addEdge(lattice.firstOutEdge(lattice.getVertexForRawCharIndex(7), lemmaMask));
-    AnnotationItem ai_noirs_lexeme_adj("adj", "noir_adj");
+    AnnotationItem ai_noirs_lexeme_adj("adj", StringFrag("noir_adj"));
     lattice.addEdge(pre_noirs, post_noirs, ai_noirs_lexeme_adj, lexeme_tag, noirs_lexeme_builder.build());
-    AnnotationItem ai_noirs_lexeme_subst("subst", "noir_subst");
+    AnnotationItem ai_noirs_lexeme_subst("subst", StringFrag("noir_subst"));
     lattice.addEdge(pre_noirs, post_noirs, ai_noirs_lexeme_subst, lexeme_tag, noirs_lexeme_builder.build());
     Lattice::EdgeSequence::Builder noirs_form_adj_builder(lattice);
     Lattice::EdgeSequence::Builder noirs_form_subst_builder(lattice);
@@ -366,11 +366,11 @@ BOOST_AUTO_TEST_CASE( puddle_unify ) {
         else if (category == "subst")
             noirs_form_subst_builder.addEdge(edge);
     }
-    AnnotationItem ai_noirs_adj_form("adj", "noir_adj");
+    AnnotationItem ai_noirs_adj_form("adj", StringFrag("noir_adj"));
     lattice.getAnnotationItemManager().setValue(ai_noirs_adj_form, "number", "pl");
     lattice.getAnnotationItemManager().setValue(ai_noirs_adj_form, "gender", "m");
     lattice.addEdge(pre_noirs, post_noirs, ai_noirs_adj_form, form_tag, noirs_form_adj_builder.build());
-    AnnotationItem ai_noirs_subst_form("subst", "noir_subst");
+    AnnotationItem ai_noirs_subst_form("subst", StringFrag("noir_subst"));
     lattice.getAnnotationItemManager().setValue(ai_noirs_subst_form, "number", "pl");
     lattice.getAnnotationItemManager().setValue(ai_noirs_subst_form, "gender", "m");
     lattice.addEdge(pre_noirs, post_noirs, ai_noirs_subst_form, form_tag, noirs_form_subst_builder.build());
@@ -551,32 +551,32 @@ BOOST_AUTO_TEST_CASE( puddle_delete ) {
 
     Lattice::EdgeSequence::Builder ananas_lemma_builder(lattice);
     ananas_lemma_builder.addEdge(lattice.firstOutEdge(lattice.getVertexForRawCharIndex(0), tokenMask));
-    AnnotationItem ai_ananas_lemma("word", "ananas");
+    AnnotationItem ai_ananas_lemma("word", StringFrag("ananas"));
     lattice.addEdge(pre_ananas, post_ananas, ai_ananas_lemma, lemma_tag, ananas_lemma_builder.build());
     Lattice::EdgeSequence::Builder ananas_lexeme_builder(lattice);
     ananas_lexeme_builder.addEdge(lattice.firstOutEdge(lattice.getVertexForRawCharIndex(0), lemmaMask));
-    AnnotationItem ai_ananas_lexeme("subst", "ananas_subst");
+    AnnotationItem ai_ananas_lexeme("subst", StringFrag("ananas_subst"));
     lattice.addEdge(pre_ananas, post_ananas, ai_ananas_lexeme, lexeme_tag, ananas_lexeme_builder.build());
     Lattice::EdgeSequence::Builder ananas_form_builder(lattice);
     ananas_form_builder.addEdge(lattice.firstOutEdge(lattice.getVertexForRawCharIndex(0), lexemeMask));
-    AnnotationItem ai_ananas_sg_form("subst", "ananas_subst");
+    AnnotationItem ai_ananas_sg_form("subst", StringFrag("ananas_subst"));
     lattice.getAnnotationItemManager().setValue(ai_ananas_sg_form, "number", "sg");
     lattice.getAnnotationItemManager().setValue(ai_ananas_sg_form, "gender", "m");
     lattice.addEdge(pre_ananas, post_ananas, ai_ananas_sg_form, form_tag, ananas_form_builder.build());
-    AnnotationItem ai_ananas_pl_form("subst", "ananas_subst");
+    AnnotationItem ai_ananas_pl_form("subst", StringFrag("ananas_subst"));
     lattice.getAnnotationItemManager().setValue(ai_ananas_pl_form, "number", "pl");
     lattice.getAnnotationItemManager().setValue(ai_ananas_pl_form, "gender", "m");
     lattice.addEdge(pre_ananas, post_ananas, ai_ananas_pl_form, form_tag, ananas_form_builder.build());
 
     Lattice::EdgeSequence::Builder noirs_lemma_builder(lattice);
     noirs_lemma_builder.addEdge(lattice.firstOutEdge(lattice.getVertexForRawCharIndex(7), tokenMask));
-    AnnotationItem ai_noirs_lemma("word", "noir");
+    AnnotationItem ai_noirs_lemma("word", StringFrag("noir"));
     lattice.addEdge(pre_noirs, post_noirs, ai_noirs_lemma, lemma_tag, noirs_lemma_builder.build());
     Lattice::EdgeSequence::Builder noirs_lexeme_builder(lattice);
     noirs_lexeme_builder.addEdge(lattice.firstOutEdge(lattice.getVertexForRawCharIndex(7), lemmaMask));
-    AnnotationItem ai_noirs_adj_lexeme("adj", "noir_adj");
+    AnnotationItem ai_noirs_adj_lexeme("adj", StringFrag("noir_adj"));
     lattice.addEdge(pre_noirs, post_noirs, ai_noirs_adj_lexeme, lexeme_tag, noirs_lexeme_builder.build());
-    AnnotationItem ai_noirs_subst_lexeme("subst", "noir_subst");
+    AnnotationItem ai_noirs_subst_lexeme("subst", StringFrag("noir_subst"));
     lattice.addEdge(pre_noirs, post_noirs, ai_noirs_subst_lexeme, lexeme_tag, noirs_lexeme_builder.build());
     Lattice::EdgeSequence::Builder noirs_form_adj_builder(lattice);
     Lattice::EdgeSequence::Builder noirs_form_subst_builder(lattice);
@@ -590,11 +590,11 @@ BOOST_AUTO_TEST_CASE( puddle_delete ) {
         else if (category == "subst")
             noirs_form_subst_builder.addEdge(edge);
     }
-    AnnotationItem ai_noirs_adj_form("adj", "noir_adj");
+    AnnotationItem ai_noirs_adj_form("adj", StringFrag("noir_adj"));
     lattice.getAnnotationItemManager().setValue(ai_noirs_adj_form, "number", "pl");
     lattice.getAnnotationItemManager().setValue(ai_noirs_adj_form, "gender", "m");
     lattice.addEdge(pre_noirs, post_noirs, ai_noirs_adj_form, form_tag, noirs_form_adj_builder.build());
-    AnnotationItem ai_noirs_subst_form("subst", "noir_subst");
+    AnnotationItem ai_noirs_subst_form("subst", StringFrag("noir_subst"));
     lattice.getAnnotationItemManager().setValue(ai_noirs_subst_form, "number", "pl");
     lattice.getAnnotationItemManager().setValue(ai_noirs_subst_form, "gender", "m");
     lattice.addEdge(pre_noirs, post_noirs, ai_noirs_subst_form, form_tag, noirs_form_subst_builder.build());
@@ -790,32 +790,32 @@ BOOST_AUTO_TEST_CASE( puddle_add ) {
 
     Lattice::EdgeSequence::Builder ananas_lemma_builder(lattice);
     ananas_lemma_builder.addEdge(lattice.firstOutEdge(lattice.getVertexForRawCharIndex(0), tokenMask));
-    AnnotationItem ai_ananas_lemma("word", "ananas");
+    AnnotationItem ai_ananas_lemma("word", StringFrag("ananas"));
     lattice.addEdge(pre_ananas, post_ananas, ai_ananas_lemma, lemma_tag, ananas_lemma_builder.build());
     Lattice::EdgeSequence::Builder ananas_lexeme_builder(lattice);
     ananas_lexeme_builder.addEdge(lattice.firstOutEdge(lattice.getVertexForRawCharIndex(0), lemmaMask));
-    AnnotationItem ai_ananas_lexeme("subst", "ananas_subst");
+    AnnotationItem ai_ananas_lexeme("subst", StringFrag("ananas_subst"));
     lattice.addEdge(pre_ananas, post_ananas, ai_ananas_lexeme, lexeme_tag, ananas_lexeme_builder.build());
     Lattice::EdgeSequence::Builder ananas_form_builder(lattice);
     ananas_form_builder.addEdge(lattice.firstOutEdge(lattice.getVertexForRawCharIndex(0), lexemeMask));
-    AnnotationItem ai_ananas_sg_form("subst", "ananas_subst");
+    AnnotationItem ai_ananas_sg_form("subst", StringFrag("ananas_subst"));
     lattice.getAnnotationItemManager().setValue(ai_ananas_sg_form, "number", "sg");
     lattice.getAnnotationItemManager().setValue(ai_ananas_sg_form, "gender", "m");
     lattice.addEdge(pre_ananas, post_ananas, ai_ananas_sg_form, form_tag, ananas_form_builder.build());
-    AnnotationItem ai_ananas_pl_form("subst", "ananas_subst");
+    AnnotationItem ai_ananas_pl_form("subst", StringFrag("ananas_subst"));
     lattice.getAnnotationItemManager().setValue(ai_ananas_pl_form, "number", "pl");
     lattice.getAnnotationItemManager().setValue(ai_ananas_pl_form, "gender", "m");
     lattice.addEdge(pre_ananas, post_ananas, ai_ananas_pl_form, form_tag, ananas_form_builder.build());
 
     Lattice::EdgeSequence::Builder noirs_lemma_builder(lattice);
     noirs_lemma_builder.addEdge(lattice.firstOutEdge(lattice.getVertexForRawCharIndex(7), tokenMask));
-    AnnotationItem ai_noirs_lemma("word", "noir");
+    AnnotationItem ai_noirs_lemma("word", StringFrag("noir"));
     lattice.addEdge(pre_noirs, post_noirs, ai_noirs_lemma, lemma_tag, noirs_lemma_builder.build());
     Lattice::EdgeSequence::Builder noirs_lexeme_builder(lattice);
     noirs_lexeme_builder.addEdge(lattice.firstOutEdge(lattice.getVertexForRawCharIndex(7), lemmaMask));
-    AnnotationItem ai_noirs_adj_lexeme("adj", "noir_adj");
+    AnnotationItem ai_noirs_adj_lexeme("adj", StringFrag("noir_adj"));
     lattice.addEdge(pre_noirs, post_noirs, ai_noirs_adj_lexeme, lexeme_tag, noirs_lexeme_builder.build());
-    AnnotationItem ai_noirs_subst_lexeme("subst", "noir_subst");
+    AnnotationItem ai_noirs_subst_lexeme("subst", StringFrag("noir_subst"));
     lattice.addEdge(pre_noirs, post_noirs, ai_noirs_subst_lexeme, lexeme_tag, noirs_lexeme_builder.build());
     Lattice::EdgeSequence::Builder noirs_form_adj_builder(lattice);
     Lattice::EdgeSequence::Builder noirs_form_subst_builder(lattice);
@@ -829,11 +829,11 @@ BOOST_AUTO_TEST_CASE( puddle_add ) {
         else if (category == "subst")
             noirs_form_subst_builder.addEdge(edge);
     }
-    AnnotationItem ai_noirs_adj_form("adj", "noir_adj");
+    AnnotationItem ai_noirs_adj_form("adj", StringFrag("noir_adj"));
     lattice.getAnnotationItemManager().setValue(ai_noirs_adj_form, "number", "pl");
     lattice.getAnnotationItemManager().setValue(ai_noirs_adj_form, "gender", "m");
     lattice.addEdge(pre_noirs, post_noirs, ai_noirs_adj_form, form_tag, noirs_form_adj_builder.build());
-    AnnotationItem ai_noirs_subst_form("subst", "noir_subst");
+    AnnotationItem ai_noirs_subst_form("subst", StringFrag("noir_subst"));
     lattice.getAnnotationItemManager().setValue(ai_noirs_subst_form, "number", "pl");
     lattice.getAnnotationItemManager().setValue(ai_noirs_subst_form, "gender", "m");
     lattice.addEdge(pre_noirs, post_noirs, ai_noirs_subst_form, form_tag, noirs_form_subst_builder.build());
@@ -1031,34 +1031,34 @@ BOOST_AUTO_TEST_CASE( puddle_group ) {
 
     Lattice::EdgeSequence::Builder ananas_lemma_builder(lattice);
     ananas_lemma_builder.addEdge(lattice.firstOutEdge(lattice.getVertexForRawCharIndex(0), tokenMask));
-    AnnotationItem ai_ananas_lemma("word", "ananas");
+    AnnotationItem ai_ananas_lemma("word", StringFrag("ananas"));
     lattice.addEdge(pre_ananas, post_ananas, ai_ananas_lemma, lemma_tag, ananas_lemma_builder.build());
     Lattice::EdgeSequence::Builder ananas_lexeme_builder(lattice);
     ananas_lexeme_builder.addEdge(lattice.firstOutEdge(lattice.getVertexForRawCharIndex(0), lemmaMask));
-    AnnotationItem ai_ananas_lexeme("subst", "ananas_subst");
+    AnnotationItem ai_ananas_lexeme("subst", StringFrag("ananas_subst"));
     lattice.addEdge(pre_ananas, post_ananas, ai_ananas_lexeme, lexeme_tag, ananas_lexeme_builder.build());
     Lattice::EdgeSequence::Builder ananas_form_builder(lattice);
     ananas_form_builder.addEdge(lattice.firstOutEdge(lattice.getVertexForRawCharIndex(0), lexemeMask));
-    AnnotationItem ai_ananas_form_sg("subst", "ananas_subst");
+    AnnotationItem ai_ananas_form_sg("subst", StringFrag("ananas_subst"));
     lattice.getAnnotationItemManager().setValue(ai_ananas_form_sg, "number", "sg");
     lattice.getAnnotationItemManager().setValue(ai_ananas_form_sg, "gender", "m");
     lattice.addEdge(pre_ananas, post_ananas, ai_ananas_form_sg, form_tag, ananas_form_builder.build());
-    AnnotationItem ai_ananas_form_pl("subst", "ananas_subst");
+    AnnotationItem ai_ananas_form_pl("subst", StringFrag("ananas_subst"));
     lattice.getAnnotationItemManager().setValue(ai_ananas_form_pl, "number", "pl");
     lattice.getAnnotationItemManager().setValue(ai_ananas_form_pl, "gender", "m");
     lattice.addEdge(pre_ananas, post_ananas, ai_ananas_form_pl, form_tag, ananas_form_builder.build());
 
     Lattice::EdgeSequence::Builder noirs_lemma_builder(lattice);
     noirs_lemma_builder.addEdge(lattice.firstOutEdge(lattice.getVertexForRawCharIndex(7), tokenMask));
-    AnnotationItem ai_noirs_lemma("word", "noir");
+    AnnotationItem ai_noirs_lemma("word", StringFrag("noir"));
     lattice.addEdge(pre_noirs, post_noirs, ai_noirs_lemma, lemma_tag, noirs_lemma_builder.build());
     Lattice::EdgeSequence::Builder noirs_lexeme_adj_builder(lattice);
     noirs_lexeme_adj_builder.addEdge(lattice.firstOutEdge(lattice.getVertexForRawCharIndex(7), lemmaMask));
-    AnnotationItem ai_noirs_lexeme_adj("adj", "noir_adj");
+    AnnotationItem ai_noirs_lexeme_adj("adj", StringFrag("noir_adj"));
     lattice.addEdge(pre_noirs, post_noirs, ai_noirs_lexeme_adj, lexeme_tag, noirs_lexeme_adj_builder.build());
     Lattice::EdgeSequence::Builder noirs_lexeme_subst_builder(lattice);
     noirs_lexeme_subst_builder.addEdge(lattice.firstOutEdge(lattice.getVertexForRawCharIndex(7), lemmaMask));
-    AnnotationItem ai_noirs_lexeme_subst("subst", "noir_subst");
+    AnnotationItem ai_noirs_lexeme_subst("subst", StringFrag("noir_subst"));
     lattice.addEdge(pre_noirs, post_noirs, ai_noirs_lexeme_subst, lexeme_tag, noirs_lexeme_subst_builder.build());
     Lattice::EdgeSequence::Builder noirs_form_adj_builder(lattice);
     Lattice::EdgeSequence::Builder noirs_form_subst_builder(lattice);
@@ -1072,11 +1072,11 @@ BOOST_AUTO_TEST_CASE( puddle_group ) {
         else if (category == "subst")
             noirs_form_subst_builder.addEdge(edge);
     }
-    AnnotationItem ai_noirs_form_adj("adj", "noir_adj");
+    AnnotationItem ai_noirs_form_adj("adj", StringFrag("noir_adj"));
     lattice.getAnnotationItemManager().setValue(ai_noirs_form_adj, "number", "pl");
     lattice.getAnnotationItemManager().setValue(ai_noirs_form_adj, "gender", "m");
     lattice.addEdge(pre_noirs, post_noirs, ai_noirs_form_adj, form_tag, noirs_form_adj_builder.build());
-    AnnotationItem ai_noirs_form_subst("subst", "noir_subst");
+    AnnotationItem ai_noirs_form_subst("subst", StringFrag("noir_subst"));
     lattice.getAnnotationItemManager().setValue(ai_noirs_form_subst, "number", "pl");
     lattice.getAnnotationItemManager().setValue(ai_noirs_form_subst, "gender", "m");
     lattice.addEdge(pre_noirs, post_noirs, ai_noirs_form_subst, form_tag, noirs_form_subst_builder.build());
@@ -1234,30 +1234,30 @@ BOOST_AUTO_TEST_CASE( puddle_join ) {
 
     Lattice::EdgeSequence::Builder ananas_lemma_builder(lattice);
     ananas_lemma_builder.addEdge(lattice.firstOutEdge(lattice.getVertexForRawCharIndex(0), tokenMask));
-    AnnotationItem ai_ananas_lemma("word", "ananas");
+    AnnotationItem ai_ananas_lemma("word", StringFrag("ananas"));
     lattice.addEdge(pre_ananas, post_ananas, ai_ananas_lemma, lemma_tag, ananas_lemma_builder.build());
     Lattice::EdgeSequence::Builder ananas_lexeme_builder(lattice);
     ananas_lexeme_builder.addEdge(lattice.firstOutEdge(lattice.getVertexForRawCharIndex(0), lemmaMask));
-    AnnotationItem ai_ananas_lexeme("subst", "ananas_subst");
+    AnnotationItem ai_ananas_lexeme("subst", StringFrag("ananas_subst"));
     lattice.addEdge(pre_ananas, post_ananas, ai_ananas_lexeme, lexeme_tag, ananas_lexeme_builder.build());
     Lattice::EdgeSequence::Builder ananas_form_builder(lattice);
     ananas_form_builder.addEdge(lattice.firstOutEdge(lattice.getVertexForRawCharIndex(0), lexemeMask));
-    AnnotationItem ai_ananas_form("subst", "ananas_subst");
+    AnnotationItem ai_ananas_form("subst", StringFrag("ananas_subst"));
     lattice.getAnnotationItemManager().setValue(ai_ananas_form, "number", "pl");
     lattice.getAnnotationItemManager().setValue(ai_ananas_form, "gender", "m");
     lattice.addEdge(pre_ananas, post_ananas, ai_ananas_form, form_tag, ananas_form_builder.build());
 
     Lattice::EdgeSequence::Builder noirs_lemma_builder(lattice);
     noirs_lemma_builder.addEdge(lattice.firstOutEdge(lattice.getVertexForRawCharIndex(7), tokenMask));
-    AnnotationItem ai_noirs_lemma("word", "noir");
+    AnnotationItem ai_noirs_lemma("word", StringFrag("noir"));
     lattice.addEdge(pre_noirs, post_noirs, ai_noirs_lemma, lemma_tag, noirs_lemma_builder.build());
     Lattice::EdgeSequence::Builder noirs_lexeme_builder(lattice);
     noirs_lexeme_builder.addEdge(lattice.firstOutEdge(lattice.getVertexForRawCharIndex(7), lemmaMask));
-    AnnotationItem ai_noirs_lexeme("adj", "noir_adj");
+    AnnotationItem ai_noirs_lexeme("adj", StringFrag("noir_adj"));
     lattice.addEdge(pre_noirs, post_noirs, ai_noirs_lexeme, lexeme_tag, noirs_lexeme_builder.build());
     Lattice::EdgeSequence::Builder noirs_form_builder(lattice);
     noirs_form_builder.addEdge(lattice.firstOutEdge(lattice.getVertexForRawCharIndex(7), lexemeMask));
-    AnnotationItem ai_noirs_form("adj", "noir_adj");
+    AnnotationItem ai_noirs_form("adj", StringFrag("noir_adj"));
     lattice.getAnnotationItemManager().setValue(ai_noirs_form, "number", "pl");
     lattice.getAnnotationItemManager().setValue(ai_noirs_form, "gender", "m");
     lattice.addEdge(pre_noirs, post_noirs, ai_noirs_form, form_tag, noirs_form_builder.build());
@@ -1536,30 +1536,30 @@ BOOST_AUTO_TEST_CASE( puddle_attach ) {
 
     Lattice::EdgeSequence::Builder ananas_lemma_builder(lattice);
     ananas_lemma_builder.addEdge(lattice.firstOutEdge(lattice.getVertexForRawCharIndex(0), tokenMask));
-    AnnotationItem ai_ananas_lemma("word", "ananas");
+    AnnotationItem ai_ananas_lemma("word", StringFrag("ananas"));
     lattice.addEdge(pre_ananas, post_ananas, ai_ananas_lemma, lemma_tag, ananas_lemma_builder.build());
     Lattice::EdgeSequence::Builder ananas_lexeme_builder(lattice);
     ananas_lexeme_builder.addEdge(lattice.firstOutEdge(lattice.getVertexForRawCharIndex(0), lemmaMask));
-    AnnotationItem ai_ananas_lexeme("subst", "ananas_subst");
+    AnnotationItem ai_ananas_lexeme("subst", StringFrag("ananas_subst"));
     lattice.addEdge(pre_ananas, post_ananas, ai_ananas_lexeme, lexeme_tag, ananas_lexeme_builder.build());
     Lattice::EdgeSequence::Builder ananas_form_builder(lattice);
     ananas_form_builder.addEdge(lattice.firstOutEdge(lattice.getVertexForRawCharIndex(0), lexemeMask));
-    AnnotationItem ai_ananas_form("subst", "ananas_subst");
+    AnnotationItem ai_ananas_form("subst", StringFrag("ananas_subst"));
     lattice.getAnnotationItemManager().setValue(ai_ananas_form, "number", "pl");
     lattice.getAnnotationItemManager().setValue(ai_ananas_form, "gender", "m");
     lattice.addEdge(pre_ananas, post_ananas, ai_ananas_form, form_tag, ananas_form_builder.build());
 
     Lattice::EdgeSequence::Builder noirs_lemma_builder(lattice);
     noirs_lemma_builder.addEdge(lattice.firstOutEdge(lattice.getVertexForRawCharIndex(7), tokenMask));
-    AnnotationItem ai_noirs_lemma("word", "noir");
+    AnnotationItem ai_noirs_lemma("word", StringFrag("noir"));
     lattice.addEdge(pre_noirs, post_noirs, ai_noirs_lemma, lemma_tag, noirs_lemma_builder.build());
     Lattice::EdgeSequence::Builder noirs_lexeme_builder(lattice);
     noirs_lexeme_builder.addEdge(lattice.firstOutEdge(lattice.getVertexForRawCharIndex(7), lemmaMask));
-    AnnotationItem ai_noirs_lexeme("adj", "noir_adj");
+    AnnotationItem ai_noirs_lexeme("adj", StringFrag("noir_adj"));
     lattice.addEdge(pre_noirs, post_noirs, ai_noirs_lexeme, lexeme_tag, noirs_lexeme_builder.build());
     Lattice::EdgeSequence::Builder noirs_form_builder(lattice);
     noirs_form_builder.addEdge(lattice.firstOutEdge(lattice.getVertexForRawCharIndex(7), lexemeMask));
-    AnnotationItem ai_noirs_form("adj", "noir_adj");
+    AnnotationItem ai_noirs_form("adj", StringFrag("noir_adj"));
     lattice.getAnnotationItemManager().setValue(ai_noirs_form, "number", "pl");
     lattice.getAnnotationItemManager().setValue(ai_noirs_form, "gender", "m");
     lattice.addEdge(pre_noirs, post_noirs, ai_noirs_form, form_tag, noirs_form_builder.build());
@@ -1806,30 +1806,30 @@ BOOST_AUTO_TEST_CASE( puddle_transform ) {
 
     Lattice::EdgeSequence::Builder ananas_lemma_builder(lattice);
     ananas_lemma_builder.addEdge(lattice.firstOutEdge(lattice.getVertexForRawCharIndex(0), tokenMask));
-    AnnotationItem ai_ananas_lemma("word", "ananas");
+    AnnotationItem ai_ananas_lemma("word", StringFrag("ananas"));
     lattice.addEdge(pre_ananas, post_ananas, ai_ananas_lemma, lemma_tag, ananas_lemma_builder.build());
     Lattice::EdgeSequence::Builder ananas_lexeme_builder(lattice);
     ananas_lexeme_builder.addEdge(lattice.firstOutEdge(lattice.getVertexForRawCharIndex(0), lemmaMask));
-    AnnotationItem ai_ananas_lexeme("subst", "ananas_subst");
+    AnnotationItem ai_ananas_lexeme("subst", StringFrag("ananas_subst"));
     lattice.addEdge(pre_ananas, post_ananas, ai_ananas_lexeme, lexeme_tag, ananas_lexeme_builder.build());
     Lattice::EdgeSequence::Builder ananas_form_builder(lattice);
     ananas_form_builder.addEdge(lattice.firstOutEdge(lattice.getVertexForRawCharIndex(0), lexemeMask));
-    AnnotationItem ai_ananas_form("subst", "ananas_subst");
+    AnnotationItem ai_ananas_form("subst", StringFrag("ananas_subst"));
     lattice.getAnnotationItemManager().setValue(ai_ananas_form, "number", "pl");
     lattice.getAnnotationItemManager().setValue(ai_ananas_form, "gender", "m");
     lattice.addEdge(pre_ananas, post_ananas, ai_ananas_form, form_tag, ananas_form_builder.build());
 
     Lattice::EdgeSequence::Builder noirs_lemma_builder(lattice);
     noirs_lemma_builder.addEdge(lattice.firstOutEdge(lattice.getVertexForRawCharIndex(7), tokenMask));
-    AnnotationItem ai_noirs_lemma("word", "noir");
+    AnnotationItem ai_noirs_lemma("word", StringFrag("noir"));
     lattice.addEdge(pre_noirs, post_noirs, ai_noirs_lemma, lemma_tag, noirs_lemma_builder.build());
     Lattice::EdgeSequence::Builder noirs_lexeme_builder(lattice);
     noirs_lexeme_builder.addEdge(lattice.firstOutEdge(lattice.getVertexForRawCharIndex(7), lemmaMask));
-    AnnotationItem ai_noirs_lexeme("adj", "noir_adj");
+    AnnotationItem ai_noirs_lexeme("adj", StringFrag("noir_adj"));
     lattice.addEdge(pre_noirs, post_noirs, ai_noirs_lexeme, lexeme_tag, noirs_lexeme_builder.build());
     Lattice::EdgeSequence::Builder noirs_form_builder(lattice);
     noirs_form_builder.addEdge(lattice.firstOutEdge(lattice.getVertexForRawCharIndex(7), lexemeMask));
-    AnnotationItem ai_noirs_form("adj", "noir_adj");
+    AnnotationItem ai_noirs_form("adj", StringFrag("noir_adj"));
     lattice.getAnnotationItemManager().setValue(ai_noirs_form, "number", "pl");
     lattice.getAnnotationItemManager().setValue(ai_noirs_form, "gender", "m");
     lattice.addEdge(pre_noirs, post_noirs, ai_noirs_form, form_tag, noirs_form_builder.build());
@@ -2042,30 +2042,30 @@ BOOST_AUTO_TEST_CASE( puddle_syntok ) {
 
     Lattice::EdgeSequence::Builder coup_lemma_builder(lattice);
     coup_lemma_builder.addEdge(lattice.firstOutEdge(lattice.getVertexForRawCharIndex(0), tokenMask));
-    AnnotationItem ai_coup_lemma("word", "coup");
+    AnnotationItem ai_coup_lemma("word", StringFrag("coup"));
     lattice.addEdge(pre_coup, post_coup, ai_coup_lemma, lemma_tag, coup_lemma_builder.build());
     Lattice::EdgeSequence::Builder coup_lexeme_builder(lattice);
     coup_lexeme_builder.addEdge(lattice.firstOutEdge(lattice.getVertexForRawCharIndex(0), lemmaMask));
-    AnnotationItem ai_coup_lexeme("subst", "coup_subst");
+    AnnotationItem ai_coup_lexeme("subst", StringFrag("coup_subst"));
     lattice.addEdge(pre_coup, post_coup, ai_coup_lexeme, lexeme_tag, coup_lexeme_builder.build());
     Lattice::EdgeSequence::Builder coup_form_builder(lattice);
     coup_form_builder.addEdge(lattice.firstOutEdge(lattice.getVertexForRawCharIndex(0), lexemeMask));
-    AnnotationItem ai_coup_form("subst", "coup_subst");
+    AnnotationItem ai_coup_form("subst", StringFrag("coup_subst"));
     lattice.getAnnotationItemManager().setValue(ai_coup_form, "number", "sg");
     lattice.getAnnotationItemManager().setValue(ai_coup_form, "gender", "m");
     lattice.addEdge(pre_coup, post_coup, ai_coup_form, form_tag, coup_form_builder.build());
 
     Lattice::EdgeSequence::Builder d__lemma_builder(lattice);
     d__lemma_builder.addEdge(lattice.firstOutEdge(lattice.getVertexForRawCharIndex(5), tokenMask));
-    AnnotationItem ai_d__lemma("word", "d'");
+    AnnotationItem ai_d__lemma("word", StringFrag("d'"));
     lattice.addEdge(pre_d, post_d, ai_d__lemma, lemma_tag, d__lemma_builder.build());
     Lattice::EdgeSequence::Builder d_lemma_builder(lattice);
     d_lemma_builder.addEdge(lattice.firstOutEdge(lattice.getVertexForRawCharIndex(5), tokenMask));
-    AnnotationItem ai_d_lemma("word", "d");
+    AnnotationItem ai_d_lemma("word", StringFrag("d"));
     lattice.addEdge(pre_d, post_d, ai_d_lemma, lemma_tag, d_lemma_builder.build());
     Lattice::EdgeSequence::Builder de_lemma_builder(lattice);
     de_lemma_builder.addEdge(lattice.firstOutEdge(lattice.getVertexForRawCharIndex(5), tokenMask));
-    AnnotationItem ai_de_lemma("word", "de");
+    AnnotationItem ai_de_lemma("word", StringFrag("de"));
     lattice.addEdge(pre_d, post_d, ai_de_lemma, lemma_tag, de_lemma_builder.build());
 
     Lattice::EdgeSequence::Builder d__lexeme_builder(lattice);
@@ -2083,9 +2083,9 @@ BOOST_AUTO_TEST_CASE( puddle_syntok ) {
         else if (text == "de")
             de_lexeme_builder.addEdge(edge);
     }
-    AnnotationItem ai_d__lexeme("prep", "d'_prep");
-    AnnotationItem ai_d_lexeme("subst", "d_subst");
-    AnnotationItem ai_de_lexeme("det", "de_det");
+    AnnotationItem ai_d__lexeme("prep", StringFrag("d'_prep"));
+    AnnotationItem ai_d_lexeme("subst", StringFrag("d_subst"));
+    AnnotationItem ai_de_lexeme("det", StringFrag("de_det"));
     lattice.addEdge(pre_d, post_d, ai_d__lexeme, lexeme_tag, d__lexeme_builder.build());
     lattice.addEdge(pre_d, post_d, ai_d_lexeme, lexeme_tag, d_lexeme_builder.build());
     lattice.addEdge(pre_d, post_d, ai_de_lexeme, lexeme_tag, de_lexeme_builder.build());
@@ -2107,37 +2107,37 @@ BOOST_AUTO_TEST_CASE( puddle_syntok ) {
         else if (category == "det")
             de_form_builder.addEdge(edge);
     }
-    AnnotationItem ai_d__form("prep", "d'_prep");
+    AnnotationItem ai_d__form("prep", StringFrag("d'_prep"));
     lattice.getAnnotationItemManager().setValue(ai_d__form, "number", "xyz"); // with no item in AI getTopEdges meets some bizarre behavior of the lattice
     lattice.addEdge(pre_d, post_d, ai_d__form, form_tag, d__form_builder.build());
-    AnnotationItem ai_d_form_pl("subst", "d_subst");
+    AnnotationItem ai_d_form_pl("subst", StringFrag("d_subst"));
     lattice.getAnnotationItemManager().setValue(ai_d_form_pl, "number", "pl");
     lattice.getAnnotationItemManager().setValue(ai_d_form_pl, "gender", "m");
     lattice.addEdge(pre_d, post_d, ai_d_form_pl, form_tag, d_form_builder.build());
-    AnnotationItem ai_d_form_sg("subst", "d_subst");
+    AnnotationItem ai_d_form_sg("subst", StringFrag("d_subst"));
     lattice.getAnnotationItemManager().setValue(ai_d_form_sg, "number", "sg");
     lattice.getAnnotationItemManager().setValue(ai_d_form_sg, "gender", "m");
     lattice.addEdge(pre_d, post_d, ai_d_form_sg, form_tag, d_form_builder.build());
-    AnnotationItem ai_de_form_m("det", "de_det");
+    AnnotationItem ai_de_form_m("det", StringFrag("de_det"));
     lattice.getAnnotationItemManager().setValue(ai_de_form_m, "number", "pl");
     lattice.getAnnotationItemManager().setValue(ai_de_form_m, "gender", "m");
     lattice.addEdge(pre_d, post_d, ai_de_form_m, form_tag, de_form_builder.build());
-    AnnotationItem ai_de_form_f("det", "de_det");
+    AnnotationItem ai_de_form_f("det", StringFrag("de_det"));
     lattice.getAnnotationItemManager().setValue(ai_de_form_f, "number", "pl");
     lattice.getAnnotationItemManager().setValue(ai_de_form_f, "gender", "f");
     lattice.addEdge(pre_d, post_d, ai_de_form_f, form_tag, de_form_builder.build());
 
     Lattice::EdgeSequence::Builder etat_lemma_builder(lattice);
     etat_lemma_builder.addEdge(lattice.firstOutEdge(lattice.getVertexForRawCharIndex(7), tokenMask));
-    AnnotationItem ai_etat_lemma("word", "état");
+    AnnotationItem ai_etat_lemma("word", StringFrag("état"));
     lattice.addEdge(post_d, post_etat, ai_etat_lemma, lemma_tag, etat_lemma_builder.build());
     Lattice::EdgeSequence::Builder etat_lexeme_builder(lattice);
     etat_lexeme_builder.addEdge(lattice.firstOutEdge(lattice.getVertexForRawCharIndex(7), lemmaMask));
-    AnnotationItem ai_etat_lexeme("subst", "état_subst");
+    AnnotationItem ai_etat_lexeme("subst", StringFrag("état_subst"));
     lattice.addEdge(post_d, post_etat, ai_etat_lexeme, lexeme_tag, etat_lexeme_builder.build());
     Lattice::EdgeSequence::Builder etat_form_builder(lattice);
     etat_form_builder.addEdge(lattice.firstOutEdge(lattice.getVertexForRawCharIndex(7), lexemeMask));
-    AnnotationItem ai_etat_form("subst", "état_subst");
+    AnnotationItem ai_etat_form("subst", StringFrag("état_subst"));
     lattice.getAnnotationItemManager().setValue(ai_etat_form, "number", "sg");
     lattice.getAnnotationItemManager().setValue(ai_etat_form, "gender", "m");
     lattice.addEdge(post_d, post_etat, ai_etat_form, form_tag, etat_form_builder.build());
@@ -2813,30 +2813,30 @@ BOOST_AUTO_TEST_CASE( load_rules_fr ) {
 
     Lattice::EdgeSequence::Builder blanc_lemma_builder(lattice);
     blanc_lemma_builder.addEdge(lattice.firstOutEdge(lattice.getVertexForRawCharIndex(0), tokenMask));
-    AnnotationItem ai_blanc_lemma("word", "blanc");
+    AnnotationItem ai_blanc_lemma("word", StringFrag("blanc"));
     lattice.addEdge(pre_blanc, post_blanc, ai_blanc_lemma, lemma_tag, blanc_lemma_builder.build());
     Lattice::EdgeSequence::Builder blanc_lexeme_builder(lattice);
     blanc_lexeme_builder.addEdge(lattice.firstOutEdge(lattice.getVertexForRawCharIndex(0), lemmaMask));
-    AnnotationItem ai_blanc_lexeme_adj("adj", "blanc_adj");
+    AnnotationItem ai_blanc_lexeme_adj("adj", StringFrag("blanc_adj"));
     lattice.addEdge(pre_blanc, post_blanc, ai_blanc_lexeme_adj, lexeme_tag, blanc_lexeme_builder.build());
     Lattice::EdgeSequence::Builder blanc_form_builder(lattice);
     blanc_form_builder.addEdge(lattice.firstOutEdge(lattice.getVertexForRawCharIndex(0), lexemeMask));
-    AnnotationItem ai_blanc_form("adj", "blanc_adj");
+    AnnotationItem ai_blanc_form("adj", StringFrag("blanc_adj"));
     lattice.getAnnotationItemManager().setValue(ai_blanc_form, "number", "sg");
     lattice.getAnnotationItemManager().setValue(ai_blanc_form, "gender", "m");
     lattice.addEdge(pre_blanc, post_blanc, ai_blanc_form, form_tag, blanc_form_builder.build());
 
     Lattice::EdgeSequence::Builder chat_lemma_builder(lattice);
     chat_lemma_builder.addEdge(lattice.firstOutEdge(lattice.getVertexForRawCharIndex(6), tokenMask));
-    AnnotationItem ai_chat_lemma("word", "chat");
+    AnnotationItem ai_chat_lemma("word", StringFrag("chat"));
     lattice.addEdge(pre_chat, post_chat, ai_chat_lemma, lemma_tag, chat_lemma_builder.build());
     Lattice::EdgeSequence::Builder chat_lexeme_builder(lattice);
     chat_lexeme_builder.addEdge(lattice.firstOutEdge(lattice.getVertexForRawCharIndex(6), lemmaMask));
-    AnnotationItem ai_chat_lexeme("subst", "chat_subst");
+    AnnotationItem ai_chat_lexeme("subst", StringFrag("chat_subst"));
     lattice.addEdge(pre_chat, post_chat, ai_chat_lexeme, lexeme_tag, chat_lexeme_builder.build());
     Lattice::EdgeSequence::Builder chat_form_builder(lattice);
     chat_form_builder.addEdge(lattice.firstOutEdge(lattice.getVertexForRawCharIndex(6), lexemeMask));
-    AnnotationItem ai_chat_form("subst", "chat_subst");
+    AnnotationItem ai_chat_form("subst", StringFrag("chat_subst"));
     lattice.getAnnotationItemManager().setValue(ai_chat_form, "number", "sg");
     lattice.getAnnotationItemManager().setValue(ai_chat_form, "gender", "m");
     lattice.getAnnotationItemManager().setValue(ai_chat_form, "discard", "0");
@@ -2938,15 +2938,15 @@ BOOST_AUTO_TEST_CASE( load_rules_pl ) {
 
     Lattice::EdgeSequence::Builder ala_lemma_builder(lattice);
     ala_lemma_builder.addEdge(lattice.firstOutEdge(lattice.getVertexForRawCharIndex(0), tokenMask));
-    AnnotationItem ai_ala_lemma("word", "Ala");
+    AnnotationItem ai_ala_lemma("word", StringFrag("Ala"));
     lattice.addEdge(pre_ala, post_ala, ai_ala_lemma, lemma_tag, ala_lemma_builder.build());
     Lattice::EdgeSequence::Builder ala_lexeme_builder(lattice);
     ala_lexeme_builder.addEdge(lattice.firstOutEdge(lattice.getVertexForRawCharIndex(0), lemmaMask));
-    AnnotationItem ai_ala_lexeme("R", "Ala_R");
+    AnnotationItem ai_ala_lexeme("R", StringFrag("Ala_R"));
     lattice.addEdge(pre_ala, post_ala, ai_ala_lexeme, lexeme_tag, ala_lexeme_builder.build());
     Lattice::EdgeSequence::Builder ala_form_builder(lattice);
     ala_form_builder.addEdge(lattice.firstOutEdge(lattice.getVertexForRawCharIndex(0), lexemeMask));
-    AnnotationItem ai_ala_form("R", "Ala_R");
+    AnnotationItem ai_ala_form("R", StringFrag("Ala_R"));
     lattice.getAnnotationItemManager().setValue(ai_ala_form, "gender", "f");
     lattice.getAnnotationItemManager().setValue(ai_ala_form, "case", "nom");
     lattice.getAnnotationItemManager().setValue(ai_ala_form, "number", "sg");
@@ -2954,15 +2954,15 @@ BOOST_AUTO_TEST_CASE( load_rules_pl ) {
 
     Lattice::EdgeSequence::Builder ma_lemma_builder(lattice);
     ma_lemma_builder.addEdge(lattice.firstOutEdge(lattice.getVertexForRawCharIndex(4), tokenMask));
-    AnnotationItem ai_ma_lemma("word", "mieć");
+    AnnotationItem ai_ma_lemma("word", StringFrag("mieć"));
     lattice.addEdge(pre_ma, post_ma, ai_ma_lemma, lemma_tag, ma_lemma_builder.build());
     Lattice::EdgeSequence::Builder ma_lexeme_builder(lattice);
     ma_lexeme_builder.addEdge(lattice.firstOutEdge(lattice.getVertexForRawCharIndex(4), lemmaMask));
-    AnnotationItem ai_ma_lexeme("C", "mieć_C");
+    AnnotationItem ai_ma_lexeme("C", StringFrag("mieć_C"));
     lattice.addEdge(pre_ma, post_ma, ai_ma_lexeme, lexeme_tag, ma_lexeme_builder.build());
     Lattice::EdgeSequence::Builder ma_form_builder(lattice);
     ma_form_builder.addEdge(lattice.firstOutEdge(lattice.getVertexForRawCharIndex(4), lexemeMask));
-    AnnotationItem ai_ma_form("C", "mieć_C");
+    AnnotationItem ai_ma_form("C", StringFrag("mieć_C"));
     lattice.getAnnotationItemManager().setValue(ai_ma_form, "tense", "pres");
     lattice.getAnnotationItemManager().setValue(ai_ma_form, "number", "sg");
     lattice.getAnnotationItemManager().setValue(ai_ma_form, "person", "ter");
@@ -2971,15 +2971,15 @@ BOOST_AUTO_TEST_CASE( load_rules_pl ) {
 
     Lattice::EdgeSequence::Builder kota_lemma_builder(lattice);
     kota_lemma_builder.addEdge(lattice.firstOutEdge(lattice.getVertexForRawCharIndex(7), tokenMask));
-    AnnotationItem ai_kota_lemma("word", "kot");
+    AnnotationItem ai_kota_lemma("word", StringFrag("kot"));
     lattice.addEdge(pre_kota, post_kota, ai_kota_lemma, lemma_tag, kota_lemma_builder.build());
     Lattice::EdgeSequence::Builder kota_lexeme_builder(lattice);
     kota_lexeme_builder.addEdge(lattice.firstOutEdge(lattice.getVertexForRawCharIndex(7), lemmaMask));
-    AnnotationItem ai_kota_lexeme("R", "kot_R");
+    AnnotationItem ai_kota_lexeme("R", StringFrag("kot_R"));
     lattice.addEdge(pre_kota, post_kota, ai_kota_lexeme, lexeme_tag, kota_lexeme_builder.build());
     Lattice::EdgeSequence::Builder kota_form_builder(lattice);
     kota_form_builder.addEdge(lattice.firstOutEdge(lattice.getVertexForRawCharIndex(7), lexemeMask));
-    AnnotationItem ai_kota_form("R", "kot_R");
+    AnnotationItem ai_kota_form("R", StringFrag("kot_R"));
     lattice.getAnnotationItemManager().setValue(ai_kota_form, "gender", "m2");
     lattice.getAnnotationItemManager().setValue(ai_kota_form, "case", "acc");
     lattice.getAnnotationItemManager().setValue(ai_kota_form, "number", "sg");

@@ -7,6 +7,7 @@ BOOST_AUTO_TEST_CASE( string_frag_simple ) {
     std::string sub1 = source.substr(0, 10);
     StringFrag sf1(sub1);
     BOOST_CHECK_EQUAL(sf1[5], sub1[5]);
+    BOOST_CHECK_EQUAL(sf1.data(), sub1.data());
     StringFrag sf2(source, 0, 10);
     BOOST_CHECK_EQUAL(sf1.str(), sf2.str());
     std::string sub2 = source.substr(10, 10);

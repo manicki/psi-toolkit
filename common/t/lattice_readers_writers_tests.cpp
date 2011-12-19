@@ -445,6 +445,7 @@ void prepareSimpleLattice_(Lattice & lattice) {
 void prepareAdvancedLattice_(Lattice & lattice) {
 
     lattice.appendString("Ala ma&nbsp;<b>kta</b>.");
+    const std::string & ltext = lattice.getAllText();
     lattice.addSymbols(
         lattice.getFirstVertex(),
         lattice.getVertexForRawCharIndex(6)
@@ -470,7 +471,7 @@ void prepareAdvancedLattice_(Lattice & lattice) {
     LayerTagMask rawMask = lattice.getLayerTagManager().getMask(rawTag);
     LayerTagMask tokenMask = lattice.getLayerTagManager().getMask(tokenTag);
 
-    AnnotationItem aiAla("'Ala'", "Ala");
+    AnnotationItem aiAla("'Ala'", StringFrag(ltext,0,3));
     lattice.getAnnotationItemManager().setValue(aiAla, "type", "word");
 
 
@@ -526,7 +527,7 @@ void prepareAdvancedLattice_(Lattice & lattice) {
 
     Lattice::VertexDescriptor preMa = lattice.getVertexForRawCharIndex(4);
 
-    AnnotationItem aiBlank("' '", " ");
+    AnnotationItem aiBlank("' '", StringFrag(ltext,3,1));
     lattice.getAnnotationItemManager().setValue(aiBlank, "type", "blank");
 
     Lattice::EdgeSequence::Builder blankBuilder(lattice);
@@ -540,7 +541,7 @@ void prepareAdvancedLattice_(Lattice & lattice) {
 
     Lattice::VertexDescriptor postMa = lattice.getVertexForRawCharIndex(6);
 
-    AnnotationItem aiMa("'ma'", "ma");
+    AnnotationItem aiMa("'ma'", StringFrag(ltext,4,2));
     lattice.getAnnotationItemManager().setValue(aiMa, "type", "word");
 
     Lattice::EdgeSequence::Builder maBuilder(lattice);
@@ -556,7 +557,7 @@ void prepareAdvancedLattice_(Lattice & lattice) {
 
     Lattice::VertexDescriptor preMarkup = lattice.getVertexForRawCharIndex(12);
 
-    AnnotationItem aiNbsp("' ", " ");
+    AnnotationItem aiNbsp("' ", StringFrag(" "));
 
     lattice.addEdge(postMa, preMarkup, aiNbsp, rawTag);
 
@@ -585,7 +586,7 @@ void prepareAdvancedLattice_(Lattice & lattice) {
 
     Lattice::VertexDescriptor postKota = lattice.getVertexForRawCharIndex(18);
 
-    AnnotationItem aiKta("'kta'", "kta");
+    AnnotationItem aiKta("'kta'", StringFrag(ltext,15,3));
     lattice.getAnnotationItemManager().setValue(aiKta, "type", "word");
 
     {
@@ -603,17 +604,17 @@ void prepareAdvancedLattice_(Lattice & lattice) {
     }
 
 
-    AnnotationItem aiK("'k", "k");
+    AnnotationItem aiK("'k", StringFrag(ltext,15,1));
     Lattice::VertexDescriptor vdKO = lattice.addLooseVertex();
     Lattice::EdgeDescriptor edgeCorrectedK = lattice.addEdge(preKota, vdKO, aiK, rawTag);
 
 
-    AnnotationItem aiO("'o", "o");
+    AnnotationItem aiO("'o", StringFrag("o"));
     Lattice::VertexDescriptor midKota = lattice.getVertexForRawCharIndex(16);
     Lattice::EdgeDescriptor edgeCorrectedO = lattice.addEdge(vdKO, midKota, aiO, rawTag);
 
 
-    AnnotationItem aiKota("'kota'", "kota");
+    AnnotationItem aiKota("'kota'", StringFrag("kota"));
     lattice.getAnnotationItemManager().setValue(aiKota, "type", "word");
 
     std::list<std::string> tokenCorrectorStr;
@@ -692,7 +693,7 @@ void prepareAdvancedLattice_(Lattice & lattice) {
 
     Lattice::VertexDescriptor postStop = lattice.getVertexForRawCharIndex(23);
 
-    AnnotationItem aiStop("'.'", ".");
+    AnnotationItem aiStop("'.'", StringFrag(ltext,22,1));
     lattice.getAnnotationItemManager().setValue(aiStop, "type", "punct");
 
     Lattice::EdgeSequence::Builder stopBuilder(lattice);

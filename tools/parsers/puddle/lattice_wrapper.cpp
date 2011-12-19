@@ -731,7 +731,7 @@ namespace poleng {
                                     partOfSpeech, lexeme)) {
                             Lattice::EdgeSequence::Builder lexemeBuilder(lattice);
                             lexemeBuilder.addEdge(lemmaEdge);
-                            AnnotationItem aiLexeme(partOfSpeech, lexeme);
+                            AnnotationItem aiLexeme(partOfSpeech, StringFrag(lexeme));
                             LayerTagCollection tagsLexeme = lattice.getLayerTagManager().
                                 createSingletonTagCollection("lexeme");
                             lexemeEdge = lattice.addEdge(
@@ -774,7 +774,7 @@ namespace poleng {
                         } else { //adding a 'form' edge
                             Lattice::EdgeSequence::Builder formBuilder(lattice);
                             formBuilder.addEdge(lexemeEdge);
-                            AnnotationItem annotationItem(partOfSpeech, lexeme);
+                            AnnotationItem annotationItem(partOfSpeech, StringFrag(lexeme));
                             //lattice.getAnnotationItemManager().setValue(
                             //        annotationItem, "morpho", morpho);
                             for (Morphology::iterator attribIt = morphIt->begin();
@@ -842,7 +842,7 @@ namespace poleng {
                                     partOfSpeech, lexeme)) {
                             Lattice::EdgeSequence::Builder lexemeBuilder(lattice);
                             lexemeBuilder.addEdge(lemmaEdge);
-                            AnnotationItem aiLexeme(partOfSpeech, lexeme);
+                            AnnotationItem aiLexeme(partOfSpeech, StringFrag(lexeme));
                             LayerTagCollection tagsLexeme = lattice.getLayerTagManager().
                                 createSingletonTagCollection("lexeme");
                             lexemeEdge = lattice.addEdge(
@@ -854,7 +854,7 @@ namespace poleng {
 
                         Lattice::EdgeSequence::Builder formBuilder(lattice);
                         formBuilder.addEdge(lexemeEdge);
-                        AnnotationItem annotationItem(partOfSpeech, lexeme);
+                        AnnotationItem annotationItem(partOfSpeech, StringFrag(lexeme));
                         for (Morphology::iterator attribIt = morphIt->begin();
                                 attribIt != morphIt->end(); ++ attribIt) {
                             if (attribIt->first == "pos")
