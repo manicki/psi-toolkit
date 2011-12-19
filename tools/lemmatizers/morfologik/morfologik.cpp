@@ -160,7 +160,7 @@ AnnotationItem Morfologik::createLexemeAnnotation(
     std::string wordId = stem + "_" + partOfSpeech;
     attributes.erase("pos");
 
-    AnnotationItem lexeme(partOfSpeech, wordId);
+    AnnotationItem lexeme(partOfSpeech, StringFrag(wordId));
 
     for (atr = attributes.begin(); atr != attributes.end(); ++atr) {
         annotationManager->setValue(lexeme, atr->first, atr->second);
