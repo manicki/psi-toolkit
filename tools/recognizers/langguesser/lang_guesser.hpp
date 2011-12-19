@@ -25,26 +25,18 @@
 
 #include <string>
 #include <list>
+#include <map>
 
 class LangGuesser : public Annotator {
 
 public:
 
     LangGuesser();
+    LangGuesser(const boost::program_options::variables_map& options);
 
     std::string guessLanguage(std::string text);
     std::string guessLanguageByLetters(std::string text);
     bool guessLanguage(Lattice& lattice);
-
-    struct Language {
-        std::string name;
-        BigramLanguageModel model;
-        std::string letters;
-
-        Language(std::string lang, boost::filesystem::path file, std::string specialLetters)
-            : name(lang), model(file), letters(specialLetters) { };
-
-    };
 
     class Factory : public AnnotatorFactory {
     public:
@@ -64,9 +56,21 @@ private:
 
     static const unsigned int MIN_TEXT_LENGTH_FOR_BIGRAM_METHOD = 24;
     static std::string UNKNOWN_LANGUAGE;
+    static std::map<std::string, std::string> LANGUAGES;
 
-    void initLanguages();
+    struct Language {
+        std::string name;
+        BigramLanguageModel model;
+        std::string letters;
+
+        Language(std::string lang, boost::filesystem::path file, std::string specialLetters)
+            : name(lang), model(file), letters(specialLetters) { };
+    };
+
     std::list<Language> languages_;
+    void initLanguages();
+    void initLanguages(std::vector<std::string> selectedLangs);
+    void addLanguage(std::string lang, std::string letters);
 
     bool isOneOfTheLanguageSpecificLetters(utf8::uint32_t letter, std::string& letters);
     double distance(double* ftableOne, double* ftableTwo);

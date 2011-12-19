@@ -14,37 +14,65 @@
 #include "lattice.hpp"
 #include "logging.hpp"
 
+#include <boost/assign.hpp>
+
 #define LOWER_LETTER(i) ( ((i) > 90 || (i) < 65) ? (i) : ((i) + 32) )
 
 std::string LangGuesser::UNKNOWN_LANGUAGE = "unknown";
+
+std::map<std::string, std::string> LangGuesser::LANGUAGES =
+    boost::assign::map_list_of
+        ("pl", "ąćęłńóśźżĄĆĘŁŃÓŚŹŻ")
+        ("en", "")
+        ("de", "äöüßÄÖÜ")
+        ("ru", "абвгдеёжзийклмнопрстуфхцчшщъыьэюяАБВГДЕЁЖЗИЙКЛМНОПРСТУФХЦЧШЩЪЫЬЭЮЯ") ;
 
 LangGuesser::LangGuesser() {
     initLanguages();
 }
 
+LangGuesser::LangGuesser(const boost::program_options::variables_map& options) {
+
+    if (options.count("only-langs")) {
+        initLanguages(options["only-langs"].as<std::vector<std::string> >());
+    }
+    else {
+        initLanguages();
+    }
+}
+
 void LangGuesser::initLanguages() {
 
-    ProcessorFileFetcher fileFetcher(__FILE__);
+    std::map<std::string, std::string>::iterator it;
+    for (it = LANGUAGES.begin(); it != LANGUAGES.end(); ++it) {
+        addLanguage(it->first, it->second);
 
-    languages_.push_back( Language("pl",
-        fileFetcher.getOneFile("%ITSDATA%/pllang.i"),
-        "ąćęłńóśźżĄĆĘŁŃÓŚŹŻ")
-    );
+    }
+}
 
-    languages_.push_back( Language("en",
-        fileFetcher.getOneFile("%ITSDATA%/enlang.i"),
-        "")
-    );
+void LangGuesser::initLanguages(std::vector<std::string> selectedLangs) {
 
-    languages_.push_back( Language("de",
-        fileFetcher.getOneFile("%ITSDATA%/delang.i"),
-        "äöüßÄÖÜ")
-    );
+    std::map<std::string, std::string>::iterator definedLang;
 
-    languages_.push_back( Language("ru",
-        fileFetcher.getOneFile("%ITSDATA%/rulang.i"),
-        "абвгдеёжзийклмнопрстуфхцчшщъыьэюяАБВГДЕЁЖЗИЙКЛМНОПРСТУФХЦЧШЩЪЫЬЭЮЯ")
-    );
+    for (unsigned int i = 0; i < selectedLangs.size(); i++) {
+        definedLang = LANGUAGES.find(selectedLangs[i]);
+
+        if (definedLang != LANGUAGES.end()) {
+            addLanguage(definedLang->first, definedLang->second);
+        }
+    }
+
+    if (languages_.empty()) {
+        initLanguages();
+    }
+}
+
+void LangGuesser::addLanguage(std::string lang, std::string letters) {
+    static ProcessorFileFetcher fileFetcher(__FILE__);
+
+    languages_.push_back(
+        Language(lang, fileFetcher.getOneFile("%ITSDATA%/" + lang + "lang.i"), letters)
+     );
 }
 
 bool LangGuesser::guessLanguage(Lattice& lattice) {
@@ -181,7 +209,7 @@ std::string LangGuesser::doInfo() {
 Annotator* LangGuesser::Factory::doCreateAnnotator(
     const boost::program_options::variables_map& options) {
 
-    LangGuesser *langGuesser = new LangGuesser();
+    LangGuesser *langGuesser = new LangGuesser(options);
     return langGuesser;
 }
 
@@ -209,6 +237,10 @@ std::list<std::string> LangGuesser::Factory::doProvidedLayerTags() {
 
 boost::program_options::options_description LangGuesser::Factory::doOptionsHandled() {
     boost::program_options::options_description optionsDescription("Allowed options");
+
+    optionsDescription.add_options()
+        ("only-langs", boost::program_options::value<std::vector<std::string> >()->multitoken(),
+            "Guesses language only from the given list of languages");
 
     return optionsDescription;
 }
