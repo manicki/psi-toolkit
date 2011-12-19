@@ -47,6 +47,12 @@ private:
     template<typename Source, typename Sink>
     void parseIntoGraph_(std::vector<std::string> args, bool isTheFirstArgProgramName);
 
+    boost::program_options::options_description runnerOptionsDescription_;
+    void setRunnerOptionsDescription_();
+    boost::program_options::variables_map runnerOptions_;
+    void parseRunnerProgramOptions_(std::vector<std::string> &args);
+    bool stopAfterExecutingRunnerOptions_();
+
     void parseIntoPipelineSpecification_(
         std::vector<std::string> args, bool isTheFirstArgProgramName,
         PipelineSpecification& pipelineSpec);

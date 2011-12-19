@@ -72,7 +72,7 @@ const std::string ServerRunner::DEFAULT_PIPE = "txt-reader ! tp-tokenizer --lang
 
 int ServerRunner::run() {
 
-    if (executeOptions() == 1) return 1;
+    if (stopAfterExecutingOptions()) return 0;
 
     try {
         PsiServer psiServer(
@@ -100,7 +100,7 @@ int ServerRunner::run() {
     return 0;
 }
 
-int ServerRunner::executeOptions() {
+bool ServerRunner::stopAfterExecutingOptions() {
     if (options.count("help")) {
         std::cout << optionsDescription << std::endl;
 
@@ -108,21 +108,21 @@ int ServerRunner::executeOptions() {
         helpFormatter->formatHelps(std::cout);
         delete helpFormatter;
 
-        return 1;
+        return true;
     }
 
     if (options.count("version")) {
         std::cout << "PsiServer version 0.2" << std::endl;
-        return 1;
+        return true;
     }
 
     if (setRootDirectory_() != 0)
-        return 1;
+        return true;
 
     if (options.count("daemon"))
         daemonize_(options.count("leave-standard-descriptors-when-daemonizing") > 0);
 
-    return 0;
+    return false;
 }
 
 int ServerRunner::setRootDirectory_() {

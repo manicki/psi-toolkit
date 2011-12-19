@@ -10,6 +10,7 @@
 #include <boost/foreach.hpp>
 
 #include "main_factories_keeper.hpp"
+#include "console_help_formatter.hpp"
 
 #include "logging.hpp"
 
@@ -17,16 +18,16 @@
 #include "perl_lattice_writer_output.hpp"
 #endif
 
-PipeRunner::PipeRunner(const std::string& pipeline) {
+PipeRunner::PipeRunner(const std::string& pipeline) : runnerOptionsDescription_("PipeRunner options") {
     parseIntoGraph_<std::istream,std::ostream>(splitPipeline_(pipeline), false);
 }
 
-PipeRunner::PipeRunner(int argc, char* argv[]) {
+PipeRunner::PipeRunner(int argc, char* argv[]) : runnerOptionsDescription_("PipeRunner options") {
     std::vector<std::string> args(argv, argv + argc);
     parseIntoGraph_<std::istream,std::ostream>(args, true);
 }
 
-PipeRunner::PipeRunner(std::vector<std::string> args) {
+PipeRunner::PipeRunner(std::vector<std::string> args) : runnerOptionsDescription_("PipeRunner options") {
     parseIntoGraph_<std::istream,std::ostream>(args, false);
 }
 
@@ -42,9 +43,47 @@ ProcessorFactory& PipeRunner::getFactory_(const PipelineElementSpecification& el
 
 template<typename Source, typename Sink>
 void PipeRunner::parseIntoGraph_(std::vector<std::string> args, bool isTheFirstArgProgramName) {
+
+    parseRunnerProgramOptions_(args);
+    if (stopAfterExecutingRunnerOptions_()) return;
+
     parseIntoPipelineSpecification_(args, isTheFirstArgProgramName, pipelineSpecification_);
     pipelineSpecification2Graph_(pipelineSpecification_, firstNode, lastNode);
     completeGraph_<Source,Sink>();
+}
+
+void PipeRunner::parseRunnerProgramOptions_(std::vector<std::string> &args) {
+    setRunnerOptionsDescription_();
+
+    boost::program_options::parsed_options opts =
+        boost::program_options::command_line_parser(args).
+        options(runnerOptionsDescription_).
+        allow_unregistered().
+        run();
+
+    boost::program_options::store(opts, runnerOptions_);
+    boost::program_options::notify(runnerOptions_);
+
+    args = boost::program_options::collect_unrecognized(
+        opts.options, boost::program_options::include_positional);
+}
+
+void PipeRunner::setRunnerOptionsDescription_() {
+    runnerOptionsDescription_.add_options()
+        ("help", "Produce help message for each processor");
+}
+
+bool PipeRunner::stopAfterExecutingRunnerOptions_() {
+    if (runnerOptions_.count("help")) {
+        std::cout << runnerOptionsDescription_ << std::endl;
+
+        HelpFormatter* helpFormatter = new ConsoleHelpFormatter;
+        helpFormatter->formatHelps(std::cout);
+        delete helpFormatter;
+
+        return true;
+    }
+    return false;
 }
 
 void PipeRunner::parseIntoPipelineSpecification_(

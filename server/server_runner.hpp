@@ -21,7 +21,7 @@ private:
     void setOptionsDescription();
     std::string annotatorOptionsAsString();
 
-    int executeOptions();
+    bool stopAfterExecutingOptions();
 
     void daemonize_(bool leaveStandardDescriptors);
     int setRootDirectory_();
