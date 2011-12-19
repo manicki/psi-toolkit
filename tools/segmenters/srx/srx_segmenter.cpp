@@ -222,14 +222,14 @@ private:
 
             return AnnotationItem(
                 DEFAULT_SENTENCE_CATEGORY,
-                StringFrag(text, currentPosition, sentenceLength)); //TODO
+                StringFrag(text, currentPosition, sentenceLength));
         }
         else {
             size_t currentPosition = positionInText;
             positionInText = std::string::npos;
             return AnnotationItem(
                 DEFAULT_SENTENCE_CATEGORY,
-                StringFrag(text, currentPosition, positionInText)); //TODO
+                StringFrag(text, currentPosition, text.length() - currentPosition));
         }
     }
 

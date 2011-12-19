@@ -2,7 +2,6 @@
 
 
 PsiQuoter::PsiQuoter() : UTTLikeQuoter("#") {
-    //TODO
 }
 
 PsiQuoter::~PsiQuoter() {
