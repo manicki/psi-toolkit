@@ -21,6 +21,11 @@ struct Tescik {
         poprawne = new std::string[poprawneSize + 1];
         niePoprawne = new std::string[niePoprawneSize + 1];
     }
+    
+    ~Tescik() {
+        delete[] poprawne;
+        delete[] niePoprawne;
+    }
 
 };
 
