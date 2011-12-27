@@ -1,12 +1,14 @@
 #include "tests.hpp"
 
+#include <boost/scoped_ptr.hpp>
+
 #include "../../common/psi_quoter.hpp"
 #include "../../formats/utt/utt_quoter.hpp"
 
 BOOST_AUTO_TEST_SUITE( quoter )
 
 BOOST_AUTO_TEST_CASE( psi_quoter ) {
-    Quoter * quoter = new PsiQuoter();
+    boost::scoped_ptr<Quoter> quoter(new PsiQuoter());
     BOOST_CHECK_EQUAL(quoter->escape("a"), "a");
     BOOST_CHECK_EQUAL(quoter->unescape("a"), "a");
     BOOST_CHECK_EQUAL(quoter->escape("ą"), "ą");
@@ -27,11 +29,10 @@ BOOST_AUTO_TEST_CASE( psi_quoter ) {
     BOOST_CHECK_EQUAL(quoter->unescape("\\#"), "#");
     BOOST_CHECK_EQUAL(quoter->escape("Zażółć gęślą jaźń!"), "Zażółć_gęślą_jaźń!");
     BOOST_CHECK_EQUAL(quoter->unescape("Zażółć_gęślą_jaźń!"), "Zażółć gęślą jaźń!");
-    delete quoter;
 }
 
 BOOST_AUTO_TEST_CASE( psi_quoter_illegal_sequence ) {
-    Quoter * quoter = new PsiQuoter();
+    boost::scoped_ptr<Quoter> quoter(new PsiQuoter());
     BOOST_CHECK_THROW(
         quoter->unescape("Abcd\\"),
         QuoterException);
@@ -39,12 +40,10 @@ BOOST_AUTO_TEST_CASE( psi_quoter_illegal_sequence ) {
     BOOST_CHECK_THROW(
         quoter->unescape("Ab\\cd"),
         QuoterException);
-
-    delete quoter;
 }
 
 BOOST_AUTO_TEST_CASE( utt_quoter ) {
-    Quoter * quoter = new UTTQuoter();
+    boost::scoped_ptr<Quoter> quoter(new UTTQuoter());
     BOOST_CHECK_EQUAL(quoter->escape("a"), "a");
     BOOST_CHECK_EQUAL(quoter->unescape("a"), "a");
     BOOST_CHECK_EQUAL(quoter->escape("ą"), "ą");
@@ -65,18 +64,16 @@ BOOST_AUTO_TEST_CASE( utt_quoter ) {
     BOOST_CHECK_EQUAL(quoter->unescape("#"), "#");
     BOOST_CHECK_EQUAL(quoter->escape("Zażółć gęślą jaźń!"), "Zażółć_gęślą_jaźń!");
     BOOST_CHECK_EQUAL(quoter->unescape("Zażółć_gęślą_jaźń!"), "Zażółć gęślą jaźń!");
-    delete quoter;
 }
 
 BOOST_AUTO_TEST_CASE( utt_quoter_illegal_sentence ) {
-    Quoter * quoter = new UTTQuoter();
+    boost::scoped_ptr<Quoter> quoter(new UTTQuoter());
     BOOST_CHECK_THROW(
         quoter->unescape("Ab#d\\"),
         QuoterException);
     BOOST_CHECK_THROW(
         quoter->unescape("Ab\\#d"),
         QuoterException);
-    delete quoter;
 }
 
 BOOST_AUTO_TEST_SUITE_END()
