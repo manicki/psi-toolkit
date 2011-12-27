@@ -1,1 +1,1 @@
-PsiReader description.
+PSI Reader reads a file in PSI format into the lattice.

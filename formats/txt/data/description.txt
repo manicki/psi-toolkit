@@ -1,1 +1,1 @@
-TxtReader description.
+Text Reader reads a file of plain text into the lattice.

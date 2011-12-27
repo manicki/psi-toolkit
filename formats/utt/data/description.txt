@@ -1,1 +1,1 @@
-UTTReader description.
+UTT Reader reads a file in UTT (UAM Text Tools) format into the lattice.

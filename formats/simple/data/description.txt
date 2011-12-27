@@ -1,1 +1,2 @@
-Simple tool description.
+Simple Writer prints the content of the lattice in a simple, human-readable way.
+It writes token segments separated by newline symbols by default.
