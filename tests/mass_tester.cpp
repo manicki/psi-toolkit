@@ -10,6 +10,7 @@
 #include "configurator.hpp"
 #include "batch_runner.hpp"
 #include "logging.hpp"
+#include "factories_keeper.hpp"
 
 MassTester::MassTester(int argc, char* argv[]) {
     Configurator::getInstance().setRunAsInstalled(false);
@@ -182,9 +183,13 @@ void MassTester::runAllBatches_() {
 void MassTester::runBatch_(const TestBatch& batch) {
     std::cout << "running " << batch.getDirectory() << " [" << batch.getPipeline() << "]" << std::endl;
 
-    BatchRunner runner(batch, *reporter_);
+    try {
+        BatchRunner runner(batch, *reporter_);
 
-    while (runner.runSingleTest());
+        while (runner.runSingleTest());
+    } catch (FactoriesKeeper::UnknownProcessorException ex) {
+        WARN("SKIPPING TEST (" << ex.what() << ")");
+    }
 }
 
 std::string MassTester::readCommand_(boost::filesystem::path commandFileName) {
