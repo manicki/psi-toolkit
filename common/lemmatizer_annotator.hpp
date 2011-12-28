@@ -227,12 +227,18 @@ public:
                 if (lattice_.getAnnotationCategory(edge) == "T"
                     || lattice_.getAnnotationCategory(edge) == "word") {
                     WorkerOutputIterator outputIterator(layerTags, lattice_, edge);
-                    lemmatizer.lemmatize(
-                        lattice_.getAnnotationText(edge),
-                        lattice_.getAnnotationItemManager(),
-                        outputIterator);
+                    lemmatizeSingleWord(lattice_.getAnnotationText(edge), outputIterator);
                 }
             }
+        }
+
+        void lemmatizeSingleWord(const std::string& word, WorkerOutputIterator& outputIterator) {
+            L& lemmatizer = dynamic_cast<LemmatizerAnnotator&>(processor_).lemmatizer_;
+
+            lemmatizer.lemmatize(
+                word,
+                lattice_.getAnnotationItemManager(),
+                outputIterator);
         }
 
     };
