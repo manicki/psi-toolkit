@@ -1,1 +1,1 @@
-PsiWriter description.
+PSI Writer prints the content of the lattice in PSI format.
