@@ -283,7 +283,7 @@ void TPBasicTokenizerRuleSet::readRule(
                                   "no rule type:  ",
                                   context, filePos);
 
-    std::string ureg = getContent(uline, "((?:\\s|.)+)",
+    std::string ureg = getContent(uline, "(?s)(.+)",
                                   "no rule regexp:  ",
                                   context, filePos);
 
