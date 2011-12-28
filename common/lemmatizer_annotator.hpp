@@ -6,17 +6,26 @@
 #include "lattice_worker.hpp"
 #include "layer_tag_collection.hpp"
 #include "lemmatizer_output_iterator.hpp"
+#include "general_case_converter.hpp"
+#include "string_case_converter_manager.hpp"
+#include "simple_convert.hpp"
 
 template<typename L>
 class LemmatizerAnnotator : public Annotator {
 
 private:
     L lemmatizer_;
+    boost::shared_ptr<GeneralCaseConverter<std::string::const_iterator,
+                                           std::back_insert_iterator<std::string> > >
+       lowerCaseConverter_;
+
 
 public:
 
     LemmatizerAnnotator(const boost::program_options::variables_map& options)
         :lemmatizer_(options) {
+        lowerCaseConverter_ = StringCaseConverterManager::getInstance().
+            getLowerCaseConverter(lemmatizer_.getLanguage());
     }
 
     class Factory : public AnnotatorFactory {
@@ -234,11 +243,31 @@ public:
 
         void lemmatizeSingleWord(const std::string& word, WorkerOutputIterator& outputIterator) {
             L& lemmatizer = dynamic_cast<LemmatizerAnnotator&>(processor_).lemmatizer_;
+            GeneralCaseConverter<std::string::const_iterator,
+                                 std::back_insert_iterator<std::string> >& lowerCaseConverter =
+                *(dynamic_cast<LemmatizerAnnotator&>(processor_).lowerCaseConverter_);
+
+            std::string w = word;
 
             lemmatizer.lemmatize(
-                word,
+                w,
                 lattice_.getAnnotationItemManager(),
                 outputIterator);
+
+            if (simpleWillBeTouchedWhenTailConverted(lowerCaseConverter, w)) {
+                w = simpleTailConvert(lowerCaseConverter, w);
+                lemmatizer.lemmatize(
+                    w,
+                    lattice_.getAnnotationItemManager(),
+                    outputIterator);
+            }
+
+            if (simpleWillBeTouchedWhenHeadConverted(lowerCaseConverter, w)) {
+                lemmatizer.lemmatize(
+                    simpleHeadConvert(lowerCaseConverter, w),
+                    lattice_.getAnnotationItemManager(),
+                    outputIterator);
+            }
         }
 
     };

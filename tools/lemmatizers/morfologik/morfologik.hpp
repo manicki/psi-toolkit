@@ -25,6 +25,8 @@ public:
 
     std::list<std::string> getLayerTags();
 
+    std::string getLanguage() const;
+
     void lemmatize(
         const std::string & word,
         AnnotationItemManager & manager,

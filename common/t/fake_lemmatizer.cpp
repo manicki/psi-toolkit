@@ -38,3 +38,7 @@ std::list<std::string> FakeLemmatizer::getLayerTags() {
 
     return layerTags;
 }
+
+std::string FakeLemmatizer::getLanguage() const {
+    return "pl";
+}

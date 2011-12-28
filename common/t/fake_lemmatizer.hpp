@@ -24,6 +24,8 @@ public:
     static std::string getName();
 
     std::list<std::string> getLayerTags();
+
+    std::string getLanguage() const;
 };
 
 #endif

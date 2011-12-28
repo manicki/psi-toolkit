@@ -40,6 +40,10 @@ std::list<std::string> Morfologik::getLayerTags() {
     return layerTags;
 }
 
+std::string Morfologik::getLanguage() const {
+    return "pl";
+}
+
 void Morfologik::setLevel(int lvl) {
     if (0 <= lvl && lvl <= 3) {
         level = lvl;

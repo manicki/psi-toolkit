@@ -150,7 +150,7 @@ endforeach(dir)
 set(ALL_TARGETS ${TARGETS} ${TESTS_TARGETS})
 
 set_target_properties(${ALL_TARGETS} PROPERTIES
-    COMPILE_FLAGS "-I${psi-toolkit_SOURCE_DIR}/utf8 -I${psi-toolkit_SOURCE_DIR}/tests")
+    COMPILE_FLAGS "-I${psi-toolkit_SOURCE_DIR}/utf8 -I${psi-toolkit_SOURCE_DIR}/utf8case -I${psi-toolkit_SOURCE_DIR}/tests")
 if(USE_PUDDLE)
     if(USE_BONSAI_PARSEGRAPH)
         set_target_properties(tools-parsers-puddle PROPERTIES
