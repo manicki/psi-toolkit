@@ -42,6 +42,8 @@ add_library(common SHARED
     ${common-java-files}
 )
 
+target_link_libraries(common pcre pcrecpp)
+
 if(USE_JAVA)
     target_link_libraries(common ${JAVA_JVM_LIBRARY})
     add_subdirectory(j)
