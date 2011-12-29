@@ -15,6 +15,7 @@
 #include "logging.hpp"
 
 #include <boost/assign.hpp>
+#include <boost/assign/list_of.hpp>
 
 #define LOWER_LETTER(i) ( ((i) > 90 || (i) < 65) ? (i) : ((i) + 32) )
 
@@ -32,7 +33,6 @@ LangGuesser::LangGuesser() {
 }
 
 LangGuesser::LangGuesser(const boost::program_options::variables_map& options) {
-
     if (options.count("only-langs")) {
         initLanguages(options["only-langs"].as<std::vector<std::string> >());
     }
@@ -73,23 +73,6 @@ void LangGuesser::addLanguage(std::string lang, std::string letters) {
     languages_.push_back(
         Language(lang, fileFetcher.getOneFile("%ITSDATA%/" + lang + "lang.i"), letters)
      );
-}
-
-bool LangGuesser::guessLanguage(Lattice& lattice) {
-
-    LayerTagMask textMask = lattice.getLayerTagManager().getMask("text");
-    Lattice::EdgesSortedBySourceIterator edgeIter(lattice, textMask);
-
-    while (edgeIter.hasNext()) {
-        std::string text = lattice.getEdgeAnnotationItem(edgeIter.next()).getText();
-
-        std::string guessedLanguage = (text.length() < MIN_TEXT_LENGTH_FOR_BIGRAM_METHOD) ?
-            guessLanguageByLetters(text) : guessLanguage(text);
-
-        INFO("Guessed language for text [" << text << "] is " << guessedLanguage);
-    }
-
-    return false;
 }
 
 std::string LangGuesser::guessLanguage(std::string text) {
@@ -250,11 +233,51 @@ boost::program_options::options_description LangGuesser::Factory::doOptionsHandl
  */
 
 LangGuesser::Worker::Worker(LangGuesser& processor, Lattice& lattice):
-    LatticeWorker(lattice), processor_(processor) {
-        //@todo: tu robi obiekt langGuesser
+    LatticeWorker(lattice),
+    processor_(processor),
+    tags_(lattice_.getLayerTagManager().createTagCollectionFromList(
+              boost::assign::list_of("text")("lang-guesser"))) {
     }
 
 void LangGuesser::Worker::doRun() {
-    processor_.guessLanguage(lattice_);
+    guessLanguage_();
 }
 
+bool LangGuesser::Worker::guessLanguage_() {
+
+    LayerTagMask textMask = lattice_.getLayerTagManager().getMask("frag");
+    Lattice::EdgesSortedBySourceIterator edgeIter(lattice_, textMask);
+
+    while (edgeIter.hasNext()) {
+        Lattice::EdgeDescriptor edge = edgeIter.next();
+
+        std::string text = lattice_.getEdgeAnnotationItem(edge).getText();
+
+        std::string guessedLanguage = (text.length() < MIN_TEXT_LENGTH_FOR_BIGRAM_METHOD) ?
+            processor_.guessLanguageByLetters(text) : processor_.guessLanguage(text);
+
+        INFO("Guessed language for text [" << text << "] is " << guessedLanguage);
+
+        if (guessedLanguage != "unknown")
+            markLanguage_(guessedLanguage, edge);
+    }
+
+    return false;
+}
+
+void LangGuesser::Worker::markLanguage_(
+    const std::string& language, Lattice::EdgeDescriptor edge) {
+
+    AnnotationItem item("TEXT", lattice_.getEdgeAnnotationItem(edge).getText());
+    lattice_.getAnnotationItemManager().setValue(item, "lang", language);
+
+    Lattice::EdgeSequence::Builder edgeSequenceBuilder(lattice_);
+    edgeSequenceBuilder.addEdge(edge);
+
+    lattice_.addEdge(
+        lattice_.getEdgeSource(edge),
+        lattice_.getEdgeTarget(edge),
+        item,
+        tags_,
+        edgeSequenceBuilder.build());
+}

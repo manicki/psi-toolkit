@@ -36,7 +36,6 @@ public:
 
     std::string guessLanguage(std::string text);
     std::string guessLanguageByLetters(std::string text);
-    bool guessLanguage(Lattice& lattice);
 
     class Factory : public AnnotatorFactory {
     public:
@@ -68,6 +67,7 @@ private:
     };
 
     std::list<Language> languages_;
+
     void initLanguages();
     void initLanguages(std::vector<std::string> selectedLangs);
     void addLanguage(std::string lang, std::string letters);
@@ -80,7 +80,13 @@ private:
         Worker(LangGuesser& processor, Lattice& lattice);
     private:
         virtual void doRun();
+
+        void markLanguage_(const std::string& language, Lattice::EdgeDescriptor edge);
+        bool guessLanguage_();
+
         LangGuesser& processor_;
+
+        LayerTagCollection tags_;
     };
 
     virtual LatticeWorker* doCreateLatticeWorker(Lattice& lattice);
