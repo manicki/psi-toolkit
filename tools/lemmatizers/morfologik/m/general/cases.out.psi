@@ -47,5 +47,5 @@
 47 0033 10    CZĘŚCIĄ      lemma,morfologik,morfologik-tagset część word[46]
 48 0033 10    CZĘŚCIĄ      lexeme,morfologik,morfologik-tagset część\_subst subst,gender=f[47]
 49 0033 10    CZĘŚCIĄ      form,morfologik,morfologik-tagset częścią subst,case=inst,gender=f,number=sg[48]
-50 0000 44    To_jes...IĄ. text,txt-reader       To_jest_POLSKA!_Łódź_jest_jej_CZĘŚCIĄ. TEXT[]
+50 0000 44    To_jes...IĄ. frag,txt-reader       To_jest_POLSKA!_Łódź_jest_jej_CZĘŚCIĄ. FRAG[]
 51 0043 01    .            token                 .           I

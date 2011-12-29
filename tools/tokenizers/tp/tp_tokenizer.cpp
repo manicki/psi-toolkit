@@ -162,7 +162,7 @@ void TpTokenizer::Worker::doRun() {
     DEBUG("starting tp tokenizer...");
 
     LayerTagMask symbolMask = lattice_.getLayerTagManager().getMask("symbol");
-    LayerTagMask textMask = lattice_.getLayerTagManager().getMask("text");
+    LayerTagMask textMask = lattice_.getLayerTagManager().getMask("frag");
 
     TpTokenCutter tokenCutter(*dynamic_cast<TpTokenizer&>(processor_).ruleSet_.get());
 

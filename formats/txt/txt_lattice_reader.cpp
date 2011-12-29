@@ -49,7 +49,7 @@ TxtLatticeReader::Worker::Worker(TxtLatticeReader& processor,
     ReaderWorker<std::istream>(inputStream, lattice),
     processor_(processor),
     textTags_(lattice_.getLayerTagManager().createTagCollectionFromList(
-                  boost::assign::list_of("text")("txt-reader"))) {
+                  boost::assign::list_of("frag")("txt-reader"))) {
 }
 
 void TxtLatticeReader::Worker::doRun() {
@@ -67,7 +67,7 @@ void TxtLatticeReader::Worker::appendParagraphToLattice_(std::string paragraph) 
     lattice_.appendStringWithSymbols(paragraph);
     Lattice::VertexDescriptor nowEnd = lattice_.getLastVertex();
 
-    AnnotationItem item("TEXT", paragraph);
+    AnnotationItem item("FRAG", paragraph);
     lattice_.addEdge(prevEnd, nowEnd,
                      item, textTags_);
 

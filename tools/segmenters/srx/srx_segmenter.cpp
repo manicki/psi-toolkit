@@ -369,7 +369,7 @@ void SrxSegmenter::Worker::doRun() {
     DEBUG("starting srx segmenter...");
 
     LayerTagMask symbolMask = lattice_.getLayerTagManager().getMask("symbol");
-    LayerTagMask textMask = lattice_.getLayerTagManager().getMask("text");
+    LayerTagMask textMask = lattice_.getLayerTagManager().getMask("frag");
 
     SrxSentenceCutter sentenceCutter(dynamic_cast<SrxSegmenter&>(processor_));
 

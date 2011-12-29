@@ -6,7 +6,7 @@
 06 0000 07    dużego       form,morfologik,morfologik-tagset dużego adj,case=gen,degree=pos,gender=m,negation=aff,number=sg[3]
 07 0000 07    dużego       form,morfologik,morfologik-tagset dużego adj,case=gen,degree=pos,gender=n,negation=aff,number=sg[3]
 08 0007 01    _            token                 _           B
-09 0000 17    dużego...era text,txt-reader       dużego_komputera TEXT[]
+09 0000 17    dużego...era frag,txt-reader       dużego_komputera FRAG[]
 10 0008 09    komputera    token                 komputera   T
 11 0008 09    komputera    lemma,morfologik,morfologik-tagset komputer word[10]
 12 0008 09    komputera    lexeme,morfologik,morfologik-tagset komputer\_subst subst,gender=m3[11]

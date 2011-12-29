@@ -6,11 +6,11 @@
 06 0011 01    _            token                 _           B
 07 0012 01    i            token                 i           T
 08 0013 01    _            token                 _           B
-09 0000 17    ala_ma...psa text,txt-reader       ala_ma_kota_i_psa TEXT[]
+09 0000 17    ala_ma...psa frag,txt-reader       ala_ma_kota_i_psa FRAG[]
 10 0014 03    psa          token                 psa         T
 11 0018 03    ala          token                 ala         T
 12 0021 01    _            token                 _           B
 13 0022 02    ma           token                 ma          T
 14 0024 01    _            token                 _           B
-15 0018 12    ala_ma_kotka text,txt-reader       ala_ma_kotka TEXT[]
+15 0018 12    ala_ma_kotka frag,txt-reader       ala_ma_kotka FRAG[]
 16 0025 05    kotka        token                 kotka       T
