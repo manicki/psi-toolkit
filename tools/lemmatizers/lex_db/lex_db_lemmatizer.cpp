@@ -1,16 +1,14 @@
 #include "lex_db_lemmatizer.hpp"
 
 #include <pqxx/transaction>
+#include <pqxx/tuple>
 #include <boost/program_options.hpp>
 
 #include "logging.hpp"
 
 LexDbLemmatizer::LexDbLemmatizer(const boost::program_options::variables_map& options)
- :connection_("dbname=upl-copy") {
+    :connection_(std::string("dbname=")+options["db-name"].as<std::string>()) {
     connection_.set_client_encoding("UTF8");
-
-    std::string dbName = options["db-name"].as<std::string>();
-    DEBUG("LEXDB" << dbName);
 }
 
 void LexDbLemmatizer::lemmatize(const std::string& token,
@@ -30,16 +28,16 @@ void LexDbLemmatizer::lemmatize(const std::string& token,
     std::string currentLemma;
     std::string currentLexeme;
 
-    static pqxx::result::tuple::size_type CANON_INDEX = 0;
-    static pqxx::result::tuple::size_type NAME_INDEX = 1;
-    static pqxx::result::tuple::size_type SINFLECTION_INDEX = 2;
-    static pqxx::result::tuple::size_type MORPHOLOGY_INDEX = 3;
+    static pqxx::tuple::size_type CANON_INDEX = 0;
+    static pqxx::tuple::size_type NAME_INDEX = 1;
+    static pqxx::tuple::size_type SINFLECTION_INDEX = 2;
+    static pqxx::tuple::size_type MORPHOLOGY_INDEX = 3;
 
     for (pqxx::result::const_iterator iter = tuples.begin();
          iter != tuples.end();
          ++iter) {
 
-        const pqxx::result::tuple& tuple = *iter;
+        const pqxx::tuple& tuple = *iter;
 
         if (tuple[CANON_INDEX].c_str() != currentLemma) {
             currentLemma = tuple[CANON_INDEX].c_str();
@@ -58,7 +56,7 @@ void LexDbLemmatizer::lemmatize(const std::string& token,
 
             AnnotationItem lexeme(
                 partOfSpeech,
-                currentLexeme);
+                StringFrag(currentLexeme));
 
             annotationItemManager.setValue(lexeme, "flags", flags);
 
@@ -75,7 +73,7 @@ void LexDbLemmatizer::lemmatize(const std::string& token,
 
             AnnotationItem form(
                 partOfSpeech,
-                currentLexeme);
+                StringFrag(currentLexeme));
 
             annotationItemManager.setValue(form, "flags", flags);
 
@@ -102,6 +100,10 @@ std::string LexDbLemmatizer::getName() {
 
 boost::filesystem::path LexDbLemmatizer::getFile() {
     return __FILE__;
+}
+
+std::string LexDbLemmatizer::getLanguage() const {
+    return "pl";
 }
 
 std::list<std::string> LexDbLemmatizer::getLayerTags() {

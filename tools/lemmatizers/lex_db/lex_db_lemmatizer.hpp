@@ -7,6 +7,7 @@
 #include <pqxx/connection>
 #include <boost/program_options/options_description.hpp>
 #include <boost/program_options/variables_map.hpp>
+#include <boost/filesystem.hpp>
 
 #include "annotation_item_manager.hpp"
 #include "lemmatizer_output_iterator.hpp"
@@ -21,7 +22,9 @@ public:
                    LemmatizerOutputIterator& outputIterator);
 
     static std::string getName();
-    boost::filesystem::path getFile();
+    static boost::filesystem::path getFile();
+
+    std::string getLanguage() const;
 
     std::list<std::string> getLayerTags();
 
