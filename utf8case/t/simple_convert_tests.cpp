@@ -8,7 +8,7 @@ BOOST_AUTO_TEST_SUITE( utf8case )
 
 BOOST_AUTO_TEST_CASE( simple_convert_lower ) {
 
-    boost::shared_ptr<GeneralCaseConverter<std::string::const_iterator, std::back_insert_iterator<std::string> > > lowerConverter =
+    boost::shared_ptr<StringGeneralCaseConverter> lowerConverter =
         StringCaseConverterManager::getInstance().getLowerCaseConverter("pl");
 
     BOOST_CHECK_EQUAL(simpleConvert(*lowerConverter, "KOMPUTER"),
@@ -57,7 +57,7 @@ BOOST_AUTO_TEST_CASE( simple_convert_lower ) {
 
 
 BOOST_AUTO_TEST_CASE( will_be_touched ) {
-    boost::shared_ptr<GeneralCaseConverter<std::string::const_iterator, std::back_insert_iterator<std::string> > > upperConverter =
+    boost::shared_ptr<StringGeneralCaseConverter> upperConverter =
         StringCaseConverterManager::getInstance().getUpperCaseConverter("pl");
 
     BOOST_CHECK(simpleWillBeTouchedWhenConverted(*upperConverter, "KOMPUTEr"));
@@ -83,7 +83,7 @@ BOOST_AUTO_TEST_CASE( will_be_touched ) {
 
 BOOST_AUTO_TEST_CASE( simple_convert_upper ) {
 
-    boost::shared_ptr<GeneralCaseConverter<std::string::const_iterator, std::back_insert_iterator<std::string> > > upperConverter =
+    boost::shared_ptr<StringGeneralCaseConverter> upperConverter =
         StringCaseConverterManager::getInstance().getUpperCaseConverter("pl");
 
     BOOST_CHECK_EQUAL(simpleConvert(*upperConverter, "komputer"),
@@ -103,7 +103,7 @@ BOOST_AUTO_TEST_CASE( simple_convert_upper ) {
 
 BOOST_AUTO_TEST_CASE( simple_convert_title ) {
 
-    boost::shared_ptr<GeneralCaseConverter<std::string::const_iterator, std::back_insert_iterator<std::string> > > titleConverter =
+    boost::shared_ptr<StringGeneralCaseConverter> titleConverter =
         StringCaseConverterManager::getInstance().getTitleCaseConverter("pl");
 
     BOOST_CHECK_EQUAL(simpleConvert(*titleConverter, "źdźbło"),

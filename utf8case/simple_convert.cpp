@@ -1,8 +1,7 @@
 #include "simple_convert.hpp"
 
 std::string simpleConvert(
-    const GeneralCaseConverter<std::string::const_iterator, std::back_insert_iterator<std::string> >&
-          converter,
+    const StringGeneralCaseConverter& converter,
     const std::string& s) {
 
     std::string result;
@@ -13,8 +12,7 @@ std::string simpleConvert(
 }
 
 std::string simpleHeadConvert(
-    const GeneralCaseConverter<std::string::const_iterator, std::back_insert_iterator<std::string> >&
-          converter,
+    const StringGeneralCaseConverter& converter,
     const std::string& s) {
 
     std::string result;
@@ -25,8 +23,7 @@ std::string simpleHeadConvert(
 }
 
 std::string simpleTailConvert(
-    const GeneralCaseConverter<std::string::const_iterator, std::back_insert_iterator<std::string> >&
-          converter,
+    const StringGeneralCaseConverter& converter,
     const std::string& s) {
 
     std::string result;
@@ -38,24 +35,21 @@ std::string simpleTailConvert(
 
 
 bool simpleWillBeTouchedWhenConverted(
-    const GeneralCaseConverter<std::string::const_iterator, std::back_insert_iterator<std::string> >&
-          converter,
+    const StringGeneralCaseConverter& converter,
     const std::string& s) {
 
     return converter.willBeTouchedWhenConverted(s.begin(), s.end());
 }
 
 bool simpleWillBeTouchedWhenHeadConverted(
-    const GeneralCaseConverter<std::string::const_iterator, std::back_insert_iterator<std::string> >&
-          converter,
+    const StringGeneralCaseConverter& converter,
     const std::string& s) {
 
     return converter.willBeTouchedWhenHeadConverted(s.begin(), s.end());
 }
 
 bool simpleWillBeTouchedWhenTailConverted(
-    const GeneralCaseConverter<std::string::const_iterator, std::back_insert_iterator<std::string> >&
-          converter,
+    const StringGeneralCaseConverter& converter,
     const std::string& s) {
 
     return converter.willBeTouchedWhenTailConverted(s.begin(), s.end());

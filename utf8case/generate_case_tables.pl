@@ -47,8 +47,13 @@ sub generate_standard_case_tables {
     @title_case_ranges = compactify(\@title_case_ranges);
 
     write_case_table('lower_case_ranges', \@lower_case_ranges);
+    print "\n";
+
     write_case_table('upper_case_ranges', \@upper_case_ranges);
+    print "\n";
+
     write_case_table('title_case_ranges', \@title_case_ranges);
+    print "\n";
 }
 
 sub generate_special_casing_tables {
@@ -65,7 +70,11 @@ sub generate_special_casing_tables {
     }
 
     write_special_casing_table('lower_special_casing', \@lower_special_casing);
+    print "\n";
+
     write_special_casing_table('title_special_casing', \@title_special_casing);
+    print "\n";
+
     write_special_casing_table('upper_special_casing', \@upper_special_casing);
 }
 
@@ -146,12 +155,13 @@ END_OF_INTRO
         my $to = $range->[1];
         my $delta = $range->[2];
 
-        print $output_cpp_fh "    ${string_to_prepend} {$from,$to,$delta}\n";
+        print $output_cpp_fh "${string_to_prepend}    {$from, $to, $delta}";
 
-        $string_to_prepend = ',';
+        $string_to_prepend = ",\n";
     }
 
-    print $output_cpp_fh "};\n\n";
+
+    print $output_cpp_fh "\n};\n";
 }
 
 sub append_to_special_casing_table {
@@ -185,12 +195,12 @@ END_OF_INTRO
         my $code_point = $item->[0];
         my $replacement = $item->[1];
 
-        print $output_cpp_fh "    ${string_to_prepend} {$code_point,\"$replacement\"}\n";
+        print $output_cpp_fh "${string_to_prepend}    {$code_point, \"$replacement\"}";
 
-        $string_to_prepend = ',';
+        $string_to_prepend = ",\n";
     }
 
-    print $output_cpp_fh "};\n\n";
+    print $output_cpp_fh "\n};\n";
 }
 
 sub cpp_encode {
@@ -239,5 +249,3 @@ sub delta {
 
     return $b - $a;
 }
-
-

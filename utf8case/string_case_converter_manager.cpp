@@ -9,5 +9,3 @@ StringCaseConverterManager& StringCaseConverterManager::getInstance() {
 
 StringCaseConverterManager::StringCaseConverterManager() {
 }
-
-
