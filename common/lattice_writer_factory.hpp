@@ -20,11 +20,13 @@ public:
 
 private:
 
-    virtual LatticeWriter<Sink>* doCreateProcessor(const boost::program_options::variables_map& options) {
+    virtual LatticeWriter<Sink>* doCreateProcessor(
+        const boost::program_options::variables_map& options) {
         return doCreateLatticeWriter(options);
     }
 
-    virtual LatticeWriter<Sink>* doCreateLatticeWriter(const boost::program_options::variables_map& options) = 0;
+    virtual LatticeWriter<Sink>* doCreateLatticeWriter(
+        const boost::program_options::variables_map& options) = 0;
 
     std::string doGetContinuation(
         const boost::program_options::variables_map& /*options*/) const {

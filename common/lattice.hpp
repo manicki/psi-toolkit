@@ -513,7 +513,7 @@ private:
 
     int nLooseVertices_;
 
-    typedef boost::bimap<LayerTagCollection,int> TagCollectionsBimap;
+    typedef boost::bimap<LayerTagCollection, int> TagCollectionsBimap;
     typedef TagCollectionsBimap::value_type TagCollectionsBimapItem;
     typedef TagCollectionsBimap::left_map::const_iterator TagCollectionsBimapLeftIterator;
     TagCollectionsBimap indexedTagCollections_;

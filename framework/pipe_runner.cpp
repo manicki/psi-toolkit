@@ -38,7 +38,7 @@ PipeRunner::PipeRunner(std::vector<std::string> args)
 }
 
 int PipeRunner::run(std::istream& in, std::ostream& out) {
-    return run_<std::istream, std::ostream>(in,out);
+    return run_<std::istream, std::ostream>(in, out);
 }
 
 const std::string PipeRunner::PIPELINE_SEPARATOR = "!";
@@ -302,9 +302,9 @@ boost::program_options::variables_map PipeRunner::parseOptions_(
     boost::scoped_array<char*> argv(new char* [argc + 1]);
 
     size_t i = 1;
-    for(std::list<std::string>::const_iterator iter = processorArgs.begin();
-        iter != processorArgs.end();
-        ++iter,++i)
+    for (std::list<std::string>::const_iterator iter = processorArgs.begin();
+         iter != processorArgs.end();
+         ++iter, ++i)
         argv[i] = const_cast<char*>((*iter).c_str()); //trick necessary because of Boost 1.42 bug
     argv[argc] = 0;
 

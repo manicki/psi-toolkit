@@ -81,7 +81,9 @@ private:
         PerlSimpleLatticeWriter& processor_;
     };
 
-    virtual WriterWorker<PerlLatticeWriterOutput>* doCreateWriterWorker(PerlLatticeWriterOutput & output, Lattice& lattice) {
+    virtual WriterWorker<PerlLatticeWriterOutput>* doCreateWriterWorker(
+        PerlLatticeWriterOutput & output, Lattice& lattice) {
+
         return new Worker(*this, output, lattice);
     }
 

@@ -119,15 +119,12 @@ void LexDbLemmatizer::parseSinflection_(const std::string& sinflection,
                                         std::string& partOfSpeech,
                                         std::string& flags) {
     size_t i = sinflection.rfind(':');
-    if(i != std::string::npos)
-    {
-        partOfSpeech = sinflection.substr(0,i);
+    if (i != std::string::npos) {
+        partOfSpeech = sinflection.substr(0, i);
         flags = sinflection.substr(i+1);
-    }
-    else {
+    } else {
         partOfSpeech = sinflection;
         flags = "";
     }
 
 }
-

@@ -41,7 +41,9 @@ private:
         PsiLatticeWriter& processor_;
     };
 
-    virtual WriterWorker<std::ostream>* doCreateWriterWorker(std::ostream& outputStream, Lattice& lattice) {
+    virtual WriterWorker<std::ostream>* doCreateWriterWorker(
+        std::ostream& outputStream, Lattice& lattice) {
+
         return new Worker(*this, outputStream, lattice);
     }
 

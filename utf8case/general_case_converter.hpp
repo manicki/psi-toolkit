@@ -52,7 +52,7 @@ public:
         while (start != end) {
             uint32_t code_point = utf8::unchecked::next(start);
 
-            if(const char* special = specialCasingConverter_->convert(code_point)) {
+            if (const char* special = specialCasingConverter_->convert(code_point)) {
                 while (*special)
                     *out++ = *special++;
             } else {

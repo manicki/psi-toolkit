@@ -32,12 +32,12 @@ public:
         virtual std::string doGetContinuation(
             const boost::program_options::variables_map& options) const;
 
-        std::map<std::string,std::string> parseMappingOption_(
+        std::map<std::string, std::string> parseMappingOption_(
             const std::string& mappingOption,
             const std::string& lang);
 
-        std::map<std::string,boost::filesystem::path> substituteMapping_(
-            const std::map<std::string,std::string>& rawMapping,
+        std::map<std::string, boost::filesystem::path> substituteMapping_(
+            const std::map<std::string, std::string>& rawMapping,
             const LangSpecificProcessorFileFetcher& fileFetcher);
 
         static const std::string DEFAULT_RULE_FILE_SPEC;
@@ -45,7 +45,7 @@ public:
     };
 
     TpTokenizer(boost::filesystem::path rules,
-                const std::map<std::string,boost::filesystem::path>& mapping);
+                const std::map<std::string, boost::filesystem::path>& mapping);
 
 private:
 

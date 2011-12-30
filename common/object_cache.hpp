@@ -37,7 +37,7 @@ public:
     void clear();
 
 private:
-    std::map<boost::filesystem::path,boost::shared_ptr<void> > mapping_;
+    std::map<boost::filesystem::path, boost::shared_ptr<void> > mapping_;
 
     ObjectCache() {
     }

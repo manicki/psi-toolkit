@@ -645,7 +645,8 @@ void prepareAdvancedLattice_(Lattice & lattice) {
     frazaRzeczBuilder.addEdge(edgeKota);
 
     Lattice::EdgeDescriptor edgeFrazaRzecz
-        = lattice.addEdge(preKota, postKota, aiFrazaRzecz, parseGobioTag, frazaRzeczBuilder.build());
+        = lattice.addEdge(preKota, postKota,
+                          aiFrazaRzecz, parseGobioTag, frazaRzeczBuilder.build());
 
 
     Lattice::VertexDescriptor postMarkup = lattice.getVertexForRawCharIndex(22);
@@ -662,7 +663,8 @@ void prepareAdvancedLattice_(Lattice & lattice) {
     frazaRzecz2Builder.addEdge(edgeMarkupClose);
 
     Lattice::EdgeDescriptor edgeFrazaRzecz2
-        = lattice.addEdge(preMarkup, postMarkup, aiFrazaRzecz, parseGobioTag, frazaRzecz2Builder.build());
+        = lattice.addEdge(preMarkup, postMarkup,
+                          aiFrazaRzecz, parseGobioTag, frazaRzecz2Builder.build());
 
 
     AnnotationItem aiFrazaCzas("fraza_czasownikowa");
@@ -688,8 +690,9 @@ void prepareAdvancedLattice_(Lattice & lattice) {
     pelnaFrCzasBuilder.addEdge(edgeFrazaCzas);
 
     Lattice::EdgeDescriptor edgePelnaFrCzas
-        = lattice.addEdge(preAla, postMarkup, aiPelnaFrCzas, parseGobioTag, pelnaFrCzasBuilder.build(), -0.342);
-
+        = lattice.addEdge(
+            preAla, postMarkup,
+            aiPelnaFrCzas, parseGobioTag, pelnaFrCzasBuilder.build(), -0.342);
 
     Lattice::VertexDescriptor postStop = lattice.getVertexForRawCharIndex(23);
 

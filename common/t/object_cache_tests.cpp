@@ -25,4 +25,3 @@ BOOST_AUTO_TEST_CASE( object_cache_simple ) {
 }
 
 BOOST_AUTO_TEST_SUITE_END()
-

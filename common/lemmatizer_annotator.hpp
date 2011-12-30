@@ -84,11 +84,13 @@ public:
             Lattice::EdgeDescriptor lastLexeme_;
 
         public:
-            WorkerOutputIterator(LayerTagCollection layerTags, Lattice& lattice, Lattice::EdgeDescriptor tokenEdge)
+            WorkerOutputIterator(
+                LayerTagCollection layerTags, Lattice& lattice, Lattice::EdgeDescriptor tokenEdge)
                 :lattice_(lattice),
                  correctionTag_(
                      createUnion(
-                         lattice.getLayerTagManager().createSingletonTagCollection("token,corrected"),
+                         lattice.getLayerTagManager().createSingletonTagCollection(
+                             "token,corrected"),
                          layerTags)),
                  normalizationTag_(
                      createUnion(
@@ -228,7 +230,8 @@ public:
             LayerTagCollection layerTags =
                 lattice_.getLayerTagManager().createTagCollection(lemmatizer.getLayerTags());
 
-            Lattice::EdgesSortedByTargetIterator edgeIterator = lattice_.edgesSortedByTarget(tokenMask_);
+            Lattice::EdgesSortedByTargetIterator edgeIterator
+                = lattice_.edgesSortedByTarget(tokenMask_);
 
             while (edgeIterator.hasNext()) {
                 Lattice::EdgeDescriptor edge = edgeIterator.next();

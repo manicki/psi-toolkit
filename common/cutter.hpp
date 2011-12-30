@@ -176,7 +176,7 @@ void Cutter::fragmentSegment_(
         size_t prevCutPoint = cutPoint;
 
         if (softLimitCutPoint != std::string::npos && hardLimitCutPoint != std::string::npos)
-            cutPoint = std::min(softLimitCutPoint, hardLimitCutPoint);
+            cutPoint = (std::min)(softLimitCutPoint, hardLimitCutPoint);
         else if (softLimitCutPoint != std::string::npos)
             cutPoint = softLimitCutPoint;
         else if (hardLimitCutPoint != std::string::npos)
@@ -228,7 +228,9 @@ size_t Cutter::findHardLimitCutPoint_(
         candidatePos += symbolLength(text, candidatePos);
 
     if (candidatePos <= cutPoint)
-        throw Exception("segment hard limit is so small that a Unicode character cannot be contained in it, make hard limit larger");
+        throw Exception(
+            "segment hard limit is so small "
+            "that a Unicode character cannot be contained in it, make hard limit larger");
 
     return candidatePos;
 }

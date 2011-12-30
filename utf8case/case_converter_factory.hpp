@@ -33,7 +33,7 @@ private:
         if (!rangeBasedCaseConverters_[case_index]) {
             boost::shared_ptr<RangeBasedCaseConverter> converter;
 
-            switch(case_index) {
+            switch (case_index) {
             case LOWER_INDEX: converter.reset(
                 new RangeBasedCaseConverter(
                     LOWER_CASE_RANGES_SIZE,
@@ -59,7 +59,7 @@ private:
         if (!specialCasingConverters_[case_index]) {
             boost::shared_ptr<SpecialCasingConverter> converter;
 
-            switch(case_index) {
+            switch (case_index) {
             case LOWER_INDEX: converter.reset(
                 new SpecialCasingConverter(
                     LOWER_SPECIAL_CASING_SIZE,
@@ -86,7 +86,8 @@ private:
     boost::shared_ptr<GeneralCaseConverter<octet_iterator, output_iterator> > getCaseConverter_(
         int case_index, const std::string& language_code) {
         if (language_code == "lt" || language_code == "az" || language_code == "tr")
-            throw Exception(std::string("language '") + language_code + "' is not handled yet in lower/upper/title-casing");
+            throw Exception(std::string("language '") + language_code
+                            + "' is not handled yet in lower/upper/title-casing");
 
         checkRawConverters_(case_index);
 
@@ -97,15 +98,18 @@ private:
     }
 
 public:
-    boost::shared_ptr<GeneralCaseConverter<octet_iterator, output_iterator> > getLowerCaseConverter(const std::string& language_code) {
+    boost::shared_ptr<GeneralCaseConverter<octet_iterator, output_iterator> >
+    getLowerCaseConverter(const std::string& language_code) {
         return getCaseConverter_(LOWER_INDEX, language_code);
     }
 
-    boost::shared_ptr<GeneralCaseConverter<octet_iterator, output_iterator> > getUpperCaseConverter(const std::string& language_code) {
+    boost::shared_ptr<GeneralCaseConverter<octet_iterator, output_iterator> >
+    getUpperCaseConverter(const std::string& language_code) {
         return getCaseConverter_(UPPER_INDEX, language_code);
     }
 
-    boost::shared_ptr<GeneralCaseConverter<octet_iterator, output_iterator> > getTitleCaseConverter(const std::string& language_code) {
+    boost::shared_ptr<GeneralCaseConverter<octet_iterator, output_iterator> >
+    getTitleCaseConverter(const std::string& language_code) {
         return getCaseConverter_(TITLE_INDEX, language_code);
     }
 

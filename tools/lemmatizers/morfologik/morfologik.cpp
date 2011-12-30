@@ -55,7 +55,7 @@ void Morfologik::lemmatize(const std::string & word,
 ) {
     annotationManager = &manager;
 
-    switch(level) {
+    switch (level) {
         case 0:
             break;
         case 1:
@@ -382,4 +382,3 @@ void Morfologik::initializeString() {
             (clsString, "toString", "()Ljava/lang/String;");
     }
 }
-

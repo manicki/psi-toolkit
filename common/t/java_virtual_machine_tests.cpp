@@ -32,7 +32,7 @@ BOOST_AUTO_TEST_CASE( java_hello_world ) {
 
     if (mid != NULL) {
         jstring jstr = (jstring)env->CallStaticObjectMethod(cls, mid, NULL);
-        hello = env->GetStringUTFChars(jstr,0);
+        hello = env->GetStringUTFChars(jstr, 0);
     }
     BOOST_CHECK_EQUAL((std::string)hello, "Hello World from Java");
 }

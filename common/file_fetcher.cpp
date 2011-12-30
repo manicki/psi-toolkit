@@ -44,7 +44,7 @@ std::string FileFetcher::replaceParams_(const std::string& fileSpec) const {
             throw Exception(std::string("unknown param `") + param + "' in file specification `"
                             + fileSpec + "'");
         else {
-            std::map<std::string,std::string>::const_iterator foundParam
+            std::map<std::string, std::string>::const_iterator foundParam
                 = params_.find(param);
             std::string value = foundParam->second;
 
@@ -59,7 +59,7 @@ std::string FileFetcher::replaceParams_(const std::string& fileSpec) const {
 }
 
 std::string FileFetcher::paramsToString_() const {
-    typedef std::map<std::string,std::string> this_map_type;
+    typedef std::map<std::string, std::string> this_map_type;
 
     std::string r;
 

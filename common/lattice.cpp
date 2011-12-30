@@ -267,7 +267,6 @@ void Lattice::discard(EdgeDescriptor edge) {
     addPartitionToEdge(edge, discardedTag_, EdgeSequence(), (std::numeric_limits<Score>::min)());
 }
 
-
 Lattice::InOutEdgesIterator Lattice::outEdges(
     Lattice::VertexDescriptor vertex,
     LayerTagMask mask
@@ -1048,8 +1047,6 @@ Lattice::EdgeDescriptor Lattice::InOutEdgesIterator::next() {
     }
     throw NoEdgeException("InOutEdgesIterator has no next edges.");
 }
-
-
 
 Lattice::SortedEdgesIterator::SortedEdgesIterator(
     Lattice& lattice,

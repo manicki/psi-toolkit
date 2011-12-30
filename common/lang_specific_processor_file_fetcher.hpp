@@ -9,7 +9,7 @@ Specifying files for processors
 
 Processors (mostly annotators) may need to read some external files
 (rule files, configuration files etc.) In order to facilitate handling
-such files `LangSpecificProcessorFileFetcher' class was created. 
+such files `LangSpecificProcessorFileFetcher' class was created.
 It should be used in the factory of a given processor. Two arguments
 are given in the constructor of `LangSpecificProcessorFileFetcher':
 * the path of the source file in which the processor and its factory
@@ -41,7 +41,7 @@ Such file specification should be expected in processor's options
 to file paths in the processor's factory using `getOneFile' and
 `getFiles' methods.
 
-For an example of using LangSpecificProcessorFileFetcher see 
+For an example of using LangSpecificProcessorFileFetcher see
 tp_tokenizer.cpp
 */
 class LangSpecificProcessorFileFetcher : public ProcessorFileFetcher {

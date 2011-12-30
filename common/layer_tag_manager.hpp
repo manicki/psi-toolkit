@@ -65,7 +65,7 @@ public:
 
 private:
 
-    typedef boost::bimap<std::string,size_t> StringBimap;
+    typedef boost::bimap<std::string, size_t> StringBimap;
     typedef StringBimap::value_type StringBimapItem;
     StringBimap m_;
 

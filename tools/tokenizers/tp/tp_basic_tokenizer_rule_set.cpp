@@ -465,13 +465,15 @@ void TPBasicTokenizerRuleSet::readIf(
     trim(name);
 
     if (name.empty())
-       throw TPTokenizerException(std::string("ifdef without a condition")+context+std::string(":")+itoa(filePos));
+       throw TPTokenizerException(
+           std::string("ifdef without a condition")+context+std::string(":")+itoa(filePos));
 
     std::string res;
     nameStream >> res;
 
     if (!res.empty())
-        throw TPTokenizerException(std::string("ifdef - unexpected quotes")+context+std::string(":")+itoa(filePos));
+        throw TPTokenizerException(
+            std::string("ifdef - unexpected quotes")+context+std::string(":")+itoa(filePos));
 
     if (openedIf && ((defs.find(name) == defs.end()) == expectation)) {
         ifstack.push_back(IfElem(true, context, filePos, TIF));
@@ -644,7 +646,8 @@ void TPBasicTokenizerRuleSet::subLoad(
                                 if (firstReadEmpty)
                                     throw
                                         TPTokenizerException("text with no @rule/@include/@def: "
-                                                             "::"+itoa(beginPos)+" file: "+context+"\n");
+                                                             "::"+itoa(beginPos)
+                                                             +" file: "+context+"\n");
 
                                 parseLine(resBuffer,
                                           defs,

@@ -49,8 +49,6 @@ struct StringSequenceGrammar : public qi::grammar<
 
 };
 
-
-
 struct PsiLRAnnotation {
     std::string category;
     double score;
@@ -63,7 +61,6 @@ struct PsiLRAnnotation {
         partitions = quoter.unescape(partitions);
     }
 };
-
 
 BOOST_FUSION_ADAPT_STRUCT(
     PsiLRAnnotation,
@@ -371,7 +368,9 @@ private:
         PsiLatticeReader& processor_;
     };
 
-    virtual ReaderWorker<std::istream>* doCreateReaderWorker(std::istream& inputStream, Lattice& lattice) {
+    virtual ReaderWorker<std::istream>* doCreateReaderWorker(
+        std::istream& inputStream, Lattice& lattice) {
+
         return new Worker(*this, inputStream, lattice);
     }
 

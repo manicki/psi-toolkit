@@ -31,7 +31,4 @@ bool simpleWillBeTouchedWhenTailConverted(
     const StringGeneralCaseConverter& converter,
     const std::string& s);
 
-
-
-
 #endif

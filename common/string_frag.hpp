@@ -35,7 +35,7 @@ public:
         size_t len
     ) :
 #if STRING_FRAG_VALIDATION
-        contents_(src.substr(begin, std::min(len,(size_t)ABBR_LENGTH))),
+        contents_(src.substr(begin, (std::min)(len, (size_t)ABBR_LENGTH))),
 #else
         contents_(""),
 #endif
@@ -56,7 +56,7 @@ public:
         size_t len
     ) :
 #if STRING_FRAG_VALIDATION
-        contents_(sf.src_.substr(sf.begin_ + begin, std::min(len,(size_t)ABBR_LENGTH))),
+        contents_(sf.src_.substr(sf.begin_ + begin, (std::min)(len, (size_t)ABBR_LENGTH))),
 #else
         contents_(""),
 #endif

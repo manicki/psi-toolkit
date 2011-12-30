@@ -43,7 +43,7 @@ public:
     TPBasicTokenizerRuleSet();
     ~TPBasicTokenizerRuleSet();
 
-    void load(std::map<std::string, std::string> & paths, std::list<std::string> & filesToLoad );
+    void load(std::map<std::string, std::string> & paths, std::list<std::string> & filesToLoad);
 
 private:
     struct _regex {
@@ -57,7 +57,8 @@ private:
         size_t len;
         std::string name;
 
-        stackElem(size_t p, size_t le, std::string n):epos(p),len(le),name(n) {
+        stackElem(size_t p, size_t le, std::string n)
+            : epos(p), len(le), name(n) {
         }
     };
 
@@ -180,25 +181,26 @@ private:
     void loadWholeElement(std::istream & input, std::string & buff, size_t & pos);
     void loadWholeElement(std::istream & input, std::string & buff);
 
-    void clearState(std::map<std::string, Definition> & definitions, std::map<std::string, bool> & opened);
+    void clearState(std::map<std::string, Definition> & definitions,
+                    std::map<std::string, bool> & opened);
     void returnToTheBuffer(std::stringstream & st, std::string & resBuffer);
-    std::string getContent(std::string & buffer,std::string  pattern,
+    std::string getContent(std::string & buffer, std::string  pattern,
                              std::string msg, std::string & context, size_t filePos);
 
     void isEmpty(std::string & buffer, std::string msg, std::string & context, size_t filePos);
 
-    void readIfNDef(std::string& resbuffer, std::string context,size_t & filePos,
-                    std::map<std::string, Definition> & defs,  std::list<IfElem> &ifstack);
+    void readIfNDef(std::string& resbuffer, std::string context, size_t & filePos,
+                    std::map<std::string, Definition> & defs, std::list<IfElem> &ifstack);
 
-    void readIfDef(std::string& resbuffer, std::string context,size_t & filePos,
-                   std::map<std::string, Definition> & defs,  std::list<IfElem> &ifstack);
+    void readIfDef(std::string& resbuffer, std::string context, size_t & filePos,
+                   std::map<std::string, Definition> & defs, std::list<IfElem> &ifstack);
 
     void readIf(
-        std::string& resbuffer, std::string context,size_t & filePos,
-        std::map<std::string, Definition> & defs,  std::list<IfElem> &ifstack,
+        std::string& resbuffer, std::string context, size_t & filePos,
+        std::map<std::string, Definition> & defs, std::list<IfElem> &ifstack,
         bool expectation);
 
-    void readElse(std::string context,size_t & filePos,
+    void readElse(std::string context, size_t & filePos,
                   std::list<IfElem> &ifstack);
 
     void readEndIf(std::list<IfElem> &ifstack);
@@ -212,4 +214,3 @@ private:
 };
 
 #endif
-

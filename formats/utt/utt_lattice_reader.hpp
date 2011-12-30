@@ -213,7 +213,9 @@ private:
         UTTLatticeReader& processor_;
     };
 
-    virtual ReaderWorker<std::istream>* doCreateReaderWorker(std::istream& inputStream, Lattice& lattice) {
+    virtual ReaderWorker<std::istream>* doCreateReaderWorker(
+        std::istream& inputStream, Lattice& lattice) {
+
         return new Worker(*this, inputStream, lattice);
     }
 };
