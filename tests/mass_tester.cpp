@@ -181,7 +181,8 @@ void MassTester::runAllBatches_() {
 }
 
 void MassTester::runBatch_(const TestBatch& batch) {
-    std::cout << "running " << batch.getDirectory() << " [" << batch.getPipeline() << "]" << std::endl;
+    std::cout << "running " << batch.getDirectory()
+              << " [" << batch.getPipeline() << "]" << std::endl;
 
     try {
         BatchRunner runner(batch, *reporter_);
@@ -216,4 +217,3 @@ std::string MassTester::stripComments_(const std::string& line) {
 
 const boost::filesystem::path MassTester::TEST_BATCH_DIRECTORY_NAME = "m";
 const boost::filesystem::path MassTester::TEST_COMMAND_FILE_NAME = "WHAT";
-

@@ -264,7 +264,7 @@ Lattice::EdgeDescriptor Lattice::addPartitionToEdge(
 }
 
 void Lattice::discard(EdgeDescriptor edge) {
-    addPartitionToEdge(edge, discardedTag_, EdgeSequence(), std::numeric_limits<Score>::min());
+    addPartitionToEdge(edge, discardedTag_, EdgeSequence(), (std::numeric_limits<Score>::min)());
 }
 
 
@@ -570,7 +570,7 @@ Lattice::EdgeSequence Lattice::getPath(VertexDescriptor& vertex, LayerTagMask ma
         } else
             nextVertexFound = false;
 
-    } while(nextVertexFound);
+    } while (nextVertexFound);
 
     return pathBuilder.build();
 }
@@ -922,16 +922,12 @@ Lattice::EdgeSequence Lattice::cutSequenceByTextLength_(
     return sequenceBuilder.build();
 }
 
-
-
 inline bool compareSecond_(
     std::pair<int, int> p1,
     std::pair<int, int> p2
 ) {
     return p1.second < p2.second;
 }
-
-
 
 Lattice::VertexIterator::VertexIterator(Lattice& lattice) :
     lattice_(lattice),
@@ -1018,8 +1014,6 @@ int Lattice::VertexIterator::f_(Graph::vertex_descriptor vd) {
     }
     return maxIndex;
 }
-
-
 
 bool Lattice::InOutEdgesIterator::hasNext() {
     if (implicitIndex_ > -1) return true;
@@ -1115,7 +1109,3 @@ Lattice::InOutEdgesIterator Lattice::EdgesSortedByTargetIterator::getEdgesIterat
 ) {
     return lattice_.inEdges(vd, mask_);
 }
-
-
-
-

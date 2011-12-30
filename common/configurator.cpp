@@ -47,5 +47,3 @@ boost::filesystem::path Configurator::underscores2minuses_(
 
     return boost::filesystem::path(segmentAsString);
 }
-
-

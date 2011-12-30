@@ -26,6 +26,3 @@ std::string AnnotatorFactory::doGetContinuation(
     const boost::program_options::variables_map& /*options*/) const {
     return "psi-writer";
 }
-
-
-

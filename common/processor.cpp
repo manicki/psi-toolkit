@@ -6,5 +6,3 @@ std::string Processor::info() {
 
 Processor::~Processor() {
 }
-
-

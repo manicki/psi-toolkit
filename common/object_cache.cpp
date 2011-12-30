@@ -9,4 +9,3 @@ ObjectCache& ObjectCache::getInstance() {
 void ObjectCache::clear() {
     mapping_.clear();
 }
-

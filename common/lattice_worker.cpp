@@ -9,4 +9,3 @@ void LatticeWorker::run() {
 
 LatticeWorker::~LatticeWorker() {
 }
-

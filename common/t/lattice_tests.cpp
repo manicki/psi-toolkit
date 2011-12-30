@@ -335,7 +335,8 @@ BOOST_AUTO_TEST_CASE( variant_edges ) {
     lattice.addEdge(pre_ananas, post_ananas, word_token, token_tag, ananas_builder.build());
 
     Lattice::EdgeSequence::Builder ananas_lemma_builder(lattice);
-    ananas_lemma_builder.addEdge(lattice.firstOutEdge(lattice.getVertexForRawCharIndex(0), tokenMask));
+    ananas_lemma_builder.addEdge(
+        lattice.firstOutEdge(lattice.getVertexForRawCharIndex(0), tokenMask));
     AnnotationItem ai_ananas_sg("ananas"); // singular masculinie noun variant
     lattice.getAnnotationItemManager().setValue(ai_ananas_sg, "base", "ananas");
     lattice.getAnnotationItemManager().setValue(ai_ananas_sg, "morphology", "subst:sg:m");
@@ -478,7 +479,9 @@ BOOST_AUTO_TEST_CASE( edges_tags_combining ) {
     lattice.addEdge(pre_ananas, post_ananas, word_token, lemma_tag, ananas_builder.build());
 
     Lattice::EdgeDescriptor edge;
-    Lattice::EdgesSortedBySourceIterator tokenOrLemmaIter = lattice.edgesSortedBySource(tokenOrLemmaMask);
+    Lattice::EdgesSortedBySourceIterator tokenOrLemmaIter
+        = lattice.edgesSortedBySource(tokenOrLemmaMask);
+
     BOOST_CHECK(tokenOrLemmaIter.hasNext());
     edge = tokenOrLemmaIter.next();
     std::list<std::string> tagNames
@@ -832,7 +835,8 @@ BOOST_AUTO_TEST_CASE( discard ) {
 
     {
         LayerTagMask discardedMask = lattice.getLayerTagManager().getMask("discarded");
-        Lattice::EdgesSortedBySourceIterator discardedIter = lattice.edgesSortedBySource(discardedMask);
+        Lattice::EdgesSortedBySourceIterator discardedIter
+            = lattice.edgesSortedBySource(discardedMask);
 
         BOOST_CHECK(discardedIter.hasNext());
         Lattice::EdgeDescriptor discardedEdge = discardedIter.next();

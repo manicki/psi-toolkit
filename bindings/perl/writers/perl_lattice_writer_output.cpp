@@ -38,7 +38,7 @@ void PerlLatticeWriterOutput::closeSubArray_(bool flattenOneElement) {
             if (flattenOneElement) {
                 currentArrayReference = tryToFlattenOneElementCurrentArray();
             }
-            
+
             if (currentArrayReference) {
                 av_push(parentArrayPointer, currentArrayReference);
             }
@@ -61,7 +61,7 @@ long PerlLatticeWriterOutput::getCurrentArrayLength_() {
 PerlReference PerlLatticeWriterOutput::tryToFlattenOneElementCurrentArray() {
 
     long arrayLength = av_len(currentArrayPointer_) + 1;
-        
+
     if ( 1 == arrayLength) {
         PerlReference elementReference = av_pop(currentArrayPointer_);
         av_undef(currentArrayPointer_);

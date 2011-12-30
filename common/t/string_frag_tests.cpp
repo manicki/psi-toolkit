@@ -37,4 +37,3 @@ BOOST_AUTO_TEST_CASE( string_frag_find ) {
     BOOST_CHECK_EQUAL(sf.find(' '), ss.find(' '));
     BOOST_CHECK_EQUAL(sf.find(' ', 5), ss.find(' ', 5));
 }
-

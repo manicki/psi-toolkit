@@ -73,7 +73,7 @@ void StringFrag::append(const StringFrag & other) {
         begin_ + len_ == other.begin_
     ) {
         len_ += other.len_;
-        contents_ = src_.substr(begin_, std::min(len_,(size_t)ABBR_LENGTH));
+        contents_ = src_.substr(begin_, (std::min)(len_, (size_t)ABBR_LENGTH));
     } else if (contents_=="" && this != &other) {
         this->StringFrag::~StringFrag();
         new (this) StringFrag(other);

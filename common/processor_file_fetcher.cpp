@@ -66,5 +66,3 @@ boost::filesystem::path ProcessorFileFetcher::removeExtension_(
 
     return boost::filesystem::path(segmentAsString);
 }
-
-

@@ -37,4 +37,3 @@ void LemmatizerOutputIterator::addForm(
 
 LemmatizerOutputIterator::~LemmatizerOutputIterator() {
 }
-

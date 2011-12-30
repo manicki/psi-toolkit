@@ -5,7 +5,8 @@
 void FactoriesKeeper::takeProcessorFactory(ProcessorFactory* processorFactory) {
     DEBUG("registering processor " << processorFactory->getName());
 
-    nameToFactoryMap_[processorFactory->getName()] = boost::shared_ptr<ProcessorFactory>(processorFactory);
+    nameToFactoryMap_[processorFactory->getName()]
+        = boost::shared_ptr<ProcessorFactory>(processorFactory);
 }
 
 ProcessorFactory& FactoriesKeeper::getProcessorFactory(std::string processorName) {
@@ -24,7 +25,7 @@ std::vector<std::string> FactoriesKeeper::getProcessorNames() {
     std::vector<std::string> names;
 
     std::map<std::string, boost::shared_ptr<ProcessorFactory> >::iterator it;
-    for(it = nameToFactoryMap_.begin(); it != nameToFactoryMap_.end(); ++it) {
+    for (it = nameToFactoryMap_.begin(); it != nameToFactoryMap_.end(); ++it) {
         names.push_back(it->first);
     }
 

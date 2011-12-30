@@ -13,7 +13,9 @@ unsigned int AligningWriterWorker::alignOutput_(std::string output) {
     return currentPos_;
 }
 
-unsigned int AligningWriterWorker::alignOutput_(std::string output, unsigned int pos, char padChar) {
+unsigned int AligningWriterWorker::alignOutput_(
+    std::string output, unsigned int pos, char padChar) {
+
     getOutputStream() << output;
     currentPos_ += utf8::distance(output.begin(), output.end());
     for (; currentPos_ < pos; ++currentPos_) {

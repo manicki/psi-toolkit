@@ -58,7 +58,7 @@ void PsiLatticeWriter::Worker::doRun() {
 
     int alignments[] = { 2, 7, 13, 26, 48, 60 };
 
-    while(ei.hasNext()) {
+    while (ei.hasNext()) {
         Lattice::EdgeDescriptor edge = ei.next();
 
         if (lattice_.isEdgeHidden(edge)) continue;

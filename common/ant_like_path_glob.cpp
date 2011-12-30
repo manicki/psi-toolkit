@@ -105,6 +105,6 @@ void AntLikePathGlob::checkFile_(boost::filesystem::path filePath,
                                  bool printWarning) const {
     if (is_regular_file(filePath))
         matchedFiles.insert(filePath);
-    else if(printWarning)
+    else if (printWarning)
         WARN("expected regular file `" << filePath.string() << "'");
 }

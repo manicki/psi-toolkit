@@ -63,4 +63,3 @@ MainFactoriesKeeper& MainFactoriesKeeper::getInstance() {
     static MainFactoriesKeeper instance;
     return instance;
 }
-

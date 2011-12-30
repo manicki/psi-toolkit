@@ -215,11 +215,12 @@ void PsiLatticeReader::Worker::doRun() {
                                 if (edgeNumber < 1) {
                                     if (currentVertex == to) {
                                         throw FileFormatException(
-                                            "PSI reader: Wrong partition's notation (too many sub-edges)"
+                                     "PSI reader: Wrong partition's notation (too many sub-edges)"
                                         );
                                     }
                                     currentEdge = lattice_.firstOutEdge(currentVertex, rawMask);
-                                } else if (edgeOrdinalMap.find(edgeNumber) == edgeOrdinalMap.end()) {
+                                } else if (edgeOrdinalMap.find(edgeNumber)
+                                           == edgeOrdinalMap.end()) {
                                     throw FileFormatException(
                                         "PSI reader: Wrong partition's notation (unknown sub-edge)"
                                     );
@@ -255,8 +256,6 @@ void PsiLatticeReader::Worker::doRun() {
 
 
             // Adding edge.
-
-            // BOOST_FOREACH(Lattice::EdgeSequence::Builder builder, seqBuilders) {
             BOOST_FOREACH(PsiLRPartitionElements partitionElements, partitionsElements) {
                 edgeOrdinalMap[item.ordinal] = lattice_.addEdge(
                     from,
@@ -276,4 +275,3 @@ void PsiLatticeReader::Worker::doRun() {
     }
 
 }
-

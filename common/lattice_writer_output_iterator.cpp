@@ -26,4 +26,3 @@ void LatticeWriterOutputIterator::flush() {
 
 LatticeWriterOutputIterator::~LatticeWriterOutputIterator() {
 }
-

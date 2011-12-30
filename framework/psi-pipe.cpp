@@ -8,7 +8,7 @@ void checkIfRunAsInstalled(char* arg0);
 
 int main(int argc, char* argv[]) {
     if (argc < 2) {
-        std::cerr << "try this: cd build; framework/psi-pipe txt-reader ! tp-tokenizer --lang pl ! psi-writer\n";
+        std::cerr << "try this: cd build; framework/psi-pipe tp-tokenizer --lang pl ! psi-writer\n";
         exit(1);
     }
 
@@ -19,8 +19,7 @@ int main(int argc, char* argv[]) {
     try {
         PipeRunner pipeRunner(argc, argv);
         exit_code = pipeRunner.run(std::cin, std::cout);
-    }
-    catch(std::exception& ex) {
+    } catch (std::exception& ex) {
         std::cerr << ex.what() << std::endl
                   << "ABORTED!" << std::endl;
 

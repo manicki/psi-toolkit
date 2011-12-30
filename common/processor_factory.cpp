@@ -66,7 +66,8 @@ std::string ProcessorFactory::doGetDescription() {
         description = getFileContent(pathToDescriptionFile);
     }
     catch (FileFetcher::Exception& err) {
-        WARN("An error occured when trying to open the processor's description file: " << err.what());
+        WARN("An error occured when trying to open the processor's description file: "
+             << err.what());
     }
 
     return description;

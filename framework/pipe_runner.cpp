@@ -18,21 +18,27 @@
 #include "perl_lattice_writer_output.hpp"
 #endif
 
-PipeRunner::PipeRunner(const std::string& pipeline) : runnerOptionsDescription_("PipeRunner options") {
-    parseIntoGraph_<std::istream,std::ostream>(splitPipeline_(pipeline), false);
+PipeRunner::PipeRunner(const std::string& pipeline)
+  : runnerOptionsDescription_("PipeRunner options") {
+
+    parseIntoGraph_<std::istream, std::ostream>(splitPipeline_(pipeline), false);
 }
 
-PipeRunner::PipeRunner(int argc, char* argv[]) : runnerOptionsDescription_("PipeRunner options") {
+PipeRunner::PipeRunner(int argc, char* argv[])
+  : runnerOptionsDescription_("PipeRunner options") {
+
     std::vector<std::string> args(argv, argv + argc);
-    parseIntoGraph_<std::istream,std::ostream>(args, true);
+    parseIntoGraph_<std::istream, std::ostream>(args, true);
 }
 
-PipeRunner::PipeRunner(std::vector<std::string> args) : runnerOptionsDescription_("PipeRunner options") {
-    parseIntoGraph_<std::istream,std::ostream>(args, false);
+PipeRunner::PipeRunner(std::vector<std::string> args)
+  : runnerOptionsDescription_("PipeRunner options") {
+
+    parseIntoGraph_<std::istream, std::ostream>(args, false);
 }
 
 int PipeRunner::run(std::istream& in, std::ostream& out) {
-    return run_<std::istream,std::ostream>(in,out);
+    return run_<std::istream, std::ostream>(in,out);
 }
 
 const std::string PipeRunner::PIPELINE_SEPARATOR = "!";
@@ -49,7 +55,7 @@ void PipeRunner::parseIntoGraph_(std::vector<std::string> args, bool isTheFirstA
 
     parseIntoPipelineSpecification_(args, isTheFirstArgProgramName, pipelineSpecification_);
     pipelineSpecification2Graph_(pipelineSpecification_, firstNode, lastNode);
-    completeGraph_<Source,Sink>();
+    completeGraph_<Source, Sink>();
 }
 
 void PipeRunner::parseRunnerProgramOptions_(std::vector<std::string> &args) {
@@ -210,7 +216,7 @@ int PipeRunner::run_(Source& in, Sink& out) {
     PipelineGraph::vertex_descriptor current = firstNode;
 
     do {
-        runPipelineNode_<Source,Sink>(current, lattice, in, out);
+        runPipelineNode_<Source, Sink>(current, lattice, in, out);
         if (!goToNextNode_(current))
             break;
     } while (1);
@@ -276,7 +282,9 @@ bool PipeRunner::goToNextNode_(PipelineGraph::vertex_descriptor& current) {
     return true;
 }
 
-PipeRunner::PipelineNode PipeRunner::pipelineElement2Node_(const PipelineElementSpecification& element) {
+PipeRunner::PipelineNode PipeRunner::pipelineElement2Node_(
+    const PipelineElementSpecification& element) {
+
     ProcessorFactory& factory = getFactory_(element);
 
     return PipelineNode(
@@ -371,7 +379,9 @@ std::ostream * PipeRunner::createOutputStreamOrReturnStandardOutput(const std::s
 }
 
 
-void PipeRunner::closeStreamWithStandardInputOrOutputCheck(std::ios * stream, const std::string & path) {
+void PipeRunner::closeStreamWithStandardInputOrOutputCheck(
+    std::ios * stream, const std::string & path) {
+
     if (!isStandardInputOrOutputFileName(path)) {
         delete stream;
     }
@@ -398,7 +408,7 @@ SV * PipeRunner::run_for_perl(const std::string & inputString) {
     std::istringstream inputStream (inputString, std::istringstream::in);
     PerlLatticeWriterOutput output(outputArray);
 
-    run_<std::istream,PerlLatticeWriterOutput>(inputStream, output);
+    run_<std::istream, PerlLatticeWriterOutput>(inputStream, output);
 
     return newRV_inc((SV *) outputArray);
 }

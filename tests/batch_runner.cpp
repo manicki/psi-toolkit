@@ -80,5 +80,3 @@ std::string BatchRunner::slurpFile_(const boost::filesystem::path& filePath) {
 
     return std::string(&bytes[0], fileSize);
 }
-
-

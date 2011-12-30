@@ -20,5 +20,3 @@ char * HelpSite::processorHelps() {
 
     return stringToChar(streamForHelps.str());
 }
-
-

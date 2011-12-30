@@ -24,7 +24,9 @@ unsigned long LayerTagCollection::getHash() const {
     return v_.to_ulong();
 }
 
-boost::dynamic_bitset<>::size_type LayerTagCollection::resize_(boost::dynamic_bitset<>::size_type size) {
+boost::dynamic_bitset<>::size_type LayerTagCollection::resize_(
+    boost::dynamic_bitset<>::size_type size) {
+
     if (size > v_.size()) {
         v_.resize(size % 32 == 0 ? size : size + 32 - size % 32);
     }

@@ -67,4 +67,3 @@ void JavaVirtualMachine::addJavaClassPath(std::string classPath) {
 void JavaVirtualMachine::addJavaLibraryPath(std::string libraryPath) {
     javaLibraryPath += ":" + libraryPath;
 }
-

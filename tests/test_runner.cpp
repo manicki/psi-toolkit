@@ -1,4 +1,3 @@
-
 /*!development,testing/100
 To run all tests, use `test_runner`:
     :::cltu
@@ -26,5 +25,3 @@ Or you can run a single test case of a given test suite, e.g.:
 #define BOOST_TEST_MODULE Main
 #define BOOST_TEST_MAIN
 #include <boost/test/included/unit_test.hpp>
-
-

@@ -3,10 +3,17 @@
 
 #if HAVE_PCRE
 
-const VariadicFunction2<bool, const PerlStringPiece&, const PCREWrapper&, PerlArg, PCREWrapper::FullMatchN> PCREWrapper::FullMatch;
-const VariadicFunction2<bool, const PerlStringPiece&, const PCREWrapper&, PerlArg, PCREWrapper::PartialMatchN> PCREWrapper::PartialMatch;
-const VariadicFunction2<bool, PerlStringPiece*, const PCREWrapper&, PerlArg, PCREWrapper::ConsumeN> PCREWrapper::Consume;
-const VariadicFunction2<bool, PerlStringPiece*, const PCREWrapper&, PerlArg, PCREWrapper::FindAndConsumeN> PCREWrapper::FindAndConsume;
+const VariadicFunction2<bool, const PerlStringPiece&,
+                        const PCREWrapper&, PerlArg, PCREWrapper::FullMatchN> PCREWrapper::FullMatch;
+
+const VariadicFunction2<bool, const PerlStringPiece&,
+                        const PCREWrapper&, PerlArg, PCREWrapper::PartialMatchN> PCREWrapper::PartialMatch;
+
+const VariadicFunction2<bool, PerlStringPiece*,
+                        const PCREWrapper&, PerlArg, PCREWrapper::ConsumeN> PCREWrapper::Consume;
+
+const VariadicFunction2<bool, PerlStringPiece*,
+                        const PCREWrapper&, PerlArg, PCREWrapper::FindAndConsumeN> PCREWrapper::FindAndConsume;
 
 bool PCREWrapper::FullMatchN(const PerlStringPiece& text,
         const PCREWrapper& re, const PerlArg* const args[], int argc) {
@@ -187,6 +194,5 @@ bool PCREWrapper::FindAndConsumeN(PerlStringPiece* input,
         default: return ((pcrecpp::RE)re).FindAndConsume(input);
     }
 }
-
 
 #endif

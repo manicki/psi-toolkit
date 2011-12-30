@@ -471,7 +471,7 @@ void prepareAdvancedLattice_(Lattice & lattice) {
     LayerTagMask rawMask = lattice.getLayerTagManager().getMask(rawTag);
     LayerTagMask tokenMask = lattice.getLayerTagManager().getMask(tokenTag);
 
-    AnnotationItem aiAla("'Ala'", StringFrag(ltext,0,3));
+    AnnotationItem aiAla("'Ala'", StringFrag(ltext, 0, 3));
     lattice.getAnnotationItemManager().setValue(aiAla, "type", "word");
 
 
@@ -527,7 +527,7 @@ void prepareAdvancedLattice_(Lattice & lattice) {
 
     Lattice::VertexDescriptor preMa = lattice.getVertexForRawCharIndex(4);
 
-    AnnotationItem aiBlank("' '", StringFrag(ltext,3,1));
+    AnnotationItem aiBlank("' '", StringFrag(ltext, 3, 1));
     lattice.getAnnotationItemManager().setValue(aiBlank, "type", "blank");
 
     Lattice::EdgeSequence::Builder blankBuilder(lattice);
@@ -541,7 +541,7 @@ void prepareAdvancedLattice_(Lattice & lattice) {
 
     Lattice::VertexDescriptor postMa = lattice.getVertexForRawCharIndex(6);
 
-    AnnotationItem aiMa("'ma'", StringFrag(ltext,4,2));
+    AnnotationItem aiMa("'ma'", StringFrag(ltext, 4, 2));
     lattice.getAnnotationItemManager().setValue(aiMa, "type", "word");
 
     Lattice::EdgeSequence::Builder maBuilder(lattice);
@@ -586,7 +586,7 @@ void prepareAdvancedLattice_(Lattice & lattice) {
 
     Lattice::VertexDescriptor postKota = lattice.getVertexForRawCharIndex(18);
 
-    AnnotationItem aiKta("'kta'", StringFrag(ltext,15,3));
+    AnnotationItem aiKta("'kta'", StringFrag(ltext, 15, 3));
     lattice.getAnnotationItemManager().setValue(aiKta, "type", "word");
 
     {
@@ -604,7 +604,7 @@ void prepareAdvancedLattice_(Lattice & lattice) {
     }
 
 
-    AnnotationItem aiK("'k", StringFrag(ltext,15,1));
+    AnnotationItem aiK("'k", StringFrag(ltext, 15, 1));
     Lattice::VertexDescriptor vdKO = lattice.addLooseVertex();
     Lattice::EdgeDescriptor edgeCorrectedK = lattice.addEdge(preKota, vdKO, aiK, rawTag);
 
@@ -693,7 +693,7 @@ void prepareAdvancedLattice_(Lattice & lattice) {
 
     Lattice::VertexDescriptor postStop = lattice.getVertexForRawCharIndex(23);
 
-    AnnotationItem aiStop("'.'", StringFrag(ltext,22,1));
+    AnnotationItem aiStop("'.'", StringFrag(ltext, 22, 1));
     lattice.getAnnotationItemManager().setValue(aiStop, "type", "punct");
 
     Lattice::EdgeSequence::Builder stopBuilder(lattice);
@@ -721,5 +721,3 @@ void prepareAdvancedLattice_(Lattice & lattice) {
     lattice.addEdge(preAla, postStop, aiZdanie, parseGobioTag, zdanieBuilder.build());
 
 }
-
-

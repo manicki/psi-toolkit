@@ -15,7 +15,7 @@ void LatticeIterWriter::run() {
         }
         Lattice::InOutEdgesIterator oei
             = lattice_.outEdges(vd, lattice_.getLayerTagManager().anyTag());
-        while(oei.hasNext()) {
+        while (oei.hasNext()) {
             edge = oei.next();
             std::list<std::string> tags
                 = lattice_.getLayerTagManager().getTagNames(lattice_.getEdgeLayerTags(edge));
