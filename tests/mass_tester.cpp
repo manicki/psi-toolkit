@@ -187,7 +187,7 @@ void MassTester::runBatch_(const TestBatch& batch) {
         BatchRunner runner(batch, *reporter_);
 
         while (runner.runSingleTest());
-    } catch (FactoriesKeeper::UnknownProcessorException ex) {
+    } catch (FactoriesKeeper::UnknownProcessorException& ex) {
         WARN("SKIPPING TEST (" << ex.what() << ")");
     }
 }
