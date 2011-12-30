@@ -31,6 +31,7 @@ _test_run_pipe_run_for_perl_with_alternatives2();
 _test_run_pipe_from_string_with_polish_letters();
 _test_run_pipe_run_for_perl_with_polish_letters();
 _test_run_pipe_run_for_perl_with_polish_letters_with_alternatives();
+_test_run_pipe_run_for_perl_with_tokenizer_and_segmenter();
 
 # @ignore (compilation with java is needed)
 #_test_run_pipe_run_for_perl_with_alternatives_with_morfologik();
@@ -165,6 +166,18 @@ sub _test_run_pipe_run_for_perl_with_alternatives_with_morfologik {
 
     _run_test_on_command_run_for_perl($command, $text_to_process, $expected_result);
 }
+
+sub _test_run_pipe_run_for_perl_with_tokenizer_and_segmenter {
+    my $command = "tp-tokenizer --lang pl ! srx-segmenter --lang pl ! perl-simple-writer --tag token --spec segment";
+    my $text_to_process = 'Ala ma kota. Kot ma mysz.';
+    my $expected_result = [
+        ['Ala', 'ma', 'kota','.'],
+        ['Kot', 'ma', 'mysz','.'],
+    ];
+
+    _run_test_on_command_run_for_perl($command, $text_to_process, $expected_result);
+}
+
 
 sub _run_test_on_command_run_for_perl {
     my ($command, $text_to_process, $expected_result) = @_;
