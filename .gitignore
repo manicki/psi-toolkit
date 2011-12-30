@@ -6,6 +6,7 @@ psi-pipe
 test_runner
 common/config.hpp
 cppcheck-result.xml
+vera++-result.xml
 build/*
 server/t/reports/*
 *.so
