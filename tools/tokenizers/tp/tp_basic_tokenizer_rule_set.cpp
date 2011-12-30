@@ -71,10 +71,10 @@ bool TPBasicTokenizerRuleSet::removeComments(std::string& comm) {
 
     bool whatFollowsWouldBeCommentedOut = false;
 
-    while ((pos = comm.find_first_of('#',pos)) != comm.npos) {
+    while ((pos = comm.find_first_of('#', pos)) != comm.npos) {
 
         if (!Escaping::isEscaped(comm, pos)) {
-            if ((last = comm.find("\n",pos)) != comm.npos)
+            if ((last = comm.find("\n", pos)) != comm.npos)
                 comm.erase(pos, last - pos + 1);
             else {
                 comm.erase(pos);
@@ -149,21 +149,21 @@ std::string TPBasicTokenizerRuleSet::applyDefinitions(
     std::map<std::string, Definition>& defs,
     std::string& subst) {
 
-    if (buffer.length() > 4 && buffer.substr(0,4).compare("def ") == 0)
+    if (buffer.length() > 4 && buffer.substr(0, 4).compare("def ") == 0)
         return "";
 
     size_t pos = 0;
 
-    if ((buffer.length() > 6 && buffer.substr(0,6).compare("ifdef ") == 0)
-        || (buffer.length() > 7 && buffer.substr(0,7).compare("ifndef ") == 0)) {
+    if ((buffer.length() > 6 && buffer.substr(0, 6).compare("ifdef ") == 0)
+        || (buffer.length() > 7 && buffer.substr(0, 7).compare("ifndef ") == 0)) {
 
         size_t begin = buffer.find_first_not_of("\n\r\t ", 6);
         if (begin == buffer.npos)
             begin = 6;
 
-        size_t end = buffer.find_first_of("\n\r\t ",begin);
+        size_t end = buffer.find_first_of("\n\r\t ", begin);
 
-        if(end == buffer.npos)
+        if (end == buffer.npos)
             pos = buffer.length();
         else
             pos = end;
@@ -172,7 +172,7 @@ std::string TPBasicTokenizerRuleSet::applyDefinitions(
     std::list<stackElem> stack;
     std::string context;
 
-    if (buffer.substr(0,7) != "include") {
+    if (buffer.substr(0, 7) != "include") {
 
         size_t inc = buffer.length();
         size_t incFake = 0;
@@ -182,7 +182,7 @@ std::string TPBasicTokenizerRuleSet::applyDefinitions(
             size_t len = 0;
             std::string candidate;
 
-            for(std::map<std::string, Definition>::iterator def = defs.begin();
+            for (std::map<std::string, Definition>::iterator def = defs.begin();
                 def != defs.end();
                 ++def) {
 
@@ -209,16 +209,16 @@ std::string TPBasicTokenizerRuleSet::applyDefinitions(
 
                 // ???
                 while ((inc = buffer.find("@include", incFake)) != buffer.npos
-                       && inc > 0 && (incFake = buffer.find("\\@include",inc - 1) == inc -1))
+                       && inc > 0 && (incFake = buffer.find("\\@include", inc - 1) == inc -1))
                     incFake = inc + 1;
             }
             else {
                 ++pos;
 
-                while(!stack.empty() && stack.back().epos <= pos) {
+                while (!stack.empty() && stack.back().epos <= pos) {
                     stackElem sTemp = stack.back();
                     stack.pop_back();
-                    if(!stack.empty()) {
+                    if (!stack.empty()) {
                         stack.back().epos += sTemp.len;
                         stack.back().len += sTemp.len;
                     }
@@ -264,7 +264,7 @@ void TPBasicTokenizerRuleSet::isEmpty(
 
     PerlRegExp empty("^\\s+$");
 
-    if(PerlRegExp::FullMatch(buffer, empty))
+    if (PerlRegExp::FullMatch(buffer, empty))
         throw new TPTokenizerException(std::string(msg) + "in: "+ context + "at: " + itoa(filePos));
 }
 
@@ -289,7 +289,7 @@ void TPBasicTokenizerRuleSet::readRule(
 
     isEmpty(ureg, "empty rule is unacceptable", context, filePos);
 
-    while(changeHereDoc(ureg));
+    while (changeHereDoc(ureg));
 
     PerlRegExp white("((?:^|[^\\\\])(?:\\\\\\\\)*)\\s+");
     PerlRegExp::GlobalReplace(&ureg, white, "\\1");
@@ -305,12 +305,12 @@ void TPBasicTokenizerRuleSet::readRule(
 
     boost::shared_ptr<PerlRegExp> reg(new PerlRegExp(ureg));
 
-    if(!reg->ok())
-    	throw TPTokenizerException(std::string("regex cannot be compiled: \n|")
+    if (!reg->ok())
+        throw TPTokenizerException(std::string("regex cannot be compiled: \n|")
                                    + ureg
                                    + std::string("| \nw: ")+context);
     else {
-        if(uname == MAIN_REGEX_NAME)
+        if (uname == MAIN_REGEX_NAME)
             mainRegex = reg;
         else
             addRegex(reg, ucat, uname);
@@ -338,7 +338,7 @@ void TPBasicTokenizerRuleSet::readInclude(
 
             std::string res;
             nameStream >> res;
-            if(!res.empty())
+            if (!res.empty())
                throw TPTokenizerException(
                    std::string("no filename to include ")
                    +context
@@ -356,7 +356,7 @@ void TPBasicTokenizerRuleSet::readInclude(
 
         std::stringstream nameStream(resbuffer);
         nameStream >> name;
-        if(name.empty())
+        if (name.empty())
             throw TPTokenizerException(
                 std::string("no file name to include")
                 +context
@@ -365,7 +365,7 @@ void TPBasicTokenizerRuleSet::readInclude(
 
         std::string res;
         nameStream >> res;
-        if(!res.empty())
+        if (!res.empty())
             throw TPTokenizerException(
                 std::string("multi-element name should be quoted")
                 +context
@@ -394,17 +394,17 @@ void TPBasicTokenizerRuleSet::readDefinition(
 
     std::stringbuf stdbuf;
 
-    if(incl.eof())
+    if (incl.eof())
         throw TPTokenizerException(std::string("definition body expected")
                                    +context+std::string(":")+itoa(filePos));
 
-    incl.get(stdbuf,'\0');
+    incl.get(stdbuf, '\0');
     val = stdbuf.str();
     size_t pos = 0;
 
     while ((pos = val.find_first_of("#@", pos)) != val.npos) {
         size_t last = val.find_last_not_of('\\', pos - 1);
-        if((last == val.npos) && (val.length() > 0))
+        if ((last == val.npos) && (val.length() > 0))
             last = -1;
 
         // ???
@@ -412,7 +412,7 @@ void TPBasicTokenizerRuleSet::readDefinition(
         // \\\@ => \@
         // \\\\\@ => \\\@
         if ((pos - last) % 2 == 0) {
-            if(pos - last > 2) {
+            if (pos - last > 2) {
                 val.replace(pos-3, 3, 1, '\\');
                 pos -= 2;
             }
@@ -422,7 +422,7 @@ void TPBasicTokenizerRuleSet::readDefinition(
         ++pos;
     }
 
-    if(defs.find(name) != defs.end())
+    if (defs.find(name) != defs.end())
         WARN(std::string("redefinition")
              << name
              << std::string(" in ")
@@ -431,7 +431,7 @@ void TPBasicTokenizerRuleSet::readDefinition(
 
     trim(val);
 
-    defs.insert(std::pair<std::string, Definition>(name, Definition(val,context)));
+    defs.insert(std::pair<std::string, Definition>(name, Definition(val, context)));
 }
 
 void TPBasicTokenizerRuleSet::readIfDef(std::string& resbuffer, std::string context,
@@ -464,16 +464,16 @@ void TPBasicTokenizerRuleSet::readIf(
     nameStream >> name;
     trim(name);
 
-    if(name.empty())
+    if (name.empty())
        throw TPTokenizerException(std::string("ifdef without a condition")+context+std::string(":")+itoa(filePos));
 
     std::string res;
     nameStream >> res;
 
-    if(!res.empty())
+    if (!res.empty())
         throw TPTokenizerException(std::string("ifdef - unexpected quotes")+context+std::string(":")+itoa(filePos));
 
-    if(openedIf && ((defs.find(name) == defs.end()) == expectation)) {
+    if (openedIf && ((defs.find(name) == defs.end()) == expectation)) {
         ifstack.push_back(IfElem(true, context, filePos, TIF));
         openedIf = false;
     }
@@ -482,12 +482,12 @@ void TPBasicTokenizerRuleSet::readIf(
 };
 
 void TPBasicTokenizerRuleSet::readElse(
-    std::string context,size_t & filePos,
+    std::string context, size_t & filePos,
     std::list<IfElem> & ifstack) {
 
-    if(!openedIf && ifstack.back().getValue()) {
+    if (!openedIf && ifstack.back().getValue()) {
 
-        if(ifstack.back().getType() == TELSE)
+        if (ifstack.back().getType() == TELSE)
             throw TPTokenizerException(std::string("too many else")
                                        +context+std::string(":")+itoa(filePos));
         openedIf = true;
@@ -503,7 +503,7 @@ void TPBasicTokenizerRuleSet::readElse(
 
 void TPBasicTokenizerRuleSet::readEndIf(std::list<IfElem> & ifstack) {
 
-    if(!openedIf && ifstack.back().getValue()) {
+    if (!openedIf && ifstack.back().getValue()) {
         openedIf = true;
     }
 
@@ -519,35 +519,35 @@ void TPBasicTokenizerRuleSet::parseLine(
     size_t& filePos,
     std::list<IfElem>& ifstack) {
 
-    if (resbuffer.length() > 5 && resbuffer.substr(0,5).compare("rule ") == 0) {
-        resbuffer = resbuffer.erase(0,5);
-        if(openedIf)
+    if (resbuffer.length() > 5 && resbuffer.substr(0, 5).compare("rule ") == 0) {
+        resbuffer = resbuffer.erase(0, 5);
+        if (openedIf)
             readRule(resbuffer, context, filePos);
     }
-    else if (resbuffer.length() > 8 && resbuffer.substr(0,8).compare("include ") == 0) {
-        resbuffer = resbuffer.erase(0,7);
-        if(openedIf)
+    else if (resbuffer.length() > 8 && resbuffer.substr(0, 8).compare("include ") == 0) {
+        resbuffer = resbuffer.erase(0, 7);
+        if (openedIf)
             readInclude(resbuffer, paths, context, opened, filePos, defs);
     }
-    else if(resbuffer.length() > 4 && resbuffer.substr(0,4).compare("def ") == 0) {
-        resbuffer = resbuffer.erase(0,4);
-        if(openedIf)
+    else if (resbuffer.length() > 4 && resbuffer.substr(0, 4).compare("def ") == 0) {
+        resbuffer = resbuffer.erase(0, 4);
+        if (openedIf)
             readDefinition(resbuffer, context, filePos, defs);
     }
-    else if(resbuffer.length() > 6 && resbuffer.substr(0,6).compare("ifdef ") == 0) {
-        resbuffer = resbuffer.erase(0,6);
+    else if (resbuffer.length() > 6 && resbuffer.substr(0, 6).compare("ifdef ") == 0) {
+        resbuffer = resbuffer.erase(0, 6);
         readIfDef(resbuffer, context, filePos, defs, ifstack);
     }
-    else if(resbuffer.length() > 7 && resbuffer.substr(0,7).compare("ifndef ") == 0) {
-        resbuffer = resbuffer.erase(0,7);
+    else if (resbuffer.length() > 7 && resbuffer.substr(0, 7).compare("ifndef ") == 0) {
+        resbuffer = resbuffer.erase(0, 7);
         readIfNDef(resbuffer, context, filePos, defs, ifstack);
     }
-    else if(resbuffer.length() >= 4 && resbuffer.substr(0,4).compare("else") == 0) {
-        resbuffer = resbuffer.erase(0,4);
+    else if (resbuffer.length() >= 4 && resbuffer.substr(0, 4).compare("else") == 0) {
+        resbuffer = resbuffer.erase(0, 4);
         readElse(context, filePos, ifstack);
     }
-    else if(resbuffer.length() >= 5 && resbuffer.substr(0,5).compare("endif") == 0) {
-        resbuffer = resbuffer.erase(0,5);
+    else if (resbuffer.length() >= 5 && resbuffer.substr(0, 5).compare("endif") == 0) {
+        resbuffer = resbuffer.erase(0, 5);
         readEndIf(ifstack);
     }
     else
@@ -578,11 +578,11 @@ void TPBasicTokenizerRuleSet::subLoad(
             INFO("trying to open `" << fileName << "'");
             std::ifstream ins(fileName.c_str());
 
-            if(ins) {
+            if (ins) {
                 std::list<IfElem> ifstack;
                 size_t filePos = 1;
 
-                while(!ins.eof()) {
+                while (!ins.eof()) {
 
                     size_t beginPos = filePos;
                     loadWholeElement(ins, buffer, filePos);
@@ -603,7 +603,7 @@ void TPBasicTokenizerRuleSet::subLoad(
                         std::string subst;
                         std::string substRes = applyDefinitions(buffer, defs, subst);
 
-                        if(!substRes.empty())
+                        if (!substRes.empty())
                             throw TPTokenizerException(
                                 std::string("definition loop: ")
                                 + substRes
@@ -611,7 +611,8 @@ void TPBasicTokenizerRuleSet::subLoad(
                                 + std::string(" file:") + fileName);
 
                         std::stringstream st(buffer);
-                        std::string tempContext = toLoad + "-->" + fileName +":"+itoa(beginPos)+"\nw: "+ context + subst;
+                        std::string tempContext = toLoad + "-->" +
+                            fileName +":"+itoa(beginPos)+"\nw: "+ context + subst;
                         std::string resBuffer;
 
                         while (!st.eof()) {
@@ -635,9 +636,9 @@ void TPBasicTokenizerRuleSet::subLoad(
                                         + std::string("in line: ") + itoa(beginPos)
                                         + std::string(" file:") + fileName);
 
-                                returnToTheBuffer(st,resBuffer);
+                                returnToTheBuffer(st, resBuffer);
                                 resBuffer = "";
-                                loadWholeElement(st,resBuffer);
+                                loadWholeElement(st, resBuffer);
                                 tempContext +=subst;
 
                                 if (firstReadEmpty)
@@ -691,7 +692,7 @@ void TPBasicTokenizerRuleSet::load(
 
     try {
 
-        for(std::list<std::string>::iterator i_toBeLoaded = filesToLoad.begin();
+        for (std::list<std::string>::iterator i_toBeLoaded = filesToLoad.begin();
             i_toBeLoaded  != filesToLoad.end();
             ++i_toBeLoaded) {
 
@@ -719,7 +720,7 @@ void TPBasicTokenizerRuleSet::load(
                     std::list<IfElem> ifstack;
                     size_t filePos = 1;
 
-                    while(!ins.eof()) {
+                    while (!ins.eof()) {
 
                         size_t beginPos = filePos;
                         loadWholeElement(ins, buffer, filePos);
@@ -728,12 +729,12 @@ void TPBasicTokenizerRuleSet::load(
 
                         trim(buffer);
 
-                        if(buffer.empty()) {
-                            if(firstReadEmpty)
+                        if (buffer.empty()) {
+                            if (firstReadEmpty)
                                 firstReadEmpty = false;
                         }
                         else {
-                            if(firstReadEmpty)
+                            if (firstReadEmpty)
                                 throw
                                     TPTokenizerException("text with no @rule/@include/@def: "
                                                          +itoa(beginPos)+" file: "+context+"\n");
@@ -756,7 +757,7 @@ void TPBasicTokenizerRuleSet::load(
                                 loadWholeElement(st, resBuffer);
                                 removeComments(resBuffer);
 
-                                if(resBuffer.empty()) {
+                                if (resBuffer.empty()) {
                                     WARN("empty @ in "
                                          << beginPos << fileName);
                                 }
@@ -773,9 +774,9 @@ void TPBasicTokenizerRuleSet::load(
                                             +std::string(" file:")+fileName);
 
 
-                                    returnToTheBuffer(st,resBuffer);
+                                    returnToTheBuffer(st, resBuffer);
                                     resBuffer = "";
-                                    loadWholeElement(st,resBuffer);
+                                    loadWholeElement(st, resBuffer);
                                     tempContext += subst;
 
                                     parseLine(resBuffer,
@@ -809,7 +810,7 @@ void TPBasicTokenizerRuleSet::load(
                     + (*i_toBeLoaded) + "'");
         }
 
-        if(!mainRegex)
+        if (!mainRegex)
             throw TPTokenizerException(std::string("no main_regex rule"));
     }
     catch (TPTokenizerException& ex) {
@@ -819,7 +820,7 @@ void TPBasicTokenizerRuleSet::load(
     }
 
     clearState(definitions, opened);
-    reverse(regs.begin(),regs.end());
+    reverse(regs.begin(), regs.end());
 }
 
 bool TPBasicTokenizerRuleSet::load(std::string path) {
@@ -829,7 +830,7 @@ bool TPBasicTokenizerRuleSet::load(std::string path) {
     std::list<std::string> filesToLoad;
     filesToLoad.push_back("main");
 
-    load(paths,filesToLoad);
+    load(paths, filesToLoad);
 
     return true;
 }
@@ -866,8 +867,8 @@ std::string TPBasicTokenizerRuleSet::getRegexCategory(size_t i) const {
 }
 
 std::string TPBasicTokenizerRuleSet::getRegexCategory(std::string &name) const {
-    for(size_t i=0; i<regs.size(); ++i) {
-        if(regs[i].name == name) return regs[i].category;
+    for (size_t i=0; i<regs.size(); ++i) {
+        if (regs[i].name == name) return regs[i].category;
     }
     return std::string("");
 }
@@ -888,4 +889,3 @@ size_t TPBasicTokenizerRuleSet::getRegexCount() const {
 const size_t TPBasicTokenizerRuleSet::MAXSTACKSIZE = 15;
 
 const std::string TPBasicTokenizerRuleSet::MAIN_REGEX_NAME = "main_regex";
-

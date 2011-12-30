@@ -21,10 +21,10 @@ Annotator* TpTokenizer::Factory::doCreateAnnotator(
     boost::filesystem::path rules
         = fileFetcher.getOneFile(rulesFileSpec);
 
-    std::map<std::string,std::string> rawMapping =
+    std::map<std::string, std::string> rawMapping =
         parseMappingOption_(options["mapping"].as<std::string>(), lang);
 
-    std::map<std::string,boost::filesystem::path> mapping =
+    std::map<std::string, boost::filesystem::path> mapping =
         substituteMapping_(rawMapping, fileFetcher);
 
     return new TpTokenizer(rules, mapping);
@@ -73,11 +73,11 @@ std::string TpTokenizer::Factory::doGetContinuation(
     return "simple-writer";
 }
 
-std::map<std::string,std::string> TpTokenizer::Factory::parseMappingOption_(
+std::map<std::string, std::string> TpTokenizer::Factory::parseMappingOption_(
     const std::string& mappingOption,
     const std::string& lang) {
 
-    std::map<std::string,std::string> mapping;
+    std::map<std::string, std::string> mapping;
 
     std::vector<std::string> assignments;
     boost::split(assignments, mappingOption, boost::is_any_of(";"));
@@ -109,14 +109,14 @@ std::map<std::string,std::string> TpTokenizer::Factory::parseMappingOption_(
     return mapping;
 }
 
-std::map<std::string,boost::filesystem::path>
+std::map<std::string, boost::filesystem::path>
 TpTokenizer::Factory::substituteMapping_(
-    const std::map<std::string,std::string>& rawMapping,
+    const std::map<std::string, std::string>& rawMapping,
     const LangSpecificProcessorFileFetcher& fileFetcher) {
 
-    std::map<std::string,boost::filesystem::path> mapping;
+    std::map<std::string, boost::filesystem::path> mapping;
 
-    for (std::map<std::string,std::string>::const_iterator iter
+    for (std::map<std::string, std::string>::const_iterator iter
              = rawMapping.begin();
          iter != rawMapping.end();
          ++iter)
@@ -133,11 +133,11 @@ const std::string TpTokenizer::Factory::DEFAULT_RULE_FILE_MAPPING
 
 TpTokenizer::TpTokenizer(
     boost::filesystem::path rules,
-    const std::map<std::string,boost::filesystem::path>& mapping) {
+    const std::map<std::string, boost::filesystem::path>& mapping) {
     ruleSet_.reset(new TPBasicTokenizerRuleSet());
 
-    std::map<std::string,std::string> pathMap;
-    for (std::map<std::string,boost::filesystem::path>::const_iterator iter
+    std::map<std::string, std::string> pathMap;
+    for (std::map<std::string, boost::filesystem::path>::const_iterator iter
              = mapping.begin();
          iter != mapping.end();
          ++iter)
