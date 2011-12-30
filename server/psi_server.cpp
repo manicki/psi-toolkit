@@ -222,7 +222,7 @@ std::string PsiServer::urlDecode(std::string & encodedString) {
     for (i = 0; i < encodedString.length(); i++) {
 
         if (int(encodedString[i]) == 37) {
-            sscanf(encodedString.substr(i+1, 2).c_str(), "%x", &j);
+            sscanf(encodedString.substr(i+1, 2).c_str(), "%2x", &j);
 
             ch = static_cast<char>(j);
             decodedString += ch;

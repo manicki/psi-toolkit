@@ -589,8 +589,6 @@ void TPBasicTokenizerRuleSet::subLoad(
 
                     removeComments(buffer);
 
-                    std::string tempNoLine = toLoad + "-->" + fileName +"\nw: "+ context;
-
                     trim(buffer);
 
                     if (buffer.empty()) {

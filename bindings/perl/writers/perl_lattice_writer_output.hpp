@@ -8,9 +8,9 @@
 
 #if HAVE_PERL_BINDINGS
 
-#include "EXTERN.h"
-#include "perl.h"
-#include "XSUB.h"
+#include <EXTERN.h>
+#include <perl.h>
+#include <XSUB.h>
 
 typedef AV* PerlArrayPointer;
 typedef SV* PerlReference;

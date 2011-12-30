@@ -146,11 +146,9 @@ bool Tagset::checkAttributeValue(std::string &attribute, std::string &value) {
     if (p != attributes.end()) {
         std::vector<std::string>::iterator i = p->second.begin();
         while (i != p->second.end()) {
-            if (*i == value) {
+            if (*i == value)
                 return true;
-                break;
-            }
-            ++ i;
+            ++i;
         }
     }
     return false;
