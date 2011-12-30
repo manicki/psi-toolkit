@@ -27,7 +27,7 @@ valgrind --xml=yes --xml-file=valgrind.xml --suppressions=../memcpy.supp ./tests
 xsltproc  ~/valgrind-reports-to-xunit/xslt/valgrind_transform.xsl valgrind.xml > valgrindTestResults.xml
 
 cd ..
-cppcheck -D__cplusplus -f --xml . --enable=all echo `find . -type d ! -path './.git*' ! -path "./${TARGET_DIR}"'*' | perl -ne 'chomp; print "-I$_ "'` -i ${TARGET_DIR}/bindings/perl 2> cppcheck-result.xml
+cppcheck -D__cplusplus -f --xml . --enable=all echo `find . -type d ! -path './.git*' ! -path "./${TARGET_DIR}"'*' | perl -ne 'chomp; print "-I$_ "'` -i ${TARGET_DIR}/bindings/perl -i ${TARGET_DIR}/bindings/python 2> cppcheck-result.xml
 
 if ! type -P jruby > /dev/null; then
     echo -e "WARNING: jRuby has been not found!\n\n"
