@@ -13,3 +13,4 @@ server/t/reports/*
 server/website/storage/*
 \#*\#
 bindings/python/Test/__pycache__
+gcov.output.data

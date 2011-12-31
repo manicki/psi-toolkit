@@ -4,6 +4,38 @@ project(psi-toolkit CXX)
 
 SET(CMAKE_INSTALL_RPATH "${CMAKE_INSTALL_PREFIX}/lib")
 
+# coverage mode
+
+if(CMAKE_CONFIGURATION_TYPES)
+  list(APPEND CMAKE_CONFIGURATION_TYPES Coverage)
+  list(REMOVE_DUPLICATES CMAKE_CONFIGURATION_TYPES)
+  set(CMAKE_CONFIGURATION_TYPES "${CMAKE_CONFIGURATION_TYPES}" CACHE STRING
+    "Add the configurations that we need"
+     FORCE)
+endif()
+
+SET( CMAKE_CXX_FLAGS_COVERAGE "-g -pg -Wall -Wundef -Wnon-virtual-dtor -Wextra -fprofile-arcs -ftest-coverage" CACHE STRING
+    "Flags used by the C++ compiler during maintainer builds."
+    FORCE )
+SET( CMAKE_C_FLAGS_COVERAGE "-g -pg -Wall -pedantic -fprofile-arcs -ftest-coverage" CACHE STRING
+    "Flags used by the C compiler during maintainer builds."
+    FORCE )
+SET( CMAKE_EXE_LINKER_FLAGS_COVERAGE
+    "-g -pg -Wl,--warn-unresolved-symbols,--warn-once -fprofile-arcs -ftest-coverage" CACHE STRING
+    "Flags used for linking binaries during maintainer builds."
+    FORCE )
+SET( CMAKE_SHARED_LINKER_FLAGS_COVERAGE
+    "-g -pg -Wl,--warn-unresolved-symbols,--warn-once -fprofile-arcs -ftest-coverage" CACHE STRING
+    "Flags used by the shared libraries linker during maintainer builds."
+    FORCE )
+MARK_AS_ADVANCED(
+    CMAKE_CXX_FLAGS_COVERAGE
+    CMAKE_C_FLAGS_COVERAGE
+    CMAKE_EXE_LINKER_FLAGS_COVERAGE
+    CMAKE_SHARED_LINKER_FLAGS_COVERAGE)
+
+# ----------------------------------------------------
+
 include_directories(${psi-toolkit_SOURCE_DIR})
 
 # Finds and includes external libraries
@@ -163,4 +195,3 @@ endif(USE_PUDDLE)
 add_subdirectory(tests)
 
 configure_file(${psi-toolkit_SOURCE_DIR}/common/config.hpp.in ${psi-toolkit_SOURCE_DIR}/common/config.hpp)
-
