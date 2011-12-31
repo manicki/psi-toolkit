@@ -2,6 +2,8 @@
 
 # Generating test coverage reports.
 
+HEREDIR=`pwd`
+
 rm -rf gcov.output.dir
 
 TARGET_DIR=build
@@ -13,4 +15,4 @@ rm -rf *.gcov
 ../main-tests.sh
 
 perl ../rungcov.pl
-gcovr -e '/usr' --xml > coverage-report.xml
+gcovr -e '/usr' --xml | perl -pne 's{filename="'$HEREDIR'/}{filename="}' > coverage-report.xml
