@@ -29,7 +29,7 @@ namespace psi {
             state_type current_state = 0;
             while(it != end) {
                 state_type next_state = delta(current_state, *it);    
-                if(next_state != -1)
+                if(next_state != state_type(-1))
                     current_state = next_state;
                 else
                     return false;
@@ -40,11 +40,11 @@ namespace psi {
         
         state_type delta(state_type p, symbol_type a) const {
             if(NDFSA<StateT, ArcT>::m_states.size() < p)
-                return -1;
+                return state_type(-1);
         
             arc_iterator_type arc = find(p, a);
             if(arc == NDFSA<StateT, ArcT>::m_states[p]->end())
-                return -1;
+                return state_type(-1);
             else
                 return arc->getDest();
         }
