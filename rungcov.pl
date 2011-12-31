@@ -40,7 +40,6 @@ sub process_file {
 
         push @source_files, "${dir}/${base_name}.cpp";
 
-        `mkdir -p "../gcov.output.data/$dir"`;
         `cp "$file_name" "../gcov.output.data/${base_name}.gcno"`;
 
         my $gcda_file_name = $file_name;
