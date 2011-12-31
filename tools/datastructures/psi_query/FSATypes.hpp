@@ -3,7 +3,7 @@
     
 namespace psi {
 
-    typedef int State;    
+    typedef unsigned int State;    
     typedef unsigned int Symbol;
     typedef unsigned int Weight;
     
