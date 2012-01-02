@@ -5,6 +5,8 @@
 %}
 
 %include "std_string.i"
+%include "exception.i"
+%include "std_except.i"
 
 %feature("shadow") PipeRunner::run(const std::string&) %{
     use Encode;
@@ -52,6 +54,19 @@
     }
 %}
 
+
+%exception {
+  try {
+    $action
+  }
+  catch(PsiException pe){
+    croak(pe.what());
+  }
+  catch (...) {
+    croak("unknown exception");
+  }
+}
+
 class PipeRunner {
  public:
     explicit PipeRunner(const std::string& pipeline);
@@ -61,3 +76,8 @@ class PipeRunner {
     SV * run_for_perl(const std::string& inputString);
 };
 
+class PsiException : public std::exception {
+ public:
+  PsiException(const std::string& msg);
+  virtual const char* what() const throw();
+};

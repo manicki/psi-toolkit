@@ -32,6 +32,7 @@ sub _find_all_tests {
         push @$tests_array, $fp;
     }
 
+    @$tests_array = sort @$tests_array;
     return $tests_array;
 }
 
@@ -42,6 +43,7 @@ sub _run_tests {
         verbosity => 'verbose',
         formatter_class => 'TAP::Formatter::JUnit',
     } );
+
 
     $harness->runtests(@$tests_array);
 }
