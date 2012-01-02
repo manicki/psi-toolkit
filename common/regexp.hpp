@@ -107,4 +107,3 @@ class PCREWrapper : private pcrecpp::RE {
 #endif
 
 #endif
-
