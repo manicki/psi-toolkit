@@ -1,15 +1,44 @@
+General conventions
+-------------------
 
 * remove trailing spaces at the end of each line of code (check the
   appropriate option in your editor)
 
+* remove trailing lines at the end of the file
+
 * DO NOT USE TAB CHARACTERS, set TAB to 4 spaces in your editor
+
+* do not write lines longer than 100 characters
+
+* use Java-like coding conventions for braces
+
+Naming conventions
+------------------
+
+* use FOO_HDR constant at the beginning of header file "foo.hpp"
 
 * use CamelCaseWithFirstLetterUpperCase for class names
 
 * use camelCaseWithFirstLetterLowerCase for methods and local variables
 
 * use camelCaseWithFirstLetterLowerCaseAndTrailingUnderscore_ for
-  private variables
+  private methods and variables (except for virtual methods, see the
+  next point)
 
-* use Java-like coding conventions for braces
+* virtual methods should not be public - make a non-virtual public method
+  `foo(..)` in the base class which delegates to virtual private `doFoo(...)`,
+  `doFoo` should be defined in all the derived classes
 
+* use ALL_UPPER_CASE_LETTERS_AND_UNDERSCORES for constants
+
+Commit messages
+---------------
+
+Always write meaningful commit messages. Use English.
+
+For fixes of bugs specified in Redmine use the following convention:
+
+    fixes #N (M)
+
+where N is the Redmine bug number, M is the description of the problem
+(could be simply the subject of the bug from Redmine).
