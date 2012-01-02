@@ -125,7 +125,7 @@ std::string PipeSite::runPipe(std::string input) {
 
         createFileFromOutput(oss.str());
     }
-    catch(std::exception& e) {
+    catch (std::exception& e) {
         oss << "There are some problems: " << e.what() << std::endl
             << "Check the pipe-line specification and try once again.";
     }

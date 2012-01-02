@@ -34,4 +34,3 @@ private:
     OutputSaver outputSaver;
     void createFileFromOutput(std::string output);
 };
-

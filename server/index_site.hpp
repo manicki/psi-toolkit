@@ -6,13 +6,13 @@ class IndexSite : public TemplateSite
 {
 
 public:
-	std::string inputText;
+    std::string inputText;
 
-	IndexSite(PsiServer& server);
+    IndexSite(PsiServer& server);
 
-	char * info();
+    char * info();
     char * scriptsPart();
     char * headerPart();
-	char * footerPart();
+    char * footerPart();
 
 };
