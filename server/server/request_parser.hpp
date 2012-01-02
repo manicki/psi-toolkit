@@ -81,7 +81,7 @@ private:
     header_value,
     expecting_newline_2,
     expecting_newline_3,
-	post_line_start,
+    post_line_start,
     multipart_start
   } state_;
 
