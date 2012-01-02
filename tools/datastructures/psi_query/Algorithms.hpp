@@ -15,7 +15,7 @@ namespace psi {
         typedef typename FSA::arc_iterator_type arc_iterator_type;
         
         Reverser(const FSA &fsa) : m_fsa(fsa) {
-            for(state_type p = 0; p < m_fsa.size(); p++) {
+            for(state_type p = 0; (size_t)p < m_fsa.size(); p++) {
                 ArcRange<arc_iterator_type> arcRange = m_fsa.getArcs(p);
                 for(arc_iterator_type ait = arcRange.first; ait != arcRange.second; ait++) {
                     state_type temp = ait->getDest();

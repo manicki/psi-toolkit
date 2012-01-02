@@ -110,7 +110,7 @@ namespace psi {
     
     template <typename StateT, typename ArcT>
     inline std::set<StateT> NDFSA<StateT, ArcT>::deltaPrime(StateT p, typename ArcT::symbol_type a) const {
-        if(m_states.size() < p)
+        if(m_states.size() < (size_t)p)
             return std::set<StateT>();
     
         std::set<StateT> destinations;

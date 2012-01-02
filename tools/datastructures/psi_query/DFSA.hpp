@@ -39,7 +39,7 @@ namespace psi {
         }
         
         state_type delta(state_type p, symbol_type a) const {
-            if(NDFSA<StateT, ArcT>::m_states.size() < p)
+            if(NDFSA<StateT, ArcT>::m_states.size() < (size_t)p)
                 return state_type(-1);
         
             arc_iterator_type arc = find(p, a);
