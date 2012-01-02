@@ -1,4 +1,3 @@
-
 #include "puddle_util.hpp"
 
 namespace poleng {
@@ -249,4 +248,3 @@ namespace poleng {
     }
 
 }
-

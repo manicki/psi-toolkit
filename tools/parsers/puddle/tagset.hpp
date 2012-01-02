@@ -1,5 +1,5 @@
-#ifndef TAGSET_H__
-#define TAGSET_H__
+#ifndef TAGSET_HDR
+#define TAGSET_HDR
 
 #include <string>
 #include <map>
@@ -106,4 +106,3 @@ typedef boost::shared_ptr<Tagset> TagsetPtr;
 }
 
 #endif
-

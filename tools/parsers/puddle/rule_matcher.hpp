@@ -1,5 +1,5 @@
-#ifndef RULEMATCHER_H__
-#define RULEMATCHER_H__
+#ifndef RULEMATCHER_HDR
+#define RULEMATCHER_HDR
 
 #include <string>
 #include <vector>
@@ -50,4 +50,3 @@ namespace poleng {
 }
 
 #endif
-

@@ -1,4 +1,3 @@
-
 #include "attach_action.hpp"
 
 #include <iostream>
@@ -100,4 +99,3 @@ void AttachAction::init(std::string aGroup, int aStart, int aEnd, int aHead,
 }
 
 }
-

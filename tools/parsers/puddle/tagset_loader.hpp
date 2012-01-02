@@ -1,5 +1,5 @@
-#ifndef TAGSETLOADER_H__
-#define TAGSETLOADER_H__
+#ifndef TAGSETLOADER_HDR
+#define TAGSETLOADER_HDR
 
 #include <string>
 #include "tagset.hpp"

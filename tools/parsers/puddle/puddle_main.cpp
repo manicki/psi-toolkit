@@ -21,7 +21,8 @@ int main(int argc, char **argv) {
         ("help", "prints this information")
         ;
     boost::program_options::variables_map vm;
-    boost::program_options::store(boost::program_options::parse_command_line(argc, argv, desc), vm);
+    boost::program_options::store(
+            boost::program_options::parse_command_line(argc, argv, desc), vm );
     boost::program_options::notify(vm);
     if (vm.count("help"))
     {
@@ -31,7 +32,8 @@ int main(int argc, char **argv) {
 
     poleng::bonsai::puddle::TagsetLoader tagset_loader;
     poleng::bonsai::puddle::RuleLoader rule_loader;
-    poleng::bonsai::puddle::TaggerPtr tagger = poleng::bonsai::puddle::TaggerPtr( new poleng::bonsai::puddle::Tagger());
+    poleng::bonsai::puddle::TaggerPtr tagger =
+        poleng::bonsai::puddle::TaggerPtr( new poleng::bonsai::puddle::Tagger());
 
     poleng::bonsai::puddle::Puddle *puddle = new poleng::bonsai::puddle::Puddle();
 

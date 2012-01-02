@@ -1,4 +1,3 @@
-
 #include "tagset.hpp"
 
 #include <iostream>
@@ -9,13 +8,10 @@
 #include <vector>
 #include <map>
 
-namespace poleng
-{
+namespace poleng {
 
-namespace bonsai
-{
-    namespace puddle
-    {
+namespace bonsai {
+    namespace puddle {
 
 Tagset::Tagset() {
     initProperties();
@@ -288,7 +284,8 @@ void Tagset::readDescFromFile(std::string &filename) {
                     else if (value == "0")
                         includepos = false;
                     else
-                        throw PuddleTagsetSyntaxException("Unknown value '" + value + "' of the option '" + key + "'.");
+                        throw PuddleTagsetSyntaxException(
+                                "Unknown value '" + value + "' of the option '" + key + "'.");
                     continue;
                 } else if (key == "desc-terminals") {
                     if (value == "1")
@@ -296,7 +293,8 @@ void Tagset::readDescFromFile(std::string &filename) {
                     else if (value == "0")
                         desc_terminals = false;
                     else
-                        throw PuddleTagsetSyntaxException("Unknown value '" + value + "' of the option '" + key + "'.");
+                        throw PuddleTagsetSyntaxException(
+                                "Unknown value '" + value + "' of the option '" + key + "'.");
                     continue;
                 } else if (key == "desc-nonterminals") {
                     if (value == "1")
@@ -304,7 +302,8 @@ void Tagset::readDescFromFile(std::string &filename) {
                     else if (value == "0")
                         desc_nonterminals = false;
                     else
-                        throw PuddleTagsetSyntaxException("Unknown value '" + value + "' of the option '" + key + "'.");
+                        throw PuddleTagsetSyntaxException(
+                                "Unknown value '" + value + "' of the option '" + key + "'.");
                     continue;
                 } else if (key == "separator") {
                     desc_separator = value;
@@ -318,7 +317,8 @@ void Tagset::readDescFromFile(std::string &filename) {
             std::string pos;
             std::string values;
             if (RegExp::FullMatch(line, regKeyVal, &pos, &values)) {
-                std::map<std::string, std::vector<std::string> >::iterator p = partsOfSpeech.find(pos);
+                std::map<std::string, std::vector<std::string> >::iterator p =
+                    partsOfSpeech.find(pos);
                 if (p == partsOfSpeech.end()) {
                     throw PuddleTagsetSyntaxException("Unknown part of speech '" + pos + "'.");
                 }
@@ -336,7 +336,8 @@ void Tagset::readDescFromFile(std::string &filename) {
                 for (std::vector<std::string>::iterator val_it = valuesVector.begin();
                         val_it != valuesVector.end(); ++ val_it) {
                     std::string val = boost::algorithm::trim_copy(*val_it);
-                    std::map<std::string, std::vector<std::string> >::iterator q = attributes.find(val);
+                    std::map<std::string, std::vector<std::string> >::iterator q =
+                        attributes.find(val);
                     if (q == attributes.end()) {
                         throw PuddleTagsetSyntaxException("Unknown attribute '" + val + "'.");
                     }
@@ -351,7 +352,8 @@ void Tagset::readDescFromFile(std::string &filename) {
                     pattern += ").*";
                     patterns.push_back(pattern);
                 }
-                token_description.insert(std::pair<std::string, std::vector<std::string> >(pos, patterns));
+                token_description.insert(
+                        std::pair<std::string, std::vector<std::string> >(pos, patterns));
             }
         }
 
@@ -724,4 +726,3 @@ void Tagset::initProperties() const { }
 }
 
 }
-

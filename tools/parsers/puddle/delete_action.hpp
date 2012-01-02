@@ -1,5 +1,5 @@
-#ifndef DELETEACTION_H__
-#define DELETEACTION_H__
+#ifndef DELETEACTION_HDR
+#define DELETEACTION_HDR
 
 #include "action.hpp"
 

@@ -1,5 +1,5 @@
-#ifndef GROUPACTION_H__
-#define GROUPACTION_H__
+#ifndef GROUPACTION_HDR
+#define GROUPACTION_HDR
 
 #include "action.hpp"
 

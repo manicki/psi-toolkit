@@ -1,14 +1,11 @@
-
 #include "transform_action.hpp"
 
 #include <iostream>
 #include <sstream>
 #include <boost/lexical_cast.hpp>
 
-namespace poleng
-{
-namespace bonsai
-{
+namespace poleng {
+namespace bonsai {
     namespace puddle
     {
 
@@ -24,7 +21,8 @@ bool TransformAction::apply(Lattice &lattice, int matchedStartIndex,
     int before = util::getTransformActionParams(ruleTokenSizes, element);
 
     Lattice::VertexDescriptor startVertex = lattice::getVertex(
-            lattice, before, matchedStartIndex); //@todo: czy te numerki tu sie kupy trzymaja trzeba sprawdzic
+            lattice, before, matchedStartIndex);
+    //@todo: czy te numerki tu sie kupy trzymaja trzeba sprawdzic
     Lattice::VertexDescriptor headVertex = lattice::getVertex(
             lattice, before, matchedStartIndex);
     Lattice::VertexDescriptor endVertex = lattice::getVertex(
@@ -73,8 +71,11 @@ bool TransformAction::test(Lattice &lattice, int matchedStartIndex,
     //Lattice::VertexDescriptor vertex = matchedStartIndex + before;
     Lattice::VertexDescriptor vertex = lattice::getVertex(lattice,
             before, matchedStartIndex);
-//    //@todo: czy to sprawdzenie jest nadal konieczne? ta funkcja getVertex nie robi czegos takiego?
-//    while (lattice::getTopEdges(lattice, vertex).size() == 0) { //if there is no edge at a given position, proceed to the next vertex, as it may be a whitespace
+//    //@todo: czy to sprawdzenie jest nadal konieczne?
+//    ta funkcja getVertex nie robi czegos takiego?
+//    while (lattice::getTopEdges(lattice, vertex).size() == 0) {
+//    //if there is no edge at a given position, proceed to the next vertex,
+//    as it may be a whitespace
 //        before ++;
 //        vertex = matchedStartIndex + before;
 //    }
@@ -104,4 +105,3 @@ void TransformAction::init(std::string aGroup, int aElement,
 }
 
 }
-

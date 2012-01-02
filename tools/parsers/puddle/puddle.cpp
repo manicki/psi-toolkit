@@ -1,4 +1,3 @@
-
 #include "puddle.hpp"
 
 namespace poleng {
@@ -166,4 +165,3 @@ void Puddle::initProperties() {
 }
 
 }
-

@@ -1,25 +1,26 @@
-
 #include "syntok_action.hpp"
 #include <iostream>
 #include <boost/lexical_cast.hpp>
 
-namespace poleng
-{
+namespace poleng {
 
-namespace bonsai
-{
-    namespace puddle
-    {
+namespace bonsai {
+    namespace puddle {
 
 SyntokAction::SyntokAction(int aStart, int aEnd, std::vector<int> aTokenIndices,
         std::vector<Morphology> aMorphology, std::string aRuleName) {
     init(aStart, aEnd, aTokenIndices, aMorphology, aRuleName);
 }
 
-//@todo: opisac dokladnie, co konkretnie po kolei jest robione w ramach implementacji tej akcji (i z kazda akcja co jest robione). pobranie czego, wyliczenie czego, zebranie jakich form, dodanie jakich krawedzi, zastapienie/usuniecie czego, skad
+//@todo: opisac dokladnie, co konkretnie po kolei jest robione w ramach implementacji tej akcji
+//(i z kazda akcja co jest robione). pobranie czego, wyliczenie czego, zebranie jakich form,
+//dodanie jakich krawedzi, zastapienie/usuniecie czego, skad
 //1. ustalenie skad zaczynamy
 //2. zebranie scalonych form bazowych
-//3. wstawienie nowej krawedzi typu token albo grup (w zaleznosci od przelacznika) NOWOSC: wczesniej bylo, ze albo dawaj krawedz group albo nic. teraz musi byc krawedz ,jak graf to jedyna struktura. ewentualnei mozna dac na koniec opcje, wywal syntoki z grafu, przeliczyc reszte grafu
+//3. wstawienie nowej krawedzi typu token albo grup (w zaleznosci od przelacznika)
+//NOWOSC: wczesniej bylo, ze albo dawaj krawedz group albo nic. teraz musi byc krawedz,
+//jak graf to jedyna struktura. ewentualnei mozna dac na koniec opcje,
+//wywal syntoki z grafu, przeliczyc reszte grafu
 bool SyntokAction::apply(Lattice &lattice, int matchedStartIndex,
         RuleTokenSizes &ruleTokenSizes,
         std::list<Lattice::EdgeSequence>&) {

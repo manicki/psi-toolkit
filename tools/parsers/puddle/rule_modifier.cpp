@@ -1,13 +1,9 @@
-
 #include "rule_modifier.hpp"
 
-namespace poleng
-{
+namespace poleng {
 
-namespace bonsai
-{
-    namespace puddle
-    {
+namespace bonsai {
+    namespace puddle     {
 
 RuleModifier::RuleModifier() {
     ruleCompiler = NULL;

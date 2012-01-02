@@ -1,17 +1,13 @@
-
 #include "join_action.hpp"
 
 #include <iostream>
 #include <sstream>
 #include <boost/lexical_cast.hpp>
 
-namespace poleng
-{
+namespace poleng {
 
-namespace bonsai
-{
-    namespace puddle
-    {
+namespace bonsai {
+    namespace puddle {
 
 JoinAction::JoinAction(std::string aGroup, int aStart, int aEnd, int aHead,
         std::string aRuleName) {
@@ -38,7 +34,10 @@ bool JoinAction::apply(Lattice &lattice, int matchedStartIndex,
             lattice, realHead, matchedStartIndex);
     Lattice::VertexDescriptor endVertex = lattice::getVertex(
             lattice, realEnd, matchedStartIndex);
-    lattice::removeParseEdges(lattice, startVertex, endVertex); //@todo: nie jestem przekonany, czy to jest dobre miejsce. addParseEdges moze sie wowczas nie powiesc. z drugiej strony, jak krawedzie nie sa usuniete tylko discarded, to moze sie nic nie stac. co tylko z groupPartitions? nie powinno byc generowane po usunieciu?
+    lattice::removeParseEdges(lattice, startVertex, endVertex); //@todo: nie jestem przekonany,
+    //czy to jest dobre miejsce. addParseEdges moze sie wowczas nie powiesc.
+    //z drugiej strony, jak krawedzie nie sa usuniete tylko discarded, to moze sie nic nie stac.
+    //co tylko z groupPartitions? nie powinno byc generowane po usunieciu?
     std::list<Lattice::EdgeDescriptor> startEdges = lattice::getTopEdges(
             lattice, startVertex);
     std::list<Lattice::EdgeDescriptor> headEdges = lattice::getTopEdges(
@@ -101,4 +100,3 @@ void JoinAction::init(std::string aGroup, int aStart, int aEnd, int aHead,
 }
 
 }
-

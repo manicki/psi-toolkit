@@ -1,4 +1,3 @@
-
 #include "delete_action.hpp"
 #include <iostream>
 
@@ -23,11 +22,14 @@ bool DeleteAction::apply(Lattice &lattice, int matchedStartIndex,
     int before = util::getDeleteActionParams(ruleTokenSizes, tokenIndex);
     //Lattice::VertexDescriptor vertex = lattice::getVertex(lattice,
     //        matchedStartIndex + before);
-    //Lattice::VertexDescriptor vertex = matchedStartIndex; //@todo: tymczasowo. to nie uwzglednia lewego kontekstu
+    //Lattice::VertexDescriptor vertex = matchedStartIndex; //@todo: tymczasowo.
+    //to nie uwzglednia lewego kontekstu
     Lattice::VertexDescriptor vertex = lattice::getVertex(lattice,
             before, matchedStartIndex);
-//    //@todo: czy to sprawdzenie jest nadal konieczne? ta funkcja getVertex nie robi czegos takiego?
-//    while (lattice::getTopEdges(lattice, vertex).size() == 0) { //if there is no edge at a given position, proceed to the next vertex, as it may be a whitespace
+//    //@todo: czy to sprawdzenie jest nadal konieczne?
+//    ta funkcja getVertex nie robi czegos takiego?
+//    while (lattice::getTopEdges(lattice, vertex).size() == 0) {
+//    //if there is no edge at a given position, proceed to the next vertex, as it may be a whitespace
 //        before ++;
 //        vertex = matchedStartIndex + before;
 //    }
@@ -57,11 +59,14 @@ bool DeleteAction::test(Lattice &lattice,
     //Lattice::VertexDescriptor vertex = matchedStartIndex + before;
     //Lattice::VertexDescriptor vertex = lattice::getVertex(lattice,
     //        matchedStartIndex + before);
-    //Lattice::VertexDescriptor vertex = matchedStartIndex; //@todo: tymczasowo. to nie uwzglednia lewego kontekstu
+    //Lattice::VertexDescriptor vertex = matchedStartIndex; //@todo: tymczasowo.
+    //to nie uwzglednia lewego kontekstu
     Lattice::VertexDescriptor vertex = lattice::getVertex(lattice,
             before, matchedStartIndex);
-//    //@todo: czy to sprawdzenie jest nadal konieczne? ta funkcja getVertex nie robi czegos takiego?
-//    while (lattice::getTopEdges(lattice, vertex).size() == 0) { //if there is no edge at a given position, proceed to the next vertex, as it may be a whitespace
+//    //@todo: czy to sprawdzenie jest nadal konieczne?
+//    //ta funkcja getVertex nie robi czegos takiego?
+//    while (lattice::getTopEdges(lattice, vertex).size() == 0) {
+//    //if there is no edge at a given position, proceed to the next vertex, as it may be a whitespace
 //        before ++;
 //        vertex = matchedStartIndex + before;
 //    }

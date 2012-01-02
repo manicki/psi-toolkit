@@ -1,5 +1,5 @@
-#ifndef PARSER_H__
-#define PARSER_H__
+#ifndef PUDDLE_HDR
+#define PUDDLE_HDR
 
 #include "config.hpp"
 #include "annotator.hpp"
@@ -50,7 +50,8 @@ class Puddle : public Annotator {
 
         Puddle();
         Puddle(TagsetPtr tagset_, RulesPtr rules_);
-        virtual void setTagset(bonsai::puddle::TagsetPtr tagset_); //@todo: po kiego te funkcje sa wirtualne?
+        virtual void setTagset(bonsai::puddle::TagsetPtr tagset_);
+        //@todo: po kiego te funkcje sa wirtualne?
         virtual void setRules(bonsai::puddle::RulesPtr rules_);
         bool parse(Lattice &lattice);
 
@@ -91,4 +92,3 @@ typedef boost::shared_ptr<Puddle> PuddlePtr;
 }
 
 #endif
-

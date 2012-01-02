@@ -1,5 +1,5 @@
-#ifndef TRANSFORMACTION_H__
-#define TRANSFORMACTION_H__
+#ifndef TRANSFORMACTION_HDR
+#define TRANSFORMACTION_HDR
 
 #include "action.hpp"
 

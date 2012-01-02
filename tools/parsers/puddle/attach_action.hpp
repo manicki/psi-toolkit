@@ -1,5 +1,5 @@
-#ifndef ATTACHACTION_H__
-#define ATTACHACTION_H__
+#ifndef ATTACHACTION_HDR
+#define ATTACHACTION_HDR
 
 #include "action.hpp"
 

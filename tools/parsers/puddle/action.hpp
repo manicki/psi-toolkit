@@ -1,5 +1,5 @@
-#ifndef ACTION_H__
-#define ACTION_H__
+#ifndef ACTION_HDR
+#define ACTION_HDR
 
 #include "puddle_types.hpp"
 #include <string>
@@ -9,17 +9,12 @@
 #include "puddle_exceptions.hpp"
 #include "puddle_util.hpp"
 
-namespace poleng
-{
+namespace poleng {
+    namespace bonsai {
 
-    namespace bonsai
-    {
+        namespace puddle {
 
-        namespace puddle
-        {
-
-            class Action
-            {
+            class Action {
                 public:
                     Action() { type = "abstract"; }
                     virtual ~Action() { }

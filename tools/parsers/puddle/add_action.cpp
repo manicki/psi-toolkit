@@ -1,4 +1,3 @@
-
 #include "add_action.hpp"
 #include <iostream>
 
@@ -94,12 +93,15 @@ bool AddAction::checkInterpretationsToAdd(Lattice &lattice,
                     interpretations.begin();
                     morph_it != interpretations.end();
                     ++ morph_it) {
-                if (edgeBase == morph_it->begin()->second) { //@todo: poprawic to na porownanie z napisem zrobionym z mapy. swoja droga, ten warunek to ma sens?
+                if (edgeBase == morph_it->begin()->second) { //@todo: poprawic to na porownanie z
+                                                             //napisem zrobionym z mapy.
+                                                             //swoja droga, ten warunek to ma sens?
                     interpretationFound = true;
                     break;
                 }
             }
-            if (interpretationFound) { //if the interpration in the token found, finish testing and do not add the interpration again
+            if (interpretationFound) { //if the interpration in the token found,
+                                       //finish testing and do not add the interpration again
                 ret = false;
                 break;
             }
@@ -136,7 +138,8 @@ void AddAction::addEdges(Lattice &lattice, Lattice::VertexDescriptor startVertex
         }
             if (! allBaseForms) {
                 break;
-                //when base form is explicitly given, take the orth form of the edge an go to the next vertex
+                //when base form is explicitly given,
+                //take the orth form of the edge an go to the next vertex
             }
     }
 }

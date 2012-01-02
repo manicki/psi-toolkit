@@ -1,14 +1,10 @@
-
 #include "unify_action.hpp"
 #include <iostream>
 
-namespace poleng
-{
+namespace poleng {
 
-namespace bonsai
-{
-    namespace puddle
-    {
+namespace bonsai {
+    namespace puddle {
 
 UnifyAction::UnifyAction(std::vector<std::string> aUnifiedPatterns,
         std::vector<std::string> aUnifiedAttributes,
@@ -84,7 +80,8 @@ std::vector<std::vector<std::string> > UnifyAction::generateInterpretationsVecto
         //Lattice::VertexDescriptor vertex = matchedStartIndex + before;
         Lattice::VertexDescriptor vertex = lattice::getVertex(lattice,
                 before, matchedStartIndex);
-//        //@todo: czy to sprawdzenie jest nadal konieczne? ta funkcja getVertex nie robi czegos takiego?
+//        //@todo: czy to sprawdzenie jest nadal konieczne?
+//        ta funkcja getVertex nie robi czegos takiego?
 //        while (lattice::getTopEdges(lattice, vertex).size() == 0) {
 //            before ++;
 //            vertex = matchedStartIndex + before;
@@ -164,7 +161,8 @@ UnifyAction::generateUnifiedEdgesList(Lattice &lattice,
             //Lattice::VertexDescriptor vertex = matchedStartIndex + before;
             Lattice::VertexDescriptor vertex = lattice::getVertex(lattice,
                     before, matchedStartIndex);
-//            //@todo: czy to sprawdzenie jest nadal konieczne? ta funkcja getVertex nie robi czegos takiego?
+//            //@todo: czy to sprawdzenie jest nadal konieczne?
+//            ta funkcja getVertex nie robi czegos takiego?
 //            while (lattice::getTopEdges(lattice, vertex).size() == 0) {
 //                before ++;
 //                vertex = matchedStartIndex + before;
@@ -259,7 +257,8 @@ bool UnifyAction::isUnifyingPossible(Lattice &lattice, int matchedStartIndex,
             //Lattice::VertexDescriptor vertex = matchedStartIndex + before;
             Lattice::VertexDescriptor vertex = lattice::getVertex(lattice,
                     before, matchedStartIndex);
-//            //@todo: czy to sprawdzenie jest nadal konieczne? ta funkcja getVertex nie robi czegos takiego?
+//            //@todo: czy to sprawdzenie jest nadal konieczne?
+//            ta funkcja getVertex nie robi czegos takiego?
 //            while (lattice::getTopEdges(lattice, vertex).size() == 0) {
 //                before ++;
 //                vertex = matchedStartIndex + before;
@@ -365,7 +364,8 @@ void UnifyAction::discardUnunifiedEdges(Lattice &lattice,
         //Lattice::VertexDescriptor vertex = matchedStartIndex + before;
         Lattice::VertexDescriptor vertex = lattice::getVertex(lattice,
                 before, matchedStartIndex);
-//        //@todo: czy to sprawdzenie jest nadal konieczne? ta funkcja getVertex nie robi czegos takiego?
+//        //@todo: czy to sprawdzenie jest nadal konieczne?
+//        ta funkcja getVertex nie robi czegos takiego?
 //        while (lattice::getTopEdges(lattice, vertex).size() == 0) {
 //            before ++;
 //            vertex = matchedStartIndex + before;

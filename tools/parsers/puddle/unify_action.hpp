@@ -1,16 +1,13 @@
-#ifndef UNIFYACTION_H__
-#define UNIFYACTION_H__
+#ifndef UNIFYACTION_HDR
+#define UNIFYACTION_HDR
 
 #include "action.hpp"
 
-namespace poleng
-{
+namespace poleng {
 
-namespace bonsai
-{
+namespace bonsai {
 
-namespace puddle
-{
+namespace puddle {
 
 class UnifyAction : public Action
 {
@@ -46,7 +43,9 @@ class UnifyAction : public Action
 
         std::vector<int> tokenIndices;
 
-        bool nullAgreement; // true = jak w czesci mowy atrybut nie wystepuje, to traktuj jako dajacy sie z unifikowac, false = jak w czesci mowy nie ma atrybutu, to nie da sie zunifikowac
+        bool nullAgreement; // true = jak w czesci mowy atrybut nie wystepuje,
+        //to traktuj jako dajacy sie z unifikowac,
+        //false = jak w czesci mowy nie ma atrybutu, to nie da sie zunifikowac
         std::vector<std::string> unifiedPatterns;
         std::vector<std::string> unifiedAttributes;
 };

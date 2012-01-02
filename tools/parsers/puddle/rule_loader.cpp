@@ -1,4 +1,3 @@
-
 #include "rule_loader.hpp"
 
 #include <iostream>
@@ -10,13 +9,10 @@
 #include <boost/lexical_cast.hpp>
 #include <boost/algorithm/string.hpp>
 
-namespace poleng
-{
+namespace poleng {
 
-namespace bonsai
-{
-    namespace puddle
-    {
+namespace bonsai {
+    namespace puddle     {
 
 RuleLoader::RuleLoader() {
     rules = RulesPtr( new Rules());
@@ -155,7 +151,8 @@ std::string RuleLoader::compileRulePattern(std::string &matched, int &size,
 
     //@todo: to ponizej wydzielic do metody
     size_t i = 0;
-    int mindex = bracketCount + 1; //as we add brackets covering the whole compiled pattern, the counter must be incremented
+    int mindex = bracketCount + 1;
+    //as we add brackets covering the whole compiled pattern, the counter must be incremented
     std::string s = compiledMatch;
     std::string compiledPattern = "";
     int brackets = 0;
@@ -751,7 +748,8 @@ std::string RuleLoader::compileOrthCondition(std::string &comparisonOperator,
 #endif
     }
     else {
-        throw PuddleRuleSyntaxException("Unknown comparison operator '" + comparisonOperator + "'.");
+        throw PuddleRuleSyntaxException(
+                "Unknown comparison operator '" + comparisonOperator + "'.");
     }
     return result;
 }
@@ -787,7 +785,8 @@ std::string RuleLoader::generateTokenPatternsString(TokenPatterns tokenPatterns)
                 basePattern = "(?!" + patternIt->base.condition + ")[^<>]+";
 #endif
             } else {
-                basePattern = patternIt->base.condition; //@todo: nie trzeba owinac w nawiasy jeszcze tego?
+                basePattern = patternIt->base.condition;
+                //@todo: nie trzeba owinac w nawiasy jeszcze tego?
             }
         }
         for (std::vector<TokenPatternPart>::iterator partIt =
@@ -797,7 +796,8 @@ std::string RuleLoader::generateTokenPatternsString(TokenPatterns tokenPatterns)
                 if (morphoPattern != "") {
                     morphoPattern += "(?::[^:<>]+)*";
                 } else {
-                    if (partIt != patternIt->parts.begin()) //if not the first part = not the part of speech
+                    if (partIt != patternIt->parts.begin())
+                        //if not the first part = not the part of speech
                         morphoPattern = "[^:<>]+";
                 }
                 if (partIt->negative) {
@@ -805,7 +805,11 @@ std::string RuleLoader::generateTokenPatternsString(TokenPatterns tokenPatterns)
                     if (partIt == patternIt->parts.begin() ) //first part = part of speech
                         morphoPattern = "(?P<";
                     else
-                        morphoPattern += ":(?P<"; //@todo: jak sie da :?(?P< to wtedy lapie takie, ktore nie maj danego atrybutu w ogole. ta wersja z obowiazkowym : wymusza wartosc atrybutu. pytanie, ktore dzialanie jest podejrzane. moze ustawic to po prostu jako parametr parsera, tak jak 'null agreement' dla unify czy etykiete dla nierozpoznanej czesci mowy ('ign')
+                        morphoPattern += ":(?P<"; //@todo: jak sie da :?(?P< to wtedy lapie takie,
+                    //ktore nie maj danego atrybutu w ogole. ta wersja z obowiazkowym:
+                    //wymusza wartosc atrybutu. pytanie, ktore dzialanie jest podejrzane.
+                    //moze ustawic to po prostu jako parametr parsera, tak jak 'null agreement'
+                    //dla unify czy etykiete dla nierozpoznanej czesci mowy ('ign')
                     std::string negativePatternName = "neg";
                     negativePatternName += boost::lexical_cast<std::string>(
                             negativePatterns.size() );
@@ -821,12 +825,17 @@ std::string RuleLoader::generateTokenPatternsString(TokenPatterns tokenPatterns)
                     if (partIt == patternIt->parts.begin() ) //first part = part of speech
                         morphoPattern = "(?!";
                     else
-                        morphoPattern += ":(?!"; //@todo: jak sie da :?(?P< to wtedy lapie takie, ktore nie maj danego atrybutu w ogole. ta wersja z obowiazkowym : wymusza wartosc atrybutu. pytanie, ktore dzialanie jest podejrzane. moze ustawic to po prostu jako parametr parsera, tak jak 'null agreement' dla unify czy etykiete dla nierozpoznanej czesci mowy ('ign')
+                        morphoPattern += ":(?!"; //@todo: jak sie da :?(?P< to wtedy lapie takie,
+                    //ktore nie maj danego atrybutu w ogole. ta wersja z obowiazkowym :
+                    //wymusza wartosc atrybutu. pytanie, ktore dzialanie jest podejrzane.
+                    //moze ustawic to po prostu jako parametr parsera, tak jak 'null agreement'
+                    //dla unify czy etykiete dla nierozpoznanej czesci mowy ('ign')
                     morphoPattern += partIt->condition;
                     morphoPattern += ")[^<>]+";
 #endif
                 } else {
-                    morphoPattern += partIt->condition; //@todo: nie trzeba owinac w nawiasy jeszcze tego?
+                    morphoPattern += partIt->condition;
+                    //@todo: nie trzeba owinac w nawiasy jeszcze tego?
                 }
             }
         }
@@ -871,7 +880,8 @@ ActionsPtr RuleLoader::compileRuleAction(std::string &matched, int ruleLeftSize,
     //delete(pos!~"adj", 1)
     Pattern regDelete("delete\\s*\\(\\s*([^,]+)\\s*,\\s*(\\d+)\\s*\\)\\s*");
     //add("adj:sg:m", "new_base", 1);
-    Pattern regAdd("add\\s*\\(\\s*\"([^\\s\",]+)\"\\s*,\\s*((\"[^\\s\",]+\")|(base))\\s*,\\s*(\\d+)\\s*\\)\\s*");
+    Pattern regAdd("add\\s*\\(\\s*\"([^\\s\",]+)\"\\s*,\\s*((\"[^\\s\",]+\")"
+            "|(base))\\s*,\\s*(\\d+)\\s*\\)\\s*");
     //unify(gender number case, 1, 2, 3);
     Pattern regUnify("unify\\s*\\(\\s*([^,]+)\\s*((,\\s*(\\d+)\\s*)+)\\)\\s*");
     //syntok("coup d'état");
@@ -940,7 +950,8 @@ ActionsPtr RuleLoader::compileRuleAction(std::string &matched, int ruleLeftSize,
             DeleteActionPtr action = createDeleteAction(conditionsString, tokenIndex);
             actions->push_back(action);
         } else if (RegExp::FullMatch(actionString, regAdd, &interpretation,
-                    &baseString, &slot1, &slot2, &tokenIndex)) { //@todo: dlaczemu nie mozna uzyc NULL zamiast slotX?
+                    &baseString, &slot1, &slot2, &tokenIndex)) {
+            //@todo: dlaczemu nie mozna uzyc NULL zamiast slotX?
             AddActionPtr action = createAddAction(interpretation, baseString,
                     tokenIndex);
             actions->push_back(action);
@@ -1204,7 +1215,8 @@ std::string RuleLoader::generateCompiledTokenString(bool tokenMatch,
     if (compiledHead != "")
         ss << compiledHead;
     else {
-        //@todo czy trzeba sprawdzic czy to nie group match i wstawic puste dopasowanie? czy sprawdzenie jakiegos warunku tu nie wystarczy?
+        //@todo czy trzeba sprawdzic czy to nie group match i wstawic puste dopasowanie?
+        //czy sprawdzenie jakiegos warunku tu nie wystarczy?
         if (orth != "")
             ss << "<" << orth;
         else
@@ -1445,8 +1457,8 @@ RulePtr RuleLoader::parseRuleString(std::string &ruleString) {
 #endif
                     chars = "";
                 } else {
-                    throw PuddleRuleSyntaxException("Unexpected characters before Match declaration '"
-                        + chars + "'.");
+                    throw PuddleRuleSyntaxException(
+                            "Unexpected characters before Match declaration '" + chars + "'.");
                 }
             }
             chars += line;
@@ -1535,4 +1547,3 @@ RulePtr RuleLoader::parseRuleString(std::string &ruleString) {
 }
 
 }
-

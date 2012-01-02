@@ -1,13 +1,9 @@
-
 #include "tagset_loader.hpp"
 
-namespace poleng
-{
+namespace poleng {
 
-namespace bonsai
-{
-namespace puddle
-{
+namespace bonsai {
+namespace puddle {
 
     TagsetPtr TagsetLoader::load(std::string filename) {
         TagsetPtr tagset = TagsetPtr(new Tagset());

@@ -1,5 +1,5 @@
-#ifndef RULELOADER_H__
-#define RULELOADER_H__
+#ifndef RULELOADER_HDR
+#define RULELOADER_HDR
 
 #include <string>
 #include <vector>

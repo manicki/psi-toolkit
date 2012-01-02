@@ -1,5 +1,5 @@
-#ifndef PUDDLE_LATTICE_WRAPPER_H__
-#define PUDDLE_LATTICE_WRAPPER_H__
+#ifndef PUDDLE_LATTICE_WRAPPER_HDR
+#define PUDDLE_LATTICE_WRAPPER_HDR
 
 #include "config.hpp"
 
@@ -26,9 +26,11 @@ namespace poleng {
 #if _WITH_BONSAI_PARSEGRAPH
                     ParseGraphPtr convertToBonsaiGraph(Lattice &lattice);
 #endif
-                    Lattice::VertexDescriptor getVertex(Lattice &lattice, //@todo: zmienic nazwe na getStartVertex
+                    Lattice::VertexDescriptor getVertex(Lattice &lattice,
+                            //@todo: zmienic nazwe na getStartVertex
                             int edgeIndex, LayerTagMask mask, int offset = 0);
-                    Lattice::VertexDescriptor getVertex(Lattice &lattice, //@todo: zmienic nazwe na getStartVertex
+                    Lattice::VertexDescriptor getVertex(Lattice &lattice,
+                            //@todo: zmienic nazwe na getStartVertex
                             int edgeIndex, int offset = 0);
                     std::list<Lattice::EdgeDescriptor> getTopEdges(Lattice &lattice,
                             Lattice::VertexDescriptor start, LayerTagMask mask);

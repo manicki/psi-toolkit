@@ -1,4 +1,3 @@
-
 #include "group_action.hpp"
 
 #include <iostream>
@@ -36,17 +35,20 @@ bool GroupAction::apply(Lattice &lattice, int matchedStartIndex,
 
     Lattice::VertexDescriptor startVertex = lattice::getVertex(
             lattice, realStart, matchedStartIndex);
-    //Lattice::VertexDescriptor startVertex = matchedStartIndex + realStart; //@todo: rozwiazanie tymczasowe. nie uwzglednia to chyba lewego kontekstu
+    //Lattice::VertexDescriptor startVertex = matchedStartIndex + realStart;
+    ////@todo: rozwiazanie tymczasowe. nie uwzglednia to chyba lewego kontekstu
     //Lattice::VertexDescriptor headVertex = lattice::getVertex(
     //        lattice, matchedStartIndex + realHead);
     Lattice::VertexDescriptor headVertex = lattice::getVertex(
             lattice, realHead, matchedStartIndex);
-    //Lattice::VertexDescriptor headVertex = matchedStartIndex + realHead; //@todo: rozwiazanie tymczasowe. nie uwzglednia to chyba lewego kontekstu
+    //Lattice::VertexDescriptor headVertex = matchedStartIndex + realHead;
+    ////@todo: rozwiazanie tymczasowe. nie uwzglednia to chyba lewego kontekstu
     //Lattice::VertexDescriptor endVertex = lattice::getVertex(
     //        lattice, matchedStartIndex + realEnd);
     Lattice::VertexDescriptor endVertex = lattice::getVertex(
             lattice, realEnd, matchedStartIndex);
-    //Lattice::VertexDescriptor endVertex = matchedStartIndex + realEnd; //@todo: rozwiazanie tymczasowe. nie uwzglednia to chyba lewego kontekstu
+    //Lattice::VertexDescriptor endVertex = matchedStartIndex + realEnd;
+    ////@todo: rozwiazanie tymczasowe. nie uwzglednia to chyba lewego kontekstu
     std::list<Lattice::EdgeDescriptor> startEdges = lattice::getTopEdges(
             lattice, startVertex);
     std::list<Lattice::EdgeDescriptor> headEdges = lattice::getTopEdges(
@@ -112,4 +114,3 @@ void GroupAction::init(std::string aGroup, unsigned int aStart,
 }
 
 }
-

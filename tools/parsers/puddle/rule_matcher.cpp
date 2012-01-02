@@ -1,4 +1,3 @@
-
 #include "rule_matcher.hpp"
 
 #include <iostream>
@@ -157,7 +156,8 @@ std::string RuleMatcher::generateSentenceString(Lattice &lattice, int startVerte
         } else {
             ss << "<" << "TOKEN";
             std::string orth = //lattice.getAnnotationItemManager().
-                //getCategory(annotationItem); //@todo: trzeba poprawic ustawianie orth dla krawedzi 'parse'
+                //getCategory(annotationItem);
+                ////@todo: trzeba poprawic ustawianie orth dla krawedzi 'parse'
                 lattice.getEdgeText(edge);
             ss << "<" << util::escapeSpecialChars(orth);
         }
@@ -166,7 +166,8 @@ std::string RuleMatcher::generateSentenceString(Lattice &lattice, int startVerte
             AnnotationItem ai = lattice.getEdgeAnnotationItem(*edgeIt);
             if (lattice::isDiscarded(lattice, *edgeIt))
                 continue; //skip discarded edges
-            std::string base = lattice::getBase(lattice, *edgeIt); //@todo: nie bedzie dzialalo dla krawedzi 'parse'
+            std::string base = lattice::getBase(lattice, *edgeIt);
+            //@todo: ustawianie base nie bedzie dzialalo dla krawedzi 'parse'
             std::string morphology = lattice::getMorphologyString(
                     lattice, *edgeIt);
             ss << "<";
@@ -181,18 +182,6 @@ std::string RuleMatcher::generateSentenceString(Lattice &lattice, int startVerte
 
     return ss.str();
 }
-
-//void RuleMatcher::setSyntok() {
-//    syntok = true;
-//}
-//
-//void RuleMatcher::setNoSyntok() {
-//    syntok = false;
-//}
-//
-//void RuleMatcher::setNoRepeats() {
-//    norepeats = true;
-//}
 
 void RuleMatcher::initProperties() {
     syntok = true;

@@ -1,17 +1,13 @@
-
 #include "rule.hpp"
 
 #include <iostream>
 
 #include <exception>
 
-namespace poleng
-{
+namespace poleng {
 
-namespace bonsai
-{
-    namespace puddle
-    {
+namespace bonsai {
+    namespace puddle {
 
 #if HAVE_RE2
         Rule::Rule( std::string aName, std::string aCompiledPattern, int aLeftCount,
@@ -175,26 +171,26 @@ int Rule::matchPattern(std::string &sentenceString,
 #endif
 
             if (matching == "") {
-                delete[] matchedS;
+                delete []matchedS;
                 for (int argIt = 0; argIt < num_groups; argIt ++)
                     delete matched[argIt];
-                delete[] matched;
+                delete []matched;
                 return -1;
             }
             int r = getPatternEnd(before);
             if (before == "")
                 r = getPatternStart(matching);
             afterIndex = getPatternStart(suffix);
-            delete[] matchedS;
+            delete []matchedS;
             for (int argIt = 0; argIt < num_groups; argIt ++)
                 delete matched[argIt];
-            delete[] matched;
+            delete []matched;
             return r;
         }
-        delete[] matchedS;
+        delete []matchedS;
         for (int argIt = 0; argIt < num_groups; argIt ++)
             delete matched[argIt];
-        delete[] matched;
+        delete []matched;
 
         return -1;
     }
@@ -382,4 +378,3 @@ void Rule::init(std::string aName, std::string aCompiledPattern, int aLeftCount,
 }
 
 }
-

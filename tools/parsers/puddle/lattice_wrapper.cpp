@@ -1,4 +1,3 @@
-
 #include "lattice_wrapper.hpp"
 
 namespace poleng {
@@ -49,7 +48,8 @@ namespace poleng {
                         }
                         int start = lattice.getEdgeBeginIndex(edge);
                         int end = start + lattice.getEdgeLength(edge);
-                        std::string orth = lattice.getEdgeText(edge); //@todo: przerabiac to na wygrzebywaine tej formy z krawedzi 'token' czy zostawic jak jest?
+                        std::string orth = lattice.getEdgeText(edge);
+                        //@todo: przerabiac to na wygrzebywaine tej formy z krawedzi 'token' czy zostawic jak jest?
                         AnnotationItem ai = lattice.getEdgeAnnotationItem(edge);
                         std::string category = ai.getCategory();
                         std::list< std::pair<std::string, std::string> > av
@@ -366,10 +366,12 @@ namespace poleng {
                                 } else {
                                     bool groupFound = false;
                                     while (edgesMapIt.first != edgesMapIt.second) {
-                                        if (edgesMapIt.first->second->getDepth() > max_depth) //@todo: po co tu szukanie tego max_depth?
+                                        if (edgesMapIt.first->second->getDepth() > max_depth)
+                                            //@todo: po co tu szukanie tego max_depth?
                                             max_depth = edgesMapIt.first->second->getDepth();
 
-                                        if (edgesMapIt.first->second->getLabel() == category) { //@todo: do czego ta morfologia jest naprawde doczepiana?
+                                        if (edgesMapIt.first->second->getLabel() == category) {
+                                            //@todo: do czego ta morfologia jest naprawde doczepiana?
                                             edgesMapIt.first->second->addMorphology(pi);
                                             groupFound = true;
                                             break;
@@ -385,7 +387,8 @@ namespace poleng {
                                         edge->setLabel(category);
                                         edge->setOrth(orth);
                                         edge->addMorphology(pi);
-                                        edgesMap.insert(std::pair<std::pair<int, int>, TransitionInfo*>(
+                                        edgesMap.insert(std::pair<
+                                                std::pair<int, int>, TransitionInfo*>(
                                                     edgeCoord, edge));
                                         depthsMap.insert(std::pair<int, int>(start, max_depth));
                                     }
@@ -657,7 +660,9 @@ namespace poleng {
                                 if (annotationItem ==
                                             lattice.getEdgeAnnotationItem(newEdge)) {
                                     //there is already such an edge. add another partition
-                                    //@todo: to tak nie dziala. nowa partition powinno dodawac samo addEdge, ale nie robi tego. na razie jest wiec jedna partition zawsze
+                                    //@todo: to tak nie dziala. nowa partition powinno dodawac samo
+                                    //addEdge, ale nie robi tego.
+                                    //na razie jest wiec jedna partition zawsze
 
 //                                    firstPartition = false;
                                     break;
@@ -735,8 +740,8 @@ namespace poleng {
                             LayerTagCollection tagsLexeme = lattice.getLayerTagManager().
                                 createSingletonTagCollection("lexeme");
                             lexemeEdge = lattice.addEdge(
-                                    startVertex, endVertex, aiLexeme, tagsLexeme, lexemeBuilder.build()
-                                    );
+                                    startVertex, endVertex, aiLexeme, tagsLexeme,
+                                    lexemeBuilder.build() );
                         } else
                             lexemeEdge = getLexemeEdge(lattice, startVertex,
                                     partOfSpeech, lexeme);
@@ -755,7 +760,8 @@ namespace poleng {
                             lattice.getAnnotationItemManager().setValue(
                                     annotationItem, "orth", concatenatedOrth);
                             lattice.getAnnotationItemManager().setValue(
-                                    annotationItem, "head", "0"); //@todo: czy tego tu inaczej jakos nie trzeba zrobic
+                                    annotationItem, "head", "0");
+                            //@todo: czy tego tu inaczej jakos nie trzeba zrobic
 
                             for (std::list<Lattice::EdgeSequence>::iterator sequenceIt =
                                     edgeSequences.begin();
@@ -846,8 +852,8 @@ namespace poleng {
                             LayerTagCollection tagsLexeme = lattice.getLayerTagManager().
                                 createSingletonTagCollection("lexeme");
                             lexemeEdge = lattice.addEdge(
-                                    startVertex, endVertex, aiLexeme, tagsLexeme, lexemeBuilder.build()
-                                    );
+                                    startVertex, endVertex, aiLexeme, tagsLexeme,
+                                    lexemeBuilder.build() );
                         } else
                             lexemeEdge = getLexemeEdge(lattice, startVertex,
                                     partOfSpeech, lexeme);
@@ -916,7 +922,8 @@ namespace poleng {
             std::string getPartOfSpeech(Lattice &lattice,
                     Lattice::EdgeDescriptor edge) {
                 if (isTokenEdge(lattice, edge)) {
-                    return "ign"; // @todo: zrobic to lepiej. interpunkcje moze inaczej moga byc obsluzone zreszta
+                    return "ign";
+                    // @todo: zrobic to lepiej. interpunkcje moze inaczej moga byc obsluzone zreszta
                 }
                 try {
                     Lattice::EdgeDescriptor lexemeEdge =
@@ -926,7 +933,8 @@ namespace poleng {
                     return annotationItem.getCategory();
                 }
                 catch (PuddleNoLexemeEdgeException &exception) {
-                    return "ign"; // @todo: zrobic to lepiej. interpunkcje moze inaczej moga byc obsluzone zreszta
+                    return "ign";
+                    // @todo: zrobic to lepiej. interpunkcje moze inaczej moga byc obsluzone zreszta
                 }
             }
 
@@ -1142,7 +1150,8 @@ namespace poleng {
                 AnnotationItem ai = lattice.getEdgeAnnotationItem(edge);
                 std::list< std::pair<std::string, std::string> > av
                     = lattice.getAnnotationItemManager().getValues(ai);
-                for (std::list< std::pair<std::string, std::string> >::iterator avit = //@todo: sortowanie tego
+                for (std::list< std::pair<std::string, std::string> >::iterator avit =
+                        //@todo: sortowanie tego
                         av.begin(); avit != av.end(); ++ avit) {
                     if (avit->first == "head" || avit->first == "orth")
                         continue;
@@ -1161,7 +1170,8 @@ namespace poleng {
                 AnnotationItem ai = lattice.getEdgeAnnotationItem(edge);
                 std::list< std::pair<std::string, std::string> > av
                     = lattice.getAnnotationItemManager().getValues(ai);
-                for (std::list< std::pair<std::string, std::string> >::iterator avit = //@todo: sortowanie tego
+                for (std::list< std::pair<std::string, std::string> >::iterator avit =
+                        //@todo: sortowanie tego
                         av.begin(); avit != av.end(); ++ avit) {
 //                    if (avit->first == "discard")
 //                        continue;

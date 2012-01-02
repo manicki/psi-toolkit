@@ -1,20 +1,16 @@
-#ifndef SYNTOKACTION_H__
-#define SYNTOKACTION_H__
+#ifndef SYNTOKACTION_HDR
+#define SYNTOKACTION_HDR
 
 #include "action.hpp"
 #include "add_action.hpp"
 
-namespace poleng
-{
+namespace poleng {
 
-namespace bonsai
-{
+namespace bonsai {
 
-namespace puddle
-{
+namespace puddle {
 
-class SyntokAction : public Action
-{
+class SyntokAction : public Action {
     public:
         SyntokAction(int aStart, int aEnd, std::vector<int> aTokenIndices,
                 std::vector<Morphology> aMorphology, std::string aRuleName);
@@ -51,4 +47,3 @@ typedef boost::shared_ptr<SyntokAction> SyntokActionPtr;
 }
 
 #endif
-

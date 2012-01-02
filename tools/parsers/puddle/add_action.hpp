@@ -1,5 +1,5 @@
-#ifndef ADDACTION_H__
-#define ADDACTION_H__
+#ifndef ADDACTION_HDR
+#define ADDACTION_HDR
 
 #include "action.hpp"
 #include <string>

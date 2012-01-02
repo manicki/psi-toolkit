@@ -1,5 +1,5 @@
-#ifndef PUDDLE_UTIL_H__
-#define PUDDLE_UTIL_H__
+#ifndef PUDDLE_UTIL_HDR
+#define PUDDLE_UTIL_HDR
 
 #include <string>
 #include <sstream>

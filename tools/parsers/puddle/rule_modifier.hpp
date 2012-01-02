@@ -1,5 +1,5 @@
-#ifndef RULEMODIFIER_H__
-#define RULEMODIFIER_H__
+#ifndef RULEMODIFIER_HDR
+#define RULEMODIFIER_HDR
 
 #include "rule_loader.hpp"
 
@@ -46,4 +46,3 @@ typedef boost::shared_ptr<RuleModifier> RuleModifierPtr;
 }
 
 #endif
-

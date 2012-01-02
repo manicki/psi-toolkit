@@ -1,5 +1,5 @@
-#ifndef JOINACTION_H__
-#define JOINACTION_H__
+#ifndef JOINACTION_HDR
+#define JOINACTION_HDR
 
 #include "action.hpp"
 

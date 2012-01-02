@@ -1,5 +1,5 @@
-#ifndef RULE_H__
-#define RULE_H__
+#ifndef RULE_HDR
+#define RULE_HDR
 
 #include <vector>
 #include <string>
@@ -16,17 +16,13 @@
 #include <sstream>
 #include <boost/shared_ptr.hpp>
 
-namespace poleng
-{
+namespace poleng {
 
-namespace bonsai
-{
+namespace bonsai {
 
-namespace puddle
-{
+namespace puddle {
 
-class Rule
-{
+class Rule {
     public:
 #if HAVE_RE2
         Rule(std::string aName, std::string aCompiledPattern, int aLeftCount,
