@@ -112,11 +112,13 @@ BOOST_AUTO_TEST_CASE( simple_parse ) {
     AnnotationItem ai_blanc_form_adj("adj", StringFrag("blanc_adj"));
     lattice.getAnnotationItemManager().setValue(ai_blanc_form_adj, "number", "sg");
     lattice.getAnnotationItemManager().setValue(ai_blanc_form_adj, "gender", "m");
-    lattice.addEdge(pre_blanc, post_blanc, ai_blanc_form_adj, form_tag, blanc_form_adj_builder.build());
+    lattice.addEdge(pre_blanc, post_blanc, ai_blanc_form_adj, form_tag,
+            blanc_form_adj_builder.build());
     AnnotationItem ai_blanc_form_subst("subst", StringFrag("blanc_subst"));
     lattice.getAnnotationItemManager().setValue(ai_blanc_form_subst, "number", "sg");
     lattice.getAnnotationItemManager().setValue(ai_blanc_form_subst, "gender", "m");
-    lattice.addEdge(pre_blanc, post_blanc, ai_blanc_form_subst, form_tag, blanc_form_subst_builder.build());
+    lattice.addEdge(pre_blanc, post_blanc, ai_blanc_form_subst, form_tag,
+            blanc_form_subst_builder.build());
 
     Lattice::EdgeSequence::Builder chat_lemma_builder(lattice);
     chat_lemma_builder.addEdge(lattice.firstOutEdge(

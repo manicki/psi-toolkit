@@ -49,7 +49,8 @@ namespace poleng {
                         int start = lattice.getEdgeBeginIndex(edge);
                         int end = start + lattice.getEdgeLength(edge);
                         std::string orth = lattice.getEdgeText(edge);
-                        //@todo: przerabiac to na wygrzebywaine tej formy z krawedzi 'token' czy zostawic jak jest?
+                        //@todo: przerabiac to na wygrzebywaine tej formy z krawedzi 'token'
+                        //czy zostawic jak jest?
                         AnnotationItem ai = lattice.getEdgeAnnotationItem(edge);
                         std::string category = ai.getCategory();
                         std::list< std::pair<std::string, std::string> > av
@@ -167,7 +168,9 @@ namespace poleng {
                         }
                         int start = lattice.getEdgeBeginIndex(edge);
                         int end = start + lattice.getEdgeLength(edge);
-                        std::string orth = lattice.getEdgeText(edge); //@todo: przerabiac to na wygrzebywaine tej formy z krawedzi 'token' czy zostawic jak jest?
+                        std::string orth = lattice.getEdgeText(edge);
+                        //@todo: przerabiac to na wygrzebywaine tej formy z krawedzi 'token'
+                        //czy zostawic jak jest?
                         AnnotationItem ai = lattice.getEdgeAnnotationItem(edge);
                         std::string category = ai.getCategory();
                         std::list< std::pair<std::string, std::string> > av
@@ -271,8 +274,7 @@ namespace poleng {
                         createUnion(
                             createUnion(
                                 lattice.getLayerTagManager().
-                                createSingletonTagCollection("form")
-                                ,
+                                createSingletonTagCollection("form"),
                                 lattice.getLayerTagManager().
                                 createSingletonTagCollection("parse")
                                 ),
@@ -371,7 +373,7 @@ namespace poleng {
                                             max_depth = edgesMapIt.first->second->getDepth();
 
                                         if (edgesMapIt.first->second->getLabel() == category) {
-                                            //@todo: do czego ta morfologia jest naprawde doczepiana?
+                                            //@todo:do czego ta morfologia jest naprawde doczepiana?
                                             edgesMapIt.first->second->addMorphology(pi);
                                             groupFound = true;
                                             break;

@@ -29,7 +29,8 @@ bool DeleteAction::apply(Lattice &lattice, int matchedStartIndex,
 //    //@todo: czy to sprawdzenie jest nadal konieczne?
 //    ta funkcja getVertex nie robi czegos takiego?
 //    while (lattice::getTopEdges(lattice, vertex).size() == 0) {
-//    //if there is no edge at a given position, proceed to the next vertex, as it may be a whitespace
+//    //if there is no edge at a given position, proceed to the next vertex,
+//    as it may be a whitespace
 //        before ++;
 //        vertex = matchedStartIndex + before;
 //    }
@@ -66,7 +67,8 @@ bool DeleteAction::test(Lattice &lattice,
 //    //@todo: czy to sprawdzenie jest nadal konieczne?
 //    //ta funkcja getVertex nie robi czegos takiego?
 //    while (lattice::getTopEdges(lattice, vertex).size() == 0) {
-//    //if there is no edge at a given position, proceed to the next vertex, as it may be a whitespace
+//    //if there is no edge at a given position, proceed to the next vertex,
+//    as it may be a whitespace
 //        before ++;
 //        vertex = matchedStartIndex + before;
 //    }
