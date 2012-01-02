@@ -36,8 +36,7 @@ _test_run_pipe_run_for_perl_with_tokenizer_and_segmenter();
 # @ignore (compilation with java is needed)
 #_test_run_pipe_run_for_perl_with_alternatives_with_morfologik();
 
-# @ignore (bug is in inner psi-pipe)
-#_test_run_pipe_run_for_perl_with_alternatives_empty_text();
+_test_run_pipe_run_for_perl_with_alternatives_empty_text();
 
 END:
 done_testing();
@@ -147,9 +146,7 @@ sub _test_run_pipe_run_for_perl_with_alternatives2 {
 sub _test_run_pipe_run_for_perl_with_alternatives_empty_text {
     my $command = "tp-tokenizer --lang pl ! perl-simple-writer --tag symbol --spec token";
     my $text_to_process = '';
-    my $expected_result = [
-        [],
-    ];
+    my $expected_result = [];
 
     _run_test_on_command_run_for_perl($command, $text_to_process, $expected_result);
 }
