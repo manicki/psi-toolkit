@@ -8,3 +8,4 @@ add_library(utf8case SHARED
 
 add_subdirectory(t)
 
+install(TARGETS utf8case DESTINATION lib/)
