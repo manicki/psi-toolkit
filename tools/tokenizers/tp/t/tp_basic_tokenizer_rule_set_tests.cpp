@@ -1,6 +1,6 @@
 #include "tests.hpp"
 
-#include "../tp_basic_tokenizer_rule_set.hpp"
+#include "tp_basic_tokenizer_rule_set.hpp"
 
 #include "config.hpp"
 

@@ -4,6 +4,9 @@ use strict;
 use File::Find;
 use Cwd;
 
+my $GCOV_OUTPUT_DATA = 'gcov.output.data';
+`mkdir "../$GCOV_OUTPUT_DATA"`;
+
 my @files;
 my @source_files;
 find(\&wanted, '.');
@@ -17,8 +20,7 @@ my $args = join(' ', @source_files);
 my $psi_toolkit_dir = getcwd();
 $psi_toolkit_dir =~ s/\/[^\/]+$//;
 
-`gcov -o "$psi_toolkit_dir/gcov.output.data" $args`;
-
+`gcov -o "$psi_toolkit_dir/$GCOV_OUTPUT_DATA" $args`;
 
 sub wanted {
     /\.cpp.gcno$/
@@ -40,13 +42,13 @@ sub process_file {
 
         push @source_files, "${dir}/${base_name}.cpp";
 
-        `cp "$file_name" "../gcov.output.data/${base_name}.gcno"`;
+        `cp "$file_name" "../$GCOV_OUTPUT_DATA/${base_name}.gcno"`;
 
         my $gcda_file_name = $file_name;
         $gcda_file_name =~ s/\.gcno$/.gcda/;
 
         if (-r $gcda_file_name) {
-            `cp "$gcda_file_name" "../gcov.output.data/${base_name}.gcda"`;
+            `cp "$gcda_file_name" "../$GCOV_OUTPUT_DATA/${base_name}.gcda"`;
         } else {
             print STDERR "unknown $gcda_file_name\n";
         }

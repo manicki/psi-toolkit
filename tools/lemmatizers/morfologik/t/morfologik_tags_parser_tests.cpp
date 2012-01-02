@@ -1,6 +1,6 @@
 #include "tests.hpp"
 
-#include "../morfologik_tags_parser.hpp"
+#include "morfologik_tags_parser.hpp"
 
 BOOST_AUTO_TEST_SUITE( morfologik_tags_parser )
 

@@ -4,12 +4,12 @@
 
 #include <boost/scoped_ptr.hpp>
 
-#include "../../common/lattice_iter_writer.hpp"
-#include "../../formats/psi/psi_reader/psi_lattice_reader.hpp"
-#include "../../formats/psi/psi_writer/psi_lattice_writer.hpp"
-#include "../../formats/simple/simple_lattice_writer.hpp"
-#include "../../formats/simple/simple_lattice_writer_stream_output_iterator.hpp"
-#include "../../formats/utt/utt_lattice_reader.hpp"
+#include "lattice_iter_writer.hpp"
+#include "psi_lattice_reader.hpp"
+#include "psi_lattice_writer.hpp"
+#include "simple_lattice_writer.hpp"
+#include "simple_lattice_writer_stream_output_iterator.hpp"
+#include "utt_lattice_reader.hpp"
 
 #include "config.hpp"
 

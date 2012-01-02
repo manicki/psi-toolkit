@@ -2,8 +2,8 @@
 
 #include <boost/scoped_ptr.hpp>
 
-#include "../../common/psi_quoter.hpp"
-#include "../../formats/utt/utt_quoter.hpp"
+#include "psi_quoter.hpp"
+#include "formats/utt/utt_quoter.hpp"
 
 BOOST_AUTO_TEST_SUITE( quoter )
 

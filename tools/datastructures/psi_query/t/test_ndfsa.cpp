@@ -1,12 +1,6 @@
-/*
- * For simple tests on 1 file
-#define BOOST_TEST_DYN_LINK//Delete this after tests
-#define BOOST_TEST_MODULE NDFSA_test//Delete this after tests
-#include <boost/test/unit_test.hpp>//Delete this after tests
-*/
-#include "../../../../tests/tests.hpp"
-#include "../NDFSA.hpp"
-#include "../Algorithms.hpp"
+#include "tests/tests.hpp"
+#include "NDFSA.hpp"
+#include "Algorithms.hpp"
 
 struct Tescik {
     psi::NDFSA<> ndfsa;
@@ -21,7 +15,7 @@ struct Tescik {
         poprawne = new std::string[poprawneSize + 1];
         niePoprawne = new std::string[niePoprawneSize + 1];
     }
-    
+
     ~Tescik() {
         delete[] poprawne;
         delete[] niePoprawne;

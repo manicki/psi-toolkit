@@ -1,6 +1,6 @@
 #include "tests.hpp"
 
-#include "../annotation_item_manager.hpp"
+#include "annotation_item_manager.hpp"
 
 BOOST_AUTO_TEST_CASE( annotation_simple ) {
     AnnotationItemManager annotationItemManager;

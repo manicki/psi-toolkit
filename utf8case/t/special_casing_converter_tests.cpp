@@ -1,6 +1,6 @@
 #include "tests.hpp"
 
-#include "../special_casing_converter.hpp"
+#include "special_casing_converter.hpp"
 
 BOOST_AUTO_TEST_SUITE( utf8case )
 

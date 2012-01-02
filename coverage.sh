@@ -4,13 +4,13 @@
 
 HEREDIR=`pwd`
 
-rm -rf gcov.output.dir
+rm -rf gcov.output.data
 
 TARGET_DIR=build
 cd $TARGET_DIR
 
 find . -name '*.gcda' -exec rm '{}' ';'
-rm -rf *.gcov
+rm -rf *.gcov coverage-report.xml
 
 ../main-tests.sh
 

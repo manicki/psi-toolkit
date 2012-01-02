@@ -1,8 +1,8 @@
 #include "tests.hpp"
 
-#include "../simple_convert.hpp"
-#include "../case_converter_factory.hpp"
-#include "../string_case_converter_manager.hpp"
+#include "simple_convert.hpp"
+#include "case_converter_factory.hpp"
+#include "string_case_converter_manager.hpp"
 
 BOOST_AUTO_TEST_SUITE( utf8case )
 

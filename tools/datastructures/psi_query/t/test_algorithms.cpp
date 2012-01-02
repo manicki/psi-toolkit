@@ -1,14 +1,6 @@
-/*
- * For simple tests on 1 file
-#define BOOST_TEST_DYN_LINK//Delete this after tests
-#define BOOST_TEST_MODULE Algorithms_test//Delete this after tests
-#include <boost/test/unit_test.hpp>//Delete this after tests
-*/
-#include "../../../../tests/tests.hpp"
-#include "../DFSA.hpp"
-#include "../Algorithms.hpp"
-
-
+#include "tests.hpp"
+#include "DFSA.hpp"
+#include "Algorithms.hpp"
 
 BOOST_AUTO_TEST_CASE(algorithms_test)
 {

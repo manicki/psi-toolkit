@@ -1,6 +1,6 @@
 #include "tests.hpp"
 
-#include "../lang_guesser.hpp"
+#include "lang_guesser.hpp"
 
 BOOST_AUTO_TEST_SUITE( lang_guesser )
 
