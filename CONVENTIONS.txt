@@ -41,4 +41,6 @@ For fixes of bugs specified in Redmine use the following convention:
     fixes #N (M)
 
 where N is the Redmine bug number, M is the description of the problem
-(could be simply the subject of the bug from Redmine).
+(could be simply the subject of the bug from Redmine). Commits with
+such messages will make Redmine close the bug automatically (may take
+a couple of minutes, be patient).
