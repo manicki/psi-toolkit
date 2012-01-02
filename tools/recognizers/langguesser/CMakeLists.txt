@@ -1,5 +1,3 @@
-include_directories("..")
-
 add_library(tools-recognizers-langguesser SHARED
     bigram_language_model.cpp
 	lang_guesser.cpp

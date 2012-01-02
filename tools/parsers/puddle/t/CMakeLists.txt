@@ -1,5 +1,3 @@
-include_directories("..")
-
 add_library(tools-parsers-puddle-tests
         puddle_tests.cpp
 )

@@ -1,6 +1,7 @@
-include_directories("..")
+get_filename_component(PARENT_DIR ".." ABSOLUTE)
+include_directories("${PARENT_DIR}")
 
-# for including
+# for including BySpacesCutter
 include_directories("${psi-toolkit_SOURCE_DIR}/common/t")
 
 add_library(tools-lemmatizers-morfologik-tests
