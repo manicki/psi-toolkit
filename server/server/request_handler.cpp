@@ -1,5 +1,6 @@
 // Distributed under the Boost Software License, Version 1.0. (See accompanying
-// file LICENSE_1_0.txt or copy at <a href="http://www.boost.org/LICENSE_1_0.txt">http://www.boost.org/LICENSE_1_0.txt)
+// file LICENSE_1_0.txt or copy at <a href="http://www.boost.org/LICENSE_1_0.txt">
+// http://www.boost.org/LICENSE_1_0.txt)
 //
 
 #include "request_handler.hpp"
@@ -20,7 +21,7 @@ request_handler::request_handler(const std::string& doc_root)
 }
 
 void request_handler::handle_request(const request& req, reply& rep)
-{	
+{
   // Decode url to path.
   std::string request_path;
   if (!url_decode(req.uri, request_path))

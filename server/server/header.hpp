@@ -1,5 +1,6 @@
 // Distributed under the Boost Software License, Version 1.0. (See accompanying
-// file LICENSE_1_0.txt or copy at <a href="http://www.boost.org/LICENSE_1_0.txt">http://www.boost.org/LICENSE_1_0.txt)
+// file LICENSE_1_0.txt or copy at <a href="http://www.boost.org/LICENSE_1_0.txt">
+// http://www.boost.org/LICENSE_1_0.txt)
 //
 
 #ifndef HTTP_SERVER3_HEADER_HPP

@@ -19,4 +19,3 @@ private:
     static std::string storageDir;
 
 };
-

@@ -62,7 +62,8 @@ void ServerRunner::setOptionsDescription() {
 
     optionsDescription.add_options()
         ("daemon", "Run as a daemon")
-        ("leave-standard-descriptors-when-daemonizing", "Don't redirect standard input, standard output and standard error to /dev/null when daemonizing")
+        ("leave-standard-descriptors-when-daemonizing", "Don't redirect standard input, "
+            "standard output and standard error to /dev/null when daemonizing")
         ("help", "Produce help message for each processor")
         ("version", "Show version")
         ("verbose", "Run verbosely");
@@ -158,6 +159,3 @@ void ServerRunner::daemonize_(bool leaveStandardDescriptors) {
 std::string ServerRunner::annotatorOptionsAsString() {
     return boost::algorithm::join(annotatorOptions, " ");
 }
-
-
-

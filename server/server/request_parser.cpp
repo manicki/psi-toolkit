@@ -1,5 +1,6 @@
 // Distributed under the Boost Software License, Version 1.0. (See accompanying
-// file LICENSE_1_0.txt or copy at <a href="http://www.boost.org/LICENSE_1_0.txt">http://www.boost.org/LICENSE_1_0.txt)
+// file LICENSE_1_0.txt or copy at <a href="http://www.boost.org/LICENSE_1_0.txt">
+// http://www.boost.org/LICENSE_1_0.txt)
 //
 
 #include "request_parser.hpp"
@@ -288,8 +289,8 @@ boost::tribool request_parser::consume(request& req, char input)
     }
   case expecting_newline_3:
     if (input == '\n')
-	{
-		if (req.method == "POST") {
+    {
+        if (req.method == "POST") {
             if (!is_multipart(req)) {
                 state_ = post_line_start;
             }
@@ -298,16 +299,16 @@ boost::tribool request_parser::consume(request& req, char input)
             }
             set_post_data_length(req);
             return boost::indeterminate;
-		}
-		else {
-			// end parsing for GET method
-			return true;
-		}
-	}
-	else
-	{
-		return false;
-	}
+        }
+        else {
+            // end parsing for GET method
+            return true;
+        }
+    }
+    else
+    {
+        return false;
+    }
   case post_line_start:
     if (input != '\n' && input != '\r') {
 
@@ -318,7 +319,7 @@ boost::tribool request_parser::consume(request& req, char input)
         }
         else {
             req.post_data += input;
-		    return true;
+            return true;
         }
     }
     else {
@@ -341,7 +342,7 @@ boost::tribool request_parser::consume(request& req, char input)
 bool request_parser::is_multipart(request& req) {
     std::string val = req.get_header_value("Content-Type");
 
-    if (val.substr(0,9) == "multipart") {
+    if (val.substr(0, 9) == "multipart") {
         return true;
     }
     return false;

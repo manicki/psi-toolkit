@@ -73,10 +73,10 @@ void PsiServer::include(std::string& reply) {
     int p = 0;
     while (1) {
         // find next request for generated text
-        p = reply.find("<!--#psis",p);
+        p = reply.find("<!--#psis", p);
             if (p == -1) { break; }
 
-        int q = reply.find("-->",p);
+        int q = reply.find("-->", p);
             if (q == -1) { break; }
         q += 3;
         int reply_len = reply.length();
@@ -113,7 +113,7 @@ void PsiServer::checkForAction(http::server3::request& req) {
     }
 
     // find function matching action code
-    std::string code = uri.substr(1,q-1);
+    std::string code = uri.substr(1, q-1);
     std::map < std::string, psis_action_function >::iterator pfun = actions_.find(code);
     if (pfun == actions_.end()) {
         return;
@@ -183,13 +183,13 @@ void PsiServer::parseNamesAndValues(std::string uri, int q) {
     int flag_done = 0;
 
     while (!flag_done) {
-        q = uri.find("=",p);
-        name = uri.substr(p,q-p);
+        q = uri.find("=", p);
+        name = uri.substr(p, q-p);
         p = q + 1;
-        q = uri.find("&",p);
+        q = uri.find("&", p);
 
         if (q != -1) {
-            value = uri.substr(p,q-p);
+            value = uri.substr(p, q-p);
         } else {
             value = uri.substr(p);
             flag_done = 1;

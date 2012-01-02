@@ -9,9 +9,6 @@
 std::string OutputSaver::fileExtension = ".txt";
 std::string OutputSaver::storageDir = "storage/";
 
-//OutputSaver::OutputSaver()
-//    : guid(1), storagePath("/") { }
-
 OutputSaver::OutputSaver(std::string rootPath)
     : guidGenerator(20, true), websiteRoot(rootPath + "/") { }
 
@@ -29,4 +26,3 @@ std::string OutputSaver::storeOutput(std::string content) {
 
     return filePathToReturn;
 }
-
