@@ -5,6 +5,10 @@ if(USE_JAVA)
         set(COMMON_TESTS_EXTRAS ${COMMON_TESTS_EXTRAS} java_virtual_machine_tests.cpp)
 endif(USE_JAVA)
 
+include_directories("${psi-toolkit_SOURCE_DIR}/formats/psi/psi_writer")
+include_directories("${psi-toolkit_SOURCE_DIR}/formats/psi/psi_reader")
+include_directories("${psi-toolkit_SOURCE_DIR}/formats/simple")
+include_directories("${psi-toolkit_SOURCE_DIR}/formats/utt")
 
 add_library(common-tests
     by_spaces_cutter.cpp

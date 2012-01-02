@@ -16,9 +16,8 @@ see <this file>.
 
 #include "tests.hpp"
 
-// Include the header file(s) of a given module, note that relative path
-// could be used.
-#include "../foo.hpp"
+// Include the header file(s) of a given module, DO NOT USE relative path
+#include "foo.hpp"
 
 // The tests specified in a given file should be grouped into
 // a test suite.

@@ -1,7 +1,7 @@
 #include "tests.hpp"
 
-#include "../morfologik.hpp"
-#include "../../common/t/by_spaces_cutter.hpp"
+#include "morfologik.hpp"
+#include "by_spaces_cutter.hpp"
 
 #include "lemmatizer_annotator.hpp"
 

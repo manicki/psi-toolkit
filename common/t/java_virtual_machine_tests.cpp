@@ -1,6 +1,6 @@
 #include "tests.hpp"
 
-#include "../java_virtual_machine.hpp"
+#include "java_virtual_machine.hpp"
 
 BOOST_AUTO_TEST_SUITE( java_virtual_machine )
 

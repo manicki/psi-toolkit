@@ -1,8 +1,8 @@
 #include "tests.hpp"
 
-#include "../puddle.hpp"
-#include "../tagset_loader.hpp"
-#include "../rule_loader.hpp"
+#include "puddle.hpp"
+#include "tagset_loader.hpp"
+#include "rule_loader.hpp"
 
 BOOST_AUTO_TEST_SUITE( puddle )
 

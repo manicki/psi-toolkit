@@ -1,6 +1,6 @@
 #include "tests.hpp"
 
-#include "../range_based_case_converter.hpp"
+#include "range_based_case_converter.hpp"
 
 BOOST_AUTO_TEST_SUITE( utf8case )
 

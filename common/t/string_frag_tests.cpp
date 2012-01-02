@@ -1,6 +1,6 @@
 #include "tests.hpp"
 
-#include "../string_frag.hpp"
+#include "string_frag.hpp"
 
 BOOST_AUTO_TEST_CASE( string_frag_simple ) {
     std::string source("Lorem ipsum dolor sit amet, consectetur adipiscing elit.");

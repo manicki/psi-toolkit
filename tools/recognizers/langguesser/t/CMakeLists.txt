@@ -1,3 +1,5 @@
+include_directories("..")
+
 add_library(tools-recognizers-langguesser-tests
     lang_guesser_tests.cpp
 )

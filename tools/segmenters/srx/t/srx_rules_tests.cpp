@@ -1,7 +1,6 @@
 #include "tests.hpp"
 
-#include "../srx_rules.hpp"
-
+#include "srx_rules.hpp"
 #include "config.hpp"
 
 #include <vector>

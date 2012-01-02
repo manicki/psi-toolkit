@@ -1,3 +1,4 @@
+include_directories("..")
 
 add_library(tools-segmenters-srx-tests
         srx_rules_tests.cpp

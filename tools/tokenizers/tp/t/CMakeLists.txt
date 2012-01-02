@@ -1,3 +1,4 @@
+include_directories("..")
 
 add_library(tools-tokenizers-tp-tests
         tp_basic_tokenizer_rule_set_tests.cpp
