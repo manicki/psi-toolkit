@@ -32,11 +32,13 @@ _test_run_pipe_from_string_with_polish_letters();
 _test_run_pipe_run_for_perl_with_polish_letters();
 _test_run_pipe_run_for_perl_with_polish_letters_with_alternatives();
 _test_run_pipe_run_for_perl_with_tokenizer_and_segmenter();
+_test_run_pipe_run_for_perl_with_lang_guesser();
 
 # @ignore (compilation with java is needed)
 #_test_run_pipe_run_for_perl_with_alternatives_with_morfologik();
 
 _test_run_pipe_run_for_perl_with_alternatives_empty_text();
+
 
 END:
 done_testing();
@@ -175,6 +177,15 @@ sub _test_run_pipe_run_for_perl_with_tokenizer_and_segmenter {
     _run_test_on_command_run_for_perl($command, $text_to_process, $expected_result);
 }
 
+sub _test_run_pipe_run_for_perl_with_lang_guesser {
+    my $command = "lang-guesser ! perl-simple-writer --tag text";
+    my $text_to_process = 'Źdźbło';
+    my $expected_result = [
+        'Źdźbło',
+    ];
+
+    _run_test_on_command_run_for_perl($command, $text_to_process, $expected_result);
+}
 
 sub _run_test_on_command_run_for_perl {
     my ($command, $text_to_process, $expected_result) = @_;
