@@ -1,0 +1,13 @@
+{
+    memcpy overlap
+    Memcheck:Overlap
+    fun:memcpy
+    ...
+}
+{
+   moneypunct wtf
+   Memcheck:Addr8
+   fun:wcscmp
+   fun:*moneypunct*
+   ...
+}
