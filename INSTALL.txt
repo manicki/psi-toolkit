@@ -13,6 +13,13 @@ Optional
 * Perl library: development files - (Ubuntu package: libperl-dev) - for Perl bindings
 
 
+Ubuntu 11.10
+------------
+
+Required packages: g++ cmake make libpcre3-dev libboost-program-options-dev libboost-graph-dev libboost-filesystem-dev libboost-serialization-dev libboost-thread-dev libboost-system-dev libboost-test-dev
+
+Optional packages: swig libperl-dev python python-all-dev openjdk-6-jdk
+
 Ubuntu 10.04
 ------------
 
@@ -22,7 +29,7 @@ Ubuntu 10.04 might use Boost 1.40, but Boost >=1.42 is needed:
     sudo add-apt-repository ppa:lucid-bleed/ppa
     sudo apt-get update
     sudo apt-get upgrade
-    sudo apt-get install g++ cmake libpcre3-dev swig libperl-dev python python-all-dev libboost-program-options1.42-dev libboost-graph1.42-dev libboost-filesystem1.42-dev libboost-serialization1.42-dev libboost-thread1.42-dev libboost-system1.42-dev libboost-test1.42-dev
+    sudo apt-get install g++ cmake make libpcre3-dev swig libperl-dev python python-all-dev libboost-program-options1.42-dev libboost-graph1.42-dev libboost-filesystem1.42-dev libboost-serialization1.42-dev libboost-thread1.42-dev libboost-system1.42-dev libboost-test1.42-dev
 
 (Some of the above steps might turn out to be unnecessary, it depends
 on whether it is a server or regular version).
