@@ -7,6 +7,7 @@ target_link_libraries(tools-recognizers-langguesser common ${Boost_LIBRARIES})
 add_subdirectory(t)
 
 install(TARGETS tools-recognizers-langguesser DESTINATION lib/)
+install(DIRECTORY data/ DESTINATION ${PSITOOLKIT_INSTALL_DATA_DIR}/tp-tokenizer)
 
 add_executable(bigram-generator bigram-generator.cpp)
 
