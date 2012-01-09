@@ -6,6 +6,8 @@
 
 #include "NDFSA.hpp"
 #include "DFSA.hpp"
+#include "BinDFSA.hpp"
+
 #include "Algorithms.hpp"
 
 int main(int argc, char** argv) {    
@@ -49,5 +51,10 @@ int main(int argc, char** argv) {
     std::cout << s3 << " : " << dfsa.in(s3.begin(), s3.end()) << std::endl;
     std::cout << s4 << " : " << dfsa.in(s4.begin(), s4.end()) << std::endl;
         
+    psi::BinDFSA<> bdfsa;
+    unify(bdfsa, dfsa);
+    
+    bdfsa.print();
+    
     return 0;
 }

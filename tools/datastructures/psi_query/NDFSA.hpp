@@ -15,7 +15,7 @@ namespace psi {
     template <typename StateT = State, typename ArcT = Arc<Symbol, State> >
     class NDFSA {
       protected:
-        typedef std::set<ArcT, ArcSorter> Arcs;
+        typedef std::vector<ArcT> Arcs;
         typedef std::vector<Arcs*> States;
     
       public:
@@ -211,7 +211,8 @@ namespace psi {
    
     template <typename StateT, typename ArcT>
     void NDFSA<StateT, ArcT>::addArc(StateT state, ArcT arc) {
-        m_states[state]->insert(arc);
+        m_states[state]->push_back(arc);
+        std::sort(m_states[state]->begin(), m_states[state]->end(), ArcSorter());
     }
     
     template <typename StateT, typename ArcT>
@@ -237,7 +238,7 @@ namespace psi {
     
     template <typename StateT, typename ArcT>
     void NDFSA<StateT, ArcT>::print() {
-        for(int i = 0; i < m_states.size(); i++) {
+        for(size_t i = 0; i < m_states.size(); i++) {
            ArcRange<arc_iterator_type> r = getArcs(i);
            for(arc_iterator_type it = r.first; it != r.second; it++) {
                std::cout << i << "\t" << it->getDest() << "\t" << it->getSymbol() << std::endl;
