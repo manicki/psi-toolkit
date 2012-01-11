@@ -6,4 +6,6 @@ The following libraries were incorporated into psi-toolkit:
 * MPFD Parser by Grigory D Gorelov (GPL) - http://grigory.info/MPFDParser/
 * UTF8-CPP (specific licence, see utf8/utf8.h) -
   http://utfcpp.sourceforge.net/
+* A Maximum Entropy Modeling Toolkit for Python and C++ by Le Zhang -
+  http://homepages.inf.ed.ac.uk/lzhang10/maxent.html
 
