@@ -209,7 +209,7 @@ std::string TPBasicTokenizerRuleSet::applyDefinitions(
 
                 // ???
                 while ((inc = buffer.find("@include", incFake)) != buffer.npos
-                       && inc > 0 && (incFake = buffer.find("\\@include", inc - 1) == inc -1))
+                       && inc > 0 && ((incFake = buffer.find("\\@include", inc - 1)) == inc -1))
                     incFake = inc + 1;
             }
             else {
