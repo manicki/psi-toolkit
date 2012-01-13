@@ -3,6 +3,9 @@ include(${SWIG_USE_FILE})
 
 find_package(PerlLibs)
 
+set(${INSTALL_MODULES_PATH} ${PERL_SITELIB})
+STRING(REGEX REPLACE "^(/usr(/?(local|share)/)*)" "" INSTALL_PERL_MODULES_PATH ${PERL_SITELIB})
+
 set(CMAKE_SWIG_FLAGS "")
 
 set(CMAKE_SWIG_CURRENT_LANG_BINDINGS_DIRECTORY "${CMAKE_SWIG_BINDINGS_DIRECTORY}/perl/PSIToolkit")
@@ -41,8 +44,8 @@ link_directories("${psi-toolkit_BINARY_DIR}/bindings/perl/PSIToolkit")
 install(TARGETS _psitoolkit_perl_simple DESTINATION lib)
 INSTALL(FILES
   ${CMAKE_SWIG_CURRENT_LANG_BINDINGS_DIRECTORY}/_psitoolkit_perl_simple.pm
-  DESTINATION lib/perl5/)
+  DESTINATION ${INSTALL_PERL_MODULES_PATH})
 
 INSTALL(FILES
   ${CMAKE_CURRENT_SOURCE_DIR}/proxy/PSIToolkit/Simple.pm
-  DESTINATION lib/perl5/PSIToolkit/)
+  DESTINATION ${INSTALL_PERL_MODULES_PATH}/PSIToolkit/)
