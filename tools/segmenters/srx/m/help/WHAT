@@ -1,0 +1,2 @@
+srx-segmenter --lang en ! simple-writer --tag segment
+
