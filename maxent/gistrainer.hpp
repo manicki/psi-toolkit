@@ -47,7 +47,7 @@ namespace maxent{
 
     class GISTrainer : public Trainer {
         public:
-            GISTrainer() {};
+            GISTrainer() {m_correct_constant = -999;}
             // ~GISTrainer();
 
             void train(size_t iter = 100, double tol = 1.0E-05);
