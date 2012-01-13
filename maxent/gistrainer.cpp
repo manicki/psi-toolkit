@@ -52,7 +52,8 @@
 #include "gistrainer.hpp"
 #include "display.hpp"
 #include "finite.h"
-#include "hash_map.hpp"
+//LM:#include "hash_map.hpp"
+#include <boost/unordered_map.hpp>
 
 namespace maxent{
 
@@ -109,7 +110,8 @@ void GISTrainer::init_trainer() {
     // calculate observed feature expectations
     // a hash map to hold the value of feature <pred,outcome> pair occured in event list
     // which is the sum of active feature f_i(a,b) in the training set
-    typedef hash_map <pair<size_t, size_t>, float, featid_hasher> FeatSumMap;
+    //LM:typedef hash_map <pair<size_t, size_t>, float, featid_hasher> FeatSumMap;
+    typedef boost::unordered_map <pair<size_t, size_t>, float, featid_hasher> FeatSumMap;
     FeatSumMap feat_sum;
     for (vector<Event>::const_iterator it = m_es->begin();
             it != m_es->end(); ++it) {
