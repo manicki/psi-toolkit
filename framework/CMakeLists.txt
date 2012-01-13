@@ -23,7 +23,9 @@ foreach(dir ${tools_DIRS})
 endforeach(dir)
 
 add_executable(psi-pipe psi-pipe.cpp)
-target_link_libraries(psi-pipe ${Boost_LIBRARIES} framework common)
+target_link_libraries(psi-pipe ${Boost_LIBRARIES} framework common maxent)
+
+include_directories("${psi-toolkit_SOURCE_DIR}/maxent")
 
 if(USE_JAVA)
     include_directories("${psi-toolkit_SOURCE_DIR}/tools/lemmatizers/morfologik")
