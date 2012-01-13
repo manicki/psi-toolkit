@@ -55,7 +55,7 @@ struct Event {
     context_type*   m_context;
     size_t       m_context_size;
     size_t       m_count;
-    double       m_prior;    // store prior(x), if the prior is uniform 
+    double       m_prior;    // store prior(x), if the prior is uniform
                              // then the model becomes Maxent Model
 
     size_t context_size() const { return m_context_size; }
@@ -85,7 +85,7 @@ struct Event {
                 rhs.m_context, rhs.m_context + rhs.m_context_size) == 0);
     }
 
-    void set_outcome(outcome_id_type oid) {}
+    void set_outcome(outcome_id_type) {}
 
     void set_prior(const double p) {m_prior = p;}
 };
