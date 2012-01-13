@@ -32,11 +32,12 @@ if (ARGV[0].nil? && ARGV[1].nil?)
     end
 
     sleep 1
+
+    $pid = `pidof psi-server #{$arguments.gsub('-', '')}`.split[0]
+    puts "\nPsi Server process id = #{$pid}"
 end
 
 puts "working on: #{$server_address}"
-$pid = `pidof psi-server #{$arguments.gsub('-', '')}`.split[0]
-puts "\nPsi Server process id = #{$pid}"
 
 t_test = Thread.new { $tst = `jruby -S rake ci:setup:testunit test[#{$host},#{$port}]` }
 
