@@ -4,7 +4,7 @@ include(${SWIG_USE_FILE})
 find_package(PerlLibs)
 
 set(${INSTALL_MODULES_PATH} ${PERL_SITELIB})
-STRING(REGEX REPLACE "^(/usr(/?(local/share|local)/)*)" "" INSTALL_PERL_MODULES_PATH ${PERL_SITELIB})
+STRING(REGEX REPLACE "^(/usr/)" "" INSTALL_PERL_MODULES_PATH ${PERL_SITELIB})
 
 set(CMAKE_SWIG_FLAGS "")
 
