@@ -4,7 +4,10 @@ require 'ci/reporter/rake/test_unit_loader'
 
 ENV['CI_REPORTS'] = File.dirname(__FILE__) + "/reports"
 
-task :test do
+task :test, :host, :port do |t, args|
+    $host = args.host
+    $port = args.port
+
 	require 'psi_server_test'
 	require 'index_site_test'
     require 'pipe_site_test'

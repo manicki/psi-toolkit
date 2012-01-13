@@ -8,7 +8,7 @@ class IndexSiteTest < Test::Unit::TestCase
 
     def setup
         @browser = Celerity::Browser.new
-        @browser.goto $server_localhost
+        @browser.goto $server_address
     end
 
     def teardown
