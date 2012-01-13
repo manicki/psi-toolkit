@@ -1,4 +1,4 @@
-$host ||= '0.0.0.0'
+$host ||= 'localhost'
 $port ||= '3000'
 threads = '1'
 current_dir = File.dirname(__FILE__)

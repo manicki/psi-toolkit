@@ -34,6 +34,7 @@ if (ARGV[0].nil? && ARGV[1].nil?)
     sleep 1
 end
 
+puts "working on: #{$server_address}"
 $pid = `pidof psi-server #{$arguments.gsub('-', '')}`.split[0]
 puts "\nPsi Server process id = #{$pid}"
 
