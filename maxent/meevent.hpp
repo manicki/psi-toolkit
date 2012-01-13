@@ -83,11 +83,11 @@ struct Event {
     bool is_same_context(const Event& rhs) const {
             return (lexicographical_compare_3way(m_context, m_context +
                         m_context_size, rhs.m_context, rhs.m_context +
-                        rhs.m_context_size) == 0); 
+                        rhs.m_context_size) == 0);
     }
 
     void set_outcome(outcome_id_type oid) { m_outcome = oid; }
-    void set_prior(const double p) {}
+    void set_prior(const double) {}
 };
 
 typedef size_t outcome_id_type;
@@ -99,7 +99,7 @@ typedef MEEventSpace::featmap_type FeatMapType;
 
 typedef ItemMap<feature_type> PredMapType;
 typedef ItemMap<outcome_type> OutcomeMapType;
-// ParamsType: each vector[pred_id] is a pair<outcome_id, feat_id> 
+// ParamsType: each vector[pred_id] is a pair<outcome_id, feat_id>
 typedef std::vector<std::vector<pair<size_t, size_t> > > ParamsType;
 
 } // namespace me

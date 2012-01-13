@@ -131,7 +131,7 @@ endif(SWIG_FOUND)
 # Sets compiler flags
 set(CMAKE_CXX_FLAGS "-g -Wall -Wundef -Wnon-virtual-dtor -Wextra")
 
-set(BASE_TARGETS common utf8case framework formats-psi formats-simple formats-txt formats-utt tools-tokenizers-tp tools-segmenters-srx tools-recognizers-langguesser)
+set(BASE_TARGETS common utf8case framework formats-psi formats-simple formats-txt formats-utt maxent tools-tokenizers-tp tools-segmenters-srx tools-recognizers-langguesser)
 
 set(TESTS_TARGETS common-tests tools-tokenizers-tp-tests tools-segmenters-srx-tests tools-datastructures-psi_query-tests tools-recognizers-langguesser-tests utf8case-tests)
 
@@ -155,7 +155,7 @@ endif(USE_PUDDLE)
 
 set(TARGETS ${BASE_TARGETS} psi-pipe)
 
-set(DIRS common formats tools framework utf8 utf8case server bindings)
+set(DIRS common formats maxent tools framework utf8 utf8case server bindings)
 foreach(dir ${DIRS})
     include_directories("${psi-toolkit_SOURCE_DIR}/${dir}")
     link_directories("${psi-toolkit_BINARY_DIR}/${dir}")
