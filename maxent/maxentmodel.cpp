@@ -298,11 +298,11 @@ double MaxentModel::build_params2(shared_ptr<ParamsType>& params,
 
     n_theta = 0;
     for(FeatMap::const_iterator pidIt = feat_map.begin();
-            pidIt != feat_map.end();pidIt++)
+            pidIt != feat_map.end();++pidIt)
     {
         vector<pair<size_t, size_t> >& param = (*params)[pidIt->first];
         for(set<size_t>::const_iterator oidIt = pidIt->second.begin();
-                oidIt != pidIt->second.end(); oidIt++)
+                oidIt != pidIt->second.end();++oidIt)
             param.push_back(make_pair(*oidIt, n_theta++));
     }
     return t.elapsed();
