@@ -30,7 +30,7 @@
 
 #include <cassert>
 
-#if HAVE_GETTIMEOFDAY
+#if defined(HAVE_GETTIMEOFDAY)
     #include <sys/time.h> // for gettimeofday()
 #endif
 
@@ -46,7 +46,7 @@
 
 #include "line_stream_iterator.hpp"
 #include "maxentmodel.hpp"
-#include "display.hpp" 
+#include "display.hpp"
 #include "maxent_cmdline.h"
 
 #include "mmapfile.hpp"
@@ -69,7 +69,7 @@ struct AddEventToModel{
     AddEventToModel(MaxentModel& m)
         :model(m){}
 
-    void operator()(const me_context_type& context, 
+    void operator()(const me_context_type& context,
             const me_outcome_type& outcome) {
         model.add_event(context, outcome, 1);
     }
@@ -94,7 +94,7 @@ struct AddEventToVector{
     AddEventToVector(EventVector_& v)
         :vec(v){}
 
-    void operator()(const me_context_type& context, 
+    void operator()(const me_context_type& context,
             const me_outcome_type& outcome) {
         vec.push_back(make_pair(context, outcome));
     }
@@ -102,7 +102,7 @@ struct AddEventToVector{
     EventVector_& vec;
 };
 
-bool get_sample(const string& line, me_context_type& context, 
+bool get_sample(const string& line, me_context_type& context,
         me_outcome_type& outcome, bool binary_feature) {
     typedef boost::tokenizer<boost::char_separator<char> > tokenizer;
     boost::char_separator<char> sep(" \t");
@@ -156,7 +156,7 @@ bool get_sample(const char* begin, const char* end, me_context_type& context,
                 ++p;
             if (p == q)
                 return false;
-            context.push_back(make_pair(string(it->first, p - it->first), 
+            context.push_back(make_pair(string(it->first, p - it->first),
                         atof(string(p + 1, q-p-1).c_str())));
         }
     }
@@ -216,7 +216,7 @@ void load_events(const string& file, Func add_event) {
         line_mem_iterator<> lend;
         for (; line != lend; ++line) {
             if (line->first == line->second)
-                continue; 
+                continue;
             if (!get_sample(line->first, line->second, context,
                         outcome, binary_feature)) {
                 char msg[100];
@@ -242,7 +242,7 @@ void load_events(const string& file, Func add_event) {
         line_stream_iterator<> lend;
         for (; line != lend; ++line) {
             if (line->empty())
-                continue; 
+                continue;
             if (!get_sample(*line, context, outcome, binary_feature)) {
                 char msg[100];
                 sprintf(msg, "line [%zd] in data file broken.", count);
@@ -266,7 +266,7 @@ void load_events(const string& file, Func add_event) {
 }
 
 // perform n-Fold cross_validation, results are printed to stdout
-void cross_validation(const string& file, size_t n, int iter, 
+void cross_validation(const string& file, size_t n, int iter,
         const string& method, double gaussian, bool random) {
     vector<pair<me_context_type, me_outcome_type> > v;
     vector<pair<me_context_type, me_outcome_type> >::iterator it;
@@ -276,7 +276,7 @@ void cross_validation(const string& file, size_t n, int iter,
         throw runtime_error("data set is too small to perform cross_validation");
 
     if (random) {
-#if HAVE_GETTIMEOFDAY
+#if defined(HAVE_GETTIMEOFDAY)
         timeval t;
         gettimeofday(&t, 0);
         srand48(t.tv_usec);
@@ -293,7 +293,7 @@ void cross_validation(const string& file, size_t n, int iter,
         m.add_events(v.begin(), v.begin() + i * step);
         m.add_events(v.begin() + (i + 1) * step, v.end());
         m.end_add_event();
-        m.train(iter, method, gaussian); 
+        m.train(iter, method, gaussian);
 
         size_t correct = 0;
         size_t count = 0;
@@ -371,7 +371,7 @@ void predict(const MaxentModel& m, const string& in_file,
 
         ++count;
     }
-    cout << "Accuracy: " << 100.0 * correct/count << "% (" << 
+    cout << "Accuracy: " << 100.0 * correct/count << "% (" <<
         correct << "/" << count << ")" << endl;
 }
 

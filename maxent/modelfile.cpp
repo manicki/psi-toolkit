@@ -87,6 +87,7 @@ void check_modeltype(const string& model, bool& binary, bool& randomfield) {
     } else if (s.find("bin") != s.npos) {
         binary = true;
     } else {
+        gzclose(f);
         throw runtime_error("Unable to detect model file format");
     }
 
@@ -95,6 +96,7 @@ void check_modeltype(const string& model, bool& binary, bool& randomfield) {
     } else if (s.find("maxent") != s.npos) {
         randomfield = false;
     } else {
+        gzclose(f);
         throw runtime_error("Unable to detect model file format");
     }
     gzclose(f);
@@ -134,7 +136,7 @@ void MaxentModelFile::set_outcome_map(
     m_outcome_map = outcome_map;
 }
 
-void MaxentModelFile::set_params(shared_ptr<me::ParamsType> params, 
+void MaxentModelFile::set_params(shared_ptr<me::ParamsType> params,
         size_t n_theta, shared_array<double> theta){
     assert(params);
     m_params           = params;
