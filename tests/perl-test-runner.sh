@@ -3,9 +3,10 @@
 echo '========================================================'
 
 PERL_BINDINGS_DIR=`pwd`/bindings/perl
+PERL_PROXIES_DIR=${PERL_BINDINGS_DIR}/PSIToolkit/proxy/
 PRJ_DIR=`pwd`/build
 
-if [[ -e $PRJ_DIR/bindings/perl/PSIToolkit/libSimple.so ]]; then
+if [[ -e $PRJ_DIR/bindings/perl/PSIToolkit/lib_psitoolkit_perl_simple.so ]]; then
 
 echo 'Start testing Perl bindings.'
 echo ''
@@ -13,6 +14,7 @@ echo ''
 export PATH=.:${PRJ_DIR}:${PATH}
 # the second path because libSimple.so is looked for in @INC directories
 export PERL5LIB=${PRJ_DIR}/bindings/perl:${PRJ_DIR}/bindings/perl/PSIToolkit:${PERL5LIB}
+export PERL5LIB=${PERL_PROXIES_DIR}:${PERL5LIB}
 
 echo "PERL5LIB is $PERL5LIB"
 
