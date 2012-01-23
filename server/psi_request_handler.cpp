@@ -64,7 +64,7 @@ void PsiRequestHandler::handle_request(
 
     //debug
     for (unsigned int i = 0; i < rep.headers.size(); i++) {
-        DEBUG(i << ": " << rep.headers[i].name << " => " << rep.headers[i].value);
+        DEBUG((unsigned long)i << ": " << (std::string)rep.headers[i].name << " => " << (std::string)rep.headers[i].value);
     }
     DEBUG("--------------");
 }

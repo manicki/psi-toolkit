@@ -95,7 +95,7 @@ int ServerRunner::run() {
         psiServer.run();
     }
     catch (std::exception& e) {
-        ERROR("Exception: " << e.what() << std::endl);
+        ERROR("Exception: " << e.what());
     }
 
     return 0;
@@ -139,10 +139,10 @@ int ServerRunner::setRootDirectory_() {
     boost::filesystem::path p(rootDir_ / "index.html");
 
     if (!boost::filesystem::exists(p)) {
-        ERROR("Set path to website root directory " << rootDir_
+        ERROR("Set path to website root directory " << rootDir_.string()
               << " does not contain the index.html file. \n"
               << "Use the --root option to specify valid root path. "
-              << std::endl);
+              );
         return 1;
     }
 
@@ -152,7 +152,7 @@ int ServerRunner::setRootDirectory_() {
 void ServerRunner::daemonize_(bool leaveStandardDescriptors) {
     if (daemon(0, leaveStandardDescriptors) != 0) {
         char* errorMessage = strerror(errno);
-        ERROR("cannot daemonize: " << errorMessage << std::endl);
+        ERROR("cannot daemonize: " << errorMessage);
     }
 }
 

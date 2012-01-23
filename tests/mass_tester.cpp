@@ -72,11 +72,11 @@ boost::program_options::options_description MassTester::optionsHandled() {
 
 void MassTester::lookForTestBatches_(const boost::filesystem::path& directory) {
     if (!boost::filesystem::is_directory(directory)) {
-        WARN(directory << "is not a directory");
+        WARN(directory.string() << "is not a directory");
         return;
     }
 
-    INFO("looking in " << directory);
+    INFO("looking in " << directory.string());
 
     boost::filesystem::recursive_directory_iterator end_itr;
     for (boost::filesystem::recursive_directory_iterator fiter(directory);
@@ -101,12 +101,12 @@ void MassTester::lookInDirectory_(const boost::filesystem::path& directory) {
 typedef std::map<std::string, boost::filesystem::path> file_map_type;
 
 void MassTester::addTestBatch_(const boost::filesystem::path& directory) {
-    INFO("registering test batch " << directory);
+    INFO("registering test batch " << directory.string());
 
     boost::filesystem::path commandFileName = directory / TEST_COMMAND_FILE_NAME;
 
     if (!boost::filesystem::is_regular_file(commandFileName)) {
-        WARN("no " << commandFileName << " found");
+        WARN("no " << commandFileName.string() << " found");
     }
 
     TestBatch testBatch(directory, readCommand_(commandFileName));
@@ -157,18 +157,18 @@ void MassTester::parseFilePath_(const boost::filesystem::path& filePath,
     infix = innerExtension.string();
     suffix = outerExtension.string();
 
-    INFO("parsing file path " << filePath << " " << basename << "+" << infix << "+" << suffix);
+    INFO("parsing file path " << filePath.string() << " " << basename << "+" << infix << "+" << suffix);
 }
 
 void MassTester::checkFileMap_(std::map<std::string, boost::filesystem::path>& filemap,
                                const boost::filesystem::path& path,
                                const std::string& key,
                                const std::string& infoString) {
-    WARN("checking " << path << " as " << infoString);
+    WARN("checking " << path.string() << " as " << infoString);
 
     if (filemap.count(key))
-        WARN("cannot use " << path << " test " << infoString << " file "
-             << "as a file with the same basename (" << filemap[key] << ") exists");
+        WARN("cannot use " << path.string() << " test " << infoString << " file "
+             << "as a file with the same basename (" << filemap[key].string() << ") exists");
     else
         filemap[key] = path;
 }

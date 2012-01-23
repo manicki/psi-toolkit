@@ -25,6 +25,7 @@ add_library(common SHARED
     layer_tag_mask.cpp
     lang_specific_processor_file_fetcher.cpp
     lemmatizer_output_iterator.cpp
+    logging.cpp
     object_cache.cpp
     processor.cpp
     processor_factory.cpp
