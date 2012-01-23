@@ -3,7 +3,7 @@
 
 #include "config.hpp"
 
-#ifdef HAVE_LOG4CPP
+#if HAVE_LOG4CPP
 
 #include <iostream>
 #include <sstream>

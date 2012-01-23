@@ -1,6 +1,6 @@
 #include "logging.hpp"
 
-#ifdef HAVE_LOG4CPP
+#if HAVE_LOG4CPP
 
 PSILogger psi_logger;
 
