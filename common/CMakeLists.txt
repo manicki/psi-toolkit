@@ -49,6 +49,10 @@ if(USE_JAVA)
     add_subdirectory(j)
 endif(USE_JAVA)
 
+if(HAVE_LOG4CPP)
+  target_link_libraries(common log4cpp)
+endif(HAVE_LOG4CPP)
+
 add_subdirectory(t)
 
 install(TARGETS common DESTINATION lib/)

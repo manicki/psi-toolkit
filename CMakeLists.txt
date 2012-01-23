@@ -38,6 +38,20 @@ MARK_AS_ADVANCED(
 
 include_directories(${psi-toolkit_SOURCE_DIR})
 
+# Logging
+find_library(LOG4CPP_LIB NAMES log4cpp)
+find_path(LOG4CPP_INCLUDE log4cpp/Appender.hh)
+
+if(EXISTS ${LOG4CPP_LIB} AND EXISTS ${LOG4CPP_INCLUDE})
+  message("-- Using Log4cpp logging...")
+  include_directories(${LOG4CPP_INCLUDE})
+  link_directories(${LOG4CPP_LIB})
+  set(HAVE_LOG4CPP 1)
+else()
+  message("-- Not using Log4cpp...")
+  set(HAVE_LOG4CPP 0)
+endif(EXISTS ${LOG4CPP_LIB} AND EXISTS ${LOG4CPP_INCLUDE})
+
 # Finds and includes external libraries
 set(Boost_USE_STATIC_LIBS OFF)
 set(Boost_USE_STATIC_RUNTIME OFF)
