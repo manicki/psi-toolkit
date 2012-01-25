@@ -3,7 +3,10 @@
 
 #include <map>
 #include <vector>
+#include <set>
 #include <boost/foreach.hpp>
+
+#include "FSATypes.hpp"
 
 namespace psi {
  
@@ -330,8 +333,8 @@ namespace psi {
     
     template <typename FSA>
     void kleene_option(FSA &fsa) {
-        std::set<typename FSA::state_type> &start  = fsa.getStartStates();
-        std::set<typename FSA::state_type> &end    = fsa.getEndStates();
+        const std::set<typename FSA::state_type> &start  = fsa.getStartStates();
+        const std::set<typename FSA::state_type> &end    = fsa.getEndStates();
         
         BOOST_FOREACH(typename FSA::state_type p, start)
             BOOST_FOREACH(typename FSA::state_type q, end)
@@ -340,8 +343,8 @@ namespace psi {
 
     template <typename FSA>
     void kleene_plus(FSA &fsa) {
-        std::set<typename FSA::state_type> &start  = fsa.getStartStates();
-        std::set<typename FSA::state_type> &end    = fsa.getEndStates();
+        const std::set<typename FSA::state_type> &start  = fsa.getStartStates();
+        const std::set<typename FSA::state_type> &end    = fsa.getEndStates();
         
         BOOST_FOREACH(typename FSA::state_type p, end)
             BOOST_FOREACH(typename FSA::state_type q, start)
