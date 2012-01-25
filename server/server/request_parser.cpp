@@ -25,7 +25,7 @@ void request_parser::reset()
 boost::tribool request_parser::consume(request& req, char input)
 {
 
-    std::cerr << input;
+  DEBUG2(input);
 
   switch (state_)
   {

@@ -203,7 +203,6 @@ void PsiServer::parseNamesAndValues(std::string uri, int q) {
         }
 
         addDataToCurrentSession(name, urlDecode(value));
-        //ame_values_.insert(std::pair<std::string, std::string> (name, urlDecode(value)));
         p = q + 1;
     }
 }

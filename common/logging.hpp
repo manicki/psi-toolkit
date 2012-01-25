@@ -97,6 +97,11 @@ extern PSILogger psi_logger;
       std::cerr << M << std::endl; \
     } while (0)
 
+#define DEBUG2(M) \
+    do { \
+      std::cerr << M; \
+    } while (0)
+
 #define INFO(M) \
     do { \
       std::cerr << M << std::endl; \

@@ -17,8 +17,6 @@
 
 ServerRunner::ServerRunner(int argc, char * argv[])
     : optionsDescription(
-    //"PsiServer is a simple multithreading web server allowed use of the PSI-Toolkit\n"
-    //"pipe through the web page interface.\n"
     "PSIServer options"
 ){
     options = parseOptions(argc, argv);
