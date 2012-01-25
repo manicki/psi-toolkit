@@ -62,9 +62,10 @@ void PsiRequestHandler::handle_request(
         rep.headers.push_back(createCookieHeader(session->getId()));
     }
 
-    //debug
+    //FIXME: debug
     for (unsigned int i = 0; i < rep.headers.size(); i++) {
-        DEBUG((unsigned long)i << ": " << (std::string)rep.headers[i].name << " => " << (std::string)rep.headers[i].value);
+        DEBUG((unsigned long)i << ": " << (std::string)rep.headers[i].name << " => "
+            << (std::string)rep.headers[i].value);
     }
     DEBUG("--------------");
 }
@@ -72,10 +73,10 @@ void PsiRequestHandler::handle_request(
 std::string PsiRequestHandler::getContentType(const std::string & uri) {
     std::string str = "text/html";
 
-    size_t is_extension = uri.find_last_of('.');
+    std::string extension = getFileExtension(uri);
 
-    if (is_extension != std::string::npos) {
-        std::string extension = uri.substr(is_extension + 1);
+    if (!extension.empty()) {
+        std::cout << "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA " << extension << std::endl;
 
         std::map<std::string, std::string>::iterator type;
         type = fileContentTypes.find(extension);
@@ -88,6 +89,25 @@ std::string PsiRequestHandler::getContentType(const std::string & uri) {
     str += ";charset=UTF-8";
 
     return str;
+}
+
+std::string PsiRequestHandler::getFileExtension(const std::string & uri) {
+
+    size_t startExtension = uri.find_last_of('.');
+    size_t endExtension = uri.find_last_of('?');
+
+    std::string extension = "";
+
+    if (startExtension != std::string::npos) {
+        if (endExtension != std::string::npos) {
+            extension = uri.substr(startExtension + 1, endExtension - startExtension - 1);
+        }
+        else {
+            extension = uri.substr(startExtension + 1);
+        }
+    }
+
+    return extension;
 }
 
 http::server3::header PsiRequestHandler::createCookieHeader(std::string id) {
