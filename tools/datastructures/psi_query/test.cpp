@@ -55,6 +55,22 @@ int main(int argc, char** argv) {
     unify(bdfsa, dfsa);
     
     bdfsa.print();
+    std::cout << std::endl;
+    
+    psi::NDFSA<> test;
+    psi::NDFSA<> str1(s2.begin(), s2.end());
+    psi::NDFSA<> str2(s4.begin(), s4.end());
+    unify(test, str1);
+    unify(test, str2);
+    
+    minimize(test);
+    minimize(ndfsa);
+    test.print();
+    
+    std::cout << std::endl;
+    intersect(test, ndfsa);
+    
+    test.print();
     
     return 0;
 }

@@ -31,68 +31,84 @@ namespace psi {
         PosT setLastBit(PosT) const;
         PosT unsetLastBit(PosT) const;
         
-        arc_iterator_type find(state_type, symbol_type) const;
+        arc_iterator_type find(size_t, symbol_type) const;
         
       public:
         BinDFSA();
                  
-        state_type delta(state_type, symbol_type) const;
+        size_t delta(size_t, symbol_type) const;
              
         template <typename InputIterator>
         bool in(InputIterator, InputIterator);
         
-        const std::set<state_type> getStartStates() const;
-        bool isStartState(state_type) const;
+        const std::set<size_t> getStartStates() const;
+        bool isStartState(size_t) const;
         
-        bool isEndState(state_type) const;
-        const std::set<state_type> getEndStates() const;
+        bool isEndState(size_t) const;
+        const std::set<size_t> getEndStates() const;
         
-        const ArcRange<arc_iterator_type> getArcs(state_type) const;
+        const ArcRange<arc_iterator_type> getArcs(size_t) const;
         
-        void setStartState(state_type p) {}
-        void unsetStartState(state_type p) {}
+        void setStartState(size_t);
+        void unsetStartState(size_t);
         
-        void setEndState(state_type p) {
-            m_states[p] = setLastBit(m_states[p]);
-        }
+        void setEndState(size_t);
+        void unsetEndState(size_t);
         
-        void unsetEndState(state_type p) {
-            m_states[p] = unsetLastBit(m_states[p]);            
-        }
-        
-        state_type addState(bool = false) {
-            state_type p = m_states.size();
-            m_states.resize(p+1);
-            m_states[p] = m_arcs.size();
-            return p;
-        }
-        
-        void addArc(state_type p, arc_type a) {
-            ArcSorter cmp;
-            if(p < m_states.size()) {
-                PosT pos = unsetLastBit(m_states[p]);
-                PosT end = m_arcs.size();
-            
-                if(p < m_states.size()-1)
-                    end = unsetLastBit(m_states[p+1]);
-                
-                while(pos < end && cmp(m_arcs[pos], a))
-                    pos++;
-                m_arcs.insert(m_arcs.begin() + pos, a);
-                
-                for(size_t q = p+1; q < m_states.size(); q++)
-                    if(isEndState(q))
-                        m_states[q] = setLastBit(unsetLastBit(m_states[q]) + 1);
-                    else
-                        m_states[q]++;
-            }
-        }
+        size_t addState(bool = false);
+        void addArc(size_t, arc_type);
         
         size_t size() const;
         void swap(BinDFSA &);
         void print();
-        
+
     };
+
+    template <typename ArcT, typename PosT>    
+    void BinDFSA<ArcT, PosT>::setStartState(size_t p) {}
+    
+    template <typename ArcT, typename PosT>    
+    void BinDFSA<ArcT, PosT>::unsetStartState(size_t p) {}
+    
+    template <typename ArcT, typename PosT>    
+    void BinDFSA<ArcT, PosT>::setEndState(size_t p) {
+        m_states[p] = setLastBit(m_states[p]);
+    }
+    
+    template <typename ArcT, typename PosT>
+    void BinDFSA<ArcT, PosT>::unsetEndState(size_t p) {
+        m_states[p] = unsetLastBit(m_states[p]);            
+    }
+    
+    template <typename ArcT, typename PosT>
+    size_t BinDFSA<ArcT, PosT>::addState(bool start) {
+        size_t p = m_states.size();
+        m_states.resize(p+1);
+        m_states[p] = m_arcs.size();
+        return p;
+    }
+    
+    template <typename ArcT, typename PosT>
+    void BinDFSA<ArcT, PosT>::addArc(size_t p, ArcT a) {
+        ArcSorter cmp;
+        if(p < m_states.size()) {
+            PosT pos = unsetLastBit(m_states[p]);
+            PosT end = m_arcs.size();
+        
+            if(p < m_states.size()-1)
+                end = unsetLastBit(m_states[p+1]);
+            
+            while(pos < end && cmp(m_arcs[pos], a))
+                pos++;
+            m_arcs.insert(m_arcs.begin() + pos, a);
+            
+            for(size_t q = p+1; q < m_states.size(); q++)
+                if(isEndState(q))
+                    m_states[q] = setLastBit(unsetLastBit(m_states[q]) + 1);
+                else
+                    m_states[q]++;
+        }
+    }
 
     template <typename ArcT, typename PosT>
     BinDFSA<ArcT, PosT>::BinDFSA() {}
@@ -121,10 +137,10 @@ namespace psi {
     template <typename ArcT, typename PosT>
     template <typename InputIterator>
     bool BinDFSA<ArcT, PosT>::in(InputIterator it, InputIterator end) {
-        state_type current_state = 0;
+        size_t current_state = 0;
         while(it != end) {
-            state_type next_state = delta(current_state, *it);    
-            if(next_state != state_type(-1))
+            size_t next_state = delta(current_state, *it);    
+            if(next_state != size_t(-1))
                 current_state = next_state;
             else
                 return false;
@@ -225,6 +241,5 @@ namespace psi {
         }
     }
 }
-
 
 #endif
