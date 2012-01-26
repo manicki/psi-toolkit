@@ -169,12 +169,16 @@ endif(USE_PUDDLE)
 
 set(TARGETS ${BASE_TARGETS} psi-pipe)
 
-set(DIRS common formats maxent tools framework utf8 utf8case sundown server bindings)
+set(DIRS common formats maxent tools framework utf8 utf8case server bindings)
 foreach(dir ${DIRS})
     include_directories("${psi-toolkit_SOURCE_DIR}/${dir}")
     link_directories("${psi-toolkit_BINARY_DIR}/${dir}")
     add_subdirectory(${dir})
 endforeach(dir)
+
+include_directories("${psi-toolkit_SOURCE_DIR}/sundown/src")
+link_directories("${psi-toolkit_BINARY_DIR}/sundown")
+add_subdirectory(sundown)
 
 if(USE_PUDDLE)
     set_target_properties(tools-parsers-puddle PROPERTIES
