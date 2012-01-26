@@ -38,7 +38,7 @@ public:
     PSILogger & operator<< (bool msg);
     
 private:
-    void _initialize_logger();
+    void initialize_logger_();
 
     std::stringstream buffer;
     log4cpp::Category & logger_category;

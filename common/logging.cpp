@@ -5,10 +5,10 @@
 PSILogger psi_logger;
 
 PSILogger::PSILogger() : logger_category(log4cpp::Category::getInstance("Category")) {
-    _initialize_logger();
+    initialize_logger_();
 }
 
-void PSILogger::_initialize_logger() {
+void PSILogger::initialize_logger_() {
     /*Setting up Appender, layout and Category*/
     log4cpp::Appender *appender =
         new log4cpp::OstreamAppender(
