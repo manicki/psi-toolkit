@@ -76,7 +76,12 @@ void PipeRunner::parseRunnerProgramOptions_(std::vector<std::string> &args) {
 
 void PipeRunner::setRunnerOptionsDescription_() {
     runnerOptionsDescription_.add_options()
-        ("help", "Produce help message for each processor");
+        ("help", "Produce help message for each processor")
+        ("log-level", boost::program_options::value<std::string>(),
+         "Set logging level")
+        ("log-file", boost::program_options::value<std::string>(),
+         "Filepath to store logs (if not set: standard error)")
+        ;
 }
 
 bool PipeRunner::stopAfterExecutingRunnerOptions_() {
@@ -89,6 +94,15 @@ bool PipeRunner::stopAfterExecutingRunnerOptions_() {
 
         return true;
     }
+
+    if (runnerOptions_.count("log-level")) {
+        SET_LOGGING_LEVEL(runnerOptions_["log-level"].as<std::string>());
+    }
+
+    if (runnerOptions_.count("log-file")) {
+        SET_LOGGER_FILE(runnerOptions_["log-file"].as<std::string>());
+    }
+    
     return false;
 }
 
