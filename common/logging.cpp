@@ -3,7 +3,7 @@
 #if HAVE_LOG4CPP
 
 #include <log4cpp/FileAppender.hh>
-#include <log4cpp/SimpleLayout.hh>
+#include <log4cpp/PatternLayout.hh>
 
 PSILogger psi_logger;
 
@@ -27,8 +27,10 @@ void PSILogger::setDefaultLoggerAppender_() {
 }
 
 void PSILogger::addDefaultLayoutToAppender_(log4cpp::Appender * appender) {
-    log4cpp::Layout *layout =
-        new log4cpp::SimpleLayout();
+    log4cpp::PatternLayout * layout =
+        new log4cpp::PatternLayout();
+
+    layout->setConversionPattern("%p %d{%Y-%m-%d %H:%M:%S,%l} : %m%n");
 
     appender->setLayout(layout);
 }
