@@ -95,13 +95,14 @@ bool PipeRunner::stopAfterExecutingRunnerOptions_() {
         return true;
     }
 
+    if (runnerOptions_.count("log-file")) {
+        SET_LOGGER_FILE(runnerOptions_["log-file"].as<std::string>());
+    }
+
     if (runnerOptions_.count("log-level")) {
         SET_LOGGING_LEVEL(runnerOptions_["log-level"].as<std::string>());
     }
 
-    if (runnerOptions_.count("log-file")) {
-        SET_LOGGER_FILE(runnerOptions_["log-file"].as<std::string>());
-    }
     
     return false;
 }

@@ -22,7 +22,7 @@ public:
     void setLoggingToFile(const std::string & filepath);
     void setLoggingPriority(const std::string & priorityName);
 
-    void flush(log4cpp::Priority::PriorityLevel priorityLevel);
+    void flush(log4cpp::Priority::Value priorityLevel);
 
     PSILogger & operator<< (const std::string & msg);
     PSILogger & operator<< (const char * msg);

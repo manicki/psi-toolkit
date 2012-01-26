@@ -34,9 +34,6 @@ void PSILogger::addDefaultLayoutToAppender_(log4cpp::Appender * appender) {
 }
 
 PSILogger::~PSILogger() {
-    if (current_logger_appender) {
-        delete current_logger_appender;
-    }
 }
 
 void PSILogger::setLoggingToFile(const std::string & filepath) {
@@ -58,19 +55,14 @@ void PSILogger::setLoggingPriority(const std::string & priorityName) {
 }
 
 void PSILogger::setNewLoggerAppender_(log4cpp::Appender * appender) {
-
     logger_category.removeAllAppenders();
 
-    if (current_logger_appender) {
-        delete current_logger_appender;
-        current_logger_appender = appender;
-    }
-
+    current_logger_appender = appender;
     logger_category.setAppender(current_logger_appender);
 }
 
-void PSILogger::flush(log4cpp::Priority::PriorityLevel priorityLevel) {
-    logger_category.info(buffer.str());
+void PSILogger::flush(log4cpp::Priority::Value priorityLevel) {
+    logger_category.log(priorityLevel, buffer.str());
     buffer.str("");
 }
 
