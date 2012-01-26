@@ -145,7 +145,7 @@ endif(SWIG_FOUND)
 # Sets compiler flags
 set(CMAKE_CXX_FLAGS "-g -Wall -Wundef -Wnon-virtual-dtor -Wextra")
 
-set(BASE_TARGETS common utf8case framework formats-psi formats-simple formats-txt formats-utt maxent tools-tokenizers-tp tools-segmenters-srx tools-recognizers-langguesser)
+set(BASE_TARGETS common utf8case sundown framework formats-psi formats-simple formats-txt formats-utt maxent tools-tokenizers-tp tools-segmenters-srx tools-recognizers-langguesser)
 
 set(TESTS_TARGETS common-tests tools-tokenizers-tp-tests tools-segmenters-srx-tests tools-datastructures-psi_query-tests tools-recognizers-langguesser-tests utf8case-tests)
 
@@ -175,6 +175,10 @@ foreach(dir ${DIRS})
     link_directories("${psi-toolkit_BINARY_DIR}/${dir}")
     add_subdirectory(${dir})
 endforeach(dir)
+
+include_directories("${psi-toolkit_SOURCE_DIR}/sundown/src")
+link_directories("${psi-toolkit_BINARY_DIR}/sundown")
+add_subdirectory(sundown)
 
 if(USE_PUDDLE)
     set_target_properties(tools-parsers-puddle PROPERTIES
