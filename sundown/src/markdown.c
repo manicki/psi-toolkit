@@ -83,7 +83,7 @@ enum markdown_char_t {
 	MD_CHAR_AUTOLINK_URL,
 	MD_CHAR_AUTOLINK_EMAIL,
 	MD_CHAR_AUTOLINK_WWW,
-	MD_CHAR_SUPERSCRIPT,
+	MD_CHAR_SUPERSCRIPT
 };
 
 static char_trigger markdown_char_ptrs[] = {
@@ -665,7 +665,12 @@ char_codespan(struct buf *ob, struct sd_markdown *rndr, uint8_t *data, size_t of
 
 	/* real code span */
 	if (f_begin < f_end) {
-		struct buf work = { data + f_begin, f_end - f_begin, 0, 0 };
+		struct buf work;
+		work.data = data + f_begin;
+		work.size = f_end - f_begin;
+                work.asize = 0;
+                work.unit = 0;
+
 		if (!rndr->cb.codespan(ob, &work, rndr->opaque))
 			end = 0;
 	} else {
@@ -735,9 +740,15 @@ static size_t
 char_langle_tag(struct buf *ob, struct sd_markdown *rndr, uint8_t *data, size_t offset, size_t size)
 {
 	enum mkd_autolink altype = MKDA_NOT_AUTOLINK;
-	size_t end = tag_length(data, size, &altype);
-	struct buf work = { data, end, 0, 0 };
+
 	int ret = 0;
+
+	size_t end = tag_length(data, size, &altype);
+	struct buf work;
+	work.data = data;
+	work.size = end;
+	work.asize = 0;
+	work.unit = 0;
 
 	if (end > 2) {
 		if (rndr->cb.autolink && altype != MKDA_NOT_AUTOLINK) {
@@ -1410,7 +1421,11 @@ parse_paragraph(struct buf *ob, struct sd_markdown *rndr, uint8_t *data, size_t 
 {
 	size_t i = 0, end = 0;
 	int level = 0;
-	struct buf work = { data, 0, 0, 0 };
+	struct buf work;
+	work.data = data;
+	work.size = 0;
+	work.asize = 0;
+	work.unit = 0;
 
 	while (i < size) {
 		for (end = i + 1; end < size && data[end - 1] != '\n'; end++) /* empty */;
@@ -1794,7 +1809,11 @@ parse_htmlblock(struct buf *ob, struct sd_markdown *rndr, uint8_t *data, size_t 
 	size_t i, j = 0;
 	const char *curtag = NULL;
 	int found;
-	struct buf work = { data, 0, 0, 0 };
+	struct buf work;
+	work.data = data;
+	work.size = 0;
+	work.asize = 0;
+	work.unit = 0;
 
 	/* identification of the opening tag */
 	if (size < 2 || data[0] != '<')
@@ -2363,7 +2382,7 @@ void
 sd_markdown_render(struct buf *ob, const uint8_t *document, size_t doc_size, struct sd_markdown *md)
 {
 #define MARKDOWN_GROW(x) ((x) + ((x) >> 1))
-	static const char UTF8_BOM[] = {0xEF, 0xBB, 0xBF};
+	static const char UTF8_BOM[] = {'\xef','\xbb','\xbf'};
 
 	struct buf *text;
 	size_t beg, end;

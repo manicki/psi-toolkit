@@ -35,7 +35,7 @@
 enum mkd_autolink {
 	MKDA_NOT_AUTOLINK,	/* used internally when it is not an autolink*/
 	MKDA_NORMAL,		/* normal http/http/ftp/mailto/etc link */
-	MKDA_EMAIL,			/* e-mail link without explit mailto: */
+	MKDA_EMAIL			/* e-mail link without explit mailto: */
 };
 
 enum mkd_tableflags {
@@ -54,7 +54,7 @@ enum mkd_extensions {
 	MKDEXT_STRIKETHROUGH = (1 << 4),
 	MKDEXT_LAX_HTML_BLOCKS = (1 << 5),
 	MKDEXT_SPACE_HEADERS = (1 << 6),
-	MKDEXT_SUPERSCRIPT = (1 << 7),
+	MKDEXT_SUPERSCRIPT = (1 << 7)
 };
 
 /* sd_callbacks - functions for rendering parsed data */

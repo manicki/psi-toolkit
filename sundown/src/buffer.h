@@ -29,7 +29,7 @@
 
 typedef enum {
 	BUF_OK = 0,
-	BUF_ENOMEM = -1,
+	BUF_ENOMEM = -1
 } buferror_t;
 
 /* struct buf: character array buffer */

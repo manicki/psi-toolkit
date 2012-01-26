@@ -15,7 +15,7 @@
  * OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
  */
 
-#define BUFFER_MAX_ALLOC_SIZE (1024 * 1024 * 16) //16mb
+#define BUFFER_MAX_ALLOC_SIZE (1024 * 1024 * 16) /*16mb*/
 
 #include "buffer.h"
 
@@ -120,7 +120,7 @@ bufprintf(struct buf *buf, const char *fmt, ...)
 
 	if (buf->size >= buf->asize && bufgrow(buf, buf->size + 1) < 0)
 		return;
-	
+
 	va_start(ap, fmt);
 	n = _buf_vsnprintf((char *)buf->data + buf->size, buf->asize - buf->size, fmt, ap);
 	va_end(ap);
