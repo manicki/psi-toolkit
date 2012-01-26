@@ -19,7 +19,7 @@ void PSILogger::initialize_logger_() {
 void PSILogger::setDefaultLoggerAppender_() {
     log4cpp::Appender * default_logger_appender =
         new log4cpp::OstreamAppender(
-                                     "OstreamAppender",&std::cerr);
+                                     "OstreamAppender", &std::cerr);
 
     addDefaultLayoutToAppender_(default_logger_appender);
 
@@ -48,8 +48,8 @@ void PSILogger::setLoggingPriority(const std::string & priorityName) {
         log4cpp::Priority::Value newPriority =
             log4cpp::Priority::getPriorityValue(priorityName);
         logger_category.setPriority(newPriority);
-                                                                            
-    } catch(std::invalid_argument e) {
+
+    } catch (std::invalid_argument e) {
         ERROR("Unknown priority name: " << priorityName);
     }
 }
@@ -105,7 +105,6 @@ PSILogger & PSILogger::operator<< (signed short msg) {
     buffer << msg;
     return *this;
 }
-    
 
 PSILogger & PSILogger::operator<< (float msg) {
     buffer << msg;

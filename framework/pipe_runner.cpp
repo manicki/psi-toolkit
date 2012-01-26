@@ -53,8 +53,10 @@ void PipeRunner::parseIntoGraph_(std::vector<std::string> args, bool isTheFirstA
     parseRunnerProgramOptions_(args);
     if (stopAfterExecutingRunnerOptions_()) return;
 
-    if( ! parseIntoPipelineSpecification_(
-                                          args, isTheFirstArgProgramName, pipelineSpecification_) ) {
+    if ( ! parseIntoPipelineSpecification_(
+                                          args,
+                                          isTheFirstArgProgramName,
+                                          pipelineSpecification_) ) {
         return;
     }
 
@@ -107,7 +109,6 @@ bool PipeRunner::stopAfterExecutingRunnerOptions_() {
         SET_LOGGING_LEVEL(runnerOptions_["log-level"].as<std::string>());
     }
 
-    
     return false;
 }
 
@@ -147,7 +148,9 @@ bool PipeRunner::parseIntoPipelineSpecification_(
 }
 
 void PipeRunner::showEmptyPipeWarningMessage_() {
-    std::cerr << "try this: cd build; framework/psi-pipe tp-tokenizer --lang pl ! psi-writer" << std::endl;
+    std::cerr << "try this: cd build; "
+              << "framework/psi-pipe tp-tokenizer --lang pl ! psi-writer"
+              << std::endl;
     std::cerr << "see --help option for details..." << std::endl;
     exit(1);
 }

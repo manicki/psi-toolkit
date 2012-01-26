@@ -87,8 +87,8 @@ extern PSILogger psi_logger;
     } while (0)
 
 
-#define SET_LOGGER_FILE(M) do { psi_logger.setLoggingToFile(M); } while(0);
-#define SET_LOGGING_LEVEL(M) do { psi_logger.setLoggingPriority(M); } while(0);
+#define SET_LOGGER_FILE(M) do { psi_logger.setLoggingToFile(M); } while (0);
+#define SET_LOGGING_LEVEL(M) do { psi_logger.setLoggingPriority(M); } while (0);
 
 #else
 
@@ -125,8 +125,8 @@ extern PSILogger psi_logger;
       std::cerr << M << std::endl; \
     } while (0)
 
-#define SET_LOGGER_FILE(M) do { INFO("Logging to file unsupported (no log4cpp)."); } while(0);
-#define SET_LOGGING_LEVEL(M) do { INFO("Logging priorities unsupported (no log4cpp)."); } while(0);
+#define SET_LOGGER_FILE(M) do { INFO("Logging to file unsupported (no log4cpp)."); } while (0);
+#define SET_LOGGING_LEVEL(M) do { INFO("Logging priorities unsupported (no log4cpp)."); } while (0);
 
 #endif
 
