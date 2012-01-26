@@ -22,13 +22,6 @@ public:
     void setLoggingToFile(const std::string & filepath);
     void setLoggingPriority(const std::string & priorityName);
 
-    void trace(const std::string & msg);
-    void debug(const std::string & msg);
-    void info(const std::string & msg);
-    void warn(const std::string & msg);
-    void error(const std::string & msg);
-    void fatal(const std::string & msg);
-
     void flush(log4cpp::Priority::PriorityLevel priorityLevel);
 
     PSILogger & operator<< (const std::string & msg);

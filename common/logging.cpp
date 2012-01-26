@@ -69,30 +69,6 @@ void PSILogger::setNewLoggerAppender_(log4cpp::Appender * appender) {
     logger_category.setAppender(current_logger_appender);
 }
 
-void PSILogger::trace(const std::string & msg) {
-    std::cerr << "trace: " << msg << std::endl;
-}
-
-void PSILogger::debug(const std::string & msg) {
-    std::cerr << "debug: " << msg << std::endl;
-}
-
-void PSILogger::info(const std::string & msg) {
-    std::cerr << "info: " << msg << std::endl;
-}
-
-void PSILogger::warn(const std::string & msg) {
-    std::cerr << "warn: " << msg << std::endl;
-}
-
-void PSILogger::error(const std::string & msg) {
-    std::cerr << "error: " << msg << std::endl;
-}
-
-void PSILogger::fatal(const std::string & msg) {
-    std::cerr << "fatal: " << msg << std::endl;
-}
-
 void PSILogger::flush(log4cpp::Priority::PriorityLevel priorityLevel) {
     logger_category.info(buffer.str());
     buffer.str("");
