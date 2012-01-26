@@ -7,11 +7,6 @@
 void checkIfRunAsInstalled(char* arg0);
 
 int main(int argc, char* argv[]) {
-    if (argc < 2) {
-        std::cerr << "try this: cd build; framework/psi-pipe tp-tokenizer --lang pl ! psi-writer\n";
-        exit(1);
-    }
-
     checkIfRunAsInstalled(argv[0]);
 
     int exit_code = 1;
