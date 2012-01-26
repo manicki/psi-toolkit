@@ -11,19 +11,18 @@
 #include <log4cpp/Category.hh>
 #include <log4cpp/OstreamAppender.hh>
 #include <log4cpp/SimpleLayout.hh>
+#include <log4cpp/Priority.hh>
+
 
 class PSILogger {
 public:
     PSILogger();
+    ~PSILogger();
 
-    void trace(const std::string & msg);
-    void debug(const std::string & msg);
-    void info(const std::string & msg);
-    void warn(const std::string & msg);
-    void error(const std::string & msg);
-    void fatal(const std::string & msg);
+    void setLoggingToFile(const std::string & filepath);
+    void setLoggingPriority(const std::string & priorityName);
 
-    void flush(log4cpp::Priority::PriorityLevel priorityLevel);
+    void flush(log4cpp::Priority::Value priorityLevel);
 
     PSILogger & operator<< (const std::string & msg);
     PSILogger & operator<< (const char * msg);
@@ -38,13 +37,18 @@ public:
     PSILogger & operator<< (bool msg);
     
 private:
-    void _initialize_logger();
+    void initialize_logger_();
+    void setDefaultLoggerAppender_();
+    void addDefaultLayoutToAppender_(log4cpp::Appender * appender);
+    void setNewLoggerAppender_(log4cpp::Appender * appender);
 
     std::stringstream buffer;
     log4cpp::Category & logger_category;
+    log4cpp::Appender * current_logger_appender;
 };
 
 extern PSILogger psi_logger;
+
 
 #define TRACE(M) \
     do { \
@@ -82,6 +86,10 @@ extern PSILogger psi_logger;
         psi_logger.flush(log4cpp::Priority::FATAL);                     \
     } while (0)
 
+
+#define SET_LOGGER_FILE(M) do { psi_logger.setLoggingToFile(M); } while (0);
+#define SET_LOGGING_LEVEL(M) do { psi_logger.setLoggingPriority(M); } while (0);
+
 #else
 
 #include <iostream>
@@ -116,6 +124,9 @@ extern PSILogger psi_logger;
     do { \
       std::cerr << M << std::endl; \
     } while (0)
+
+#define SET_LOGGER_FILE(M) do { INFO("Logging to file unsupported (no log4cpp)."); } while (0);
+#define SET_LOGGING_LEVEL(M) do { INFO("Logging priorities unsupported (no log4cpp)."); } while (0);
 
 #endif
 

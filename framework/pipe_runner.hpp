@@ -53,9 +53,10 @@ private:
     void parseRunnerProgramOptions_(std::vector<std::string> &args);
     bool stopAfterExecutingRunnerOptions_();
 
-    void parseIntoPipelineSpecification_(
+    bool parseIntoPipelineSpecification_(
         std::vector<std::string> args, bool isTheFirstArgProgramName,
         PipelineSpecification& pipelineSpec);
+    void showEmptyPipeWarningMessage_();
 
     ProcessorFactory& getFactory_(const PipelineElementSpecification& elementSpec);
 
