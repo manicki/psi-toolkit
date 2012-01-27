@@ -9,6 +9,8 @@
 #include <boost/logic/tribool.hpp>
 #include <boost/tuple/tuple.hpp>
 
+#include "logging.hpp"
+
 namespace http {
 namespace server3 {
 

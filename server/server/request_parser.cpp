@@ -5,7 +5,6 @@
 
 #include "request_parser.hpp"
 #include "request.hpp"
-#include "logging.hpp"
 
 #include <iostream>
 
