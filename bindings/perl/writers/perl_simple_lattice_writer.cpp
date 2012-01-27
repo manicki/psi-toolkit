@@ -28,7 +28,8 @@ LatticeWriter<PerlLatticeWriterOutput>* PerlSimpleLatticeWriter::Factory::doCrea
         options.count("no-alts"),
         options.count("with-blank"),
         quoter.unescape(options["tag"].as<std::string>()),
-        higherOrderTags
+        higherOrderTags,
+        options.count("with-args")
         );
 }
 
@@ -46,6 +47,8 @@ boost::program_options::options_description PerlSimpleLatticeWriter::Factory::do
             "basic tag")
         ("spec", boost::program_options::value< std::vector<std::string> >()->multitoken(),
             "specification of higher-order tags")
+        ("with-args",
+         "if set, then returns text with annotation as a hash element")
         ;
 
     return optionsDescription;
@@ -74,7 +77,8 @@ PerlSimpleLatticeWriter::Worker::Worker(PerlSimpleLatticeWriter & processor,
 void PerlSimpleLatticeWriter::Worker::doRun() {
 
     PerlSimpleLatticeWriterOutputIterator outputIterator(
-        getOutputStream()
+                                                         getOutputStream(),
+                                                         processor_.isWithArgs()
         );
 
     std::vector<std::string> handledTags;

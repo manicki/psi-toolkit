@@ -1,6 +1,6 @@
 #include "lattice_writer_output_iterator.hpp"
 
-void LatticeWriterOutputIterator::putElement(const std::string& element) {
+void LatticeWriterOutputIterator::putElement(const AnnotationItem& element) {
     doPutElement(element);
 }
 
@@ -25,4 +25,13 @@ void LatticeWriterOutputIterator::flush() {
 }
 
 LatticeWriterOutputIterator::~LatticeWriterOutputIterator() {
+}
+
+std::string LatticeWriterOutputIterator::getElementAnnotationItemStringToPut(const AnnotationItem & element) const {
+    if (element.getText().empty()) {
+        return element.getCategory();
+    } else {
+        return element.getText();
+    }
+
 }

@@ -5,6 +5,7 @@
 
 #include "lattice_writer_output_iterator.hpp"
 #include "perl_lattice_writer_output.hpp"
+#include "annotation_item.hpp"
 
 /**
  * Writes simple lattice writer's output to the stream.
@@ -12,7 +13,8 @@
 class PerlSimpleLatticeWriterOutputIterator : public LatticeWriterOutputIterator {
 public:
     PerlSimpleLatticeWriterOutputIterator(
-        PerlLatticeWriterOutput & output
+                                          PerlLatticeWriterOutput & output,
+                                          bool withArgs
     );
 
     virtual ~PerlSimpleLatticeWriterOutputIterator();
@@ -20,7 +22,7 @@ public:
 private:
     PerlLatticeWriterOutput & output_;
 
-    virtual void doPutElement(const std::string& element);
+    virtual void doPutElement(const AnnotationItem& element);
 
     virtual void doOpenAlternative();
 
@@ -31,6 +33,8 @@ private:
     virtual void doCloseGroup(const std::string& group);
 
     virtual void doFlush();
+
+    bool withArgs_;
 };
 
 #endif

@@ -4,6 +4,7 @@
 #include <string>
 
 #include "lattice.hpp"
+#include "annotation_item.hpp"
 
 /**
  * Lattice writers write their results using
@@ -14,7 +15,7 @@ public:
     /**
      * Puts an element into the iterator.
      */
-    void putElement(const std::string& element);
+    void putElement(const AnnotationItem & element);
 
     /**
      * Opens a group of alternative elements.
@@ -43,8 +44,11 @@ public:
 
     virtual ~LatticeWriterOutputIterator();
 
+protected:
+    std::string getElementAnnotationItemStringToPut(const AnnotationItem & element) const;
+    
 private:
-    virtual void doPutElement(const std::string& element) = 0;
+    virtual void doPutElement(const AnnotationItem & element) = 0;
 
     virtual void doOpenAlternative() = 0;
 

@@ -20,17 +20,20 @@ void SimpleLatticeWriterStreamOutputIterator::setSeparator(std::string group, st
     groupOpened_[group] = false;
 }
 
-void SimpleLatticeWriterStreamOutputIterator::doPutElement(const std::string& element) {
+void SimpleLatticeWriterStreamOutputIterator::doPutElement(const AnnotationItem& element) {
+    std::string elementText =
+        getElementAnnotationItemStringToPut(element);
+
     if (alternativeOpened_) {
         if (alternativeSs_.str() != "") {
             alternativeSs_ << altSep_;
         }
-        alternativeSs_ << element;
+        alternativeSs_ << elementText;
     } else {
         if (blockSs_.str() != "") {
             blockSs_ << sep_;
         }
-        blockSs_ << element;
+        blockSs_ << elementText;
     }
 }
 

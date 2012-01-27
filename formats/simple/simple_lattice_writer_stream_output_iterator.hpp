@@ -6,7 +6,7 @@
 #include <string>
 
 #include "lattice_writer_output_iterator.hpp"
-
+#include "annotation_item.hpp"
 /**
  * Writes simple lattice writer's output to the stream.
  */
@@ -38,7 +38,7 @@ private:
     bool alternativeOpened_;
     std::map<std::string, bool> groupOpened_;
 
-    virtual void doPutElement(const std::string& element);
+    virtual void doPutElement(const AnnotationItem& element);
 
     virtual void doOpenAlternative();
 

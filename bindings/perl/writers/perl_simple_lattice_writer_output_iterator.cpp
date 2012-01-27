@@ -3,17 +3,25 @@
 #include "logging.hpp"
 
 PerlSimpleLatticeWriterOutputIterator::PerlSimpleLatticeWriterOutputIterator(
-    PerlLatticeWriterOutput & output
+  PerlLatticeWriterOutput & output,
+  bool withArgs
+                                                                             
 ) :
-    output_(output)
+    output_(output),
+    withArgs_(withArgs)
 {
 }
 
 PerlSimpleLatticeWriterOutputIterator::~PerlSimpleLatticeWriterOutputIterator() {
 }
 
-void PerlSimpleLatticeWriterOutputIterator::doPutElement(const std::string& element) {
-    output_.push(element);
+void PerlSimpleLatticeWriterOutputIterator::doPutElement(const AnnotationItem& element) {
+
+    if(this->withArgs_) {
+        output_.push(element);
+    } else {
+        output_.push(getElementAnnotationItemStringToPut(element));
+    }
 }
 
 void PerlSimpleLatticeWriterOutputIterator::doOpenAlternative() {

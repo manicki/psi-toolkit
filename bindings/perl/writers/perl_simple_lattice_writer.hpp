@@ -36,13 +36,15 @@ public:
         bool noAlts,
         bool withBlank,
         std::string basicTag,
-        std::set<std::string> higherOrderTags
+        std::set<std::string> higherOrderTags,
+        bool withArgs
     ) :
         linear_(linear),
         noAlts_(noAlts),
         withBlank_(withBlank),
         basicTag_(basicTag),
-        higherOrderTags_(higherOrderTags)
+        higherOrderTags_(higherOrderTags),
+        withArgs_(withArgs)
     { }
 
     bool isLinear() const {
@@ -55,6 +57,10 @@ public:
 
     bool isWithBlank() const {
         return withBlank_;
+    }
+
+    bool isWithArgs() const {
+        return withArgs_;
     }
 
     std::string getBasicTag() const {
@@ -92,6 +98,7 @@ private:
     bool withBlank_;
     std::string basicTag_;
     std::set<std::string> higherOrderTags_;
+    bool withArgs_;
 };
 
 #endif

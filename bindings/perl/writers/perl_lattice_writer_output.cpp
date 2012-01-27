@@ -13,6 +13,10 @@ void PerlLatticeWriterOutput::push(const std::string & textElement) {
     av_push( currentArrayPointer_, element_sv);
 }
 
+void PerlLatticeWriterOutput::push(const AnnotationItem & element) {
+    // TODO
+}
+
 void PerlLatticeWriterOutput::openNewSubArray() {
     arraysStack_.push(currentArrayPointer_);
 

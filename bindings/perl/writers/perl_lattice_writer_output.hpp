@@ -5,6 +5,7 @@
 #include <string>
 #include "config.hpp"
 #include  <stack>
+#include "annotation_item.hpp"
 
 #if HAVE_PERL_BINDINGS
 
@@ -20,6 +21,7 @@ public:
     PerlLatticeWriterOutput(AV * arrayPointer);
 
     void push(const std::string & textElement);
+    void push(const AnnotationItem & element);
 
     void openNewSubArray();
     void closeSubArray();
