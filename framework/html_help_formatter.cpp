@@ -8,13 +8,14 @@ void HtmlHelpFormatter::doFormatOneProcessorHelp(
     boost::program_options::options_description options,
     std::ostream& output)
 {
-    output << "<h3>" << processorName << "</h3>" << std::endl;
+    output << "<h2>" << processorName << "</h2>" << std::endl;
 
     if (description.size() != 0) {
-        output << "<p class=\"proc-desc\">" << markdownString2String(description) << "</p>" << std::endl;
+        output << "<div class=\"proc-desc\">" << markdownString2String(description)
+            << "</div>" << std::endl;
     }
 
-    output << "<pre class=\"proc-option\">" << options << "</pre>" << std::endl;
+    output << "<div class=\"proc-option\"><pre>" << options << "</pre></div>" << std::endl;
 }
 
 HtmlHelpFormatter::~HtmlHelpFormatter() { }
