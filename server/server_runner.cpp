@@ -14,6 +14,7 @@
 #include "index_site.hpp"
 #include "pipe_site.hpp"
 #include "help_site.hpp"
+#include "json_site.hpp"
 
 ServerRunner::ServerRunner(int argc, char * argv[])
     : optionsDescription(
@@ -88,6 +89,7 @@ int ServerRunner::run() {
         std::string opts = annotatorOptions.empty() ? DEFAULT_PIPE : annotatorOptionsAsString();
         PipeSite pipe(psiServer, opts);
         HelpSite help(psiServer);
+        JsonSite json(psiServer);
 
         // run server
         psiServer.run();

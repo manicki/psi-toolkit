@@ -5,7 +5,7 @@
 #include <boost/lexical_cast.hpp>
 #include <boost/assign.hpp>
 
-std::map<std::string, std::string> PsiRequestHandler::fileContentTypes =
+std::map<std::string, std::string> PsiRequestHandler::filesToContentTypes =
     boost::assign::map_list_of
         ("htm", "text/html")
         ("html", "text/html")
@@ -28,7 +28,11 @@ std::map<std::string, std::string> PsiRequestHandler::fileContentTypes =
         ("png", "image/png")
         ("gif", "image/gif")
         ("tiff", "image/tiff")
-        ("tiff", "image/tif");
+        ("tif", "image/tif");
+
+std::map<std::string, std::string> PsiRequestHandler::fileExceptionsToContentTypes =
+    boost::assign::map_list_of
+        ("json.psis", "text/javascript");
 
 void PsiRequestHandler::handle_request(
     const http::server3::request& req, http::server3::reply& rep
@@ -71,40 +75,58 @@ void PsiRequestHandler::handle_request(
 }
 
 std::string PsiRequestHandler::getContentType(const std::string & uri) {
-    std::string str = "text/html";
+    std::string content = "";
+    std::map<std::string, std::string>::iterator type;
 
-    std::string extension = getFileExtension(uri);
+    std::string file = getFileName(uri);
+    type = fileExceptionsToContentTypes.find(file);
 
-    if (!extension.empty()) {
-        std::cout << "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA " << extension << std::endl;
+    if (type != fileExceptionsToContentTypes.end()) {
+        content = type->second;
+    }
 
-        std::map<std::string, std::string>::iterator type;
-        type = fileContentTypes.find(extension);
+    if (content.empty()) {
+        std::string extension = getFileExtension(file);
+        type = filesToContentTypes.find(extension);
 
-        if (type != fileContentTypes.end()) {
-            str = type->second;
+        if (type != filesToContentTypes.end()) {
+            content = type->second;
         }
     }
 
-    str += ";charset=UTF-8";
+    if (content.empty()) {
+        content = "text/html";
+    }
+    content += ";charset=UTF-8";
 
-    return str;
+    return content;
 }
 
-std::string PsiRequestHandler::getFileExtension(const std::string & uri) {
+std::string PsiRequestHandler::getFileName(const std::string & uri) {
+    size_t startFile = uri.find_last_of('/');
+    size_t endFile = uri.find_last_of('?');
 
-    size_t startExtension = uri.find_last_of('.');
-    size_t endExtension = uri.find_last_of('?');
+    std::string file = "";
+
+    if (startFile != std::string::npos) {
+        if (endFile != std::string::npos) {
+            file = uri.substr(startFile + 1, endFile - startFile - 1);
+        }
+        else {
+            file = uri.substr(startFile + 1);
+        }
+    }
+
+    return file;
+}
+
+std::string PsiRequestHandler::getFileExtension(std::string fileName) {
+    size_t startExtension = fileName.find_last_of('.');
 
     std::string extension = "";
 
     if (startExtension != std::string::npos) {
-        if (endExtension != std::string::npos) {
-            extension = uri.substr(startExtension + 1, endExtension - startExtension - 1);
-        }
-        else {
-            extension = uri.substr(startExtension + 1);
-        }
+        extension = fileName.substr(startExtension + 1);
     }
 
     return extension;

@@ -2,21 +2,22 @@ html, body { height: 100%; }
 body { background: url("/img/bg-gradient.jpg") repeat-x #FFFFFF;
     font-family: Verdana, sans-serif; font-size: 13px; }
 
-#wrapper { width: 900px; margin: 0 auto -100px; min-height: 100%; }
-#content { overflow:auto; padding-bottom: 100px; }
-p { padding: 5px 0; }
+#wrapper { width: 900px; margin:0 auto -100px; min-height:100%; }
+#content { overflow:auto; padding-bottom:100px; }
+p { padding:5px 0; }
 
 a { text-decoration: none; color: #335599; }
 a:hover { text-decoration: underline; }
 
-h3 { font-size: 14px; color: #1b4394; }
+h1 { font-size:20px; padding:5px 0 10px 0; }
+h3 { font-size:14px; padding:5px 0; color:#1b4394; }
 
 pre { font-family: monospace; font-size: 12px; }
 
 /* Header */
 
-#header { min-height: 50px; line-height: 20px; }
-#header div.logo { float: left; margin: 15px; font-size: 16px; font-weight: bold; }
+#header { min-height:50px; line-height:20px; margin-bottom:20px; }
+#main-logo { float: left; margin: 15px; font-size: 16px; font-weight: bold; }
 
 #menu { float: right; }
 #menu li { float: left; height: 40px; line-height: 40px; padding: 0 20px;
@@ -32,7 +33,7 @@ pre { font-family: monospace; font-size: 12px; }
 #inputs { margin-top: -1px; }
 #input-file input { width: 620px; margin: 21px auto; }
 
-#submit { margin: 5px 35px; width: 100px; height: 32px; cursor: pointer;
+#submit { margin:5px 35px; width:100px; height:32px; cursor:pointer;
     background-color: #335599; color: #FFFFFF;
     -webkit-border-radius: 8px; -moz-border-radius: 8px; border-radius: 8px; border: 1px solid #DEDEDE;}
 #submit:hover { background-color: #1b4394; }
@@ -92,5 +93,5 @@ div#psis-hidden-options, div#psis-hidden-options div { visibility: hidden; displ
 
 /* Help list */
 
-#help-list { margin: 20px 0; }
-#help-list pre { padding: 20px; }
+#help-list { margin:0 0 20px 0; }
+#help-list pre { padding:20px; }

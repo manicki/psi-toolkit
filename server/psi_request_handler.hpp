@@ -19,9 +19,12 @@ public:
 private:
     PsiServer* psi_server_;
 
-    static std::map<std::string, std::string> fileContentTypes;
+    static std::map<std::string, std::string> filesToContentTypes;
+    static std::map<std::string, std::string> fileExceptionsToContentTypes;
+
     std::string getContentType(const std::string & uri);
-    std::string getFileExtension(const std::string & uri);
+    std::string getFileName(const std::string & uri);
+    std::string getFileExtension(std::string fileName);
 
     http::server3::header createCookieHeader(std::string id);
 };

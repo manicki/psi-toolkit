@@ -8,9 +8,7 @@ class PipeSite : public TemplateSite
 
 public:
 
-    //PipeSite(PsiServer& server);
     PipeSite(PsiServer& server, const std::string & pipe);
-    //PipeSite(PsiServer& server, std::string input, std::string pipe);
 
     char * inputText();
     char * pipeText();
