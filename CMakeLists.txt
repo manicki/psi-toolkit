@@ -177,6 +177,8 @@ foreach(dir ${DIRS})
 endforeach(dir)
 
 include_directories("${psi-toolkit_SOURCE_DIR}/sundown/src")
+include_directories("${psi-toolkit_SOURCE_DIR}/sundown/html")
+include_directories("${psi-toolkit_SOURCE_DIR}/sundown/cpp")
 link_directories("${psi-toolkit_BINARY_DIR}/sundown")
 add_subdirectory(sundown)
 
