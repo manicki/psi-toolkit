@@ -3,7 +3,10 @@
 
 #include <map>
 #include <vector>
+#include <set>
 #include <boost/foreach.hpp>
+
+#include "FSATypes.hpp"
 
 namespace psi {
  
@@ -76,6 +79,51 @@ namespace psi {
         
       private:
         const FSA &m_fsa;
+    };
+    
+    template <typename FSA1, typename FSA2>
+    class Intersector {
+      public:
+        typedef std::pair<typename FSA1::state_type, typename FSA2::state_type> state_type;
+        typedef Arc<typename FSA1::arc_type::symbol_type, state_type> arc_type;
+        
+        Intersector(const FSA1 &fsa1, const FSA2 &fsa2) : m_fsa1(fsa1), m_fsa2(fsa2) {}
+        
+        std::set<state_type> startFn() const {
+            std::set<state_type> starts;
+            BOOST_FOREACH( typename FSA1::state_type p1, m_fsa1.getStartStates() )
+                BOOST_FOREACH( typename FSA2::state_type p2, m_fsa1.getStartStates() )
+                    starts.insert(state_type(p1, p2));
+                
+            return starts;
+        }
+        
+        bool finalFn(state_type p) const {
+            return (m_fsa1.isEndState(p.first) && m_fsa2.isEndState(p.second));
+        }
+        
+        std::set<arc_type, ArcSorter> arcFn(state_type p) const {
+            std::set<arc_type, ArcSorter> arcs;
+            
+            ArcRange<typename FSA1::arc_iterator_type> arcRange1 = m_fsa1.getArcs(p.first);
+            ArcRange<typename FSA2::arc_iterator_type> arcRange2 = m_fsa2.getArcs(p.second);
+            
+            for(typename FSA1::arc_iterator_type ait1 = arcRange1.first; ait1 != arcRange1.second; ait1++)
+                for(typename FSA2::arc_iterator_type ait2 = arcRange2.first; ait2 != arcRange2.second; ait2++)
+                    if(ait1->getSymbol() == ait2->getSymbol())
+                       arcs.insert(
+                           arc_type(
+                               ait1->getSymbol(),
+                               state_type(ait1->getDest(), ait2->getDest())
+                           )
+                       );
+               
+            return arcs;
+        }
+        
+      private:
+        const FSA1 &m_fsa1;
+        const FSA2 &m_fsa2;
     };
     
     template <typename FSA>
@@ -195,7 +243,7 @@ namespace psi {
                 }
                 
                 fsa.addArc(
-                     mapper[s], Arc(arc.getSymbol(), mapper[arc.getDest()])
+                    mapper[s], Arc(arc.getSymbol(), mapper[arc.getDest()])
                 );
             }
         }
@@ -255,6 +303,14 @@ namespace psi {
     }
     
     template <typename FSA1, typename FSA2>
+    void intersect(FSA1 &dst, FSA2 &src) {
+        FSA1 temp;
+        Intersector<FSA1, FSA2> intersector(dst, src);
+        traverse(intersector, temp);
+        dst.swap(temp);
+    }
+    
+    template <typename FSA1, typename FSA2>
     void concatenate(FSA1 &dst, FSA2 &src) {
         std::set<typename FSA1::state_type> first_start  = dst.getStartStates();
         std::set<typename FSA1::state_type> first_end    = dst.getEndStates();
@@ -277,8 +333,8 @@ namespace psi {
     
     template <typename FSA>
     void kleene_option(FSA &fsa) {
-        std::set<typename FSA::state_type> &start  = fsa.getStartStates();
-        std::set<typename FSA::state_type> &end    = fsa.getEndStates();
+        const std::set<typename FSA::state_type> &start  = fsa.getStartStates();
+        const std::set<typename FSA::state_type> &end    = fsa.getEndStates();
         
         BOOST_FOREACH(typename FSA::state_type p, start)
             BOOST_FOREACH(typename FSA::state_type q, end)
@@ -287,8 +343,8 @@ namespace psi {
 
     template <typename FSA>
     void kleene_plus(FSA &fsa) {
-        std::set<typename FSA::state_type> &start  = fsa.getStartStates();
-        std::set<typename FSA::state_type> &end    = fsa.getEndStates();
+        const std::set<typename FSA::state_type> &start  = fsa.getStartStates();
+        const std::set<typename FSA::state_type> &end    = fsa.getEndStates();
         
         BOOST_FOREACH(typename FSA::state_type p, end)
             BOOST_FOREACH(typename FSA::state_type q, start)

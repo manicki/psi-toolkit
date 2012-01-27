@@ -39,6 +39,8 @@ public:
         return boost::make_tuple(result, begin);
     }
     boost::tribool result = boost::indeterminate;
+    FLUSH; // flush for DEBUG_NOFLUSH in .cpp file
+
     return boost::make_tuple(result, begin);
   }
 

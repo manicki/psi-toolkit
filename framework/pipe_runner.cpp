@@ -53,7 +53,13 @@ void PipeRunner::parseIntoGraph_(std::vector<std::string> args, bool isTheFirstA
     parseRunnerProgramOptions_(args);
     if (stopAfterExecutingRunnerOptions_()) return;
 
-    parseIntoPipelineSpecification_(args, isTheFirstArgProgramName, pipelineSpecification_);
+    if ( ! parseIntoPipelineSpecification_(
+                                          args,
+                                          isTheFirstArgProgramName,
+                                          pipelineSpecification_) ) {
+        return;
+    }
+
     pipelineSpecification2Graph_(pipelineSpecification_, firstNode, lastNode);
     completeGraph_<Source, Sink>();
 }
@@ -76,7 +82,12 @@ void PipeRunner::parseRunnerProgramOptions_(std::vector<std::string> &args) {
 
 void PipeRunner::setRunnerOptionsDescription_() {
     runnerOptionsDescription_.add_options()
-        ("help", "Produce help message for each processor");
+        ("help", "Produce help message for each processor")
+        ("log-level", boost::program_options::value<std::string>(),
+         "Set logging level")
+        ("log-file", boost::program_options::value<std::string>(),
+         "Filepath to store logs (if not set: standard error)")
+        ;
 }
 
 bool PipeRunner::stopAfterExecutingRunnerOptions_() {
@@ -89,16 +100,30 @@ bool PipeRunner::stopAfterExecutingRunnerOptions_() {
 
         return true;
     }
+
+    if (runnerOptions_.count("log-file")) {
+        SET_LOGGER_FILE(runnerOptions_["log-file"].as<std::string>());
+    }
+
+    if (runnerOptions_.count("log-level")) {
+        SET_LOGGING_LEVEL(runnerOptions_["log-level"].as<std::string>());
+    }
+
     return false;
 }
 
-void PipeRunner::parseIntoPipelineSpecification_(
+bool PipeRunner::parseIntoPipelineSpecification_(
     std::vector<std::string> args, bool isTheFirstArgProgramName,
     PipelineSpecification& pipelineSpec) {
 
     bool nameExpected = true;
 
     size_t startingIndex = (isTheFirstArgProgramName ? 1 : 0);
+
+    if (startingIndex >= args.size()) {
+        showEmptyPipeWarningMessage_();
+        return false;
+    }
 
     for (size_t i = startingIndex; i < args.size(); ++i) {
 
@@ -118,6 +143,16 @@ void PipeRunner::parseIntoPipelineSpecification_(
             pipelineSpec.elements.back().processorArgs.push_back(args[i]);
         }
     }
+
+    return true;
+}
+
+void PipeRunner::showEmptyPipeWarningMessage_() {
+    std::cerr << "try this: cd build; "
+              << "framework/psi-pipe tp-tokenizer --lang pl ! psi-writer"
+              << std::endl;
+    std::cerr << "see --help option for details..." << std::endl;
+    exit(1);
 }
 
 void PipeRunner::pipelineSpecification2Graph_(

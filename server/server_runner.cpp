@@ -65,7 +65,12 @@ void ServerRunner::setOptionsDescription() {
             "standard output and standard error to /dev/null when daemonizing")
         ("help", "Produce help message for each processor")
         ("version", "Show version")
-        ("verbose", "Run verbosely");
+        ("verbose", "Run verbosely")
+        ("log-level", boost::program_options::value<std::string>(),
+         "Set logging level")
+        ("log-file", boost::program_options::value<std::string>(),
+         "Filepath to store logs (if not set: standard error)")
+        ;
 }
 
 const std::string ServerRunner::DEFAULT_PIPE = "txt-reader ! tp-tokenizer --lang pl ! psi-writer";
@@ -119,6 +124,15 @@ bool ServerRunner::stopAfterExecutingOptions() {
 
     if (setRootDirectory_() != 0)
         return true;
+
+    if (options.count("log-file")) {
+        SET_LOGGER_FILE(options["log-file"].as<std::string>());
+    }
+
+    if (options.count("log-level")) {
+        SET_LOGGING_LEVEL(options["log-level"].as<std::string>());
+    }
+
 
     if (options.count("daemon"))
         daemonize_(options.count("leave-standard-descriptors-when-daemonizing") > 0);
