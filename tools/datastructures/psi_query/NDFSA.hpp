@@ -242,7 +242,7 @@ namespace psi {
         for(size_t i = 0; i < m_states.size(); i++) {
             ArcRange<arc_iterator_type> r = getArcs(i);
             for(arc_iterator_type it = r.first; it != r.second; it++) {
-                std::cout << i << "\t" << it->getDest() << "\t" << it->getSymbol() << std::endl;
+                std::cout << i << "\t" << it->getDest() << "\t" << (long)it->getSymbol() << std::endl;
             }
             //if(isStartState(i)) {
             //    std::cout << "s(" << i << ")" << std::endl;

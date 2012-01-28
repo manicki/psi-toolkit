@@ -17,66 +17,43 @@
 
 namespace psi {
 
-    namespace fusion = boost::fusion;
     namespace phoenix = boost::phoenix;
     namespace qi = boost::spirit::qi;
-    namespace unicode = boost::spirit::ascii;
+    namespace unicode = boost::spirit::standard;
 
     template <typename Iterator, typename FSA>
-    struct NDFSAGrammar : qi::grammar<Iterator, FSA(), unicode::space_type> {
+    struct CharGrammar : qi::grammar<Iterator, FSA()> {
         
-        NDFSAGrammar() : NDFSAGrammar::base_type(exp) {
-            using qi::lit;
-            using qi::lexeme;
-            using qi::eps;
-            using qi::alnum;
-            using qi::int_;
-            using unicode::char_;
-            using namespace qi::labels;
-            //
-            exp =
-                term [qi::_val = qi::_1] >>
-                *(
-                  term [phoenix::bind(&concatenate<FSA, FSA>, qi::_val, qi::_1)]
-                  | ( '|' >> term [phoenix::bind(&unify<FSA, FSA>, qi::_val, qi::_1)] )
-                );
+        CharGrammar() : CharGrammar::base_type(alternation) {
             
-            term = 
+            alternation =
+                sequence [qi::_val = qi::_1] >>
+                *( '|' >> sequence [phoenix::bind(&unify<FSA, FSA>, qi::_val, qi::_1)] );
+
+            sequence =
+                repetition [qi::_val = qi::_1] >>
+                *( repetition [phoenix::bind(&concatenate<FSA, FSA>, qi::_val, qi::_1)] );
+            
+            repetition = 
                 ( factor >> "*" ) [phoenix::bind(&kleene_star<FSA>, qi::_val = qi::_1)]
                 | ( factor >> "+" ) [phoenix::bind(&kleene_plus<FSA>, qi::_val = qi::_1)]
                 | ( factor >> "?" ) [phoenix::bind(&kleene_option<FSA>, qi::_val = qi::_1)]
                 | factor [qi::_val = qi::_1];
                 
-            factor = (
-            //    any [ phoenix::bind( &psi::QueryFSA::from_symbol, qi::_val, psi::ANY ) ]
-            //|
+            factor =
                 symbol [ qi::_val = phoenix::construct<FSA>( phoenix::begin(qi::_1), phoenix::end(qi::_1) ) ]
-            /*|
-                regexp [
-                    phoenix::bind(
-                        &psi::QueryFSA::from_symbols, qi::_val,
-                        phoenix::bind(
-                            &psi::query::RuleSymbolNumberMap::get_numbers_by_regex,
-                            sm, qi::_1
-                        )
-                    )
-                ]*/
-            |
-                '(' >> exp [qi::_val = qi::_1] >> ')'
-            );
+                | '(' >> alternation [qi::_val = qi::_1] >> ')';
     
-            symbol %= lexeme[+alnum];
-            //any %= lexeme[+char_('_')];
-            //regexp %= lit('/') >> lexeme[+(char_ - '/')] >> lit('/');
+            symbol %= ~unicode::char_("()|+*?");
+            
         }
     
-        qi::rule<Iterator, FSA(), unicode::space_type> exp;
-        qi::rule<Iterator, FSA(), unicode::space_type> term;
-        qi::rule<Iterator, FSA(), unicode::space_type> factor;
-        qi::rule<Iterator, std::string(), unicode::space_type> symbol;
-        qi::rule<Iterator, std::string(), unicode::space_type> any;
-        qi::rule<Iterator, std::string(), unicode::space_type> regexp;
-        
+        qi::rule<Iterator, FSA()> alternation;
+        qi::rule<Iterator, FSA()> sequence;
+        qi::rule<Iterator, FSA()> repetition;
+        qi::rule<Iterator, FSA()> factor;
+        qi::rule<Iterator, std::string()> symbol;
+    
     };
 
 
