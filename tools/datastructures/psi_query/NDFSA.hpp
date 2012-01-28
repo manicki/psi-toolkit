@@ -35,7 +35,7 @@ namespace psi {
       public:
         NDFSA();
         
-        NDFSA(symbol_type &);
+        NDFSA(symbol_type);
         
         template <typename InputIterator>
         NDFSA(InputIterator, InputIterator);
@@ -79,11 +79,12 @@ namespace psi {
     NDFSA<StateT, ArcT>::NDFSA() {}
 
     template <typename StateT, typename ArcT>
-    NDFSA<StateT, ArcT>::NDFSA(typename ArcT::symbol_type &s) {
+    NDFSA<StateT, ArcT>::NDFSA(typename ArcT::symbol_type s) {
         StateT q0 = addState(true);
         StateT q1 = addState();
         
-        addArc(q0, ArcT(q1, s));
+        addArc(q0, ArcT(s, q1));
+        setEndState(q1);
     }
 
     template <typename StateT, typename ArcT>
@@ -239,13 +240,16 @@ namespace psi {
     template <typename StateT, typename ArcT>
     void NDFSA<StateT, ArcT>::print() {
         for(size_t i = 0; i < m_states.size(); i++) {
-           ArcRange<arc_iterator_type> r = getArcs(i);
-           for(arc_iterator_type it = r.first; it != r.second; it++) {
-               std::cout << i << "\t" << it->getDest() << "\t" << it->getSymbol() << std::endl;
-           }
-           if(isEndState(i)) {
-               std::cout << i << std::endl;
-           }
+            ArcRange<arc_iterator_type> r = getArcs(i);
+            for(arc_iterator_type it = r.first; it != r.second; it++) {
+                std::cout << i << "\t" << it->getDest() << "\t" << it->getSymbol() << std::endl;
+            }
+            //if(isStartState(i)) {
+            //    std::cout << "s(" << i << ")" << std::endl;
+            //}
+            if(isEndState(i)) {
+                std::cout << i << std::endl;
+            }
         }
     }
     
@@ -267,7 +271,8 @@ namespace psi {
                     queue.push_back(ait->getDest());
                 }
             }
-        }    
+        }
+        
         return closure;
     }
     

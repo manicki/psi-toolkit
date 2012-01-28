@@ -333,12 +333,24 @@ namespace psi {
     
     template <typename FSA>
     void kleene_option(FSA &fsa) {
-        const std::set<typename FSA::state_type> &start  = fsa.getStartStates();
-        const std::set<typename FSA::state_type> &end    = fsa.getEndStates();
+        const std::set<typename FSA::state_type> start  = fsa.getStartStates();
+        const std::set<typename FSA::state_type> end    = fsa.getEndStates();
         
-        BOOST_FOREACH(typename FSA::state_type p, start)
-            BOOST_FOREACH(typename FSA::state_type q, end)
-                fsa.addArc(p, typename FSA::arc_type(EPS, q));
+        typename FSA::state_type ns = fsa.addState();
+        fsa.setStartState(ns);
+        
+        typename FSA::state_type ne = fsa.addState();
+        fsa.setEndState(ne);
+        
+        BOOST_FOREACH(typename FSA::state_type p, start) {
+            fsa.unsetStartState(p);
+            fsa.addArc(ns, typename FSA::arc_type(EPS, p));            
+        }
+        
+        BOOST_FOREACH(typename FSA::state_type p, end) {
+            fsa.unsetEndState(p);
+            fsa.addArc(p, typename FSA::arc_type(EPS, ne));
+        }
     }
 
     template <typename FSA>
