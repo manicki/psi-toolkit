@@ -13,7 +13,7 @@ PSILogger::PSILogger() : logger_category(log4cpp::Category::getInstance("Categor
 
 void PSILogger::initialize_logger_() {
     setDefaultLoggerAppender_();
-    logger_category.setPriority(log4cpp::Priority::INFO);
+    logger_category.setPriority(log4cpp::Priority::WARN);
 }
 
 void PSILogger::setDefaultLoggerAppender_() {

@@ -42,11 +42,20 @@ public:
      */
     void flush();
 
+    void setLatticeAnnotationItemManagerPointer(
+         AnnotationItemManager * latticeAnnotationItemManager) {
+        latticeAnnotationItemManager_ = latticeAnnotationItemManager;
+    }
+
     virtual ~LatticeWriterOutputIterator();
 
 protected:
     std::string getElementAnnotationItemStringToPut(const AnnotationItem & element) const;
-    
+
+    AnnotationItemManager * getLatticeAnnotationItemManagerPointer() {
+        return latticeAnnotationItemManager_;
+    }
+
 private:
     virtual void doPutElement(const AnnotationItem & element) = 0;
 
@@ -60,6 +69,7 @@ private:
 
     virtual void doFlush() = 0;
 
+    AnnotationItemManager * latticeAnnotationItemManager_;
 };
 
 #endif

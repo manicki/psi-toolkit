@@ -9,6 +9,8 @@ use TAP::Formatter::JUnit;
 
 my $TESTS_DIRECTORY = 't';
 
+my $fixed_test_regexp;
+
 my $run_directory = $ARGV[0];
 my $current_tests_dir = $run_directory . '/' . $TESTS_DIRECTORY;
 # =====================
@@ -29,6 +31,10 @@ sub _find_all_tests {
 
     for my $fp (split /\n/, `find $current_tests_dir -regex '.*[.]t'`) {
         next if $fp !~ /[.]t$/;
+
+        if ($fixed_test_regexp) {
+            next if not $fp =~ $fixed_test_regexp;
+        }
         push @$tests_array, $fp;
     }
 

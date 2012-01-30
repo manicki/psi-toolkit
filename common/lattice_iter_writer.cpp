@@ -36,15 +36,8 @@ void LatticeIterWriter::run() {
         outputIterator_.openAlternative();
         while (!basicTagEdges.empty()) {
             Lattice::EdgeDescriptor basicTagEdge = basicTagEdges.front();
-            if (lattice_.getAnnotationText(basicTagEdge).empty()) {
-                outputIterator_.putElement(
-                    lattice_.getAnnotationCategory(basicTagEdge)
-                );
-            } else {
-                outputIterator_.putElement(
-                    lattice_.getAnnotationText(basicTagEdge)
-                );
-            }
+            outputIterator_.putElement(lattice_.getEdgeAnnotationItem(basicTagEdge));
+            
             basicTagEdges.pop();
             if (noAlts_) {
                 while (!basicTagEdges.empty()) {

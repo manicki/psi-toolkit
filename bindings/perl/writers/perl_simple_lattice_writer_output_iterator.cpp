@@ -17,8 +17,8 @@ PerlSimpleLatticeWriterOutputIterator::~PerlSimpleLatticeWriterOutputIterator() 
 
 void PerlSimpleLatticeWriterOutputIterator::doPutElement(const AnnotationItem& element) {
 
-    if(this->withArgs_) {
-        output_.push(element);
+    if(withArgs_) {
+        output_.push(element, getLatticeAnnotationItemManagerPointer());
     } else {
         output_.push(getElementAnnotationItemStringToPut(element));
     }

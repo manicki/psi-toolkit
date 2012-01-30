@@ -24,7 +24,6 @@ binmode(STDERR, ":utf8");
 
 _test_run_pipe_run_for_perl_with_args1();
 
-
 END:
 done_testing();
 
@@ -33,9 +32,105 @@ done_testing();
 # Helper functions
 
 sub _test_run_pipe_run_for_perl_with_args1 {
-    my $command = "tp-tokenizer --lang pl  ! srx-segmenter --lang pl ! perl-simple-writer --with-args --tag token";
+    my $command = "tp-tokenizer --lang pl  ! morfologik ! perl-simple-writer --with-args --tag form --spec lemma lexeme token";
     my $text_to_process = 'Ala ma kota.';
     my $expected_result = [
+        [
+            [
+                {
+                    'text' => 'Ala',
+                    'category' => 'subst',
+                    'values' => {
+                        'number' => 'sg',
+                        'case' => 'acc',
+                        'gender' => 'm1'
+                    }
+                },
+                {
+                    'text' => 'Ala',
+                    'category' => 'subst',
+                    'values' => {
+                        'number' => 'sg',
+                        'case' => 'gen',
+                        'gender' => 'm1'
+                    }
+                },
+                {
+                    'text' => 'Ala',
+                    'category' => 'subst',
+                    'values' => {
+                        'number' => 'sg',
+                        'case' => 'nom',
+                        'gender' => 'f'
+                    }
+                }
+            ]
+        ],
+        [
+            [
+                {
+                    'text' => 'ma',
+                    'category' => 'verb',
+                    'values' => {
+                        'tense' => 'fin',
+                        'number' => 'sg',
+                        'person' => 'ter',
+                        'aspect' => 'imperf'
+                    }
+                },
+                {
+                    'text' => 'ma',
+                    'category' => 'adj',
+                    'values' => {
+                        'number' => 'sg',
+                        'degree' => 'pos',
+                        'case' => 'nom',
+                        'gender' => 'f'
+                    }
+                },
+                {
+                    'text' => 'ma',
+                    'category' => 'adj',
+                    'values' => {
+                        'number' => 'sg',
+                        'degree' => 'pos',
+                        'case' => 'voc',
+                        'gender' => 'f'
+                    }
+                }
+            ]
+        ],
+        [
+            [
+                {
+                    'text' => 'kota',
+                    'category' => 'subst',
+                    'values' => {
+                        'number' => 'sg',
+                        'case' => 'acc',
+                        'gender' => 'm2'
+                    }
+                },
+                {
+                    'text' => 'kota',
+                    'category' => 'subst',
+                    'values' => {
+                        'number' => 'sg',
+                        'case' => 'gen',
+                        'gender' => 'm2'
+                    }
+                },
+                {
+                    'text' => 'kota',
+                    'category' => 'subst',
+                    'values' => {
+                        'number' => 'sg',
+                        'case' => 'nom',
+                        'gender' => 'f'
+                    }
+                }
+            ]
+        ]
     ];
 
     _run_test_on_command_run_for_perl($command, $text_to_process, $expected_result);

@@ -34,7 +34,10 @@ public:
         withBlank_(withBlank),
         basicTag_(basicTag),
         handledTags_(handledTags)
-    { }
+    {
+        outputIterator.setLatticeAnnotationItemManagerPointer(
+                      &lattice_.getAnnotationItemManager());
+    }
 
     void run();
 

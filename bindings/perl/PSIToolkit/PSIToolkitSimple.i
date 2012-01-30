@@ -38,7 +38,7 @@
         my ($array) = @_;
 
         if (defined $array) {
-            if (ref $array) {
+            if (ref $array eq 'ARRAY') {
                 my $decoded_array = [];
                 for my $element (@$array) {
                     my $decoded = _decode_array($element);
@@ -47,6 +47,16 @@
                     }
                 }
                 return $decoded_array;
+            } elsif (ref $array eq 'HASH') {
+                my $decoded_hash = {};
+                for my $key (keys %$array) {
+                    my $value = $array->{$key};
+                    my $decoded_value = _decode_array($value);
+                    if (defined $decoded_value) {
+                        $decoded_hash->{$key} = $decoded_value;
+                    }
+                }
+                return $decoded_hash;
             } else {
                 return Encode::decode('utf-8', $array);
             }

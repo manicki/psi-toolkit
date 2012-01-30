@@ -10,7 +10,6 @@
 
 #include "string_frag.hpp"
 
-
 class AnnotationItem {
 
 public:
@@ -18,14 +17,6 @@ public:
         category_(category),
         attributes_(32)
     { }
-
-    /* DEPRECATED! */ /*
-    AnnotationItem(const std::string& category, const std::string& text) :
-        category_(category),
-        text_(text),
-        attributes_(32)
-    { }
-    */
 
     AnnotationItem(const std::string& category, StringFrag text) :
         category_(category),
@@ -47,6 +38,13 @@ public:
     AnnotationItem(const AnnotationItem& item, const std::string& newText) :
         category_(item.category_),
         text_(newText),
+        values_(item.values_),
+        attributes_(item.attributes_) {
+    }
+
+    AnnotationItem(const AnnotationItem& item) :
+        category_(item.category_),
+        text_(item.text_),
         values_(item.values_),
         attributes_(item.attributes_) {
     }

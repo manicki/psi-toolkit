@@ -1,4 +1,5 @@
 #include "lattice_writer_output_iterator.hpp"
+#include "logging.hpp"
 
 void LatticeWriterOutputIterator::putElement(const AnnotationItem& element) {
     doPutElement(element);

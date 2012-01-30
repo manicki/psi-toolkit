@@ -6,6 +6,7 @@
 #include "config.hpp"
 #include  <stack>
 #include "annotation_item.hpp"
+#include "annotation_item_manager.hpp"
 
 #if HAVE_PERL_BINDINGS
 
@@ -13,6 +14,7 @@
 #include <perl.h>
 #include <XSUB.h>
 
+typedef HV* PerlHashPointer;
 typedef AV* PerlArrayPointer;
 typedef SV* PerlReference;
 
@@ -21,7 +23,8 @@ public:
     PerlLatticeWriterOutput(AV * arrayPointer);
 
     void push(const std::string & textElement);
-    void push(const AnnotationItem & element);
+    void push(const AnnotationItem & element,
+              AnnotationItemManager * latticeAnnotationItemManager);
 
     void openNewSubArray();
     void closeSubArray();
@@ -39,6 +42,7 @@ private:
     PerlArrayPointer currentArrayPointer_;
     std::stack<PerlArrayPointer> arraysStack_;
 
+    AnnotationItemManager * latticeAnnotationItemManager_;
 };
 
 #endif
