@@ -9,6 +9,7 @@ add_library(sundown SHARED
     html/html_smartypants.c
     html/houdini_href_e.c
     html/houdini_html_e.c
+    cpp/stringwrapper.cpp
 )
 
 set_target_properties(sundown PROPERTIES LINKER_LANGUAGE CXX)

@@ -14,11 +14,10 @@
 #include "index_site.hpp"
 #include "pipe_site.hpp"
 #include "help_site.hpp"
+#include "json_site.hpp"
 
 ServerRunner::ServerRunner(int argc, char * argv[])
     : optionsDescription(
-    //"PsiServer is a simple multithreading web server allowed use of the PSI-Toolkit\n"
-    //"pipe through the web page interface.\n"
     "PSIServer options"
 ){
     options = parseOptions(argc, argv);
@@ -95,6 +94,7 @@ int ServerRunner::run() {
         std::string opts = annotatorOptions.empty() ? DEFAULT_PIPE : annotatorOptionsAsString();
         PipeSite pipe(psiServer, opts);
         HelpSite help(psiServer);
+        JsonSite json(psiServer);
 
         // run server
         psiServer.run();

@@ -35,7 +35,7 @@ public:
     PSILogger & operator<< (float msg);
     PSILogger & operator<< (double msg);
     PSILogger & operator<< (bool msg);
-    
+
 private:
     void initialize_logger_();
     void setDefaultLoggerAppender_();
@@ -59,6 +59,16 @@ extern PSILogger psi_logger;
 #define DEBUG(M) \
     do { \
         psi_logger << M;                        \
+        psi_logger.flush(log4cpp::Priority::DEBUG);                     \
+    } while (0)
+
+#define DEBUG_NOFLUSH(M) \
+    do { \
+        psi_logger << M;                        \
+    } while (0)
+
+#define FLUSH \
+    do { \
         psi_logger.flush(log4cpp::Priority::DEBUG);                     \
     } while (0)
 
@@ -103,6 +113,16 @@ extern PSILogger psi_logger;
 #define DEBUG(M) \
     do { \
       std::cerr << M << std::endl; \
+    } while (0)
+
+#define DEBUG_NOFLUSH(M) \
+    do { \
+      std::cerr << M; \
+    } while (0)
+
+#define FLUSH \
+    do { \
+        std::cerr << std::endl; \
     } while (0)
 
 #define INFO(M) \

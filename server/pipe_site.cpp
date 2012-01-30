@@ -115,7 +115,7 @@ std::string PipeSite::runPipe(std::string input) {
     std::ostringstream oss;
 
     INFO("Constructing pipe [" << pipe << "]...");
-    INFO("Input is: " << input);
+    INFO("Input: " << input);
 
     try {
         PipeRunner p(pipe);

@@ -5,7 +5,6 @@
 
 #include "request_parser.hpp"
 #include "request.hpp"
-#include "logging.hpp"
 
 #include <iostream>
 
@@ -24,6 +23,7 @@ void request_parser::reset()
 
 boost::tribool request_parser::consume(request& req, char input)
 {
+  DEBUG_NOFLUSH(input);
 
   switch (state_)
   {

@@ -4,7 +4,7 @@
 namespace psi {
 
     typedef int State;    
-    typedef unsigned int Symbol;
+    typedef char Symbol;
     typedef unsigned int Weight;
     
     const Symbol EPS = -1;

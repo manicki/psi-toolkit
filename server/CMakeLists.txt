@@ -4,6 +4,7 @@ add_library(server SHARED
     index_site.cpp
     pipe_site.cpp
     help_site.cpp
+    json_site.cpp
     guid_generator.cpp
     session.cpp
     session_manager.cpp

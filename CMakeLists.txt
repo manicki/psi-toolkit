@@ -147,7 +147,7 @@ set(CMAKE_CXX_FLAGS "-g -Wall -Wundef -Wnon-virtual-dtor -Wextra")
 
 set(BASE_TARGETS common utf8case sundown framework formats-psi formats-simple formats-txt formats-utt maxent tools-tokenizers-tp tools-segmenters-srx tools-recognizers-langguesser)
 
-set(TESTS_TARGETS common-tests tools-tokenizers-tp-tests tools-segmenters-srx-tests tools-datastructures-psi_query-tests tools-recognizers-langguesser-tests utf8case-tests)
+set(TESTS_TARGETS common-tests tools-tokenizers-tp-tests tools-segmenters-srx-tests tools-datastructures-psi_query-tests tools-recognizers-langguesser-tests utf8case-tests formats-utt-tests formats-psi-tests formats-simple-tests)
 
 if(USE_JAVA)
     set(BASE_TARGETS ${BASE_TARGETS} tools-lemmatizers-morfologik)
@@ -177,6 +177,8 @@ foreach(dir ${DIRS})
 endforeach(dir)
 
 include_directories("${psi-toolkit_SOURCE_DIR}/sundown/src")
+include_directories("${psi-toolkit_SOURCE_DIR}/sundown/html")
+include_directories("${psi-toolkit_SOURCE_DIR}/sundown/cpp")
 link_directories("${psi-toolkit_BINARY_DIR}/sundown")
 add_subdirectory(sundown)
 

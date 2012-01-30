@@ -9,6 +9,8 @@
 #include <boost/logic/tribool.hpp>
 #include <boost/tuple/tuple.hpp>
 
+#include "logging.hpp"
+
 namespace http {
 namespace server3 {
 
@@ -39,6 +41,8 @@ public:
         return boost::make_tuple(result, begin);
     }
     boost::tribool result = boost::indeterminate;
+    FLUSH; // flush for DEBUG_NOFLUSH in .cpp file
+
     return boost::make_tuple(result, begin);
   }
 
