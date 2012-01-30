@@ -1,0 +1,110 @@
+ )level1) 
+ (level1( 
+ )level2) 
+ (level2( 
+ [ Aa1 ] 
+ [  ] 
+ [  ] 
+ [ Aa2 ] 
+ [  ] 
+ [  ] 
+ [ Aa3 ] 
+ [  ] 
+ [  ] 
+ )level1) 
+ (level1( 
+ [ Ab1 ] 
+ [  ] 
+ [  ] 
+ [ Ab2 ] 
+ [  ] 
+ [  ] 
+ [ Ab3 ] 
+ [  ] 
+ [  ] 
+ )level1) 
+ (level1( 
+ [ Ac1 ] 
+ [  ] 
+ [  ] 
+ [ Ac2 ] 
+ [  ] 
+ [  ] 
+ [ Ac3 ] 
+ [  ] 
+ [  ] 
+ )level1) 
+ (level1( 
+ )level2) 
+ (level2( 
+ [ Ba1 ] 
+ [  ] 
+ [  ] 
+ [ Ba2 ] 
+ [  ] 
+ [  ] 
+ [ Ba3 ] 
+ [  ] 
+ [  ] 
+ )level1) 
+ (level1( 
+ [ Bb1 ] 
+ [  ] 
+ [  ] 
+ [ Bb2 ] 
+ [  ] 
+ [  ] 
+ [ Bb3 ] 
+ [  ] 
+ [  ] 
+ )level1) 
+ (level1( 
+ [ Bc1 ] 
+ [  ] 
+ [  ] 
+ [ Bc2 ] 
+ [  ] 
+ [  ] 
+ [ Bc3 ] 
+ [  ] 
+ [  ] 
+ )level1) 
+ (level1( 
+ )level2) 
+ (level2( 
+ [ Ca1 ] 
+ [  ] 
+ [  ] 
+ [ Ca2 ] 
+ [  ] 
+ [  ] 
+ [ Ca3 ] 
+ [  ] 
+ [  ] 
+ )level1) 
+ (level1( 
+ [ Cb1 ] 
+ [  ] 
+ [  ] 
+ [ Cb2 ] 
+ [  ] 
+ [  ] 
+ [ Cb3 ] 
+ [  ] 
+ [  ] 
+ )level1) 
+ (level1( 
+ [ Cc1 ] 
+ [  ] 
+ [  ] 
+ [ Cc2 ] 
+ [  ] 
+ [  ] 
+ [ Cc3 ] 
+ [  ] 
+ [  ] 
+ [  ] 
+ )level1) 
+ )level2) 
+ ! 
+
