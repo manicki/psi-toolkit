@@ -8,6 +8,7 @@ namespace writers_tests_utils {
 
     void prepareSimpleLattice(Lattice & lattice);
     void prepareAdvancedLattice(Lattice & lattice);
+    void prepareRegularLattice(Lattice & lattice);
 
 }
 
