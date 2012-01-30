@@ -224,8 +224,12 @@ size_t Cutter::findHardLimitCutPoint_(
          ? hardLimitPos - UTF8_MAX_LENGTH
          : 0);
 
-    while (candidatePos <= hardLimitPos)
-        candidatePos += symbolLength(text, candidatePos);
+    while (candidatePos < hardLimitPos) {
+        int symLen = symbolLength(text, candidatePos);
+        if (candidatePos + symLen > hardLimitPos)
+            break;
+        candidatePos += symLen;
+    }
 
     if (candidatePos <= cutPoint)
         throw Exception(

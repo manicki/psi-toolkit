@@ -36,7 +36,7 @@ bool Cutter::areLimitsBroken_(size_t segmentLength) {
 }
 
 bool Cutter::isSoftLimitBroken_(size_t segmentLength) {
-    return isSoftLimitSet_() && segmentLength > segmentLengthSoftLimit();
+    return isSoftLimitSet_() && segmentLength >= segmentLengthSoftLimit();
 }
 
 bool Cutter::isSoftLimitSet_() {
@@ -44,7 +44,7 @@ bool Cutter::isSoftLimitSet_() {
 }
 
 bool Cutter::isHardLimitBroken_(size_t segmentLength) {
-    return isHardLimitSet_() && segmentLength > segmentLengthHardLimit();
+    return isHardLimitSet_() && segmentLength >= segmentLengthHardLimit();
 }
 
 bool Cutter::isHardLimitSet_() {
