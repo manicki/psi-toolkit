@@ -2,7 +2,7 @@ html, body { height: 100%; }
 body { background:url("/img/bg-gradient.jpg") repeat-x #FFFFFF;
     font-family:helvetica,arial,freesans; font-size:14px; line-height:18px; }
 
-#wrapper { width:900px; margin:0 auto -100px; min-height:100%; }
+.wrapper { width:900px; margin:0 auto -100px; min-height:100%; }
 #content { overflow:auto; padding-bottom:100px; }
 p { padding:6px 0; }
 
@@ -16,7 +16,7 @@ pre { font-family:monospace; font-size:13px; line-height:16px; }
 code { font-family:monospace; color:#666; }
 
 ul, ol { padding:3px 0; }
-#content ul li:before { content:"\00BB \0020"; padding-left:12px; }
+#help-list ul li:before { content:"\00BB \0020"; padding-left:12px; }
 
 /* Header */
 
@@ -59,7 +59,7 @@ input.alert { color: #FF0000; }
 
 /* Input bookmarks */
 
-#input-bookmarks { overflow:hidden; width: 600px; margin: 0 auto; }
+#input-bookmarks { overflow:hidden; width:600px; margin:0 auto; padding:0; }
 #input-bookmarks li { width: 90px; height: 20px; float: right; display: block;
     text-align: center; padding-top: 3px; background-color: #CCCCCC;
     border-top-left-radius: 12px; border-top-right-radius: 12px;

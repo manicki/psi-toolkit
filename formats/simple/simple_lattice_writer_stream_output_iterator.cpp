@@ -76,6 +76,7 @@ void SimpleLatticeWriterStreamOutputIterator::doCloseGroup(const std::string& gr
     if (smi != sepMap_.end()) {
         if (blockSs_.str() != "") {
             mainSs_ << sepSs_.str();
+            sepSs_.str("");
             mainSs_ << blockSs_.str();
         }
         blockSs_.str("");
