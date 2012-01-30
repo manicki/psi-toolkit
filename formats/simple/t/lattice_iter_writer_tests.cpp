@@ -6,10 +6,8 @@
 #include <boost/scoped_ptr.hpp>
 
 #include "lattice_iter_writer.hpp"
-#include "writers_tests_utils.hpp"
-
-//an example of LatticeWriterOutputIterator:
 #include "simple_lattice_writer_stream_output_iterator.hpp"
+#include "writers_tests_utils.hpp"
 
 #include "config.hpp"
 
