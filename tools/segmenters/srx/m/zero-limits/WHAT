@@ -1,0 +1,1 @@
+srx-segmenter --lang pl --sentence-length-hard-limit 0 ! simple-writer --tag segment
