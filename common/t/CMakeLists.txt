@@ -14,7 +14,7 @@ add_library(common-tests
         annotation_item_tests.cpp
         ant_like_path_glob_tests.cpp
         file_fetcher_tests.cpp
-        lattice_readers_writers_tests.cpp
+        lattice_iter_writer_tests.cpp
         lattice_tests.cpp
         layer_tags_tests.cpp
         object_cache_tests.cpp
@@ -27,7 +27,7 @@ add_library(common-tests
 )
 
 
-target_link_libraries(common-tests common formats-simple)
+target_link_libraries(common-tests common)
 
 
 

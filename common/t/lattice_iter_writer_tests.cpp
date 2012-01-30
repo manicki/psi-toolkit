@@ -6,13 +6,15 @@
 #include <boost/scoped_ptr.hpp>
 
 #include "lattice_iter_writer.hpp"
-#include "simple_lattice_writer_stream_output_iterator.hpp"
 #include "writers_tests_utils.hpp"
+
+//an example of LatticeWriterOutputIterator:
+#include "simple_lattice_writer_stream_output_iterator.hpp"
 
 #include "config.hpp"
 
 
-BOOST_AUTO_TEST_SUITE( lattice_readers_writers )
+BOOST_AUTO_TEST_SUITE( lattice_iter_writer )
 
 
 BOOST_AUTO_TEST_CASE( lattice_iter_writer ) {
