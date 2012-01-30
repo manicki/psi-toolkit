@@ -1,175 +1,12 @@
-#include "tests.hpp"
+#ifndef WRITERS_TESTS_UTILS_HDR
+#define WRITERS_TESTS_UTILS_HDR
 
-#include <fstream>
-#include <iostream>
-
-#include <boost/scoped_ptr.hpp>
-
-#include "lattice_iter_writer.hpp"
-#include "simple_lattice_writer.hpp"
-#include "simple_lattice_writer_stream_output_iterator.hpp"
-
-#include "config.hpp"
-
-void prepareSimpleLattice_(Lattice & lattice);
-void prepareAdvancedLattice_(Lattice & lattice);
-
-BOOST_AUTO_TEST_SUITE( lattice_readers_writers )
+#include "lattice.hpp"
 
 
-BOOST_AUTO_TEST_CASE( simple_lattice_writer ) {
+namespace writers_tests_utils {
 
-    Lattice lattice;
-    prepareSimpleLattice_(lattice);
-
-    std::map<std::string, std::string> tagsSeparators;
-    tagsSeparators["token"] = ";";
-
-    boost::scoped_ptr<LatticeWriter<std::ostream> > writer(new SimpleLatticeWriter(
-                                                false, //linear
-                                                false, //no-alts
-                                                true, //with-blank
-                                                "symbol", //tag
-                                                ",", //sep
-                                                "|", //alt-sep
-                                                tagsSeparators
-                                                ));
-
-    // writer->writeLattice(lattice, std::cout);
-
-    std::ostringstream osstr;
-    writer->writeLattice(lattice, osstr);
-
-    std::string line;
-    std::string contents;
-    std::ifstream s(ROOT_DIR "formats/simple/t/files/simple_ala.txt");
-    while (getline(s, line)) {
-        contents += line;
-        contents += "\n";
-    }
-
-    BOOST_CHECK_EQUAL(osstr.str(), contents);
-
-}
-
-BOOST_AUTO_TEST_CASE( simple_lattice_writer_linear ) {
-
-    Lattice lattice;
-    prepareSimpleLattice_(lattice);
-
-    std::map<std::string, std::string> tagsSeparators;
-    tagsSeparators["token"] = ";";
-
-    boost::scoped_ptr<LatticeWriter<std::ostream> > writer(new SimpleLatticeWriter(
-                                                true, //linear
-                                                false, //no-alts
-                                                true, //with-blank
-                                                "symbol", //tag
-                                                ",", //sep
-                                                "|", //alt-sep
-                                                tagsSeparators
-                                                ));
-
-    // writer->writeLattice(lattice, std::cout);
-
-    std::ostringstream osstr;
-    writer->writeLattice(lattice, osstr);
-
-    std::string line;
-    std::string contents;
-    std::ifstream s(ROOT_DIR "formats/simple/t/files/simple_ala.txt");
-    while (getline(s, line)) {
-        contents += line;
-        contents += "\n";
-    }
-
-    BOOST_CHECK_EQUAL(osstr.str(), contents);
-
-}
-
-BOOST_AUTO_TEST_CASE( simple_lattice_writer_advanced ) {
-
-    Lattice lattice;
-    prepareAdvancedLattice_(lattice);
-
-    std::map<std::string, std::string> tagsSeparators;
-    // tagsSeparators["splitter"] = "\n";
-
-    boost::scoped_ptr<LatticeWriter<std::ostream> > writer(new SimpleLatticeWriter(
-                                                false, //linear
-                                                false, //no-alts
-                                                true, //with-blank
-                                                "token", //tag
-                                                ",", //sep
-                                                "|", //alt-sep
-                                                tagsSeparators
-                                                ));
-
-    // writer->writeLattice(lattice, std::cout);
-
-    std::ostringstream osstr;
-    writer->writeLattice(lattice, osstr);
-
-    std::string line;
-    std::string contents;
-    std::ifstream s(ROOT_DIR "formats/simple/t/files/simple_ala_advanced.txt");
-    while (getline(s, line)) {
-        contents += line;
-        contents += "\n";
-    }
-
-    BOOST_CHECK_EQUAL(osstr.str(), contents);
-
-}
-
-BOOST_AUTO_TEST_CASE( lattice_iter_writer ) {
-
-    Lattice lattice;
-    prepareSimpleLattice_(lattice);
-
-    std::vector<std::string> handledTags;
-    handledTags.push_back("token");
-
-    std::ostringstream osstr;
-
-    SimpleLatticeWriterStreamOutputIterator outputIterator(
-        osstr,
-        "|",
-        ","
-    );
-
-    outputIterator.setSeparator("token", ";");
-
-    boost::scoped_ptr<LatticeIterWriter> writer(new LatticeIterWriter(
-        lattice,
-        outputIterator,
-        false, //linear
-        false, //no-alts
-        true, //with-blank
-        "symbol", //basicTag
-        handledTags
-    ));
-
-    writer->run();
-
-    osstr << std::endl;
-
-    std::string line;
-    std::string contents;
-    std::ifstream s(ROOT_DIR "formats/simple/t/files/simple_ala.txt");
-    while (getline(s, line)) {
-        contents += line;
-        contents += "\n";
-    }
-
-    BOOST_CHECK_EQUAL(osstr.str(), contents);
-
-}
-
-BOOST_AUTO_TEST_SUITE_END()
-
-
-void prepareSimpleLattice_(Lattice & lattice) {
+void prepareSimpleLattice(Lattice & lattice) {
 
     lattice.appendString("Ala ma słonia");
     lattice.addSymbols(lattice.getFirstVertex(), lattice.getLastVertex());
@@ -262,7 +99,7 @@ void prepareSimpleLattice_(Lattice & lattice) {
 }
 
 
-void prepareAdvancedLattice_(Lattice & lattice) {
+void prepareAdvancedLattice(Lattice & lattice) {
 
     lattice.appendString("Ala ma&nbsp;<b>kta</b>.");
     const std::string & ltext = lattice.getAllText();
@@ -544,3 +381,7 @@ void prepareAdvancedLattice_(Lattice & lattice) {
     lattice.addEdge(preAla, postStop, aiZdanie, parseGobioTag, zdanieBuilder.build());
 
 }
+
+}
+
+#endif
