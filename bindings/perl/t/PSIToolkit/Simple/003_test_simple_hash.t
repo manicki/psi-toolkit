@@ -22,7 +22,9 @@ binmode(STDOUT, ":utf8");
 binmode(STDIN, ":utf8");
 binmode(STDERR, ":utf8");
 
-_test_run_pipe_run_for_perl_with_args1();
+_test_run_pipe_run_for_perl_with_args_tokenizer();
+# @ignore (compilation with java is needed)
+#_test_run_pipe_run_for_perl_with_args_morfologik();
 
 END:
 done_testing();
@@ -31,8 +33,36 @@ done_testing();
 # =====================================
 # Helper functions
 
-sub _test_run_pipe_run_for_perl_with_args1 {
-    my $command = "tp-tokenizer --lang pl  ! morfologik ! perl-simple-writer --with-args --tag form --spec lemma lexeme token";
+sub _test_run_pipe_run_for_perl_with_args_tokenizer {
+    my $command = "tp-tokenizer --lang pl ! perl-simple-writer --with-args --tag token";
+    my $text_to_process = 'Ala ma kota.';
+    my $expected_result = [
+        {
+            'text' => 'Ala',
+            'category' => 'T',
+            'values' => {}
+        },
+        {
+            'text' => 'ma',
+            'category' => 'T',
+            'values' => {}
+        },
+        {
+            'text' => 'kota',
+            'category' => 'T',
+            'values' => {}
+        },
+        {
+            'text' => '.',
+            'category' => 'I',
+            'values' => {}
+        }
+    ];
+    _run_test_on_command_run_for_perl($command, $text_to_process, $expected_result);
+}
+
+sub _test_run_pipe_run_for_perl_with_args_morfologik {
+    my $command = "tp-tokenizer --lang pl ! perl-simple-writer --with-args --tag token";
     my $text_to_process = 'Ala ma kota.';
     my $expected_result = [
         [
@@ -141,7 +171,6 @@ sub _run_test_on_command_run_for_perl {
     my $runner = PSIToolkit::Simple::PipeRunner->new($command);
 
     my $actual_result = $runner->run_for_perl($text_to_process);
-
     is_deeply($actual_result, $expected_result, "PipeRunner::run_for_perl($text_to_process) for command($command)");
 }
 

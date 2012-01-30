@@ -10,8 +10,8 @@ LiteralTestOutputIterator::LiteralTestOutputIterator(
 LiteralTestOutputIterator::~LiteralTestOutputIterator() {
 }
 
-void LiteralTestOutputIterator::doPutElement(const std::string& element) {
-    outputStream_ << element;
+void LiteralTestOutputIterator::doPutElement(const AnnotationItem& element) {
+    outputStream_ << element.getText();
 }
 
 void LiteralTestOutputIterator::doOpenAlternative() {

@@ -6,6 +6,7 @@
 #include <string>
 
 #include "lattice_writer_output_iterator.hpp"
+#include "annotation_item.hpp"
 
 /**
  * Writes literal output to the stream.
@@ -21,7 +22,7 @@ public:
 private:
     std::ostream& outputStream_;
 
-    virtual void doPutElement(const std::string& element);
+    virtual void doPutElement(const AnnotationItem& element);
 
     virtual void doOpenAlternative();
 
