@@ -5,8 +5,6 @@ if(USE_JAVA)
         set(COMMON_TESTS_EXTRAS ${COMMON_TESTS_EXTRAS} java_virtual_machine_tests.cpp)
 endif(USE_JAVA)
 
-include_directories("${psi-toolkit_SOURCE_DIR}/formats/psi/psi_writer")
-include_directories("${psi-toolkit_SOURCE_DIR}/formats/psi/psi_reader")
 include_directories("${psi-toolkit_SOURCE_DIR}/formats/simple")
 
 add_library(common-tests
@@ -29,7 +27,7 @@ add_library(common-tests
 )
 
 
-target_link_libraries(common-tests common formats-psi formats-simple)
+target_link_libraries(common-tests common formats-simple)
 
 
 
