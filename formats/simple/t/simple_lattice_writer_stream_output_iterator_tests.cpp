@@ -6,17 +6,16 @@
 #include <boost/scoped_ptr.hpp>
 
 #include "lattice_iter_writer.hpp"
-#include "literal_test_output_iterator.hpp"
 #include "simple_lattice_writer_stream_output_iterator.hpp"
 #include "writers_tests_utils.hpp"
 
 #include "config.hpp"
 
 
-BOOST_AUTO_TEST_SUITE( lattice_iter_writer )
+BOOST_AUTO_TEST_SUITE( simple_lattice_writer_stream_output_iterator )
 
 
-BOOST_AUTO_TEST_CASE( lattice_iter_writer ) {
+BOOST_AUTO_TEST_CASE( simple_lattice_writer_stream_output_iterator ) {
 
     Lattice lattice;
     writers_tests_utils::prepareSimpleLattice(lattice);
@@ -61,7 +60,7 @@ BOOST_AUTO_TEST_CASE( lattice_iter_writer ) {
 }
 
 
-BOOST_AUTO_TEST_CASE( lattice_iter_writer_advanced ) {
+BOOST_AUTO_TEST_CASE( simple_lattice_writer_stream_output_iterator_advanced ) {
 
     Lattice lattice;
     writers_tests_utils::prepareRegularLattice(lattice);
@@ -72,18 +71,14 @@ BOOST_AUTO_TEST_CASE( lattice_iter_writer_advanced ) {
 
     std::ostringstream osstr;
 
-    // SimpleLatticeWriterStreamOutputIterator outputIterator(
-        // std::cout,// osstr,
-        // "|",
-        // ","
-    // );
-
-    LiteralTestOutputIterator outputIterator(
-        std::cout
+    SimpleLatticeWriterStreamOutputIterator outputIterator(
+        osstr,
+        "|",
+        ","
     );
 
-    // outputIterator.setSeparator("level1", ";");
-    // outputIterator.setSeparator("level2", "\n");
+    outputIterator.setSeparator("level1", ";");
+    outputIterator.setSeparator("level2", "\n");
 
     boost::scoped_ptr<LatticeIterWriter> writer(new LatticeIterWriter(
         lattice,
@@ -97,8 +92,6 @@ BOOST_AUTO_TEST_CASE( lattice_iter_writer_advanced ) {
 
     writer->run();
 
-    std::cout << std::endl;
-/*
     osstr << std::endl;
 
     std::string line;
@@ -110,7 +103,7 @@ BOOST_AUTO_TEST_CASE( lattice_iter_writer_advanced ) {
     }
 
     BOOST_CHECK_EQUAL(osstr.str(), contents);
-*/
+
 }
 
 

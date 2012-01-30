@@ -1,7 +1,6 @@
 add_library(formats-simple SHARED
     simple_lattice_writer.cpp
     simple_lattice_writer_stream_output_iterator.cpp
-    literal_test_output_iterator.cpp
 )
 
 add_subdirectory(t)
