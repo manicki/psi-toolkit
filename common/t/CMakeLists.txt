@@ -8,7 +8,6 @@ endif(USE_JAVA)
 include_directories("${psi-toolkit_SOURCE_DIR}/formats/psi/psi_writer")
 include_directories("${psi-toolkit_SOURCE_DIR}/formats/psi/psi_reader")
 include_directories("${psi-toolkit_SOURCE_DIR}/formats/simple")
-include_directories("${psi-toolkit_SOURCE_DIR}/formats/utt")
 
 add_library(common-tests
     by_spaces_cutter.cpp
@@ -29,7 +28,7 @@ add_library(common-tests
 )
 
 
-target_link_libraries(common-tests common formats-psi formats-simple formats-utt)
+target_link_libraries(common-tests common formats-psi formats-simple)
 
 
 
