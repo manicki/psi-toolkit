@@ -20,7 +20,7 @@ class HelpSiteTest < Test::Unit::TestCase
     end
 
     def test_if_each_processor_has_a_title_and_an_option_list
-       titles = @browser.h3s
+       titles = @browser.h2s
        assert !titles.empty?
 
        options = @browser.pres

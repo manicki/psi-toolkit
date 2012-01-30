@@ -376,3 +376,57 @@ void writers_tests_utils::prepareAdvancedLattice(Lattice & lattice) {
     lattice.addEdge(preAla, postStop, aiZdanie, parseGobioTag, zdanieBuilder.build());
 
 }
+
+
+void writers_tests_utils::prepareRegularLattice(Lattice & lattice) {
+
+    std::string text(
+        "Aa1Aa2Aa3Ab1Ab2Ab3Ac1Ac2Ac3Ba1Ba2Ba3Bb1Bb2Bb3Bc1Bc2Bc3Ca1Ca2Ca3Cb1Cb2Cb3Cc1Cc2Cc3"
+    );
+    lattice.appendString(text);
+    lattice.addSymbols(lattice.getFirstVertex(), lattice.getLastVertex());
+
+    Lattice::VertexDescriptor vd[28];
+    for (int i = 0; i <= 27; ++i) {
+        vd[i] = lattice.getVertexForRawCharIndex(3*i);
+    }
+
+    LayerTagCollection
+        tagRaw = lattice.getLayerTagManager().createSingletonTagCollection("symbol");
+    LayerTagCollection
+        tagToken = lattice.getLayerTagManager().createSingletonTagCollection("token");
+    LayerTagCollection
+        tagLevel1 = lattice.getLayerTagManager().createSingletonTagCollection("level1");
+    LayerTagCollection
+        tagLevel2 = lattice.getLayerTagManager().createSingletonTagCollection("level2");
+
+    LayerTagMask maskRaw = lattice.getLayerTagManager().getMask(tagRaw);
+    LayerTagMask maskToken = lattice.getLayerTagManager().getMask(tagToken);
+    LayerTagMask maskLevel1 = lattice.getLayerTagManager().getMask(tagLevel1);
+    LayerTagMask maskLevel2 = lattice.getLayerTagManager().getMask(tagLevel2);
+
+    AnnotationItem *ai[27];
+    for (int i = 0; i < 27; ++i) {
+        std::string aiText = text.substr(3*i, 3);
+        ai[i] = new AnnotationItem("token", aiText);
+        lattice.addEdge(vd[i], vd[i+1], *ai[i], tagToken);\
+        delete ai[i];
+    }
+
+    AnnotationItem *ai2[9];
+    for (int i = 0; i < 9; ++i) {
+        std::string aiText = text.substr(9*i, 9);
+        ai2[i] = new AnnotationItem("level1", aiText);
+        lattice.addEdge(vd[3*i], vd[3*i+3], *ai2[i], tagLevel1);
+        delete ai2[i];
+    }
+
+    AnnotationItem *ai3[3];
+    for (int i = 0; i < 3; ++i) {
+        std::string aiText = text.substr(27*i, 27);
+        ai3[i] = new AnnotationItem("level2", aiText);
+        lattice.addEdge(vd[9*i], vd[9*i+9], *ai3[i], tagLevel2);
+        delete ai3[i];
+    }
+
+}

@@ -6,7 +6,7 @@
 #include <boost/scoped_ptr.hpp>
 
 #include "lattice_iter_writer.hpp"
-#include "simple_lattice_writer_stream_output_iterator.hpp"
+#include "literal_test_output_iterator.hpp"
 #include "writers_tests_utils.hpp"
 
 #include "config.hpp"
@@ -18,20 +18,17 @@ BOOST_AUTO_TEST_SUITE( lattice_iter_writer )
 BOOST_AUTO_TEST_CASE( lattice_iter_writer ) {
 
     Lattice lattice;
-    writers_tests_utils::prepareSimpleLattice(lattice);
+    writers_tests_utils::prepareRegularLattice(lattice);
 
     std::vector<std::string> handledTags;
-    handledTags.push_back("token");
+    handledTags.push_back("level1");
+    handledTags.push_back("level2");
 
     std::ostringstream osstr;
 
-    SimpleLatticeWriterStreamOutputIterator outputIterator(
-        osstr,
-        "|",
-        ","
+    LiteralTestOutputIterator outputIterator(
+        osstr
     );
-
-    outputIterator.setSeparator("token", ";");
 
     boost::scoped_ptr<LatticeIterWriter> writer(new LatticeIterWriter(
         lattice,
@@ -39,7 +36,7 @@ BOOST_AUTO_TEST_CASE( lattice_iter_writer ) {
         false, //linear
         false, //no-alts
         true, //with-blank
-        "symbol", //basicTag
+        "token", //basicTag
         handledTags
     ));
 
@@ -49,7 +46,7 @@ BOOST_AUTO_TEST_CASE( lattice_iter_writer ) {
 
     std::string line;
     std::string contents;
-    std::ifstream s(ROOT_DIR "formats/simple/t/files/simple_ala.txt");
+    std::ifstream s(ROOT_DIR "common/t/files/iter_writer_regular_output.txt");
     while (getline(s, line)) {
         contents += line;
         contents += "\n";

@@ -12,8 +12,10 @@ add_library(common-tests
         annotation_item_tests.cpp
         ant_like_path_glob_tests.cpp
         file_fetcher_tests.cpp
+        lattice_iter_writer_tests.cpp
         lattice_tests.cpp
         layer_tags_tests.cpp
+        literal_test_output_iterator.cpp
         object_cache_tests.cpp
         quoter_tests.cpp
         regexp_tests.cpp
