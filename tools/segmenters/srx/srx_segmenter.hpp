@@ -36,10 +36,15 @@ public:
         virtual std::list<std::string> doProvidedLayerTags();
 
         static const std::string DEFAULT_RULE_FILE_SPEC;
+
+        static const size_t DEFAULT_HARD_LIMIT;
+        static const size_t DEFAULT_SOFT_LIMIT;
     };
 
     SrxSegmenter(const std::string& lang,
-                 boost::filesystem::path rules);
+                 boost::filesystem::path rules,
+                 size_t hardLimit,
+                 size_t softLimit);
 
 private:
 
@@ -78,6 +83,8 @@ private:
 
     std::vector<BreakingRuleInfo> breakingRules_;
 
+    size_t hardLimit_;
+    size_t softLimit_;
 };
 
 #endif

@@ -12,6 +12,6 @@ Known deviations from the SRX standard (cf.
 (http://www.gala-global.org/oscarStandards/srx/srx20.html))
 
   * regexps in SRX files are interpreted as PCRE regexps,
-  * `\G` metacharacter is not handled.
-
+  * `\G` metacharacter is not handled,
+  * cascading is not supported.
 

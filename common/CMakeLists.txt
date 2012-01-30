@@ -13,6 +13,7 @@ add_library(common SHARED
     ant_like_path_glob.cpp
     configurator.cpp
     cutter.cpp
+    cutter_annotator_options.cpp
     escaping.cpp
     file_fetcher.cpp
     language_dependent_annotator_factory.cpp

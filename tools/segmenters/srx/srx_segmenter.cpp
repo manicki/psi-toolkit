@@ -12,6 +12,8 @@
 #include "cutter.hpp"
 #include "escaping.hpp"
 
+#include "cutter_annotator_options.hpp"
+
 Annotator* SrxSegmenter::Factory::doCreateAnnotator(
     const boost::program_options::variables_map& options) {
     std::string lang = options["lang"].as<std::string>();
@@ -23,7 +25,10 @@ Annotator* SrxSegmenter::Factory::doCreateAnnotator(
     boost::filesystem::path rules
         = fileFetcher.getOneFile(rulesFileSpec);
 
-    return new SrxSegmenter(lang, rules);
+    size_t hardLimit = options["sentence-length-hard-limit"].as<size_t>();
+    size_t softLimit = options["sentence-length-soft-limit"].as<size_t>();
+
+    return new SrxSegmenter(lang, rules, hardLimit, softLimit);
 }
 
 void SrxSegmenter::Factory::doAddLanguageIndependentOptionsHandled(
@@ -35,6 +40,13 @@ void SrxSegmenter::Factory::doAddLanguageIndependentOptionsHandled(
          ->default_value(DEFAULT_RULE_FILE_SPEC),
          "rule file")
         ;
+
+    addCutterAnnotatorOptions(
+        optionsDescription,
+        DEFAULT_HARD_LIMIT,
+        DEFAULT_SOFT_LIMIT,
+        "sentence");
+
 }
 
 std::string SrxSegmenter::Factory::doGetName() {
@@ -62,6 +74,8 @@ std::list<std::string> SrxSegmenter::Factory::doProvidedLayerTags() {
 const std::string SrxSegmenter::Factory::DEFAULT_RULE_FILE_SPEC
 = "%ITSDATA%/%LANG%/segmentation.srx";
 
+const size_t SrxSegmenter::Factory::DEFAULT_HARD_LIMIT = 1000;
+const size_t SrxSegmenter::Factory::DEFAULT_SOFT_LIMIT = 600;
 
 class RuleProcessor {
 public:
@@ -120,7 +134,10 @@ std::string SrxSegmenter::makeAllParensNonCapturing_(const std::string& pattern)
 
 SrxSegmenter::SrxSegmenter(
     const std::string& lang,
-    boost::filesystem::path rules) {
+    boost::filesystem::path rules,
+    size_t hardLimit,
+    size_t softLimit):
+    hardLimit_(hardLimit), softLimit_(softLimit) {
 
     SrxRulesReader ruleReader(rules, lang);
     RuleProcessor ruleProc(*this);
@@ -244,11 +261,11 @@ private:
     }
 
     virtual size_t doSegmentLengthHardLimit() {
-        return 1000;
+        return segmenter_.hardLimit_;
     }
 
     virtual size_t doSegmentLengthSoftLimit() {
-        return 600;
+        return segmenter_.softLimit_;
     }
 
     virtual std::list<std::string> doLayerTags() {
