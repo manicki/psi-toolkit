@@ -41,7 +41,7 @@ void SrxSegmenter::Factory::doAddLanguageIndependentOptionsHandled(
          boost::program_options::value<std::string>()
          ->default_value(DEFAULT_RULE_FILE_SPEC),
          "rule file")
-        ("cascade", 
+        ("cascade",
          boost::program_options::bool_switch()->default_value(false),
          "force cascade mode")
         ;

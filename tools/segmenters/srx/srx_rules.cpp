@@ -95,12 +95,12 @@ bool SrxRulesReader::processLanguageMap_(boost::property_tree::ptree& langmap) {
 }
 
 void SrxRulesReader::setCascade_() {
-    if (boost::optional<boost::property_tree::ptree&> header = 
+    if (boost::optional<boost::property_tree::ptree&> header =
         xmlParsed_->get_child_optional("srx.header")) {
 
         cascade_ = (
-            forceCascade_ 
-            || 
+            forceCascade_
+            ||
             cascadeAttrToBool_(
                 header.get().get_optional<std::string>(
                     "<xmlattr>.cascade")));
@@ -112,7 +112,7 @@ bool SrxRulesReader::cascadeAttrToBool_(
 
     if (!attrValue)
         return false;
-    else 
+    else
         return yesNoToBool_(attrValue.get());
 }
 
