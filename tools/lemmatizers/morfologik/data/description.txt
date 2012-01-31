@@ -1,1 +1,1 @@
-Polish morphological analyzer wrote in Java.
+Polish morphological analyzer written in Java.
