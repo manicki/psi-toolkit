@@ -30,6 +30,7 @@ add_executable(
  mass_tester.cpp
  batch_runner.cpp
  junit_mass_tests_reporter.cpp
+ test_batch.cpp
 )
 
 target_link_libraries(

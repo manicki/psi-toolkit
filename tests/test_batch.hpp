@@ -34,7 +34,8 @@ private:
 public:
     TestBatch(const boost::filesystem::path& mDirectory,
               const std::string& pipeline)
-        :mDirectory_(mDirectory), pipeline_(pipeline) {
+        :mDirectory_(mDirectory) {
+        pipeline_ = processPipeline_(pipeline);
     }
 
     boost::filesystem::path getDirectory() const {
@@ -55,6 +56,9 @@ public:
             *outputIterator++ = testRun;
         }
     }
+
+private:
+    std::string processPipeline_(const std::string& pipeline);
 };
 
 #endif
