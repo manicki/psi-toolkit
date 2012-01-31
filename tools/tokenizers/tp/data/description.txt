@@ -1,0 +1,11 @@
+Splits texts into tokens (i.e. word-like units) according to special
+rules. Each rule specifies a regular expression and a token type that
+will be assigned to a sequence of characters matching the given
+regexp.
+
+By default, tokenization rules from Translatica Machine Translation
+system are used (for Polish, English, Russian, German, French and
+Italian). Another SRX file can be specified with the `--rules` option.
+
+Maximum token length can be set with `--token-length-hard-limit`
+and `--token-length-soft-limit`.
