@@ -1,0 +1,1 @@
+tp-tokenizer --lang en --token-length-soft-limit 5 --token-length-hard-limit 10

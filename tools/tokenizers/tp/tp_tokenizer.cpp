@@ -9,6 +9,7 @@
 #include "config.hpp"
 
 #include "tp_basic_tokenizer_rule_set.hpp"
+#include "cutter_annotator_options.hpp"
 
 Annotator* TpTokenizer::Factory::doCreateAnnotator(
     const boost::program_options::variables_map& options) {
@@ -27,7 +28,10 @@ Annotator* TpTokenizer::Factory::doCreateAnnotator(
     std::map<std::string, boost::filesystem::path> mapping =
         substituteMapping_(rawMapping, fileFetcher);
 
-    return new TpTokenizer(rules, mapping);
+    size_t hardLimit = options["token-length-hard-limit"].as<size_t>();
+    size_t softLimit = options["token-length-soft-limit"].as<size_t>();
+
+    return new TpTokenizer(rules, mapping, hardLimit, softLimit);
 }
 
 void TpTokenizer::Factory::doAddLanguageIndependentOptionsHandled(
@@ -43,6 +47,13 @@ void TpTokenizer::Factory::doAddLanguageIndependentOptionsHandled(
          ->default_value(DEFAULT_RULE_FILE_MAPPING),
          "mapping between include names and files")
         ;
+
+    addCutterAnnotatorOptions(
+        optionsDescription,
+        DEFAULT_HARD_LIMIT,
+        DEFAULT_SOFT_LIMIT,
+        "token");
+
 }
 
 std::string TpTokenizer::Factory::doGetName() {
@@ -131,9 +142,16 @@ const std::string TpTokenizer::Factory::DEFAULT_RULE_FILE_SPEC
 const std::string TpTokenizer::Factory::DEFAULT_RULE_FILE_MAPPING
 = "common=%ITSDATA%/xx/xx.rgx;abbrev_%LANG%=%ITSDATA%/%LANG%/abbrev.rgx";
 
+const size_t TpTokenizer::Factory::DEFAULT_HARD_LIMIT = 1000;
+const size_t TpTokenizer::Factory::DEFAULT_SOFT_LIMIT = 950;
+
 TpTokenizer::TpTokenizer(
     boost::filesystem::path rules,
-    const std::map<std::string, boost::filesystem::path>& mapping) {
+    const std::map<std::string, boost::filesystem::path>& mapping,
+    size_t hardLimit,
+    size_t softLimit)
+    :hardLimit_(hardLimit), softLimit_(softLimit) {
+
     ruleSet_.reset(new TPBasicTokenizerRuleSet());
 
     std::map<std::string, std::string> pathMap;
@@ -164,7 +182,12 @@ void TpTokenizer::Worker::doRun() {
     LayerTagMask symbolMask = lattice_.getLayerTagManager().getMask("symbol");
     LayerTagMask textMask = lattice_.getLayerTagManager().getMask("frag");
 
-    TpTokenCutter tokenCutter(*dynamic_cast<TpTokenizer&>(processor_).ruleSet_.get());
+    TpTokenizer& tpProcessor = dynamic_cast<TpTokenizer&>(processor_);
+
+    TpTokenCutter tokenCutter(
+        *tpProcessor.ruleSet_.get(),
+        tpProcessor.hardLimit_,
+        tpProcessor.softLimit_);
 
     lattice_.runCutter(tokenCutter, symbolMask, textMask);
 }

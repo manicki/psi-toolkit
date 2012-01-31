@@ -42,10 +42,16 @@ public:
 
         static const std::string DEFAULT_RULE_FILE_SPEC;
         static const std::string DEFAULT_RULE_FILE_MAPPING;
+
+        static const size_t DEFAULT_HARD_LIMIT;
+        static const size_t DEFAULT_SOFT_LIMIT;
     };
 
-    TpTokenizer(boost::filesystem::path rules,
-                const std::map<std::string, boost::filesystem::path>& mapping);
+    TpTokenizer(
+        boost::filesystem::path rules,
+        const std::map<std::string, boost::filesystem::path>& mapping,
+        size_t hardLimit,
+        size_t softLimit);
 
 private:
 
@@ -62,6 +68,9 @@ private:
     virtual std::string doInfo();
 
     boost::scoped_ptr<TPBasicTokenizerRuleSet> ruleSet_;
+
+    size_t hardLimit_;
+    size_t softLimit_;
 };
 
 #endif

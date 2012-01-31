@@ -3,7 +3,11 @@
 #include "logging.hpp"
 #include "string_helpers.hpp"
 
-TpTokenCutter::TpTokenCutter(TPBasicTokenizerRuleSet& ruleSet):ruleSet_(ruleSet) {
+TpTokenCutter::TpTokenCutter(
+    TPBasicTokenizerRuleSet& ruleSet,
+    size_t hardLimit,
+    size_t softLimit)
+    :ruleSet_(ruleSet), hardLimit_(hardLimit), softLimit_(softLimit) {
 }
 
 AnnotationItem TpTokenCutter::doCutOff(const std::string& text, size_t& positionInText) {
@@ -18,11 +22,11 @@ void TpTokenCutter::doReset() {
 }
 
 size_t TpTokenCutter::doSegmentLengthHardLimit() {
-    return 1000;
+    return hardLimit_;
 }
 
 size_t TpTokenCutter::doSegmentLengthSoftLimit() {
-    return 950;
+    return softLimit_;
 }
 
 std::list<std::string > TpTokenCutter::doLayerTags() {
