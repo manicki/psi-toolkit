@@ -44,7 +44,8 @@ public:
     SrxSegmenter(const std::string& lang,
                  boost::filesystem::path rules,
                  size_t hardLimit,
-                 size_t softLimit);
+                 size_t softLimit,
+                 bool cascade=false);
 
 private:
 

@@ -1,0 +1,1 @@
+srx-segmenter --rules %TESTDIR%/simple.srx --lang en ! simple-writer --tag segment

@@ -1,0 +1,1 @@
+srx-segmenter --rules %TESTDIR%/cascading.srx --lang pl ! simple-writer --tag segment

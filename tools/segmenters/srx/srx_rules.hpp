@@ -56,7 +56,8 @@ public:
 
     SrxRulesReader(
         const boost::filesystem::path& filePath,
-        const std::string& lang);
+        const std::string& lang,
+        bool forceCascade=false);
 
     template<typename Out>
     void getRules(Out outputIterator) {
@@ -119,11 +120,16 @@ private:
     bool processMapRule_(boost::property_tree::ptree& maprules);
     bool processLanguageMap_(boost::property_tree::ptree& langmap);
 
+    void setCascade_();
+    bool cascadeAttrToBool_(boost::optional<std::string> attrValue);
+    bool yesNoToBool_(const std::string& yesNo);
+
     std::set<std::string> languageRuleNames_;
 
     boost::shared_ptr<XmlPropertyTree> xmlParsed_;
     const std::string& lang_;
-    unsigned int srx_version;
+    bool forceCascade_;
+    unsigned int srxVersion_;
     bool cascade_;
 };
 

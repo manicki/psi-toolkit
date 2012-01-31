@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<srx xmlns="http://www.lisa.org/srx20" version="2.0">
+ <header segmentsubflows="yes" cascade="yes">
+  <formathandle type="start" include="no"></formathandle>
+  <formathandle type="end" include="yes"></formathandle>
+  <formathandle type="isolated" include="no"></formathandle>
+ </header>
+ <body>
+  <languagerules>
+   <languagerule languagerulename="polish">
+    <rule break="no">
+     <beforebreak>np\.</beforebreak>
+     <afterbreak>\s</afterbreak>
+    </rule>
+   </languagerule>
+   <languagerule languagerulename="default">
+    <rule break="no">
+     <beforebreak>([A-Z]\.){2,}</beforebreak>
+     <afterbreak>\s</afterbreak>
+    </rule>
+    <rule break="yes">
+     <beforebreak>\.</beforebreak>
+     <afterbreak>\s</afterbreak>
+    </rule>
+   </languagerule>
+  </languagerules>
+  <maprules>
+   <languagemap languagepattern="pl" languagerulename="polish"></languagemap>
+   <languagemap languagepattern=".*" languagerulename="default"></languagemap>
+  </maprules>
+ </body>
+</srx>

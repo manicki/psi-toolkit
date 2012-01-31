@@ -24,15 +24,19 @@ const std::string& SrxRule::getAfterBreak() const {
 
 SrxRulesReader::SrxRulesReader(
     const boost::filesystem::path& filePath,
-    const std::string& lang)
+    const std::string& lang,
+    bool forceCascade)
     :xmlParsed_(ObjectCache::getInstance().getObject<XmlPropertyTree>(filePath)),
      lang_(lang),
-     srx_version(1),
-     cascade_(false) {
+     forceCascade_(forceCascade),
+     srxVersion_(1),
+     cascade_(forceCascade) {
     findLanguageRuleNames_();
 }
 
 void SrxRulesReader::findLanguageRuleNames_() {
+    setCascade_();
+
     BOOST_FOREACH(boost::property_tree::ptree::value_type &v,
                   xmlParsed_->get_child("srx.body")) {
         if (v.first == "maprules") {
@@ -46,11 +50,15 @@ bool SrxRulesReader::processMapRules_(boost::property_tree::ptree& maprules) {
     BOOST_FOREACH(boost::property_tree::ptree::value_type &v, maprules.get_child("")) {
         // in SRX 2.0
         if (v.first == "languagemap") {
+            srxVersion_ = 2;
+
             if (processLanguageMap_(v.second))
                 return true;
         }
         // in SRX 1.0
         else if (v.first == "maprule") {
+            srxVersion_ = 1;
+
             if (processMapRule_(v.second))
                 return true;
         }
@@ -85,3 +93,37 @@ bool SrxRulesReader::processLanguageMap_(boost::property_tree::ptree& langmap) {
 
     return false;
 }
+
+void SrxRulesReader::setCascade_() {
+    if (boost::optional<boost::property_tree::ptree&> header = 
+        xmlParsed_->get_child_optional("srx.header")) {
+
+        cascade_ = (
+            forceCascade_ 
+            || 
+            cascadeAttrToBool_(
+                header.get().get_optional<std::string>(
+                    "<xmlattr>.cascade")));
+    }
+}
+
+bool SrxRulesReader::cascadeAttrToBool_(
+    boost::optional<std::string> attrValue) {
+
+    if (!attrValue)
+        return false;
+    else 
+        return yesNoToBool_(attrValue.get());
+}
+
+bool SrxRulesReader::yesNoToBool_(const std::string& yesNo) {
+    if (yesNo == "yes")
+        return true;
+    else if (yesNo == "no")
+        return false;
+    else {
+        WARN("yes/no expected (was: '" << yesNo << "')");
+        return false;
+    }
+}
+

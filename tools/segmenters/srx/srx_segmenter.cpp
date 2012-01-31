@@ -28,7 +28,9 @@ Annotator* SrxSegmenter::Factory::doCreateAnnotator(
     size_t hardLimit = options["sentence-length-hard-limit"].as<size_t>();
     size_t softLimit = options["sentence-length-soft-limit"].as<size_t>();
 
-    return new SrxSegmenter(lang, rules, hardLimit, softLimit);
+    bool cascade = options["cascade"].as<bool>();
+
+    return new SrxSegmenter(lang, rules, hardLimit, softLimit, cascade);
 }
 
 void SrxSegmenter::Factory::doAddLanguageIndependentOptionsHandled(
@@ -39,6 +41,9 @@ void SrxSegmenter::Factory::doAddLanguageIndependentOptionsHandled(
          boost::program_options::value<std::string>()
          ->default_value(DEFAULT_RULE_FILE_SPEC),
          "rule file")
+        ("cascade", 
+         boost::program_options::bool_switch()->default_value(false),
+         "force cascade mode")
         ;
 
     addCutterAnnotatorOptions(
@@ -136,10 +141,11 @@ SrxSegmenter::SrxSegmenter(
     const std::string& lang,
     boost::filesystem::path rules,
     size_t hardLimit,
-    size_t softLimit):
+    size_t softLimit,
+    bool cascade):
     hardLimit_(hardLimit), softLimit_(softLimit) {
 
-    SrxRulesReader ruleReader(rules, lang);
+    SrxRulesReader ruleReader(rules, lang, cascade);
     RuleProcessor ruleProc(*this);
 
     ruleReader.getRules(boost::make_function_output_iterator(ruleProc));
