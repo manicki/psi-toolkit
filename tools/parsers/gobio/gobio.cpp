@@ -50,7 +50,7 @@ Gobio::Worker::Worker(Gobio& processor, Lattice& lattice) :
 }
 
 void Gobio::Worker::doRun() {
-    //TODO
+    processor_.parse(lattice_);
 }
 
 std::string Gobio::doInfo() {
@@ -61,7 +61,19 @@ Gobio::Gobio() {
     //TODO
 }
 
-bool Gobio::parse(Lattice &lattice) {
+void Gobio::parse(Lattice &lattice) {
     //TODO
-    return true;
+
+    //DUMMY IMPLEMENTATION (for testing in psi-pipe)
+    // /*
+    AnnotationItem aiGobio("parsed by GOBIO");
+    LayerTagCollection
+        tagParse = lattice.getLayerTagManager().createSingletonTagCollection("parse");
+    lattice.addEdge(
+        lattice.getFirstVertex(),
+        lattice.getLastVertex(),
+        aiGobio,
+        tagParse
+    );
+    // */
 }

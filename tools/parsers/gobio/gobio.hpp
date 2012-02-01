@@ -31,7 +31,8 @@ public:
     };
 
     Gobio();
-    bool parse(Lattice &lattice);
+
+    void parse(Lattice &lattice);
 
 private:
 
