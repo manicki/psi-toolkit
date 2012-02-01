@@ -6,7 +6,8 @@
 #include <map>
 #include <boost/assign/list_of.hpp>
 #include <boost/foreach.hpp>
-#include <boost/filesystem.hpp>
+
+#include <stdio.h>
 
 BOOST_AUTO_TEST_CASE(perfect_hash_index_test) {
     std::list<const char*> wantedStrings = boost::assign::list_of
@@ -30,8 +31,7 @@ BOOST_AUTO_TEST_CASE(perfect_hash_index_test) {
     std::map<std::string, size_t> checkMap;
     size_t hashSize;
 
-    boost::filesystem::path tmpFile =
-        boost::filesystem::temp_directory_path() / "test_perfect_hash_index.bin";
+    char* tmpFile = tempnam(0, "test_perfect_hash_index_bin");
 
     {
         PerfectHashIndex hash;
@@ -56,12 +56,12 @@ BOOST_AUTO_TEST_CASE(perfect_hash_index_test) {
             BOOST_CHECK_EQUAL(hash.getHash(s), hashSize);
         }
 
-        hash.save(tmpFile.string());
+        hash.save(tmpFile);
     }
 
     {
         PerfectHashIndex loadedHash;
-        loadedHash.load(tmpFile.string());
+        loadedHash.load(tmpFile);
 
         BOOST_CHECK_EQUAL(loadedHash.getSize(), hashSize);
 
