@@ -28,8 +28,11 @@ void LatticeIterWriter::run() {
                 }
                 if (isHandledTag_(tag) && targets[tag] == vd) {
                     targets[tag] = lattice_.getEdgeTarget(edge);
-                    outputIterator_.closeGroup(tag);
+                    if (groupOpened_[tag]) {
+                        outputIterator_.closeGroup(tag);
+                    }
                     outputIterator_.openGroup(tag);
+                    groupOpened_[tag] = true;
                 }
             }
         }
@@ -37,7 +40,7 @@ void LatticeIterWriter::run() {
         while (!basicTagEdges.empty()) {
             Lattice::EdgeDescriptor basicTagEdge = basicTagEdges.front();
             outputIterator_.putElement(lattice_.getEdgeAnnotationItem(basicTagEdge));
-            
+
             basicTagEdges.pop();
             if (noAlts_) {
                 while (!basicTagEdges.empty()) {
