@@ -40,7 +40,7 @@ private:
     }
 
     void calcFprints() {
-        for (std::vector<char*>::iterator it = m_keys.begin(); it != m_keys.end(); it++) {
+        for (std::vector<char*>::iterator it = m_keys.begin(); it != m_keys.end(); ++it) {
             Fprint fprint = getFprint(*it);
             size_t idx = cmph_search(m_hash, *it, (cmph_uint32) strlen(*it));
 
@@ -51,8 +51,8 @@ private:
     }
 
 public:
-    PerfectHashIndex() : m_algo(CMPH_CHD) {}
-    PerfectHashIndex(CMPH_ALGO algo) : m_algo(algo) {}
+    PerfectHashIndex() : m_algo(CMPH_CHD),m_hash(0) {}
+    PerfectHashIndex(CMPH_ALGO algo) : m_algo(algo),m_hash(0) {}
 
     ~PerfectHashIndex() {
         cmph_destroy(m_hash);

@@ -62,7 +62,7 @@ void AntLikePathGlob::findMatchingFiles_(
          (globIter == segmentGlobs_.end()
           ? "END"
           : (*globIter).asString()));
-    
+
     std::list<SegmentGlob>::const_iterator globIterPlusOne = globIter;
     ++globIterPlusOne;
 

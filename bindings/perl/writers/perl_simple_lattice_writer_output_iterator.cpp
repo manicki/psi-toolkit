@@ -4,9 +4,7 @@
 
 PerlSimpleLatticeWriterOutputIterator::PerlSimpleLatticeWriterOutputIterator(
   PerlLatticeWriterOutput & output,
-  bool withArgs
-                                                                             
-) :
+  bool withArgs) :
     output_(output),
     withArgs_(withArgs)
 {
@@ -17,7 +15,7 @@ PerlSimpleLatticeWriterOutputIterator::~PerlSimpleLatticeWriterOutputIterator() 
 
 void PerlSimpleLatticeWriterOutputIterator::doPutElement(const AnnotationItem& element) {
 
-    if(withArgs_) {
+    if (withArgs_) {
         output_.push(element, getLatticeAnnotationItemManagerPointer());
     } else {
         output_.push(getElementAnnotationItemStringToPut(element));

@@ -71,7 +71,7 @@ cmph_io_adapter_t *cmph_io_phrasetable_adapter(std::FILE* phrasetable_fd) {
 }
 
 void PerfectHashIndex::clearKeys() {
-    for (std::vector<char*>::iterator it = m_keys.begin(); it != m_keys.end(); it++)
+    for (std::vector<char*>::iterator it = m_keys.begin(); it != m_keys.end(); ++it)
         delete [] *it;
     m_keys.clear();
 }

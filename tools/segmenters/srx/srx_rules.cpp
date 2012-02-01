@@ -126,4 +126,3 @@ bool SrxRulesReader::yesNoToBool_(const std::string& yesNo) {
         return false;
     }
 }
-
