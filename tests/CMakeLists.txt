@@ -21,7 +21,6 @@ endif(WITH_RE2)
 if(HAVE_PERL_BINDINGS)
     target_link_libraries(test_runner formats-perl-simple)
     find_package(PerlLibs)
-
 endif(HAVE_PERL_BINDINGS)
 
 add_executable(
