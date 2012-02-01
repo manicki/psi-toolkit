@@ -52,6 +52,20 @@ else()
   set(HAVE_LOG4CPP 0)
 endif(EXISTS ${LOG4CPP_LIB} AND EXISTS ${LOG4CPP_INCLUDE})
 
+# CMPH library (for perfect hashing)
+find_library(CMPH_LIB NAMES cmph)
+find_path(CMPH_INCLUDE cmph.h)
+
+if(EXISTS ${CMPH_LIB} AND EXISTS ${CMPH_INCLUDE})
+  message("-- Using CMPH...")
+  include_directories(${CMPH_INCLUDE})
+  link_directories(${CMPH_LIB})
+  set(HAVE_CMPH 1)
+else()
+  message("-- Not using CMPH...")
+  set(HAVE_CMPH 0)
+endif(EXISTS ${CMPH_LIB} AND EXISTS ${CMPH_INCLUDE})
+
 # Finds and includes external libraries
 set(Boost_USE_STATIC_LIBS OFF)
 set(Boost_USE_STATIC_RUNTIME OFF)

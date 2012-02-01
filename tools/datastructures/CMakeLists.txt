@@ -1,2 +1,5 @@
-add_subdirectory(lexica)
+if(HAVE_CMPH)
+   add_subdirectory(lexica)
+endif(HAVE_CMPH)
+
 add_subdirectory(psi_query)
