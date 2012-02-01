@@ -23,9 +23,9 @@ namespace psi {
 
     template <typename Iterator, typename FSA>
     struct CharGrammar : qi::grammar<Iterator, FSA()> {
-        
+
         CharGrammar() : CharGrammar::base_type(alternation) {
-            
+
             alternation =
                 sequence [qi::_val = qi::_1] >>
                 *( '|' >> sequence [phoenix::bind(&unify<FSA, FSA>, qi::_val, qi::_1)] );
@@ -33,27 +33,28 @@ namespace psi {
             sequence =
                 repetition [qi::_val = qi::_1] >>
                 *( repetition [phoenix::bind(&concatenate<FSA, FSA>, qi::_val, qi::_1)] );
-            
-            repetition = 
+
+            repetition =
                 ( factor >> "*" ) [phoenix::bind(&kleene_star<FSA>, qi::_val = qi::_1)]
                 | ( factor >> "+" ) [phoenix::bind(&kleene_plus<FSA>, qi::_val = qi::_1)]
                 | ( factor >> "?" ) [phoenix::bind(&kleene_option<FSA>, qi::_val = qi::_1)]
                 | factor [qi::_val = qi::_1];
-                
+
             factor =
-                symbol [ qi::_val = phoenix::construct<FSA>( phoenix::begin(qi::_1), phoenix::end(qi::_1) ) ]
+                symbol [ qi::_val =
+                    phoenix::construct<FSA>( phoenix::begin(qi::_1), phoenix::end(qi::_1) ) ]
                 | '(' >> alternation [qi::_val = qi::_1] >> ')';
-    
-            symbol %= ~unicode::char_("()|+*?");
-            
+
+            symbol = ( ~unicode::char_("()|+*?") ) [qi::_val = qi::_1];
+
         }
-    
+
         qi::rule<Iterator, FSA()> alternation;
         qi::rule<Iterator, FSA()> sequence;
         qi::rule<Iterator, FSA()> repetition;
         qi::rule<Iterator, FSA()> factor;
         qi::rule<Iterator, std::string()> symbol;
-    
+
     };
 
 
