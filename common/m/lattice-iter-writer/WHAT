@@ -1,1 +1,1 @@
-tp-tokenizer --lang pl ! simple-writer --tag token --spec segment
+tp-tokenizer --lang pl ! simple-writer --tag token --spec segment ";"

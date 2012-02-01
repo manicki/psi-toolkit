@@ -15,12 +15,18 @@ void LatticeIterWriter::run() {
     }
     bool alternativeOpened = false;
 
+    bool printElements = true;
+
     while (linear_ ? true : vi.hasNext()) {
+
         if (!linear_) {
             vd = vi.next();
         }
+
         Lattice::InOutEdgesIterator oei
             = lattice_.outEdges(vd, lattice_.getLayerTagManager().anyTag());
+
+        // gather information about edges
         while (oei.hasNext()) {
             edge = oei.next();
             std::list<std::string> tags
@@ -42,25 +48,42 @@ void LatticeIterWriter::run() {
                 }
             }
         }
-        while (!basicTagEdges.empty()) {
-            Lattice::EdgeDescriptor basicTagEdge = basicTagEdges.front();
-            if (!alternativeOpened) {
-                outputIterator_.openAlternative();
-                alternativeOpened = true;
-            }
-            outputIterator_.putElement(lattice_.getEdgeAnnotationItem(basicTagEdge));
 
-            basicTagEdges.pop();
-            if (noAlts_) {
-                while (!basicTagEdges.empty()) {
-                    basicTagEdges.pop();
+        // check if there is need for printing anything
+        // (prevents from printing edges not covered by --spec-ified tags)
+        if (!handledTags_.empty()) {
+            printElements = false;
+            BOOST_FOREACH(std::string tag, handledTags_) {
+                if (groupOpened[tag]) {
+                    printElements = true;
+                    break;
                 }
             }
         }
-        if (alternativeOpened) {
-            outputIterator_.closeAlternative();
-            alternativeOpened = false;
+
+        // print edges
+        if (printElements) {
+            while (!basicTagEdges.empty()) {
+                Lattice::EdgeDescriptor basicTagEdge = basicTagEdges.front();
+                if (!alternativeOpened) {
+                    outputIterator_.openAlternative();
+                    alternativeOpened = true;
+                }
+                outputIterator_.putElement(lattice_.getEdgeAnnotationItem(basicTagEdge));
+
+                basicTagEdges.pop();
+                if (noAlts_) {
+                    while (!basicTagEdges.empty()) {
+                        basicTagEdges.pop();
+                    }
+                }
+            }
+            if (alternativeOpened) {
+                outputIterator_.closeAlternative();
+                alternativeOpened = false;
+            }
         }
+
         if (linear_) {
             try {
                 vd = lattice_.getEdgeTarget(
@@ -70,6 +93,7 @@ void LatticeIterWriter::run() {
                 break;
             }
         }
+
     }
 
     typedef std::pair<std::string, Lattice::VertexDescriptor> TagTargetPair;
