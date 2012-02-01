@@ -2,14 +2,12 @@
 
 
 Annotator* Gobio::Factory::doCreateAnnotator(
-    const boost::program_options::variables_map& options
-) {
+    const boost::program_options::variables_map& /*options*/) {
     return new Gobio();
 }
 
 void Gobio::Factory::doAddLanguageIndependentOptionsHandled(
-    boost::program_options::options_description& optionsDescription
-) {
+    boost::program_options::options_description& optionsDescription) {
     optionsDescription.add_options()
         ("option",
         boost::program_options::value<std::string>()->default_value("default_value"),
