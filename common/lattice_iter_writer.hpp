@@ -37,9 +37,6 @@ public:
     {
         outputIterator.setLatticeAnnotationItemManagerPointer(
                       &lattice_.getAnnotationItemManager());
-        BOOST_FOREACH(std::string tag, handledTags_) {
-            groupOpened_[tag] = false;
-        }
     }
 
     void run();
@@ -55,8 +52,6 @@ private:
     std::vector<std::string> handledTags_;
 
     bool isHandledTag_(std::string tagName);
-
-    std::map<std::string, bool> groupOpened_;
 
 };
 

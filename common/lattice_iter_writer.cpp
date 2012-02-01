@@ -9,6 +9,12 @@ void LatticeIterWriter::run() {
 
     std::map<std::string, Lattice::VertexDescriptor> targets;
 
+    std::map<std::string, bool> groupOpened;
+    BOOST_FOREACH(std::string tag, handledTags_) {
+        groupOpened[tag] = false;
+    }
+    bool alternativeOpened = false;
+
     while (linear_ ? true : vi.hasNext()) {
         if (!linear_) {
             vd = vi.next();
@@ -28,17 +34,20 @@ void LatticeIterWriter::run() {
                 }
                 if (isHandledTag_(tag) && targets[tag] == vd) {
                     targets[tag] = lattice_.getEdgeTarget(edge);
-                    if (groupOpened_[tag]) {
+                    if (groupOpened[tag]) {
                         outputIterator_.closeGroup(tag);
                     }
                     outputIterator_.openGroup(tag);
-                    groupOpened_[tag] = true;
+                    groupOpened[tag] = true;
                 }
             }
         }
-        outputIterator_.openAlternative();
         while (!basicTagEdges.empty()) {
             Lattice::EdgeDescriptor basicTagEdge = basicTagEdges.front();
+            if (!alternativeOpened) {
+                outputIterator_.openAlternative();
+                alternativeOpened = true;
+            }
             outputIterator_.putElement(lattice_.getEdgeAnnotationItem(basicTagEdge));
 
             basicTagEdges.pop();
@@ -48,7 +57,10 @@ void LatticeIterWriter::run() {
                 }
             }
         }
-        outputIterator_.closeAlternative();
+        if (alternativeOpened) {
+            outputIterator_.closeAlternative();
+            alternativeOpened = false;
+        }
         if (linear_) {
             try {
                 vd = lattice_.getEdgeTarget(

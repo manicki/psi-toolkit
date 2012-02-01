@@ -42,8 +42,6 @@ BOOST_AUTO_TEST_CASE( lattice_iter_writer ) {
 
     writer->run();
 
-    osstr << std::endl;
-
     std::string line;
     std::string contents;
     std::ifstream s(ROOT_DIR "common/t/files/iter_writer_regular_output.txt");
