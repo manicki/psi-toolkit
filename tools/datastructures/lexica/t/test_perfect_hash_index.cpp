@@ -73,4 +73,6 @@ BOOST_AUTO_TEST_CASE(perfect_hash_index_test) {
             BOOST_CHECK_EQUAL(loadedHash.getHash(s), hashSize);
         }
     }
+
+    free(tmpFile);
 }

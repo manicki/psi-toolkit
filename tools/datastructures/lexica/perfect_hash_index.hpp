@@ -23,14 +23,15 @@ private:
     cmph_t* m_hash;
 
     void calcHashFunction() {
-        cmph_io_adapter_t *source = cmph_io_vector_adapter((char**) &m_keys[0], m_keys.size());
+        cmph_io_adapter_t* source = cmph_io_vector_adapter((char**) &m_keys[0], m_keys.size());
 
-        cmph_config_t *config = cmph_config_new(source);
+        cmph_config_t* config = cmph_config_new(source);
         cmph_config_set_algo(config, m_algo);
         cmph_config_set_verbosity(config, 5);
 
         m_hash = cmph_new(config);
         cmph_config_destroy(config);
+        cmph_io_vector_adapter_destroy(source);
     }
 
     Fprint getFprint(const char* key) const {
