@@ -61,11 +61,25 @@ Gobio::Gobio() {
     //TODO
 }
 
+
 void Gobio::parse(Lattice &lattice) {
-    //TODO
+
+    typedef std::string Category;
+    typedef std::string Variant;
+    typedef simple_cfg_rule<Category> Rule;
+    typedef simple_cfg_combinator<Rule, Category> Combinator;
+    typedef fifo_agenda<Category> Agenda;
+    typedef int Index;
+    typedef agenda_parser<Category, Score, Variant, Rule, Combinator, Agenda, Index> Parser;
+
+    Combinator combinator;
+    Agenda agenda;
+    Parser parser(lattice, combinator, agenda);
+
+    parser.run();
 
     //DUMMY IMPLEMENTATION (for testing in psi-pipe)
-    // /*
+    /*
     AnnotationItem aiGobio("parsed by GOBIO");
     LayerTagCollection
         tagParse = lattice.getLayerTagManager().createSingletonTagCollection("parse");
