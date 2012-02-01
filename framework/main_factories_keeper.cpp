@@ -11,6 +11,7 @@
 #include "srx_segmenter.hpp"
 #include "lemmatizer_annotator.hpp"
 #include "lang_guesser.hpp"
+#include "gobio.hpp"
 
 #if HAVE_POSTGRESQL
 #include "lex_db_lemmatizer.hpp"
@@ -35,6 +36,7 @@ MainFactoriesKeeper::MainFactoriesKeeper() {
     keeper_.takeProcessorFactory(new TpTokenizer::Factory());
     keeper_.takeProcessorFactory(new SrxSegmenter::Factory());
     keeper_.takeProcessorFactory(new LangGuesser::Factory());
+    keeper_.takeProcessorFactory(new Gobio::Factory());
 
 #if HAVE_POSTGRESQL
     keeper_.takeProcessorFactory(new LemmatizerAnnotator<LexDbLemmatizer>::Factory());
