@@ -1,110 +1,106 @@
- )level1) 
- (level1( 
- )level2) 
- (level2( 
- [ Aa1 ] 
- [  ] 
- [  ] 
- [ Aa2 ] 
- [  ] 
- [  ] 
- [ Aa3 ] 
- [  ] 
- [  ] 
- )level1) 
- (level1( 
- [ Ab1 ] 
- [  ] 
- [  ] 
- [ Ab2 ] 
- [  ] 
- [  ] 
- [ Ab3 ] 
- [  ] 
- [  ] 
- )level1) 
- (level1( 
- [ Ac1 ] 
- [  ] 
- [  ] 
- [ Ac2 ] 
- [  ] 
- [  ] 
- [ Ac3 ] 
- [  ] 
- [  ] 
- )level1) 
- (level1( 
- )level2) 
- (level2( 
- [ Ba1 ] 
- [  ] 
- [  ] 
- [ Ba2 ] 
- [  ] 
- [  ] 
- [ Ba3 ] 
- [  ] 
- [  ] 
- )level1) 
- (level1( 
- [ Bb1 ] 
- [  ] 
- [  ] 
- [ Bb2 ] 
- [  ] 
- [  ] 
- [ Bb3 ] 
- [  ] 
- [  ] 
- )level1) 
- (level1( 
- [ Bc1 ] 
- [  ] 
- [  ] 
- [ Bc2 ] 
- [  ] 
- [  ] 
- [ Bc3 ] 
- [  ] 
- [  ] 
- )level1) 
- (level1( 
- )level2) 
- (level2( 
- [ Ca1 ] 
- [  ] 
- [  ] 
- [ Ca2 ] 
- [  ] 
- [  ] 
- [ Ca3 ] 
- [  ] 
- [  ] 
- )level1) 
- (level1( 
- [ Cb1 ] 
- [  ] 
- [  ] 
- [ Cb2 ] 
- [  ] 
- [  ] 
- [ Cb3 ] 
- [  ] 
- [  ] 
- )level1) 
- (level1( 
- [ Cc1 ] 
- [  ] 
- [  ] 
- [ Cc2 ] 
- [  ] 
- [  ] 
- [ Cc3 ] 
- [  ] 
- [  ] 
- [  ] 
- )level1) 
- )level2) 
- ! 
-
+open(level1)
+open(level2)
+openalt
+[Aa1]
+closealt
+openalt
+[Aa2]
+closealt
+openalt
+[Aa3]
+closealt
+close(level1)
+open(level1)
+openalt
+[Ab1]
+closealt
+openalt
+[Ab2]
+closealt
+openalt
+[Ab3]
+closealt
+close(level1)
+open(level1)
+openalt
+[Ac1]
+closealt
+openalt
+[Ac2]
+closealt
+openalt
+[Ac3]
+closealt
+close(level1)
+open(level1)
+close(level2)
+open(level2)
+openalt
+[Ba1]
+closealt
+openalt
+[Ba2]
+closealt
+openalt
+[Ba3]
+closealt
+close(level1)
+open(level1)
+openalt
+[Bb1]
+closealt
+openalt
+[Bb2]
+closealt
+openalt
+[Bb3]
+closealt
+close(level1)
+open(level1)
+openalt
+[Bc1]
+closealt
+openalt
+[Bc2]
+closealt
+openalt
+[Bc3]
+closealt
+close(level1)
+open(level1)
+close(level2)
+open(level2)
+openalt
+[Ca1]
+closealt
+openalt
+[Ca2]
+closealt
+openalt
+[Ca3]
+closealt
+close(level1)
+open(level1)
+openalt
+[Cb1]
+closealt
+openalt
+[Cb2]
+closealt
+openalt
+[Cb3]
+closealt
+close(level1)
+open(level1)
+openalt
+[Cc1]
+closealt
+openalt
+[Cc2]
+closealt
+openalt
+[Cc3]
+closealt
+close(level1)
+close(level2)
+flush

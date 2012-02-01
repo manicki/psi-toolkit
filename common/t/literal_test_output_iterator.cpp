@@ -11,25 +11,25 @@ LiteralTestOutputIterator::~LiteralTestOutputIterator() {
 }
 
 void LiteralTestOutputIterator::doPutElement(const AnnotationItem& element) {
-    outputStream_ << element.getText();
+    outputStream_ << "[" << element.getText() << "]\n";
 }
 
 void LiteralTestOutputIterator::doOpenAlternative() {
-    outputStream_ << " [ ";
+    outputStream_ << "openalt\n";
 }
 
 void LiteralTestOutputIterator::doCloseAlternative() {
-    outputStream_ << " ] \n";
+    outputStream_ << "closealt\n";
 }
 
 void LiteralTestOutputIterator::doOpenGroup(const std::string& group) {
-    outputStream_ << " (" << group << "( \n";
+    outputStream_ << "open(" << group << ")\n";
 }
 
 void LiteralTestOutputIterator::doCloseGroup(const std::string& group) {
-    outputStream_ << " )" << group << ") \n";
+    outputStream_ << "close(" << group << ")\n";
 }
 
 void LiteralTestOutputIterator::doFlush() {
-    outputStream_ << " ! \n";
+    outputStream_ << "flush\n";
 }
