@@ -3,3 +3,5 @@ if(USE_PUDDLE)
 else()
   unset(puddle-t CACHE)
 endif(USE_PUDDLE)
+
+add_subdirectory(gobio)
