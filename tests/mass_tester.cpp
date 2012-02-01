@@ -157,7 +157,8 @@ void MassTester::parseFilePath_(const boost::filesystem::path& filePath,
     infix = innerExtension.string();
     suffix = outerExtension.string();
 
-    INFO("parsing file path " << filePath.string() << " " << basename << "+" << infix << "+" << suffix);
+    INFO("parsing file path " << filePath.string()
+         << " " << basename << "+" << infix << "+" << suffix);
 }
 
 void MassTester::checkFileMap_(std::map<std::string, boost::filesystem::path>& filemap,

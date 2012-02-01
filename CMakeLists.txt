@@ -168,6 +168,11 @@ if(USE_JAVA)
     set(TESTS_TARGETS ${TESTS_TARGETS} tools-lemmatizers-morfologik-tests)
 endif(USE_JAVA)
 
+if(HAVE_CMPH)
+    set(BASE_TARGETS ${BASE_TARGETS} tools-datastructures-lexica)
+    set(TESTS_TARGETS ${TESTS_TARGETS} tools-datastructures-lexica-tests)
+endif(HAVE_CMPH)
+
 if(USE_POSTGRESQL)
         set(BASE_TARGETS ${BASE_TARGETS} lex-db)
 endif(USE_POSTGRESQL)
