@@ -62,26 +62,31 @@ void LatticeIterWriter::run() {
         }
 
         // print edges
-        if (printElements) {
-            while (!basicTagEdges.empty()) {
-                Lattice::EdgeDescriptor basicTagEdge = basicTagEdges.front();
+        while (!basicTagEdges.empty()) {
+            Lattice::EdgeDescriptor basicTagEdge = basicTagEdges.front();
+
+            if (printElements) {
                 if (!alternativeOpened) {
                     outputIterator_.openAlternative();
                     alternativeOpened = true;
                 }
                 outputIterator_.putElement(lattice_.getEdgeAnnotationItem(basicTagEdge));
+            } else {
+                WARN("Edge ("
+                    << lattice_.getEdgeAnnotationItem(basicTagEdges.front()).getText()
+                    << ") not printed because not enclosed by a spec-tag edge");
+            }
 
-                basicTagEdges.pop();
-                if (noAlts_) {
-                    while (!basicTagEdges.empty()) {
-                        basicTagEdges.pop();
-                    }
+            basicTagEdges.pop();
+            if (noAlts_) {
+                while (!basicTagEdges.empty()) {
+                    basicTagEdges.pop();
                 }
             }
-            if (alternativeOpened) {
-                outputIterator_.closeAlternative();
-                alternativeOpened = false;
-            }
+        }
+        if (alternativeOpened) {
+            outputIterator_.closeAlternative();
+            alternativeOpened = false;
         }
 
         if (linear_) {
