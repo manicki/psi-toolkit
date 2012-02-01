@@ -28,7 +28,9 @@ void LatticeWriterOutputIterator::flush() {
 LatticeWriterOutputIterator::~LatticeWriterOutputIterator() {
 }
 
-std::string LatticeWriterOutputIterator::getElementAnnotationItemStringToPut(const AnnotationItem & element) const {
+std::string LatticeWriterOutputIterator::getElementAnnotationItemStringToPut(
+    const AnnotationItem & element
+) const {
     if (element.getText().empty()) {
         return element.getCategory();
     } else {
