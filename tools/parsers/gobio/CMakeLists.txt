@@ -7,7 +7,7 @@ set(gobio_SUBDIRS
 CACHE PATH "Gobio subdirectories" FORCE)
 
 foreach(dir ${gobio_SUBDIRS})
-    include_directories(${dir})
+    include_directories("${psi-toolkit_SOURCE_DIR}/tools/parsers/gobio/${dir}")
     add_subdirectory(${dir})
 endforeach(dir)
 
