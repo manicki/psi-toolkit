@@ -69,7 +69,7 @@ char * PipeSite::hiddenOptions() {
     std::string outputFile = psiServer_.session()->getData("output-file");
 
     std::string opts =
-        std::string("psisOptions = {") + 
+        std::string("psisOptions = {") +
         std::string("'isInputFile' : '") + fileOnOff + std::string("', ") +
         std::string("'fileToDownload' : '") + outputFile + std::string("' ") +
         std::string("};");
@@ -101,11 +101,6 @@ std::string PipeSite::getInput() {
     return input;
 }
 
-void PipeSite::createFileFromOutput(std::string output) {
-    std::string filename = outputSaver.storeOutput(output);
-    psiServer_.session()->setData("output-file", filename);
-}
-
 std::string PipeSite::runPipe(std::string input) {
     std::string pipe = psiServer_.session()->getData("pipe-text");
 
@@ -117,6 +112,8 @@ std::string PipeSite::runPipe(std::string input) {
 
     INFO("Constructing pipe [" << pipe << "]...");
     INFO("Input: " << input);
+
+    clearPreviousFileFromOutput();
 
     try {
         PipeRunner p(pipe);
@@ -132,4 +129,13 @@ std::string PipeSite::runPipe(std::string input) {
     }
 
     return oss.str();
+}
+
+void PipeSite::createFileFromOutput(std::string output) {
+    std::string filename = outputSaver.storeOutput(output);
+    psiServer_.session()->setData("output-file", filename);
+}
+
+void PipeSite::clearPreviousFileFromOutput() {
+    psiServer_.session()->clearData("output-file");
 }

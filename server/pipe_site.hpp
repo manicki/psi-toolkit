@@ -31,4 +31,5 @@ private:
 
     OutputSaver outputSaver;
     void createFileFromOutput(std::string output);
+    void clearPreviousFileFromOutput();
 };
