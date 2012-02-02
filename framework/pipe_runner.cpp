@@ -211,7 +211,7 @@ void PipeRunner::checkWriter_() {
 
     const LatticeWriterFactory<Sink>* writer =
         dynamic_cast<const LatticeWriterFactory<Sink> *>(
-            pipelineGraph_[firstNode].getFactory());
+            pipelineGraph_[lastNode].getFactory());
 
     if (!writer)
         ERROR("no writer specified");
