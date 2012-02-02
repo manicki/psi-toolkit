@@ -9,8 +9,10 @@
     <script type="text/javascript" src="js/jquery-1.6.4.min.js"></script>
     <script type="text/javascript" src="js/jquery.textarearesizer.compressed.js"></script>
 
-    <script type="text/javascript" src="js/main-form.js"></script>    
-    <script type="text/javascript" src="js/validations.js"></script>
+    <script type="text/javascript"><!--#psis pipe_site_options --></script>
+
+    <script type="text/javascript" src="js/main-form.js"></script>
+
 </head>
 
 <body>
@@ -28,7 +30,7 @@
                 <input id="input-pipe" name="pipe-text" type="text" value="<!--#psis pipe_site_pipe_text -->" />
             </div>
 
-            <ul id="input-bookmarks">
+            <ul id="bookmarks">
                 <li class="active"><a class="input-text" href="#">Text</a></li>
                 <li><a href="#" class="input-file">File</a></li>
             </ul>
@@ -36,7 +38,7 @@
             <div class="box black" id="inputs" >
                 <div id="input-text" class="hidable">
                     <p>Write some text:</p>
-                    <textarea class="resizable" name="input-text" rows="5"><!--#psis pipe_site_input_text --></textarea>
+                    <textarea class="resizable" name="input-text" rows="5" cols="1"><!--#psis pipe_site_input_text --></textarea>
                 </div>
 
                 <div id="input-file" class="hidable">
@@ -44,7 +46,7 @@
                     <input type="file" accept="text/html" name="input-file" size="60" />
                 </div>
 
-                <input class="input-radio" id="radio-input-text" type="radio" name="radio-text" checked="yes" />
+                <input class="input-radio" id="radio-input-text" type="radio" name="radio-text" checked="checked" />
                 <input class="input-radio" id="radio-input-file" type="radio" name="radio-file" />
 
             </div>
@@ -61,17 +63,13 @@
         <div class="box" id="output">
             <!--#psis pipe_site_output_text -->
         </div>
-        
+
         <div class="box" id="download"></div>
 
     </div>
 </div>
 
 <!--#psis index_site_footer_part -->
-
-<div id="psis-hidden-options" style="visibility: hidden; display: none;">
-    <!--#psis pipe_site_options -->
-</div>
 
 </body>
 

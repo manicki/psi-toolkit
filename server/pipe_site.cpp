@@ -69,9 +69,10 @@ char * PipeSite::hiddenOptions() {
     std::string outputFile = psiServer_.session()->getData("output-file");
 
     std::string opts =
-        std::string("<div input_file=\"") + fileOnOff
-        + std::string("\" file_to_download=\"") + outputFile
-        + std::string("\" />");
+        std::string("psisOptions = {") + 
+        std::string("'isInputFile' : '") + fileOnOff + std::string("', ") +
+        std::string("'fileToDownload' : '") + outputFile + std::string("' ") +
+        std::string("};");
 
     psiServer_.session()->clearData("radio-file");
 

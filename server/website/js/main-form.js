@@ -1,43 +1,101 @@
+var preloaderTimestamp = 2000;
+var messages = [];
+
 $(document).ready(function()
 {
     $('textarea.resizable:not(.processed)').TextAreaResizer();
 
-    $("ul#input-bookmarks li a").click(function(e)
-    {
+    $("#bookmarks li a").click(function(e) {
         e.preventDefault();
-
-        $("ul#input-bookmarks .active").removeClass("active");
-        $(this).parent().addClass("active");
-
         switchBookmark($(this).attr("class"));
-
         return false;
     });
 
-    function switchBookmark(class_name) {
-        // handle div content
-        $("#inputs div.hidable:visible").hide();
-        $("#inputs div#" + class_name).show();
-
-        // handle radio buttons for server
-        $("#inputs input.input-radio").attr("checked", false);
-        $("#inputs input#radio-" + class_name).attr("checked", true);
-    }
-
-    var options = $("div#psis-hidden-options div");
-
-    if (options.attr("input_file") == "on") {
-        $("ul#input-bookmarks .active").removeClass("active");
-        $("ul#input-bookmarks a.input-file").parent().addClass("active");
-
+    if (psisOptions['isInputFile'] == "on") {
         switchBookmark("input-file");
     }
 
-    var downloadFilePath = options.attr("file_to_download");
-    if (downloadFilePath != "") {
+    if (psisOptions['fileToDownload'] != "") {
         var infoDownload = "Click here to download the output file";
-        $("#download").append("<a href=\"" + downloadFilePath + "\">" + infoDownload + "</a>");
+        $("#download").append("<a href=\"" + psisOptions['fileToDownload'] + "\">" + infoDownload + "</a>");
     }
+
+   $("form").submit(function() {
+        clearMessages();
+
+        if (validate() > 0) {
+            showMessage();
+            return false;
+        }
+        else {
+            //hideOldOutput();
+            showPreloader();
+        }
+    });
 
 });
 
+function switchBookmark(anchorClass) {
+    $("#bookmarks .active").removeClass("active");
+    $('#bookmarks a.' + anchorClass).parent().addClass("active");
+
+    // handle div content
+    $("#inputs div.hidable:visible").hide();
+    $("#inputs div#" + anchorClass).show();
+
+    // handle radio buttons for server
+    $("#inputs input.input-radio").attr("checked", false);
+    $("#inputs input#radio-" + anchorClass).attr("checked", true);
+};
+
+function clearMessages() {
+    messages = [];
+    $("#message").empty();
+};
+
+function validate() {
+    var errors = 0;
+
+    if (!$("#input-pipe").val()) {
+        addMessage("Pipe specification cannot be empty.");
+        errors += 1;
+    }
+
+    if ($("#radio-input-text").attr("checked") == 'checked') {
+        if (!$("#input-text textarea").val()) {
+            addMessage("Write some text to process.");
+            errors += 1;
+        }
+    }
+    else {
+        if (!$("#input-file input").val()) {
+            addMessage("Select file with text to process.");
+            errors += 1;
+        }
+    }
+    return errors;
+}
+
+function addMessage(text) {
+    messages.push("<li>" + text + "</li>");
+};
+
+function showMessage() {
+    if (messages.length) {
+        var msg = $("<ul>").html(messages.join(''));
+        $("#message").html("<p>Some errors occured:</p>").append(msg);
+        return true;
+    }
+    return false;
+};
+
+function showPreloader() {
+    setTimeout( function() {
+        $("#message").addClass("preloader");
+    }, preloaderTimestamp);
+};
+
+function hideOldOutput() {
+    $('#output').hide();
+    $('#download').hide();
+}
