@@ -140,7 +140,7 @@ public:
     PosT find(StringT &s) const;
     PosT find(const char* c) const;
 
-    bool save(std::FILE* out) {
+    bool save(std::FILE* out) const {
         std::fwrite(&m_sorted, sizeof(bool), 1, out);
 
         m_positions.save(out);
@@ -172,7 +172,7 @@ public:
         return true;
     }
 
-    bool save(std::string filename) {
+    bool save(std::string filename) const {
         std::FILE* pFile = fopen(filename.c_str(), "w");
         save(pFile);
         fclose(pFile);

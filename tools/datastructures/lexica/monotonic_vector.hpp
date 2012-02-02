@@ -95,7 +95,7 @@ public:
         fread(&m_rests[0], sizeof(std::pair<PosT, PosT>), size, in);
     }
 
-    void save(std::FILE* out) {
+    void save(std::FILE* out) const {
         size_t size = m_diffs.size();
         fwrite(&size, sizeof(size_t), 1, out);
         fwrite(&m_diffs[0], sizeof(LenT), size, out);

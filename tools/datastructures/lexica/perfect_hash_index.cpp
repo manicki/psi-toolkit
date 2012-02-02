@@ -81,13 +81,13 @@ void PerfectHashIndex::create() {
     calcFprints();
 }
 
-void PerfectHashIndex::save(std::string filename) {
+void PerfectHashIndex::save(std::string filename) const {
     std::FILE* mphf = std::fopen(filename.c_str(), "w");
     save(mphf);
     std::fclose(mphf);
 }
 
-void PerfectHashIndex::save(std::FILE* mphf) {
+void PerfectHashIndex::save(std::FILE* mphf) const {
     cmph_dump(m_hash, mphf);
 
     size_t nkeys = m_fprints.size();

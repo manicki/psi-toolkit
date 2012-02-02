@@ -96,12 +96,16 @@ public:
         addKey(keyArg.c_str());
     }
 
+    const char* getKey(size_t index) {
+        return m_keys[index];
+    }
+
     void clearKeys();
 
     void create();
 
-    void save(std::string filename);
-    void save(std::FILE* mphf);
+    void save(std::string filename) const;
+    void save(std::FILE* mphf) const;
 
     void load(std::string filename);
     void load(std::FILE* mphf);
