@@ -85,8 +85,15 @@ std::pair<typename chart<C,S,V,R,I>::edge_descriptor,bool> chart<C,S,V,R,I>::add
     S score)
 {
     AnnotationItem ai(category);
-    Lattice::EdgeDescriptor result
-        = lattice_.addEdge(u, v, ai, getGobioTag_(), Lattice::EdgeSequence(), score);
+    // Lattice::EdgeDescriptor result = firstOutEdge(u, lattice_.getLayerTagManager.anyTag();
+    Lattice::EdgeDescriptor result = lattice_.addEdge(
+        u,
+        v,
+        ai,
+        getGobioTag_(),
+        Lattice::EdgeSequence(),
+        score
+    );
     return std::pair<edge_descriptor,bool>(result, true);
 }
 
@@ -111,7 +118,13 @@ typename chart<C,S,V,R,I>::edge_descriptor chart<C,S,V,R,I>::add_partition(
     S score,
     R rule)
 {
-    return lattice_.addPartitionToEdge(edge, getGobioTag_(), Lattice::EdgeSequence(), score, rule);
+    return lattice_.addPartitionToEdge(
+        edge,
+        getGobioTag_(),
+        Lattice::EdgeSequence(),
+        score,
+        rule.rule_no()
+    );
 }
 
 
@@ -124,7 +137,13 @@ typename chart<C,S,V,R,I>::edge_descriptor chart<C,S,V,R,I>::add_partition(
 {
     Lattice::EdgeSequence::Builder builder(lattice_);
     builder.addEdge(link);
-    return lattice_.addPartitionToEdge(edge, getGobioTag_(), builder.build(), score, rule);
+    return lattice_.addPartitionToEdge(
+        edge,
+        getGobioTag_(),
+        builder.build(),
+        score,
+        rule.rule_no()
+    );
 }
 
 template<class C, class S, class V, class R, template<class,class> class I>
@@ -138,7 +157,13 @@ typename chart<C,S,V,R,I>::edge_descriptor chart<C,S,V,R,I>::add_partition(
     Lattice::EdgeSequence::Builder builder(lattice_);
     builder.addEdge(left_link);
     builder.addEdge(right_link);
-    return lattice_.addPartitionToEdge(edge, getGobioTag_(), builder.build(), score, rule);
+    return lattice_.addPartitionToEdge(
+        edge,
+        getGobioTag_(),
+        builder.build(),
+        score,
+        rule.rule_no()
+    );
 }
 
 template<class C, class S, class V, class R, template<class,class> class I>
@@ -367,10 +392,17 @@ void chart<C,S,V,R,I>::add_variant(
     variants.back().links.push_back(left_link_vit);
     variants.back().links.push_back(right_link_vit);
 }
-*/
 
 template<class C, class S, class V, class R, template<class,class> class I>
 R chart<C,S,V,R,I>::partition_rule(
+    partition_iterator piter)
+{
+    return (*piter).getRuleId();
+}
+*/
+
+template<class C, class S, class V, class R, template<class,class> class I>
+int chart<C,S,V,R,I>::partition_rule_id(
     partition_iterator piter)
 {
     return (*piter).getRuleId();

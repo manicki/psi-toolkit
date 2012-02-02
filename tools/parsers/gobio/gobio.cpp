@@ -82,10 +82,10 @@ void Gobio::parse(Lattice &lattice) {
         simple_marked_edges_index
     > Parser;
 
-    Chart chart(lattice);
+    Chart a_chart(lattice);
     Combinator combinator;
     Agenda agenda;
-    Parser parser(chart, combinator, agenda);
+    Parser parser(a_chart, combinator, agenda);
 
     parser.run();
 

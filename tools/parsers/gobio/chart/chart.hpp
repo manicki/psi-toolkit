@@ -168,7 +168,8 @@ public:
         // variant_iterator    right_link_vit);
 
 
-    R partition_rule(partition_iterator piter);
+    // R partition_rule(partition_iterator piter);
+    int partition_rule_id(partition_iterator piter);
     // std::vector<edge_descriptor>& partition_links(partition_iterator piter);
     Lattice::Partition::Iterator partition_links_iterator(partition_iterator piter);
     // partition_iterator variant_partition(variant_iterator vit);
