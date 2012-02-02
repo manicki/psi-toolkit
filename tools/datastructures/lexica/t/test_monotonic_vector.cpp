@@ -22,7 +22,7 @@ BOOST_AUTO_TEST_CASE(monotonic_vector_test) {
         (200001)
         (200256);
 
-    char* tmpFile = tempnam(0, "test_perfect_hash_index_bin");
+    char* tmpFile = tempnam(0, "test_monotonic_vector_bin");
 
     {
         MonotonicVector<> v;
