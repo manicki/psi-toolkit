@@ -186,10 +186,13 @@ if(USE_PUDDLE)
         endif(USE_BONSAI_PARSEGRAPH)
 endif(USE_PUDDLE)
 
-foreach(dir ${gobio_SUBDIRS})
-    include_directories("${psi-toolkit_SOURCE_DIR}/tools/parsers/gobio/${dir}")
-    link_directories("${psi-toolkit_BINARY_DIR}/tools/parsers/gobio/${dir}")
-endforeach(dir)
+include_directories("${psi-toolkit_SOURCE_DIR}/tools/parsers/gobio")
+include_directories("${psi-toolkit_SOURCE_DIR}/tools/parsers/gobio/chart")
+include_directories("${psi-toolkit_SOURCE_DIR}/tools/parsers/gobio/parser")
+
+link_directories("${psi-toolkit_BINARY_DIR}/tools/parsers/gobio")
+link_directories("${psi-toolkit_BINARY_DIR}/tools/parsers/gobio/chart")
+link_directories("${psi-toolkit_BINARY_DIR}/tools/parsers/gobio/parser")
 
 set(TARGETS ${BASE_TARGETS} psi-pipe)
 

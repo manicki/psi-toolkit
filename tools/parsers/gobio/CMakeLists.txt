@@ -12,4 +12,6 @@ include_directories("${psi-toolkit_SOURCE_DIR}/tools/parsers/gobio/parser")
 add_subdirectory("chart")
 add_subdirectory("parser")
 
+target_link_libraries(tools-parsers-gobio)
+
 install(TARGETS tools-parsers-gobio DESTINATION lib/)
