@@ -2,9 +2,6 @@
 #define CHART_HPP_HDR
 
 
-
-
-
 template<class E, class C>
 struct empty_marked_edges_index
 {
@@ -43,8 +40,8 @@ public:
 };
 
 // I - indeks przy kazdym wierzcholku
-template<class C, class S, class V, class R,
-     template<class,class> class I = simple_marked_edges_index>
+template< class C, class S, class V, class R,
+     template< class, class > class I = simple_marked_edges_index >
 class chart
 {
 public:
@@ -71,14 +68,14 @@ public:
 
     // vertex_descriptor add_vertex();
 
-    std::pair<edge_descriptor,bool>   add_edge(
+    std::pair<edge_descriptor, bool>   add_edge(
     vertex_descriptor u,
     vertex_descriptor v,
     const C& category,
     S score,
     R rule);
 
-    std::pair<edge_descriptor,bool>   add_edge(
+    std::pair<edge_descriptor, bool>   add_edge(
     vertex_descriptor u,
     vertex_descriptor v,
     const C& category,
@@ -86,7 +83,7 @@ public:
     R rule,
     edge_descriptor link);
 
-    std::pair<edge_descriptor,bool>   add_edge(
+    std::pair<edge_descriptor, bool>   add_edge(
     vertex_descriptor u,
     vertex_descriptor v,
     const C& category,
@@ -189,7 +186,7 @@ public:
 
 private:
 
-    std::pair<edge_descriptor,bool> add_edge_(
+    std::pair<edge_descriptor, bool> add_edge_(
     vertex_descriptor u,
     vertex_descriptor v,
     const C& category,
@@ -272,7 +269,7 @@ private:
     // Lattice::EdgeCounterHash edge_counter_hash_;
 
 
-    typename HashWrapper3<vertex_descriptor,size_t,vertex_hash_fun>::type topological_order_;
+    typename HashWrapper3<vertex_descriptor, size_t, vertex_hash_fun>::type topological_order_;
     std::vector<vertex_descriptor> sorted_vertices_;
 
     typename HashWrapper3<

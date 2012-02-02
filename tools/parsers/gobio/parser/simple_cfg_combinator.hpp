@@ -17,7 +17,7 @@ private:
     static int last_rule_no_;
 
 public:
-    simple_cfg_rule(T lhs, double score=0.0):lhs_(lhs), score_(score) {}
+    simple_cfg_rule(T lhs, double score=0.0):lhs_(lhs), score_(score), rule_no_(0) {}
 
     T category()   const { return lhs_; }
     double score() const { return score_; }
@@ -45,16 +45,16 @@ public:
     std::vector<R> find_only_child_parent(T symbol);
 
     // znajduje możliwych lewych braci z rodzicami
-    std::vector<std::pair<R,T> > find_left_sibling_with_parent(T second_symbol);
+    std::vector<std::pair<R, T> > find_left_sibling_with_parent(T second_symbol);
 
     // znajduje możliwych prawych braci z rodzicami
-    std::vector<std::pair<R,T> > find_right_sibling_with_parent(T first_symbol);
+    std::vector<std::pair<R, T> > find_right_sibling_with_parent(T first_symbol);
 
     // znajduje reguły binarne, których głową jest dany węzeł
-    std::vector< std::pair< R, std::pair<T,T> > > split(T parent_symbol);
+    std::vector< std::pair< R, std::pair<T, T> > > split(T parent_symbol);
 
     // znajduje reguły unarne, których głową jest dany węzeł
-    std::vector< std::pair< R,T > > find_only_children(T parent_symbol);
+    std::vector< std::pair< R, T > > find_only_children(T parent_symbol);
 
     // dodaje wierzchołek do listy korzeni
     void set_root(T state);
