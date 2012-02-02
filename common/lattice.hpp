@@ -88,6 +88,12 @@ public:
         Score score;
         std::list<Partition> partitions;
 
+        EdgeEntry():
+            item(AnnotationItem("")),
+            tagList(LayerTagManager().createSingletonTagCollection("")),
+            score(0.0)
+        { }
+
         EdgeEntry(
             AnnotationItem aItem,
             LayerTagCollection aTagList,
@@ -170,6 +176,8 @@ public:
         const LayerTagCollection& getTagList() const;
 
         const Score& getScore() const;
+
+        const int& getRuleId() const;
 
         EdgeDescriptor firstEdge(Lattice & lattice) const { return sequence_.firstEdge(lattice); }
 
@@ -471,6 +479,9 @@ public:
     void correctionInsert(VertexDescriptor here, std::string text);
     void correctionErase(VertexDescriptor from, VertexDescriptor to);
     void correctionReplace(VertexDescriptor from, VertexDescriptor to, std::string text);
+
+    int countEdges(VertexDescriptor from, VertexDescriptor to);
+    int countAllVertices();
 
 private:
 

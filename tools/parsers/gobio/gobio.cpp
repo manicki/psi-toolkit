@@ -59,11 +59,36 @@ Gobio::Gobio() {
     //TODO
 }
 
+
 void Gobio::parse(Lattice &lattice) {
-    //TODO
+
+    typedef Lattice::EdgeDescriptor Edge;
+    typedef std::string Category;
+    typedef Lattice::Score Score;
+    typedef std::string Variant;
+    typedef simple_cfg_rule<Category> Rule;
+    typedef simple_cfg_combinator<Category, Rule> Combinator;
+    typedef fifo_agenda<Edge> Agenda;
+    typedef chart<Category, Score, Variant, Rule, simple_marked_edges_index> Chart;
+    typedef agenda_parser<
+        Category,
+        Score,
+        Variant,
+        Rule,
+        Combinator,
+        Agenda,
+        simple_marked_edges_index
+    > Parser;
+
+    Chart a_chart(lattice);
+    Combinator combinator;
+    Agenda agenda;
+    Parser parser(a_chart, combinator, agenda);
+
+    parser.run();
 
     //DUMMY IMPLEMENTATION (for testing in psi-pipe)
-    // /*
+    /*
     AnnotationItem aiGobio("parsed by GOBIO");
     LayerTagCollection
         tagParse = lattice.getLayerTagManager().createSingletonTagCollection("parse");

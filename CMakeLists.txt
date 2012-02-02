@@ -186,6 +186,11 @@ if(USE_PUDDLE)
         endif(USE_BONSAI_PARSEGRAPH)
 endif(USE_PUDDLE)
 
+foreach(dir ${gobio_SUBDIRS})
+    include_directories("${psi-toolkit_SOURCE_DIR}/tools/parsers/gobio/${dir}")
+    link_directories("${psi-toolkit_BINARY_DIR}/tools/parsers/gobio/${dir}")
+endforeach(dir)
+
 set(TARGETS ${BASE_TARGETS} psi-pipe)
 
 set(DIRS common formats maxent tools framework utf8 utf8case server bindings)
