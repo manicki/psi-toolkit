@@ -95,6 +95,7 @@ private:
     }
 };
 
+/*
 template<typename C, typename S, typename V, typename R, typename K, typename A>
 class apply_binary_rules_algorithm<C,S,V,R,K,A,layered_marked_edges_index>
 {
@@ -209,6 +210,7 @@ private:
         }
     }
 };
+*/
 
 /**
  * C - typ kategorii (odpowiada symbolowi terminalnemu/nieterminalnemu z tradycyjnej

@@ -2,7 +2,7 @@
 
 
 Annotator* Gobio::Factory::doCreateAnnotator(
-    const boost::program_options::variables_map& options
+    const boost::program_options::variables_map& /*options*/
 ) {
     return new Gobio();
 }
@@ -66,16 +66,26 @@ void Gobio::parse(Lattice &lattice) {
 
     typedef Lattice::EdgeDescriptor Edge;
     typedef std::string Category;
+    typedef Lattice::Score Score;
     typedef std::string Variant;
     typedef simple_cfg_rule<Category> Rule;
-    typedef simple_cfg_combinator<Rule, Category> Combinator;
-    typedef fifo_agenda<Category> Agenda;
-    typedef simple_marked_edges_index<Edge, Category> Index;
-    typedef agenda_parser<Category, Score, Variant, Rule, Combinator, Agenda, Index> Parser;
+    typedef simple_cfg_combinator<Category, Rule> Combinator;
+    typedef fifo_agenda<Edge> Agenda;
+    typedef chart<Category, Score, Variant, Rule, simple_marked_edges_index> Chart;
+    typedef agenda_parser<
+        Category,
+        Score,
+        Variant,
+        Rule,
+        Combinator,
+        Agenda,
+        simple_marked_edges_index
+    > Parser;
 
+    Chart chart(lattice);
     Combinator combinator;
     Agenda agenda;
-    Parser parser(lattice, combinator, agenda);
+    Parser parser(chart, combinator, agenda);
 
     parser.run();
 

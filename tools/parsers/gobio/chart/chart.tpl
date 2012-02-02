@@ -1,15 +1,22 @@
 #ifndef CHART_TPL_HDR
 #define CHART_TPL_HDR
 
-#include <vector>
-#include <algorithm>
+// #include <vector>
+// #include <algorithm>
 // warningi pod GCC 3.3.4
-#include <boost/graph/topological_sort.hpp>
+// #include <boost/graph/topological_sort.hpp>
 #include "chart.hpp"
 
 
+template<class C, class S, class V, class R, template<class,class> class I>
+chart<C,S,V,R,I>::chart(
+    Lattice & lattice
+) :
+    lattice_(lattice),
+    gobioTag_(lattice.getLayerTagManager().createSingletonTagCollection("parse"))
+{ }
 
-
+/*
 template<class C, class S, class V, class R, template<class,class> class I>
 typename chart<C,S,V,R,I>::vertex_descriptor chart<C,S,V,R,I>::add_vertex()
 {
@@ -17,17 +24,18 @@ typename chart<C,S,V,R,I>::vertex_descriptor chart<C,S,V,R,I>::add_vertex()
 
     return vd;
 }
+*/
 
 template<class C, class S, class V, class R, template<class,class> class I>
 std::pair<typename chart<C,S,V,R,I>::edge_descriptor,bool> chart<C,S,V,R,I>::add_edge(
-	vertex_descriptor u, 
-	vertex_descriptor v,
-	const C& category,
-	S score,
-	R rule)
+    vertex_descriptor u,
+    vertex_descriptor v,
+    const C& category,
+    S score,
+    R rule)
 {
-    std::pair<edge_descriptor,bool> p = 
-	add_edge_(u, v, category, score);
+    std::pair<edge_descriptor,bool> p =
+    add_edge_(u, v, category, score);
 
     add_partition(p.first, score, rule);
 
@@ -36,15 +44,15 @@ std::pair<typename chart<C,S,V,R,I>::edge_descriptor,bool> chart<C,S,V,R,I>::add
 
 template<class C, class S, class V, class R, template<class,class> class I>
 std::pair<typename chart<C,S,V,R,I>::edge_descriptor,bool> chart<C,S,V,R,I>::add_edge(
-	vertex_descriptor u, 
-	vertex_descriptor v,
-	const C& category,
-	S score,
-	R rule,
-	edge_descriptor link)
+    vertex_descriptor u,
+    vertex_descriptor v,
+    const C& category,
+    S score,
+    R rule,
+    edge_descriptor link)
 {
-    std::pair<edge_descriptor,bool> p = 
-	add_edge_(u, v, category, score);
+    std::pair<edge_descriptor,bool> p =
+    add_edge_(u, v, category, score);
 
     add_partition(p.first, score, rule, link);
 
@@ -53,16 +61,16 @@ std::pair<typename chart<C,S,V,R,I>::edge_descriptor,bool> chart<C,S,V,R,I>::add
 
 template<class C, class S, class V, class R, template<class,class> class I>
 std::pair<typename chart<C,S,V,R,I>::edge_descriptor,bool> chart<C,S,V,R,I>::add_edge(
-	vertex_descriptor u, 
-	vertex_descriptor v,
-	const C& category,
-	S score,
-	R rule,
-	edge_descriptor  left_link,
-	edge_descriptor right_link)
+    vertex_descriptor u,
+    vertex_descriptor v,
+    const C& category,
+    S score,
+    R rule,
+    edge_descriptor  left_link,
+    edge_descriptor right_link)
 {
-    std::pair<edge_descriptor,bool> p = 
-	add_edge_(u, v, category, score);
+    std::pair<edge_descriptor,bool> p =
+    add_edge_(u, v, category, score);
 
     add_partition(p.first, score, rule, left_link, right_link);
 
@@ -71,200 +79,140 @@ std::pair<typename chart<C,S,V,R,I>::edge_descriptor,bool> chart<C,S,V,R,I>::add
 
 template<class C, class S, class V, class R, template<class,class> class I>
 std::pair<typename chart<C,S,V,R,I>::edge_descriptor,bool> chart<C,S,V,R,I>::add_edge_(
-	vertex_descriptor u, 
-	vertex_descriptor v,
-	const C& category,
-	S score)
+    vertex_descriptor u,
+    vertex_descriptor v,
+    const C& category,
+    S score)
 {
-    std::pair<vertex_descriptor,vertex_descriptor> vpair(u,v);
-    
-    std::pair<std::pair<vertex_descriptor,vertex_descriptor>, C> hkey(vpair, category);
-
-    // dodajemy pusty edge_descriptor(), właściwe dodanie
-    // nastąpi później
-    std::pair<vvc_hash_iterator_type_, bool> insert_result
-	(vvc_hash_.insert(std::pair<
-			  std::pair<std::pair<vertex_descriptor,vertex_descriptor>, C>,
-			  edge_descriptor>(hkey, edge_descriptor())));
-
-    if(insert_result.second) {
-        if (!edge_counter_hash_[vpair]) {
-            edge_counter_hash_[vpair] = 1;
-        } else {
-            ++edge_counter_hash_[vpair];
-        }
-        return std::pair<edge_descriptor,bool>(
-            ((*insert_result.first).second
-             = boost::add_edge(u, v, edge_entry(category, score), graph_).first),
-            true);
-    } else {
-        return std::pair<edge_descriptor,bool>(
-            (*insert_result.first).second,
-            false);
-    }
+    AnnotationItem ai(category);
+    Lattice::EdgeDescriptor result
+        = lattice_.addEdge(u, v, ai, getGobioTag_(), Lattice::EdgeSequence(), score);
+    return std::pair<edge_descriptor,bool>(result, true);
 }
 
 template<class C, class S, class V, class R, template<class,class> class I>
 void chart<C,S,V,R,I>::remove_edge(
-	edge_descriptor edge)
+    edge_descriptor edge)
 {
-    boost::remove_edge(edge, graph_);
+    lattice_.discard(edge);
 }
 
 template<class C, class S, class V, class R, template<class,class> class I>
 int chart<C,S,V,R,I>::nb_edges(
-    vertex_descriptor u, 
+    vertex_descriptor u,
     vertex_descriptor v)
 {
-    return edge_counter_hash_[std::pair<vertex_descriptor,vertex_descriptor>(u,v)];
+    return lattice_.countEdges(u, v);
 }
 
 template<class C, class S, class V, class R, template<class,class> class I>
 typename chart<C,S,V,R,I>::edge_descriptor chart<C,S,V,R,I>::add_partition(
-	edge_descriptor edge,
-	S score,
-	R rule)
+    edge_descriptor edge,
+    S score,
+    R rule)
 {
-    edge_entry& entry = graph_[edge];
-
-    assert(&entry);
-
-    if(score > entry.score)
-	entry.score = score;
-
-    entry.partitions.push_back(partition(score, rule));
-
-    return edge;
+    return lattice_.addPartitionToEdge(edge, getGobioTag_(), Lattice::EdgeSequence(), score, rule);
 }
 
 
 template<class C, class S, class V, class R, template<class,class> class I>
 typename chart<C,S,V,R,I>::edge_descriptor chart<C,S,V,R,I>::add_partition(
-	edge_descriptor edge,
-	S score,
-	R rule,
-	edge_descriptor link)
+    edge_descriptor edge,
+    S score,
+    R rule,
+    edge_descriptor link)
 {
-    edge_entry& entry = graph_[edge];
-
-    assert(&entry);
-
-    if(score > entry.score)
-	entry.score = score;
-
-    entry.partitions.push_back(partition(score, rule, link));
-
-    return edge;
+    Lattice::EdgeSequence::Builder builder(lattice_);
+    builder.addEdge(link);
+    return lattice_.addPartitionToEdge(edge, getGobioTag_(), builder.build(), score, rule);
 }
 
 template<class C, class S, class V, class R, template<class,class> class I>
 typename chart<C,S,V,R,I>::edge_descriptor chart<C,S,V,R,I>::add_partition(
-	edge_descriptor edge,
-	S score,
-	R rule,
-	edge_descriptor left_link,
-	edge_descriptor right_link)
+    edge_descriptor edge,
+    S score,
+    R rule,
+    edge_descriptor left_link,
+    edge_descriptor right_link)
 {
-    edge_entry& entry = graph_[edge];
-
-    assert(&entry);
-
-    if(score > entry.score)
-	entry.score = score;
-
-    entry.partitions.push_back(partition(score, rule, left_link, right_link));
-
-    return edge;
+    Lattice::EdgeSequence::Builder builder(lattice_);
+    builder.addEdge(left_link);
+    builder.addEdge(right_link);
+    return lattice_.addPartitionToEdge(edge, getGobioTag_(), builder.build(), score, rule);
 }
 
 template<class C, class S, class V, class R, template<class,class> class I>
 typename chart<C,S,V,R,I>::edge_descriptor chart<C,S,V,R,I>::mark_edge(
     edge_descriptor edge)
 {
-    graph_[source(edge, graph_)].marked_edges_index.mark_out_edge(edge, edge_category(edge));
-    graph_[target(edge, graph_)].marked_edges_index.mark_in_edge(edge, edge_category(edge));
+    markedEdgesIndexes_[lattice_.getEdgeSource(edge)].mark_out_edge(edge, edge_category(edge));
+    markedEdgesIndexes_[lattice_.getEdgeTarget(edge)].mark_in_edge(edge, edge_category(edge));
 
     return edge;
 }
 
 template<class C, class S, class V, class R, template<class,class> class I>
-std::pair<typename chart<C,S,V,R,I>::vertex_iterator,
-	  typename chart<C,S,V,R,I>::vertex_iterator>
-chart<C,S,V,R,I>::vertices() const
+typename chart<C,S,V,R,I>::vertex_iterator chart<C,S,V,R,I>::vertices()
 {
-    return boost::vertices(graph_);
+    return Lattice::VertexIterator(lattice_);
 }
 
 template<class C, class S, class V, class R, template<class,class> class I>
 size_t chart<C,S,V,R,I>::nb_vertices() const
 {
-    std::pair<
-	vertex_iterator,
-	vertex_iterator> vxits 
-	= vertices();
-
-    size_t r = 0;
-    vertex_iterator vxit = vxits.first;
-    while(vxit != vxits.second)
-    {
-	++r;
-	++vxit;
-    }
-    
-    return r;
+    return lattice_.countAllVertices();
 }
 
 
 template<class C, class S, class V, class R, template<class,class> class I>
-std::pair<typename chart<C,S,V,R,I>::out_edge_iterator,
-	  typename chart<C,S,V,R,I>::out_edge_iterator>
-chart<C,S,V,R,I>::out_edges(vertex_descriptor vertex) const
+typename chart<C,S,V,R,I>::out_edge_iterator
+chart<C,S,V,R,I>::out_edges(vertex_descriptor vertex)
 {
-    return boost::out_edges(vertex, graph_);
+    return lattice_.allOutEdges(vertex);
 }
 
 template<class C, class S, class V, class R, template<class,class> class I>
-std::pair<typename chart<C,S,V,R,I>::in_edge_iterator,
-	  typename chart<C,S,V,R,I>::in_edge_iterator>
-chart<C,S,V,R,I>::in_edges(vertex_descriptor vertex) const
+typename chart<C,S,V,R,I>::in_edge_iterator
+chart<C,S,V,R,I>::in_edges(vertex_descriptor vertex)
 {
-    return boost::in_edges(vertex, graph_);
+    return lattice_.allInEdges(vertex);
 }
 
 template<class C, class S, class V, class R, template<class,class> class I>
 typename chart<C,S,V,R,I>::marked_edges_index_type&
 chart<C,S,V,R,I>::marked_edges_index(vertex_descriptor vertex)
 {
-    return graph_[vertex].marked_edges_index;
+    return markedEdgesIndexes_[vertex];
 }
 
 template<class C, class S, class V, class R, template<class,class> class I>
 typename chart<C,S,V,R,I>::vertex_descriptor chart<C,S,V,R,I>::edge_source(
     edge_descriptor edge)
 {
-    return boost::source(edge, graph_);
+    return lattice_.getEdgeSource(edge);
 }
 
 template<class C, class S, class V, class R, template<class,class> class I>
 typename chart<C,S,V,R,I>::vertex_descriptor chart<C,S,V,R,I>::edge_target(
     edge_descriptor edge)
 {
-    return boost::target(edge, graph_);
+    return lattice_.getEdgeTarget(edge);
 }
 
 template<class C, class S, class V, class R, template<class,class> class I>
-typename param_type<C>::type chart<C,S,V,R,I>::edge_category(
+C chart<C,S,V,R,I>::edge_category(
     edge_descriptor edge)
 {
-    return graph_[edge].category;
+    return lattice_.getAnnotationCategory(edge);
 }
 
 template<class C, class S, class V, class R, template<class,class> class I>
 S chart<C,S,V,R,I>::edge_score(edge_descriptor edge) const
 {
-    return graph_[edge].score;
+    return lattice_.getEdgeScore(edge);
 }
 
+/*
 template<class C, class S, class V, class R, template<class,class> class I>
 bool chart<C,S,V,R,I>::edge_accommodated(edge_descriptor edge) const
 {
@@ -276,36 +224,37 @@ void chart<C,S,V,R,I>::mark_edge_as_accommodated(edge_descriptor edge)
 {
     graph_[edge].is_accommodated = true;
 }
-
+*/
 
 template<class C, class S, class V, class R, template<class,class> class I>
-std::pair<typename chart<C,S,V,R,I>::partition_iterator, 
-	  typename chart<C,S,V,R,I>::partition_iterator> 
+std::pair<typename chart<C,S,V,R,I>::partition_iterator,
+      typename chart<C,S,V,R,I>::partition_iterator>
 chart<C,S,V,R,I>::edge_partitions(
     edge_descriptor edge)
 {
-    std::list<partition>& partition_vector = graph_[edge].partitions;
+    std::list<Lattice::Partition>& partition_vector = lattice_.getEdgePartitions(edge);
 
     return std::pair<
-	partition_iterator, 
-	partition_iterator>(
-	    partition_vector.begin(),
-	    partition_vector.end());
+    partition_iterator,
+    partition_iterator>(
+        partition_vector.begin(),
+        partition_vector.end());
 }
 
+/*
 template<class C, class S, class V, class R, template<class,class> class I>
-std::pair<typename chart<C,S,V,R,I>::variant_iterator, 
-	  typename chart<C,S,V,R,I>::variant_iterator> 
+std::pair<typename chart<C,S,V,R,I>::variant_iterator,
+      typename chart<C,S,V,R,I>::variant_iterator>
 chart<C,S,V,R,I>::edge_variants(
     edge_descriptor edge)
 {
     std::vector<variant>& variant_vector = graph_[edge].variants;
 
     return std::pair<
-	variant_iterator, 
-	variant_iterator>(
-	    variant_vector.begin(),
-	    variant_vector.end());
+    variant_iterator,
+    variant_iterator>(
+        variant_vector.begin(),
+        variant_vector.end());
 }
 
 template<class V>
@@ -317,38 +266,38 @@ private:
 public:
     the_same_variant_category(const V& model):cat_(model.variant_category) {}
     bool operator() (const V& v)
-	{ return v.variant_category == cat_; }
+    { return v.variant_category == cat_; }
 };
 
 template<class C, class S, class V, class R, template<class,class> class I>
 void chart<C,S,V,R,I>::remove_duplicate_variants(edge_descriptor edge)
 {
     if(graph_[edge].variants.size() <= 1)
-	return;
-    
+    return;
+
     std::vector<variant> new_variants;
     variant_iterator i;
     i = graph_[edge].variants.begin();
 
     for(;i != graph_[edge].variants.end();++i)
     {
-	the_same_variant_category<variant> epred(*i);
+    the_same_variant_category<variant> epred(*i);
 
-	variant_iterator prev = 
-	    find_if(
-		new_variants.begin(),
-		new_variants.end(),
-		epred);
+    variant_iterator prev =
+        find_if(
+        new_variants.begin(),
+        new_variants.end(),
+        epred);
 
-	if(prev != new_variants.end())
-	{
-	    if((*i).score > (*prev).score)
-		*prev = *i;
-	}
-	else
-	    new_variants.push_back(*i);
+    if(prev != new_variants.end())
+    {
+        if((*i).score > (*prev).score)
+        *prev = *i;
     }
-    
+    else
+        new_variants.push_back(*i);
+    }
+
     graph_[edge].variants = new_variants;
 }
 
@@ -358,19 +307,19 @@ void chart<C,S,V,R,I>::sort_variants(edge_descriptor edge, size_t limit)
     remove_duplicate_variants(edge);
 
     std::stable_sort(
-	    graph_[edge].variants.begin(),
-	    graph_[edge].variants.end());
+        graph_[edge].variants.begin(),
+        graph_[edge].variants.end());
 
     if(graph_[edge].variants.size() > limit && limit != 0)
-	graph_[edge].variants.erase(
-	    graph_[edge].variants.begin() + limit,
-	    graph_[edge].variants.end());
+    graph_[edge].variants.erase(
+        graph_[edge].variants.begin() + limit,
+        graph_[edge].variants.end());
 }
 
 template<class C, class S, class V, class R, template<class,class> class I>
 void chart<C,S,V,R,I>::add_variant(
     edge_descriptor edge,
-    partition_iterator piter, 
+    partition_iterator piter,
     const V& new_variant,
     S score)
 {
@@ -418,24 +367,34 @@ void chart<C,S,V,R,I>::add_variant(
     variants.back().links.push_back(left_link_vit);
     variants.back().links.push_back(right_link_vit);
 }
-
+*/
 
 template<class C, class S, class V, class R, template<class,class> class I>
 R chart<C,S,V,R,I>::partition_rule(
     partition_iterator piter)
 {
-    return (*piter).rule;
+    return (*piter).getRuleId();
 }
 
+/*
 template<class C, class S, class V, class R, template<class,class> class I>
 std::vector<typename chart<C,S,V,R,I>::edge_descriptor>& chart<C,S,V,R,I>::partition_links(
     partition_iterator piter)
 {
     return (*piter).links;
 }
+*/
 
 template<class C, class S, class V, class R, template<class,class> class I>
-typename chart<C,S,V,R,I>::partition_iterator chart<C,S,V,R,I>::variant_partition(variant_iterator vit)
+Lattice::Partition::Iterator chart<C,S,V,R,I>::partition_links_iterator(partition_iterator piter)
+{
+    return Lattice::Partition::Iterator(lattice_, *piter);
+}
+
+/*
+template<class C, class S, class V, class R, template<class,class> class I>
+typename chart<C,S,V,R,I>::partition_iterator chart<C,S,V,R,I>::variant_partition(
+    variant_iterator vit)
 {
     return (*vit).pit;
 }
@@ -458,22 +417,17 @@ chart<C,S,V,R,I>::variant_links(variant_iterator vit)
 {
     return (*vit).links;
 }
+*/
 
 template<class C, class S, class V, class R, template<class,class> class I>
 void chart<C,S,V,R,I>::sort_topologically()
 {
-    std::vector<vertex_descriptor> vc;
-    boost::topological_sort(graph_, std::back_inserter(vc));
-    
     size_t ix = 0;
-
-    for(typename std::vector<vertex_descriptor>::reverse_iterator
-	    ii = vc.rbegin();
-	ii != vc.rend();
-	++ii)
-    {
-	sorted_vertices_.push_back(*ii);
-	topological_order_[(*ii)] = ix++;
+    Lattice::VertexIterator vi(lattice_);
+    while (vi.hasNext()) {
+        vertex_descriptor vd = vi.next();
+        sorted_vertices_.push_back(vd);
+        topological_order_[vd] = ix++;
     }
 }
 
@@ -498,5 +452,12 @@ size_t chart<C,S,V,R,I>::topological_count() const
 {
     return sorted_vertices_.size();
 }
+
+template<class C, class S, class V, class R, template<class,class> class I>
+const LayerTagCollection& chart<C,S,V,R,I>::getGobioTag_() const {
+    return gobioTag_;
+}
+
+
 
 #endif
