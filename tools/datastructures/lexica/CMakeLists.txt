@@ -1,4 +1,5 @@
 add_library(tools-datastructures-lexica SHARED
+    key_value_store.cpp
     murmur_hash3.cpp
     perfect_hash_index.cpp
 )
