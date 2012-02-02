@@ -64,12 +64,13 @@ Gobio::Gobio() {
 
 void Gobio::parse(Lattice &lattice) {
 
+    typedef Lattice::EdgeDescriptor Edge;
     typedef std::string Category;
     typedef std::string Variant;
     typedef simple_cfg_rule<Category> Rule;
     typedef simple_cfg_combinator<Rule, Category> Combinator;
     typedef fifo_agenda<Category> Agenda;
-    typedef int Index;
+    typedef simple_marked_edges_index<Edge, Category> Index;
     typedef agenda_parser<Category, Score, Variant, Rule, Combinator, Agenda, Index> Parser;
 
     Combinator combinator;

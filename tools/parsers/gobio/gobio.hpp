@@ -8,9 +8,9 @@
 #include "language_dependent_annotator_factory.hpp"
 #include "lang_specific_processor_file_fetcher.hpp"
 
-#include "parser/agenda.hpp"
-#include "parser/agenda_parser.tpl"
-#include "parser/simple_cfg_combinator.tpl"
+#include "agenda.hpp"
+#include "agenda_parser.tpl"
+#include "simple_cfg_combinator.tpl"
 
 
 class Gobio : public Annotator {
