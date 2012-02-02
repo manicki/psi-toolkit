@@ -171,6 +171,8 @@ public:
 
         const Score& getScore() const;
 
+        const int& getRuleId() const;
+
         EdgeDescriptor firstEdge(Lattice & lattice) const { return sequence_.firstEdge(lattice); }
 
         EdgeDescriptor lastEdge(Lattice & lattice) const { return sequence_.lastEdge(lattice); }
@@ -471,6 +473,9 @@ public:
     void correctionInsert(VertexDescriptor here, std::string text);
     void correctionErase(VertexDescriptor from, VertexDescriptor to);
     void correctionReplace(VertexDescriptor from, VertexDescriptor to, std::string text);
+
+    int countEdges(VertexDescriptor from, VertexDescriptor to);
+    int countAllVertices();
 
 private:
 

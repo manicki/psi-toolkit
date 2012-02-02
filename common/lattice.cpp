@@ -667,6 +667,14 @@ void Lattice::correctionReplace(VertexDescriptor from, VertexDescriptor to, std:
     }
 }
 
+int Lattice::countEdges(VertexDescriptor from, VertexDescriptor to) {
+    return edgeCounterHash_[std::pair<VertexDescriptor,VertexDescriptor>(from, to)];
+}
+
+int Lattice::countAllVertices() {
+    return 1 + allText_.length() + nLooseVertices_;
+}
+
 int Lattice::addTagCollectionIndex_(LayerTagCollection tags) {
     TagCollectionsBimapLeftIterator li = indexedTagCollections_.left.find(tags);
     if (li != indexedTagCollections_.left.end()) {
@@ -859,6 +867,10 @@ const LayerTagCollection& Lattice::Partition::getTagList() const {
 
 const Lattice::Score& Lattice::Partition::getScore() const {
     return score_;
+}
+
+const int& Lattice::Partition::getRuleId() const {
+    return ruleId_;
 }
 
 Lattice::VertexDescriptor Lattice::firstSequenceVertex_(const EdgeSequence& sequence) {
