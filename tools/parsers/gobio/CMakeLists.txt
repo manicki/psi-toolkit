@@ -7,6 +7,7 @@ set(gobio_SUBDIRS
 CACHE PATH "Gobio subdirectories" FORCE)
 
 foreach(dir ${gobio_SUBDIRS})
+    include_directories(${dir})
     add_subdirectory(${dir})
 endforeach(dir)
 
