@@ -62,7 +62,10 @@ public:
 
     size_t getHash(const char* key) const {
         size_t idx = cmph_search(m_hash, key, (cmph_uint32) strlen(key));
-        if (getFprint(key) == m_fprints[idx])
+
+        // idx < getSize() is checked because getSize() is
+        // apparently returned when empty string is checked
+        if (idx < getSize() && getFprint(key) == m_fprints[idx])
             return idx;
         else
             return getSize();
