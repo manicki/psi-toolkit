@@ -88,6 +88,12 @@ public:
         Score score;
         std::list<Partition> partitions;
 
+        EdgeEntry():
+            item(AnnotationItem("")),
+            tagList(LayerTagManager().createSingletonTagCollection("")),
+            score(0.0)
+        { }
+
         EdgeEntry(
             AnnotationItem aItem,
             LayerTagCollection aTagList,
