@@ -202,7 +202,7 @@ private:
 
     // typename Lattice::Graph graph_;
 
-    Lattice lattice_;
+    Lattice & lattice_;
 
     LayerTagCollection gobioTag_;
     LayerTagMask tagMask_;
