@@ -184,6 +184,8 @@ public:
     // zwraca rozmiar wektora wierzchołków
     size_t topological_count() const;
 
+    void setTagMask(LayerTagMask layerTagMask);
+
     typedef Lattice::EdgeEntry edge_entry;
 
 
@@ -203,8 +205,10 @@ private:
     Lattice lattice_;
 
     LayerTagCollection gobioTag_;
+    LayerTagMask tagMask_;
 
     const LayerTagCollection& getGobioTag_() const;
+    const LayerTagMask& getTagMask_() const;
 
     typedef Lattice::HashFun hash_fun;
     typedef Lattice::VertexPairHashFun vertex_pair_hash_fun;

@@ -1,10 +1,9 @@
 #ifndef CHART_TPL_HDR
 #define CHART_TPL_HDR
 
-// #include <vector>
-// #include <algorithm>
 // warningi pod GCC 3.3.4
 // #include <boost/graph/topological_sort.hpp>
+
 #include "chart.hpp"
 
 
@@ -13,8 +12,17 @@ chart<C,S,V,R,I>::chart(
     Lattice & lattice
 ) :
     lattice_(lattice),
-    gobioTag_(lattice.getLayerTagManager().createSingletonTagCollection("parse"))
-{ }
+    gobioTag_(lattice.getLayerTagManager().createSingletonTagCollection("parse")),
+    tagMask_(lattice.getLayerTagManager().anyTag())
+{
+    std::list<std::string> tagNames;
+    tagNames.push_back("form");
+    tagNames.push_back("lemma");
+    tagNames.push_back("lexeme");
+    tagNames.push_back("parse");
+    tagNames.push_back("token");
+    setTagMask(lattice.getLayerTagManager().getMask(tagNames));
+}
 
 /*
 template<class C, class S, class V, class R, template<class,class> class I>
@@ -193,14 +201,14 @@ template<class C, class S, class V, class R, template<class,class> class I>
 typename chart<C,S,V,R,I>::out_edge_iterator
 chart<C,S,V,R,I>::out_edges(vertex_descriptor vertex)
 {
-    return lattice_.allOutEdges(vertex);
+    return lattice_.outEdges(vertex, getTagMask_());
 }
 
 template<class C, class S, class V, class R, template<class,class> class I>
 typename chart<C,S,V,R,I>::in_edge_iterator
 chart<C,S,V,R,I>::in_edges(vertex_descriptor vertex)
 {
-    return lattice_.allInEdges(vertex);
+    return lattice_.inEdges(vertex, getTagMask_());
 }
 
 template<class C, class S, class V, class R, template<class,class> class I>
@@ -486,10 +494,19 @@ size_t chart<C,S,V,R,I>::topological_count() const
 }
 
 template<class C, class S, class V, class R, template<class,class> class I>
+void chart<C,S,V,R,I>::setTagMask(LayerTagMask layerTagMask) {
+    tagMask_ = layerTagMask;
+}
+
+template<class C, class S, class V, class R, template<class,class> class I>
 const LayerTagCollection& chart<C,S,V,R,I>::getGobioTag_() const {
     return gobioTag_;
 }
 
+template<class C, class S, class V, class R, template<class,class> class I>
+const LayerTagMask& chart<C,S,V,R,I>::getTagMask_() const {
+    return tagMask_;
+}
 
 
 #endif

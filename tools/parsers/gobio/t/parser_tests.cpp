@@ -48,10 +48,9 @@ BOOST_AUTO_TEST_CASE( helpers ) {
     chart<char, double, int, simple_cfg_rule<char> > ch(lattice);
 
     BOOST_CHECK_EQUAL(count_vertices(ch), 7);
-/*
     BOOST_CHECK_EQUAL(count_out_edges(ch), 6);
     BOOST_CHECK(is_consistent(ch));
-
+/*
     ADD_UNARY_RULE('B', 'b');
     ADD_UNARY_RULE('A', 'a');
     ADD_BINARY_RULE('X', 'B', 'A');
