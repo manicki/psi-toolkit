@@ -66,11 +66,14 @@ BOOST_AUTO_TEST_CASE( chart_edges ) {
     typedef chart<std::string, double, int, int_rule> simple_chart;
     simple_chart ch(lattice);
 
-    std::vector<simple_chart::vertex_descriptor> v(8);
+    BOOST_CHECK_EQUAL(count_vertices(ch), 8);
 
+    std::vector<simple_chart::vertex_descriptor> v(8);
     for (int i=0; i<8; ++i) {
         v[i] = lattice.getVertexForRawCharIndex(i);
     }
+
+    BOOST_CHECK_EQUAL(count_vertices(ch), 8);
 
     BOOST_CHECK_EQUAL(count_out_edges(ch), 0);
     BOOST_CHECK_EQUAL(count_in_edges(ch), 0);
@@ -83,7 +86,7 @@ BOOST_AUTO_TEST_CASE( chart_edges ) {
 
     ch.add_edge(v[6], v[7], "b", 1.1, 0);
     ch.add_edge(v[6], v[7], "c", 1.1, 0);
-    ch.add_edge(v[7], v[4], "c", 2.555, 23);
+    ch.add_edge(v[4], v[7], "c", 2.555, 23);
     ch.add_edge(v[3], v[4], "c", 2.555, 23);
     ch.add_edge(v[0], v[4], "c", 2.555, 23);
 
