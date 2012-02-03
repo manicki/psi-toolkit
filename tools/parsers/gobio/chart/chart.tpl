@@ -187,7 +187,7 @@ typename chart<C,S,V,R,I>::edge_descriptor chart<C,S,V,R,I>::mark_edge(
 template<class C, class S, class V, class R, template<class,class> class I>
 typename chart<C,S,V,R,I>::vertex_iterator chart<C,S,V,R,I>::vertices()
 {
-    return Lattice::VertexIterator(lattice_);
+    return Lattice::VertexIterator(lattice_, false);
 }
 
 template<class C, class S, class V, class R, template<class,class> class I>

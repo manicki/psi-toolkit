@@ -28,19 +28,19 @@ BOOST_AUTO_TEST_CASE( chart_vertices ) {
     typedef chart<std::string, double, int, int_rule> simple_chart;
     simple_chart ch(lattice);
 
-    BOOST_CHECK_EQUAL(count_vertices(ch), 0);
+    BOOST_CHECK_EQUAL(count_vertices(ch), 1);
 
-    lattice.appendString(std::string(15, 'a'));
+    lattice.appendString(std::string(9, 'a'));
 
-    BOOST_CHECK_EQUAL(count_vertices(ch), 0);
+    BOOST_CHECK_EQUAL(count_vertices(ch), 10);
 
-    lattice.appendStringWithSymbols(std::string(14, 'a'));
+    lattice.appendStringWithSymbols(std::string(15, 'a'));
 
-    BOOST_CHECK_EQUAL(count_vertices(ch), 15);
+    BOOST_CHECK_EQUAL(count_vertices(ch), 25);
 
     lattice.appendStringWithSymbols(std::string(5000, 'a'));
 
-    BOOST_CHECK_EQUAL(count_vertices(ch), 5015);
+    BOOST_CHECK_EQUAL(count_vertices(ch), 5025);
 
 }
 
@@ -51,7 +51,7 @@ BOOST_AUTO_TEST_CASE( chart_vertices_with_preparator ) {
     typedef chart<std::string, double, int, int_rule> simple_chart;
     simple_chart ch(lattice);
 
-    BOOST_CHECK_EQUAL(count_vertices(ch), 0);
+    BOOST_CHECK_EQUAL(count_vertices(ch), 1);
 
     lattice_preparators::prepareLatticeWithOneSymbolTokens(lattice, "abccdddd");
 
@@ -112,7 +112,18 @@ BOOST_AUTO_TEST_CASE( chart_mask ) {
     typedef chart<std::string, double, int, int_rule> simple_chart;
     simple_chart ch(lattice);
 
-    //TODO
+    BOOST_CHECK_EQUAL(count_out_edges(ch), 8);
+    BOOST_CHECK_EQUAL(count_in_edges(ch), 8);
+
+    ch.setTagMask(lattice.getLayerTagManager().anyTag());
+
+    BOOST_CHECK_EQUAL(count_out_edges(ch), 16);
+    BOOST_CHECK_EQUAL(count_in_edges(ch), 16);
+
+    ch.setTagMask(lattice.getLayerTagManager().getMask(std::list<std::string>()));
+
+    BOOST_CHECK_EQUAL(count_out_edges(ch), 0);
+    BOOST_CHECK_EQUAL(count_in_edges(ch), 0);
 
 }
 
