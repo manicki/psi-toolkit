@@ -677,7 +677,7 @@ int Lattice::countEdges(VertexDescriptor from, VertexDescriptor to) {
 }
 
 int Lattice::countAllVertices() {
-    return 1 + allText_.length() + nLooseVertices_;
+    return 1 + utf8::distance(allText_.begin(), allText_.end()) + nLooseVertices_;
 }
 
 int Lattice::addTagCollectionIndex_(LayerTagCollection tags) {
