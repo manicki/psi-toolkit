@@ -13,6 +13,7 @@ add_library(common-tests
         ant_like_path_glob_tests.cpp
         file_fetcher_tests.cpp
         lattice_iter_writer_tests.cpp
+        lattice_preparators.cpp
         lattice_tests.cpp
         layer_tags_tests.cpp
         literal_test_output_iterator.cpp
@@ -20,7 +21,6 @@ add_library(common-tests
         quoter_tests.cpp
         regexp_tests.cpp
         string_frag_tests.cpp
-        writers_tests_utils.cpp
         xml_property_tree_tests.cpp
         ${COMMON_TESTS_EXTRAS}
 )

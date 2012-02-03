@@ -6,8 +6,8 @@
 #include <boost/scoped_ptr.hpp>
 
 #include "lattice_iter_writer.hpp"
+#include "lattice_preparators.hpp"
 #include "simple_lattice_writer_stream_output_iterator.hpp"
-#include "writers_tests_utils.hpp"
 
 #include "config.hpp"
 
@@ -18,7 +18,7 @@ BOOST_AUTO_TEST_SUITE( simple_lattice_writer_stream_output_iterator )
 BOOST_AUTO_TEST_CASE( simple_lattice_writer_stream_output_iterator ) {
 
     Lattice lattice;
-    writers_tests_utils::prepareSimpleLattice(lattice);
+    lattice_preparators::prepareSimpleLattice(lattice);
 
     std::vector<std::string> handledTags;
     handledTags.push_back("token");
@@ -63,7 +63,7 @@ BOOST_AUTO_TEST_CASE( simple_lattice_writer_stream_output_iterator ) {
 BOOST_AUTO_TEST_CASE( simple_lattice_writer_stream_output_iterator_advanced ) {
 
     Lattice lattice;
-    writers_tests_utils::prepareRegularLattice(lattice);
+    lattice_preparators::prepareRegularLattice(lattice);
 
     std::vector<std::string> handledTags;
     handledTags.push_back("level1");

@@ -1,10 +1,10 @@
-#ifndef WRITERS_TESTS_UTILS_HDR
-#define WRITERS_TESTS_UTILS_HDR
+#ifndef LATTICE_PREPARATORS_HDR
+#define LATTICE_PREPARATORS_HDR
 
 #include "lattice.hpp"
 
 
-namespace writers_tests_utils {
+namespace lattice_preparators {
 
     void prepareSimpleLattice(Lattice & lattice);
     void prepareAdvancedLattice(Lattice & lattice);

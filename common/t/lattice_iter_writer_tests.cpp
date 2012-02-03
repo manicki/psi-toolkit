@@ -6,8 +6,8 @@
 #include <boost/scoped_ptr.hpp>
 
 #include "lattice_iter_writer.hpp"
+#include "lattice_preparators.hpp"
 #include "literal_test_output_iterator.hpp"
-#include "writers_tests_utils.hpp"
 
 #include "config.hpp"
 
@@ -18,7 +18,7 @@ BOOST_AUTO_TEST_SUITE( lattice_iter_writer )
 BOOST_AUTO_TEST_CASE( lattice_iter_writer ) {
 
     Lattice lattice;
-    writers_tests_utils::prepareRegularLattice(lattice);
+    lattice_preparators::prepareRegularLattice(lattice);
 
     std::vector<std::string> handledTags;
     handledTags.push_back("level1");

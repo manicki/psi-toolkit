@@ -4,8 +4,8 @@
 
 #include <boost/scoped_ptr.hpp>
 
+#include "lattice_preparators.hpp"
 #include "psi_lattice_writer.hpp"
-#include "writers_tests_utils.hpp"
 
 
 BOOST_AUTO_TEST_SUITE( psi_lattice_writer )
@@ -13,7 +13,7 @@ BOOST_AUTO_TEST_SUITE( psi_lattice_writer )
 
 BOOST_AUTO_TEST_CASE( psi_lattice_writer_simple ) {
     Lattice lattice;
-    writers_tests_utils::prepareSimpleLattice(lattice);
+    lattice_preparators::prepareSimpleLattice(lattice);
 
     boost::scoped_ptr<LatticeWriter<std::ostream> > writer(new PsiLatticeWriter());
 
@@ -35,7 +35,7 @@ BOOST_AUTO_TEST_CASE( psi_lattice_writer_simple ) {
 
 BOOST_AUTO_TEST_CASE( psi_lattice_writer_advanced ) {
     Lattice lattice;
-    writers_tests_utils::prepareAdvancedLattice(lattice);
+    lattice_preparators::prepareAdvancedLattice(lattice);
 
     boost::scoped_ptr<LatticeWriter<std::ostream> > writer(new PsiLatticeWriter());
 

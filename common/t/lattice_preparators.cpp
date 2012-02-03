@@ -1,7 +1,7 @@
-#include "writers_tests_utils.hpp"
+#include "lattice_preparators.hpp"
 
 
-void writers_tests_utils::prepareSimpleLattice(Lattice & lattice) {
+void lattice_preparators::prepareSimpleLattice(Lattice & lattice) {
 
     lattice.appendString("Ala ma słonia");
     lattice.addSymbols(lattice.getFirstVertex(), lattice.getLastVertex());
@@ -94,7 +94,7 @@ void writers_tests_utils::prepareSimpleLattice(Lattice & lattice) {
 }
 
 
-void writers_tests_utils::prepareAdvancedLattice(Lattice & lattice) {
+void lattice_preparators::prepareAdvancedLattice(Lattice & lattice) {
 
     lattice.appendString("Ala ma&nbsp;<b>kta</b>.");
     const std::string & ltext = lattice.getAllText();
@@ -378,7 +378,7 @@ void writers_tests_utils::prepareAdvancedLattice(Lattice & lattice) {
 }
 
 
-void writers_tests_utils::prepareRegularLattice(Lattice & lattice) {
+void lattice_preparators::prepareRegularLattice(Lattice & lattice) {
 
     std::string text(
         "Aa1Aa2Aa3Ab1Ab2Ab3Ac1Ac2Ac3Ba1Ba2Ba3Bb1Bb2Bb3Bc1Bc2Bc3Ca1Ca2Ca3Cb1Cb2Cb3Cc1Cc2Cc3"

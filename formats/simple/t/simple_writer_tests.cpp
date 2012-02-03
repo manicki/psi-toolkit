@@ -4,8 +4,8 @@
 
 #include <boost/scoped_ptr.hpp>
 
+#include "lattice_preparators.hpp"
 #include "simple_lattice_writer.hpp"
-#include "writers_tests_utils.hpp"
 
 
 BOOST_AUTO_TEST_SUITE( simple_lattice_writer )
@@ -14,7 +14,7 @@ BOOST_AUTO_TEST_SUITE( simple_lattice_writer )
 BOOST_AUTO_TEST_CASE( simple_lattice_writer ) {
 
     Lattice lattice;
-    writers_tests_utils::prepareSimpleLattice(lattice);
+    lattice_preparators::prepareSimpleLattice(lattice);
 
     std::map<std::string, std::string> tagsSeparators;
     tagsSeparators["token"] = ";";
@@ -48,7 +48,7 @@ BOOST_AUTO_TEST_CASE( simple_lattice_writer ) {
 BOOST_AUTO_TEST_CASE( simple_lattice_writer_linear ) {
 
     Lattice lattice;
-    writers_tests_utils::prepareSimpleLattice(lattice);
+    lattice_preparators::prepareSimpleLattice(lattice);
 
     std::map<std::string, std::string> tagsSeparators;
     tagsSeparators["token"] = ";";
@@ -82,7 +82,7 @@ BOOST_AUTO_TEST_CASE( simple_lattice_writer_linear ) {
 BOOST_AUTO_TEST_CASE( simple_lattice_writer_advanced ) {
 
     Lattice lattice;
-    writers_tests_utils::prepareAdvancedLattice(lattice);
+    lattice_preparators::prepareAdvancedLattice(lattice);
 
     std::map<std::string, std::string> tagsSeparators;
     // tagsSeparators["splitter"] = "\n";
