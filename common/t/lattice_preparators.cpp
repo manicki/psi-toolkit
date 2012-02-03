@@ -400,16 +400,11 @@ void lattice_preparators::prepareRegularLattice(Lattice & lattice) {
     LayerTagCollection
         tagLevel2 = lattice.getLayerTagManager().createSingletonTagCollection("level2");
 
-    LayerTagMask maskRaw = lattice.getLayerTagManager().getMask(tagRaw);
-    LayerTagMask maskToken = lattice.getLayerTagManager().getMask(tagToken);
-    LayerTagMask maskLevel1 = lattice.getLayerTagManager().getMask(tagLevel1);
-    LayerTagMask maskLevel2 = lattice.getLayerTagManager().getMask(tagLevel2);
-
     AnnotationItem *ai[27];
     for (int i = 0; i < 27; ++i) {
         std::string aiText = text.substr(3*i, 3);
         ai[i] = new AnnotationItem("token", aiText);
-        lattice.addEdge(vd[i], vd[i+1], *ai[i], tagToken);\
+        lattice.addEdge(vd[i], vd[i+1], *ai[i], tagToken);
         delete ai[i];
     }
 
@@ -428,5 +423,37 @@ void lattice_preparators::prepareRegularLattice(Lattice & lattice) {
         lattice.addEdge(vd[9*i], vd[9*i+9], *ai3[i], tagLevel2);
         delete ai3[i];
     }
+
+}
+
+
+void lattice_preparators::prepareLatticeWithOneSymbolTokens(Lattice & lattice, std::string text) {
+
+    lattice.appendString(text);
+    lattice.addSymbols(lattice.getFirstVertex(), lattice.getLastVertex());
+
+    Lattice::VertexDescriptor * vd = new Lattice::VertexDescriptor[text.length() + 1];
+    for (size_t i = 0; i <= text.length(); ++i) {
+        vd[i] = lattice.getVertexForRawCharIndex(i);
+    }
+
+    LayerTagCollection
+        tagRaw = lattice.getLayerTagManager().createSingletonTagCollection("symbol");
+    LayerTagCollection
+        tagToken = lattice.getLayerTagManager().createSingletonTagCollection("token");
+
+    LayerTagMask maskRaw = lattice.getLayerTagManager().getMask(tagRaw);
+
+    AnnotationItem ** ai = new AnnotationItem * [text.length()];
+    for (size_t i = 0; i < text.length(); ++i) {
+        std::string aiCategory = text.substr(i, 1);
+        StringFrag aiText(text, i, 1);
+        ai[i] = new AnnotationItem(aiCategory, aiText);
+        Lattice::EdgeSequence::Builder builder(lattice);
+        builder.addEdge(lattice.firstOutEdge(vd[i], maskRaw));
+        lattice.addEdge(vd[i], vd[i+1], *ai[i], tagToken, builder.build());
+        delete ai[i];
+    }
+    delete [] ai;
 
 }
