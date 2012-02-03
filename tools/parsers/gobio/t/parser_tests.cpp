@@ -7,8 +7,8 @@
 #include "test_helpers.hpp"
 
 
-#define ADD_BINARY_RULE(A,B,C) (combinator.add_binary_rule((B),(C),simple_cfg_rule<char>((A))))
-#define ADD_UNARY_RULE(A,B) (combinator.add_unary_rule((B),simple_cfg_rule<char>((A))))
+#define ADD_BINARY_RULE(A, B, C) (combinator.add_binary_rule((B), (C), simple_cfg_rule<char>((A))))
+#define ADD_UNARY_RULE(A, B) (combinator.add_unary_rule((B), simple_cfg_rule<char>((A))))
 
 
 BOOST_AUTO_TEST_SUITE( gobio_parser )
