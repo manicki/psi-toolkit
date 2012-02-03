@@ -400,11 +400,19 @@ void lattice_preparators::prepareRegularLattice(Lattice & lattice) {
     LayerTagCollection
         tagLevel2 = lattice.getLayerTagManager().createSingletonTagCollection("level2");
 
+    LayerTagMask maskRaw = lattice.getLayerTagManager().getMask(tagRaw);
+    LayerTagMask maskToken = lattice.getLayerTagManager().getMask(tagToken);
+    LayerTagMask maskLevel1 = lattice.getLayerTagManager().getMask(tagLevel1);
+
     AnnotationItem *ai[27];
     for (int i = 0; i < 27; ++i) {
         std::string aiText = text.substr(3*i, 3);
         ai[i] = new AnnotationItem("token", aiText);
-        lattice.addEdge(vd[i], vd[i+1], *ai[i], tagToken);
+        Lattice::EdgeSequence::Builder builder(lattice);
+        builder.addEdge(lattice.firstOutEdge(lattice.getVertexForRawCharIndex(3*i), maskRaw));
+        builder.addEdge(lattice.firstOutEdge(lattice.getVertexForRawCharIndex(3*i+1), maskRaw));
+        builder.addEdge(lattice.firstOutEdge(lattice.getVertexForRawCharIndex(3*i+2), maskRaw));
+        lattice.addEdge(vd[i], vd[i+1], *ai[i], tagToken, builder.build());
         delete ai[i];
     }
 
@@ -412,7 +420,11 @@ void lattice_preparators::prepareRegularLattice(Lattice & lattice) {
     for (int i = 0; i < 9; ++i) {
         std::string aiText = text.substr(9*i, 9);
         ai2[i] = new AnnotationItem("level1", aiText);
-        lattice.addEdge(vd[3*i], vd[3*i+3], *ai2[i], tagLevel1);
+        Lattice::EdgeSequence::Builder builder(lattice);
+        builder.addEdge(lattice.firstOutEdge(vd[3*i], maskToken));
+        builder.addEdge(lattice.firstOutEdge(vd[3*i+1], maskToken));
+        builder.addEdge(lattice.firstOutEdge(vd[3*i+2], maskToken));
+        lattice.addEdge(vd[3*i], vd[3*i+3], *ai2[i], tagLevel1, builder.build());
         delete ai2[i];
     }
 
@@ -420,7 +432,11 @@ void lattice_preparators::prepareRegularLattice(Lattice & lattice) {
     for (int i = 0; i < 3; ++i) {
         std::string aiText = text.substr(27*i, 27);
         ai3[i] = new AnnotationItem("level2", aiText);
-        lattice.addEdge(vd[9*i], vd[9*i+9], *ai3[i], tagLevel2);
+        Lattice::EdgeSequence::Builder builder(lattice);
+        builder.addEdge(lattice.firstOutEdge(vd[9*i], maskLevel1));
+        builder.addEdge(lattice.firstOutEdge(vd[9*i+3], maskLevel1));
+        builder.addEdge(lattice.firstOutEdge(vd[9*i+6], maskLevel1));
+        lattice.addEdge(vd[9*i], vd[9*i+9], *ai3[i], tagLevel2, builder.build());
         delete ai3[i];
     }
 
