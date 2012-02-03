@@ -2,6 +2,9 @@
 #define CHART_HPP_HDR
 
 
+#include "lattice.hpp"
+
+
 template<class E, class C>
 struct empty_marked_edges_index
 {
