@@ -1,72 +1,63 @@
-#ifndef EXCEPTIONS_HDR
-#define EXCEPTIONS_HDR
+#ifndef PsiExceptionS_HDR
+#define PsiExceptionS_HDR
 
 
-#include <stdexcept>
 #include <string>
 
+#include "psi_exception.hpp"
 
-class Exception : public std::runtime_error {
+
+class NoEdgeException : public PsiException {
 public:
-    Exception(std::string message) : std::runtime_error(message), message_(message) { }
-    ~Exception() throw() { }
-    std::string getMessage() const { return message_; }
-protected:
-    std::string message_;
+    NoEdgeException(std::string message) : PsiException(message) { }
 };
 
 
-class NoEdgeException : public Exception {
+class NoVertexException : public PsiException {
 public:
-    NoEdgeException(std::string message) : Exception(message) { }
+    NoVertexException(std::string message) : PsiException(message) { }
 };
 
 
-class NoVertexException : public Exception {
+class WrongVertexException : public PsiException {
 public:
-    NoVertexException(std::string message) : Exception(message) { }
+    WrongVertexException(std::string message) : PsiException(message) { }
 };
 
 
-class WrongVertexException : public Exception {
+class FileFormatException : public PsiException {
 public:
-    WrongVertexException(std::string message) : Exception(message) { }
+    FileFormatException(std::string message) : PsiException(message) { }
 };
 
 
-class FileFormatException : public Exception {
+class QuoterException : public PsiException {
 public:
-    FileFormatException(std::string message) : Exception(message) { }
+    QuoterException(std::string message) : PsiException(message) { }
 };
 
 
-class QuoterException : public Exception {
+class JavaVirtualMachineException : public PsiException {
 public:
-    QuoterException(std::string message) : Exception(message) { }
+    JavaVirtualMachineException(std::string message) : PsiException(message) { }
 };
 
 
-class JavaVirtualMachineException : public Exception {
+class StringFragException : public PsiException {
 public:
-    JavaVirtualMachineException(std::string message) : Exception(message) { }
+    StringFragException(std::string message) : PsiException(message) { }
 };
 
 
-class StringFragException : public Exception {
+class EdgeSelfReferenceException : public PsiException {
 public:
-    StringFragException(std::string message) : Exception(message) { }
+    EdgeSelfReferenceException(std::string message) : PsiException(message) { }
 };
 
 
-class EdgeSelfReferenceException : public Exception {
+class ReversedEdgeException : public PsiException {
 public:
-    EdgeSelfReferenceException(std::string message) : Exception(message) { }
-};
-
-
-class ReversedEdgeException : public Exception {
-public:
-    ReversedEdgeException(std::string message) : Exception(message) { }
+    ReversedEdgeException(std::string message) : PsiException(message) { }
 };
 
 
