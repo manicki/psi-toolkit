@@ -240,17 +240,19 @@ public:
 
     class VertexIterator {
     public:
-        VertexIterator(Lattice& lattice);
+        VertexIterator(Lattice& lattice, bool skipUselessVertices = true);
         bool hasNext();
         VertexDescriptor next();
     private:
         Lattice& lattice_;
         VertexDescriptor vd_;
         bool withLooseVertices_;
+        bool skipUselessVertices_;
         std::vector< std::pair<Lattice::VertexDescriptor, int> > iterContainer_;
         std::vector< std::pair<Lattice::VertexDescriptor, int> >::iterator ici_;
 
         void nextRealVertex_();
+        bool shouldBeSkipped_(Lattice::VertexDescriptor vd);
 
         int f_(Graph::vertex_descriptor vertex);
     };

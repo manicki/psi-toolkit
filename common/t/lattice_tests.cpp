@@ -869,5 +869,163 @@ BOOST_AUTO_TEST_CASE( edge_self_reference ) {
     );
 }
 
+BOOST_AUTO_TEST_CASE( reversed_edges ) {
+    Lattice lattice("abcd");
+    Lattice::VertexDescriptor from = lattice.getVertexForRawCharIndex(3);
+    Lattice::VertexDescriptor to = lattice.getVertexForRawCharIndex(1);
+    AnnotationItem item("item");
+    LayerTagCollection tags(lattice.getLayerTagManager().createSingletonTagCollection("tag"));
+
+    BOOST_CHECK_THROW(
+        lattice.addEdge(from, to, item, tags),
+        ReversedEdgeException
+    );
+}
+
+
+BOOST_AUTO_TEST_CASE( lattice_vertices ) {
+
+    Lattice lattice;
+    BOOST_CHECK_EQUAL(lattice.countAllVertices(), 1);
+
+    {
+        int count = 0;
+        Lattice::VertexIterator vi(lattice, false);
+        while (vi.hasNext()) {
+            vi.next();
+            ++count;
+        }
+        BOOST_CHECK_EQUAL(count, 1);
+    }
+
+    {
+        int count = 0;
+        Lattice::VertexIterator vi(lattice, true);
+        while (vi.hasNext()) {
+            vi.next();
+            ++count;
+        }
+        BOOST_CHECK_EQUAL(count, 0);
+    }
+
+    lattice.appendString(std::string(3, 'a'));
+    BOOST_CHECK_EQUAL(lattice.countAllVertices(), 4);
+
+    {
+        int count = 0;
+        Lattice::VertexIterator vi(lattice, false);
+        while (vi.hasNext()) {
+            vi.next();
+            ++count;
+        }
+        BOOST_CHECK_EQUAL(count, 4);
+    }
+
+    {
+        int count = 0;
+        Lattice::VertexIterator vi(lattice, true);
+        while (vi.hasNext()) {
+            vi.next();
+            ++count;
+        }
+        BOOST_CHECK_EQUAL(count, 0);
+    }
+
+    lattice.appendStringWithSymbols(std::string(5, 'a'));
+    BOOST_CHECK_EQUAL(lattice.countAllVertices(), 9);
+
+    {
+        int count = 0;
+        Lattice::VertexIterator vi(lattice, false);
+        while (vi.hasNext()) {
+            vi.next();
+            ++count;
+        }
+        BOOST_CHECK_EQUAL(count, 9);
+    }
+
+    {
+        int count = 0;
+        Lattice::VertexIterator vi(lattice, true);
+        while (vi.hasNext()) {
+            vi.next();
+            ++count;
+        }
+        BOOST_CHECK_EQUAL(count, 6);
+    }
+
+    lattice.addLooseVertex();
+    BOOST_CHECK_EQUAL(lattice.countAllVertices(), 10);
+
+    {
+        int count = 0;
+        Lattice::VertexIterator vi(lattice, false);
+        while (vi.hasNext()) {
+            vi.next();
+            ++count;
+        }
+        BOOST_CHECK_EQUAL(count, 10);
+    }
+
+    {
+        int count = 0;
+        Lattice::VertexIterator vi(lattice, true);
+        while (vi.hasNext()) {
+            vi.next();
+            ++count;
+        }
+        BOOST_CHECK_EQUAL(count, 7);
+    }
+
+    for (int i = 0; i < 13; ++i) {
+        lattice.addLooseVertex();
+    }
+    BOOST_CHECK_EQUAL(lattice.countAllVertices(), 23);
+
+    {
+        int count = 0;
+        Lattice::VertexIterator vi(lattice, false);
+        while (vi.hasNext()) {
+            vi.next();
+            ++count;
+        }
+        BOOST_CHECK_EQUAL(count, 23);
+    }
+
+    {
+        int count = 0;
+        Lattice::VertexIterator vi(lattice, true);
+        while (vi.hasNext()) {
+            vi.next();
+            ++count;
+        }
+        BOOST_CHECK_EQUAL(count, 20);
+    }
+
+    lattice.appendStringWithSymbols("ąć");
+    BOOST_CHECK_EQUAL(lattice.countAllVertices(), 25);
+
+    {
+        int count = 0;
+        Lattice::VertexIterator vi(lattice, false);
+        while (vi.hasNext()) {
+            vi.next();
+            ++count;
+        }
+        BOOST_CHECK_EQUAL(count, 25);
+    }
+
+    {
+        int count = 0;
+        Lattice::VertexIterator vi(lattice, true);
+        while (vi.hasNext()) {
+            vi.next();
+            ++count;
+        }
+        BOOST_CHECK_EQUAL(count, 22);
+    }
+
+}
+
 
 BOOST_AUTO_TEST_SUITE_END()

@@ -472,4 +472,6 @@ void lattice_preparators::prepareLatticeWithOneSymbolTokens(Lattice & lattice, s
     }
     delete [] ai;
 
+    delete [] vd;
+
 }
