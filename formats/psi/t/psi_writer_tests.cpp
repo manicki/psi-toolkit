@@ -54,4 +54,46 @@ BOOST_AUTO_TEST_CASE( psi_lattice_writer_advanced ) {
 }
 
 
+BOOST_AUTO_TEST_CASE( psi_lattice_writer_regular ) {
+    Lattice lattice;
+    lattice_preparators::prepareRegularLattice(lattice);
+
+    boost::scoped_ptr<LatticeWriter<std::ostream> > writer(new PsiLatticeWriter());
+
+    std::ostringstream osstr;
+    writer->writeLattice(lattice, osstr);
+
+    std::string line;
+    std::string contents;
+    std::ifstream s(ROOT_DIR "formats/psi/t/files/regular.txt");
+    while (getline(s, line)) {
+        contents += line;
+        contents += "\n";
+    }
+
+    BOOST_CHECK_EQUAL(osstr.str(), contents);
+}
+
+
+BOOST_AUTO_TEST_CASE( psi_lattice_writer_one_symbol_tokens ) {
+    Lattice lattice;
+    lattice_preparators::prepareLatticeWithOneSymbolTokens(lattice, "abccdddd");
+
+    boost::scoped_ptr<LatticeWriter<std::ostream> > writer(new PsiLatticeWriter());
+
+    std::ostringstream osstr;
+    writer->writeLattice(lattice, osstr);
+
+    std::string line;
+    std::string contents;
+    std::ifstream s(ROOT_DIR "formats/psi/t/files/one_symbol_tokens.txt");
+    while (getline(s, line)) {
+        contents += line;
+        contents += "\n";
+    }
+
+    BOOST_CHECK_EQUAL(osstr.str(), contents);
+}
+
+
 BOOST_AUTO_TEST_SUITE_END()

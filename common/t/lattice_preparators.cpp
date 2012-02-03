@@ -447,7 +447,7 @@ void lattice_preparators::prepareLatticeWithOneSymbolTokens(Lattice & lattice, s
     AnnotationItem ** ai = new AnnotationItem * [text.length()];
     for (size_t i = 0; i < text.length(); ++i) {
         std::string aiCategory = text.substr(i, 1);
-        StringFrag aiText(text, i, 1);
+        StringFrag aiText(aiCategory);
         ai[i] = new AnnotationItem(aiCategory, aiText);
         Lattice::EdgeSequence::Builder builder(lattice);
         builder.addEdge(lattice.firstOutEdge(vd[i], maskRaw));
