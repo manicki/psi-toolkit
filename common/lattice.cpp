@@ -945,12 +945,13 @@ inline bool compareSecond_(
     return p1.second < p2.second;
 }
 
-Lattice::VertexIterator::VertexIterator(Lattice& lattice) :
+Lattice::VertexIterator::VertexIterator(Lattice& lattice, bool skipUselessVertices) :
     lattice_(lattice),
     vd_(0),
-    withLooseVertices_(lattice.nLooseVertices_ > 0)
+    withLooseVertices_(lattice.nLooseVertices_ > 0),
+    skipUselessVertices_(skipUselessVertices)
 {
-    if (lattice.nLooseVertices_ > 0) {
+    if (withLooseVertices_) {
         std::list<Graph::vertex_descriptor> vertexContainer;
         boost::topological_sort(lattice_.graph_, std::front_inserter(vertexContainer));
         BOOST_FOREACH(Graph::vertex_descriptor vd, vertexContainer) {
@@ -960,7 +961,10 @@ Lattice::VertexIterator::VertexIterator(Lattice& lattice) :
         }
         VertexDescriptor vd = 0;
         while (vd < int(lattice.allText_.length())) {
-            if (lattice.vertices_.find(vd) == lattice.vertices_.end()) {
+            if (
+                lattice.vertices_.find(vd) == lattice.vertices_.end()
+                && !shouldBeSkipped_(vd)
+            ) {
                 iterContainer_.push_back(std::pair<Lattice::VertexDescriptor, int>(vd, vd));
             }
             vd += lattice_.symbolLength_((int)vd);
@@ -978,14 +982,11 @@ bool Lattice::VertexIterator::hasNext() {
         return ici_ != iterContainer_.end();
     }
     while (vd_ <= (int)lattice_.allText_.length()) {
-        if (
-            lattice_.vertices_.find(vd_) != lattice_.vertices_.end()
-            || lattice_.implicitOutEdges_[vd_]
-            || (vd_ > 0 && lattice_.implicitOutEdges_[lattice_.priorVertex_(vd_)])
-        ) {
+        if (shouldBeSkipped_(vd_)) {
+            nextRealVertex_();
+        } else {
             return true;
         }
-        nextRealVertex_();
     }
     return false;
 }
@@ -995,16 +996,13 @@ Lattice::VertexDescriptor Lattice::VertexIterator::next() {
         if (ici_ != iterContainer_.end()) return (*(ici_++)).first;
     }
     while (vd_ <= (int)lattice_.allText_.length()) {
-        if (
-            lattice_.vertices_.find(vd_) != lattice_.vertices_.end()
-            || lattice_.implicitOutEdges_[vd_]
-            || (vd_ > 0 && lattice_.implicitOutEdges_[lattice_.priorVertex_(vd_)])
-        ) {
+        if (shouldBeSkipped_(vd_)) {
+            nextRealVertex_();
+        } else {
             Lattice::VertexDescriptor returnedVertexDescriptor = vd_;
             nextRealVertex_();
             return returnedVertexDescriptor;
         }
-        nextRealVertex_();
     }
     throw NoEdgeException("Vertex iterator has no next edges.");
 }
@@ -1014,6 +1012,13 @@ void Lattice::VertexIterator::nextRealVertex_() {
         vd_ += lattice_.symbolLength_((int)vd_);
     else
         ++vd_;
+}
+
+bool Lattice::VertexIterator::shouldBeSkipped_(Lattice::VertexDescriptor vd) {
+    return skipUselessVertices_
+        && lattice_.vertices_.find(vd) == lattice_.vertices_.end()
+        && !lattice_.implicitOutEdges_[vd]
+        && (vd == 0 || !lattice_.implicitOutEdges_[lattice_.priorVertex_(vd)]);
 }
 
 int Lattice::VertexIterator::f_(Graph::vertex_descriptor vd) {
