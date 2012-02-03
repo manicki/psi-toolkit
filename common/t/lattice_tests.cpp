@@ -869,5 +869,18 @@ BOOST_AUTO_TEST_CASE( edge_self_reference ) {
     );
 }
 
+BOOST_AUTO_TEST_CASE( reversed_edges ) {
+    Lattice lattice("abcd");
+    Lattice::VertexDescriptor from = lattice.getVertexForRawCharIndex(3);
+    Lattice::VertexDescriptor to = lattice.getVertexForRawCharIndex(1);
+    AnnotationItem item("item");
+    LayerTagCollection tags(lattice.getLayerTagManager().createSingletonTagCollection("tag"));
+
+    BOOST_CHECK_THROW(
+        lattice.addEdge(from, to, item, tags),
+        ReversedEdgeException
+    );
+}
+
 
 BOOST_AUTO_TEST_SUITE_END()

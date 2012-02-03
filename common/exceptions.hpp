@@ -64,4 +64,10 @@ public:
 };
 
 
+class ReversedEdgeException : public Exception {
+public:
+    ReversedEdgeException(std::string message) : Exception(message) { }
+};
+
+
 #endif
