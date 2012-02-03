@@ -668,7 +668,7 @@ void Lattice::correctionReplace(VertexDescriptor from, VertexDescriptor to, std:
 }
 
 int Lattice::countEdges(VertexDescriptor from, VertexDescriptor to) {
-    return edgeCounterHash_[std::pair<VertexDescriptor,VertexDescriptor>(from, to)];
+    return edgeCounterHash_[std::pair<VertexDescriptor, VertexDescriptor>(from, to)];
 }
 
 int Lattice::countAllVertices() {
