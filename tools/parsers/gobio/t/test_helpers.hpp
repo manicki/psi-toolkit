@@ -35,35 +35,23 @@ int count_out_edges(chart<C,S,V,R>& ch)
     return edge_count;
 }
 
-/*
+
 template<class C,class S,class V,class R>
 int count_in_edges(chart<C,S,V,R>& ch)
 {
-    typename chart<C,S,V,R>::vertex_iterator vertex_it = ch.vertices().first;
-    typename chart<C,S,V,R>::vertex_iterator vertex_end = ch.vertices().second;
-
+    typename chart<C,S,V,R>::vertex_iterator vertex_it = ch.vertices();
     int edge_count = 0;
-
-    while (vertex_it != vertex_end)
-    {
-    typename chart<C,S,V,R>::in_edge_iterator it =
-        ch.in_edges(*vertex_it).first;
-    typename chart<C,S,V,R>::in_edge_iterator end =
-        ch.in_edges(*vertex_it).second;
-
-    while (it != end)
-    {
-        ++edge_count;
-        ++it;
+    while (vertex_it.hasNext()) {
+        typename chart<C,S,V,R>::in_edge_iterator it = ch.in_edges(vertex_it.next());
+        while (it.hasNext()) {
+            it.next();
+            ++edge_count;
+        }
     }
-
-    ++vertex_it;
-    }
-
     return edge_count;
 }
 
-
+/*
 template<class C,class S,class V,class R>
 int count_marked_out_edges(chart<C,S,V,R>& ch)
 {
