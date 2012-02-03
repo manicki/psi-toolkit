@@ -4,6 +4,7 @@ include_directories("${PARENT_DIR}/parser")
 include_directories("${psi-toolkit_SOURCE_DIR}/common/t")
 
 add_library(tools-parsers-gobio-tests
+    chart_tests.cpp
     parser_tests.cpp
 )
 
