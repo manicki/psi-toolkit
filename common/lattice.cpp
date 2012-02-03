@@ -102,6 +102,11 @@ Lattice::EdgeDescriptor Lattice::addEdge(
     int ruleId)
 {
 
+    // doesn't check if a loose edge is reversed!
+    if (from >= 0 && to >= 0 && from > to) {
+        throw ReversedEdgeException("Cannot add a reversed edge");
+    }
+
     std::pair<Graph::edge_descriptor, bool> result;
 
     std::pair<VertexDescriptor, VertexDescriptor> vpair(from, to);
