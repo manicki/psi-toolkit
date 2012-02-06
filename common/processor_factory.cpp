@@ -74,7 +74,6 @@ std::string ProcessorFactory::doGetDescription() {
 }
 
 std::string ProcessorFactory::getFileContent(boost::filesystem::path path) {
-
     std::stringstream content;
     content << std::ifstream( path.string().c_str() ).rdbuf();
 
