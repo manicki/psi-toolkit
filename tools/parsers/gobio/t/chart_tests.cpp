@@ -302,7 +302,7 @@ BOOST_AUTO_TEST_CASE( chart_marked ) {
 
 BOOST_AUTO_TEST_CASE( chart_partitions ) {
 
-    const int nb_vertices = 61;
+    const int nb_vertices = 11;
 
     Lattice lattice(std::string(nb_vertices-1, 's'));
     typedef chart<std::string, double, int, int_rule> simple_chart;
@@ -388,6 +388,18 @@ BOOST_AUTO_TEST_CASE( chart_partitions ) {
     BOOST_CHECK_EQUAL(count_vertices(ch), nb_vertices);
 
     BOOST_CHECK(is_consistent(ch));
+
+    boost::scoped_ptr<LatticeWriter<std::ostream> > writer(new PsiLatticeWriter());
+    std::ostringstream osstr;
+    writer->writeLattice(lattice, osstr);
+    std::string line;
+    std::string contents;
+    std::ifstream s(ROOT_DIR "tools/parsers/gobio/t/files/chart_partitions.psi");
+    while (getline(s, line)) {
+        contents += line;
+        contents += "\n";
+    }
+    BOOST_CHECK_EQUAL(osstr.str(), contents);
 
 }
 
