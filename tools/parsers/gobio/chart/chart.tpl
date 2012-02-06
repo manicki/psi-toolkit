@@ -103,6 +103,7 @@ std::pair<typename chart<C,S,V,R,I>::edge_descriptor,bool> chart<C,S,V,R,I>::add
     return std::pair<edge_descriptor,bool>(result, true);
 }
 
+/*
 template<class C, class S, class V, class R, template<class,class> class I>
 std::pair<typename chart<C,S,V,R,I>::edge_descriptor,bool> chart<C,S,V,R,I>::add_edge_(
     vertex_descriptor u,
@@ -120,6 +121,7 @@ std::pair<typename chart<C,S,V,R,I>::edge_descriptor,bool> chart<C,S,V,R,I>::add
     );
     return std::pair<edge_descriptor,bool>(result, true);
 }
+*/
 
 template<class C, class S, class V, class R, template<class,class> class I>
 void chart<C,S,V,R,I>::remove_edge(

@@ -194,11 +194,11 @@ public:
 
 private:
 
-    std::pair<edge_descriptor, bool> add_edge_(
-    vertex_descriptor u,
-    vertex_descriptor v,
-    const C& category,
-    S score);
+    // std::pair<edge_descriptor, bool> add_edge_(
+    // vertex_descriptor u,
+    // vertex_descriptor v,
+    // const C& category,
+    // S score);
 
     typedef Lattice::VertexEntry vertex_entry;
     typedef Lattice::Partition partition;
