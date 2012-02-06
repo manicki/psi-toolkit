@@ -53,8 +53,10 @@ void TestExtractor::lookInDirectory_(const boost::filesystem::path& directory) {
              fiter != end_iter;
              ++fiter)
     {
-        std::string testDir = fiter->path().leaf();
-        if (directoryPrefix_ == "" || boost::starts_with(testDir, directoryPrefix_))
+        // trick for boost 1.48
+        boost::filesystem::path testDir(fiter->path().filename());
+
+        if (directoryPrefix_ == "" || boost::starts_with(testDir.string(), directoryPrefix_))
             addTestBatch_(fiter->path());
     }
 }
