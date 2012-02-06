@@ -2,3 +2,6 @@ komputer_subst  computer_subst
 być_verb  be_verb
 dobry_adj good_adj
 kot_subst cat_subst
+kanał_subst channel_subst
+kanał_subst canal_subst
+tablica_subst board_subst;table_subst;array_subst

@@ -2,6 +2,7 @@
 
 #include <boost/filesystem/fstream.hpp>
 #include <boost/algorithm/string.hpp>
+#include <boost/assign.hpp>
 
 #include "processor_file_fetcher.hpp"
 
@@ -15,6 +16,8 @@ BiLexicon::BiLexicon(const boost::program_options::variables_map& options) {
 
         readPlainText_(plainTextLexiconPath);
     }
+
+
 }
 
 std::string BiLexicon::getName() {
@@ -42,8 +45,37 @@ boost::program_options::options_description BiLexicon::optionsHandled() {
     return desc;
 }
 
-void processEdge(Lattice& /*lattice*/, Lattice::EdgeDescriptor /*edge*/) {
+void BiLexicon::processEdge(Lattice& lattice, Lattice::EdgeDescriptor edge) {
+    std::string edgeText = lattice.getAnnotationText(edge);
 
+    boost::optional<std::string> entryFound = store_->get(edgeText);
+
+    if (entryFound) {
+        std::vector<std::string> records;
+        boost::split(records, entryFound.get(), boost::is_any_of(";"));
+
+        BOOST_FOREACH(std::string& record, records) {
+            addEntry_(lattice, edge, record);
+        }
+    }
+}
+
+void BiLexicon::addEntry_(
+    Lattice& lattice, Lattice::EdgeDescriptor edge, const std::string& record) {
+
+    LayerTagCollection tags = lattice.getLayerTagManager().createTagCollectionFromList(
+        boost::assign::list_of("lexeme")("bilexicon"));
+
+    lattice.addEdge(
+        lattice.getEdgeSource(edge),
+        lattice.getEdgeTarget(edge),
+        parseRecord_(record),
+        tags);
+
+}
+
+AnnotationItem BiLexicon::parseRecord_(const std::string& record) {
+    return AnnotationItem(record, StringFrag(record));
 }
 
 void BiLexicon::readPlainText_(const boost::filesystem::path& plainTextLexicon) {
@@ -52,6 +84,10 @@ void BiLexicon::readPlainText_(const boost::filesystem::path& plainTextLexicon) 
     boost::filesystem::ifstream plainTextStream(plainTextLexicon);
 
     std::string line;
+    std::string prevKey;
+    std::string stringSoFar;
+    bool firstEntry = true;
+
     while (std::getline(plainTextStream, line)) {
         std::vector<std::string> fields;
         boost::split(fields, line, boost::is_any_of("\t "));
@@ -61,8 +97,25 @@ void BiLexicon::readPlainText_(const boost::filesystem::path& plainTextLexicon) 
                 std::string("two fields expected in plain text bilexicon, was: `")
                 + line + "`");
 
-        storeBuilder.add(fields[0], fields[1]);
+        if (firstEntry) {
+            prevKey = fields[0];
+            stringSoFar = fields[1];
+            firstEntry = false;
+        } else {
+            if (fields[0] == prevKey) {
+                stringSoFar += ";";
+                stringSoFar += fields[1];
+            }
+            else {
+                storeBuilder.add(prevKey, stringSoFar);
+                prevKey = fields[0];
+                stringSoFar = fields[1];
+            }
+        }
     }
+
+    if (!firstEntry)
+        storeBuilder.add(prevKey, stringSoFar);
 
     store_.reset(storeBuilder.build());
 }

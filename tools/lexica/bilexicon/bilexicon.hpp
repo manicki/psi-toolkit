@@ -30,9 +30,10 @@ public:
 
 private:
     void readPlainText_(const boost::filesystem::path& plainTextLexicon);
+    void addEntry_(Lattice& lattice, Lattice::EdgeDescriptor edge, const std::string& record);
+    AnnotationItem parseRecord_(const std::string& record);
 
     boost::shared_ptr<KeyValueStore> store_;
-
 };
 
 #endif
