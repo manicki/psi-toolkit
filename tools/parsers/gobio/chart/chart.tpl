@@ -71,7 +71,7 @@ std::pair<typename chart<C,S,V,R,I>::edge_descriptor,bool> chart<C,S,V,R,I>::add
         v,
         ai,
         getGobioTag_(),
-        Lattice::EdgeSequence(),
+        builder.build(),
         score,
         rule.rule_no()
     );
