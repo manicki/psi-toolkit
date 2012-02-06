@@ -32,6 +32,11 @@ protected:
     std::string getProcessorDescription(std::string processorName);
     boost::program_options::options_description getProcessorOptions(std::string processorName);
     std::vector<TestBatch> getProcessorUsingExamples(std::string processorName);
+
+    std::string getFileContent(const boost::filesystem::path& path);
+
+    const static std::string EXAMPLES_HEADER;
+    const static std::string OPTIONS_HEADER;
 };
 
 #endif

@@ -17,6 +17,7 @@ public:
 
     void lookForTestBatches(std::vector<boost::filesystem::path> directories,
                             const std::string& prefix);
+    void clearTestBatches();
     std::vector<TestBatch> & getTestBatches();
 
 private:

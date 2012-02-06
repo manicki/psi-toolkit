@@ -1,3 +1,6 @@
+#include <sstream>
+#include <fstream>
+
 #include "help_formatter.hpp"
 
 void HelpFormatter::formatOneProcessorHelp(
@@ -39,7 +42,18 @@ std::vector<TestBatch> HelpFormatter::getProcessorUsingExamples(std::string proc
     std::vector<boost::filesystem::path> directories;
     directories.push_back(processorFile.parent_path());
 
+    testExtractor_.clearTestBatches();
     testExtractor_.lookForTestBatches(directories, "help");
 
     return testExtractor_.getTestBatches();
 }
+
+std::string HelpFormatter::getFileContent(const boost::filesystem::path& path) {
+    std::stringstream content;
+    content << std::ifstream( path.string().c_str() ).rdbuf();
+
+    return content.str();
+}
+
+const std::string HelpFormatter::EXAMPLES_HEADER = "Examples";
+const std::string HelpFormatter::OPTIONS_HEADER = "Options";

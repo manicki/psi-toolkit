@@ -23,6 +23,9 @@ void TestExtractor::lookForTestBatches(std::vector<boost::filesystem::path> dire
     }
 }
 
+void TestExtractor::clearTestBatches() {
+    testBatches_.clear();
+}
 std::vector<TestBatch> & TestExtractor::getTestBatches() {
     return testBatches_;
 }
@@ -68,12 +71,17 @@ void TestExtractor::addTestBatch_(const boost::filesystem::path& directory) {
     INFO("registering test batch " << directory.string());
 
     boost::filesystem::path commandFileName = directory / TEST_COMMAND_FILE_NAME;
-
     if (!boost::filesystem::is_regular_file(commandFileName)) {
         WARN("no " << commandFileName.string() << " found");
     }
 
-    TestBatch testBatch(directory, readCommand_(commandFileName), "");
+    boost::filesystem::path descriptionFileName = directory / TEST_DESCRIPTION_FILE_NAME;
+    if (!boost::filesystem::is_regular_file(descriptionFileName)) {
+        WARN("no " << descriptionFileName.string() << " found");
+    }
+
+    TestBatch testBatch(directory, readCommand_(commandFileName),
+        readCommand_(descriptionFileName));
 
     std::map<std::string, boost::filesystem::path> inputFiles;
     std::map<std::string, boost::filesystem::path> outputFiles;

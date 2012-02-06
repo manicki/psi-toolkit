@@ -17,6 +17,10 @@ private:
         std::vector<TestBatch> usingExamples,
         std::ostream& output);
 
+    void formatUsingExamples(std::vector<TestBatch> batches, std::ostream& output);
+
+    void formatAllowedOptions(boost::program_options::options_description options,
+        std::ostream& output);
 };
 
 #endif

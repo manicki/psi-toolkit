@@ -64,6 +64,10 @@ public:
         }
     }
 
+    std::vector<TestRun> getTestRuns() const {
+        return testRuns_;
+    }
+
 private:
     std::string processPipeline_(const std::string& pipeline);
 };
