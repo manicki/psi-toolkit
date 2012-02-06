@@ -128,4 +128,23 @@ BOOST_AUTO_TEST_CASE( chart_mask ) {
 }
 
 
+BOOST_AUTO_TEST_CASE( chart_empty ) {
+
+    Lattice lattice(std::string(2012, 's'));
+    typedef chart<std::string, double, int, int_rule> simple_chart;
+    simple_chart ch(lattice);
+
+    BOOST_CHECK_EQUAL(count_out_edges(ch), 0);
+    BOOST_CHECK_EQUAL(count_in_edges(ch), 0);
+
+    BOOST_CHECK_EQUAL(count_marked_out_edges(ch), 0);
+    BOOST_CHECK_EQUAL(count_marked_in_edges(ch), 0);
+
+    BOOST_CHECK_EQUAL(count_vertices(ch), 2013);
+
+    BOOST_CHECK(is_consistent(ch));
+
+}
+
+
 BOOST_AUTO_TEST_SUITE_END()
