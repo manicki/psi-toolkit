@@ -7,7 +7,14 @@ void ConsoleHelpFormatter::doFormatOneProcessorHelp(
     std::vector<TestBatch> usingExamples,
     std::ostream& output) {
 
-    output << processorName << std::endl << description << std::endl << options;
+    output << processorName << std::endl << description << std::endl;
+
+    if (usingExamples.size() > 0)
+        output << "To see one of the " << usingExamples.size()
+            << " examples check installed files or visit PSI website."
+            << std::endl << std::endl;
+
+    output << options;
 }
 
 ConsoleHelpFormatter::~ConsoleHelpFormatter() { }
