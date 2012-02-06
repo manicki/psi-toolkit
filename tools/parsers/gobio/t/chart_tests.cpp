@@ -217,4 +217,87 @@ BOOST_AUTO_TEST_CASE( chart_complete ) {
 }
 
 
+BOOST_AUTO_TEST_CASE( chart_marked ) {
+
+    const int nb_vertices = 60;
+
+    Lattice lattice(std::string(nb_vertices-1, 's'));
+    typedef chart<std::string, double, int, int_rule> simple_chart;
+    simple_chart ch(lattice);
+
+    std::vector<simple_chart::edge_descriptor> e;
+
+    for (int i=0; i<nb_vertices; ++i) {
+        if (i > 0) {
+
+            e.push_back(ch.add_edge(
+                lattice.getVertexForRawCharIndex(i-1),
+                lattice.getVertexForRawCharIndex(i),
+                "a",
+                1.4,
+                1
+            ).first);
+
+            ch.mark_edge(ch.add_edge(
+                lattice.getVertexForRawCharIndex(i-1),
+                lattice.getVertexForRawCharIndex(i),
+                "b",
+                1.4,
+                1
+            ).first);
+
+            ch.add_edge(
+                lattice.getVertexForRawCharIndex(i-1),
+                lattice.getVertexForRawCharIndex(i),
+                "e",
+                1.4,
+                1
+            );
+
+        }
+    }
+
+    for (int i=nb_vertices/3; i<(nb_vertices/3)*2; ++i) {
+        for (int j=nb_vertices/3; j<i; ++j) {
+
+            ch.add_edge(
+                lattice.getVertexForRawCharIndex(j),
+                lattice.getVertexForRawCharIndex(i),
+                "c",
+                1.4,
+                1
+            );
+
+            ch.mark_edge(ch.add_edge(
+                lattice.getVertexForRawCharIndex(j),
+                lattice.getVertexForRawCharIndex(i),
+                "d",
+                1.4,
+                1
+            ).first);
+
+        }
+    }
+
+    for (int i=0; i<nb_vertices-1; ++i) {
+        ch.mark_edge(e[i]);
+    }
+
+    int expected_nb_edges = (nb_vertices-1)*3 + (nb_vertices/3)*(nb_vertices/3-1);
+
+    BOOST_CHECK_EQUAL(count_out_edges(ch), expected_nb_edges);
+    BOOST_CHECK_EQUAL(count_in_edges(ch), expected_nb_edges);
+
+    int expected_nb_out_edges = (nb_vertices-1)*2 + ((nb_vertices/3)*(nb_vertices/3-1))/2;
+
+    BOOST_CHECK_EQUAL(count_marked_out_edges(ch), expected_nb_out_edges);
+    BOOST_CHECK_EQUAL(count_marked_in_edges(ch), expected_nb_out_edges);
+
+    BOOST_CHECK_EQUAL(count_vertices(ch), nb_vertices);
+
+    BOOST_CHECK(is_consistent(ch));
+
+}
+
+
 BOOST_AUTO_TEST_SUITE_END()
