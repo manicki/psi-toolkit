@@ -16,13 +16,14 @@ public:
     TestExtractor();
 
     void lookForTestBatches(std::vector<boost::filesystem::path> directories,
-                            const std::string& onlyWithPrefix);
+                            const std::string& prefix);
     std::vector<TestBatch> & getTestBatches();
 
 private:
 
-    void lookForTestBatches_(const boost::filesystem::path& directory);
+    std::string directoryPrefix_;
 
+    void lookForTestBatches_(const boost::filesystem::path& directory);
     void lookInDirectory_(const boost::filesystem::path& directory);
     void addTestBatch_(const boost::filesystem::path& directory);
 

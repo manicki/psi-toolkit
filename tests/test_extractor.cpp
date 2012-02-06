@@ -4,16 +4,21 @@
 
 #include <boost/filesystem/fstream.hpp>
 #include <boost/foreach.hpp>
+#include <boost/algorithm/string/predicate.hpp>
 
 #include "logging.hpp"
 
-TestExtractor::TestExtractor() {}
+TestExtractor::TestExtractor() : directoryPrefix_("") {
+    SET_LOGGING_LEVEL("INFO");
+}
 
 void TestExtractor::lookForTestBatches(std::vector<boost::filesystem::path> directories,
-    const std::string& onlyWithPrefix) {
+    const std::string& prefix) {
+
+    directoryPrefix_ = prefix;
+    INFO("test directory prefix is " << directoryPrefix_);
 
     BOOST_FOREACH(boost::filesystem::path path, directories) {
-        //TODO: filter by prefix
         lookForTestBatches_(path);
     }
 }
@@ -23,6 +28,7 @@ std::vector<TestBatch> & TestExtractor::getTestBatches() {
 }
 
 void TestExtractor::lookForTestBatches_(const boost::filesystem::path& directory) {
+
     if (!boost::filesystem::is_directory(directory)) {
         WARN(directory.string() << "is not a directory");
         return;
@@ -36,7 +42,7 @@ void TestExtractor::lookForTestBatches_(const boost::filesystem::path& directory
          ++fiter) {
         boost::filesystem::path filename(fiter->path().filename());
         if (boost::filesystem::is_directory(fiter->path())
-            && filename == TEST_BATCH_DIRECTORY_NAME)
+                && filename == TEST_BATCH_DIRECTORY_NAME)
             lookInDirectory_(fiter->path());
     }
 }
@@ -46,7 +52,11 @@ void TestExtractor::lookInDirectory_(const boost::filesystem::path& directory) {
     for (boost::filesystem::directory_iterator fiter(directory);
              fiter != end_iter;
              ++fiter)
-        addTestBatch_(fiter->path());
+    {
+        std::string testDir = fiter->path().leaf();
+        if (directoryPrefix_ == "" || boost::starts_with(testDir, directoryPrefix_))
+            addTestBatch_(fiter->path());
+    }
 }
 
 
