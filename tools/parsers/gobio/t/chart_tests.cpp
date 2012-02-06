@@ -94,10 +94,10 @@ BOOST_AUTO_TEST_CASE( chart_edges ) {
 
     BOOST_CHECK_EQUAL(count_out_edges(ch), 11);
     BOOST_CHECK_EQUAL(count_in_edges(ch), 11);
-/*
+
     BOOST_CHECK_EQUAL(count_marked_out_edges(ch), 0);
     BOOST_CHECK_EQUAL(count_marked_in_edges(ch), 0);
-*/
+
     BOOST_CHECK_EQUAL(count_vertices(ch), 8);
 
     BOOST_CHECK(is_consistent(ch));
