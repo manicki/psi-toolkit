@@ -58,8 +58,6 @@ if(USE_PUDDLE)
 
 endif(USE_PUDDLE)
 
-include_directories("${psi-toolkit_SOURCE_DIR}/tools/parsers/gobio")
-
 if(HAVE_PERL_BINDINGS)
     include_directories("${psi-toolkit_SOURCE_DIR}/bindings/perl/writers")
     link_directories("${psi-toolkit_BINARY_DIR}/bindings/perl/writers")
