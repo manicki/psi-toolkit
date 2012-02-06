@@ -27,6 +27,7 @@ add_executable(
  mass-tests
  mass-tests.cpp
  mass_tester.cpp
+ test_extractor.cpp
  batch_runner.cpp
  junit_mass_tests_reporter.cpp
  test_batch.cpp
