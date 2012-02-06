@@ -1,0 +1,4 @@
+komputer_subst  computer_subst
+być_verb  be_verb
+dobry_adj good_adj
+kot_subst cat_subst

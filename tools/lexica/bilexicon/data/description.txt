@@ -1,0 +1,1 @@
+Simple bilingual lexicon for machine translation.

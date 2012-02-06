@@ -171,6 +171,9 @@ endif(USE_JAVA)
 if(HAVE_CMPH)
     set(BASE_TARGETS ${BASE_TARGETS} tools-datastructures-lexica)
     set(TESTS_TARGETS ${TESTS_TARGETS} tools-datastructures-lexica-tests)
+
+    set(BASE_TARGETS ${BASE_TARGETS} tools-lexica-bilexicon)
+    set(TESTS_TARGETS ${TESTS_TARGETS} tools-lexica-bilexicon-tests)
 endif(HAVE_CMPH)
 
 if(USE_POSTGRESQL)
