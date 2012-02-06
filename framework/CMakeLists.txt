@@ -1,3 +1,4 @@
+# library framework
 add_library(framework SHARED
     factories_keeper.cpp
     main_factories_keeper.cpp
@@ -7,7 +8,8 @@ add_library(framework SHARED
     pipe_runner.cpp
 )
 
-target_link_libraries(framework ${Boost_LIBRARIES} pthread mpfd-parser ${BASE_TARGETS} pcre pcrecpp tools-parsers-puddle)
+target_link_libraries(framework ${Boost_LIBRARIES} pthread mpfd-parser ${BASE_TARGETS} pcre pcrecpp tools-parsers-puddle test-extractor)
+
 if (WITH_RE2)
     target_link_libraries(framework re2)
 endif(WITH_RE2)
@@ -22,7 +24,14 @@ foreach(dir ${tools_DIRS})
     link_directories("${psi-toolkit_BINARY_DIR}/tools/${dir}")
 endforeach(dir)
 
-add_executable(psi-pipe psi-pipe.cpp)
+include_directories("${psi-toolkit_SOURCE_DIR}/tests")
+link_directories("${psi-toolkit_BINARY_DIR}/tests")
+
+# executable psi-pipe
+add_executable(psi-pipe
+    psi-pipe.cpp
+)
+
 target_link_libraries(psi-pipe ${Boost_LIBRARIES} framework common maxent)
 
 include_directories("${psi-toolkit_SOURCE_DIR}/maxent")
@@ -34,9 +43,9 @@ if(USE_JAVA)
 endif(USE_JAVA)
 
 if(USE_POSTGRESQL)
-        include_directories("${psi-toolkit_SOURCE_DIR}/tools/lemmatizers/lex_db")
+    include_directories("${psi-toolkit_SOURCE_DIR}/tools/lemmatizers/lex_db")
     link_directories("${psi-toolkit_BINARY_DIR}/tools/lemmatizers/lex_db")
-        target_link_libraries(psi-pipe lex-db)
+    target_link_libraries(psi-pipe lex-db)
 endif(USE_POSTGRESQL)
 
 if(USE_PUDDLE)

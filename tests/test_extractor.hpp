@@ -44,6 +44,7 @@ private:
 
     const static boost::filesystem::path TEST_BATCH_DIRECTORY_NAME;
     const static boost::filesystem::path TEST_COMMAND_FILE_NAME;
+    const static boost::filesystem::path TEST_DESCRIPTION_FILE_NAME;
 };
 
 #endif

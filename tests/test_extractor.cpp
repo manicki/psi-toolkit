@@ -9,7 +9,7 @@
 #include "logging.hpp"
 
 TestExtractor::TestExtractor() : directoryPrefix_("") {
-    SET_LOGGING_LEVEL("INFO");
+    //SET_LOGGING_LEVEL("INFO");
 }
 
 void TestExtractor::lookForTestBatches(std::vector<boost::filesystem::path> directories,
@@ -73,7 +73,7 @@ void TestExtractor::addTestBatch_(const boost::filesystem::path& directory) {
         WARN("no " << commandFileName.string() << " found");
     }
 
-    TestBatch testBatch(directory, readCommand_(commandFileName));
+    TestBatch testBatch(directory, readCommand_(commandFileName), "");
 
     std::map<std::string, boost::filesystem::path> inputFiles;
     std::map<std::string, boost::filesystem::path> outputFiles;
@@ -162,3 +162,4 @@ std::string TestExtractor::stripComments_(const std::string& line) {
 
 const boost::filesystem::path TestExtractor::TEST_BATCH_DIRECTORY_NAME = "m";
 const boost::filesystem::path TestExtractor::TEST_COMMAND_FILE_NAME = "WHAT";
+const boost::filesystem::path TestExtractor::TEST_DESCRIPTION_FILE_NAME = "DESCRIPTION";

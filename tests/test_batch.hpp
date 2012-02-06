@@ -30,11 +30,14 @@ class TestBatch {
 private:
     boost::filesystem::path mDirectory_;
     std::string pipeline_;
+    std::string description_;
     std::vector<TestRun> testRuns_;
 public:
     TestBatch(const boost::filesystem::path& mDirectory,
-              const std::string& pipeline)
-        :mDirectory_(mDirectory) {
+              const std::string& pipeline,
+              const std::string& description)
+        : mDirectory_(mDirectory),
+        description_(description) {
         pipeline_ = processPipeline_(pipeline);
     }
 
@@ -44,6 +47,10 @@ public:
 
     std::string getPipeline() const {
         return pipeline_;
+    }
+
+    std::string getDescription() const {
+        return description_;
     }
 
     void addTestRun(const TestRun& testRun) {

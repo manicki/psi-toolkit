@@ -7,6 +7,7 @@ void HelpFormatter::formatOneProcessorHelp(
         processorName,
         getProcessorDescription(processorName),
         getProcessorOptions(processorName),
+        getProcessorUsingExamples(processorName),
         output
     );
 }
@@ -28,6 +29,17 @@ std::string HelpFormatter::getProcessorDescription(std::string processorName) {
 
 boost::program_options::options_description HelpFormatter::getProcessorOptions(
     std::string processorName) {
-
     return MainFactoriesKeeper::getInstance().getProcessorFactory(processorName).optionsHandled();
+}
+
+std::vector<TestBatch> HelpFormatter::getProcessorUsingExamples(std::string processorName) {
+    boost::filesystem::path processorFile = MainFactoriesKeeper::getInstance()
+        .getProcessorFactory(processorName).getFile();
+
+    std::vector<boost::filesystem::path> directories;
+    directories.push_back(processorFile.parent_path());
+
+    testExtractor_.lookForTestBatches(directories, "help");
+
+    return testExtractor_.getTestBatches();
 }
