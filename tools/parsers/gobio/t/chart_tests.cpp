@@ -300,4 +300,96 @@ BOOST_AUTO_TEST_CASE( chart_marked ) {
 }
 
 
+BOOST_AUTO_TEST_CASE( chart_partitions ) {
+
+    const int nb_vertices = 61;
+
+    Lattice lattice(std::string(nb_vertices-1, 's'));
+    typedef chart<std::string, double, int, int_rule> simple_chart;
+    simple_chart ch(lattice);
+
+    std::vector<simple_chart::edge_descriptor> e;
+
+    for (int i=0; i<nb_vertices; ++i) {
+        if (i > 0) {
+
+            simple_chart::edge_descriptor edge_a = ch.add_edge(
+                lattice.getVertexForRawCharIndex(i-1),
+                lattice.getVertexForRawCharIndex(i),
+                "a",
+                1.4,
+                1
+            ).first;
+
+            simple_chart::edge_descriptor edge_b = ch.add_edge(
+                lattice.getVertexForRawCharIndex(i-1),
+                lattice.getVertexForRawCharIndex(i),
+                "b",
+                1.4,
+                1
+            ).first;
+
+            ch.add_edge(
+                lattice.getVertexForRawCharIndex(i-1),
+                lattice.getVertexForRawCharIndex(i),
+                "a",
+                1.5,
+                2,
+                edge_b
+            );
+
+            ch.add_partition(edge_a, 1.6, 3, edge_b);
+
+            e.push_back(edge_b);
+        }
+    }
+
+    for (int i=0; i<nb_vertices-1; i+=2) {
+
+        simple_chart::edge_descriptor edge = ch.add_edge(
+            lattice.getVertexForRawCharIndex(i),
+            lattice.getVertexForRawCharIndex(i+2),
+            "c",
+            1.4,
+            10
+        ).first;
+
+        ch.add_edge(
+            lattice.getVertexForRawCharIndex(i),
+            lattice.getVertexForRawCharIndex(i+2),
+            "d",
+            1.4,
+            1,
+            edge
+        );
+
+        ch.add_edge(
+            lattice.getVertexForRawCharIndex(i),
+            lattice.getVertexForRawCharIndex(i+2),
+            "c",
+            1.5,
+            2,
+            e[i/2],
+            e[i/2+1]
+        );
+
+        ch.add_partition(edge, 1.6, 3, e[i/2], e[i/2+1]);
+
+    }
+
+    int expected_nb_edges = 2*(nb_vertices-1) + 2 *((nb_vertices-1)/2);
+
+    BOOST_CHECK_EQUAL(count_out_edges(ch), expected_nb_edges);
+    BOOST_CHECK_EQUAL(count_in_edges(ch), expected_nb_edges);
+
+    BOOST_CHECK_EQUAL(count_marked_out_edges(ch), 0);
+    BOOST_CHECK_EQUAL(count_marked_in_edges(ch), 0);
+
+    BOOST_CHECK_EQUAL(count_vertices(ch), nb_vertices);
+
+    BOOST_CHECK(is_consistent(ch));
+
+}
+
+
 BOOST_AUTO_TEST_SUITE_END()
