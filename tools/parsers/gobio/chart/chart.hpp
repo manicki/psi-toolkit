@@ -186,6 +186,9 @@ public:
 
     void setTagMask(LayerTagMask layerTagMask);
 
+    vertex_descriptor getFirstVertex() const;
+    vertex_descriptor getLastVertex() const;
+
     typedef Lattice::EdgeEntry edge_entry;
 
 

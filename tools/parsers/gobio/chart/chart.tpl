@@ -499,6 +499,16 @@ void chart<C,S,V,R,I>::setTagMask(LayerTagMask layerTagMask) {
 }
 
 template<class C, class S, class V, class R, template<class,class> class I>
+typename chart<C,S,V,R,I>::vertex_descriptor chart<C,S,V,R,I>:: getFirstVertex() const {
+    return lattice_.getFirstVertex();
+}
+
+template<class C, class S, class V, class R, template<class,class> class I>
+typename chart<C,S,V,R,I>::vertex_descriptor chart<C,S,V,R,I>:: getLastVertex() const {
+    return lattice_.getLastVertex();
+}
+
+template<class C, class S, class V, class R, template<class,class> class I>
 const LayerTagCollection& chart<C,S,V,R,I>::getGobioTag_() const {
     return gobioTag_;
 }
