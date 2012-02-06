@@ -182,4 +182,39 @@ BOOST_AUTO_TEST_CASE( chart_linear ) {
 }
 
 
+BOOST_AUTO_TEST_CASE( chart_complete ) {
+
+    const int nb_vertices = 30;
+
+    Lattice lattice(std::string(nb_vertices-1, 's'));
+    typedef chart<std::string, double, int, int_rule> simple_chart;
+    simple_chart ch(lattice);
+
+    for (int i=0; i<nb_vertices; ++i) {
+        for (int j=0; j<i; ++j) {
+            for (char c='A'; c<='Z'; ++c) {
+                ch.add_edge(
+                    lattice.getVertexForRawCharIndex(j),
+                    lattice.getVertexForRawCharIndex(i),
+                    std::string(1, c),
+                    1.3,
+                    1
+                );
+            }
+        }
+    }
+
+    BOOST_CHECK_EQUAL(count_out_edges(ch), 26*(nb_vertices*(nb_vertices-1))/2);
+    BOOST_CHECK_EQUAL(count_in_edges(ch), 26*(nb_vertices*(nb_vertices-1))/2);
+
+    BOOST_CHECK_EQUAL(count_marked_out_edges(ch), 0);
+    BOOST_CHECK_EQUAL(count_marked_in_edges(ch), 0);
+
+    BOOST_CHECK_EQUAL(count_vertices(ch), nb_vertices);
+
+    BOOST_CHECK(is_consistent(ch));
+
+}
+
+
 BOOST_AUTO_TEST_SUITE_END()
