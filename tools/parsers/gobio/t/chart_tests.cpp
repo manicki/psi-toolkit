@@ -1,8 +1,11 @@
 #include "tests.hpp"
 
+#include <boost/scoped_ptr.hpp>
+
 #include "chart.tpl"
 #include "lattice.hpp"
 #include "lattice_preparators.hpp"
+#include "psi_lattice_writer.hpp"
 #include "test_helpers.hpp"
 
 
