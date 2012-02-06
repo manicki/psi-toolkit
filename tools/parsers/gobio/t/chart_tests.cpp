@@ -316,18 +316,18 @@ BOOST_AUTO_TEST_CASE( chart_partitions ) {
     for (int i=0; i<nb_vertices; ++i) {
         if (i > 0) {
 
-            simple_chart::edge_descriptor edge_a = ch.add_edge(
-                lattice.getVertexForRawCharIndex(i-1),
-                lattice.getVertexForRawCharIndex(i),
-                "a",
-                1.4,
-                1
-            ).first;
-
             simple_chart::edge_descriptor edge_b = ch.add_edge(
                 lattice.getVertexForRawCharIndex(i-1),
                 lattice.getVertexForRawCharIndex(i),
                 "b",
+                1.4,
+                1
+            ).first;
+
+            simple_chart::edge_descriptor edge_a = ch.add_edge(
+                lattice.getVertexForRawCharIndex(i-1),
+                lattice.getVertexForRawCharIndex(i),
+                "a",
                 1.4,
                 1
             ).first;
