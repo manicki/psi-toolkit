@@ -147,4 +147,39 @@ BOOST_AUTO_TEST_CASE( chart_empty ) {
 }
 
 
+BOOST_AUTO_TEST_CASE( chart_linear ) {
+
+    const int nb_vertices = 200;
+
+    Lattice lattice(std::string(nb_vertices-1, 's'));
+    typedef chart<std::string, double, int, int_rule> sample_chart;
+    sample_chart ch(lattice);
+
+    for (int i=0; i<nb_vertices; ++i) {
+        if (i > 0) {
+            for (char c='A'; c<='Z'; ++c) {
+                ch.add_edge(
+                    lattice.getVertexForRawCharIndex(i-1),
+                    lattice.getVertexForRawCharIndex(i),
+                    std::string(1, c),
+                    1.4,
+                    1
+                );
+            }
+        }
+    }
+
+    BOOST_CHECK_EQUAL(count_out_edges(ch), 26*(nb_vertices-1));
+    BOOST_CHECK_EQUAL(count_in_edges(ch), 26*(nb_vertices-1));
+
+    BOOST_CHECK_EQUAL(count_marked_out_edges(ch), 0);
+    BOOST_CHECK_EQUAL(count_marked_in_edges(ch), 0);
+
+    BOOST_CHECK_EQUAL(count_vertices(ch), nb_vertices);
+
+    BOOST_CHECK(is_consistent(ch));
+
+}
+
+
 BOOST_AUTO_TEST_SUITE_END()
