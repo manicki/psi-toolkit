@@ -14,6 +14,48 @@
     (combinator.add_unary_rule((B), simple_cfg_rule<std::string>((A))))
 
 
+bool check_parse_results(
+    chart<
+        std::string,
+        Lattice::Score,
+        std::string,
+        simple_cfg_rule<std::string>,
+        simple_marked_edges_index
+    >& ch,
+    std::set<std::string> scats
+) {
+
+    typedef chart<
+        std::string,
+        Lattice::Score,
+        std::string,
+        simple_cfg_rule<std::string>,
+        simple_marked_edges_index
+    > Chart;
+    Chart::vertex_descriptor firstVertex = ch.getFirstVertex();
+    Chart::out_edge_iterator pe = ch.out_edges(firstVertex);
+
+    std::set<std::string> result_cats;
+    while (pe.hasNext()) {
+        Chart::edge_descriptor edge = pe.next();
+        if (ch.edge_target(edge) == ch.getLastVertex()) {
+            result_cats.insert(ch.edge_category(edge));
+        }
+    }
+
+    if (result_cats.size() != scats.size()) {
+        return false;
+    }
+    BOOST_FOREACH(std::string scat, scats) {
+        if (result_cats.find(scat) == result_cats.end()) {
+            return false;
+        }
+    }
+    return true;
+
+}
+
+
 BOOST_AUTO_TEST_SUITE( gobio_parser )
 
 
@@ -82,7 +124,10 @@ BOOST_AUTO_TEST_CASE( helpers ) {
 
     parser.run();
 
-    // BOOST_CHECK(check_parse_results(ch,"SX"));
+    std::set<Category> expectedParseResults;
+    expectedParseResults.insert("S");
+    expectedParseResults.insert("X");
+    BOOST_CHECK(check_parse_results(ch, expectedParseResults));
     BOOST_CHECK(is_consistent(ch));
 
 }
