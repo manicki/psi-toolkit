@@ -11,7 +11,9 @@ public:
     boost::optional<std::string> get(const std::string& key) const;
 
     void load(std::FILE* mphf);
+    void load(const std::string& filename);
     void save(std::FILE* mphf) const;
+    void save(const std::string& filename) const;
 
     class Builder {
     public:

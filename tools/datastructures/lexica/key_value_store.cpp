@@ -60,7 +60,19 @@ void KeyValueStore::load(std::FILE* mphf) {
     assert(perfectHashIndex_.getSize() == stringVector_.size());
 }
 
+void KeyValueStore::load(const std::string& filename) {
+    std::FILE* mphf = std::fopen(filename.c_str(), "r");
+    load(mphf);
+    std::fclose(mphf);
+}
+
 void KeyValueStore::save(std::FILE* mphf) const {
     perfectHashIndex_.save(mphf);
     stringVector_.save(mphf);
+}
+
+void KeyValueStore::save(const std::string& filename) const {
+    std::FILE* mphf = std::fopen(filename.c_str(), "w");
+    save(mphf);
+    std::fclose(mphf);
 }

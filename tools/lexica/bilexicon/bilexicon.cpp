@@ -3,21 +3,41 @@
 #include <boost/filesystem/fstream.hpp>
 #include <boost/algorithm/string.hpp>
 #include <boost/assign.hpp>
+#include <boost/bind.hpp>
 
 #include "processor_file_fetcher.hpp"
 
 BiLexicon::BiLexicon(const boost::program_options::variables_map& options) {
+    ProcessorFileFetcher fileFetcher(__FILE__);
+
     if (options.count("plain-text-lexicon") > 0) {
-        ProcessorFileFetcher fileFetcher(__FILE__);
+        if (options.count("binary-lexicon") > 0)
+            throw new Exception(
+                "either --plain-text-lexicon or --binary-lexicon expected, not both");
+
 
         boost::filesystem::path plainTextLexiconPath =
             fileFetcher.getOneFile(
                 options["plain-text-lexicon"].as<std::string>());
 
         readPlainText_(plainTextLexiconPath);
+    } else if (options.count("binary-lexicon") > 0) {
+        boost::filesystem::path binaryLexiconPath =
+            fileFetcher.getOneFile(
+                options["binary-lexicon"].as<std::string>());
+
+        loadBinary_(binaryLexiconPath);
     }
 
+    if (options.count("save-binary-lexicon") > 0) {
+        if (!store_)
+            throw new Exception("no data to save");
 
+        boost::filesystem::path binaryLexiconPath(
+            options["save-binary-lexicon"].as<std::string>());
+
+        saveBinary_(binaryLexiconPath);
+    }
 }
 
 std::string BiLexicon::getName() {
@@ -43,6 +63,17 @@ boost::program_options::options_description BiLexicon::optionsHandled() {
          "as a side effect the lexicon in the binary format is generated");
 
     return desc;
+}
+
+std::list<std::string> BiLexicon::providedLayerTags() {
+    return boost::assign::list_of
+        (std::string("lexeme"))
+        (std::string("bilexicon"));
+}
+
+std::list<std::string> BiLexicon::tagsToOperateOn() {
+    return boost::assign::list_of
+        (std::string("lexeme"));
 }
 
 void BiLexicon::processEdge(Lattice& lattice, Lattice::EdgeDescriptor edge) {
@@ -75,10 +106,18 @@ void BiLexicon::addEntry_(
 }
 
 AnnotationItem BiLexicon::parseRecord_(const std::string& record) {
-    return AnnotationItem(record, StringFrag(record));
+    size_t underscorePos = record.find_first_of('_');
+
+    std::string category =
+        (underscorePos == std::string::npos
+         ? record
+         : record.substr(underscorePos + 1));
+
+    return AnnotationItem(category, StringFrag(record));
 }
 
 void BiLexicon::readPlainText_(const boost::filesystem::path& plainTextLexicon) {
+
     KeyValueStore::Builder storeBuilder;
 
     boost::filesystem::ifstream plainTextStream(plainTextLexicon);
@@ -91,6 +130,9 @@ void BiLexicon::readPlainText_(const boost::filesystem::path& plainTextLexicon) 
     while (std::getline(plainTextStream, line)) {
         std::vector<std::string> fields;
         boost::split(fields, line, boost::is_any_of("\t "));
+        fields.erase(std::remove_if(
+                         fields.begin(), fields.end(),
+                         boost::bind( &std::string::empty, _1 )), fields.end());
 
         if (fields.size() != 2)
             throw Exception(
@@ -118,4 +160,17 @@ void BiLexicon::readPlainText_(const boost::filesystem::path& plainTextLexicon) 
         storeBuilder.add(prevKey, stringSoFar);
 
     store_.reset(storeBuilder.build());
+}
+
+void BiLexicon::saveBinary_(const boost::filesystem::path& binaryLexiconPath) {
+    WARN("saving lexicon to `" << binaryLexiconPath.string() << "`");
+
+    store_->save(binaryLexiconPath.string());
+
+    WARN("lexicon saved");
+}
+
+void BiLexicon::loadBinary_(const boost::filesystem::path& binaryLexiconPath) {
+    store_.reset(new KeyValueStore());
+    store_->load(binaryLexiconPath.string());
 }

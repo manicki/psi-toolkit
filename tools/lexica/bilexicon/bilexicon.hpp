@@ -17,6 +17,8 @@ public:
     static std::string getName();
     static boost::filesystem::path getFile();
     static boost::program_options::options_description optionsHandled();
+    static std::list<std::string> providedLayerTags();
+    static std::list<std::string> tagsToOperateOn();
 
     void processEdge(Lattice& lattice, Lattice::EdgeDescriptor edge);
 
@@ -30,6 +32,9 @@ public:
 
 private:
     void readPlainText_(const boost::filesystem::path& plainTextLexicon);
+    void saveBinary_(const boost::filesystem::path& binaryLexiconPath);
+    void loadBinary_(const boost::filesystem::path& binaryLexiconPath);
+
     void addEntry_(Lattice& lattice, Lattice::EdgeDescriptor edge, const std::string& record);
     AnnotationItem parseRecord_(const std::string& record);
 

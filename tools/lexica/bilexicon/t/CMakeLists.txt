@@ -8,5 +8,3 @@ add_library(tools-lexica-bilexicon-tests
 target_link_libraries(tools-lexica-bilexicon-tests
         tools-lexica-bilexicon
 )
-
-

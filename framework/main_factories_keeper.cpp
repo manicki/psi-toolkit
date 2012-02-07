@@ -23,6 +23,11 @@
 #include "puddle.hpp"
 #endif
 
+#if HAVE_CMPH
+#include "one_edge_at_a_time_annotator.hpp"
+#include "bilexicon.hpp"
+#endif
+
 #if HAVE_PERL_BINDINGS
 #include "perl_simple_lattice_writer.hpp"
 #endif
@@ -45,7 +50,11 @@ MainFactoriesKeeper::MainFactoriesKeeper() {
     keeper_.takeProcessorFactory(new LemmatizerAnnotator<Morfologik>::Factory());
 #endif
 #if HAVE_PUDDLE
-      keeper_.takeProcessorFactory(new poleng::bonsai::puddle::Puddle::Factory());
+    keeper_.takeProcessorFactory(new poleng::bonsai::puddle::Puddle::Factory());
+#endif
+
+#if HAVE_CMPH
+    keeper_.takeProcessorFactory(new OneEdgeAtATimeAnnotator<BiLexicon>::Factory());
 #endif
 
 #if HAVE_PERL_BINDINGS
