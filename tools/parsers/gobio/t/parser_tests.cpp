@@ -1,14 +1,59 @@
 #include "tests.hpp"
 
 #include "agenda.hpp"
+#include "agenda_parser.tpl"
 #include "chart.tpl"
 #include "lattice_preparators.hpp"
 #include "simple_cfg_combinator.tpl"
 #include "test_helpers.hpp"
 
 
-#define ADD_BINARY_RULE(A, B, C) (combinator.add_binary_rule((B), (C), simple_cfg_rule<char>((A))))
-#define ADD_UNARY_RULE(A, B) (combinator.add_unary_rule((B), simple_cfg_rule<char>((A))))
+#define ADD_BINARY_RULE(A, B, C) \
+    (combinator.add_binary_rule((B), (C), simple_cfg_rule<std::string>((A))))
+#define ADD_UNARY_RULE(A, B) \
+    (combinator.add_unary_rule((B), simple_cfg_rule<std::string>((A))))
+
+
+bool check_parse_results(
+    chart<
+        std::string,
+        Lattice::Score,
+        std::string,
+        simple_cfg_rule<std::string>,
+        simple_marked_edges_index
+    >& ch,
+    std::set<std::string> scats
+) {
+
+    typedef chart<
+        std::string,
+        Lattice::Score,
+        std::string,
+        simple_cfg_rule<std::string>,
+        simple_marked_edges_index
+    > Chart;
+    Chart::vertex_descriptor firstVertex = ch.getFirstVertex();
+    Chart::out_edge_iterator pe = ch.out_edges(firstVertex);
+
+    std::set<std::string> result_cats;
+    while (pe.hasNext()) {
+        Chart::edge_descriptor edge = pe.next();
+        if (ch.edge_target(edge) == ch.getLastVertex()) {
+            result_cats.insert(ch.edge_category(edge));
+        }
+    }
+
+    if (result_cats.size() != scats.size()) {
+        return false;
+    }
+    BOOST_FOREACH(std::string scat, scats) {
+        if (result_cats.find(scat) == result_cats.end()) {
+            return false;
+        }
+    }
+    return true;
+
+}
 
 
 BOOST_AUTO_TEST_SUITE( gobio_parser )
@@ -39,36 +84,52 @@ BOOST_AUTO_TEST_CASE( combinator ) {
 
 BOOST_AUTO_TEST_CASE( helpers ) {
 
+    typedef Lattice::EdgeDescriptor Edge;
+    typedef std::string Category;
+    typedef Lattice::Score Score;
+    typedef std::string Variant;
+    typedef simple_cfg_rule<Category> Rule;
+    typedef simple_cfg_combinator<Category, Rule> Combinator;
+    typedef fifo_agenda<Edge> Agenda;
+    typedef chart<Category, Score, Variant, Rule, simple_marked_edges_index> Chart;
+    typedef agenda_parser<
+        Category,
+        Score,
+        Variant,
+        Rule,
+        Combinator,
+        Agenda,
+        simple_marked_edges_index
+    > Parser;
+
     Lattice lattice;
     lattice_preparators::prepareLatticeWithOneSymbolTokens(lattice, "baaaaa");
 
-    fifo_agenda<chart<char, double, int, simple_cfg_rule<char> >::edge_descriptor> agenda;
-    simple_cfg_combinator<char, simple_cfg_rule<char> > combinator;
+    Agenda agenda;
+    Combinator combinator;
 
-    chart<char, double, int, simple_cfg_rule<char> > ch(lattice);
+    Chart ch(lattice);
 
     BOOST_CHECK_EQUAL(count_vertices(ch), 7);
     BOOST_CHECK_EQUAL(count_out_edges(ch), 6);
     BOOST_CHECK(is_consistent(ch));
-/*
-    ADD_UNARY_RULE('B', 'b');
-    ADD_UNARY_RULE('A', 'a');
-    ADD_BINARY_RULE('X', 'B', 'A');
-    ADD_BINARY_RULE('X', 'X', 'A');
-    ADD_UNARY_RULE('S', 'X');
 
-    agenda_parser<
-    char, double, int,
-    simple_cfg_rule<char> ,
-    simple_cfg_combinator<char, simple_cfg_rule<char> >,
-    fifo_agenda<chart<char, double, int, simple_cfg_rule<char> >::edge_descriptor> >
-    parser(ch, combinator, agenda);
+    ADD_UNARY_RULE("B", "b");
+    ADD_UNARY_RULE("A", "a");
+    ADD_BINARY_RULE("X", "B", "A");
+    ADD_BINARY_RULE("X", "X", "A");
+    ADD_UNARY_RULE("S", "X");
+
+    Parser parser(ch, combinator, agenda);
 
     parser.run();
 
-    BOOST_CHECK(check_parse_results(ch,"SX"));
+    std::set<Category> expectedParseResults;
+    expectedParseResults.insert("S");
+    expectedParseResults.insert("X");
+    BOOST_CHECK(check_parse_results(ch, expectedParseResults));
     BOOST_CHECK(is_consistent(ch));
-*/
+
 }
 
 

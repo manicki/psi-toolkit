@@ -186,16 +186,19 @@ public:
 
     void setTagMask(LayerTagMask layerTagMask);
 
+    vertex_descriptor getFirstVertex() const;
+    vertex_descriptor getLastVertex() const;
+
     typedef Lattice::EdgeEntry edge_entry;
 
 
 private:
 
-    std::pair<edge_descriptor, bool> add_edge_(
-    vertex_descriptor u,
-    vertex_descriptor v,
-    const C& category,
-    S score);
+    // std::pair<edge_descriptor, bool> add_edge_(
+    // vertex_descriptor u,
+    // vertex_descriptor v,
+    // const C& category,
+    // S score);
 
     typedef Lattice::VertexEntry vertex_entry;
     typedef Lattice::Partition partition;

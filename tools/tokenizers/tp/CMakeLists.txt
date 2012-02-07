@@ -13,3 +13,4 @@ add_subdirectory(t)
 
 install(TARGETS tools-tokenizers-tp DESTINATION lib/)
 install(DIRECTORY data/ DESTINATION ${PSITOOLKIT_INSTALL_DATA_DIR}/tp-tokenizer)
+install(DIRECTORY m/help/ DESTINATION ${PSITOOLKIT_INSTALL_DATA_DIR}/tp-tokenizer/help-examples)

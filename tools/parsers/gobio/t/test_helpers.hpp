@@ -51,31 +51,23 @@ int count_in_edges(chart<C, S, V, R>& ch)
     return edge_count;
 }
 
-/*
+
 template< class C, class S, class V, class R >
 int count_marked_out_edges(chart<C, S, V, R>& ch)
 {
-    typename chart<C, S, V, R>::vertex_iterator vertex_it = ch.vertices().first;
-    typename chart<C, S, V, R>::vertex_iterator vertex_end = ch.vertices().second;
-
+    typename chart<C, S, V, R>::vertex_iterator vertex_it = ch.vertices();
     int edge_count = 0;
-
-    while (vertex_it != vertex_end)
-    {
-    typename chart<C, S, V, R>::marked_edges_index_type::marked_out_edge_iterator it =
-        ch.marked_edges_index(*vertex_it).marked_out_edges().first;
-    typename chart<C, S, V, R>::marked_edges_index_type::marked_out_edge_iterator end =
-        ch.marked_edges_index(*vertex_it).marked_out_edges().second;
-
-    while (it != end)
-    {
-        ++edge_count;
-        ++it;
+    while (vertex_it.hasNext()) {
+        typename chart<C, S, V, R>::vertex_descriptor vd = vertex_it.next();
+        typename chart<C, S, V, R>::marked_edges_index_type::marked_out_edge_iterator it =
+            ch.marked_edges_index(vd).marked_out_edges().first;
+        typename chart<C, S, V, R>::marked_edges_index_type::marked_out_edge_iterator end =
+            ch.marked_edges_index(vd).marked_out_edges().second;
+        while (it != end) {
+            ++edge_count;
+            ++it;
+        }
     }
-
-    ++vertex_it;
-    }
-
     return edge_count;
 }
 
@@ -83,31 +75,23 @@ int count_marked_out_edges(chart<C, S, V, R>& ch)
 template< class C, class S, class V, class R >
 int count_marked_in_edges(chart<C, S, V, R>& ch)
 {
-    typename chart<C, S, V, R>::vertex_iterator vertex_it = ch.vertices().first;
-    typename chart<C, S, V, R>::vertex_iterator vertex_end = ch.vertices().second;
-
+    typename chart<C, S, V, R>::vertex_iterator vertex_it = ch.vertices();
     int edge_count = 0;
-
-    while (vertex_it != vertex_end)
-    {
-    typename chart<C, S, V, R>::marked_edges_index_type::marked_in_edge_iterator it =
-        ch.marked_edges_index(*vertex_it).marked_in_edges().first;
-    typename chart<C, S, V, R>::marked_edges_index_type::marked_in_edge_iterator end =
-        ch.marked_edges_index(*vertex_it).marked_in_edges().second;
-
-    while (it != end)
-    {
-        ++edge_count;
-        ++it;
+    while (vertex_it.hasNext()) {
+        typename chart<C, S, V, R>::vertex_descriptor vd = vertex_it.next();
+        typename chart<C, S, V, R>::marked_edges_index_type::marked_in_edge_iterator it =
+            ch.marked_edges_index(vd).marked_in_edges().first;
+        typename chart<C, S, V, R>::marked_edges_index_type::marked_in_edge_iterator end =
+            ch.marked_edges_index(vd).marked_in_edges().second;
+        while (it != end) {
+            ++edge_count;
+            ++it;
+        }
     }
-
-    ++vertex_it;
-    }
-
     return edge_count;
 }
 
-*/
+
 template< class C, class S, class V, class R >
 bool is_vertex_consistent(chart<C, S, V, R>& ch, typename chart<C, S, V, R>::vertex_descriptor v)
 {

@@ -4,15 +4,17 @@ body { background:url("/img/bg-gradient.jpg") repeat-x #FFFFFF;
 
 .wrapper { width:900px; margin:0 auto -100px; min-height:100%; }
 #content { overflow:auto; padding-bottom:100px; }
-p { padding:6px 0; }
+p { padding:3px 0; }
 
 a { text-decoration: none; color: #335599; }
 a:hover { text-decoration: underline; }
 
 h1 { font-size:20px; padding:6px 0 12px 0; }
 h2 { font-size:16px; padding:6px 0; color:#1b4394; }
+h3 { padding:6px 0; color:#1b4394; }
 
-pre { font-family:monospace; font-size:13px; line-height:16px; }
+pre { font-family:monospace; font-size:13px; line-height:16px; padding: 6px 10px; margin:3px 10px;
+    background-color: #F8F8F8; border: 1px solid #CCCCCC; border-radius: 3px 3px 3px 3px;}
 code { font-family:monospace; color:#666; }
 
 ul, ol { padding:3px 0; }
@@ -57,7 +59,7 @@ input.alert { color: #FF0000; }
 
 /* Output */
 
-#output pre { border-width:1px; border-style:solid; padding:8px; }
+#output pre { border-width:1px; border-style:solid; padding:8px; overflow:scroll; }
 #download { margin-bottom: 50px; }
 
 /* Input bookmarks */
@@ -101,4 +103,9 @@ div.grippie { width: 760px; height: 8px; overflow: hidden; margin-left: 20px; cu
 /* Help list */
 
 #help-list { margin:0 0 20px 0; }
-#help-list pre { padding:20px; }
+.help-item { padding:10px 0; border-top: 1px dotted #CCC; }
+.help-example, .help-opts { margin-left:25px; }
+
+.help-opts > pre { background-color:transparent; border:none; padding:10px 0; color:#000; margin:0; }
+
+.example-desc { margin-top:6px; }

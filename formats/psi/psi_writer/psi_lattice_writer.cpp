@@ -180,10 +180,13 @@ void PsiLatticeWriter::Worker::doRun() {
             lattice_.getEdgeLayerTags(edge)
                 == lattice_.getLayerTagManager().createSingletonTagCollection("symbol")
         );
+        bool firstPartition = true;
         bool partitionBeginning = false;
         std::stringstream partSs;
         BOOST_FOREACH(Lattice::Partition partition, partitions) {
-            if (!partSs.str().empty()) {
+            if (firstPartition) {
+                firstPartition = false;
+            } else {
                 partSs << ",";
             }
             std::stringstream linkSs;
