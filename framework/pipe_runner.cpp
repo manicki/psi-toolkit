@@ -111,7 +111,9 @@ bool PipeRunner::stopAfterExecutingRunnerOptions_() {
     }
 
     if (runnerOptions_.count("version")) {
-        std::cout << "psi-toolkit" << ' ' << g_GIT_SHA1 << std::endl;
+        std::cout << "psi-toolkit ver."
+                  << ' ' << g_GIT_LAST_DATE
+                  << ' ' << g_GIT_SHA1 << std::endl;
 
         return true;
     }

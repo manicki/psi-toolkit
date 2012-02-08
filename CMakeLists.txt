@@ -41,6 +41,7 @@ MARK_AS_ADVANCED(
 list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake-modules/")
 include(GetGitRevisionDescription)
 get_git_head_revision(GIT_REFSPEC GIT_SHA1)
+git_last_date(GIT_LAST_DATE)
 
 # ----------------------------------------------------
 

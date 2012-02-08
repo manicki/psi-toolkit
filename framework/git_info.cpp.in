@@ -1,3 +1,5 @@
 #define GIT_SHA1 "@GIT_SHA1@"
+#define GIT_LAST_DATE "@GIT_LAST_DATE@"
 
 const char* g_GIT_SHA1 = GIT_SHA1;
+const char* g_GIT_LAST_DATE = GIT_LAST_DATE;
