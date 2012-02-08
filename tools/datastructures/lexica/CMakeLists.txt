@@ -7,3 +7,6 @@ add_library(tools-datastructures-lexica SHARED
 target_link_libraries(tools-datastructures-lexica cmph)
 
 add_subdirectory(t)
+
+install(TARGETS tools-datastructures-lexica DESTINATION lib/)
+
