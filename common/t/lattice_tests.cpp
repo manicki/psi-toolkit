@@ -1028,4 +1028,70 @@ BOOST_AUTO_TEST_CASE( lattice_vertices ) {
 }
 
 
+BOOST_AUTO_TEST_CASE( planes ) {
+    Lattice lattice("abcd");
+
+    LayerTagCollection tagsFoo(lattice.getLayerTagManager().createSingletonTagCollection("foo"));
+    LayerTagCollection tagsBar(lattice.getLayerTagManager().createSingletonTagCollection("bar"));
+    LayerTagCollection tagsP(lattice.getLayerTagManager().createSingletonTagCollection("!plane"));
+    BOOST_CHECK(lattice.getLayerTagManager().areInTheSamePlane(tagsFoo, tagsBar));
+    BOOST_CHECK(!lattice.getLayerTagManager().areInTheSamePlane(tagsFoo, tagsP));
+
+    Lattice::VertexDescriptor from = lattice.getVertexForRawCharIndex(1);
+    Lattice::VertexDescriptor to = lattice.getVertexForRawCharIndex(3);
+    AnnotationItem item("item");
+
+    int edgeCount = 0;
+    Lattice::InOutEdgesIterator ei = lattice.outEdges(from, lattice.getLayerTagManager().anyTag());
+    while (ei.hasNext()) {
+        if (lattice.getEdgeTarget(ei.next()) == to) {
+            ++edgeCount;
+        }
+    }
+    BOOST_CHECK_EQUAL(edgeCount, 0);
+
+    lattice.addEdge(from, to, item, tagsFoo);
+
+    edgeCount = 0;
+    ei = lattice.outEdges(from, lattice.getLayerTagManager().anyTag());
+    while (ei.hasNext()) {
+        if (lattice.getEdgeTarget(ei.next()) == to) {
+            ++edgeCount;
+        }
+    }
+    BOOST_CHECK_EQUAL(edgeCount, 1);
+
+    lattice.addEdge(from, to, item, tagsBar);
+
+    edgeCount = 0;
+    ei = lattice.outEdges(from, lattice.getLayerTagManager().anyTag());
+    while (ei.hasNext()) {
+        if (lattice.getEdgeTarget(ei.next()) == to) {
+            ++edgeCount;
+        }
+    }
+    BOOST_CHECK_EQUAL(edgeCount, 1);
+
+    lattice.addEdge(from, to, item, tagsP);
+
+    edgeCount = 0;
+    ei = lattice.outEdges(from, lattice.getLayerTagManager().anyTag());
+    while (ei.hasNext()) {
+        if (lattice.getEdgeTarget(ei.next()) == to) {
+            ++edgeCount;
+        }
+    }
+    BOOST_CHECK_EQUAL(edgeCount, 2);
+
+    edgeCount = 0;
+    ei = lattice.outEdges(from, lattice.getLayerTagManager().getMask("!plane"));
+    while (ei.hasNext()) {
+        if (lattice.getEdgeTarget(ei.next()) == to) {
+            ++edgeCount;
+        }
+    }
+    BOOST_CHECK_EQUAL(edgeCount, 1);
+}
+
+
 BOOST_AUTO_TEST_SUITE_END()
