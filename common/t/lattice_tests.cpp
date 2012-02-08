@@ -1028,4 +1028,15 @@ BOOST_AUTO_TEST_CASE( lattice_vertices ) {
 }
 
 
+BOOST_AUTO_TEST_CASE( planes ) {
+    Lattice lattice;
+    LayerTagCollection tagsFoo(lattice.getLayerTagManager().createSingletonTagCollection("foo"));
+    LayerTagCollection tagsBar(lattice.getLayerTagManager().createSingletonTagCollection("bar"));
+    LayerTagCollection tagsFooP(lattice.getLayerTagManager().createSingletonTagCollection("!foo"));
+    LayerTagCollection tagsBarP(lattice.getLayerTagManager().createSingletonTagCollection("!bar"));
+    BOOST_CHECK(lattice.areInTheSamePlane(tagsFoo, tagsBar));
+    BOOST_CHECK(!lattice.areInTheSamePlane(tagsFooP, tagsBarP));
+}
+
+
 BOOST_AUTO_TEST_SUITE_END()
