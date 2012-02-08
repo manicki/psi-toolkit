@@ -19,25 +19,28 @@
 #endif
 
 PipeRunner::PipeRunner(const std::string& pipeline)
-  : runnerOptionsDescription_("PipeRunner options") {
+    : justInformation_(false), runnerOptionsDescription_("PipeRunner options") {
 
     parseIntoGraph_<std::istream, std::ostream>(splitPipeline_(pipeline), false);
 }
 
 PipeRunner::PipeRunner(int argc, char* argv[])
-  : runnerOptionsDescription_("PipeRunner options") {
+    : justInformation_(false), runnerOptionsDescription_("PipeRunner options") {
 
     std::vector<std::string> args(argv, argv + argc);
     parseIntoGraph_<std::istream, std::ostream>(args, true);
 }
 
 PipeRunner::PipeRunner(std::vector<std::string> args)
-  : runnerOptionsDescription_("PipeRunner options") {
+    : justInformation_(false), runnerOptionsDescription_("PipeRunner options") {
 
     parseIntoGraph_<std::istream, std::ostream>(args, false);
 }
 
 int PipeRunner::run(std::istream& in, std::ostream& out) {
+    if (justInformation_)
+        return 0;
+
     return run_<std::istream, std::ostream>(in, out);
 }
 
@@ -51,7 +54,11 @@ template<typename Source, typename Sink>
 void PipeRunner::parseIntoGraph_(std::vector<std::string> args, bool isTheFirstArgProgramName) {
 
     parseRunnerProgramOptions_(args);
-    if (stopAfterExecutingRunnerOptions_()) return;
+    if (stopAfterExecutingRunnerOptions_()) {
+        justInformation_ = true;
+
+        return;
+    }
 
     if ( ! parseIntoPipelineSpecification_(
                                           args,

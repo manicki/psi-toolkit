@@ -43,6 +43,7 @@ public:
 
 private:
     PipelineSpecification pipelineSpecification_;
+    bool justInformation_;
 
     template<typename Source, typename Sink>
     void parseIntoGraph_(std::vector<std::string> args, bool isTheFirstArgProgramName);
