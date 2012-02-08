@@ -116,14 +116,17 @@ Lattice::EdgeDescriptor Lattice::addEdge(
         AnnotationItem
     > hkey(vpair, annotationItem);
 
+    std::vector<EdgeDescriptor> vectorOfOneEmptyEdgeDescriptor;
+    vectorOfOneEmptyEdgeDescriptor.push_back(EdgeDescriptor());
+
     std::pair<VVCHash::iterator, bool> insertResult(vvcHash_.insert(
         std::pair<
             std::pair<
                 std::pair<VertexDescriptor, VertexDescriptor>,
                 AnnotationItem
             >,
-            EdgeDescriptor
-        >(hkey, EdgeDescriptor())
+            std::vector<EdgeDescriptor>
+        >(hkey, vectorOfOneEmptyEdgeDescriptor)
     ));
 
     bool needToAddEdge = false;
@@ -131,7 +134,7 @@ Lattice::EdgeDescriptor Lattice::addEdge(
     if (insertResult.second) {
         needToAddEdge = true;
     } else {
-        EdgeDescriptor edge = (insertResult.first)->second;
+        EdgeDescriptor edge = (insertResult.first)->second.front();
         EdgeSequence::Iterator sequenceIter(*this, sequence);
         while (sequenceIter.hasNext()) {
             if (sequenceIter.next() == edge) {
@@ -184,7 +187,7 @@ Lattice::EdgeDescriptor Lattice::addEdge(
             && !implicitOutEdges_[from]
         ) {
             implicitOutEdges_.set(from, true);
-            (insertResult.first)->second = EdgeDescriptor(from);
+            (insertResult.first)->second.front() = EdgeDescriptor(from);
             return EdgeDescriptor(from);
         }
 
@@ -243,13 +246,13 @@ Lattice::EdgeDescriptor Lattice::addEdge(
                     hiddenImplicitOutEdges_[vd] = true;
                 }
             }
-            (insertResult.first)->second = EdgeDescriptor(result.first);
+            (insertResult.first)->second.front() = EdgeDescriptor(result.first);
             return EdgeDescriptor(result.first);
         }
 
     }
 
-    return (insertResult.first)->second;
+    return (insertResult.first)->second.front();
 }
 
 Lattice::EdgeDescriptor Lattice::addPartitionToEdge(

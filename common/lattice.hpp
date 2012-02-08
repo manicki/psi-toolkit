@@ -620,7 +620,7 @@ private:
             std::pair<VertexDescriptor, VertexDescriptor>,
             AnnotationItem
         >,
-        EdgeDescriptor,
+        std::vector<EdgeDescriptor>,
         HashFun
     >::type VVCHash;
 
