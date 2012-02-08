@@ -9,7 +9,7 @@ void ConsoleHelpFormatter::doFormatOneProcessorHelp(
 
     output << processorName << std::endl << description << std::endl;
 
-    if (usingExamples.size() > 0)
+    if (!usingExamples.empty())
         output << "To see one of the " << usingExamples.size()
             << " examples check installed files or visit PSI website."
             << std::endl << std::endl;

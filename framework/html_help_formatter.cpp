@@ -17,7 +17,7 @@ void HtmlHelpFormatter::doFormatOneProcessorHelp(
             << "</div>" << std::endl;
     }
 
-    if (usingExamples.size() > 0) {
+    if (!usingExamples.empty()) {
         formatUsingExamples(usingExamples, output);
     }
 
