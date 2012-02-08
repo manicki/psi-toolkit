@@ -61,4 +61,10 @@ public:
 };
 
 
+class EdgeInsertionException : public PsiException {
+public:
+    EdgeInsertionException(std::string message) : PsiException(message) { }
+};
+
+
 #endif

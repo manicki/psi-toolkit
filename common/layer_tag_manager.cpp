@@ -43,6 +43,15 @@ LayerTagCollection LayerTagManager::createTagCollection(LayerTagMask mask) {
         return result;
     }
     if (mask.isNone()) return LayerTagCollection();
+    if (mask.isPlane()) {
+        LayerTagCollection result = LayerTagCollection(m_.size());
+        for (size_t i = 0; i < m_.size(); ++i) {
+            if (m_.right.at(i).at(0) == '!') {
+                result.v_.set(i);
+            }
+        }
+        return result;
+    }
     return LayerTagCollection(mask.tags_);
 }
 
@@ -59,9 +68,17 @@ std::list<std::string> LayerTagManager::getTagNames(const LayerTagCollection& ta
     return result;
 }
 
+bool LayerTagManager::areInTheSamePlane(LayerTagCollection tags1, LayerTagCollection tags2) {
+    LayerTagCollection tagsPlane = createTagCollection(planeTags());
+    LayerTagCollection tagsP1 = createIntersection(tags1, tagsPlane);
+    LayerTagCollection tagsP2 = createIntersection(tags2, tagsPlane);
+    return tagsP1 == tagsP2;
+}
+
 bool LayerTagManager::match(LayerTagMask mask, std::string tagName) {
     if (mask.isAny()) return true;
     if (mask.isNone()) return false;
+    if (mask.isPlane()) return tagName.at(0) == '!';
     m_.insert(StringBimapItem(tagName, m_.size()));
     mask.tags_.resize_(m_.left.at(tagName) + 1);
     return mask.tags_.v_[m_.left.at(tagName)];

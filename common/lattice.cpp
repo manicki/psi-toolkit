@@ -107,31 +107,54 @@ Lattice::EdgeDescriptor Lattice::addEdge(
         throw ReversedEdgeException("Cannot add a reversed edge");
     }
 
+    // result of adding edge to the boost graph
     std::pair<Graph::edge_descriptor, bool> result;
 
+    // a key for the edge counter hash
     std::pair<VertexDescriptor, VertexDescriptor> vpair(from, to);
 
+    // a key for the VVC hash
     std::pair<
         std::pair<VertexDescriptor, VertexDescriptor>,
         AnnotationItem
     > hkey(vpair, annotationItem);
 
+    std::vector<EdgeDescriptor> vectorOfOneEmptyEdgeDescriptor;
+    // vectorOfOneEmptyEdgeDescriptor.push_back(EdgeDescriptor());
+
+    // firstly, we add an empty edge descriptor to the VVC hash,
+    // the proper edge addition will follow later
     std::pair<VVCHash::iterator, bool> insertResult(vvcHash_.insert(
         std::pair<
             std::pair<
                 std::pair<VertexDescriptor, VertexDescriptor>,
                 AnnotationItem
             >,
-            EdgeDescriptor
-        >(hkey, EdgeDescriptor())
+            std::vector<EdgeDescriptor>
+        >(hkey, vectorOfOneEmptyEdgeDescriptor)
     ));
 
+    // indicates if we need to add edge to the boost graph
     bool needToAddEdge = false;
 
-    if (insertResult.second) {
+    // finds an existing edge in the same plane
+    EdgeDescriptor isoplanarEdge;
+    bool isoplanarEdgeFound = false;
+    BOOST_FOREACH(EdgeDescriptor edge, (insertResult.first)->second) {
+        if (layerTagManager_.areInTheSamePlane(tags, getEdgeLayerTags(edge))) {
+            isoplanarEdge = edge;
+            isoplanarEdgeFound = true;
+            break;
+        }
+    }
+
+    // if there were no "such" edges in the VVC hash, we should add edge to the boost graph;
+    // otherwise we shall merge the new edge with the existing edge
+    // (unless the edges are in differet planes)
+    if (insertResult.second || !isoplanarEdgeFound) {
         needToAddEdge = true;
     } else {
-        EdgeDescriptor edge = (insertResult.first)->second;
+        EdgeDescriptor edge = isoplanarEdge;
         EdgeSequence::Iterator sequenceIter(*this, sequence);
         while (sequenceIter.hasNext()) {
             if (sequenceIter.next() == edge) {
@@ -160,12 +183,14 @@ Lattice::EdgeDescriptor Lattice::addEdge(
 
     if (needToAddEdge) {
 
+        // updating the edge counter hash
         if (!edgeCounterHash_[vpair]) {
             edgeCounterHash_[vpair] = 1;
         } else {
             ++edgeCounterHash_[vpair];
         }
 
+        // updating hidden edges, where applicable
         if (tags == getSymbolTag_()) {
             try {
                 firstOutEdge(from, getLayerTagManager().getMask(getSymbolTag_()));
@@ -176,6 +201,7 @@ Lattice::EdgeDescriptor Lattice::addEdge(
             }
         }
 
+        // updating implicit edges, where applicable
         if (
             !isLooseVertex(from)
             && !isLooseVertex(to)
@@ -184,9 +210,11 @@ Lattice::EdgeDescriptor Lattice::addEdge(
             && !implicitOutEdges_[from]
         ) {
             implicitOutEdges_.set(from, true);
-            (insertResult.first)->second = EdgeDescriptor(from);
+            (insertResult.first)->second.push_back(EdgeDescriptor(from));
             return EdgeDescriptor(from);
         }
+
+        // the real addition of the edge to the graph
 
         Graph::vertex_descriptor boost_from;
         Graph::vertex_descriptor boost_to;
@@ -243,13 +271,20 @@ Lattice::EdgeDescriptor Lattice::addEdge(
                     hiddenImplicitOutEdges_[vd] = true;
                 }
             }
-            (insertResult.first)->second = EdgeDescriptor(result.first);
+            (insertResult.first)->second.push_back(EdgeDescriptor(result.first));
             return EdgeDescriptor(result.first);
         }
 
     }
 
-    return (insertResult.first)->second;
+    // if there were no need for sdding new edge to the graph,
+    // the edge on the same plane is returned
+    if (isoplanarEdgeFound) {
+        return isoplanarEdge;
+    }
+
+    throw EdgeInsertionException("An error occured while adding edge");
+
 }
 
 Lattice::EdgeDescriptor Lattice::addPartitionToEdge(
@@ -679,6 +714,7 @@ int Lattice::countEdges(VertexDescriptor from, VertexDescriptor to) {
 int Lattice::countAllVertices() {
     return 1 + utf8::distance(allText_.begin(), allText_.end()) + nLooseVertices_;
 }
+
 
 int Lattice::addTagCollectionIndex_(LayerTagCollection tags) {
     TagCollectionsBimapLeftIterator li = indexedTagCollections_.left.find(tags);

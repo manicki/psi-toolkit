@@ -33,22 +33,22 @@ void HtmlHelpFormatter::formatUsingExamples(std::vector<TestBatch> batches,
 
     for (unsigned int i = 0; i < batches.size(); i++) {
        output << "<pre class=\"example-pipe\">"
-            << markdownString2String(batches[i].getPipeline())
-            << "</pre>" << std::endl;
+            << batches[i].getPipeline() << "</pre>" << std::endl;
 
        output << "<div class=\"example-desc\">"
-            << markdownString2String(batches[i].getDescription())
-            << "</div>" << std::endl;
+            << markdownString2String(batches[i].getDescription()) << "</div>" << std::endl;
 
         std::vector<TestRun> inOuts = batches[i].getTestRuns();
         for (unsigned int j = 0; j < inOuts.size(); j++) {
             output << "<div class=\"in-out\">" << std::endl;
 
             std::string fileContent = getFileContent(inOuts[j].getInputFilePath());
-            output << "<pre class=\"in\">" << fileContent << "</pre>" << std::endl;
+            output << "<div class=\"in\">in:</div>"
+                << "<pre>" << fileContent << "</pre>" << std::endl;
 
             fileContent = getFileContent(inOuts[j].getExpectedOutputFilePath());
-            output << "<pre class=\"out\">" << fileContent << "</pre>" << std::endl;
+            output << "<div class=\"out\">out:</div>"
+                << "<pre>" << fileContent << "</pre>" << std::endl;
             output << "</div>" << std::endl;
         }
     }
