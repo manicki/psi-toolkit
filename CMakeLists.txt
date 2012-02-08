@@ -36,6 +36,14 @@ MARK_AS_ADVANCED(
 
 # ----------------------------------------------------
 
+# extracting information from git, see http://stackoverflow.com/questions/1435953/how-can-i-pass-git-sha1-to-compiler-as-definition-using-cmake
+
+list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake-modules/")
+include(GetGitRevisionDescription)
+get_git_head_revision(GIT_REFSPEC GIT_SHA1)
+
+# ----------------------------------------------------
+
 include_directories(${psi-toolkit_SOURCE_DIR})
 
 # Logging

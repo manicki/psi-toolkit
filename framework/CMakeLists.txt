@@ -1,3 +1,5 @@
+configure_file("${CMAKE_CURRENT_SOURCE_DIR}/git_info.cpp.in" "${CMAKE_CURRENT_BINARY_DIR}/git_info.cpp" @ONLY)
+
 # library framework
 add_library(framework SHARED
     factories_keeper.cpp
@@ -6,6 +8,7 @@ add_library(framework SHARED
     console_help_formatter.cpp
     html_help_formatter.cpp
     pipe_runner.cpp
+    "${CMAKE_CURRENT_BINARY_DIR}/git_info.cpp"
 )
 
 target_link_libraries(framework ${Boost_LIBRARIES} pthread mpfd-parser ${BASE_TARGETS} pcre pcrecpp tools-parsers-puddle test-extractor)

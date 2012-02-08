@@ -13,6 +13,7 @@
 #include "console_help_formatter.hpp"
 
 #include "logging.hpp"
+#include "git_info.hpp"
 
 #if HAVE_PERL_BINDINGS
 #include "perl_lattice_writer_output.hpp"
@@ -94,6 +95,7 @@ void PipeRunner::setRunnerOptionsDescription_() {
          "Set logging level")
         ("log-file", boost::program_options::value<std::string>(),
          "Filepath to store logs (if not set: standard error)")
+        ("version", "output version information and exit")
         ;
 }
 
@@ -104,6 +106,12 @@ bool PipeRunner::stopAfterExecutingRunnerOptions_() {
         HelpFormatter* helpFormatter = new ConsoleHelpFormatter;
         helpFormatter->formatHelps(std::cout);
         delete helpFormatter;
+
+        return true;
+    }
+
+    if (runnerOptions_.count("version")) {
+        std::cout << "psi-toolkit" << ' ' << g_GIT_SHA1 << std::endl;
 
         return true;
     }
