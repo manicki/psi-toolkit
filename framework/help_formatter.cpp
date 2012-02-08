@@ -2,6 +2,7 @@
 #include <fstream>
 
 #include "help_formatter.hpp"
+#include "its_data.hpp"
 
 void HelpFormatter::formatOneProcessorHelp(
     std::string processorName, std::ostream& output) {
@@ -40,7 +41,7 @@ std::vector<TestBatch> HelpFormatter::getProcessorUsingExamples(std::string proc
         .getProcessorFactory(processorName).getFile();
 
     std::vector<boost::filesystem::path> directories;
-    directories.push_back(processorFile.parent_path());
+    directories.push_back(getItsData(processorFile));
 
     testExtractor_.clearTestBatches();
     testExtractor_.lookForTestBatches(directories, "help");
