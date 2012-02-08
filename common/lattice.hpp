@@ -485,6 +485,8 @@ public:
     int countEdges(VertexDescriptor from, VertexDescriptor to);
     int countAllVertices();
 
+    bool areInTheSamePlane(LayerTagCollection tags1, LayerTagCollection tags2);
+
 private:
 
     Graph graph_;

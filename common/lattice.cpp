@@ -680,6 +680,15 @@ int Lattice::countAllVertices() {
     return 1 + utf8::distance(allText_.begin(), allText_.end()) + nLooseVertices_;
 }
 
+bool Lattice::areInTheSamePlane(LayerTagCollection tags1, LayerTagCollection tags2) {
+    LayerTagCollection tagsPlane
+        = layerTagManager_.createTagCollection(layerTagManager_.planeTags());
+    LayerTagCollection tagsP1 = createIntersection(tags1, tagsPlane);
+    LayerTagCollection tagsP2 = createIntersection(tags2, tagsPlane);
+    return tagsP1 == tagsP2;
+}
+
+
 int Lattice::addTagCollectionIndex_(LayerTagCollection tags) {
     TagCollectionsBimapLeftIterator li = indexedTagCollections_.left.find(tags);
     if (li != indexedTagCollections_.left.end()) {
