@@ -40,3 +40,4 @@ if(HAVE_PERL_BINDINGS)
     find_package(PerlLibs)
 endif(HAVE_PERL_BINDINGS)
 
+install(TARGETS test-extractor DESTINATION lib/)
