@@ -20,6 +20,7 @@ public:
 
     /**
      * created union of two layertaglists
+     * mask1 and mask2 cannot be plane tag masks
      */
     friend LayerTagMask createUnion(
         LayerTagMask mask1,
@@ -40,18 +41,28 @@ private:
     /**
      * private constructor! only LayerTagManager can be used to create layer tag masks
      */
-    LayerTagMask(LayerTagCollection tags) : tags_(tags), any_(false), none_(false) { }
+    LayerTagMask(LayerTagCollection tags, bool plane = false) :
+        tags_(tags),
+        any_(false),
+        none_(false),
+        plane_(plane)
+    { }
 
     /**
      * private constructor! only LayerTagManager can be used to create layer tag masks.
      * Creates mask ANY if val==1 and mask NONE if val==0.
      */
-    LayerTagMask(bool val) : any_(val), none_(!val) { }
+    LayerTagMask(bool val) :
+        any_(val),
+        none_(!val),
+        plane_(false)
+    { }
 
     LayerTagCollection tags_;
 
     bool any_;
     bool none_;
+    bool plane_;
 
 };
 

@@ -20,6 +20,8 @@ LayerTagMask createUnion(
     LayerTagMask mask1,
     LayerTagMask mask2
 ) {
+    assert(!mask1.plane_);
+    assert(!mask2.plane_);
     if (mask1.any_ || mask2.any_) return LayerTagMask(true);
     if (mask1.none_) return mask2;
     if (mask2.none_) return mask1;
@@ -33,5 +35,5 @@ LayerTagMask createIntersection(
     if (mask1.none_ || mask2.none_) return LayerTagMask(false);
     if (mask1.any_) return mask2;
     if (mask2.any_) return mask1;
-    return LayerTagMask(createIntersection(mask1.tags_, mask2.tags_));
+    return LayerTagMask(createIntersection(mask1.tags_, mask2.tags_), mask1.plane_||mask2.plane_);
 }
