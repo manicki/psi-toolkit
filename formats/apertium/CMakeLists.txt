@@ -1,5 +1,5 @@
 add_library(formats-apertium SHARED
-    apertium_reader/apertium_reader.cpp
+    apertium_reader/apertium_lattice_reader.cpp
     apertium_reader/apertium_deformatter.cpp
 )
 
