@@ -65,6 +65,8 @@ public:
         return LayerTagMask(false, false, true);
     }
 
+    bool areInTheSamePlane(LayerTagCollection tags1, LayerTagCollection tags2);
+
     bool match(LayerTagMask mask, std::string tagName);
 
 private:

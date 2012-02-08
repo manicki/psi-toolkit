@@ -68,6 +68,13 @@ std::list<std::string> LayerTagManager::getTagNames(const LayerTagCollection& ta
     return result;
 }
 
+bool LayerTagManager::areInTheSamePlane(LayerTagCollection tags1, LayerTagCollection tags2) {
+    LayerTagCollection tagsPlane = createTagCollection(planeTags());
+    LayerTagCollection tagsP1 = createIntersection(tags1, tagsPlane);
+    LayerTagCollection tagsP2 = createIntersection(tags2, tagsPlane);
+    return tagsP1 == tagsP2;
+}
+
 bool LayerTagManager::match(LayerTagMask mask, std::string tagName) {
     if (mask.isAny()) return true;
     if (mask.isNone()) return false;

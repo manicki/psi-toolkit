@@ -125,4 +125,14 @@ BOOST_AUTO_TEST_CASE( tags_masks ) {
     BOOST_CHECK(layer_tag_manager.match(maskPlane, "!foo"));
 }
 
+BOOST_AUTO_TEST_CASE( planes ) {
+    LayerTagManager layerTagManager;
+    LayerTagCollection tagsFoo(layerTagManager.createSingletonTagCollection("foo"));
+    LayerTagCollection tagsBar(layerTagManager.createSingletonTagCollection("bar"));
+    LayerTagCollection tagsFooP(layerTagManager.createSingletonTagCollection("!foo"));
+    LayerTagCollection tagsBarP(layerTagManager.createSingletonTagCollection("!bar"));
+    BOOST_CHECK(layerTagManager.areInTheSamePlane(tagsFoo, tagsBar));
+    BOOST_CHECK(!layerTagManager.areInTheSamePlane(tagsFooP, tagsBarP));
+}
+
 BOOST_AUTO_TEST_SUITE_END()

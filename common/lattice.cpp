@@ -681,11 +681,7 @@ int Lattice::countAllVertices() {
 }
 
 bool Lattice::areInTheSamePlane(LayerTagCollection tags1, LayerTagCollection tags2) {
-    LayerTagCollection tagsPlane
-        = layerTagManager_.createTagCollection(layerTagManager_.planeTags());
-    LayerTagCollection tagsP1 = createIntersection(tags1, tagsPlane);
-    LayerTagCollection tagsP2 = createIntersection(tags2, tagsPlane);
-    return tagsP1 == tagsP2;
+    return layerTagManager_.areInTheSamePlane(tags1, tags2);
 }
 
 
