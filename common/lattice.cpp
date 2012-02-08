@@ -141,7 +141,7 @@ Lattice::EdgeDescriptor Lattice::addEdge(
     EdgeDescriptor isoplanarEdge;
     bool isoplanarEdgeFound = false;
     BOOST_FOREACH(EdgeDescriptor edge, (insertResult.first)->second) {
-        if (areInTheSamePlane(tags, getEdgeLayerTags(edge))) {
+        if (layerTagManager_.areInTheSamePlane(tags, getEdgeLayerTags(edge))) {
             isoplanarEdge = edge;
             isoplanarEdgeFound = true;
             break;
@@ -713,10 +713,6 @@ int Lattice::countEdges(VertexDescriptor from, VertexDescriptor to) {
 
 int Lattice::countAllVertices() {
     return 1 + utf8::distance(allText_.begin(), allText_.end()) + nLooseVertices_;
-}
-
-bool Lattice::areInTheSamePlane(LayerTagCollection tags1, LayerTagCollection tags2) {
-    return layerTagManager_.areInTheSamePlane(tags1, tags2);
 }
 
 
