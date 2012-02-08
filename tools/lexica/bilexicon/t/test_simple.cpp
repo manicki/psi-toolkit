@@ -29,9 +29,10 @@ BOOST_AUTO_TEST_CASE( bilexicon_simple ) {
     const int argc = 3;
 
     boost::program_options::variables_map options;
+    // const_casting because of Boost 1.42 bug
     boost::program_options::store(
         boost::program_options::parse_command_line(
-            argc, argv, BiLexicon::optionsHandled()), options);
+            argc, const_cast<char**>(argv), BiLexicon::optionsHandled()), options);
     boost::program_options::notify(options);
 
     BiLexicon biLexicon(options);
@@ -63,7 +64,7 @@ BOOST_AUTO_TEST_CASE( bilexicon_save_and_load ) {
         boost::program_options::variables_map options;
         boost::program_options::store(
             boost::program_options::parse_command_line(
-                argc, argv, BiLexicon::optionsHandled()), options);
+                argc, const_cast<char**>(argv), BiLexicon::optionsHandled()), options);
         boost::program_options::notify(options);
 
         BiLexicon biLexicon(options);
@@ -84,7 +85,7 @@ BOOST_AUTO_TEST_CASE( bilexicon_save_and_load ) {
         boost::program_options::variables_map options;
         boost::program_options::store(
             boost::program_options::parse_command_line(
-                argc, argv, BiLexicon::optionsHandled()), options);
+                argc, const_cast<char**>(argv), BiLexicon::optionsHandled()), options);
 
         boost::program_options::notify(options);
 
