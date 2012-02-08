@@ -13,6 +13,8 @@ public:
 
     bool isAny() const;
 
+    bool isPlane() const;
+
     /**
      * method for compatibility with boost::bimap
      */
@@ -41,11 +43,11 @@ private:
     /**
      * private constructor! only LayerTagManager can be used to create layer tag masks
      */
-    LayerTagMask(LayerTagCollection tags, bool plane = false) :
+    LayerTagMask(LayerTagCollection tags) :
         tags_(tags),
         any_(false),
         none_(false),
-        plane_(plane)
+        plane_(false)
     { }
 
     /**
@@ -56,6 +58,15 @@ private:
         any_(val),
         none_(!val),
         plane_(false)
+    { }
+
+    /**
+     * private constructor! only LayerTagManager can be used to create layer tag masks.
+     */
+    LayerTagMask(bool any, bool none, bool plane) :
+        any_(any),
+        none_(none),
+        plane_(plane)
     { }
 
     LayerTagCollection tags_;

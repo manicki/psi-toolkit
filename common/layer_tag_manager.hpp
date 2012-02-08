@@ -61,6 +61,10 @@ public:
         return getMask(createTagCollection(tagNames));
     }
 
+    LayerTagMask planeTags() {
+        return LayerTagMask(false, false, true);
+    }
+
     bool match(LayerTagMask mask, std::string tagName);
 
 private:
