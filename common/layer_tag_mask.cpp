@@ -1,7 +1,7 @@
 #include "layer_tag_mask.hpp"
 
 bool LayerTagMask::isNone() {
-    return none_ || (tags_.isEmpty() && (none_ = true));
+    return none_ || (!any_ && !plane_ && tags_.isEmpty() && (none_ = true));
 }
 
 bool LayerTagMask::isSome() {
