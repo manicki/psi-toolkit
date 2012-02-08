@@ -133,6 +133,30 @@ BOOST_AUTO_TEST_CASE( planes ) {
     LayerTagCollection tagsBarP(layerTagManager.createSingletonTagCollection("!bar"));
     BOOST_CHECK(layerTagManager.areInTheSamePlane(tagsFoo, tagsBar));
     BOOST_CHECK(!layerTagManager.areInTheSamePlane(tagsFooP, tagsBarP));
+
+    {
+        std::list<std::string> namesList1;
+        namesList1.push_back("foo");
+        namesList1.push_back("!boo");
+        LayerTagCollection tags1 = layerTagManager.createTagCollectionFromList(namesList1);
+        std::list<std::string> namesList2;
+        namesList2.push_back("bar");
+        namesList2.push_back("!boo");
+        LayerTagCollection tags2 = layerTagManager.createTagCollectionFromList(namesList2);
+        BOOST_CHECK(layerTagManager.areInTheSamePlane(tags1, tags2));
+    }
+
+    {
+        std::list<std::string> namesList1;
+        namesList1.push_back("!foo");
+        namesList1.push_back("boo");
+        LayerTagCollection tags1 = layerTagManager.createTagCollectionFromList(namesList1);
+        std::list<std::string> namesList2;
+        namesList2.push_back("!bar");
+        namesList2.push_back("boo");
+        LayerTagCollection tags2 = layerTagManager.createTagCollectionFromList(namesList2);
+        BOOST_CHECK(!layerTagManager.areInTheSamePlane(tags1, tags2));
+    }
 }
 
 BOOST_AUTO_TEST_SUITE_END()
