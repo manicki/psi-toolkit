@@ -16,6 +16,7 @@ add_library(common SHARED
     cutter_annotator_options.cpp
     escaping.cpp
     file_fetcher.cpp
+    its_data.cpp
     language_dependent_annotator_factory.cpp
     lattice.cpp
     lattice_iter_writer.cpp
