@@ -107,10 +107,13 @@ Lattice::EdgeDescriptor Lattice::addEdge(
         throw ReversedEdgeException("Cannot add a reversed edge");
     }
 
+    // result of adding edge to the boost graph
     std::pair<Graph::edge_descriptor, bool> result;
 
+    // a key for the edge counter hash
     std::pair<VertexDescriptor, VertexDescriptor> vpair(from, to);
 
+    // a key for the VVC hash
     std::pair<
         std::pair<VertexDescriptor, VertexDescriptor>,
         AnnotationItem
@@ -119,6 +122,8 @@ Lattice::EdgeDescriptor Lattice::addEdge(
     std::vector<EdgeDescriptor> vectorOfOneEmptyEdgeDescriptor;
     vectorOfOneEmptyEdgeDescriptor.push_back(EdgeDescriptor());
 
+    // firstly, we add an empty edge descriptor to the VVC hash,
+    // the proper edge addition will follow later
     std::pair<VVCHash::iterator, bool> insertResult(vvcHash_.insert(
         std::pair<
             std::pair<
@@ -129,8 +134,12 @@ Lattice::EdgeDescriptor Lattice::addEdge(
         >(hkey, vectorOfOneEmptyEdgeDescriptor)
     ));
 
+    // indicates if we need to add edge to the boost graph
     bool needToAddEdge = false;
 
+    // if there were no "such" edges in the VVC hash, we should add edge to the boost graph;
+    // otherwise we shall merge the new edge with the existing edge
+    // (unless the edges are in differet planes)
     if (insertResult.second) {
         needToAddEdge = true;
     } else {
@@ -163,12 +172,14 @@ Lattice::EdgeDescriptor Lattice::addEdge(
 
     if (needToAddEdge) {
 
+        // updating the edge counter hash
         if (!edgeCounterHash_[vpair]) {
             edgeCounterHash_[vpair] = 1;
         } else {
             ++edgeCounterHash_[vpair];
         }
 
+        // updating hidden edges, where applicable
         if (tags == getSymbolTag_()) {
             try {
                 firstOutEdge(from, getLayerTagManager().getMask(getSymbolTag_()));
@@ -179,6 +190,7 @@ Lattice::EdgeDescriptor Lattice::addEdge(
             }
         }
 
+        // updating implicit edges, where applicable
         if (
             !isLooseVertex(from)
             && !isLooseVertex(to)
@@ -190,6 +202,8 @@ Lattice::EdgeDescriptor Lattice::addEdge(
             (insertResult.first)->second.front() = EdgeDescriptor(from);
             return EdgeDescriptor(from);
         }
+
+        // the real addition of the edge to the graph
 
         Graph::vertex_descriptor boost_from;
         Graph::vertex_descriptor boost_to;
