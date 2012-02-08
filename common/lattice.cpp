@@ -120,7 +120,7 @@ Lattice::EdgeDescriptor Lattice::addEdge(
     > hkey(vpair, annotationItem);
 
     std::vector<EdgeDescriptor> vectorOfOneEmptyEdgeDescriptor;
-    vectorOfOneEmptyEdgeDescriptor.push_back(EdgeDescriptor());
+    // vectorOfOneEmptyEdgeDescriptor.push_back(EdgeDescriptor());
 
     // firstly, we add an empty edge descriptor to the VVC hash,
     // the proper edge addition will follow later
@@ -137,13 +137,24 @@ Lattice::EdgeDescriptor Lattice::addEdge(
     // indicates if we need to add edge to the boost graph
     bool needToAddEdge = false;
 
+    // finds an existing edge in the same plane
+    EdgeDescriptor isoplanarEdge;
+    bool isoplanarEdgeFound = false;
+    BOOST_FOREACH(EdgeDescriptor edge, (insertResult.first)->second) {
+        if (areInTheSamePlane(tags, getEdgeLayerTags(edge))) {
+            isoplanarEdge = edge;
+            isoplanarEdgeFound = true;
+            break;
+        }
+    }
+
     // if there were no "such" edges in the VVC hash, we should add edge to the boost graph;
     // otherwise we shall merge the new edge with the existing edge
     // (unless the edges are in differet planes)
-    if (insertResult.second) {
+    if (insertResult.second || !isoplanarEdgeFound) {
         needToAddEdge = true;
     } else {
-        EdgeDescriptor edge = (insertResult.first)->second.front();
+        EdgeDescriptor edge = isoplanarEdge;
         EdgeSequence::Iterator sequenceIter(*this, sequence);
         while (sequenceIter.hasNext()) {
             if (sequenceIter.next() == edge) {
@@ -199,7 +210,7 @@ Lattice::EdgeDescriptor Lattice::addEdge(
             && !implicitOutEdges_[from]
         ) {
             implicitOutEdges_.set(from, true);
-            (insertResult.first)->second.front() = EdgeDescriptor(from);
+            (insertResult.first)->second.push_back(EdgeDescriptor(from));
             return EdgeDescriptor(from);
         }
 
@@ -260,13 +271,20 @@ Lattice::EdgeDescriptor Lattice::addEdge(
                     hiddenImplicitOutEdges_[vd] = true;
                 }
             }
-            (insertResult.first)->second.front() = EdgeDescriptor(result.first);
+            (insertResult.first)->second.push_back(EdgeDescriptor(result.first));
             return EdgeDescriptor(result.first);
         }
 
     }
 
-    return (insertResult.first)->second.front();
+    // if there were no need for sdding new edge to the graph,
+    // the edge on the same plane is returned
+    if (isoplanarEdgeFound) {
+        return isoplanarEdge;
+    }
+
+    throw EdgeInsertionException("An error occured while adding edge");
+
 }
 
 Lattice::EdgeDescriptor Lattice::addPartitionToEdge(
