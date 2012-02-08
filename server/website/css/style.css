@@ -59,7 +59,7 @@ input.alert { color: #FF0000; }
 
 /* Output */
 
-#output pre { border-width:1px; border-style:solid; padding:8px; overflow:scroll; }
+#output pre { border-width:1px; border-style:solid; padding:8px; }
 #download { margin-bottom: 50px; }
 
 /* Input bookmarks */
@@ -105,7 +105,10 @@ div.grippie { width: 760px; height: 8px; overflow: hidden; margin-left: 20px; cu
 #help-list { margin:0 0 20px 0; }
 .help-item { padding:10px 0; border-top: 1px dotted #CCC; }
 .help-example, .help-opts { margin-left:25px; }
-
-.help-opts > pre { background-color:transparent; border:none; padding:10px 0; color:#000; margin:0; }
-
 .example-desc { margin-top:6px; }
+
+.in, .out { float:left; line-height:30px; width:25px; text-align:right; font-weight:bold; }
+.in-out pre { margin-left:35px; }
+
+.help-opts > pre { background-color:transparent; border:none; padding:10px 0; margin:0;
+    color:#000; }
