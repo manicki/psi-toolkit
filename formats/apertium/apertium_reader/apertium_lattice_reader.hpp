@@ -1,6 +1,8 @@
 #ifndef APERTIUM_LATTICE_READER_HDR
 #define APERTIUM_LATTICE_READER_HDR
 
+#include <string>
+
 #include "stream_lattice_reader.hpp"
 #include "lattice_reader_factory.hpp"
 
@@ -11,6 +13,9 @@
 class ApertiumLatticeReader : public StreamLatticeReader {
 
 public:
+
+    ApertiumLatticeReader(const boost::filesystem::path&);
+
     std::string getFormatName();
 
     class Factory : public LatticeReaderFactory<std::istream> {
@@ -25,6 +30,8 @@ public:
 
         virtual std::string doGetName();
         virtual boost::filesystem::path doGetFile();
+
+        static const std::string DEFAULT_SPEC_FILES_DIR;
     };
 
 private:
@@ -49,6 +56,7 @@ private:
     }
 
     ApertiumDeformatter apertiumDeformatter_;
+    boost::filesystem::path specificationFile_;
 
 };
 

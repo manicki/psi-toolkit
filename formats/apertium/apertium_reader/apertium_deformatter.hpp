@@ -7,6 +7,8 @@ public:
 
     ApertiumDeformatter();
 
+    //deformat(const std::string& input,const boost::filesystem::path& specFilePath);
+
 private:
 
 
