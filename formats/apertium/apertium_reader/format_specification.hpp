@@ -5,8 +5,9 @@
 
 #include <boost/filesystem.hpp>
 
-class FormatSpecification {
+#include "format_rules.hpp"
 
+class FormatSpecification {
 public:
 
     FormatSpecification(const boost::filesystem::path& path);

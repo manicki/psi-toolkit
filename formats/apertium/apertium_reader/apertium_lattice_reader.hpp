@@ -11,7 +11,6 @@
 #include "apertium_deformatter.hpp"
 
 class ApertiumLatticeReader : public StreamLatticeReader {
-
 public:
 
     ApertiumLatticeReader(const boost::filesystem::path&);
@@ -37,6 +36,7 @@ public:
     };
 
 private:
+
     virtual std::string doInfo();
 
     class Worker : public ReaderWorker<std::istream> {

@@ -8,7 +8,6 @@
 #include "format_specification.hpp"
 
 class ApertiumDeformatter {
-
 public:
 
     ApertiumDeformatter(const boost::filesystem::path& specificationFile);

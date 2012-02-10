@@ -6,7 +6,7 @@ ApertiumDeformatter::ApertiumDeformatter(const boost::filesystem::path& specific
 }
 
 std::string ApertiumDeformatter::deformat(const std::string& input) {
-    std::string output = "fake apertium ouput";
+    std::string output = "fake apertium output";
 
     return output;
 }
