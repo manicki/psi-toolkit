@@ -1,22 +1,29 @@
 #include <boost/algorithm/string/trim.hpp>
 
 #include "apertium_lattice_reader.hpp"
+#include "processor_file_fetcher.cpp"
 
 
 std::string ApertiumLatticeReader::getFormatName() {
     return "Apertium";
 }
+
 std::string ApertiumLatticeReader::doInfo() {
     return "Apertium reader";
 }
 
+std::string ApertiumLatticeReader::deformat(const std::string& input) {
+    return apertiumDeformatter_.deformat(input);
+}
+
 
 const std::string ApertiumLatticeReader::Factory::DEFAULT_SPEC_FILES_DIR = "%ITSDATA%/";
+const std::string ApertiumLatticeReader::Factory::DEFAULT_SPEC_FILE_ENDING = "-format.xml";
 
 ApertiumLatticeReader::ApertiumLatticeReader(const boost::filesystem::path& specificationFile)
-    : specificationFile_(specificationFile) {
+    : apertiumDeformatter_(specificationFile) {
 
-    SET_LOGGING_LEVEL("DEBUG");
+    SET_LOGGING_LEVEL("DEBUG"); //FIXME
 }
 
 ApertiumLatticeReader::Factory::~Factory() { }
@@ -24,15 +31,18 @@ ApertiumLatticeReader::Factory::~Factory() { }
 LatticeReader<std::istream>* ApertiumLatticeReader::Factory::doCreateLatticeReader(
     const boost::program_options::variables_map& options) {
 
-    boost::filesystem::path specificationFile;
+    std::string specFilePath;
 
     if (options.count("specification-file")) {
-        specificationFile = options["specification-file"].as<std::string>();
+        specFilePath = options["specification-file"].as<std::string>();
     }
     else {
-        specificationFile = DEFAULT_SPEC_FILES_DIR + "/"
-            + options["file-type"].as<std::string>() + ".xml";
+        specFilePath = DEFAULT_SPEC_FILES_DIR + "/"
+            + options["format"].as<std::string>() + DEFAULT_SPEC_FILE_ENDING;
     }
+
+    ProcessorFileFetcher fileFetcher(__FILE__);
+    boost::filesystem::path specificationFile = fileFetcher.getOneFile(specFilePath);
 
     return new ApertiumLatticeReader(specificationFile);
 }
@@ -41,7 +51,7 @@ boost::program_options::options_description ApertiumLatticeReader::Factory::doOp
     boost::program_options::options_description optionsDescription("Allowed options");
 
     optionsDescription.add_options()
-        ("file-type", boost::program_options::value<std::string>()
+        ("format", boost::program_options::value<std::string>()
             ->default_value("xhtml"),
             "type of file to deformatting")
         ("specification-file", boost::program_options::value<std::string>(),
@@ -74,7 +84,9 @@ void ApertiumLatticeReader::Worker::doRun() {
         if (boost::algorithm::trim_copy(line).empty()) {
             continue;
         }
-        input += line;
+        input += line + "\n";
     }
-    INFO(input);
+
+    std::string output = processor_.deformat(input);
+    DEBUG(output);
 }

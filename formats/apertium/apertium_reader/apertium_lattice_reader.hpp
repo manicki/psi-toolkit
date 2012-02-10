@@ -17,6 +17,7 @@ public:
     ApertiumLatticeReader(const boost::filesystem::path&);
 
     std::string getFormatName();
+    std::string deformat(const std::string& input);
 
     class Factory : public LatticeReaderFactory<std::istream> {
     public:
@@ -32,6 +33,7 @@ public:
         virtual boost::filesystem::path doGetFile();
 
         static const std::string DEFAULT_SPEC_FILES_DIR;
+        static const std::string DEFAULT_SPEC_FILE_ENDING;
     };
 
 private:
