@@ -10,13 +10,14 @@
 class ApertiumDeformatter {
 public:
 
-    ApertiumDeformatter(const boost::filesystem::path& specificationFile);
+    ApertiumDeformatter(const boost::filesystem::path& specFilePath);
 
     std::string deformat(const std::string& input);
 
 private:
 
     FormatSpecification formatSpecification_;
+    FormatSpecification initializeFormatSpecification_(const boost::filesystem::path& path);
 
 };
 
