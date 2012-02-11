@@ -69,7 +69,8 @@ boost::program_options::options_description BiLexicon::optionsHandled() {
 std::list<std::string> BiLexicon::providedLayerTags() {
     return boost::assign::list_of
         (std::string("lexeme"))
-        (std::string("bilexicon"));
+        (std::string("bilexicon"))
+        (std::string("!translation"));
 }
 
 std::list<std::string> BiLexicon::tagsToOperateOn() {
@@ -96,14 +97,17 @@ void BiLexicon::addEntry_(
     Lattice& lattice, Lattice::EdgeDescriptor edge, const std::string& record) {
 
     LayerTagCollection tags = lattice.getLayerTagManager().createTagCollectionFromList(
-        boost::assign::list_of("lexeme")("bilexicon"));
+        providedLayerTags());
+
+    Lattice::EdgeSequence::Builder builder(lattice);
+    builder.addEdge(edge);
 
     lattice.addEdge(
         lattice.getEdgeSource(edge),
         lattice.getEdgeTarget(edge),
         parseRecord_(record),
-        tags);
-
+        tags,
+        builder.build());
 }
 
 AnnotationItem BiLexicon::parseRecord_(const std::string& record) {
