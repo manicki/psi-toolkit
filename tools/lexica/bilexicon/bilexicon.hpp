@@ -3,6 +3,7 @@
 
 #include "lattice.hpp"
 #include "key_value_store.hpp"
+#include "utt_like_quoter.hpp"
 
 #include <boost/filesystem.hpp>
 #include <boost/shared_ptr.hpp>
@@ -39,6 +40,7 @@ private:
     AnnotationItem parseRecord_(const std::string& record);
 
     boost::shared_ptr<KeyValueStore> store_;
+    UTTLikeQuoter quoter_;
 };
 
 #endif

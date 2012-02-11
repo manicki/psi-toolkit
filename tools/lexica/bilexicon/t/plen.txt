@@ -8,3 +8,4 @@ kanał+subst canal+subst
 tablica+subst board+subst;table+subst;array+subst
 garnek+subst pot+subst
 pot+subst sweat+subst
+agrafka+subst safety_pin+subst

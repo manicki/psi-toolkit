@@ -139,6 +139,10 @@ void BiLexicon::readPlainText_(const boost::filesystem::path& plainTextLexicon) 
                          fields.begin(), fields.end(),
                          boost::bind( &std::string::empty, _1 )), fields.end());
 
+        BOOST_FOREACH(std::string& field, fields) {
+            field = quoter_.unescape(field);
+        }
+
         if (fields.size() != 2)
             throw Exception(
                 std::string("two fields expected in plain text bilexicon, was: `")

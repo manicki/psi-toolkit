@@ -45,6 +45,10 @@ BOOST_AUTO_TEST_CASE( bilexicon_simple ) {
     testOnLattice(biLexicon, "nauskopii", "nauskopia+subst", "subst",
                   std::list<std::string>());
 
+    testOnLattice(biLexicon, "agrafki", "agrafka+subst", "subst",
+                  boost::assign::list_of("safety pin+subst"));
+
+
 }
 
 BOOST_AUTO_TEST_CASE( bilexicon_save_and_load ) {
@@ -99,6 +103,9 @@ BOOST_AUTO_TEST_CASE( bilexicon_save_and_load ) {
 
         testOnLattice(biLexicon, "nauskopii", "nauskopia+subst", "subst",
                       std::list<std::string>());
+
+        testOnLattice(biLexicon, "agrafki", "agrafka+subst", "subst",
+                      boost::assign::list_of("safety pin+subst"));
     }
 
     free(tmpFile);
