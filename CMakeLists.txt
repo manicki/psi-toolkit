@@ -90,7 +90,7 @@ option(USE_JAVA "Compiling Java components" OFF)
 message(STATUS "Compiling Java components ${USE_JAVA}")
 
 option(DOWNLOAD_DATA "Downloading data (artifacts)" ON)
-message(STATUS "Compiling Java components ${USE_JAVA}")
+message(STATUS "Downloading data (artifacts) ${DOWNLOAD_DATA}")
 
 if(USE_JAVA)
     enable_language(Java)
