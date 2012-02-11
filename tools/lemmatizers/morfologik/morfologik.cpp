@@ -1,5 +1,6 @@
 #include "morfologik.hpp"
 #include "logging.hpp"
+#include "config.hpp"
 
 #include <iostream>
 #include <boost/algorithm/string.hpp>
@@ -161,7 +162,7 @@ AnnotationItem Morfologik::createLexemeAnnotation(
     std::map<std::string, std::string>::iterator atr;
 
     std::string partOfSpeech = attributes["pos"];
-    std::string wordId = stem + "_" + partOfSpeech;
+    std::string wordId = stem + LEMMA_CATEGORY_SEPARATOR + partOfSpeech;
     attributes.erase("pos");
 
     AnnotationItem lexeme(partOfSpeech, StringFrag(wordId));

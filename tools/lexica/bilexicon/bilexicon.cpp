@@ -1,4 +1,5 @@
 #include "bilexicon.hpp"
+#include "config.hpp"
 
 #include <boost/filesystem/fstream.hpp>
 #include <boost/algorithm/string.hpp>
@@ -106,12 +107,12 @@ void BiLexicon::addEntry_(
 }
 
 AnnotationItem BiLexicon::parseRecord_(const std::string& record) {
-    size_t underscorePos = record.find_first_of('_');
+    size_t separatorPos = record.find_first_of(LEMMA_CATEGORY_SEPARATOR);
 
     std::string category =
-        (underscorePos == std::string::npos
+        (separatorPos == std::string::npos
          ? record
-         : record.substr(underscorePos + 1));
+         : record.substr(separatorPos + 1));
 
     return AnnotationItem(category, StringFrag(record));
 }
