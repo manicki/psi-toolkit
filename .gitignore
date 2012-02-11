@@ -14,3 +14,4 @@ server/website/storage/*
 \#*\#
 bindings/python/Test/__pycache__
 gcov.output.data
+tools/lexica/bilexicon/data/plen.bin
