@@ -1,9 +1,11 @@
+# comment
+
 komputer+subst  computer+subst
 być+verb  be+verb
 mieć+verb have+verb
 dobry+adj good+adj
 kot+subst cat+subst
-kanał+subst channel+subst
+kanał+subst channel+subst # comment at the end of line
 kanał+subst canal+subst
 tablica+subst board+subst;table+subst;array+subst
 garnek+subst pot+subst

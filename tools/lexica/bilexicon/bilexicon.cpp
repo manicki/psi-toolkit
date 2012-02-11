@@ -133,6 +133,11 @@ void BiLexicon::readPlainText_(const boost::filesystem::path& plainTextLexicon) 
     bool firstEntry = true;
 
     while (std::getline(plainTextStream, line)) {
+        removeComment_(line);
+
+        if (isEmptyLine_(line))
+            continue;
+
         std::vector<std::string> fields;
         boost::split(fields, line, boost::is_any_of("\t "));
         fields.erase(std::remove_if(
@@ -182,4 +187,15 @@ void BiLexicon::saveBinary_(const boost::filesystem::path& binaryLexiconPath) {
 void BiLexicon::loadBinary_(const boost::filesystem::path& binaryLexiconPath) {
     store_.reset(new KeyValueStore());
     store_->load(binaryLexiconPath.string());
+}
+
+void BiLexicon::removeComment_(std::string& s) {
+    size_t hashPos = s.find_first_of('#');
+
+    if (hashPos != std::string::npos)
+        s = s.substr(0, hashPos);
+}
+
+bool BiLexicon::isEmptyLine_(const std::string& s) {
+    return s.find_first_not_of(" \t");
 }
