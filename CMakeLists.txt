@@ -89,6 +89,9 @@ message(STATUS "Is prepared for install ${IS_INSTALLABLE}")
 option(USE_JAVA "Compiling Java components" OFF)
 message(STATUS "Compiling Java components ${USE_JAVA}")
 
+option(DOWNLOAD_DATA "Downloading data (artifacts)" ON)
+message(STATUS "Downloading data (artifacts) ${DOWNLOAD_DATA}")
+
 if(USE_JAVA)
     enable_language(Java)
 
@@ -254,3 +257,28 @@ endif(USE_PUDDLE)
 add_subdirectory(tests)
 
 configure_file(${psi-toolkit_SOURCE_DIR}/common/config.hpp.in ${psi-toolkit_SOURCE_DIR}/common/config.hpp)
+
+function(download_artifact FILE)
+  set(_url
+      "http://mrt.wmi.amu.edu.pl:8080/job/psi-toolkit-data/lastSuccessfulBuild/artifact/psi-toolkit-data/${FILE}")
+
+  message(STATUS "Downloading ${_url}...")
+  file(DOWNLOAD
+      "${_url}"
+      "${psi-toolkit_SOURCE_DIR}/${FILE}"
+      STATUS status)
+
+  list(GET status 0 _status )
+  list(GET status 1 _status_message )
+
+  if (NOT ${_status} EQUAL 0)
+     file(REMOVE "${psi-toolkit_SOURCE_DIR}/${FILE}")
+     message(FATAL_ERROR
+             "Cannot download ${_url}:${_status_message}. Try running cmake with -DDOWNLOAD_DATA=OFF")
+  endif()
+
+endfunction(download_artifact)
+
+if(DOWNLOAD_DATA)
+        download_artifact("tools/lexica/bilexicon/data/plen.bin")
+endif(DOWNLOAD_DATA)

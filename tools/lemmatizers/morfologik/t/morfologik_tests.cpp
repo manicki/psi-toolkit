@@ -81,7 +81,7 @@ BOOST_AUTO_TEST_CASE( lexeme_level ) {
         AnnotationItem prowokacjamiItem = lattice.getEdgeAnnotationItem(prowokacjamiLemma);
 
         BOOST_CHECK_EQUAL(prowokacjamiItem.getCategory(), "subst");
-        BOOST_CHECK_EQUAL(prowokacjamiItem.getText(), "prowokacja_subst");
+        BOOST_CHECK_EQUAL(prowokacjamiItem.getText(), "prowokacja+subst");
 
         AnnotationItemManager annItmMng = lattice.getAnnotationItemManager();
         std::list<std::pair<std::string, std::string> > lexemeValues =
@@ -161,7 +161,7 @@ BOOST_AUTO_TEST_CASE( many_lexemes ) {
         AnnotationItem item = lattice.getEdgeAnnotationItem(lemma);
 
         BOOST_CHECK_EQUAL(item.getCategory(), "subst");
-        BOOST_CHECK_EQUAL(item.getText(), "mama_subst");
+        BOOST_CHECK_EQUAL(item.getText(), "mama+subst");
 
         BOOST_CHECK(lemmaIter.hasNext());
 
@@ -169,14 +169,14 @@ BOOST_AUTO_TEST_CASE( many_lexemes ) {
         item = lattice.getEdgeAnnotationItem(lemma);
 
         BOOST_CHECK_EQUAL(item.getCategory(), "verb");
-        BOOST_CHECK_EQUAL(item.getText(), "mamić_verb");
+        BOOST_CHECK_EQUAL(item.getText(), "mamić+verb");
         BOOST_CHECK(lemmaIter.hasNext());
 
         lemma = lemmaIter.next();
         item = lattice.getEdgeAnnotationItem(lemma);
 
         BOOST_CHECK_EQUAL(item.getCategory(), "verb");
-        BOOST_CHECK_EQUAL(item.getText(), "mieć_verb");
+        BOOST_CHECK_EQUAL(item.getText(), "mieć+verb");
 
         BOOST_CHECK(!lemmaIter.hasNext());
     }

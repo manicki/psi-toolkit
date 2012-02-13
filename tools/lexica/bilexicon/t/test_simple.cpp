@@ -36,14 +36,18 @@ BOOST_AUTO_TEST_CASE( bilexicon_simple ) {
     boost::program_options::notify(options);
 
     BiLexicon biLexicon(options);
-    testOnLattice(biLexicon, "kanału", "kanał_subst", "subst",
-                  boost::assign::list_of("channel_subst")("canal_subst"));
+    testOnLattice(biLexicon, "kanału", "kanał+subst", "subst",
+                  boost::assign::list_of("channel+subst")("canal+subst"));
 
-    testOnLattice(biLexicon, "garnki", "garnek_subst", "subst",
-                  boost::assign::list_of("pot_subst"));
+    testOnLattice(biLexicon, "garnki", "garnek+subst", "subst",
+                  boost::assign::list_of("pot+subst"));
 
-    testOnLattice(biLexicon, "nauskopii", "nauskopia_subst", "subst",
+    testOnLattice(biLexicon, "nauskopii", "nauskopia+subst", "subst",
                   std::list<std::string>());
+
+    testOnLattice(biLexicon, "agrafki", "agrafka+subst", "subst",
+                  boost::assign::list_of("safety pin+subst"));
+
 
 }
 
@@ -68,8 +72,8 @@ BOOST_AUTO_TEST_CASE( bilexicon_save_and_load ) {
         boost::program_options::notify(options);
 
         BiLexicon biLexicon(options);
-        testOnLattice(biLexicon, "kanału", "kanał_subst", "subst",
-                      boost::assign::list_of("channel_subst")("canal_subst"));
+        testOnLattice(biLexicon, "kanału", "kanał+subst", "subst",
+                      boost::assign::list_of("channel+subst")("canal+subst"));
 
     }
 
@@ -91,14 +95,17 @@ BOOST_AUTO_TEST_CASE( bilexicon_save_and_load ) {
 
         BiLexicon biLexicon(options);
 
-        testOnLattice(biLexicon, "kanału", "kanał_subst", "subst",
-                      boost::assign::list_of("channel_subst")("canal_subst"));
+        testOnLattice(biLexicon, "kanału", "kanał+subst", "subst",
+                      boost::assign::list_of("channel+subst")("canal+subst"));
 
-        testOnLattice(biLexicon, "garnkami", "garnek_subst", "subst",
-                      boost::assign::list_of("pot_subst"));
+        testOnLattice(biLexicon, "garnkami", "garnek+subst", "subst",
+                      boost::assign::list_of("pot+subst"));
 
-        testOnLattice(biLexicon, "nauskopii", "nauskopia_subst", "subst",
+        testOnLattice(biLexicon, "nauskopii", "nauskopia+subst", "subst",
                       std::list<std::string>());
+
+        testOnLattice(biLexicon, "agrafki", "agrafka+subst", "subst",
+                      boost::assign::list_of("safety pin+subst"));
     }
 
     free(tmpFile);

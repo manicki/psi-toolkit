@@ -1,4 +1,5 @@
 #include "lattice_wrapper.hpp"
+#include "config.hpp"
 
 namespace poleng {
 
@@ -731,7 +732,7 @@ namespace poleng {
                                 *morphIt);
                         size_t delimPos = morphoString.find(":");
                         std::string partOfSpeech = morphoString.substr(0, delimPos);
-                        std::string lexeme = *baseIt + "_" + partOfSpeech;
+                        std::string lexeme = *baseIt + LEMMA_CATEGORY_SEPARATOR + partOfSpeech;
 
                         Lattice::EdgeDescriptor lexemeEdge;
                         if (! matchLexemeEdge(lattice, startVertex,

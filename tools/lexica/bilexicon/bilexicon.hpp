@@ -3,6 +3,7 @@
 
 #include "lattice.hpp"
 #include "key_value_store.hpp"
+#include "utt_like_quoter.hpp"
 
 #include <boost/filesystem.hpp>
 #include <boost/shared_ptr.hpp>
@@ -38,7 +39,11 @@ private:
     void addEntry_(Lattice& lattice, Lattice::EdgeDescriptor edge, const std::string& record);
     AnnotationItem parseRecord_(const std::string& record);
 
+    void removeComment_(std::string& s);
+    bool isEmptyLine_(const std::string& s);
+
     boost::shared_ptr<KeyValueStore> store_;
+    UTTLikeQuoter quoter_;
 };
 
 #endif

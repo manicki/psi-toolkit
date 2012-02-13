@@ -1,4 +1,5 @@
 #include "bilexicon.hpp"
+#include "config.hpp"
 
 #include <boost/filesystem/fstream.hpp>
 #include <boost/algorithm/string.hpp>
@@ -68,7 +69,8 @@ boost::program_options::options_description BiLexicon::optionsHandled() {
 std::list<std::string> BiLexicon::providedLayerTags() {
     return boost::assign::list_of
         (std::string("lexeme"))
-        (std::string("bilexicon"));
+        (std::string("bilexicon"))
+        (std::string("!translation"));
 }
 
 std::list<std::string> BiLexicon::tagsToOperateOn() {
@@ -95,23 +97,26 @@ void BiLexicon::addEntry_(
     Lattice& lattice, Lattice::EdgeDescriptor edge, const std::string& record) {
 
     LayerTagCollection tags = lattice.getLayerTagManager().createTagCollectionFromList(
-        boost::assign::list_of("lexeme")("bilexicon"));
+        providedLayerTags());
+
+    Lattice::EdgeSequence::Builder builder(lattice);
+    builder.addEdge(edge);
 
     lattice.addEdge(
         lattice.getEdgeSource(edge),
         lattice.getEdgeTarget(edge),
         parseRecord_(record),
-        tags);
-
+        tags,
+        builder.build());
 }
 
 AnnotationItem BiLexicon::parseRecord_(const std::string& record) {
-    size_t underscorePos = record.find_first_of('_');
+    size_t separatorPos = record.find_first_of(LEMMA_CATEGORY_SEPARATOR);
 
     std::string category =
-        (underscorePos == std::string::npos
+        (separatorPos == std::string::npos
          ? record
-         : record.substr(underscorePos + 1));
+         : record.substr(separatorPos + 1));
 
     return AnnotationItem(category, StringFrag(record));
 }
@@ -128,11 +133,20 @@ void BiLexicon::readPlainText_(const boost::filesystem::path& plainTextLexicon) 
     bool firstEntry = true;
 
     while (std::getline(plainTextStream, line)) {
+        removeComment_(line);
+
+        if (isEmptyLine_(line))
+            continue;
+
         std::vector<std::string> fields;
         boost::split(fields, line, boost::is_any_of("\t "));
         fields.erase(std::remove_if(
                          fields.begin(), fields.end(),
                          boost::bind( &std::string::empty, _1 )), fields.end());
+
+        BOOST_FOREACH(std::string& field, fields) {
+            field = quoter_.unescape(field);
+        }
 
         if (fields.size() != 2)
             throw Exception(
@@ -173,4 +187,15 @@ void BiLexicon::saveBinary_(const boost::filesystem::path& binaryLexiconPath) {
 void BiLexicon::loadBinary_(const boost::filesystem::path& binaryLexiconPath) {
     store_.reset(new KeyValueStore());
     store_->load(binaryLexiconPath.string());
+}
+
+void BiLexicon::removeComment_(std::string& s) {
+    size_t hashPos = s.find_first_of('#');
+
+    if (hashPos != std::string::npos)
+        s = s.substr(0, hashPos);
+}
+
+bool BiLexicon::isEmptyLine_(const std::string& s) {
+    return s.find_first_not_of(" \t");
 }
