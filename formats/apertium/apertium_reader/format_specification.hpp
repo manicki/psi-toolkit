@@ -14,7 +14,7 @@ class FormatSpecification {
 public:
 
     FormatSpecification(FormatOptions options,
-        std::vector<FormatRule> formatRules, std::vector<ReplacementRule> replacementRules);
+        std::pair<std::vector<FormatRule>, std::vector<ReplacementRule> > rules);
 
     FormatOptions getOptions();
     std::vector<FormatRule> getFormatRules();
@@ -60,8 +60,10 @@ private:
     boost::shared_ptr<XmlPropertyTree> xmlParsed_;
 
     FormatOptions parseOptions_();
-    std::vector<FormatRule> parseFormatRules_();
-    std::vector<ReplacementRule> parseReplacementRules_();
+    std::pair<std::vector<FormatRule>, std::vector<ReplacementRule> > parseRules_();
+
+    FormatRule parseFormatRule_(boost::property_tree::ptree&);
+    ReplacementRule parseReplacementRule_(boost::property_tree::ptree&);
 
 };
 
