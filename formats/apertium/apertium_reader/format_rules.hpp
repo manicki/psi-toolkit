@@ -58,6 +58,7 @@ public:
     void addReplacement(std::string source, std::string target);
 
     std::string getRegexp();
+    unsigned int replacementsCount();
 
 private:
 

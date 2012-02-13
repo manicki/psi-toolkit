@@ -61,3 +61,7 @@ void ReplacementRule::addReplacement(std::string source, std::string target) {
 std::string ReplacementRule::getRegexp() {
     return regexp_;
 }
+
+unsigned int ReplacementRule::replacementsCount() {
+    return sourceToTargetMap_.size();
+}

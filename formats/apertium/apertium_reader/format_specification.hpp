@@ -65,6 +65,7 @@ private:
     FormatRule parseFormatRule_(boost::property_tree::ptree&);
     ReplacementRule parseReplacementRule_(boost::property_tree::ptree&);
 
+    bool yesNoToBool_(std::string &);
 };
 
 #endif
