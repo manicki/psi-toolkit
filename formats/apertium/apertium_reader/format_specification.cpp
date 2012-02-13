@@ -119,13 +119,14 @@ ReplacementRule FormatSpecificationReader::parseReplacementRule_(
     std::string regexp = ruleNode.get<std::string>("<xmlattr>.regexp");
     ReplacementRule rule(regexp);
 
-    //FIXME: how to iterate by the subnode in given node?
-    //in this solution only the first <replace> node is processed
-    BOOST_FOREACH(boost::property_tree::ptree::value_type & v, ruleNode.get_child("replace")) {
-        std::string source = v.second.get<std::string>("source");
-        std::string target = v.second.get<std::string>("target");
+    boost::property_tree::ptree::const_iterator end = ruleNode.end();
 
-        rule.addReplacement(source, target);
+    for (boost::property_tree::ptree::const_iterator it = ruleNode.begin(); it != end; ++it) {
+        if (it->first == "replace") {
+            std::string source = it->second.get<std::string>("<xmlattr>.source");
+            std::string target = it->second.get<std::string>("<xmlattr>.target");
+            rule.addReplacement(source, target);
+        }
     }
 
     DEBUG("found replacement rule: " << regexp << " with " << rule.replacementsCount()
