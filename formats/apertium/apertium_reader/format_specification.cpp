@@ -123,13 +123,12 @@ ReplacementRule FormatSpecificationReader::parseReplacementRule_(
 
     for (boost::property_tree::ptree::const_iterator it = ruleNode.begin(); it != end; ++it) {
         if (it->first == "replace") {
-            std::string source = it->second.get<std::string>("<xmlattr>.source");
-            std::string target = it->second.get<std::string>("<xmlattr>.target");
-            rule.addReplacement(source, target);
+            rule.addReplacement(it->second.get<std::string>("<xmlattr>.source"),
+                it->second.get<std::string>("<xmlattr>.target"));
         }
     }
 
-    DEBUG("found replacement rule: " << regexp << " with " << rule.replacementsCount()
+    DEBUG("found replacement rule: " << regexp << " contains " << rule.replacementsCount()
         << " replacements");
 
     return rule;

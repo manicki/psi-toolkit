@@ -19,6 +19,8 @@ private:
     FormatSpecification formatSpecification_;
     FormatSpecification initializeFormatSpecification_(const boost::filesystem::path& path);
 
+    const static std::string DELIMITER_BEGIN;
+    const static std::string DELIMITER_END;
 };
 
 #endif
