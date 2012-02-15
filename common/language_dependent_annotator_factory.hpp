@@ -16,6 +16,9 @@ class LanguageDependentAnnotatorFactory : public AnnotatorFactory {
 public:
     virtual ~LanguageDependentAnnotatorFactory();
 
+    static void addLanguageDependentOptions(
+        boost::program_options::options_description& optionsDescription);
+
 private:
 
     virtual boost::program_options::options_description doOptionsHandled();
