@@ -27,8 +27,10 @@ char * IndexSite::footerPart() {
     std::string footer = readPsisFile("footer.psis");
 
     std::string version = "psi-toolkit ver. ";
-    version += g_GIT_LAST_DATE;
-    version += " ";
+    if (std::string("GIT-NOTFOUND").compare(g_GIT_LAST_DATE) == 0) {
+        version += g_GIT_LAST_DATE;
+        version += " ";
+    }
     version += g_GIT_SHA1;
 
     boost::replace_first(footer, "<!--#psis version -->", version);

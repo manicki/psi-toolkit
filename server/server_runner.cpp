@@ -118,9 +118,12 @@ bool ServerRunner::stopAfterExecutingOptions_() {
     }
 
     if (options_.count("version")) {
-        std::cout << "psi-toolkit ver. "
-            << g_GIT_LAST_DATE << " "
-            << g_GIT_SHA1 << std::endl;
+        std::cout << "psi-toolkit ver.";
+        if (std::string("GIT-NOTFOUND").compare(g_GIT_LAST_DATE) == 0) {
+            std::cout << ' ' << g_GIT_LAST_DATE;
+        }
+        std::cout << ' ' << g_GIT_SHA1 << std::endl;
+
         return true;
     }
 
