@@ -1,7 +1,10 @@
 #include <string>
+
 #include <boost/bind.hpp>
+#include <boost/algorithm/string/replace.hpp>
 
 #include "index_site.hpp"
+#include "git_info.hpp"
 
 IndexSite::IndexSite(PsiServer& server) : TemplateSite(server) {
     psiServer_.registerIncludeCode(
@@ -21,7 +24,16 @@ char * IndexSite::info() {
 }
 
 char * IndexSite::footerPart() {
-    return stringToChar(readPsisFile("footer.psis"));
+    std::string footer = readPsisFile("footer.psis");
+
+    std::string version = "psi-toolkit ver. ";
+    version += g_GIT_LAST_DATE;
+    version += " ";
+    version += g_GIT_SHA1;
+
+    boost::replace_first(footer, "<!--#psis version -->", version);
+
+    return stringToChar(footer);
 }
 
 char * IndexSite::scriptsPart() {

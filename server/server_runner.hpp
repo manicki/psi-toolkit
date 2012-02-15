@@ -12,16 +12,16 @@ public:
     int run();
 
 private:
-    boost::program_options::variables_map options;
-    std::vector<std::string> annotatorOptions;
+    boost::program_options::variables_map options_;
+    std::vector<std::string> annotatorOptions_;
 
-    boost::program_options::options_description optionsDescription;
+    boost::program_options::options_description optionsDescription_;
 
-    boost::program_options::variables_map parseOptions(int argc, char * argv[]);
-    void setOptionsDescription();
-    std::string annotatorOptionsAsString();
+    boost::program_options::variables_map parseOptions_(int argc, char * argv[]);
+    void setOptionsDescription_();
+    std::string annotatorOptionsAsString_();
 
-    bool stopAfterExecutingOptions();
+    bool stopAfterExecutingOptions_();
 
     void daemonize_(bool leaveStandardDescriptors);
     int setRootDirectory_();

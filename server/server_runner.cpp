@@ -10,6 +10,7 @@
 #include "config.hpp"
 #include "logging.hpp"
 #include "configurator.hpp"
+#include "git_info.hpp"
 
 #include "index_site.hpp"
 #include "pipe_site.hpp"
@@ -17,20 +18,20 @@
 #include "json_site.hpp"
 
 ServerRunner::ServerRunner(int argc, char * argv[])
-    : optionsDescription(
+    : optionsDescription_(
     "PSIServer options"
 ){
-    options = parseOptions(argc, argv);
+    options_ = parseOptions_(argc, argv);
 }
 
-boost::program_options::variables_map ServerRunner::parseOptions(int argc, char * argv[]) {
+boost::program_options::variables_map ServerRunner::parseOptions_(int argc, char * argv[]) {
 
-    setOptionsDescription();
+    setOptionsDescription_();
 
     boost::program_options::variables_map vmap;
     boost::program_options::parsed_options opts =
         boost::program_options::command_line_parser(argc, argv).
-        options(optionsDescription).
+        options(optionsDescription_).
         allow_unregistered().
         run();
 
@@ -38,15 +39,15 @@ boost::program_options::variables_map ServerRunner::parseOptions(int argc, char 
     boost::program_options::notify(vmap);
 
     // rest options needed for the further annotators
-    annotatorOptions = boost::program_options::collect_unrecognized(
+    annotatorOptions_ = boost::program_options::collect_unrecognized(
         opts.options, boost::program_options::include_positional);
 
     return vmap;
 }
 
-void ServerRunner::setOptionsDescription() {
+void ServerRunner::setOptionsDescription_() {
 
-    optionsDescription.add_options()
+    optionsDescription_.add_options()
         ("address", boost::program_options::value<std::string>()->default_value("0.0.0.0"),
             "Set server address")
         ("port", boost::program_options::value<std::string>()->default_value("3000"),
@@ -59,17 +60,16 @@ void ServerRunner::setOptionsDescription() {
              / "server/website").string()),
             "Set root of website files");
 
-    optionsDescription.add_options()
-        ("daemon", "Run as a daemon")
-        ("leave-standard-descriptors-when-daemonizing", "Don't redirect standard input, "
+    optionsDescription_.add_options()
+        ("daemon", "run as a daemon")
+        ("leave-standard-descriptors-when-daemonizing", "don't redirect standard input, "
             "standard output and standard error to /dev/null when daemonizing")
-        ("help", "Produce help message for each processor")
-        ("version", "Show version")
-        ("verbose", "Run verbosely")
-        ("log-level", boost::program_options::value<std::string>(),
-         "Set logging level")
+        ("help", "produce help message for each processor")
+        ("version", "show version information and exit")
+        ("verbose", "run verbosely")
+        ("log-level", boost::program_options::value<std::string>(), "set logging level")
         ("log-file", boost::program_options::value<std::string>(),
-         "Filepath to store logs (if not set: standard error)")
+            "filepath to store logs (if not set: standard error)")
         ;
 }
 
@@ -77,13 +77,13 @@ const std::string ServerRunner::DEFAULT_PIPE = "txt-reader ! tp-tokenizer --lang
 
 int ServerRunner::run() {
 
-    if (stopAfterExecutingOptions()) return 0;
+    if (stopAfterExecutingOptions_()) return 0;
 
     try {
         PsiServer psiServer(
-            options["address"].as<std::string>(),
-            options["port"].as<std::string>(),
-            options["threads"].as<std::string>(),
+            options_["address"].as<std::string>(),
+            options_["port"].as<std::string>(),
+            options_["threads"].as<std::string>(),
             rootDir_.string()
         );
 
@@ -91,7 +91,7 @@ int ServerRunner::run() {
 
         // register all websites
         IndexSite index(psiServer);
-        std::string opts = annotatorOptions.empty() ? DEFAULT_PIPE : annotatorOptionsAsString();
+        std::string opts = annotatorOptions_.empty() ? DEFAULT_PIPE : annotatorOptionsAsString_();
         PipeSite pipe(psiServer, opts);
         HelpSite help(psiServer);
         JsonSite json(psiServer);
@@ -106,9 +106,9 @@ int ServerRunner::run() {
     return 0;
 }
 
-bool ServerRunner::stopAfterExecutingOptions() {
-    if (options.count("help")) {
-        std::cout << optionsDescription << std::endl;
+bool ServerRunner::stopAfterExecutingOptions_() {
+    if (options_.count("help")) {
+        std::cout << optionsDescription_ << std::endl;
 
         HelpFormatter* helpFormatter = new ConsoleHelpFormatter;
         helpFormatter->formatHelps(std::cout);
@@ -117,36 +117,38 @@ bool ServerRunner::stopAfterExecutingOptions() {
         return true;
     }
 
-    if (options.count("version")) {
-        std::cout << "PsiServer version 0.2" << std::endl;
+    if (options_.count("version")) {
+        std::cout << "psi-toolkit ver. "
+            << g_GIT_LAST_DATE << " "
+            << g_GIT_SHA1 << std::endl;
         return true;
     }
 
     if (setRootDirectory_() != 0)
         return true;
 
-    if (options.count("log-file")) {
-        SET_LOGGER_FILE(options["log-file"].as<std::string>());
+    if (options_.count("log-file")) {
+        SET_LOGGER_FILE(options_["log-file"].as<std::string>());
     }
 
-    if (options.count("log-level")) {
-        SET_LOGGING_LEVEL(options["log-level"].as<std::string>());
+    if (options_.count("log-level")) {
+        SET_LOGGING_LEVEL(options_["log-level"].as<std::string>());
     }
 
 
-    if (options.count("daemon"))
-        daemonize_(options.count("leave-standard-descriptors-when-daemonizing") > 0);
+    if (options_.count("daemon"))
+        daemonize_(options_.count("leave-standard-descriptors-when-daemonizing") > 0);
 
     return false;
 }
 
 int ServerRunner::setRootDirectory_() {
-    boost::filesystem::path rootAsGiven(options["root"].as<std::string>());
+    boost::filesystem::path rootAsGiven(options_["root"].as<std::string>());
 
     rootDir_ =
         // A daemon changes its current directory, so an absolute path
         // must be specified.
-        (options.count("daemon") && !rootAsGiven.has_root_directory()
+        (options_.count("daemon") && !rootAsGiven.has_root_directory()
          ? boost::filesystem::current_path() / rootAsGiven
          : rootAsGiven);
 
@@ -170,6 +172,6 @@ void ServerRunner::daemonize_(bool leaveStandardDescriptors) {
     }
 }
 
-std::string ServerRunner::annotatorOptionsAsString() {
-    return boost::algorithm::join(annotatorOptions, " ");
+std::string ServerRunner::annotatorOptionsAsString_() {
+    return boost::algorithm::join(annotatorOptions_, " ");
 }
