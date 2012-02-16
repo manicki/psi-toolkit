@@ -147,13 +147,13 @@ bool is_vertex_consistent(chart<C, S, V, R>& ch, typename chart<C, S, V, R>::ver
     {
         if (ch.edge_source((*it)) != v)
         return false;
-
+/*
         if (std::count(
            ch.marked_edges_index(ch.edge_target((*it))).marked_in_edges().first,
            ch.marked_edges_index(ch.edge_target((*it))).marked_in_edges().second,
            (*it)) != 1)
         return false;
-
+*/
         ++it;
     }
     }
@@ -168,13 +168,13 @@ bool is_vertex_consistent(chart<C, S, V, R>& ch, typename chart<C, S, V, R>::ver
     {
         if (ch.edge_target((*it)) != v)
         return false;
-
+/*
         if (std::count(
            ch.marked_edges_index(ch.edge_source((*it))).marked_out_edges().first,
            ch.marked_edges_index(ch.edge_source((*it))).marked_out_edges().second,
            (*it)) != 1)
         return false;
-
+*/
         ++it;
     }
     }
