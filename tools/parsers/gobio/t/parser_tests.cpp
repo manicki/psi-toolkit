@@ -246,10 +246,10 @@ BOOST_AUTO_TEST_CASE( parser_max ) {
 BOOST_AUTO_TEST_CASE( parser_anbncmdm ) {
     INIT_PARSER_TEST("aaaaaaaaaabbbbbbbbbbcccddd");
 
-    ADD_UNARY_RULE("A","a");
-    ADD_UNARY_RULE("B","b");
-    ADD_UNARY_RULE("C","c");
-    ADD_UNARY_RULE("D","d");
+    ADD_UNARY_RULE("A", "a");
+    ADD_UNARY_RULE("B", "b");
+    ADD_UNARY_RULE("C", "c");
+    ADD_UNARY_RULE("D", "d");
 
     ADD_BINARY_RULE("S", "X", "Y");
 

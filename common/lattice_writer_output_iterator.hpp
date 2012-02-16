@@ -12,6 +12,8 @@
  */
 class LatticeWriterOutputIterator {
 public:
+    LatticeWriterOutputIterator() { }
+
     /**
      * Puts an element into the iterator.
      */
