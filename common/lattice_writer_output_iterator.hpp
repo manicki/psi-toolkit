@@ -12,7 +12,7 @@
  */
 class LatticeWriterOutputIterator {
 public:
-    LatticeWriterOutputIterator() { }
+    LatticeWriterOutputIterator() : latticeAnnotationItemManager_(NULL) { }
 
     /**
      * Puts an element into the iterator.
