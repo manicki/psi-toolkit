@@ -4,6 +4,7 @@
 #include "agenda_parser.tpl"
 #include "chart.tpl"
 #include "lattice_preparators.hpp"
+#include "psi_lattice_writer.hpp"
 #include "simple_cfg_combinator.tpl"
 #include "test_helpers.hpp"
 
@@ -291,7 +292,7 @@ BOOST_AUTO_TEST_CASE( parser_anbncmdm_fails ) {
 }
 
 
-BOOST_AUTO_TEST_CASE( parser_paraling ) {
+BOOST_AUTO_TEST_CASE( parser_print_lattice ) {
     INIT_PARSER_TEST("aanvanrnv");
 
     ADD_UNARY_RULE("N", "n");
@@ -304,9 +305,21 @@ BOOST_AUTO_TEST_CASE( parser_paraling ) {
     ADD_BINARY_RULE("W", "N", "v");
 
     RUN_PARSER_TEST;
-    std::set<Category> expectedParseResults;
-    expectedParseResults.insert("S");
-    BOOST_CHECK(check_parse_results(ch, expectedParseResults));
+
+    boost::scoped_ptr<LatticeWriter<std::ostream> > writer(new PsiLatticeWriter());
+
+    std::ostringstream osstr;
+    writer->writeLattice(lattice, osstr);
+
+    std::string line;
+    std::string contents;
+    std::ifstream s(ROOT_DIR "tools/parsers/gobio/t/files/paraling.psi");
+    while (getline(s, line)) {
+        contents += line;
+        contents += "\n";
+    }
+
+    BOOST_CHECK_EQUAL(osstr.str(), contents);
 }
 
 
