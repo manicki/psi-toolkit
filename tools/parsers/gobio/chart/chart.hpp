@@ -59,13 +59,14 @@ public:
     typedef typename std::list<Lattice::Partition>::iterator partition_iterator;
     // typedef typename std::string::iterator variant_iterator;
 
-    typedef C category_type;
+    typedef std::string category_type;
     typedef V variant_category_type;
     typedef S score_type;
+    typedef R rule_type;
     typedef typename std::string variant_type;
     typedef typename std::string variant;
 
-    typedef I<edge_descriptor, C> marked_edges_index_type;
+    typedef I<edge_descriptor, category_type> marked_edges_index_type;
 
     chart(Lattice & lattice);
 
@@ -74,24 +75,24 @@ public:
     std::pair<edge_descriptor, bool>   add_edge(
     vertex_descriptor u,
     vertex_descriptor v,
-    const C& category,
-    S score,
-    R rule);
+    const category_type& category,
+    score_type score,
+    rule_type rule);
 
     std::pair<edge_descriptor, bool>   add_edge(
     vertex_descriptor u,
     vertex_descriptor v,
-    const C& category,
-    S score,
-    R rule,
+    const category_type& category,
+    score_type score,
+    rule_type rule,
     edge_descriptor link);
 
     std::pair<edge_descriptor, bool>   add_edge(
     vertex_descriptor u,
     vertex_descriptor v,
-    const C& category,
-    S score,
-    R rule,
+    const category_type& category,
+    score_type score,
+    rule_type rule,
     edge_descriptor  left_link,
     edge_descriptor right_link);
 
@@ -107,19 +108,19 @@ public:
 
     edge_descriptor   add_partition(
     edge_descriptor edge,
-    S score,
-    R rule);
+    score_type score,
+    rule_type rule);
 
     edge_descriptor   add_partition(
     edge_descriptor edge,
-    S score,
-    R rule,
+    score_type score,
+    rule_type rule,
     edge_descriptor link);
 
     edge_descriptor   add_partition(
     edge_descriptor edge,
-    S score,
-    R rule,
+    score_type score,
+    rule_type rule,
     edge_descriptor left_link,
     edge_descriptor right_link);
 
@@ -136,8 +137,8 @@ public:
 
     vertex_descriptor edge_source(edge_descriptor edge);
     vertex_descriptor edge_target(edge_descriptor edge);
-    C edge_category(edge_descriptor edge);
-    S edge_score(edge_descriptor edge) const;
+    category_type edge_category(edge_descriptor edge);
+    score_type edge_score(edge_descriptor edge) const;
     // bool edge_accommodated(edge_descriptor edge) const;
     // void mark_edge_as_accommodated(edge_descriptor edge);
 
@@ -150,31 +151,31 @@ public:
     // edge_descriptor edge,
     // partition_iterator piter,
     // const V& new_variant,
-    // S score);
+    // score_type score);
 
     // void add_variant(
     // edge_descriptor edge,
     // partition_iterator piter,
     // const V& new_variant,
-    // S score,
+    // score_type score,
         // variant_iterator    link_vit);
 
     // void add_variant(
     // edge_descriptor edge,
     // partition_iterator piter,
     // const V& new_variant,
-    // S score,
+    // score_type score,
         // variant_iterator    left_link_vit,
         // variant_iterator    right_link_vit);
 
 
-    // R partition_rule(partition_iterator piter);
+    // rule_type partition_rule(partition_iterator piter);
     int partition_rule_id(partition_iterator piter);
     // std::vector<edge_descriptor>& partition_links(partition_iterator piter);
     Lattice::Partition::Iterator partition_links_iterator(partition_iterator piter);
     // partition_iterator variant_partition(variant_iterator vit);
-    // V edge_variant_category(variant_iterator vit);
-    // S variant_score(variant_iterator vit);
+    // variant_category_type edge_variant_category(variant_iterator vit);
+    // score_type variant_score(variant_iterator vit);
     // std::vector<variant_iterator>& variant_links(variant_iterator vit);
 
     void sort_topologically();
@@ -197,8 +198,8 @@ private:
     // std::pair<edge_descriptor, bool> add_edge_(
     // vertex_descriptor u,
     // vertex_descriptor v,
-    // const C& category,
-    // S score);
+    // const category_type& category,
+    // score_type score);
 
     typedef Lattice::VertexEntry vertex_entry;
     typedef Lattice::Partition partition;

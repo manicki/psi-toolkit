@@ -38,9 +38,9 @@ template<class C, class S, class V, class R, template<class,class> class I>
 std::pair<typename chart<C,S,V,R,I>::edge_descriptor,bool> chart<C,S,V,R,I>::add_edge(
     vertex_descriptor u,
     vertex_descriptor v,
-    const C& category,
-    S score,
-    R rule)
+    const category_type& category,
+    score_type score,
+    rule_type rule)
 {
     Lattice::EdgeDescriptor result = lattice_.addEdge(
         u,
@@ -58,9 +58,9 @@ template<class C, class S, class V, class R, template<class,class> class I>
 std::pair<typename chart<C,S,V,R,I>::edge_descriptor,bool> chart<C,S,V,R,I>::add_edge(
     vertex_descriptor u,
     vertex_descriptor v,
-    const C& category,
-    S score,
-    R rule,
+    const category_type& category,
+    score_type score,
+    rule_type rule,
     edge_descriptor link)
 {
     AnnotationItem ai(category);
@@ -82,9 +82,9 @@ template<class C, class S, class V, class R, template<class,class> class I>
 std::pair<typename chart<C,S,V,R,I>::edge_descriptor,bool> chart<C,S,V,R,I>::add_edge(
     vertex_descriptor u,
     vertex_descriptor v,
-    const C& category,
-    S score,
-    R rule,
+    const category_type& category,
+    score_type score,
+    rule_type rule,
     edge_descriptor  left_link,
     edge_descriptor right_link)
 {
@@ -108,8 +108,8 @@ template<class C, class S, class V, class R, template<class,class> class I>
 std::pair<typename chart<C,S,V,R,I>::edge_descriptor,bool> chart<C,S,V,R,I>::add_edge_(
     vertex_descriptor u,
     vertex_descriptor v,
-    const C& category,
-    S score)
+    const category_type& category,
+    score_type score)
 {
     Lattice::EdgeDescriptor result = lattice_.addEdge(
         u,
@@ -141,8 +141,8 @@ int chart<C,S,V,R,I>::nb_edges(
 template<class C, class S, class V, class R, template<class,class> class I>
 typename chart<C,S,V,R,I>::edge_descriptor chart<C,S,V,R,I>::add_partition(
     edge_descriptor edge,
-    S score,
-    R rule)
+    score_type score,
+    rule_type rule)
 {
     return lattice_.addPartitionToEdge(
         edge,
@@ -157,8 +157,8 @@ typename chart<C,S,V,R,I>::edge_descriptor chart<C,S,V,R,I>::add_partition(
 template<class C, class S, class V, class R, template<class,class> class I>
 typename chart<C,S,V,R,I>::edge_descriptor chart<C,S,V,R,I>::add_partition(
     edge_descriptor edge,
-    S score,
-    R rule,
+    score_type score,
+    rule_type rule,
     edge_descriptor link)
 {
     Lattice::EdgeSequence::Builder builder(lattice_);
@@ -175,8 +175,8 @@ typename chart<C,S,V,R,I>::edge_descriptor chart<C,S,V,R,I>::add_partition(
 template<class C, class S, class V, class R, template<class,class> class I>
 typename chart<C,S,V,R,I>::edge_descriptor chart<C,S,V,R,I>::add_partition(
     edge_descriptor edge,
-    S score,
-    R rule,
+    score_type score,
+    rule_type rule,
     edge_descriptor left_link,
     edge_descriptor right_link)
 {
@@ -251,14 +251,14 @@ typename chart<C,S,V,R,I>::vertex_descriptor chart<C,S,V,R,I>::edge_target(
 }
 
 template<class C, class S, class V, class R, template<class,class> class I>
-C chart<C,S,V,R,I>::edge_category(
+typename chart<C,S,V,R,I>::category_type chart<C,S,V,R,I>::edge_category(
     edge_descriptor edge)
 {
     return lattice_.getAnnotationCategory(edge);
 }
 
 template<class C, class S, class V, class R, template<class,class> class I>
-S chart<C,S,V,R,I>::edge_score(edge_descriptor edge) const
+typename chart<C,S,V,R,I>::score_type chart<C,S,V,R,I>::edge_score(edge_descriptor edge) const
 {
     return lattice_.getEdgeScore(edge);
 }
@@ -372,7 +372,7 @@ void chart<C,S,V,R,I>::add_variant(
     edge_descriptor edge,
     partition_iterator piter,
     const V& new_variant,
-    S score)
+    score_type score)
 {
     std::vector<variant>& variants = graph_[edge].variants;
     variants.push_back(variant_type());
@@ -386,7 +386,7 @@ void chart<C,S,V,R,I>::add_variant(
     edge_descriptor edge,
     partition_iterator piter,
     const V& new_variant,
-    S score,
+    score_type score,
     variant_iterator    link_vit)
 {
     std::vector<variant>& variants = graph_[edge].variants;
@@ -404,7 +404,7 @@ void chart<C,S,V,R,I>::add_variant(
     edge_descriptor edge,
     partition_iterator piter,
     const V& new_variant,
-    S score,
+    score_type score,
     variant_iterator    left_link_vit,
     variant_iterator    right_link_vit)
 {
@@ -420,7 +420,7 @@ void chart<C,S,V,R,I>::add_variant(
 }
 
 template<class C, class S, class V, class R, template<class,class> class I>
-R chart<C,S,V,R,I>::partition_rule(
+typename chart<C,S,V,R,I>::rule_type chart<C,S,V,R,I>::partition_rule(
     partition_iterator piter)
 {
     return (*piter).getRuleId();
@@ -464,7 +464,7 @@ typename param_type<V>::type chart<C,S,V,R,I>::edge_variant_category(variant_ite
 }
 
 template<class C, class S, class V, class R, template<class,class> class I>
-S chart<C,S,V,R,I>::variant_score(variant_iterator vit)
+score_type chart<C,S,V,R,I>::variant_score(variant_iterator vit)
 {
     return (*vit).score;
 }
