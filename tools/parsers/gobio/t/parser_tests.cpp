@@ -178,7 +178,7 @@ BOOST_AUTO_TEST_CASE( parser_zero ) {
     BOOST_CHECK(check_parse_results(ch, expectedParseResults));
 }
 
-// /* generates edge self-reference error / infinite loop
+// /* generates edge self-reference error
 BOOST_AUTO_TEST_CASE( parser_chain ) {
     INIT_PARSER_TEST("a");
 
@@ -188,7 +188,7 @@ BOOST_AUTO_TEST_CASE( parser_chain ) {
     ADD_UNARY_RULE("X", "B");
     // ADD_UNARY_RULE("X", "X"); // generates edge self-reference error
     ADD_UNARY_RULE("S", "X");
-    // ADD_UNARY_RULE("X", "S"); // generates an infinite loop
+    ADD_UNARY_RULE("X", "S");
 
     RUN_PARSER_TEST;
     std::set<Category> expectedParseResults;

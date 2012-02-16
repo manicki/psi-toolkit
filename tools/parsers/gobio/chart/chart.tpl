@@ -42,6 +42,7 @@ std::pair<typename chart<C,S,V,R,I>::edge_descriptor,bool> chart<C,S,V,R,I>::add
     score_type score,
     rule_type rule)
 {
+    int num1 = lattice_.countEdges(u, v);
     Lattice::EdgeDescriptor result = lattice_.addEdge(
         u,
         v,
@@ -51,7 +52,8 @@ std::pair<typename chart<C,S,V,R,I>::edge_descriptor,bool> chart<C,S,V,R,I>::add
         score,
         rule.rule_no()
     );
-    return std::pair<edge_descriptor,bool>(result, true);
+    int num2 = lattice_.countEdges(u, v);
+    return std::pair<edge_descriptor,bool>(result, num2 - num1 > 0);
 }
 
 template<class C, class S, class V, class R, template<class,class> class I>
@@ -66,6 +68,7 @@ std::pair<typename chart<C,S,V,R,I>::edge_descriptor,bool> chart<C,S,V,R,I>::add
     AnnotationItem ai(category);
     Lattice::EdgeSequence::Builder builder(lattice_);
     builder.addEdge(link);
+    int num1 = lattice_.countEdges(u, v);
     Lattice::EdgeDescriptor result = lattice_.addEdge(
         u,
         v,
@@ -75,7 +78,8 @@ std::pair<typename chart<C,S,V,R,I>::edge_descriptor,bool> chart<C,S,V,R,I>::add
         score,
         rule.rule_no()
     );
-    return std::pair<edge_descriptor,bool>(result, true);
+    int num2 = lattice_.countEdges(u, v);
+    return std::pair<edge_descriptor,bool>(result, num2 - num1 > 0);
 }
 
 template<class C, class S, class V, class R, template<class,class> class I>
@@ -91,6 +95,7 @@ std::pair<typename chart<C,S,V,R,I>::edge_descriptor,bool> chart<C,S,V,R,I>::add
     Lattice::EdgeSequence::Builder builder(lattice_);
     builder.addEdge(left_link);
     builder.addEdge(right_link);
+    int num1 = lattice_.countEdges(u, v);
     Lattice::EdgeDescriptor result = lattice_.addEdge(
         u,
         v,
@@ -100,7 +105,8 @@ std::pair<typename chart<C,S,V,R,I>::edge_descriptor,bool> chart<C,S,V,R,I>::add
         score,
         rule.rule_no()
     );
-    return std::pair<edge_descriptor,bool>(result, true);
+    int num2 = lattice_.countEdges(u, v);
+    return std::pair<edge_descriptor,bool>(result, num2 - num1 > 0);
 }
 
 /*
