@@ -42,18 +42,22 @@ std::pair<typename chart<C,S,V,R,I>::edge_descriptor,bool> chart<C,S,V,R,I>::add
     score_type score,
     rule_type rule)
 {
-    int num1 = lattice_.countEdges(u, v);
-    Lattice::EdgeDescriptor result = lattice_.addEdge(
-        u,
-        v,
-        category,
-        getGobioTag_(),
-        Lattice::EdgeSequence(),
-        score,
-        rule.rule_no()
-    );
-    int num2 = lattice_.countEdges(u, v);
-    return std::pair<edge_descriptor,bool>(result, num2 - num1 > 0);
+    try {
+        int num1 = lattice_.countEdges(u, v);
+        Lattice::EdgeDescriptor result = lattice_.addEdge(
+            u,
+            v,
+            category,
+            getGobioTag_(),
+            Lattice::EdgeSequence(),
+            score,
+            rule.rule_no()
+        );
+        int num2 = lattice_.countEdges(u, v);
+        return std::pair<edge_descriptor,bool>(result, num2 - num1 > 0);
+    } catch (EdgeSelfReferenceException) {
+        return std::pair<edge_descriptor,bool>(Lattice::EdgeDescriptor(), false);
+    }
 }
 
 template<class C, class S, class V, class R, template<class,class> class I>
@@ -65,21 +69,25 @@ std::pair<typename chart<C,S,V,R,I>::edge_descriptor,bool> chart<C,S,V,R,I>::add
     rule_type rule,
     edge_descriptor link)
 {
-    AnnotationItem ai(category);
-    Lattice::EdgeSequence::Builder builder(lattice_);
-    builder.addEdge(link);
-    int num1 = lattice_.countEdges(u, v);
-    Lattice::EdgeDescriptor result = lattice_.addEdge(
-        u,
-        v,
-        ai,
-        getGobioTag_(),
-        builder.build(),
-        score,
-        rule.rule_no()
-    );
-    int num2 = lattice_.countEdges(u, v);
-    return std::pair<edge_descriptor,bool>(result, num2 - num1 > 0);
+    try {
+        AnnotationItem ai(category);
+        Lattice::EdgeSequence::Builder builder(lattice_);
+        builder.addEdge(link);
+        int num1 = lattice_.countEdges(u, v);
+        Lattice::EdgeDescriptor result = lattice_.addEdge(
+            u,
+            v,
+            ai,
+            getGobioTag_(),
+            builder.build(),
+            score,
+            rule.rule_no()
+        );
+        int num2 = lattice_.countEdges(u, v);
+        return std::pair<edge_descriptor,bool>(result, num2 - num1 > 0);
+    } catch (EdgeSelfReferenceException) {
+        return std::pair<edge_descriptor,bool>(Lattice::EdgeDescriptor(), false);
+    }
 }
 
 template<class C, class S, class V, class R, template<class,class> class I>
@@ -92,21 +100,25 @@ std::pair<typename chart<C,S,V,R,I>::edge_descriptor,bool> chart<C,S,V,R,I>::add
     edge_descriptor  left_link,
     edge_descriptor right_link)
 {
-    Lattice::EdgeSequence::Builder builder(lattice_);
-    builder.addEdge(left_link);
-    builder.addEdge(right_link);
-    int num1 = lattice_.countEdges(u, v);
-    Lattice::EdgeDescriptor result = lattice_.addEdge(
-        u,
-        v,
-        category,
-        getGobioTag_(),
-        builder.build(),
-        score,
-        rule.rule_no()
-    );
-    int num2 = lattice_.countEdges(u, v);
-    return std::pair<edge_descriptor,bool>(result, num2 - num1 > 0);
+    try {
+        Lattice::EdgeSequence::Builder builder(lattice_);
+        builder.addEdge(left_link);
+        builder.addEdge(right_link);
+        int num1 = lattice_.countEdges(u, v);
+        Lattice::EdgeDescriptor result = lattice_.addEdge(
+            u,
+            v,
+            category,
+            getGobioTag_(),
+            builder.build(),
+            score,
+            rule.rule_no()
+        );
+        int num2 = lattice_.countEdges(u, v);
+        return std::pair<edge_descriptor,bool>(result, num2 - num1 > 0);
+    } catch (EdgeSelfReferenceException) {
+        return std::pair<edge_descriptor,bool>(Lattice::EdgeDescriptor(), false);
+    }
 }
 
 /*
