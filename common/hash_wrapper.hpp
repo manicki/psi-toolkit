@@ -28,9 +28,11 @@ struct HashWrapperSet2 {
     typedef std::tr1::unordered_set<A, B> type;
 };
 
-#define HASH_WRAPPER_HASH_INTRO namespace std::tr1 {
+// #define HASH_WRAPPER_HASH_INTRO namespace std::tr1 {
+#define HASH_WRAPPER_HASH_INTRO namespace std { namespace tr1 {
 
-#define HASH_WRAPPER_HASH_OUTRO };
+// #define HASH_WRAPPER_HASH_OUTRO };
+#define HASH_WRAPPER_HASH_OUTRO } };
 
 #define HASH_WRAPPER_HASH_TRAITS hash
 

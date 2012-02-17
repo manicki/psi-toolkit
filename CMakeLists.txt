@@ -202,14 +202,22 @@ if(USE_PUDDLE)
 endif(USE_PUDDLE)
 
 include_directories("${psi-toolkit_SOURCE_DIR}/tools/parsers/gobio")
+include_directories("${psi-toolkit_SOURCE_DIR}/tools/parsers/gobio/avmatrix")
 include_directories("${psi-toolkit_SOURCE_DIR}/tools/parsers/gobio/chart")
 include_directories("${psi-toolkit_SOURCE_DIR}/tools/parsers/gobio/parser")
+include_directories("${psi-toolkit_SOURCE_DIR}/tools/parsers/gobio/registrar")
 include_directories("${psi-toolkit_SOURCE_DIR}/tools/parsers/gobio/rules")
+include_directories("${psi-toolkit_SOURCE_DIR}/tools/parsers/gobio/translator")
+include_directories("${psi-toolkit_SOURCE_DIR}/tools/parsers/gobio/trees")
 
 link_directories("${psi-toolkit_BINARY_DIR}/tools/parsers/gobio")
+link_directories("${psi-toolkit_BINARY_DIR}/tools/parsers/gobio/avmatrix")
 link_directories("${psi-toolkit_BINARY_DIR}/tools/parsers/gobio/chart")
 link_directories("${psi-toolkit_BINARY_DIR}/tools/parsers/gobio/parser")
+link_directories("${psi-toolkit_BINARY_DIR}/tools/parsers/gobio/registrar")
 link_directories("${psi-toolkit_BINARY_DIR}/tools/parsers/gobio/rules")
+link_directories("${psi-toolkit_BINARY_DIR}/tools/parsers/gobio/translator")
+link_directories("${psi-toolkit_BINARY_DIR}/tools/parsers/gobio/trees")
 
 set(TARGETS ${BASE_TARGETS} psi-pipe)
 
