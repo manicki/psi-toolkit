@@ -34,7 +34,7 @@ char grerror_message[128] = "GRULES UNKNOWN ERROR";
     GRuleTreeRecipePath* tree_recipe_path;
     GRuleTreeRecipe* tree_recipe;
     list<GRuleTreeRecipe*>* tree_subrecipes_list;
-    score_type score;
+    Lattice::Score score;
 }
 
 %token <s> RTOKEN_ERROR
@@ -129,7 +129,7 @@ grules_file: grules_seq
 }
 ;
 
-grules_seq: grule 
+grules_seq: grule
 {
     $$ = new GRuleList;
     $$->push_back($1);
@@ -142,7 +142,7 @@ grules_seq: grule
 
 
 grule: RTOKEN_ATOM  RTOKEN_EQUAL right_symbols_seq rule_id grule_recipe condition
-{ 
+{
     $$ = new GRule;
     $$->left_symbol = $1;
     $$->right_symbols = $3;
@@ -154,7 +154,7 @@ grule: RTOKEN_ATOM  RTOKEN_EQUAL right_symbols_seq rule_id grule_recipe conditio
 #endif
 }
 | RTOKEN_ATOM  RTOKEN_EQUAL right_symbols_seq rule_id grule_recipe condition RTOKEN_RIGHT_LAPKI expr
-{ 
+{
     $$ = new GRule;
     $$->left_symbol = $1;
     $$->right_symbols = $3;
@@ -240,7 +240,7 @@ tree_recipe_head_pre_path: tree_recipe_head_main
 {
     $$ = $1;
     $$->label = $3;
-} 
+}
 ;
 
 tree_recipe_head_main: parse_category
@@ -339,7 +339,7 @@ right_symbols_seq: right_symbol_alt
     $$ = new GRuleRightSymbolsSeq;
     $$->push_back($1);
 }
-| right_symbols_seq  right_symbol_alt 
+| right_symbols_seq  right_symbol_alt
 {
     $$ = $1;
     $$->push_back($2);
@@ -354,7 +354,7 @@ right_symbol_alt: RTOKEN_ATOM starred quantifier
     $$->is_optional = static_cast<bool>($3);
 }
   |  RTOKEN_LEFT_PAREN  right_symbol_alts_seq  RTOKEN_RIGHT_PAREN quantifier
-{ 
+{
     $$ = $2;
     $$->is_optional = static_cast<bool>($4);
 }
@@ -388,7 +388,7 @@ condition: /* empty */ { $$ = NULL; }
 ;
 
 expr: expr  RTOKEN_SEMICOLON  expr
-{ 
+{
     $$ = new GRuleExpression(GRuleExpression::OPERATOR_BI);
     $$->expr_operator = GRuleExpression::OPERATOR_OR;
     $$->left_subexpr = $1;
@@ -397,7 +397,7 @@ expr: expr  RTOKEN_SEMICOLON  expr
 ;
 
 expr: expr  RTOKEN_COMMA  expr
-{ 
+{
     $$ = new GRuleExpression(GRuleExpression::OPERATOR_BI);
     $$->expr_operator = GRuleExpression::OPERATOR_AND;
     $$->left_subexpr = $1;
@@ -406,7 +406,7 @@ expr: expr  RTOKEN_COMMA  expr
 ;
 
 expr: expr  RTOKEN_UEQUAL  expr
-{ 
+{
     $$ = new GRuleExpression(GRuleExpression::OPERATOR_BI);
     $$->expr_operator = GRuleExpression::OPERATOR_UEQUAL;
     $$->left_subexpr = $1;
@@ -435,7 +435,7 @@ expr: expr RTOKEN_IMPLICATION expr
 }
 
 expr: expr  RTOKEN_NOT_EQUAL  expr
-{ 
+{
     $$ = new GRuleExpression(GRuleExpression::OPERATOR_BI);
     $$->expr_operator = GRuleExpression::OPERATOR_NOT_EQUAL;
     $$->left_subexpr = $1;
@@ -444,7 +444,7 @@ expr: expr  RTOKEN_NOT_EQUAL  expr
 ;
 
 expr: expr  RTOKEN_AMPERSAND  expr
-{ 
+{
     $$ = new GRuleExpression(GRuleExpression::OPERATOR_BI);
     $$->expr_operator = GRuleExpression::OPERATOR_HOOKING;
     $$->left_subexpr = $1;
@@ -454,7 +454,7 @@ expr: expr  RTOKEN_AMPERSAND  expr
 
 
 expr: expr  RTOKEN_EQUAL  expr
-{ 
+{
     $$ = new GRuleExpression(GRuleExpression::OPERATOR_BI);
     $$->expr_operator = GRuleExpression::OPERATOR_EQUAL;
     $$->left_subexpr = $1;
@@ -463,7 +463,7 @@ expr: expr  RTOKEN_EQUAL  expr
 ;
 
 expr: RTOKEN_ATTRIBUTE  RTOKEN_UASSIGN  expr
-{ 
+{
     $$ = new GRuleExpression(GRuleExpression::OPERATOR_BI);
     $$->expr_operator = GRuleExpression::OPERATOR_UASSIGN;
     $$->left_subexpr = new GRuleExpression(GRuleExpression::ATTRIBUTE);
@@ -473,7 +473,7 @@ expr: RTOKEN_ATTRIBUTE  RTOKEN_UASSIGN  expr
 ;
 
 expr: RTOKEN_ATTRIBUTE  RTOKEN_ASSIGN  expr
-{ 
+{
     $$ = new GRuleExpression(GRuleExpression::OPERATOR_BI);
     $$->expr_operator = GRuleExpression::OPERATOR_ASSIGN;
     $$->left_subexpr = new GRuleExpression(GRuleExpression::ATTRIBUTE);
@@ -483,7 +483,7 @@ expr: RTOKEN_ATTRIBUTE  RTOKEN_ASSIGN  expr
 ;
 
 expr: expr  RTOKEN_CARET  expr
-{ 
+{
     $$ = new GRuleExpression(GRuleExpression::OPERATOR_BI);
     $$->expr_operator = GRuleExpression::OPERATOR_SEMANTICS_INTERSECTION;
     $$->left_subexpr = $1;
@@ -492,7 +492,7 @@ expr: expr  RTOKEN_CARET  expr
 ;
 
 expr: expr  RTOKEN_PLUS  expr
-{ 
+{
     $$ = new GRuleExpression(GRuleExpression::OPERATOR_BI);
     $$->expr_operator = GRuleExpression::OPERATOR_SUM;
     $$->left_subexpr = $1;
@@ -501,7 +501,7 @@ expr: expr  RTOKEN_PLUS  expr
 ;
 
 expr: expr  RTOKEN_BINARG  expr
-{ 
+{
     $$ = new GRuleExpression(GRuleExpression::OPERATOR_BI);
     $$->expr_operator = GRuleExpression::OPERATOR_BINARG;
     $$->left_subexpr = $1;
@@ -514,15 +514,15 @@ expr: RTOKEN_LEFT_PAREN  expr  RTOKEN_RIGHT_PAREN
 ;
 
 expr: RTOKEN_LEFT_CURLY  expr  RTOKEN_RIGHT_CURLY
-{ 
+{
     $$ = new GRuleExpression(GRuleExpression::OPERATOR_MONO);
     $$->expr_operator = GRuleExpression::OPERATOR_ALWAYS_TRUE;
     $$->left_subexpr = $2;
 }
 ;
 
-expr: RTOKEN_QMARK  expr 
-{ 
+expr: RTOKEN_QMARK  expr
+{
     $$ = new GRuleExpression(GRuleExpression::OPERATOR_MONO);
     $$->expr_operator = GRuleExpression::OPERATOR_PRINT;
     $$->left_subexpr = $2;
@@ -530,14 +530,14 @@ expr: RTOKEN_QMARK  expr
 ;
 
 expr: RTOKEN_ATTRIBUTE
-{ 
+{
     $$ = new GRuleExpression(GRuleExpression::ATTRIBUTE);
     $$->attribute = $1;
 }
 ;
 
 expr: symbol_ref RTOKEN_DOT  RTOKEN_ATTRIBUTE
-{ 
+{
     $$ = $1;
     $$->attribute = $3;
 }
@@ -554,7 +554,7 @@ expr: RTOKEN_ATOM
 expr: RTOKEN_NUMBER
 {
     $$ = new GRuleExpression(GRuleExpression::NUMBER);
-    $$->number = $1;  
+    $$->number = $1;
 }
 ;
 
@@ -571,7 +571,7 @@ score_number: RTOKEN_SCORE
 
 score_number: RTOKEN_NUMBER
 {
-    $$ = static_cast<score_type>($1);
+    $$ = static_cast<Lattice::Score>($1);
 }
 
 expr: RTOKEN_SETSCORE score_number
@@ -587,7 +587,7 @@ symbol_ref: RTOKEN_ATOM
     $$ = new GRuleExpression(GRuleExpression::ATTRIBUTE);
     $$->atom = $1;
 }
-| RTOKEN_ATOM RTOKEN_LEFT_SQUARE RTOKEN_NUMBER RTOKEN_RIGHT_SQUARE 
+| RTOKEN_ATOM RTOKEN_LEFT_SQUARE RTOKEN_NUMBER RTOKEN_RIGHT_SQUARE
 {
     $$ = new GRuleExpression(GRuleExpression::ATTRIBUTE);
     $$->atom = $1;
@@ -598,6 +598,6 @@ symbol_ref: RTOKEN_ATOM
 %%
 void grparsererror(char* s)
     {
-	printf("b³±d: %s %d\n", s, grlexlineno);
-	snprintf(grerror_message,127,"%d::%s",grlexlineno,s);
+    printf("b³±d: %s %d\n", s, grlexlineno);
+    snprintf(grerror_message,127,"%d::%s",grlexlineno,s);
    }

@@ -4,15 +4,15 @@
 
 extern GRuleList* grparser_all;
 extern char grerror_message[];
-extern int grlexlineno;
+// extern int grlexlineno;
 
 
 int grparserparse();
 
 istream* grlex_input_stream;
 
-extern bool first_read;
-extern bool encoded;
+// extern bool first_read;
+// extern bool encoded;
 
 GRuleList* GRParser::parse(istream& a_input_stream, bool a_encoded)
 {
@@ -27,11 +27,11 @@ GRuleList* GRParser::parse(istream& a_input_stream, bool a_encoded)
         setlocale(LC_NUMERIC, "C");
     }
 
-    grlexlineno = 0;
+    // grlexlineno = 0;
     grparser_all = 0;
 
-    first_read = true;
-    encoded = a_encoded;
+    // first_read = true;
+    // encoded = a_encoded;
 
     grlex_input_stream = &a_input_stream;
     if(grparserparse())

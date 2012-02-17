@@ -11,7 +11,7 @@
 #include "decompose_expression.tpl"
 #include "default_tree_spec.tpl"
 // #include "disassemble_expression.tpl"
-// #include "expression_runner.tpl"
+#include "expression_runner.tpl"
 #include "grparser.h"
 #include "grule_helpers.hpp"
 #include "opcodes.hpp"

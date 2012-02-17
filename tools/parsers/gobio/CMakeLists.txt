@@ -4,6 +4,7 @@ add_library(tools-parsers-gobio SHARED
     rules/compile_gruleexpression.cpp
     rules/grule_helpers.cpp
     translator/grparser.cpp
+    translator/grparser.bis.cpp
     translator/grules.cpp
 )
 

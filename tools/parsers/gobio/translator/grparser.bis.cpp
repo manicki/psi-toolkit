@@ -150,12 +150,12 @@
 #include "grules.h"
 #include <stdio.h>
 
-    int grlexlex();
-    extern int grlexlineno;
+    // int grlexlex();
+    // extern int grlexlineno;
 
 int grparserlex()
 {
-   return grlexlex();
+   return 0; // return grlexlex();
 }
 
 
@@ -195,7 +195,7 @@ typedef union YYSTYPE {
     GRuleTreeRecipePath* tree_recipe_path;
     GRuleTreeRecipe* tree_recipe;
     list<GRuleTreeRecipe*>* tree_subrecipes_list;
-    score_type score;
+    Lattice::Score score;
 } YYSTYPE;
 /* Line 191 of yacc.c.  */
 #line 200 "grparser.bis.cpp"
@@ -246,7 +246,7 @@ typedef union YYSTYPE {
 
 #if (! defined (yyoverflow) \
      && (! defined (__cplusplus) \
-	 || (YYSTYPE_IS_TRIVIAL)))
+     || (YYSTYPE_IS_TRIVIAL)))
 
 /* A type that is properly aligned for any stack member.  */
 union yyalloc
@@ -261,7 +261,7 @@ union yyalloc
 /* The size of an array large to enough to hold all stacks, each with
    N elements.  */
 # define YYSTACK_BYTES(N) \
-     ((N) * (sizeof (short) + sizeof (YYSTYPE))				\
+     ((N) * (sizeof (short) + sizeof (YYSTYPE))             \
       + YYSTACK_GAP_MAXIMUM)
 
 /* Copy COUNT objects from FROM to TO.  The source and destination do
@@ -271,13 +271,13 @@ union yyalloc
 #   define YYCOPY(To, From, Count) \
       __builtin_memcpy (To, From, (Count) * sizeof (*(From)))
 #  else
-#   define YYCOPY(To, From, Count)		\
-      do					\
-	{					\
-	  register YYSIZE_T yyi;		\
-	  for (yyi = 0; yyi < (Count); yyi++)	\
-	    (To)[yyi] = (From)[yyi];		\
-	}					\
+#   define YYCOPY(To, From, Count)      \
+      do                    \
+    {                   \
+      register YYSIZE_T yyi;        \
+      for (yyi = 0; yyi < (Count); yyi++)   \
+        (To)[yyi] = (From)[yyi];        \
+    }                   \
       while (0)
 #  endif
 # endif
@@ -287,15 +287,15 @@ union yyalloc
    elements in the stack, and YYPTR gives the new location of the
    stack.  Advance YYPTR to a properly aligned location for the next
    stack.  */
-# define YYSTACK_RELOCATE(Stack)					\
-    do									\
-      {									\
-	YYSIZE_T yynewbytes;						\
-	YYCOPY (&yyptr->Stack, Stack, yysize);				\
-	Stack = &yyptr->Stack;						\
-	yynewbytes = yystacksize * sizeof (*Stack) + YYSTACK_GAP_MAXIMUM; \
-	yyptr += yynewbytes / sizeof (*yyptr);				\
-      }									\
+# define YYSTACK_RELOCATE(Stack)                    \
+    do                                  \
+      {                                 \
+    YYSIZE_T yynewbytes;                        \
+    YYCOPY (&yyptr->Stack, Stack, yysize);              \
+    Stack = &yyptr->Stack;                      \
+    yynewbytes = yystacksize * sizeof (*Stack) + YYSTACK_GAP_MAXIMUM; \
+    yyptr += yynewbytes / sizeof (*yyptr);              \
+      }                                 \
     while (0)
 
 #endif
@@ -324,7 +324,7 @@ union yyalloc
 #define YYUNDEFTOK  2
 #define YYMAXUTOK   294
 
-#define YYTRANSLATE(YYX) 						\
+#define YYTRANSLATE(YYX)                        \
   ((unsigned int) (YYX) <= YYMAXUTOK ? yytranslate[YYX] : YYUNDEFTOK)
 
 /* YYTRANSLATE[YYLEX] -- Bison symbol number corresponding to YYLEX.  */
@@ -426,24 +426,24 @@ static const unsigned short yyrline[] =
    First, the terminals, then, starting at YYNTOKENS, nonterminals. */
 static const char *const yytname[] =
 {
-  "$end", "error", "$undefined", "RTOKEN_ERROR", "RTOKEN_ASSIGN", 
-  "RTOKEN_ATOM", "RTOKEN_ATTRIBUTE", "RTOKEN_CARET", "RTOKEN_COMMA", 
-  "RTOKEN_DOT", "RTOKEN_LT", "RTOKEN_GT", "RTOKEN_EQUAL", 
-  "RTOKEN_LEFT_CURLY", "RTOKEN_LEFT_PAREN", "RTOKEN_LEFT_SQUARE", 
-  "RTOKEN_NOT_EQUAL", "RTOKEN_NUMBER", "RTOKEN_PIPE", 
-  "RTOKEN_RIGHT_CURLY", "RTOKEN_RIGHT_LAPKI", "RTOKEN_RIGHT_PAREN", 
-  "RTOKEN_RIGHT_SQUARE", "RTOKEN_SEMICOLON", "RTOKEN_STAR", 
-  "RTOKEN_UASSIGN", "RTOKEN_UEQUAL", "RTOKEN_QMARK", "RTOKEN_COLON", 
-  "RTOKEN_ELSE", "RTOKEN_IMPLICATION", "RTOKEN_SLASH", "RTOKEN_PERCENT", 
-  "RTOKEN_PLUS", "RTOKEN_AMPERSAND", "RTOKEN_BINARG", 
-  "RTOKEN_FIRST_NEWLINE", "RTOKEN_MULTIPLE_NEWLINE", "RTOKEN_SETSCORE", 
-  "RTOKEN_SCORE", "$accept", "grules_file", "grules_seq", "grule", 
-  "rule_id", "grule_recipe", "tree_recipe_expr", "tree_recipe", "p_plus", 
-  "tree_recipe_head", "tree_recipe_head_pre_path", 
-  "tree_recipe_head_main", "tree_subrecipes_list", "tree_recipe_path", 
-  "tree_recipe_path_node", "search_type_specifier", "parse_category", 
-  "parse_label", "right_symbols_seq", "right_symbol_alt", 
-  "right_symbol_alts_seq", "starred", "quantifier", "condition", "expr", 
+  "$end", "error", "$undefined", "RTOKEN_ERROR", "RTOKEN_ASSIGN",
+  "RTOKEN_ATOM", "RTOKEN_ATTRIBUTE", "RTOKEN_CARET", "RTOKEN_COMMA",
+  "RTOKEN_DOT", "RTOKEN_LT", "RTOKEN_GT", "RTOKEN_EQUAL",
+  "RTOKEN_LEFT_CURLY", "RTOKEN_LEFT_PAREN", "RTOKEN_LEFT_SQUARE",
+  "RTOKEN_NOT_EQUAL", "RTOKEN_NUMBER", "RTOKEN_PIPE",
+  "RTOKEN_RIGHT_CURLY", "RTOKEN_RIGHT_LAPKI", "RTOKEN_RIGHT_PAREN",
+  "RTOKEN_RIGHT_SQUARE", "RTOKEN_SEMICOLON", "RTOKEN_STAR",
+  "RTOKEN_UASSIGN", "RTOKEN_UEQUAL", "RTOKEN_QMARK", "RTOKEN_COLON",
+  "RTOKEN_ELSE", "RTOKEN_IMPLICATION", "RTOKEN_SLASH", "RTOKEN_PERCENT",
+  "RTOKEN_PLUS", "RTOKEN_AMPERSAND", "RTOKEN_BINARG",
+  "RTOKEN_FIRST_NEWLINE", "RTOKEN_MULTIPLE_NEWLINE", "RTOKEN_SETSCORE",
+  "RTOKEN_SCORE", "$accept", "grules_file", "grules_seq", "grule",
+  "rule_id", "grule_recipe", "tree_recipe_expr", "tree_recipe", "p_plus",
+  "tree_recipe_head", "tree_recipe_head_pre_path",
+  "tree_recipe_head_main", "tree_subrecipes_list", "tree_recipe_path",
+  "tree_recipe_path_node", "search_type_specifier", "parse_category",
+  "parse_label", "right_symbols_seq", "right_symbol_alt",
+  "right_symbol_alts_seq", "starred", "quantifier", "condition", "expr",
   "score_number", "symbol_ref", 0
 };
 #endif
@@ -628,43 +628,43 @@ static const unsigned char yystos[] =
 # define YYSIZE_T unsigned int
 #endif
 
-#define yyerrok		(yyerrstatus = 0)
-#define yyclearin	(yychar = YYEMPTY)
-#define YYEMPTY		(-2)
-#define YYEOF		0
+#define yyerrok     (yyerrstatus = 0)
+#define yyclearin   (yychar = YYEMPTY)
+#define YYEMPTY     (-2)
+#define YYEOF       0
 
-#define YYACCEPT	goto yyacceptlab
-#define YYABORT		goto yyabortlab
-#define YYERROR		goto yyerrlab1
+#define YYACCEPT    goto yyacceptlab
+#define YYABORT     goto yyabortlab
+#define YYERROR     goto yyerrlab1
 
 
 /* Like YYERROR except do call yyerror.  This remains here temporarily
    to ease the transition to the new meaning of YYERROR, for GCC.
    Once GCC version 2 has supplanted version 1, this can go.  */
 
-#define YYFAIL		goto yyerrlab
+#define YYFAIL      goto yyerrlab
 
 #define YYRECOVERING()  (!!yyerrstatus)
 
-#define YYBACKUP(Token, Value)					\
-do								\
-  if (yychar == YYEMPTY && yylen == 1)				\
-    {								\
-      yychar = (Token);						\
-      yylval = (Value);						\
-      yytoken = YYTRANSLATE (yychar);				\
-      YYPOPSTACK;						\
-      goto yybackup;						\
-    }								\
-  else								\
-    { 								\
+#define YYBACKUP(Token, Value)                  \
+do                              \
+  if (yychar == YYEMPTY && yylen == 1)              \
+    {                               \
+      yychar = (Token);                     \
+      yylval = (Value);                     \
+      yytoken = YYTRANSLATE (yychar);               \
+      YYPOPSTACK;                       \
+      goto yybackup;                        \
+    }                               \
+  else                              \
+    {                               \
       yyerror ("syntax error: cannot back up");\
-      YYERROR;							\
-    }								\
+      YYERROR;                          \
+    }                               \
 while (0)
 
-#define YYTERROR	1
-#define YYERRCODE	256
+#define YYTERROR    1
+#define YYERRCODE   256
 
 /* YYLLOC_DEFAULT -- Compute the default location (before the actions
    are run).  */
@@ -693,27 +693,27 @@ while (0)
 #  define YYFPRINTF fprintf
 # endif
 
-# define YYDPRINTF(Args)			\
-do {						\
-  if (yydebug)					\
-    YYFPRINTF Args;				\
+# define YYDPRINTF(Args)            \
+do {                        \
+  if (yydebug)                  \
+    YYFPRINTF Args;             \
 } while (0)
 
-# define YYDSYMPRINT(Args)			\
-do {						\
-  if (yydebug)					\
-    yysymprint Args;				\
+# define YYDSYMPRINT(Args)          \
+do {                        \
+  if (yydebug)                  \
+    yysymprint Args;                \
 } while (0)
 
-# define YYDSYMPRINTF(Title, Token, Value, Location)		\
-do {								\
-  if (yydebug)							\
-    {								\
-      YYFPRINTF (stderr, "%s ", Title);				\
-      yysymprint (stderr, 					\
-                  Token, Value);	\
-      YYFPRINTF (stderr, "\n");					\
-    }								\
+# define YYDSYMPRINTF(Title, Token, Value, Location)        \
+do {                                \
+  if (yydebug)                          \
+    {                               \
+      YYFPRINTF (stderr, "%s ", Title);             \
+      yysymprint (stderr,                   \
+                  Token, Value);    \
+      YYFPRINTF (stderr, "\n");                 \
+    }                               \
 } while (0)
 
 /*------------------------------------------------------------------.
@@ -737,10 +737,10 @@ yy_stack_print (bottom, top)
   YYFPRINTF (stderr, "\n");
 }
 
-# define YY_STACK_PRINT(Bottom, Top)				\
-do {								\
-  if (yydebug)							\
-    yy_stack_print ((Bottom), (Top));				\
+# define YY_STACK_PRINT(Bottom, Top)                \
+do {                                \
+  if (yydebug)                          \
+    yy_stack_print ((Bottom), (Top));               \
 } while (0)
 
 
@@ -767,10 +767,10 @@ yy_reduce_print (yyrule)
   YYFPRINTF (stderr, "-> %s\n", yytname [yyr1[yyrule]]);
 }
 
-# define YY_REDUCE_PRINT(Rule)		\
-do {					\
-  if (yydebug)				\
-    yy_reduce_print (Rule);		\
+# define YY_REDUCE_PRINT(Rule)      \
+do {                    \
+  if (yydebug)              \
+    yy_reduce_print (Rule);     \
 } while (0)
 
 /* Nonzero means print parse trace.  It is left uninitialized so that
@@ -786,7 +786,7 @@ int yydebug;
 
 
 /* YYINITDEPTH -- initial size of the parser's stacks.  */
-#ifndef	YYINITDEPTH
+#ifndef YYINITDEPTH
 # define YYINITDEPTH 200
 #endif
 
@@ -977,7 +977,7 @@ yyparse ()
 #endif
 #endif
 {
-  
+
   register int yystate;
   register int yyn;
   int yyresult;
@@ -995,7 +995,7 @@ yyparse ()
      to reallocate them elsewhere.  */
 
   /* The state stack.  */
-  short	yyssa[YYINITDEPTH];
+  short yyssa[YYINITDEPTH];
   short *yyss = yyssa;
   register short *yyssp;
 
@@ -1024,7 +1024,7 @@ yyparse ()
   yystate = 0;
   yyerrstatus = 0;
   yynerrs = 0;
-  yychar = YYEMPTY;		/* Cause a token to be read.  */
+  yychar = YYEMPTY;     /* Cause a token to be read.  */
 
   /* Initialize stack pointers.
      Waste one element of value and location stack
@@ -1055,25 +1055,25 @@ yyparse ()
 
 #ifdef yyoverflow
       {
-	/* Give user a chance to reallocate the stack. Use copies of
-	   these so that the &'s don't force the real ones into
-	   memory.  */
-	YYSTYPE *yyvs1 = yyvs;
-	short *yyss1 = yyss;
+    /* Give user a chance to reallocate the stack. Use copies of
+       these so that the &'s don't force the real ones into
+       memory.  */
+    YYSTYPE *yyvs1 = yyvs;
+    short *yyss1 = yyss;
 
 
-	/* Each stack pointer address is followed by the size of the
-	   data in use in that stack, in bytes.  This used to be a
-	   conditional around just the two extra args, but that might
-	   be undefined if yyoverflow is a macro.  */
-	yyoverflow ("parser stack overflow",
-		    &yyss1, yysize * sizeof (*yyssp),
-		    &yyvs1, yysize * sizeof (*yyvsp),
+    /* Each stack pointer address is followed by the size of the
+       data in use in that stack, in bytes.  This used to be a
+       conditional around just the two extra args, but that might
+       be undefined if yyoverflow is a macro.  */
+    yyoverflow ("parser stack overflow",
+            &yyss1, yysize * sizeof (*yyssp),
+            &yyvs1, yysize * sizeof (*yyvsp),
 
-		    &yystacksize);
+            &yystacksize);
 
-	yyss = yyss1;
-	yyvs = yyvs1;
+    yyss = yyss1;
+    yyvs = yyvs1;
       }
 #else /* no yyoverflow */
 # ifndef YYSTACK_RELOCATE
@@ -1081,23 +1081,23 @@ yyparse ()
 # else
       /* Extend the stack our own way.  */
       if (YYMAXDEPTH <= yystacksize)
-	goto yyoverflowlab;
+    goto yyoverflowlab;
       yystacksize *= 2;
       if (YYMAXDEPTH < yystacksize)
-	yystacksize = YYMAXDEPTH;
+    yystacksize = YYMAXDEPTH;
 
       {
-	short *yyss1 = yyss;
-	union yyalloc *yyptr =
-	  (union yyalloc *) YYSTACK_ALLOC (YYSTACK_BYTES (yystacksize));
-	if (! yyptr)
-	  goto yyoverflowlab;
-	YYSTACK_RELOCATE (yyss);
-	YYSTACK_RELOCATE (yyvs);
+    short *yyss1 = yyss;
+    union yyalloc *yyptr =
+      (union yyalloc *) YYSTACK_ALLOC (YYSTACK_BYTES (yystacksize));
+    if (! yyptr)
+      goto yyoverflowlab;
+    YYSTACK_RELOCATE (yyss);
+    YYSTACK_RELOCATE (yyvs);
 
 #  undef YYSTACK_RELOCATE
-	if (yyss1 != yyssa)
-	  YYSTACK_FREE (yyss1);
+    if (yyss1 != yyssa)
+      YYSTACK_FREE (yyss1);
       }
 # endif
 #endif /* no yyoverflow */
@@ -1107,10 +1107,10 @@ yyparse ()
 
 
       YYDPRINTF ((stderr, "Stack size increased to %lu\n",
-		  (unsigned long int) yystacksize));
+          (unsigned long int) yystacksize));
 
       if (yyss + yystacksize - 1 <= yyssp)
-	YYABORT;
+    YYABORT;
     }
 
   YYDPRINTF ((stderr, "Entering state %d\n", yystate));
@@ -1161,7 +1161,7 @@ yybackup:
   if (yyn <= 0)
     {
       if (yyn == 0 || yyn == YYTABLE_NINF)
-	goto yyerrlab;
+    goto yyerrlab;
       yyn = -yyn;
       goto yyreduce;
     }
@@ -1250,7 +1250,7 @@ yyreduce:
 
   case 6:
 #line 144 "grparser.y"
-    { 
+    {
     yyval.grule = new GRule;
     yyval.grule->left_symbol = yyvsp[-5].s;
     yyval.grule->right_symbols = yyvsp[-3].right_symbols_seq;
@@ -1265,7 +1265,7 @@ yyreduce:
 
   case 7:
 #line 156 "grparser.y"
-    { 
+    {
     yyval.grule = new GRule;
     yyval.grule->left_symbol = yyvsp[-7].s;
     yyval.grule->right_symbols = yyvsp[-5].right_symbols_seq;
@@ -1316,7 +1316,6 @@ yyreduce:
     yyval.tree_recipe = yyvsp[-1].tree_recipe;
     if(yyvsp[-2].b) yyval.tree_recipe->how_to_insert = GRuleTreeRecipe::INSERT_AFTER;
     if(yyvsp[0].b) yyval.tree_recipe->how_to_insert = GRuleTreeRecipe::INSERT_BEFORE;
-    PE_ASSERT(!yyvsp[-2].b || !yyvsp[0].b);
 ;}
     break;
 
@@ -1327,7 +1326,6 @@ yyreduce:
     yyval.tree_recipe->subrecipes = yyvsp[-2].tree_subrecipes_list;
     if(yyvsp[-5].b) yyval.tree_recipe->how_to_insert = GRuleTreeRecipe::INSERT_AFTER;
     if(yyvsp[0].b) yyval.tree_recipe->how_to_insert = GRuleTreeRecipe::INSERT_BEFORE;
-    PE_ASSERT(!yyvsp[-5].b || !yyvsp[0].b);
 ;}
     break;
 
@@ -1507,7 +1505,7 @@ yyreduce:
 
   case 41:
 #line 356 "grparser.y"
-    { 
+    {
     yyval.right_symbol_alts_seq = yyvsp[-2].right_symbol_alts_seq;
     yyval.right_symbol_alts_seq->is_optional = static_cast<bool>(yyvsp[0].i);
 ;}
@@ -1562,7 +1560,7 @@ yyreduce:
 
   case 50:
 #line 390 "grparser.y"
-    { 
+    {
     yyval.grule_expression = new GRuleExpression(GRuleExpression::OPERATOR_BI);
     yyval.grule_expression->expr_operator = GRuleExpression::OPERATOR_OR;
     yyval.grule_expression->left_subexpr = yyvsp[-2].grule_expression;
@@ -1572,7 +1570,7 @@ yyreduce:
 
   case 51:
 #line 399 "grparser.y"
-    { 
+    {
     yyval.grule_expression = new GRuleExpression(GRuleExpression::OPERATOR_BI);
     yyval.grule_expression->expr_operator = GRuleExpression::OPERATOR_AND;
     yyval.grule_expression->left_subexpr = yyvsp[-2].grule_expression;
@@ -1582,7 +1580,7 @@ yyreduce:
 
   case 52:
 #line 408 "grparser.y"
-    { 
+    {
     yyval.grule_expression = new GRuleExpression(GRuleExpression::OPERATOR_BI);
     yyval.grule_expression->expr_operator = GRuleExpression::OPERATOR_UEQUAL;
     yyval.grule_expression->left_subexpr = yyvsp[-2].grule_expression;
@@ -1615,7 +1613,7 @@ yyreduce:
 
   case 55:
 #line 437 "grparser.y"
-    { 
+    {
     yyval.grule_expression = new GRuleExpression(GRuleExpression::OPERATOR_BI);
     yyval.grule_expression->expr_operator = GRuleExpression::OPERATOR_NOT_EQUAL;
     yyval.grule_expression->left_subexpr = yyvsp[-2].grule_expression;
@@ -1625,7 +1623,7 @@ yyreduce:
 
   case 56:
 #line 446 "grparser.y"
-    { 
+    {
     yyval.grule_expression = new GRuleExpression(GRuleExpression::OPERATOR_BI);
     yyval.grule_expression->expr_operator = GRuleExpression::OPERATOR_HOOKING;
     yyval.grule_expression->left_subexpr = yyvsp[-2].grule_expression;
@@ -1635,7 +1633,7 @@ yyreduce:
 
   case 57:
 #line 456 "grparser.y"
-    { 
+    {
     yyval.grule_expression = new GRuleExpression(GRuleExpression::OPERATOR_BI);
     yyval.grule_expression->expr_operator = GRuleExpression::OPERATOR_EQUAL;
     yyval.grule_expression->left_subexpr = yyvsp[-2].grule_expression;
@@ -1645,7 +1643,7 @@ yyreduce:
 
   case 58:
 #line 465 "grparser.y"
-    { 
+    {
     yyval.grule_expression = new GRuleExpression(GRuleExpression::OPERATOR_BI);
     yyval.grule_expression->expr_operator = GRuleExpression::OPERATOR_UASSIGN;
     yyval.grule_expression->left_subexpr = new GRuleExpression(GRuleExpression::ATTRIBUTE);
@@ -1656,7 +1654,7 @@ yyreduce:
 
   case 59:
 #line 475 "grparser.y"
-    { 
+    {
     yyval.grule_expression = new GRuleExpression(GRuleExpression::OPERATOR_BI);
     yyval.grule_expression->expr_operator = GRuleExpression::OPERATOR_ASSIGN;
     yyval.grule_expression->left_subexpr = new GRuleExpression(GRuleExpression::ATTRIBUTE);
@@ -1667,7 +1665,7 @@ yyreduce:
 
   case 60:
 #line 485 "grparser.y"
-    { 
+    {
     yyval.grule_expression = new GRuleExpression(GRuleExpression::OPERATOR_BI);
     yyval.grule_expression->expr_operator = GRuleExpression::OPERATOR_SEMANTICS_INTERSECTION;
     yyval.grule_expression->left_subexpr = yyvsp[-2].grule_expression;
@@ -1677,7 +1675,7 @@ yyreduce:
 
   case 61:
 #line 494 "grparser.y"
-    { 
+    {
     yyval.grule_expression = new GRuleExpression(GRuleExpression::OPERATOR_BI);
     yyval.grule_expression->expr_operator = GRuleExpression::OPERATOR_SUM;
     yyval.grule_expression->left_subexpr = yyvsp[-2].grule_expression;
@@ -1687,7 +1685,7 @@ yyreduce:
 
   case 62:
 #line 503 "grparser.y"
-    { 
+    {
     yyval.grule_expression = new GRuleExpression(GRuleExpression::OPERATOR_BI);
     yyval.grule_expression->expr_operator = GRuleExpression::OPERATOR_BINARG;
     yyval.grule_expression->left_subexpr = yyvsp[-2].grule_expression;
@@ -1702,7 +1700,7 @@ yyreduce:
 
   case 64:
 #line 516 "grparser.y"
-    { 
+    {
     yyval.grule_expression = new GRuleExpression(GRuleExpression::OPERATOR_MONO);
     yyval.grule_expression->expr_operator = GRuleExpression::OPERATOR_ALWAYS_TRUE;
     yyval.grule_expression->left_subexpr = yyvsp[-1].grule_expression;
@@ -1711,7 +1709,7 @@ yyreduce:
 
   case 65:
 #line 524 "grparser.y"
-    { 
+    {
     yyval.grule_expression = new GRuleExpression(GRuleExpression::OPERATOR_MONO);
     yyval.grule_expression->expr_operator = GRuleExpression::OPERATOR_PRINT;
     yyval.grule_expression->left_subexpr = yyvsp[0].grule_expression;
@@ -1720,7 +1718,7 @@ yyreduce:
 
   case 66:
 #line 532 "grparser.y"
-    { 
+    {
     yyval.grule_expression = new GRuleExpression(GRuleExpression::ATTRIBUTE);
     yyval.grule_expression->attribute = yyvsp[0].s;
 ;}
@@ -1728,7 +1726,7 @@ yyreduce:
 
   case 67:
 #line 539 "grparser.y"
-    { 
+    {
     yyval.grule_expression = yyvsp[-2].grule_expression;
     yyval.grule_expression->attribute = yyvsp[0].s;
 ;}
@@ -1746,7 +1744,7 @@ yyreduce:
 #line 554 "grparser.y"
     {
     yyval.grule_expression = new GRuleExpression(GRuleExpression::NUMBER);
-    yyval.grule_expression->number = yyvsp[0].i;  
+    yyval.grule_expression->number = yyvsp[0].i;
 ;}
     break;
 
@@ -1768,7 +1766,7 @@ yyreduce:
   case 72:
 #line 572 "grparser.y"
     {
-    yyval.score = static_cast<score_type>(yyvsp[0].i);
+    yyval.score = static_cast<Lattice::Score>(yyvsp[0].i);
 ;}
     break;
 
@@ -1839,50 +1837,50 @@ yyerrlab:
       yyn = yypact[yystate];
 
       if (YYPACT_NINF < yyn && yyn < YYLAST)
-	{
-	  YYSIZE_T yysize = 0;
-	  int yytype = YYTRANSLATE (yychar);
-	  char *yymsg;
-	  int yyx, yycount;
+    {
+      YYSIZE_T yysize = 0;
+      int yytype = YYTRANSLATE (yychar);
+      char *yymsg;
+      int yyx, yycount;
 
-	  yycount = 0;
-	  /* Start YYX at -YYN if negative to avoid negative indexes in
-	     YYCHECK.  */
-	  for (yyx = yyn < 0 ? -yyn : 0;
-	       yyx < (int) (sizeof (yytname) / sizeof (char *)); yyx++)
-	    if (yycheck[yyx + yyn] == yyx && yyx != YYTERROR)
-	      yysize += yystrlen (yytname[yyx]) + 15, yycount++;
-	  yysize += yystrlen ("syntax error, unexpected ") + 1;
-	  yysize += yystrlen (yytname[yytype]);
-	  yymsg = (char *) YYSTACK_ALLOC (yysize);
-	  if (yymsg != 0)
-	    {
-	      char *yyp = yystpcpy (yymsg, "syntax error, unexpected ");
-	      yyp = yystpcpy (yyp, yytname[yytype]);
+      yycount = 0;
+      /* Start YYX at -YYN if negative to avoid negative indexes in
+         YYCHECK.  */
+      for (yyx = yyn < 0 ? -yyn : 0;
+           yyx < (int) (sizeof (yytname) / sizeof (char *)); yyx++)
+        if (yycheck[yyx + yyn] == yyx && yyx != YYTERROR)
+          yysize += yystrlen (yytname[yyx]) + 15, yycount++;
+      yysize += yystrlen ("syntax error, unexpected ") + 1;
+      yysize += yystrlen (yytname[yytype]);
+      yymsg = (char *) YYSTACK_ALLOC (yysize);
+      if (yymsg != 0)
+        {
+          char *yyp = yystpcpy (yymsg, "syntax error, unexpected ");
+          yyp = yystpcpy (yyp, yytname[yytype]);
 
-	      if (yycount < 5)
-		{
-		  yycount = 0;
-		  for (yyx = yyn < 0 ? -yyn : 0;
-		       yyx < (int) (sizeof (yytname) / sizeof (char *));
-		       yyx++)
-		    if (yycheck[yyx + yyn] == yyx && yyx != YYTERROR)
-		      {
-			const char *yyq = ! yycount ? ", expecting " : " or ";
-			yyp = yystpcpy (yyp, yyq);
-			yyp = yystpcpy (yyp, yytname[yyx]);
-			yycount++;
-		      }
-		}
-	      yyerror (yymsg);
-	      YYSTACK_FREE (yymsg);
-	    }
-	  else
-	    yyerror ("syntax error; also virtual memory exhausted");
-	}
+          if (yycount < 5)
+        {
+          yycount = 0;
+          for (yyx = yyn < 0 ? -yyn : 0;
+               yyx < (int) (sizeof (yytname) / sizeof (char *));
+               yyx++)
+            if (yycheck[yyx + yyn] == yyx && yyx != YYTERROR)
+              {
+            const char *yyq = ! yycount ? ", expecting " : " or ";
+            yyp = yystpcpy (yyp, yyq);
+            yyp = yystpcpy (yyp, yytname[yyx]);
+            yycount++;
+              }
+        }
+          yyerror (yymsg);
+          YYSTACK_FREE (yymsg);
+        }
+      else
+        yyerror ("syntax error; also virtual memory exhausted");
+    }
       else
 #endif /* YYERROR_VERBOSE */
-	yyerror ("syntax error");
+    yyerror ("syntax error");
     }
 
 
@@ -1890,21 +1888,21 @@ yyerrlab:
   if (yyerrstatus == 3)
     {
       /* If just tried and failed to reuse lookahead token after an
-	 error, discard it.  */
+     error, discard it.  */
 
       /* Return failure if at end of input.  */
       if (yychar == YYEOF)
         {
-	  /* Pop the error token.  */
+      /* Pop the error token.  */
           YYPOPSTACK;
-	  /* Pop the rest of the stack.  */
-	  while (yyss < yyssp)
-	    {
-	      YYDSYMPRINTF ("Error: popping", yystos[*yyssp], yyvsp, yylsp);
-	      yydestruct (yystos[*yyssp], yyvsp);
-	      YYPOPSTACK;
-	    }
-	  YYABORT;
+      /* Pop the rest of the stack.  */
+      while (yyss < yyssp)
+        {
+          YYDSYMPRINTF ("Error: popping", yystos[*yyssp], yyvsp, yylsp);
+          yydestruct (yystos[*yyssp], yyvsp);
+          YYPOPSTACK;
+        }
+      YYABORT;
         }
 
       YYDSYMPRINTF ("Error: discarding", yytoken, &yylval, &yylloc);
@@ -1922,25 +1920,25 @@ yyerrlab:
 | yyerrlab1 -- error raised explicitly by an action.  |
 `----------------------------------------------------*/
 yyerrlab1:
-  yyerrstatus = 3;	/* Each real token shifted decrements this.  */
+  yyerrstatus = 3;  /* Each real token shifted decrements this.  */
 
   for (;;)
     {
       yyn = yypact[yystate];
       if (yyn != YYPACT_NINF)
-	{
-	  yyn += YYTERROR;
-	  if (0 <= yyn && yyn <= YYLAST && yycheck[yyn] == YYTERROR)
-	    {
-	      yyn = yytable[yyn];
-	      if (0 < yyn)
-		break;
-	    }
-	}
+    {
+      yyn += YYTERROR;
+      if (0 <= yyn && yyn <= YYLAST && yycheck[yyn] == YYTERROR)
+        {
+          yyn = yytable[yyn];
+          if (0 < yyn)
+        break;
+        }
+    }
 
       /* Pop the current state because it cannot handle the error token.  */
       if (yyssp == yyss)
-	YYABORT;
+    YYABORT;
 
       YYDSYMPRINTF ("Error: popping", yystos[*yyssp], yyvsp, yylsp);
       yydestruct (yystos[yystate], yyvsp);
@@ -1999,8 +1997,8 @@ yyreturn:
 
 void grparsererror(char* s)
     {
-	printf("b³±d: %s %d\n", s, grlexlineno);
-	sprintf(grerror_message,"%d::%s",grlexlineno,s);
+    // printf("b³±d: %s %d\n", s, grlexlineno);
+    // sprintf(grerror_message,"%d::%s",grlexlineno,s);
    }
 
 
