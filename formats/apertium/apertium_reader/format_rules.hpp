@@ -2,6 +2,7 @@
 #define APERTIUM_FORMAT_RULES_HDR
 
 #include <string>
+#include <vector>
 #include <map>
 
 
@@ -28,14 +29,16 @@ private:
 class FormatRule {
 public:
 
-    FormatRule(const std::string& type, bool eos, int priority,
-        const std::string& beginEnd);
+    FormatRule(const std::string& type, bool eos, int priority);
     FormatRule(const std::string& type, bool eos, int priority,
         const std::string& begin, const std::string& end);
 
     std::string getType();
     bool isEos();
     int getPriority();
+    std::string getRegexp();
+
+    void addRule(const std::string& ruleRegexp);
 
 private:
 
@@ -43,10 +46,11 @@ private:
     bool eos_;
     int priority_;
 
-    std::string beginEnd_;
+    std::vector<std::string> tags_;
     std::string begin_;
     std::string end_;
 
+    std::string tagsToRegexAlternative_();
 };
 
 
@@ -56,6 +60,7 @@ public:
     ReplacementRule(const std::string& regexp);
 
     void addReplacement(std::string source, std::string target);
+    void addPreferredReplacement(std::string target, std::string source);
 
     std::string getRegexp();
     unsigned int replacementsCount();
@@ -64,6 +69,7 @@ private:
 
     std::string regexp_;
     std::map<std::string, std::string> sourceToTargetMap_;
+    std::map<std::string, std::string> preferredTargetToSourceMap_;
 
 };
 

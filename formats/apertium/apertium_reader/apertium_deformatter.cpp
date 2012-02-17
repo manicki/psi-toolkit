@@ -1,3 +1,5 @@
+#include <boost/foreach.hpp>
+
 #include "regexp.hpp"
 #include "logging.hpp"
 
@@ -19,16 +21,30 @@ FormatSpecification ApertiumDeformatter::initializeFormatSpecification_(
 std::string ApertiumDeformatter::deformat(const std::string& input) {
     std::string output = "apertium-reader got input: [" + input + "]";
 
-    pcrecpp::RE re("(\\[.*?\\])");
+    BOOST_FOREACH(FormatRule formatRule, formatSpecification_.getFormatRules()) {
+        pcrecpp::StringPiece inputToSearch(input);
+        std::string matched;
+        int inputLength = inputToSearch.size();
 
-    if (re.error().length() > 0) {
-        ERROR("PCRE compilation in apertium-deformatter failed with error: " << re.error());
-    }
+        std::string regexp = "(";
+        regexp += formatRule.getRegexp();
+        regexp += ")";
 
-    pcrecpp::StringPiece inputToSearch(input);
-    std::string matched;
-    while (re.FindAndConsume(&inputToSearch, &matched)) {
-        DEBUG("matched: " << matched);
+
+
+        pcrecpp::RE re(regexp);
+        DEBUG("looking for: " << regexp);
+
+        if (re.error().length() > 0) {
+            ERROR("PCRE compilation in apertium-deformatter failed with error: " << re.error());
+        }
+
+        // początek i koniec dopasowania
+        while (re.FindAndConsume(&inputToSearch, &matched)) {
+            DEBUG("  " << matched << " "
+                << "("<< inputLength - inputToSearch.size() - matched.size()
+                << ", " << inputLength - inputToSearch.size() << ")");
+        }
     }
 
     return output;
@@ -36,3 +52,12 @@ std::string ApertiumDeformatter::deformat(const std::string& input) {
 
 const std::string DELIMITER_BEGIN = "[";
 const std::string DELIMITER_END = "]";
+
+/*
+std::pair<int, int> ApertiumDeformatter::getMatchBeginEndIndex(
+     pcrecpp::StringPiece currentInput, std::string matchedString) {
+
+    return std::pair<int, int>(inputSize_ - currentInput.size() - matchedString.size(),
+        inputSize_ - currentInput.size());
+}
+*/

@@ -1,3 +1,5 @@
+#include <boost/algorithm/string/replace.hpp>
+
 #include <boost/foreach.hpp>
 
 #include "format_specification.hpp"
@@ -8,9 +10,9 @@
 
 //FormatSpecification
 
-FormatSpecification::FormatSpecification(FormatOptions options,
+FormatSpecification::FormatSpecification(std::string name, FormatOptions options,
         std::pair<std::vector<FormatRule>, std::vector<ReplacementRule> > rules)
-            : formatOptions_(options),
+            : name_(name), formatOptions_(options),
             formatRules_(rules.first), replacementRules_(rules.second) { }
 
 FormatOptions FormatSpecification::getOptions() {
@@ -35,9 +37,13 @@ FormatSpecificationReader::FormatSpecificationReader(const boost::filesystem::pa
 }
 
 FormatSpecification FormatSpecificationReader::readFormatSpecification() {
-    FormatSpecification formatSpecification(parseOptions_(), parseRules_());
+    FormatSpecification formatSpecification(parseName_(), parseOptions_(), parseRules_());
 
     return formatSpecification;
+}
+
+std::string FormatSpecificationReader::parseName_() {
+    return xmlParsed_->get<std::string>("format.<xmlattr>.name");
 }
 
 FormatOptions FormatSpecificationReader::parseOptions_() {
@@ -97,38 +103,58 @@ FormatRule FormatSpecificationReader::parseFormatRule_(boost::property_tree::ptr
 
     DEBUG("found format rule: " << type << "; " << eos << "; " << priority);
 
-    //FIXME: according to documentation, this node should be named 'begin-end' instead of 'tag'
-    std::string regexpOne = ruleNode.get<std::string>("tag.<xmlattr>.regexp", "");
+    std::string regexpOne = ruleNode.get<std::string>("begin.<xmlattr>.regexp", "");
 
-    if (!regexpOne.empty()) {
-        DEBUG("  with regexp: " << regexpOne);
-        return FormatRule(type, yesNoToBool_(eos), priority, regexpOne);
+    if (regexpOne.empty()) {
+
+        FormatRule rule(type, yesNoToBool_(eos), priority);
+        boost::property_tree::ptree::const_iterator end = ruleNode.end();
+
+        for (boost::property_tree::ptree::const_iterator it = ruleNode.begin(); it != end; ++it) {
+            //FIXME: according to documentation, this node should be named 'begin-end'
+            //instead of 'tag'
+            if (it->first == "tag") {
+
+                regexpOne = it->second.get<std::string>("<xmlattr>.regexp", "");
+                DEBUG("  with regexp: " << regexpOne);
+                rule.addRule(removeQuotationMarks_(regexpOne));
+            }
+        }
+
+        return rule;
     }
     else {
-        regexpOne = ruleNode.get<std::string>("begin.<xmlattr>.regexp");
         std::string regexpTwo = ruleNode.get<std::string>("end.<xmlattr>.regexp");
 
         DEBUG("  with regexp: " << regexpOne << "; " << regexpTwo);
-        return FormatRule(type, yesNoToBool_(eos), priority, regexpOne, regexpTwo);
+        return FormatRule(type, yesNoToBool_(eos), priority,
+            removeQuotationMarks_(regexpOne), removeQuotationMarks_(regexpTwo));
     }
 }
 
 ReplacementRule FormatSpecificationReader::parseReplacementRule_(
     boost::property_tree::ptree& ruleNode) {
 
-    std::string regexp = ruleNode.get<std::string>("<xmlattr>.regexp");
-    ReplacementRule rule(regexp);
+    std::string regex = ruleNode.get<std::string>("<xmlattr>.regexp");
+    ReplacementRule rule(regex);
 
     boost::property_tree::ptree::const_iterator end = ruleNode.end();
 
     for (boost::property_tree::ptree::const_iterator it = ruleNode.begin(); it != end; ++it) {
         if (it->first == "replace") {
-            rule.addReplacement(it->second.get<std::string>("<xmlattr>.source"),
-                it->second.get<std::string>("<xmlattr>.target"));
+            std::string source = it->second.get<std::string>("<xmlattr>.source");
+            std::string target = it->second.get<std::string>("<xmlattr>.target");
+
+            rule.addReplacement(source, target);
+
+            std::string prefer = it->second.get<std::string>("<xmlattr>.prefer", "");
+            if (prefer == "yes") {
+                rule.addPreferredReplacement(target, source);
+            }
         }
     }
 
-    DEBUG("found replacement rule: " << regexp << " contains " << rule.replacementsCount()
+    DEBUG("found replacement rule: " << regex << " contains " << rule.replacementsCount()
         << " replacements");
 
     return rule;
@@ -136,4 +162,10 @@ ReplacementRule FormatSpecificationReader::parseReplacementRule_(
 
 bool FormatSpecificationReader::yesNoToBool_(std::string& yesNo) {
     return (yesNo == "yes" ? true : false);
+}
+
+std::string FormatSpecificationReader::removeQuotationMarks_(std::string& str) {
+    //FIXME: distinct a raw quotation mark (") from an escaped quatation mark (\")
+    boost::replace_all(str, "\"", "");
+    return str;
 }

@@ -72,7 +72,7 @@
     </format-rule>
 
     <format-rule type="empty" eos="no" priority="5">
-      <tag regexp='("&lt;!"|"&lt;?")[a-zA-Z][^&gt;]*"&gt;"'/>
+      <tag regexp='("&lt;!"|"&lt;\?")[a-zA-Z][^&gt;]*"&gt;"'/>
     </format-rule>
 
 <!-- End (Cambios hechos por Gorka L.)-->
