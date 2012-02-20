@@ -4,12 +4,12 @@
 #include "grules.h"
 #include <stdio.h>
 
-    int grlexlex();
-    extern int grlexlineno;
+    // int grlexlex();
+    // extern int grlexlineno;
 
 int grparserlex()
 {
-   return grlexlex();
+   // return grlexlex();
 }
 
 
@@ -197,7 +197,6 @@ tree_recipe: p_plus tree_recipe_head p_plus
     $$ = $2;
     if($1) $$->how_to_insert = GRuleTreeRecipe::INSERT_AFTER;
     if($3) $$->how_to_insert = GRuleTreeRecipe::INSERT_BEFORE;
-    PE_ASSERT(!$1 || !$3);
 }
 | p_plus tree_recipe_head RTOKEN_LEFT_SQUARE tree_subrecipes_list RTOKEN_RIGHT_SQUARE p_plus
 {
@@ -205,7 +204,6 @@ tree_recipe: p_plus tree_recipe_head p_plus
     $$->subrecipes = $4;
     if($1) $$->how_to_insert = GRuleTreeRecipe::INSERT_AFTER;
     if($6) $$->how_to_insert = GRuleTreeRecipe::INSERT_BEFORE;
-    PE_ASSERT(!$1 || !$6);
 }
 ;
 
@@ -598,6 +596,6 @@ symbol_ref: RTOKEN_ATOM
 %%
 void grparsererror(char* s)
     {
-    printf("b³±d: %s %d\n", s, grlexlineno);
-    snprintf(grerror_message,127,"%d::%s",grlexlineno,s);
+    printf("b³±d: %s\n", s); // printf("b³±d: %s %d\n", s, grlexlineno);
+    snprintf(grerror_message,127,"%s",s); // snprintf(grerror_message,127,"%d::%s",grlexlineno,s);
    }
