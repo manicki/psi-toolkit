@@ -55,4 +55,18 @@ BOOST_AUTO_TEST_CASE( reading_markov_binarized_rules ) {
 }
 
 
+BOOST_AUTO_TEST_CASE( compiling_binarized_rules ) {
+
+    tgbg_combinator<
+        int,
+        Lattice::Score,
+        number_master,
+        semantics_stub<int, number_master, double>
+    > tgbg;
+    tgbg.add_rules(ROOT_DIR "tools/parsers/gobio/t/files/rules_6.g");
+    tgbg.compile_all_rules();
+
+}
+
+
 BOOST_AUTO_TEST_SUITE_END()
