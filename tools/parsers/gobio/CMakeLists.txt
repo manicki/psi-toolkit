@@ -8,6 +8,8 @@ add_library(tools-parsers-gobio SHARED
     translator/grules.cpp
 )
 
+set_source_files_properties(${psi-toolkit_SOURCE_DIR}/tools/parsers/gobio/translator/grparser.bis.cpp GENERATED)
+
 set(gobio_SUBDIRS
     avmatrix chart parser registrar rules translator trees
 CACHE PATH "Gobio subdirectories" FORCE)

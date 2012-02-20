@@ -10,6 +10,7 @@ vera++-result.xml
 build/*
 server/t/reports/*
 *.so
+*.bis.cpp
 server/website/storage/*
 \#*\#
 bindings/python/Test/__pycache__

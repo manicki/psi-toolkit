@@ -201,6 +201,37 @@ if(USE_PUDDLE)
         endif(USE_BONSAI_PARSEGRAPH)
 endif(USE_PUDDLE)
 
+if(NOT DEFINED BISON_PREFIX_OUTPUTS)
+    set(BISON_PREFIX_OUTPUTS FALSE)
+endif(NOT DEFINED BISON_PREFIX_OUTPUTS)
+
+if(NOT DEFINED BISON_GENERATE_DEFINES)
+    set(BISON_GENERATE_DEFINES FALSE)
+endif(NOT DEFINED BISON_GENERATE_DEFINES)
+
+if(NOT BISON_EXECUTABLE)
+    message(STATUS "Looking for bison")
+    find_program(BISON_EXECUTABLE bison)
+    if(BISON_EXECUTABLE)
+        message(STATUS "Looking for bison -- ${BISON_EXECUTABLE}")
+    endif(BISON_EXECUTABLE)
+endif(NOT BISON_EXECUTABLE)
+
+add_custom_target(
+    bison-grparser ALL
+    DEPENDS ${psi-toolkit_SOURCE_DIR}/tools/parsers/gobio/translator/grparser.bis.cpp
+)
+
+add_custom_command(
+    OUTPUT ${psi-toolkit_SOURCE_DIR}/tools/parsers/gobio/translator/grparser.bis.cpp
+    COMMAND ${BISON_EXECUTABLE}
+        -p grparser
+        -o ${psi-toolkit_SOURCE_DIR}/tools/parsers/gobio/translator/grparser.bis.cpp
+        ${psi-toolkit_SOURCE_DIR}/tools/parsers/gobio/translator/grparser.y
+    DEPENDS ${psi-toolkit_SOURCE_DIR}/tools/parsers/gobio/translator/grparser.y
+    COMMENT "Generating grparser.bis.cpp"
+)
+
 include_directories("${psi-toolkit_SOURCE_DIR}/tools/parsers/gobio")
 include_directories("${psi-toolkit_SOURCE_DIR}/tools/parsers/gobio/avmatrix")
 include_directories("${psi-toolkit_SOURCE_DIR}/tools/parsers/gobio/chart")
