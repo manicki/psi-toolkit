@@ -4,12 +4,12 @@
 #include "grules.h"
 #include <stdio.h>
 
-    // int grlexlex();
-    // extern int grlexlineno;
+    int grlexlex();
+    extern int grlexlineno;
 
 int grparserlex()
 {
-   // return grlexlex();
+   return grlexlex();
 }
 
 
@@ -596,6 +596,6 @@ symbol_ref: RTOKEN_ATOM
 %%
 void grparsererror(char* s)
     {
-    printf("b³±d: %s\n", s); // printf("b³±d: %s %d\n", s, grlexlineno);
-    snprintf(grerror_message,127,"%s",s); // snprintf(grerror_message,127,"%d::%s",grlexlineno,s);
+    printf("grparse error (%s) at line %d\n", s, grlexlineno);
+    snprintf(grerror_message,127,"%d::%s",grlexlineno,s);
    }

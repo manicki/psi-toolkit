@@ -3,11 +3,14 @@ add_library(tools-parsers-gobio SHARED
     registrar/number_master.cpp
     rules/compile_gruleexpression.cpp
     rules/grule_helpers.cpp
+    translator/lex.grlex.cpp
     translator/grparser.cpp
     translator/grparser.bis.cpp
     translator/grules.cpp
+    translator/prandseq.cpp
 )
 
+set_source_files_properties(${psi-toolkit_SOURCE_DIR}/tools/parsers/gobio/translator/lex.grlex.cpp GENERATED)
 set_source_files_properties(${psi-toolkit_SOURCE_DIR}/tools/parsers/gobio/translator/grparser.bis.cpp GENERATED)
 
 set(gobio_SUBDIRS

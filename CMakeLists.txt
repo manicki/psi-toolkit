@@ -201,6 +201,38 @@ if(USE_PUDDLE)
         endif(USE_BONSAI_PARSEGRAPH)
 endif(USE_PUDDLE)
 
+if(NOT DEFINED FLEX_PREFIX_OUTPUTS)
+    set(FLEX_PREFIX_OUTPUTS FALSE)
+endif(NOT DEFINED FLEX_PREFIX_OUTPUTS)
+
+if(NOT DEFINED FLEX_GENERATE_DEFINES)
+    set(FLEX_GENERATE_DEFINES FALSE)
+endif(NOT DEFINED FLEX_GENERATE_DEFINES)
+
+if(NOT FLEX_EXECUTABLE)
+    message(STATUS "Looking for flex")
+    find_program(FLEX_EXECUTABLE flex)
+    if(FLEX_EXECUTABLE)
+        message(STATUS "Looking for flex -- ${FLEX_EXECUTABLE}")
+    endif(FLEX_EXECUTABLE)
+endif(NOT FLEX_EXECUTABLE)
+
+add_custom_target(
+    flex-grlex ALL
+    DEPENDS
+        ${psi-toolkit_SOURCE_DIR}/tools/parsers/gobio/translator/lex.grlex.cpp
+)
+
+add_custom_command(
+    OUTPUT ${psi-toolkit_SOURCE_DIR}/tools/parsers/gobio/translator/lex.grlex.cpp
+    COMMAND ${FLEX_EXECUTABLE}
+        -P grlex
+        -o ${psi-toolkit_SOURCE_DIR}/tools/parsers/gobio/translator/lex.grlex.cpp
+        ${psi-toolkit_SOURCE_DIR}/tools/parsers/gobio/translator/lex.grlex.lpp
+    DEPENDS ${psi-toolkit_SOURCE_DIR}/tools/parsers/gobio/translator/lex.grlex.lpp
+    COMMENT "Generating lex.grlex.cpp"
+)
+
 if(NOT DEFINED BISON_PREFIX_OUTPUTS)
     set(BISON_PREFIX_OUTPUTS FALSE)
 endif(NOT DEFINED BISON_PREFIX_OUTPUTS)

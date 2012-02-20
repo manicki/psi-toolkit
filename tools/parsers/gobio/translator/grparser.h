@@ -6,8 +6,6 @@
 
 #include "grules.h"
 
-// #include "grparser.bis.h"
-
 class GRParser
 {
 public:

@@ -16,7 +16,7 @@ BOOST_AUTO_TEST_CASE( reading_rules ) {
         semantics_stub<int, number_master, double>
     > tgbg;
 
-    // tgbg.add_rules(ROOT_DIR "tools/parsers/gobio/t/files/rules_3.g");
+    tgbg.add_rules(ROOT_DIR "tools/parsers/gobio/t/files/rules_3.g");
 
 }
 
