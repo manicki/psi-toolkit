@@ -72,8 +72,8 @@ void compiled_expression<T,S,N>::pop_if_instruction(int opcode)
 {
     if(!instructions_.empty())
     {
-	if(instructions_.back().op_code == opcode)
-	    instructions_.pop_back();
+    if(instructions_.back().op_code == opcode)
+        instructions_.pop_back();
     }
 }
 
@@ -84,8 +84,8 @@ void compiled_expression<T,S,N>::delete_instructions(int begin_ix, int end_ix)
     assert(end_ix   <= (signed int)instructions_.size());
 
     instructions_.erase(
-	instructions_.begin() + begin_ix,
-	instructions_.begin() + end_ix);
+    instructions_.begin() + begin_ix,
+    instructions_.begin() + end_ix);
 }
 
 template<class T, class S, int N>
@@ -142,7 +142,7 @@ S compiled_expression<T,S,N>::get_farg(int address, int arg_number) const
     return instructions_[address].instruction_arguments[arg_number].f;
 }
 
-    
+
 template<class T, class S, int N>
 void compiled_expression<T,S,N>::set_iarg(int address, int arg_number, int arg_value)
 {
@@ -167,9 +167,9 @@ void compiled_expression<T,S,N>::set_opcode(int address, int opc, bool clear_arg
 
     if(clear_args)
     {
-	for(int i = 0; i < N; ++i)
-	    instructions_[address].instruction_arguments[i] 
-		= typename instruction::instruction_argument();
+    for(int i = 0; i < N; ++i)
+        instructions_[address].instruction_arguments[i]
+        = typename instruction::instruction_argument();
     }
 }
 
@@ -184,20 +184,20 @@ template<class T, class S, int N>
 void compiled_expression<T,S,N>::append(const compiled_expression& a)
 {
     for(size_t i = 0; i < a.instructions_.size(); ++i)
-	instructions_.push_back(a.instructions_[i]);
+    instructions_.push_back(a.instructions_[i]);
 }
 
 template<class T, class S, int N>
 boost::shared_ptr<compiled_expression<T,S,N> > compiled_expression<T,S,N>::get_slice(
     int begin_ix, int end_ix)
 {
-    assert(begin_ix <= instructions_.size() && end_ix <= instructions_.size());
+    assert(begin_ix <= (int)(instructions_.size()) && end_ix <= (int)(instructions_.size()));
 
     boost::shared_ptr<compiled_expression<T,S,N> > r(
-	new compiled_expression<T,S,N>());
+    new compiled_expression<T,S,N>());
 
     for(int ix = begin_ix; ix < end_ix; ++ix)
-	r->instructions_.push_back(instructions_[ix]);
+    r->instructions_.push_back(instructions_[ix]);
 
     return r;
 }
@@ -208,15 +208,15 @@ unsigned int compiled_expression<T,S,N>::hash_fun() const
     int h = 0;
     for(size_t i = 0; i < instructions_.size(); ++i)
     {
-	h ^= HASH_WRAPPER_FULL_HASH_TRAITS<int>().operator()(instructions_[i].op_code);
+    h ^= HASH_WRAPPER_FULL_HASH_TRAITS<int>().operator()(instructions_[i].op_code);
 
-	h <<= 1;
-	h ^= HASH_WRAPPER_FULL_HASH_TRAITS<int>().operator()(
-	    instructions_[i].instruction_arguments[0].t);
+    h <<= 1;
+    h ^= HASH_WRAPPER_FULL_HASH_TRAITS<int>().operator()(
+        instructions_[i].instruction_arguments[0].t);
 
-	h <<= 1;
-	h ^= HASH_WRAPPER_FULL_HASH_TRAITS<T>().operator()(
-	    instructions_[i].instruction_arguments[0].i);
+    h <<= 1;
+    h ^= HASH_WRAPPER_FULL_HASH_TRAITS<T>().operator()(
+        instructions_[i].instruction_arguments[0].i);
     }
 
     return h;
@@ -226,23 +226,23 @@ template<class T, class S, int N>
 bool compiled_expression<T,S,N>::operator==(const compiled_expression& a) const
 {
     if(instructions_.size() != a.instructions_.size())
-	return false;
+    return false;
 
     for(size_t i = 0; i < instructions_.size(); ++i)
     {
-	if(instructions_[i].op_code != a.instructions_[i].op_code)
-	    return false;
+    if(instructions_[i].op_code != a.instructions_[i].op_code)
+        return false;
 
-	for(size_t j = 0; j < N; ++j)
-	    if(instructions_[i].instruction_arguments[j].t
-	       != a.instructions_[i].instruction_arguments[j].t
-	       ||
-	       instructions_[i].instruction_arguments[j].f
-	       != a.instructions_[i].instruction_arguments[j].f
-	       ||
-	       instructions_[i].instruction_arguments[j].i
-	       != a.instructions_[i].instruction_arguments[j].i)
-		return false;
+    for(size_t j = 0; j < N; ++j)
+        if(instructions_[i].instruction_arguments[j].t
+           != a.instructions_[i].instruction_arguments[j].t
+           ||
+           instructions_[i].instruction_arguments[j].f
+           != a.instructions_[i].instruction_arguments[j].f
+           ||
+           instructions_[i].instruction_arguments[j].i
+           != a.instructions_[i].instruction_arguments[j].i)
+        return false;
     }
 
     return true;

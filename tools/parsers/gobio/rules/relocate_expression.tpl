@@ -482,7 +482,7 @@ std::vector<bool> get_independence_vector(
     int starred_ix)
 {
     assert(starred_ix == -1L ||
-       starred_ix >= 0 && starred_ix < (signed int)rhs_size);
+       (starred_ix >= 0 && starred_ix < (signed int)rhs_size));
 
     std::vector<bool> r;
 

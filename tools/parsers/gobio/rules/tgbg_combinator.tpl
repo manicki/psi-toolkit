@@ -447,7 +447,7 @@ void tgbg_combinator<T,S,M,X,E>::binarize_all_rules()
             (*rule_it).starred_ix,
             symbol_ix);
 
-        for(int i = 0; i < bifs.size(); ++i)
+        for (size_t i = 0; i < bifs.size(); ++i)
         ++bifs_hash[*bifs[i]];
 
         ++nb_of_rules;
@@ -613,7 +613,7 @@ void tgbg_combinator<T,S,M,X,E>::binarize_all_rules()
     bool first_filtre = true;
 
     for( ; bifs_hash_it != bifs_hash.end(); ++bifs_hash_it)
-        if((*bifs_hash_it).second == nb_of_rules)
+        if((*bifs_hash_it).second == (int)(nb_of_rules))
         {
         if(first_filtre)
         {
@@ -729,12 +729,12 @@ tgbg_combinator<T,S,M,X,E>::best_bid_(
 
     if((signed int)((*it).second.refs.size()) > max_freq ||
 
-       (signed int)((*it).second.refs.size()) == max_freq
-       && (*it).second.attrs.size() < min_attrs ||
+       ((signed int)((*it).second.refs.size()) == max_freq
+       && (*it).second.attrs.size() < min_attrs) ||
 
-       (signed int)((*it).second.refs.size()) == max_freq
+       ((signed int)((*it).second.refs.size()) == max_freq
        && (*it).second.attrs.size() == min_attrs
-       && order_force < min_order_force)
+       && order_force < min_order_force))
     {
         max_freq = (signed int)(*it).second.refs.size();
         min_attrs = (*it).second.attrs.size();

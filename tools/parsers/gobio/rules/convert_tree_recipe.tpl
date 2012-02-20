@@ -71,9 +71,9 @@ boost::shared_ptr<tree_specification<T> > convert_tree_recipe(
              ||
              // jesli mamy do czynienia z instrukcja typu A[B[...]]
              // B traktujemy domyslnie jako glowe A
-             is_category_root
+             (is_category_root
              && is_single_subrecipe
-             && (*it)->category)
+             && (*it)->category))
             ? master.from_string("#")
             : master.false_value()));
 
