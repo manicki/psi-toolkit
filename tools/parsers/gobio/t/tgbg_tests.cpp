@@ -129,5 +129,85 @@ BOOST_AUTO_TEST_CASE( tgbg_binarization_simple ) {
 
 }
 
+/*
+BOOST_AUTO_TEST_CASE( tgbg_binarization ) {
+
+    tgbg_combinator<
+        int,
+        Lattice::Score,
+        number_master,
+        semantics_stub<int, number_master, double>
+    > tgbg;
+    tgbg.add_rules(ROOT_DIR "tools/parsers/gobio/t/files/rules_10.g");
+
+    std::ostringstream osstr;
+    tgbg.print_rules(osstr);
+    BOOST_CHECK_EQUAL(
+        osstr.str(),
+        slurp_file(ROOT_DIR "tools/parsers/gobio/t/files/rules_10.g.out")
+    );
+
+}
+*/
+
+BOOST_AUTO_TEST_CASE( tgbg_binarization_with_star ) {
+
+    tgbg_combinator<
+        int,
+        Lattice::Score,
+        number_master,
+        semantics_stub<int, number_master, double>
+    > tgbg;
+    tgbg.add_rules(ROOT_DIR "tools/parsers/gobio/t/files/rules_11.g");
+
+    std::ostringstream osstr;
+    tgbg.print_rules(osstr);
+    BOOST_CHECK_EQUAL(
+        osstr.str(),
+        slurp_file(ROOT_DIR "tools/parsers/gobio/t/files/rules_11.g.out")
+    );
+
+}
+
+
+BOOST_AUTO_TEST_CASE( tgbg_binarization_with_attrs ) {
+
+    tgbg_combinator<
+        int,
+        Lattice::Score,
+        number_master,
+        semantics_stub<int, number_master, double>
+    > tgbg;
+    tgbg.add_rules(ROOT_DIR "tools/parsers/gobio/t/files/rules_12.g");
+
+    std::ostringstream osstr;
+    tgbg.print_rules(osstr);
+    BOOST_CHECK_EQUAL(
+        osstr.str(),
+        slurp_file(ROOT_DIR "tools/parsers/gobio/t/files/rules_12.g.out")
+    );
+
+}
+
+
+BOOST_AUTO_TEST_CASE( tgbg_binarization_with_attrs_2 ) {
+
+    tgbg_combinator<
+        int,
+        Lattice::Score,
+        number_master,
+        semantics_stub<int, number_master, double>
+    > tgbg;
+    tgbg.add_rules(ROOT_DIR "tools/parsers/gobio/t/files/rules_13.g");
+
+    std::ostringstream osstr;
+    tgbg.print_rules(osstr);
+    BOOST_CHECK_EQUAL(
+        osstr.str(),
+        slurp_file(ROOT_DIR "tools/parsers/gobio/t/files/rules_13.g.out")
+    );
+
+}
+
 
 BOOST_AUTO_TEST_SUITE_END()
