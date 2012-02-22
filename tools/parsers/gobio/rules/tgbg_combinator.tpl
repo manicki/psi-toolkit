@@ -640,7 +640,9 @@ void tgbg_combinator<T,S,M,X,E>::binarize_all_rules()
     // ------------------
 
 
-    bids.erase(max_it);
+    // bids.erase(max_it); //replaced by the following line to avoid memory access violation errors
+    bids.erase(max_it->first);
+
     }
 }
 

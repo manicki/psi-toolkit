@@ -129,7 +129,7 @@ BOOST_AUTO_TEST_CASE( tgbg_binarization_simple ) {
 
 }
 
-/*
+
 BOOST_AUTO_TEST_CASE( tgbg_binarization ) {
 
     tgbg_combinator<
@@ -148,7 +148,7 @@ BOOST_AUTO_TEST_CASE( tgbg_binarization ) {
     );
 
 }
-*/
+
 
 BOOST_AUTO_TEST_CASE( tgbg_binarization_with_star ) {
 
