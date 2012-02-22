@@ -269,8 +269,17 @@ function(download_artifact FILE)
 
   set(_skip_download 0)
 
-  if (NOT "${CMAKE_VERSION}" VERSION_LESS "2.8.7" AND EXISTS "${_downloaded_file}")
-     file(MD5 "${_downloaded_file}" _file_md5)
+  if (EXISTS "${_downloaded_file}")
+     if ("${CMAKE_VERSION}" VERSION_LESS "2.8.7")
+         execute_process(COMMAND "md5sum" "-b" ${_downloaded_file}
+		OUTPUT_VARIABLE _file_md5_line
+		ERROR_QUIET
+		OUTPUT_STRIP_TRAILING_WHITESPACE)
+         string(REGEX MATCH "^[0-9a-f]+" _file_md5 "${_file_md5_line}")
+     else()
+        file(MD5 "${_downloaded_file}" _file_md5)
+     endif ()
+
      message(STATUS "File ${_downloaded_file} already there with MD5 ${_file_md5}")
      message(STATUS "Downloading MD5 ${_url}...")
 
