@@ -8,13 +8,14 @@ add_library(tools-parsers-gobio SHARED
     translator/grparser.bis.cpp
     translator/grules.cpp
     translator/prandseq.cpp
+    transporter/semantics_wrapper.cpp
 )
 
 set_source_files_properties(${psi-toolkit_SOURCE_DIR}/tools/parsers/gobio/translator/lex.grlex.cpp GENERATED)
 set_source_files_properties(${psi-toolkit_SOURCE_DIR}/tools/parsers/gobio/translator/grparser.bis.cpp GENERATED)
 
 set(gobio_SUBDIRS
-    avmatrix chart parser registrar rules translator trees
+    avmatrix chart parser registrar rules translator transporter trees
 CACHE PATH "Gobio subdirectories" FORCE)
 
 include_directories("${psi-toolkit_SOURCE_DIR}/tools/parsers/gobio/avmatrix")
@@ -23,6 +24,7 @@ include_directories("${psi-toolkit_SOURCE_DIR}/tools/parsers/gobio/parser")
 include_directories("${psi-toolkit_SOURCE_DIR}/tools/parsers/gobio/registrar")
 include_directories("${psi-toolkit_SOURCE_DIR}/tools/parsers/gobio/rules")
 include_directories("${psi-toolkit_SOURCE_DIR}/tools/parsers/gobio/translator")
+include_directories("${psi-toolkit_SOURCE_DIR}/tools/parsers/gobio/transporter")
 include_directories("${psi-toolkit_SOURCE_DIR}/tools/parsers/gobio/trees")
 
 add_subdirectory("avmatrix")
@@ -31,6 +33,7 @@ add_subdirectory("parser")
 add_subdirectory("registrar")
 add_subdirectory("rules")
 add_subdirectory("translator")
+add_subdirectory("transporter")
 add_subdirectory("trees")
 add_subdirectory("t")
 

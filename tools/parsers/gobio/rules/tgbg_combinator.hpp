@@ -226,6 +226,7 @@ public:
 
     entry_type category()   const { return entry_; }
     S score()               const { return score_; }
+    int rule_no() const { return rule_ix_; }
 
     rule_type(int a_rule_ix, unsigned int a_tree_choice, S a_score, const entry_type& a_entry):
         rule_ix_(a_rule_ix),

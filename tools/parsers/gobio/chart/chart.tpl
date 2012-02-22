@@ -47,7 +47,7 @@ std::pair<typename chart<C,S,V,R,I>::edge_descriptor,bool> chart<C,S,V,R,I>::add
         Lattice::EdgeDescriptor result = lattice_.addEdge(
             u,
             v,
-            category,
+            (std::string)(category),
             getGobioTag_(),
             Lattice::EdgeSequence(),
             score,
@@ -70,7 +70,7 @@ std::pair<typename chart<C,S,V,R,I>::edge_descriptor,bool> chart<C,S,V,R,I>::add
     edge_descriptor link)
 {
     try {
-        AnnotationItem ai(category);
+        AnnotationItem ai((std::string)(category));
         Lattice::EdgeSequence::Builder builder(lattice_);
         builder.addEdge(link);
         int num1 = lattice_.countEdges(u, v);
@@ -97,7 +97,7 @@ std::pair<typename chart<C,S,V,R,I>::edge_descriptor,bool> chart<C,S,V,R,I>::add
     const category_type& category,
     score_type score,
     rule_type rule,
-    edge_descriptor  left_link,
+    edge_descriptor left_link,
     edge_descriptor right_link)
 {
     try {
@@ -108,7 +108,7 @@ std::pair<typename chart<C,S,V,R,I>::edge_descriptor,bool> chart<C,S,V,R,I>::add
         Lattice::EdgeDescriptor result = lattice_.addEdge(
             u,
             v,
-            category,
+            (std::string)(category),
             getGobioTag_(),
             builder.build(),
             score,
@@ -272,7 +272,7 @@ template<class C, class S, class V, class R, template<class,class> class I>
 typename chart<C,S,V,R,I>::category_type chart<C,S,V,R,I>::edge_category(
     edge_descriptor edge)
 {
-    return lattice_.getAnnotationCategory(edge);
+    return (chart<C,S,V,R,I>::category_type)(lattice_.getAnnotationCategory(edge));
 }
 
 template<class C, class S, class V, class R, template<class,class> class I>

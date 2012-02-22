@@ -59,7 +59,7 @@ public:
     typedef typename std::list<Lattice::Partition>::iterator partition_iterator;
     // typedef typename std::string::iterator variant_iterator;
 
-    typedef std::string category_type;
+    typedef C category_type;
     typedef V variant_category_type;
     typedef S score_type;
     typedef R rule_type;
