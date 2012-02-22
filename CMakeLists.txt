@@ -75,6 +75,20 @@ else()
   set(HAVE_CMPH 0)
 endif(EXISTS ${CMPH_LIB} AND EXISTS ${CMPH_INCLUDE})
 
+# SFST library (finite state machine)
+find_library(SFST_LIB NAMES sfst)
+find_path(SFST_INCLUDE fst.h)
+
+if(EXISTS ${SFST_LIB} AND EXISTS ${SFST_INCLUDE})
+  message("-- Using SFST...")
+  include_directories(${SFST_INCLUDE})
+  link_directories(${SFST_LIB})
+  set(HAVE_CMPH 1)
+else()
+  message("-- Not using SFST...")
+  set(HAVE_SFST 0)
+endif(EXISTS ${SFST_LIB} AND EXISTS ${SFST_INCLUDE})
+
 # Finds and includes external libraries
 set(Boost_USE_STATIC_LIBS OFF)
 set(Boost_USE_STATIC_RUNTIME OFF)
