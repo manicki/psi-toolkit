@@ -35,7 +35,7 @@ int semantics_wrapper::tri_intersect(int word, int sem, int pattern, double& bon
     return ar;
 }
 
-int semantics_wrapper::tri_intersect_(int word, int sem, int pattern, double& bonus)
+int semantics_wrapper::tri_intersect_(int /*word*/, int sem, int pattern, double& bonus)
 {
     // assert(dhierarchy_);
 

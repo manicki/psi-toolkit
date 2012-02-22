@@ -17,7 +17,7 @@ public:
     void set_divisor(int bonus_divisor);
 
 private:
-    int tri_intersect_(int word, int sem, int pattern, double& bonus);
+    int tri_intersect_(int /*word*/, int sem, int pattern, double& bonus);
 
     number_master& master_;
     // DomainHierarchy* dhierarchy_;
