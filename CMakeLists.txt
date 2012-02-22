@@ -269,7 +269,7 @@ function(download_artifact FILE)
 
   set(_skip_download 0)
 
-  if (EXISTS "${_downloaded_file}")
+  if (NOT "${CMAKE_VERSION}" VERSION_LESS "2.8.7" AND EXISTS "${_downloaded_file}")
      file(MD5 "${_downloaded_file}" _file_md5)
      message(STATUS "File ${_downloaded_file} already there with MD5 ${_file_md5}")
      message(STATUS "Downloading MD5 ${_url}...")
@@ -281,10 +281,12 @@ function(download_artifact FILE)
          "${_jenkins_fingerprint_file}"
          STATUS status)
 
-     # :( no '{..}' quantifiers in cmake regexps
-     file(STRINGS ${_jenkins_fingerprint_file} _md5_lines REGEX ">([0-9a-f][0-9a-f][0-9a-f][0-9a-f][0-9a-f][0-9a-f][0-9a-f][0-9a-f][0-9a-f][0-9a-f][0-9a-f][0-9a-f][0-9a-f][0-9a-f][0-9a-f][0-9a-f][0-9a-f][0-9a-f][0-9a-f][0-9a-f][0-9a-f][0-9a-f][0-9a-f][0-9a-f][0-9a-f][0-9a-f][0-9a-f][0-9a-f][0-9a-f][0-9a-f][0-9a-f][0-9a-f])<")
+     # :( no '{..}' quantifiers in cmake regexps, should be ">([0-9a-f]{32})<"
+     set(_stupid_regexp ">([0-9a-f][0-9a-f][0-9a-f][0-9a-f][0-9a-f][0-9a-f][0-9a-f][0-9a-f][0-9a-f][0-9a-f][0-9a-f][0-9a-f][0-9a-f][0-9a-f][0-9a-f][0-9a-f][0-9a-f][0-9a-f][0-9a-f][0-9a-f][0-9a-f][0-9a-f][0-9a-f][0-9a-f][0-9a-f][0-9a-f][0-9a-f][0-9a-f][0-9a-f][0-9a-f][0-9a-f][0-9a-f])<")
 
-     string(REGEX MATCH ">([0-9a-f][0-9a-f][0-9a-f][0-9a-f][0-9a-f][0-9a-f][0-9a-f][0-9a-f][0-9a-f][0-9a-f][0-9a-f][0-9a-f][0-9a-f][0-9a-f][0-9a-f][0-9a-f][0-9a-f][0-9a-f][0-9a-f][0-9a-f][0-9a-f][0-9a-f][0-9a-f][0-9a-f][0-9a-f][0-9a-f][0-9a-f][0-9a-f][0-9a-f][0-9a-f][0-9a-f][0-9a-f])<" _match "${_md5_lines}")
+     file(STRINGS ${_jenkins_fingerprint_file} _md5_lines REGEX "${_stupid_regexp}")
+
+     string(REGEX MATCH "${_stupid_regexp}" _match "${_md5_lines}")
 
      set(_remote_md5 "${CMAKE_MATCH_1}")
 
@@ -294,7 +296,7 @@ function(download_artifact FILE)
         message(STATUS "MD5 is the same, skipping download")
         set(_skip_download 1)
      endif ("${_remote_md5}" STREQUAL "${_file_md5}")
-  endif (EXISTS "${_downloaded_file}")
+  endif ()
 
   if (NOT "${_skip_download}")
     message(STATUS "Downloading ${_url}...")
