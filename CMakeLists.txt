@@ -262,19 +262,55 @@ function(download_artifact FILE)
   set(_url
       "http://mrt.wmi.amu.edu.pl:8080/job/psi-toolkit-data/lastSuccessfulBuild/artifact/psi-toolkit-data/${FILE}")
 
-  message(STATUS "Downloading ${_url}...")
-  file(DOWNLOAD
-      "${_url}"
-      "${psi-toolkit_SOURCE_DIR}/${FILE}"
-      STATUS status)
+  message(STATUS "Checking ${_url}...")
 
-  list(GET status 0 _status )
-  list(GET status 1 _status_message )
+  set(_downloaded_file
+      "${psi-toolkit_SOURCE_DIR}/${FILE}")
 
-  if (NOT ${_status} EQUAL 0)
-     file(REMOVE "${psi-toolkit_SOURCE_DIR}/${FILE}")
-     message(FATAL_ERROR
+  set(_skip_download 0)
+
+  if (EXISTS "${_downloaded_file}")
+     file(MD5 "${_downloaded_file}" _file_md5)
+     message(STATUS "File ${_downloaded_file} already there with MD5 ${_file_md5}")
+     message(STATUS "Downloading MD5 ${_url}...")
+
+     set(_jenkins_fingerprint_file "${psi-toolkit_BINARY_DIR}/${FILE}.md5")
+
+     file(DOWNLOAD
+         "${_url}/*fingerprint*/"
+         "${_jenkins_fingerprint_file}"
+         STATUS status)
+
+     # :( no '{..}' quantifiers in cmake regexps
+     file(STRINGS ${_jenkins_fingerprint_file} _md5_lines REGEX ">([0-9a-f][0-9a-f][0-9a-f][0-9a-f][0-9a-f][0-9a-f][0-9a-f][0-9a-f][0-9a-f][0-9a-f][0-9a-f][0-9a-f][0-9a-f][0-9a-f][0-9a-f][0-9a-f][0-9a-f][0-9a-f][0-9a-f][0-9a-f][0-9a-f][0-9a-f][0-9a-f][0-9a-f][0-9a-f][0-9a-f][0-9a-f][0-9a-f][0-9a-f][0-9a-f][0-9a-f][0-9a-f])<")
+
+     string(REGEX MATCH ">([0-9a-f][0-9a-f][0-9a-f][0-9a-f][0-9a-f][0-9a-f][0-9a-f][0-9a-f][0-9a-f][0-9a-f][0-9a-f][0-9a-f][0-9a-f][0-9a-f][0-9a-f][0-9a-f][0-9a-f][0-9a-f][0-9a-f][0-9a-f][0-9a-f][0-9a-f][0-9a-f][0-9a-f][0-9a-f][0-9a-f][0-9a-f][0-9a-f][0-9a-f][0-9a-f][0-9a-f][0-9a-f])<" _match "${_md5_lines}")
+
+     set(_remote_md5 "${CMAKE_MATCH_1}")
+
+     message(STATUS "Remote file MD5 is: ${_remote_md5}")
+
+     if ("${_remote_md5}" STREQUAL "${_file_md5}")
+        message(STATUS "MD5 is the same, skipping download")
+        set(_skip_download 1)
+     endif ("${_remote_md5}" STREQUAL "${_file_md5}")
+  endif (EXISTS "${_downloaded_file}")
+
+  if (NOT "${_skip_download}")
+    message(STATUS "Downloading ${_url}...")
+    file(DOWNLOAD
+          "${_url}"
+          "${psi-toolkit_SOURCE_DIR}/${FILE}"
+          STATUS status)
+
+    list(GET status 0 _status )
+    list(GET status 1 _status_message )
+
+    if (NOT ${_status} EQUAL 0)
+       file(REMOVE "${psi-toolkit_SOURCE_DIR}/${FILE}")
+       message(FATAL_ERROR
              "Cannot download ${_url}:${_status_message}. Try running cmake with -DDOWNLOAD_DATA=OFF")
+    endif()
   endif()
 
 endfunction(download_artifact)
