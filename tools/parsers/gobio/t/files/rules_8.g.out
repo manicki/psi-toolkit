@@ -1,0 +1,187 @@
+* a = b*
+0000.  PUSH SUBVAR Z[1]
+0001.  EQUAL haha
+0002.  STOP
+
+
++ a = b* c
+0000.  PUSH SUBVAR Z[1]
+0001.  EQUAL haha
+0002.  STOP
+
+
++ a = b* d
+0000.  PUSH SUBVAR Z[1]
+0001.  EQUAL haha
+0002.  STOP
+
+
+* x =
+0000.  PUSH SUBVAR A[1]
+0001.  PUSH SUBVAR A[0]
+0002.  EQUAL
+0003.  STOP
+
+
++ x = y u*
+0000.  PUSH SUBVAR A[1]
+0001.  PUSH SUBVAR A[0]
+0002.  EQUAL
+0003.  STOP
+
+
++ x = z u*
+0000.  PUSH SUBVAR A[1]
+0001.  PUSH SUBVAR A[0]
+0002.  EQUAL
+0003.  STOP
+
+
++ x = t u*
+0000.  PUSH SUBVAR A[1]
+0001.  PUSH SUBVAR A[0]
+0002.  EQUAL
+0003.  STOP
+
+
+* a =
+0000.  PUSH SUBVAR B[0]
+0001.  EQUAL 1
+0002.  STOP
+
+
++ a = b d
+0000.  PUSH SUBVAR B[0]
+0001.  EQUAL 1
+0002.  STOP
+
+
++ a = c d
+0000.  PUSH SUBVAR B[0]
+0001.  EQUAL 1
+0002.  STOP
+
+
++ a = b e
+0000.  PUSH SUBVAR B[0]
+0001.  EQUAL 1
+0002.  STOP
+
+
++ a = c e
+0000.  PUSH SUBVAR B[0]
+0001.  EQUAL 1
+0002.  STOP
+
+
+* h =
+0000.  PUSH TRUE
+0001.  STOP
+
+
++ h = b d*
+0000.  PUSH TRUE
+0001.  STOP
+
+
++ h = d*
+0000.  PUSH TRUE
+0001.  STOP
+
+
++ h = c d*
+0000.  PUSH TRUE
+0001.  STOP
+
+
++ h = b
+0000.  PUSH TRUE
+0001.  STOP
+
+
++ h = c
+0000.  PUSH TRUE
+0001.  STOP
+
+
++ h = b e*
+0000.  PUSH TRUE
+0001.  STOP
+
+
++ h = e*
+0000.  PUSH TRUE
+0001.  STOP
+
+
++ h = c e*
+0000.  PUSH TRUE
+0001.  STOP
+
+
+* q = v
+0000.  PUSH SUBVAR A[1]
+0001.  EQUAL 2
+0002.  STOP
+
+
++ q = v b*
+0000.  PUSH SUBVAR A[1]
+0001.  EQUAL 2
+0002.  STOP
+
+
++ q = v c*
+0000.  PUSH SUBVAR A[1]
+0001.  EQUAL 2
+0002.  STOP
+
+
+* t =
+0000.  PUSH SUBVAR C[0]
+0001.  EQUAL 3
+0002.  STOP
+
+
++ t = b
+0000.  PUSH FALSE
+0001.  EQUAL 3
+0002.  STOP
+
+
++ t = a b
+0000.  PUSH SUBVAR C[0]
+0001.  EQUAL 3
+0002.  STOP
+
+
++ t = c
+0000.  PUSH SUBVAR C[0]
+0001.  EQUAL 3
+0002.  STOP
+
+
++ t = d
+0000.  PUSH SUBVAR C[0]
+0001.  EQUAL 3
+0002.  STOP
+
+
+* a = b
+0000.  PUSH SUBVAR C[1]
+0001.  EQUAL 10
+0002.  STOP
+
+
++ a = b b
+0000.  PUSH SUBVAR C[1]
+0001.  EQUAL 10
+0002.  STOP
+
+
++ a = b a
+0000.  PUSH SUBVAR C[1]
+0001.  EQUAL 10
+0002.  STOP
+
+
