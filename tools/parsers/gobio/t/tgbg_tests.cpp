@@ -210,4 +210,25 @@ BOOST_AUTO_TEST_CASE( tgbg_binarization_with_attrs_2 ) {
 }
 
 
+BOOST_AUTO_TEST_CASE( setscore_factor ) {
+
+    tgbg_combinator<
+        int,
+        Lattice::Score,
+        number_master,
+        semantics_stub<int, number_master, double>
+    > tgbg;
+    tgbg.add_rules(ROOT_DIR "tools/parsers/gobio/t/files/rules_23.g");
+    tgbg.compile_all_rules();
+
+    std::ostringstream osstr;
+    tgbg.print_rules(osstr);
+    BOOST_CHECK_EQUAL(
+        osstr.str(),
+        slurp_file(ROOT_DIR "tools/parsers/gobio/t/files/rules_23.g.out")
+    );
+
+}
+
+
 BOOST_AUTO_TEST_SUITE_END()
