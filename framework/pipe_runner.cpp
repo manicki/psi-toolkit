@@ -111,11 +111,11 @@ bool PipeRunner::stopAfterExecutingRunnerOptions_() {
     }
 
     if (runnerOptions_.count("version")) {
-        std::cout << "psi-toolkit ver.";
-        if (std::string("GIT-NOTFOUND").compare(g_GIT_LAST_DATE) == 0) {
-            std::cout << ' ' << g_GIT_LAST_DATE;
+        std::cout << "psi-toolkit ver. ";
+        if (std::string("GIT-NOTFOUND") != g_GIT_LAST_DATE) {
+            std::cout << g_GIT_LAST_DATE << ' ';
         }
-        std::cout << ' ' << g_GIT_SHA1 << std::endl;
+        std::cout << g_GIT_SHA1 << std::endl;
 
         return true;
     }
