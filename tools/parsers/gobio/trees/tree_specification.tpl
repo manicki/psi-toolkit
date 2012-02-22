@@ -315,7 +315,7 @@ void tree_specification<T>::ground(
 
 }
 
-/*
+
 template<class T> template<class M>
 std::string tree_specification<T>::string_representation(M& master) const
 {
@@ -371,9 +371,6 @@ std::string tree_specification<T>::string_representation(M& master) const
 
     return r;
 }
-*/
-
-
 
 
 template<class T>
@@ -386,13 +383,13 @@ boost::shared_ptr<tree_specification_root<T> > category_root<T>::clone() const
 {
     return boost::shared_ptr<tree_specification_root<T> >(new category_root<T>(*this));
 }
-/*
+
 template<class T>
 std::string category_root<T>::string_representation(string_representationer<T>& srer) const
 {
     return srer.string_representation(category_);
 }
-*/
+
 
 template<class T>
 hook_root<T>::hook_root(size_t symbol_ix)
@@ -454,7 +451,8 @@ std::vector<size_t> hook_root<T>::get_hook_path() const
 {
     return symbol_ixs_;
 }
-/*
+
+
 template<class T>
 std::string hook_root<T>::string_representation(string_representationer<T>&) const
 {
@@ -465,8 +463,6 @@ std::string hook_root<T>::string_representation(string_representationer<T>&) con
 
     return osstr.str();
 }
-*/
-
 
 
 template<class T>
@@ -521,7 +517,7 @@ std::vector<size_t> hook_contents_root<T>::get_hook_path() const
     return symbol_ixs_;
 }
 
-/*
+
 template<class T>
 std::string hook_contents_root<T>::string_representation(string_representationer<T>&) const
 {
@@ -534,7 +530,8 @@ std::string hook_contents_root<T>::string_representation(string_representationer
 
     return osstr.str();
 }
-*/
+
+
 template<class T> template<class Archive>
 void tree_specification<T>::serialize(Archive & ar, const unsigned int /*version*/)
 {

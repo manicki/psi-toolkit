@@ -10,14 +10,14 @@
 #include "convert_tree_recipe.tpl"
 #include "decompose_expression.tpl"
 #include "default_tree_spec.tpl"
-// #include "disassemble_expression.tpl"
+#include "disassemble_expression.tpl"
 #include "expression_runner.tpl"
 #include "grparser.h"
 #include "grule_helpers.hpp"
 #include "opcodes.hpp"
 #include "relocate_expression.tpl"
 #include "tgbg_combinator.hpp"
-// #include "tree_specification.tpl"
+#include "tree_specification.tpl"
 
 #ifdef _T5_WITH_EXTSCORES
 #include "gen_ruledumper.tpl"

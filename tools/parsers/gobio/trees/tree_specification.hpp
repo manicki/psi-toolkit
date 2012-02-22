@@ -3,14 +3,14 @@
 
 #include <vector>
 #include <string>
-#include <boost/shared_ptr.hpp>
-
-// #include "string_representationer.hpp"
 
 #include <boost/archive/binary_oarchive.hpp>
 #include <boost/archive/binary_iarchive.hpp>
 #include <boost/serialization/shared_ptr.hpp>
 #include <boost/serialization/vector.hpp>
+#include <boost/shared_ptr.hpp>
+
+#include "string_representationer.hpp"
 
 template<class T>
 class tree_specification_root;
@@ -162,8 +162,8 @@ public:
     template<class Ch, class Sel>
     void ground(Ch& chart, typename Ch::partition_iterator partition_it, Sel& selector);
 
-    // template<class M>
-    // std::string string_representation(M& master) const;
+    template<class M>
+    std::string string_representation(M& master) const;
 
 private:
     //! Zablokowany konstruktor bezparametrowy.
@@ -382,8 +382,8 @@ public:
     /**
      * \arg srer - obiekt zamieniający kategorie i etykiety na string
      */
-    // virtual std::string string_representation(string_representationer<T>& /*srer*/) const
-    // { assert(0); return std::string(); }
+    virtual std::string string_representation(string_representationer<T>& /*srer*/) const
+    { assert(0); return std::string(); }
 
     friend class boost::serialization::access;
     template<class Archive>
@@ -410,8 +410,8 @@ public:
     virtual bool remove_hook(size_t, size_t) { return false; }
     virtual void move_hook_down(size_t, size_t, size_t) {}
     virtual bool is_final() const { return true;}
-    // virtual std::string string_representation(string_representationer<T>&) const
-    // { return "??";}
+    virtual std::string string_representation(string_representationer<T>&) const
+    { return "??";}
 
 private:
     friend class boost::serialization::access;
@@ -437,7 +437,7 @@ public:
     virtual void move_hook_down(size_t, size_t, size_t) {}
     virtual bool is_final() const { return true;}
     virtual T get_category(T) const { return category_; }
-    // virtual std::string string_representation(string_representationer<T>& srer) const;
+    virtual std::string string_representation(string_representationer<T>& srer) const;
 private:
     T category_;
 
@@ -469,7 +469,7 @@ public:
     virtual bool is_final() const { return false;}
     virtual bool is_hook() const { return true; }
     virtual std::vector<size_t> get_hook_path() const;
-    // virtual std::string string_representation(string_representationer<T>& srer) const;
+    virtual std::string string_representation(string_representationer<T>& srer) const;
 private:
     std::vector<size_t> symbol_ixs_;
 
@@ -500,7 +500,7 @@ public:
     virtual bool is_final() const { return false;}
     virtual bool is_contents_hook() const { return true; }
     virtual std::vector<size_t> get_hook_path() const;
-    // virtual std::string string_representation(string_representationer<T>& srer) const;
+    virtual std::string string_representation(string_representationer<T>& srer) const;
 
 private:
     std::vector<size_t> symbol_ixs_;
