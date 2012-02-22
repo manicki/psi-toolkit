@@ -1,0 +1,193 @@
+
+
+*POS Tags
+      <adj> Adjective
+      <adv> Adverb
+      <cnj> Conjunction
+      <ij> Interjection
+      <n> Noun
+      <np> Proper Name
+      <num> Number
+      <pnct> Punctuation
+      <postp> Postposition
+      <prn> Pronoun
+      <v> Verb
+      <vaux> Auxiliary Verb
+
+
+*Nominal morphemes
+
+    - Plural Suffix
+      <pl> Plural suffix
+          Exmple: ev-<b>ler</b> `houses
+
+    - Case suffixes
+      <abl> Ablative case
+          Exmple: ev-<b>den</b>   `from the house'
+      <acc> Accusative case
+          Exmple: ev-<b>i</b>
+      <dat> Dative case
+          Exmple: ev-<b>e</b>    `to the house'
+      <gen> Genitive case
+          Exmple: ev-<b>in</b> `the one that belongs the house'
+      <ins> Instrumental/comitative case
+          This one also has a clitic equivalent `ile', and is not
+          considered as a case for most grammar books. Probably this
+          has three different functions. (1) <b>and:</b>
+          `araba-<b>yla</b> evi sattık' (we sold the car and the
+          house). (2) <b>instrumental case:</b> `araba-<b>yla</b> eve
+          gittik' (we went home with the car). (3) <b>comitative
+          case:</b> `Ali-<b>yle</b> eve gittik' (we went home with
+          Ali). Current version of TRmorph uses single symbol for all
+          these senses.
+          Exmple: ev-<b>le</b>  `with the house'
+      <loc> Locative case
+          Exmple: ev-<b>de</b> `in/on/at the house'
+
+    - Possessive Suffixes
+      <p1p> 1st person pulural possessive
+          Exmple: ev-<b>imiz</b> `our house'
+      <p1s> 1st person singular possessive
+          Exmple: ev-<b>im</b> `my house'
+      <p2p> 2nd person pulural possessive
+          Exmple: ev-<b>iniz</b> `your house'
+      <p2s> 2nd person singular possessive
+          Exmple: ev-<b>in</b> `your house'
+      <p3p> 3rd person pulural possessive
+          Exmple: ev-<b>leri</b> `their house'
+      <p3s> 3rd person singular possessive
+          Exmple: ev-<b>i</b> `his/her/its house'
+
+    - ki
+      <ki> ki
+          -ki attaches to the nominals in locative and genitive case and
+          forms "attributive adjectival phrases or pronominal expressions"
+          (G&K). It can attach to the same word multiple times.
+          Exmple: ev-de-<b>ki</b>-nin-<b>ki</b>  `the one that belongs
+          to the person in the house'
+
+
+*Morphemes that attach to (mostly) verbs
+
+    - Compound verb morphemes
+      <abil> Ability 
+          Exmple: gör-<b>ebil</b> `to be able to see'
+      <adur> Continuously
+          This is not very productive.
+      <agel> Agel
+          This is not very productive.
+      <agor> Agor
+          This is not very productive.
+      <akal> Akal
+          This is not very productive.
+      <akoy> Akal
+          This is not very productive.
+      <ayaz> Ayaz
+          This is not very productive.
+      <iver> Quickly 
+          Exmple: yıka-<b>yıver</b> `wash it quickly'
+
+    - Copular suffixes
+      <cpl_di> Past copula
+          Exmple: gel-iyor `he/she/it is coming', gel-iyor-<b>du</b>
+          `he/she/it was coming'
+      <cpl_mis> Evidential copula
+          Exmple: gel-iyor `he/she/it is coming', gel-iyor-<b>muş</b>
+          `(it is said that) he/she/it was coming'
+      <cpl_sa> Conditional copula
+          Exmple: gel-iyor `he/she/it is coming', gel-iyor-<b>sa</b>
+          `if he/she/it is coming'
+      <dir> DIr
+          This suffix (except a few exceptions) follows person agreement,
+          serves a number of purposes including introducing supposition,
+          nominal predicates (especially in formal language). G&K calls
+          this suffix 'generalized modality marker', Kornfilt treats it
+          (more or less) as a copula.
+          Exmple: doktor-<b>dur</b> `(supposedly) s/he is a doctor'
+          (note that this -dur is generally not used in spoken language
+          if supposition is not implied)
+
+    - Negative marker(s)
+      <neg> Negative marker
+          We do not distinguish between the `regular' negative marker
+          -me/-ma and -e/-a before -abil.
+
+    - Person Agreement
+      <1p> 1st person plural
+          Exmple: gör-dü-<b>k</b> `We saw'
+      <1s> 1st person singular
+          Exmple: gör-dü-<b>m</b> `I saw'
+      <2p> 2nd person plural/formal
+          Exmple: gör-dü-<b>nüz</b> `you saw'
+      <2s> 2nd person singular
+          Exmple: gör-dü-<b>n</b> `you saw'
+      <3p> 3rd person plural
+          Exmple: gör-dü-<b>ler</b> `they saw'
+      <3s> 3rd person singular
+          Exmple: gör-dü `he/she/it saw' (null morpheme)
+
+    - Sobordinating Suffixes
+      <cv> Converb markers
+          These makers form subordinating clauses with adverbial function.
+          Most of the suffixes that form converbs can also form other
+          forms of subordination (verbal nouns and participles).
+          Normally, the converbial markers has a restricted context,
+          i.e., they serve as cv only if they are followed by certain
+          morphemes or words (particles). Current version of TRmorph
+          does not fully restrict these.
+          Exmple: gör-<b>mek</b> için gittim `I went in order to see'.
+      <part> Participle markers
+          These are a few morphemes that make non-finite verbs of
+          relative clauses.
+          Exmple: gör-<b>düğ</b>-üm film `the movie that I saw'
+      <vn> Verbal Noun Markers
+          These are a number of morphemes that form noun clauses from
+          non-finita verbs. Together with Participles and Converbs,
+          previous versions of TRmorph used to assign different analysis
+          symbols to each morpheme. This version does not make this
+          distinction.
+          Exmple: gör-<b>mey</b>-e gittim `I went to see'.
+
+    - Tense/aspect/modality markers
+      <t_aor> Aorist
+          Exmple: gör-<b>ür</b> `he/she/it sees (something)'
+      <t_cond> Conditional
+          It can also give the optative mood.
+          Exmple: gör-<b>se</b> `if he/she/it sees'
+      <t_cont> Continuous tense
+          Exmple: gör-<b>üyor</b> `he/she/it is seeing (something)'
+      <t_fut> Future tense
+          Exmple: gör-<b>ecek</b> `he/she/it will se (something)'
+      <t_makta> ??Continuos/progressive/imperfective
+          This is similar to t_cont, but used less frequently.  Most of
+          the time it is used in formal situations, and has a more
+          definite progressive sense (-yor can be used for future events
+          as well).
+          Exmple: gör-<b>mekte</b> `he/she/it is seeing (something)'
+      <t_narr> Narrative (or evidential) past tense 
+          Exmple: gör-<b>müş</b> `it is evident/said that he/she/it
+          saw (something)'
+      <t_obl> Obligation
+          Exmple: gör-<b>meli</b> `he/she/it must see (something)'
+      <t_opt> Optative
+          Indicates wish and hope, it can also have imperative meaning
+          (archaic). Note that t_cond below may also indicate the
+          same mood.
+          Exmple: bitir-<b>e</b> `(I) wish/hope/order that he/she/it
+          finishes'
+      <t_past> Past tense
+          Exmple: gör-<b>dü</b> `he/she/it saw (something)'
+
+    - Voice
+      <caus> Causative
+           Causative suffix can be attached to the same stem multiple
+           times.
+          Exmple:  yika-<b>t</b>-<b>tır</b> `to make someone have
+          (something) washed'
+      <pass> Passive
+          Exmple: sev-<b>il</b> `to be loved'
+      <rec> Reciprocal
+          Exmple: sev `to love' -> sev-<b>iş</b> `to love each other'
+          or `make love'
+      <ref> Reflexive
+          Exmple: yıka `to wash' -> yıka-<b>n</b> `to wash oneself'
