@@ -231,4 +231,43 @@ BOOST_AUTO_TEST_CASE( setscore_factor ) {
 }
 
 
+BOOST_AUTO_TEST_CASE( options ) {
+
+    tgbg_combinator<
+        int,
+        Lattice::Score,
+        number_master,
+        semantics_stub<int, number_master, double>
+    > tgbg;
+    tgbg.add_rules(ROOT_DIR "tools/parsers/gobio/t/files/rules_28.g");
+
+    BOOST_CHECK_EQUAL(tgbg.get_option("super"), "yes");
+    BOOST_CHECK_EQUAL(tgbg.get_option("oho"), "no");
+    BOOST_CHECK_EQUAL(tgbg.get_option("bla"), "bla");
+    BOOST_CHECK_EQUAL(tgbg.get_option("unknown"), "");
+
+}
+
+
+BOOST_AUTO_TEST_CASE( limits ) {
+
+    tgbg_combinator<
+        int,
+        Lattice::Score,
+        number_master,
+        semantics_stub<int, number_master, double>
+    > tgbg;
+    tgbg.add_rules(ROOT_DIR "tools/parsers/gobio/t/files/rules_28.g");
+
+    BOOST_CHECK_EQUAL(tgbg.get_nb_limits(), 3);
+    BOOST_CHECK_EQUAL(tgbg.get_limit_threshold(2), 1000000000);
+    BOOST_CHECK_EQUAL(tgbg.get_limit_threshold(1), 200);
+    BOOST_CHECK_EQUAL(tgbg.get_limit_threshold(0), 100);
+    BOOST_CHECK_CLOSE(tgbg.get_limit_min_score(0), -0.5, 0.00001);
+    BOOST_CHECK_CLOSE(tgbg.get_limit_min_score(1), 2.3, 0.00001);
+    BOOST_CHECK_CLOSE(tgbg.get_limit_min_score(2), 100, 0.00001);
+
+}
+
+
 BOOST_AUTO_TEST_SUITE_END()
