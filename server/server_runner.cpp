@@ -10,7 +10,7 @@
 #include "config.hpp"
 #include "logging.hpp"
 #include "configurator.hpp"
-#include "git_info.hpp"
+#include "version_information.hpp"
 
 #include "index_site.hpp"
 #include "pipe_site.hpp"
@@ -118,12 +118,7 @@ bool ServerRunner::stopAfterExecutingOptions_() {
     }
 
     if (options_.count("version")) {
-        std::cout << "psi-toolkit ver.";
-        if (std::string("GIT-NOTFOUND") != g_GIT_LAST_DATE) {
-            std::cout << ' ' << g_GIT_LAST_DATE;
-        }
-        std::cout << ' ' << g_GIT_SHA1 << std::endl;
-
+        std::cout << get_psi_toolkit_version_string() << std::endl;
         return true;
     }
 

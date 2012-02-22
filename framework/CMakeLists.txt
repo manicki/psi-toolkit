@@ -8,6 +8,7 @@ add_library(framework SHARED
     console_help_formatter.cpp
     html_help_formatter.cpp
     pipe_runner.cpp
+    version_information.cpp
     "${CMAKE_CURRENT_BINARY_DIR}/git_info.cpp"
 )
 
