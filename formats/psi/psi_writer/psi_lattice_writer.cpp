@@ -67,11 +67,15 @@ void PsiLatticeWriter::Worker::doRun() {
 
         edgeOrdinalMap[edge] = ordinal;
 
+        // ordinal:
+
         std::stringstream ordinalSs;
         ordinalSs << std::right << std::setfill('0') << std::setw(2);
         ordinalSs << ordinal;
         alignOutput_(ordinalSs.str(), alignments[0]);
         alignOutput_(" ");
+
+        // beginning:
 
         std::stringstream beginningSs;
         Lattice::VertexDescriptor source = lattice_.getEdgeSource(edge);
@@ -83,6 +87,8 @@ void PsiLatticeWriter::Worker::doRun() {
         }
         alignOutput_(beginningSs.str(), alignments[1]);
         alignOutput_(" ");
+
+        // length:
 
         std::stringstream lengthSs;
         Lattice::VertexDescriptor target = lattice_.getEdgeTarget(edge);
@@ -98,6 +104,8 @@ void PsiLatticeWriter::Worker::doRun() {
         }
         alignOutput_(lengthSs.str(), alignments[2]);
         alignOutput_(" ");
+
+        // (some preparations):
 
         const AnnotationItem& annotationItem = lattice_.getEdgeAnnotationItem(edge);
         std::string edgeText;
@@ -122,8 +130,12 @@ void PsiLatticeWriter::Worker::doRun() {
             }
         }
 
+        // edge text:
+
         int edgeTextLength = utf8::distance(edgeText.begin(), edgeText.end());
-        if (edgeTextLength > alignments[3] - alignments[2] && !writeWholeText) {
+        if (edgeTextLength == 0) {
+            alignOutput_("∅", alignments[3]);
+        } else if (edgeTextLength > alignments[3] - alignments[2] && !writeWholeText) {
             std::string::const_iterator bIter = edgeText.begin();
             utf8::unchecked::advance(bIter, alignments[3] - alignments[2] - 7);
             alignOutput_(edgeText.substr(0, bIter - edgeText.begin()));
@@ -140,6 +152,8 @@ void PsiLatticeWriter::Worker::doRun() {
         }
         alignOutput_(" ");
 
+        // tags:
+
         std::string tagStr = "";
         std::list<std::string> tagNames
             = lattice_.getLayerTagManager().getTagNames(lattice_.getEdgeLayerTags(edge));
@@ -152,8 +166,12 @@ void PsiLatticeWriter::Worker::doRun() {
         alignOutput_(quoter.escape(tagStr), alignments[4]);
         alignOutput_(" ");
 
+        // annotation text:
+
         alignOutput_(quoter.escape(annotationItem.getText()), alignments[5]);
         alignOutput_(" ");
+
+        // annotations:
 
         std::stringstream aiSs;
 
