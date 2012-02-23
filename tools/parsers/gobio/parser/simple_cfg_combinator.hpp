@@ -85,9 +85,9 @@ public:
 
     size_t get_nb_limits() const { return 1; }
     int get_limit_threshold(size_t /*limit_ix*/) const
-    { return std::numeric_limits<int>::max(); }
+    { return (std::numeric_limits<int>::max)(); }
     double get_limit_min_score(size_t /*limit_ix*/) const
-    { return -std::numeric_limits<double>::max(); }
+    { return -(std::numeric_limits<double>::max)(); }
 
     int get_limit_edges(int len) const
     { return -1L; }
