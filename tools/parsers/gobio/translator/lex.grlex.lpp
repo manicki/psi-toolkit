@@ -63,7 +63,7 @@ PLLETTER [a-z±æê³ñó¶¼¿A-Z¡ÆÊ£ÑÓ¦¬¯]
                             return RTOKEN_ATOM;}
 
 \'[^\']*\'                        { grparserlval.s = new string(grlextext);
-                    int i;
+                    size_t i;
                     for(i = 1; i < grparserlval.s->length(); ++i)
                     {
                         if((*grparserlval.s)[i] == '~')
