@@ -171,7 +171,7 @@ endif(SWIG_FOUND)
 # Sets compiler flags
 set(CMAKE_CXX_FLAGS "-g -Wall -Wundef -Wnon-virtual-dtor -Wextra")
 
-set(BASE_TARGETS common utf8case sundown framework formats-psi formats-simple formats-txt formats-utt formats-apertium maxent tools-tokenizers-tp tools-segmenters-srx tools-recognizers-langguesser tools-parsers-gobio)
+set(BASE_TARGETS common utf8case sundown framework formats-psi formats-simple formats-txt formats-utt formats-apertium maxent tools-tokenizers-tp tools-segmenters-srx tools-recognizers-langguesser tools-parsers-gobio tools-taggers-metagger)
 
 set(TESTS_TARGETS common-tests tools-tokenizers-tp-tests tools-segmenters-srx-tests tools-datastructures-psi_query-tests tools-recognizers-langguesser-tests utf8case-tests formats-utt-tests formats-psi-tests formats-simple-tests tools-parsers-gobio-tests)
 
@@ -339,19 +339,66 @@ function(download_artifact FILE)
   set(_url
       "http://mrt.wmi.amu.edu.pl:8080/job/psi-toolkit-data/lastSuccessfulBuild/artifact/psi-toolkit-data/${FILE}")
 
-  message(STATUS "Downloading ${_url}...")
-  file(DOWNLOAD
-      "${_url}"
-      "${psi-toolkit_SOURCE_DIR}/${FILE}"
-      STATUS status)
+  message(STATUS "Checking ${_url}...")
 
-  list(GET status 0 _status )
-  list(GET status 1 _status_message )
+  set(_downloaded_file
+      "${psi-toolkit_SOURCE_DIR}/${FILE}")
 
-  if (NOT ${_status} EQUAL 0)
-     file(REMOVE "${psi-toolkit_SOURCE_DIR}/${FILE}")
-     message(FATAL_ERROR
+  set(_skip_download 0)
+
+  if (EXISTS "${_downloaded_file}")
+     if ("${CMAKE_VERSION}" VERSION_LESS "2.8.7")
+         execute_process(COMMAND "md5sum" "-b" ${_downloaded_file}
+		OUTPUT_VARIABLE _file_md5_line
+		ERROR_QUIET
+		OUTPUT_STRIP_TRAILING_WHITESPACE)
+         string(REGEX MATCH "^[0-9a-f]+" _file_md5 "${_file_md5_line}")
+     else()
+        file(MD5 "${_downloaded_file}" _file_md5)
+     endif ()
+
+     message(STATUS "File ${_downloaded_file} already there with MD5 ${_file_md5}")
+     message(STATUS "Downloading MD5 ${_url}...")
+
+     set(_jenkins_fingerprint_file "${psi-toolkit_BINARY_DIR}/${FILE}.md5")
+
+     file(DOWNLOAD
+         "${_url}/*fingerprint*/"
+         "${_jenkins_fingerprint_file}"
+         STATUS status)
+
+     # :( no '{..}' quantifiers in cmake regexps, should be ">([0-9a-f]{32})<"
+     set(_stupid_regexp ">([0-9a-f][0-9a-f][0-9a-f][0-9a-f][0-9a-f][0-9a-f][0-9a-f][0-9a-f][0-9a-f][0-9a-f][0-9a-f][0-9a-f][0-9a-f][0-9a-f][0-9a-f][0-9a-f][0-9a-f][0-9a-f][0-9a-f][0-9a-f][0-9a-f][0-9a-f][0-9a-f][0-9a-f][0-9a-f][0-9a-f][0-9a-f][0-9a-f][0-9a-f][0-9a-f][0-9a-f][0-9a-f])<")
+
+     file(STRINGS ${_jenkins_fingerprint_file} _md5_lines REGEX "${_stupid_regexp}")
+
+     string(REGEX MATCH "${_stupid_regexp}" _match "${_md5_lines}")
+
+     set(_remote_md5 "${CMAKE_MATCH_1}")
+
+     message(STATUS "Remote file MD5 is: ${_remote_md5}")
+
+     if ("${_remote_md5}" STREQUAL "${_file_md5}")
+        message(STATUS "MD5 is the same, skipping download")
+        set(_skip_download 1)
+     endif ("${_remote_md5}" STREQUAL "${_file_md5}")
+  endif ()
+
+  if (NOT "${_skip_download}")
+    message(STATUS "Downloading ${_url}...")
+    file(DOWNLOAD
+          "${_url}"
+          "${psi-toolkit_SOURCE_DIR}/${FILE}"
+          STATUS status)
+
+    list(GET status 0 _status )
+    list(GET status 1 _status_message )
+
+    if (NOT ${_status} EQUAL 0)
+       file(REMOVE "${psi-toolkit_SOURCE_DIR}/${FILE}")
+       message(FATAL_ERROR
              "Cannot download ${_url}:${_status_message}. Try running cmake with -DDOWNLOAD_DATA=OFF")
+    endif()
   endif()
 
 endfunction(download_artifact)

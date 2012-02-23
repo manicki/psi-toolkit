@@ -13,7 +13,7 @@
 #include "console_help_formatter.hpp"
 
 #include "logging.hpp"
-#include "git_info.hpp"
+#include "version_information.hpp"
 
 #if HAVE_PERL_BINDINGS
 #include "perl_lattice_writer_output.hpp"
@@ -111,12 +111,7 @@ bool PipeRunner::stopAfterExecutingRunnerOptions_() {
     }
 
     if (runnerOptions_.count("version")) {
-        std::cout << "psi-toolkit ver.";
-        if (std::string("GIT-NOTFOUND").compare(g_GIT_LAST_DATE) == 0) {
-            std::cout << ' ' << g_GIT_LAST_DATE;
-        }
-        std::cout << ' ' << g_GIT_SHA1 << std::endl;
-
+        std::cout << get_psi_toolkit_version_string() << std::endl;
         return true;
     }
 

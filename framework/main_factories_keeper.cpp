@@ -33,6 +33,8 @@
 #include "perl_simple_lattice_writer.hpp"
 #endif
 
+#include "me_tagger.hpp"
+
 MainFactoriesKeeper::MainFactoriesKeeper() {
     keeper_.takeProcessorFactory(new TxtLatticeReader::Factory());
     keeper_.takeProcessorFactory(new UTTLatticeReader::Factory());
@@ -62,6 +64,7 @@ MainFactoriesKeeper::MainFactoriesKeeper() {
 #if HAVE_PERL_BINDINGS
     keeper_.takeProcessorFactory(new PerlSimpleLatticeWriter::Factory());
 #endif
+    keeper_.takeProcessorFactory(new MeTagger::Factory());
 }
 
 ProcessorFactory& MainFactoriesKeeper::getProcessorFactory(std::string processorName) {
