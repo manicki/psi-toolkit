@@ -15,11 +15,12 @@ set_source_files_properties(${psi-toolkit_SOURCE_DIR}/tools/parsers/gobio/transl
 set_source_files_properties(${psi-toolkit_SOURCE_DIR}/tools/parsers/gobio/translator/grparser.bis.cpp GENERATED)
 
 set(gobio_SUBDIRS
-    avmatrix chart parser registrar rules translator transporter trees
+    avmatrix chart helpers parser registrar rules translator transporter trees
 CACHE PATH "Gobio subdirectories" FORCE)
 
 include_directories("${psi-toolkit_SOURCE_DIR}/tools/parsers/gobio/avmatrix")
 include_directories("${psi-toolkit_SOURCE_DIR}/tools/parsers/gobio/chart")
+include_directories("${psi-toolkit_SOURCE_DIR}/tools/parsers/gobio/helpers")
 include_directories("${psi-toolkit_SOURCE_DIR}/tools/parsers/gobio/parser")
 include_directories("${psi-toolkit_SOURCE_DIR}/tools/parsers/gobio/registrar")
 include_directories("${psi-toolkit_SOURCE_DIR}/tools/parsers/gobio/rules")
@@ -29,6 +30,7 @@ include_directories("${psi-toolkit_SOURCE_DIR}/tools/parsers/gobio/trees")
 
 add_subdirectory("avmatrix")
 add_subdirectory("chart")
+add_subdirectory("helpers")
 add_subdirectory("parser")
 add_subdirectory("registrar")
 add_subdirectory("rules")

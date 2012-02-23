@@ -70,7 +70,7 @@ public:
 
     chart(Lattice & lattice);
 
-    // vertex_descriptor add_vertex();
+    vertex_descriptor add_vertex();
 
     std::pair<edge_descriptor, bool>   add_edge(
     vertex_descriptor u,

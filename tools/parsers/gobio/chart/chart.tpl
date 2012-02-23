@@ -24,15 +24,14 @@ chart<C,S,V,R,I>::chart(
     setTagMask(lattice.getLayerTagManager().getMask(tagNames));
 }
 
-/*
+
 template<class C, class S, class V, class R, template<class,class> class I>
 typename chart<C,S,V,R,I>::vertex_descriptor chart<C,S,V,R,I>::add_vertex()
 {
-    vertex_descriptor vd = boost::add_vertex(graph_);
-
+    vertex_descriptor vd = lattice_.addLooseVertex();
     return vd;
 }
-*/
+
 
 template<class C, class S, class V, class R, template<class,class> class I>
 std::pair<typename chart<C,S,V,R,I>::edge_descriptor,bool> chart<C,S,V,R,I>::add_edge(
@@ -301,7 +300,7 @@ std::pair<typename chart<C,S,V,R,I>::partition_iterator,
 chart<C,S,V,R,I>::edge_partitions(
     edge_descriptor edge)
 {
-    std::list<Lattice::Partition>& partition_vector = lattice_.getEdgePartitions(edge);
+    std::list<Lattice::Partition> partition_vector = lattice_.getEdgePartitions(edge);
 
     return std::pair<
     partition_iterator,

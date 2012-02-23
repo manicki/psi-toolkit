@@ -4,6 +4,8 @@
 #include "test_helpers.hpp"
 #include "tgbg_combinator.tpl"
 
+#include "avinput_parser.tpl"
+
 
 BOOST_AUTO_TEST_SUITE( gobio_tgbg )
 
@@ -67,6 +69,87 @@ BOOST_AUTO_TEST_CASE( compiling_binarized_rules ) {
     tgbg.add_rules(ROOT_DIR "tools/parsers/gobio/t/files/rules_6.g");
     tgbg.compile_all_rules();
 
+}
+
+
+BOOST_AUTO_TEST_CASE( avinput ) {
+
+    Lattice lattice;
+
+    typedef tgbg_combinator<
+        int,
+        Lattice::Score,
+        number_master,
+        semantics_stub<int, number_master, double>
+    > Combinator;
+
+    typedef chart<
+        av_matrix<int, int>,
+        Lattice::Score,
+        Combinator::variant_type,
+        Combinator::rule_type
+    > Chart;
+
+    Chart ch(lattice);
+    number_master master;
+    registrar<std::string> symbol_reg;
+    registrar<std::string> attribute_reg;
+    registrar<std::string> extra_attribute_reg;
+    simple_converter<int> converter(symbol_reg, attribute_reg, extra_attribute_reg);
+
+    std::vector<Combinator::rule_holder> local_rules;
+
+    avinput_parser<
+        int,
+        Combinator::rule_type,
+        int,
+        number_master,
+        Chart,
+        simple_converter<int>,
+        Combinator::rule_holder
+    > av_parser(
+        master,
+        ch,
+        converter,
+        local_rules
+    );
+
+    BOOST_CHECK(av_parser.parse(slurp_file(ROOT_DIR "tools/parsers/gobio/t/files/av_1.i")));
+
+/*
+        {
+        short_avmatrix_generator<int,number_master> sh_avm_generator(
+            8,
+            attribute_reg,
+            extra_attribute_reg,
+            symbol_reg,
+            master);
+
+        dot_chart_printer<
+            chart_type,
+            short_avmatrix_generator<int,number_master> > printer(sh_avm_generator);
+
+        std::ostringstream osstr;
+        printer.print(ch, osstr);
+        TS_ASSERT_EQUALS(osstr.str(), slurp_file(GOBIO_TEST_FILES_PATH "av_1a.i.out"));
+        }
+
+        {
+        simple_avmatrix_generator<int,number_master> si_avm_generator(
+            attribute_reg,
+            extra_attribute_reg,
+            symbol_reg,
+            master);
+
+        txt_chart_printer<
+            chart_type,
+            simple_avmatrix_generator<int,number_master> > printer(si_avm_generator);
+
+        std::ostringstream osstr;
+        printer.print(ch, osstr);
+        TS_ASSERT_EQUALS(osstr.str(), slurp_file(GOBIO_TEST_FILES_PATH "av_1b.i.out"));
+        }
+*/
 }
 
 
