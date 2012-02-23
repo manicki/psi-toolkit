@@ -2,16 +2,30 @@
 
 
 Annotator* Gobio::Factory::doCreateAnnotator(
-    const boost::program_options::variables_map& /*options*/) {
-    return new Gobio();
+    const boost::program_options::variables_map& options) {
+
+    std::string lang = options["lang"].as<std::string>();
+    LangSpecificProcessorFileFetcher fileFetcher(__FILE__, lang);
+
+    boost::shared_ptr<Combinator> combinatorPtr = boost::shared_ptr<Combinator>(new Combinator());
+
+    if (options.count("rules")) {
+        std::string rulesFilename = options["rules"].as<std::string>();
+        boost::filesystem::path rulesPath =
+            fileFetcher.getOneFile(rulesFilename);
+        std::string rulesPathString = rulesPath.string();
+        combinatorPtr->add_rules(rulesPathString);
+    }
+
+    return new Gobio(combinatorPtr);
 }
 
 void Gobio::Factory::doAddLanguageIndependentOptionsHandled(
     boost::program_options::options_description& optionsDescription) {
     optionsDescription.add_options()
-        ("option",
-        boost::program_options::value<std::string>()->default_value("default_value"),
-        "option_description")
+        ("rules",
+        boost::program_options::value<std::string>()->default_value(DEFAULT_RULE_FILE),
+        "rules file")
         ;
 }
 
@@ -37,6 +51,9 @@ std::list<std::string> Gobio::Factory::doProvidedLayerTags() {
     return layerTags;
 }
 
+const std::string Gobio::Factory::DEFAULT_RULE_FILE
+    = "%ITSDATA%/%LANG%/rules.g";
+
 LatticeWorker* Gobio::doCreateLatticeWorker(Lattice& lattice) {
     return new Worker(*this, lattice);
 }
@@ -55,17 +72,16 @@ std::string Gobio::doInfo() {
     return "gobio parser";
 }
 
-Gobio::Gobio() {
+Gobio::Gobio(boost::shared_ptr<Combinator> combinatorPtr) : combinator_(combinatorPtr) {
     //TODO
 }
 
 
 void Gobio::parse(Lattice &lattice) {
 
-    Chart a_chart(lattice);
-    Combinator combinator;
+    Chart ch(lattice);
     Agenda agenda;
-    Parser parser(a_chart, combinator, agenda);
+    Parser parser(ch, *combinator_, agenda);
 
     parser.run();
 

@@ -3,6 +3,7 @@
 
 
 #include <boost/program_options.hpp>
+#include <boost/shared_ptr.hpp>
 
 #include "annotator.hpp"
 #include "language_dependent_annotator_factory.hpp"
@@ -83,9 +84,11 @@ public:
         virtual std::list<std::list<std::string> > doOptionalLayerTags();
 
         virtual std::list<std::string> doProvidedLayerTags();
+
+        static const std::string DEFAULT_RULE_FILE;
     };
 
-    Gobio();
+    Gobio(boost::shared_ptr<Combinator> combinatorPtr);
 
     void parse(Lattice &lattice);
 
@@ -102,6 +105,8 @@ private:
     virtual LatticeWorker* doCreateLatticeWorker(Lattice& lattice);
 
     virtual std::string doInfo();
+
+    boost::shared_ptr<Combinator> combinator_;
 
 };
 
