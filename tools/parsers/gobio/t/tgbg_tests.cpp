@@ -5,6 +5,7 @@
 #include "tgbg_combinator.tpl"
 
 #include "avinput_parser.tpl"
+#include "psi_lattice_writer.hpp"
 
 
 BOOST_AUTO_TEST_SUITE( gobio_tgbg )
@@ -115,6 +116,9 @@ BOOST_AUTO_TEST_CASE( avinput ) {
     );
 
     BOOST_CHECK(av_parser.parse(slurp_file(ROOT_DIR "tools/parsers/gobio/t/files/av_1.i")));
+
+    boost::scoped_ptr<LatticeWriter<std::ostream> > writer(new PsiLatticeWriter());
+    writer->writeLattice(lattice, std::cout);
 
 /*
         {
