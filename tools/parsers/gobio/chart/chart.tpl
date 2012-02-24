@@ -7,7 +7,7 @@
 #include "chart.hpp"
 
 
-template<class C, class S, class V, class R, template<class,class> class I>
+template<typename C, typename S, typename V, typename R, template<typename, typename> class I>
 chart<C,S,V,R,I>::chart(
     Lattice & lattice
 ) :
@@ -25,7 +25,7 @@ chart<C,S,V,R,I>::chart(
 }
 
 /*
-template<class C, class S, class V, class R, template<class,class> class I>
+template<typename C, typename S, typename V, typename R, template<typename, typename> class I>
 typename chart<C,S,V,R,I>::vertex_descriptor chart<C,S,V,R,I>::add_vertex()
 {
     vertex_descriptor vd = boost::add_vertex(graph_);
@@ -34,7 +34,7 @@ typename chart<C,S,V,R,I>::vertex_descriptor chart<C,S,V,R,I>::add_vertex()
 }
 */
 
-template<class C, class S, class V, class R, template<class,class> class I>
+template<typename C, typename S, typename V, typename R, template<typename, typename> class I>
 std::pair<typename chart<C,S,V,R,I>::edge_descriptor,bool> chart<C,S,V,R,I>::add_edge(
     vertex_descriptor u,
     vertex_descriptor v,
@@ -60,7 +60,7 @@ std::pair<typename chart<C,S,V,R,I>::edge_descriptor,bool> chart<C,S,V,R,I>::add
     }
 }
 
-template<class C, class S, class V, class R, template<class,class> class I>
+template<typename C, typename S, typename V, typename R, template<typename, typename> class I>
 std::pair<typename chart<C,S,V,R,I>::edge_descriptor,bool> chart<C,S,V,R,I>::add_edge(
     vertex_descriptor u,
     vertex_descriptor v,
@@ -90,7 +90,7 @@ std::pair<typename chart<C,S,V,R,I>::edge_descriptor,bool> chart<C,S,V,R,I>::add
     }
 }
 
-template<class C, class S, class V, class R, template<class,class> class I>
+template<typename C, typename S, typename V, typename R, template<typename, typename> class I>
 std::pair<typename chart<C,S,V,R,I>::edge_descriptor,bool> chart<C,S,V,R,I>::add_edge(
     vertex_descriptor u,
     vertex_descriptor v,
@@ -122,7 +122,7 @@ std::pair<typename chart<C,S,V,R,I>::edge_descriptor,bool> chart<C,S,V,R,I>::add
 }
 
 /*
-template<class C, class S, class V, class R, template<class,class> class I>
+template<typename C, typename S, typename V, typename R, template<typename, typename> class I>
 std::pair<typename chart<C,S,V,R,I>::edge_descriptor,bool> chart<C,S,V,R,I>::add_edge_(
     vertex_descriptor u,
     vertex_descriptor v,
@@ -141,14 +141,14 @@ std::pair<typename chart<C,S,V,R,I>::edge_descriptor,bool> chart<C,S,V,R,I>::add
 }
 */
 
-template<class C, class S, class V, class R, template<class,class> class I>
+template<typename C, typename S, typename V, typename R, template<typename, typename> class I>
 void chart<C,S,V,R,I>::remove_edge(
     edge_descriptor edge)
 {
     lattice_.discard(edge);
 }
 
-template<class C, class S, class V, class R, template<class,class> class I>
+template<typename C, typename S, typename V, typename R, template<typename, typename> class I>
 int chart<C,S,V,R,I>::nb_edges(
     vertex_descriptor u,
     vertex_descriptor v)
@@ -156,7 +156,7 @@ int chart<C,S,V,R,I>::nb_edges(
     return lattice_.countEdges(u, v);
 }
 
-template<class C, class S, class V, class R, template<class,class> class I>
+template<typename C, typename S, typename V, typename R, template<typename, typename> class I>
 typename chart<C,S,V,R,I>::edge_descriptor chart<C,S,V,R,I>::add_partition(
     edge_descriptor edge,
     score_type score,
@@ -172,7 +172,7 @@ typename chart<C,S,V,R,I>::edge_descriptor chart<C,S,V,R,I>::add_partition(
 }
 
 
-template<class C, class S, class V, class R, template<class,class> class I>
+template<typename C, typename S, typename V, typename R, template<typename, typename> class I>
 typename chart<C,S,V,R,I>::edge_descriptor chart<C,S,V,R,I>::add_partition(
     edge_descriptor edge,
     score_type score,
@@ -190,7 +190,7 @@ typename chart<C,S,V,R,I>::edge_descriptor chart<C,S,V,R,I>::add_partition(
     );
 }
 
-template<class C, class S, class V, class R, template<class,class> class I>
+template<typename C, typename S, typename V, typename R, template<typename, typename> class I>
 typename chart<C,S,V,R,I>::edge_descriptor chart<C,S,V,R,I>::add_partition(
     edge_descriptor edge,
     score_type score,
@@ -210,7 +210,7 @@ typename chart<C,S,V,R,I>::edge_descriptor chart<C,S,V,R,I>::add_partition(
     );
 }
 
-template<class C, class S, class V, class R, template<class,class> class I>
+template<typename C, typename S, typename V, typename R, template<typename, typename> class I>
 typename chart<C,S,V,R,I>::edge_descriptor chart<C,S,V,R,I>::mark_edge(
     edge_descriptor edge)
 {
@@ -220,82 +220,82 @@ typename chart<C,S,V,R,I>::edge_descriptor chart<C,S,V,R,I>::mark_edge(
     return edge;
 }
 
-template<class C, class S, class V, class R, template<class,class> class I>
+template<typename C, typename S, typename V, typename R, template<typename, typename> class I>
 typename chart<C,S,V,R,I>::vertex_iterator chart<C,S,V,R,I>::vertices()
 {
     return Lattice::VertexIterator(lattice_, false);
 }
 
-template<class C, class S, class V, class R, template<class,class> class I>
+template<typename C, typename S, typename V, typename R, template<typename, typename> class I>
 size_t chart<C,S,V,R,I>::nb_vertices() const
 {
     return lattice_.countAllVertices();
 }
 
 
-template<class C, class S, class V, class R, template<class,class> class I>
+template<typename C, typename S, typename V, typename R, template<typename, typename> class I>
 typename chart<C,S,V,R,I>::out_edge_iterator
 chart<C,S,V,R,I>::out_edges(vertex_descriptor vertex)
 {
     return lattice_.outEdges(vertex, getTagMask_());
 }
 
-template<class C, class S, class V, class R, template<class,class> class I>
+template<typename C, typename S, typename V, typename R, template<typename, typename> class I>
 typename chart<C,S,V,R,I>::in_edge_iterator
 chart<C,S,V,R,I>::in_edges(vertex_descriptor vertex)
 {
     return lattice_.inEdges(vertex, getTagMask_());
 }
 
-template<class C, class S, class V, class R, template<class,class> class I>
+template<typename C, typename S, typename V, typename R, template<typename, typename> class I>
 typename chart<C,S,V,R,I>::marked_edges_index_type&
 chart<C,S,V,R,I>::marked_edges_index(vertex_descriptor vertex)
 {
     return markedEdgesIndexes_[vertex];
 }
 
-template<class C, class S, class V, class R, template<class,class> class I>
+template<typename C, typename S, typename V, typename R, template<typename, typename> class I>
 typename chart<C,S,V,R,I>::vertex_descriptor chart<C,S,V,R,I>::edge_source(
     edge_descriptor edge)
 {
     return lattice_.getEdgeSource(edge);
 }
 
-template<class C, class S, class V, class R, template<class,class> class I>
+template<typename C, typename S, typename V, typename R, template<typename, typename> class I>
 typename chart<C,S,V,R,I>::vertex_descriptor chart<C,S,V,R,I>::edge_target(
     edge_descriptor edge)
 {
     return lattice_.getEdgeTarget(edge);
 }
 
-template<class C, class S, class V, class R, template<class,class> class I>
+template<typename C, typename S, typename V, typename R, template<typename, typename> class I>
 typename chart<C,S,V,R,I>::category_type chart<C,S,V,R,I>::edge_category(
     edge_descriptor edge)
 {
     return lattice_.getAnnotationCategory(edge);
 }
 
-template<class C, class S, class V, class R, template<class,class> class I>
+template<typename C, typename S, typename V, typename R, template<typename, typename> class I>
 typename chart<C,S,V,R,I>::score_type chart<C,S,V,R,I>::edge_score(edge_descriptor edge) const
 {
     return lattice_.getEdgeScore(edge);
 }
 
 /*
-template<class C, class S, class V, class R, template<class,class> class I>
+template<typename C, typename S, typename V, typename R, template<typename, typename> class I>
 bool chart<C,S,V,R,I>::edge_accommodated(edge_descriptor edge) const
 {
     return graph_[edge].is_accommodated;
 }
 
-template<class C, class S, class V, class R, template<class,class> class I>
+template<typename C, typename S, typename V, typename R, template<typename, typename> class I>
 void chart<C,S,V,R,I>::mark_edge_as_accommodated(edge_descriptor edge)
 {
     graph_[edge].is_accommodated = true;
 }
 */
 
-template<class C, class S, class V, class R, template<class,class> class I>
+template<typename C, typename S, typename V, typename R, template<typename, typename> class I>
 std::pair<typename chart<C,S,V,R,I>::partition_iterator,
       typename chart<C,S,V,R,I>::partition_iterator>
 chart<C,S,V,R,I>::edge_partitions(
@@ -311,7 +311,7 @@ chart<C,S,V,R,I>::edge_partitions(
 }
 
 /*
-template<class C, class S, class V, class R, template<class,class> class I>
+template<typename C, typename S, typename V, typename R, template<typename, typename> class I>
 std::pair<typename chart<C,S,V,R,I>::variant_iterator,
       typename chart<C,S,V,R,I>::variant_iterator>
 chart<C,S,V,R,I>::edge_variants(
@@ -326,7 +326,7 @@ chart<C,S,V,R,I>::edge_variants(
         variant_vector.end());
 }
 
-template<class V>
+template<typename V>
 class the_same_variant_category
 {
 private:
@@ -338,7 +338,7 @@ public:
     { return v.variant_category == cat_; }
 };
 
-template<class C, class S, class V, class R, template<class,class> class I>
+template<typename C, typename S, typename V, typename R, template<typename, typename> class I>
 void chart<C,S,V,R,I>::remove_duplicate_variants(edge_descriptor edge)
 {
     if(graph_[edge].variants.size() <= 1)
@@ -370,7 +370,7 @@ void chart<C,S,V,R,I>::remove_duplicate_variants(edge_descriptor edge)
     graph_[edge].variants = new_variants;
 }
 
-template<class C, class S, class V, class R, template<class,class> class I>
+template<typename C, typename S, typename V, typename R, template<typename, typename> class I>
 void chart<C,S,V,R,I>::sort_variants(edge_descriptor edge, size_t limit)
 {
     remove_duplicate_variants(edge);
@@ -385,7 +385,7 @@ void chart<C,S,V,R,I>::sort_variants(edge_descriptor edge, size_t limit)
         graph_[edge].variants.end());
 }
 
-template<class C, class S, class V, class R, template<class,class> class I>
+template<typename C, typename S, typename V, typename R, template<typename, typename> class I>
 void chart<C,S,V,R,I>::add_variant(
     edge_descriptor edge,
     partition_iterator piter,
@@ -399,7 +399,7 @@ void chart<C,S,V,R,I>::add_variant(
     variants.back().pit = piter;
 }
 
-template<class C, class S, class V, class R, template<class,class> class I>
+template<typename C, typename S, typename V, typename R, template<typename, typename> class I>
 void chart<C,S,V,R,I>::add_variant(
     edge_descriptor edge,
     partition_iterator piter,
@@ -417,7 +417,7 @@ void chart<C,S,V,R,I>::add_variant(
 }
 
 
-template<class C, class S, class V, class R, template<class,class> class I>
+template<typename C, typename S, typename V, typename R, template<typename, typename> class I>
 void chart<C,S,V,R,I>::add_variant(
     edge_descriptor edge,
     partition_iterator piter,
@@ -437,7 +437,7 @@ void chart<C,S,V,R,I>::add_variant(
     variants.back().links.push_back(right_link_vit);
 }
 
-template<class C, class S, class V, class R, template<class,class> class I>
+template<typename C, typename S, typename V, typename R, template<typename, typename> class I>
 typename chart<C,S,V,R,I>::rule_type chart<C,S,V,R,I>::partition_rule(
     partition_iterator piter)
 {
@@ -445,7 +445,7 @@ typename chart<C,S,V,R,I>::rule_type chart<C,S,V,R,I>::partition_rule(
 }
 */
 
-template<class C, class S, class V, class R, template<class,class> class I>
+template<typename C, typename S, typename V, typename R, template<typename, typename> class I>
 int chart<C,S,V,R,I>::partition_rule_id(
     partition_iterator piter)
 {
@@ -453,7 +453,7 @@ int chart<C,S,V,R,I>::partition_rule_id(
 }
 
 /*
-template<class C, class S, class V, class R, template<class,class> class I>
+template<typename C, typename S, typename V, typename R, template<typename, typename> class I>
 std::vector<typename chart<C,S,V,R,I>::edge_descriptor>& chart<C,S,V,R,I>::partition_links(
     partition_iterator piter)
 {
@@ -461,33 +461,33 @@ std::vector<typename chart<C,S,V,R,I>::edge_descriptor>& chart<C,S,V,R,I>::parti
 }
 */
 
-template<class C, class S, class V, class R, template<class,class> class I>
+template<typename C, typename S, typename V, typename R, template<typename, typename> class I>
 Lattice::Partition::Iterator chart<C,S,V,R,I>::partition_links_iterator(partition_iterator piter)
 {
     return Lattice::Partition::Iterator(lattice_, *piter);
 }
 
 /*
-template<class C, class S, class V, class R, template<class,class> class I>
+template<typename C, typename S, typename V, typename R, template<typename, typename> class I>
 typename chart<C,S,V,R,I>::partition_iterator chart<C,S,V,R,I>::variant_partition(
     variant_iterator vit)
 {
     return (*vit).pit;
 }
 
-template<class C, class S, class V, class R, template<class,class> class I>
+template<typename C, typename S, typename V, typename R, template<typename, typename> class I>
 typename param_type<V>::type chart<C,S,V,R,I>::edge_variant_category(variant_iterator vit)
 {
     return (*vit).variant_category;
 }
 
-template<class C, class S, class V, class R, template<class,class> class I>
+template<typename C, typename S, typename V, typename R, template<typename, typename> class I>
 score_type chart<C,S,V,R,I>::variant_score(variant_iterator vit)
 {
     return (*vit).score;
 }
 
-template<class C, class S, class V, class R, template<class,class> class I>
+template<typename C, typename S, typename V, typename R, template<typename, typename> class I>
 std::vector<typename chart<C,S,V,R,I>::variant_iterator>&
 chart<C,S,V,R,I>::variant_links(variant_iterator vit)
 {
@@ -495,7 +495,7 @@ chart<C,S,V,R,I>::variant_links(variant_iterator vit)
 }
 */
 
-template<class C, class S, class V, class R, template<class,class> class I>
+template<typename C, typename S, typename V, typename R, template<typename, typename> class I>
 void chart<C,S,V,R,I>::sort_topologically()
 {
     size_t ix = 0;
@@ -507,7 +507,7 @@ void chart<C,S,V,R,I>::sort_topologically()
     }
 }
 
-template<class C, class S, class V, class R, template<class,class> class I>
+template<typename C, typename S, typename V, typename R, template<typename, typename> class I>
 size_t chart<C,S,V,R,I>::topological_index(vertex_descriptor vertex) const
 {
     assert(topological_order_.count(vertex));
@@ -515,7 +515,7 @@ size_t chart<C,S,V,R,I>::topological_index(vertex_descriptor vertex) const
     return (*(topological_order_.find(vertex))).second;
 }
 
-template<class C, class S, class V, class R, template<class,class> class I>
+template<typename C, typename S, typename V, typename R, template<typename, typename> class I>
 typename chart<C,S,V,R,I>::vertex_descriptor chart<C,S,V,R,I>::vertex_by_index(size_t i) const
 {
     assert(i < sorted_vertices_.size());
@@ -523,33 +523,33 @@ typename chart<C,S,V,R,I>::vertex_descriptor chart<C,S,V,R,I>::vertex_by_index(s
     return sorted_vertices_[i];
 }
 
-template<class C, class S, class V, class R, template<class,class> class I>
+template<typename C, typename S, typename V, typename R, template<typename, typename> class I>
 size_t chart<C,S,V,R,I>::topological_count() const
 {
     return sorted_vertices_.size();
 }
 
-template<class C, class S, class V, class R, template<class,class> class I>
+template<typename C, typename S, typename V, typename R, template<typename, typename> class I>
 void chart<C,S,V,R,I>::setTagMask(LayerTagMask layerTagMask) {
     tagMask_ = layerTagMask;
 }
 
-template<class C, class S, class V, class R, template<class,class> class I>
+template<typename C, typename S, typename V, typename R, template<typename, typename> class I>
 typename chart<C,S,V,R,I>::vertex_descriptor chart<C,S,V,R,I>:: getFirstVertex() const {
     return lattice_.getFirstVertex();
 }
 
-template<class C, class S, class V, class R, template<class,class> class I>
+template<typename C, typename S, typename V, typename R, template<typename, typename> class I>
 typename chart<C,S,V,R,I>::vertex_descriptor chart<C,S,V,R,I>:: getLastVertex() const {
     return lattice_.getLastVertex();
 }
 
-template<class C, class S, class V, class R, template<class,class> class I>
+template<typename C, typename S, typename V, typename R, template<typename, typename> class I>
 const LayerTagCollection& chart<C,S,V,R,I>::getGobioTag_() const {
     return gobioTag_;
 }
 
-template<class C, class S, class V, class R, template<class,class> class I>
+template<typename C, typename S, typename V, typename R, template<typename, typename> class I>
 const LayerTagMask& chart<C,S,V,R,I>::getTagMask_() const {
     return tagMask_;
 }

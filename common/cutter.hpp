@@ -26,7 +26,7 @@ public:
      * `text` is an UTF8-encoded string. A cutter advances the `positionInText`
      * by the length of the cut-off fragment.
      */
-    template <class StringType>
+    template <typename StringType>
     AnnotationItem cutOff(const StringType& text, size_t& positionInText);
 
     /**
@@ -74,7 +74,7 @@ private:
 
     bool shouldFragmentQueueBeUsed_() const;
 
-    template <class StringType>
+    template <typename StringType>
     AnnotationItem getFirstItemInFragmentQueue_(const StringType& text, size_t& positionInText);
 
     bool areLimitsBroken_(size_t segmentLength);
@@ -83,20 +83,20 @@ private:
     bool isHardLimitBroken_(size_t segmentLength);
     bool isHardLimitSet_();
 
-    template <class StringType>
+    template <typename StringType>
     void fragmentSegment_(
         const AnnotationItem& item,
         const StringType& text,
         size_t positionInText,
         size_t segmentLength);
 
-    template <class StringType>
+    template <typename StringType>
     size_t findSoftLimitCutPoint_(
         const StringType& text,
         size_t cutPoint,
         size_t maxCutPoint);
 
-    template <class StringType>
+    template <typename StringType>
     size_t findHardLimitCutPoint_(
         const StringType& text,
         size_t cutPoint);
@@ -107,7 +107,7 @@ private:
 };
 
 
-template <class StringType>
+template <typename StringType>
 AnnotationItem Cutter::cutOff(const StringType& text, size_t& positionInText) {
     if (shouldFragmentQueueBeUsed_())
         return getFirstItemInFragmentQueue_(text, positionInText);
@@ -135,7 +135,7 @@ AnnotationItem Cutter::cutOff(const StringType& text, size_t& positionInText) {
 }
 
 
-template <class StringType>
+template <typename StringType>
 AnnotationItem Cutter::getFirstItemInFragmentQueue_(
     const StringType& text, size_t& positionInText) {
 
@@ -151,7 +151,7 @@ AnnotationItem Cutter::getFirstItemInFragmentQueue_(
 }
 
 
-template <class StringType>
+template <typename StringType>
 void Cutter::fragmentSegment_(
     const AnnotationItem& item,
     const StringType& text,
@@ -191,7 +191,7 @@ void Cutter::fragmentSegment_(
 }
 
 
-template <class StringType>
+template <typename StringType>
 size_t Cutter::findSoftLimitCutPoint_(
     const StringType& text,
     size_t cutPoint,
@@ -210,7 +210,7 @@ size_t Cutter::findSoftLimitCutPoint_(
 }
 
 
-template <class StringType>
+template <typename StringType>
 size_t Cutter::findHardLimitCutPoint_(
     const StringType& text,
     size_t cutPoint) {

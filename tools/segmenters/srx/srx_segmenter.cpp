@@ -179,7 +179,7 @@ private:
         return performCutOff(text, positionInText);
     }
 
-    template <class StringType>
+    template <typename StringType>
     AnnotationItem performCutOff(const StringType& text, size_t& positionInText) {
         size_t nearestBreakPoint = 0;
         size_t nearestRuleIndex = 0;
@@ -281,7 +281,7 @@ private:
         return tags;
     }
 
-    template <class StringType>
+    template <typename StringType>
     size_t updateBreakingRuleIndex_(size_t breakingRuleIndex,
                                     size_t minBreakPoint,
                                     const StringType& text,
@@ -295,7 +295,7 @@ private:
                                positionInText);
     }
 
-    template <class StringType>
+    template <typename StringType>
     bool checkBreakPoint_(size_t breakPoint,
                           const StringType& text,
                           size_t positionInText,
@@ -317,7 +317,7 @@ private:
         return true;
     }
 
-    template <class StringType>
+    template <typename StringType>
     size_t updateNonBreakingRuleIndex_(size_t breakingRuleIndex,
                                        size_t minBreakPoint,
                                        const StringType& text,
@@ -343,7 +343,7 @@ private:
     std::vector<RuleApplication> breakingRuleApplications_;
     std::vector<RuleApplication> nonBreakingRuleApplications_;
 
-    template <class StringType>
+    template <typename StringType>
     size_t updatePosition_(boost::shared_ptr<PerlRegExp> regexp,
                            RuleApplication& ruleApplication,
                            size_t minBreakPoint,

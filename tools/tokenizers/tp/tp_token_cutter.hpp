@@ -13,7 +13,7 @@ public:
         size_t softLimit);
 
 private:
-    template <class StringType>
+    template <typename StringType>
     AnnotationItem performCutOff(const StringType& text, size_t& positionInText);
 
     virtual AnnotationItem doCutOff(const std::string& text, size_t& positionInText);
@@ -24,7 +24,7 @@ private:
     virtual size_t doSegmentLengthSoftLimit();
     virtual std::list<std::string> doLayerTags();
 
-    template <class StringType>
+    template <typename StringType>
     AnnotationItem defaultToken(const StringType& text, size_t& positionInText);
 
     TPBasicTokenizerRuleSet& ruleSet_;
@@ -34,7 +34,7 @@ private:
 };
 
 
-template <class StringType>
+template <typename StringType>
 AnnotationItem TpTokenCutter::performCutOff(const StringType& text, size_t& positionInText) {
 
     size_t len = text.length() - positionInText;
@@ -55,7 +55,7 @@ AnnotationItem TpTokenCutter::performCutOff(const StringType& text, size_t& posi
 }
 
 
-template <class StringType>
+template <typename StringType>
 AnnotationItem TpTokenCutter::defaultToken(const StringType& text, size_t& positionInText) {
     size_t len = symbolLength(text, positionInText);
     StringFrag sf(text, positionInText, len);

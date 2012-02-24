@@ -5,7 +5,7 @@
 #include "lattice.hpp"
 
 
-template<class E, class C>
+template<typename E, typename C>
 struct empty_marked_edges_index
 {
 public:
@@ -13,7 +13,7 @@ public:
     void mark_in_edge (const E&, const C&) {}
 };
 
-template<class E, class C>
+template<typename E, typename C>
 struct simple_marked_edges_index
 {
 private:
@@ -43,8 +43,8 @@ public:
 };
 
 // I - indeks przy kazdym wierzcholku
-template< class C, class S, class V, class R,
-     template< class, class > class I = simple_marked_edges_index >
+template<typename C, typename S, typename V, typename R,
+    template<typename, typename> class I = simple_marked_edges_index>
 class chart
 {
 public:

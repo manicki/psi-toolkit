@@ -14,7 +14,7 @@ private:
     virtual AnnotationItem doCutOff(const std::string& text, size_t& positionInText);
     virtual AnnotationItem doCutOff(const StringFrag& text, size_t& positionInText);
 
-    template <class StringType>
+    template <typename StringType>
     AnnotationItem performCutOff(const StringType& text, size_t& positionInText);
 
     virtual void doReset();
@@ -24,7 +24,7 @@ private:
 };
 
 
-template <class StringType>
+template <typename StringType>
 AnnotationItem BySpacesCutter::performCutOff(const StringType& text, size_t& positionInText) {
     size_t spacePosition = text.find(' ', positionInText);
 

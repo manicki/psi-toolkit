@@ -7,7 +7,7 @@
 /**
  * Najprostsza agenda oparta na kolejce FIFO
  */
-template<class T>
+template<typename T>
 class fifo_agenda
 {
 private:
@@ -28,7 +28,7 @@ public:
  * Agenda wykorzystująca score'y.
  * Uwaga: zakładamy, że score'y nie zmieniają się w czasie.
  */
-template<class Ch>
+template<typename Ch>
 struct priority_agenda
 {
 private:
@@ -89,7 +89,7 @@ public:
 /**
  * Klasa wirtualna, żeby można było w "locie" zmieniać agendę.
  */
-template<class T>
+template<typename T>
 class dyna_abstract_agenda
 {
 public:
@@ -106,7 +106,7 @@ public:
 /**
  * Łącznik między "dynamiczną" a konkretną "statyczną" agendą.
  */
-template<class T, class A>
+template<typename T, typename A>
 class dyna_agenda: public dyna_abstract_agenda<T>
 {
 private:
@@ -127,7 +127,7 @@ public:
  * Agenda umożliwiająca podpięcie dowolnej agendy wydziedziczonej
  * z dyna_abstract_agenda.
  */
-template<class T, class A, class P>
+template<typename T, typename A, typename P>
 class dyna_agenda_p: public dyna_abstract_agenda<T>
 {
 private:
