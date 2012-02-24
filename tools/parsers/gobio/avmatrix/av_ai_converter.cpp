@@ -1,9 +1,6 @@
 #include "av_ai_converter.hpp"
 
 
-#include <sstream>
-
-
 const AnnotationItem AV_AI_Converter::toAnnotationItem(av_matrix<int, int> av) {
     std::stringstream catSs;
     std::stringstream attrSs;
