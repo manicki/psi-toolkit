@@ -2,6 +2,7 @@
 #define CHART_HPP_HDR
 
 
+#include "av_ai_converter.hpp"
 #include "lattice.hpp"
 
 
