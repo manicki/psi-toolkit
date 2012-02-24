@@ -1,11 +1,10 @@
     <div id="header">
         <div id="main-logo">
-            Psi Server
+            <a href="index.html" title="Psi Server">Psi Server</a>
         </div>
 
         <ul id="menu">
             <li><a href="#">About</a></li>
-            <li><a href="index.html">Psi-Toolkit</a></li>
             <li><a href="api.html">API</a></li>
             <li><a href="help.html">Help</a></li>
         </ul>
