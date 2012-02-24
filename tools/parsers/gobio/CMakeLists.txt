@@ -1,5 +1,6 @@
 add_library(tools-parsers-gobio SHARED
     gobio.cpp
+    avmatrix/av_ai_converter.cpp
     registrar/number_master.cpp
     rules/compile_gruleexpression.cpp
     rules/grule_helpers.cpp

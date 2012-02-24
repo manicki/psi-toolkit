@@ -2,7 +2,10 @@
 #define AV_AI_CONVERTER_HDR
 
 
+#include <string>
+
 #include "annotation_item.hpp"
+#include "av_matrix.hpp"
 #include "lattice.hpp"
 
 
@@ -12,22 +15,15 @@ public:
 
     AV_AI_Converter(Lattice & lattice) : lattice_(lattice) { }
 
-    template <typename AVMatrixType>
-    const AnnotationItem toAnnotationItem(AVMatrixType av);
+    const AnnotationItem toAnnotationItem(av_matrix<int, int> av);
+
+    const AnnotationItem toAnnotationItem(std::string av);
 
 private:
 
     Lattice & lattice_;
 
 };
-
-
-template <typename AVMatrixType>
-const AnnotationItem AV_AI_Converter::toAnnotationItem(AVMatrixType av) {
-    AnnotationItem result("dummy");
-    // TODO
-    return result;
-}
 
 
 #endif

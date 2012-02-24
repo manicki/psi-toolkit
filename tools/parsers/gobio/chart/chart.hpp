@@ -196,18 +196,13 @@ public:
 
 private:
 
-    // std::pair<edge_descriptor, bool> add_edge_(
-    // vertex_descriptor u,
-    // vertex_descriptor v,
-    // const category_type& category,
-    // score_type score);
-
     typedef Lattice::VertexEntry vertex_entry;
     typedef Lattice::Partition partition;
 
     // typename Lattice::Graph graph_;
 
     Lattice & lattice_;
+    AV_AI_Converter av_ai_converter_;
 
     LayerTagCollection gobioTag_;
     LayerTagMask tagMask_;
