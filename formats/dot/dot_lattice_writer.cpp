@@ -1,6 +1,10 @@
 #include "dot_lattice_writer.hpp"
 
+#include <iomanip>
 #include <iostream>
+#include <locale>
+
+#include <boost/foreach.hpp>
 
 #include "lattice.hpp"
 #include "logging.hpp"
@@ -89,7 +93,26 @@ void DotLatticeWriter::Worker::doRun() {
         } else {
             edgeText = quoter.escape(lattice_.getEdgeText(edge));
         }
-        edgeSs << " [label=\"" << edgeText << "\"]";
+
+        std::string tagStr = "";
+        std::stringstream colorSs;
+        std::list<std::string> tagNames
+            = lattice_.getLayerTagManager().getTagNames(lattice_.getEdgeLayerTags(edge));
+        BOOST_FOREACH(std::string tagName, tagNames) {
+            if (!tagStr.empty()) {
+                tagStr += ",";
+                colorSs << ":";
+            }
+            tagStr += tagName;
+            const std::collate<char>& coll = std::use_facet<std::collate<char> >(std::locale());
+            unsigned int color = coll.hash(tagName.data(), tagName.data() + tagName.length()) & 0xffffff;
+            if ((color & 0xe0e0e0) == 0xe0e0e0) color &= 0x7f7f7f;
+            colorSs << "#" << std::setbase(16) << color;
+        }
+
+
+        edgeSs << " [label=\"" << edgeText << " (" << tagStr << ")\"";
+        edgeSs << "color=\"" << std::setbase(16) << colorSs.str() << "\"]";
 
         alignOutput_(edgeSs.str());
         alignOutputNewline_();
