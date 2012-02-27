@@ -62,13 +62,13 @@ void DotLatticeWriter::Worker::doRun() {
 
         Lattice::EdgeDescriptor edge = ei.next();
 
-        if (lattice_.isEdgeHidden(edge)) continue;
+        // if (lattice_.isEdgeHidden(edge)) continue;
 
         std::stringstream edgeSs;
 
         Lattice::VertexDescriptor source = lattice_.getEdgeSource(edge);
         if (lattice_.isLooseVertex(source)) {
-            edgeSs << "@" << lattice_.getLooseVertexIndex(source);
+            edgeSs << "L" << lattice_.getLooseVertexIndex(source);
         } else {
             edgeSs << lattice_.getVertexRawCharIndex(source);
         }
@@ -77,7 +77,7 @@ void DotLatticeWriter::Worker::doRun() {
 
         Lattice::VertexDescriptor target = lattice_.getEdgeTarget(edge);
         if (lattice_.isLooseVertex(target)) {
-            edgeSs << "@" << lattice_.getLooseVertexIndex(target);
+            edgeSs << "L" << lattice_.getLooseVertexIndex(target);
         } else {
             edgeSs << lattice_.getVertexRawCharIndex(target);
         }
