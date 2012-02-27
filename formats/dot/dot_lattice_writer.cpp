@@ -127,7 +127,7 @@ void DotLatticeWriter::Worker::doRun() {
         if (processor_.isShowTags()) {
             edgeSs << " (" << tagStr << ")";
         }
-        edgeSs << "\"";
+        edgeSs << " " << annotationItem.getCategory() << "\"";
         if (processor_.isColor()) {
             edgeSs << ",color=\"" << std::setbase(16) << colorSs.str() << "\"";
         }
