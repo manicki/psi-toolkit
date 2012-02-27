@@ -17,8 +17,14 @@ public:
         std::pair<std::vector<FormatRule>, std::vector<ReplacementRule> > rules);
 
     FormatOptions getOptions();
-    std::vector<FormatRule> getFormatRules();
-    std::vector<ReplacementRule> getReplacementRules();
+
+    std::string formatRulesRegexp();
+    int formatRuleSize();
+
+    //std::map<std::string, std::string> replacementRulesRegexp();
+
+    FormatRule getFormatRule(int i);
+    ReplacementRule getReplacementRule(int i);
 
 private:
 
@@ -26,7 +32,6 @@ private:
     FormatOptions formatOptions_;
     std::vector<FormatRule> formatRules_;
     std::vector<ReplacementRule> replacementRules_;
-
 };
 
 
@@ -68,7 +73,8 @@ private:
     ReplacementRule parseReplacementRule_(boost::property_tree::ptree&);
 
     bool yesNoToBool_(std::string &);
-    std::string removeQuotationMarks_(std::string&);
+    void removeQuotations_(std::string&);
+    void removeBackreferences_(std::string&);
 };
 
 #endif

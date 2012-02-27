@@ -44,8 +44,13 @@ class PCREWrapper : private pcrecpp::RE {
     public:
         PCREWrapper(const std::string &pattern) :
             pcrecpp::RE(pattern, pcrecpp::UTF8()) {}
+        PCREWrapper(const std::string &pattern, const pcrecpp::RE_Options &option) :
+            pcrecpp::RE(pattern, option) {}
+
         PCREWrapper(const char *pattern) :
             pcrecpp::RE(pattern, pcrecpp::UTF8()) {}
+        PCREWrapper(const char *pattern, const pcrecpp::RE_Options &option) :
+            pcrecpp::RE(pattern, option) {}
 
         static bool FullMatchN(const PerlStringPiece& text, const PCREWrapper& re,
                 const PerlArg* const args[], int argc);
@@ -101,6 +106,8 @@ class PCREWrapper : private pcrecpp::RE {
         const string& pattern() const {
             return ((const pcrecpp::RE&)(*this)).pattern();
         }
+
+        static const int MAX_MATCHES;
 
         //@todo: any other methods of pcrecpp::RE ?
 };

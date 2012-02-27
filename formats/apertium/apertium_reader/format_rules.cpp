@@ -46,7 +46,7 @@ bool FormatRule::isEos() {
     return eos_;
 }
 
-int FormatRule::getPriority() {
+int FormatRule::getPriority() const {
     return priority_;
 }
 
@@ -55,7 +55,7 @@ std::string FormatRule::getRegexp() {
         return tagsToRegexAlternative_();
     }
     else {
-        std::string result = begin_ + "|" + end_;
+        std::string result = begin_ + "(?:.*?)" + end_;
         return result;
     }
 }
@@ -74,6 +74,11 @@ std::string FormatRule::tagsToRegexAlternative_() {
 
     return regexAlternative;
 }
+
+bool FormatRule::operator< (const FormatRule &other) const {
+    return priority_ < other.getPriority();
+}
+
 
 //ReplacementRule
 

@@ -22,7 +22,6 @@ private:
     std::string escapeChars_;
     std::string spaceChars_;
     bool caseSensitive_;
-
 };
 
 
@@ -35,10 +34,12 @@ public:
 
     std::string getType();
     bool isEos();
-    int getPriority();
+    int getPriority() const;
     std::string getRegexp();
 
     void addRule(const std::string& ruleRegexp);
+
+    bool operator< (const FormatRule &other) const;
 
 private:
 
@@ -70,7 +71,6 @@ private:
     std::string regexp_;
     std::map<std::string, std::string> sourceToTargetMap_;
     std::map<std::string, std::string> preferredTargetToSourceMap_;
-
 };
 
 #endif

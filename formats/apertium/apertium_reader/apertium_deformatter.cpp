@@ -9,6 +9,11 @@ ApertiumDeformatter::ApertiumDeformatter(const boost::filesystem::path& specFile
     : formatSpecification_(initializeFormatSpecification_(specFilePath)) {
 
     SET_LOGGING_LEVEL("DEBUG");
+
+    perlRegexpOptions_.set_utf8(true);
+    perlRegexpOptions_.set_multiline(true);
+    perlRegexpOptions_.set_dotall(true);
+    perlRegexpOptions_.set_caseless(!formatSpecification_.getOptions().isCaseSensitive());
 }
 
 FormatSpecification ApertiumDeformatter::initializeFormatSpecification_(
@@ -19,45 +24,66 @@ FormatSpecification ApertiumDeformatter::initializeFormatSpecification_(
 }
 
 std::string ApertiumDeformatter::deformat(const std::string& input) {
-    std::string output = "apertium-reader got input: [" + input + "]";
+    initialInputSize_ = 0;
+    deformatData_.clear();
 
-    BOOST_FOREACH(FormatRule formatRule, formatSpecification_.getFormatRules()) {
-        pcrecpp::StringPiece inputToSearch(input);
-        std::string matched;
-        int inputLength = inputToSearch.size();
+    processFormatRules_(input);
+    processReplacementRules_(input);
 
-        std::string regexp = "(";
-        regexp += formatRule.getRegexp();
-        regexp += ")";
+    return input;
+}
 
+void ApertiumDeformatter::processFormatRules_(const std::string& input) {
+    PerlStringPiece currentInput(input);
+    initialInputSize_ = currentInput.size();
 
+    std::string regexp = formatSpecification_.formatRulesRegexp();
+    PerlRegExp re(regexp, perlRegexpOptions_);
+    DEBUG("looking for: " << regexp);
 
-        pcrecpp::RE re(regexp);
-        DEBUG("looking for: " << regexp);
+    const int rulesSize = formatSpecification_.formatRuleSize();
+    if (rulesSize > PerlRegExp::MAX_MATCHES)
+        ERROR("the number of rules is larger than " << PerlRegExp::MAX_MATCHES << "!");
 
-        if (re.error().length() > 0) {
-            ERROR("PCRE compilation in apertium-deformatter failed with error: " << re.error());
-        }
+    const PerlArg *args[rulesSize];
+    std::string matches[rulesSize];
 
-        // początek i koniec dopasowania
-        while (re.FindAndConsume(&inputToSearch, &matched)) {
-            DEBUG("  " << matched << " "
-                << "("<< inputLength - inputToSearch.size() - matched.size()
-                << ", " << inputLength - inputToSearch.size() << ")");
-        }
+    for (int i = 0; i < rulesSize; i++) {
+        args[i] = new PerlArg(&matches[i]);
     }
 
-    return output;
+    while (PerlRegExp::FindAndConsumeN(&currentInput, re, args, rulesSize)) {
+        for (int i = 0; i < rulesSize; i++) {
+            if (!matches[i].empty()) {
+                std::pair<int, int> indexes = getMatchedStringIndexes(currentInput, matches[i]);
+                std::string info = formatSpecification_.getFormatRule(i).getType();
+
+                storeDeformatData_(indexes, info);
+
+                DEBUG(matches[i] << " (" << indexes.first << ", " << indexes.second << ")"
+                    << " as " << info);
+            }
+        }
+    }
+    //FIXME: delete args?
+}
+
+void ApertiumDeformatter::storeDeformatData_(std::pair<int, int> indexes, const std::string& info) {
+    deformatData_.push_back(DeformatData(indexes, info));
+}
+
+void ApertiumDeformatter::processReplacementRules_(const std::string& input) {
+    PerlStringPiece currentInput(input);
+
+    //PerlRegExp::GlobalReplace(&input, sourceRegexp, target);
 }
 
 const std::string DELIMITER_BEGIN = "[";
 const std::string DELIMITER_END = "]";
 
-/*
-std::pair<int, int> ApertiumDeformatter::getMatchBeginEndIndex(
-     pcrecpp::StringPiece currentInput, std::string matchedString) {
+std::pair<int, int> ApertiumDeformatter::getMatchedStringIndexes(
+     PerlStringPiece currentInput, std::string matchedString) {
 
-    return std::pair<int, int>(inputSize_ - currentInput.size() - matchedString.size(),
-        inputSize_ - currentInput.size());
+    return std::pair<int, int>(initialInputSize_ - currentInput.size() - matchedString.size(),
+        initialInputSize_ - currentInput.size());
 }
-*/

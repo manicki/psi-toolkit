@@ -1,10 +1,10 @@
-#include <boost/algorithm/string/replace.hpp>
-
+#include <boost/algorithm/string/join.hpp>
 #include <boost/foreach.hpp>
 
 #include "format_specification.hpp"
 #include "object_cache.hpp"
 #include "regexp.hpp"
+#include "escaping.hpp"
 #include "logging.hpp"
 
 
@@ -15,16 +15,36 @@ FormatSpecification::FormatSpecification(std::string name, FormatOptions options
             : name_(name), formatOptions_(options),
             formatRules_(rules.first), replacementRules_(rules.second) { }
 
+std::string FormatSpecification::formatRulesRegexp() {
+    std::string regexp = "";
+
+    for (unsigned int i = 0; i < formatRules_.size(); ++i) {
+        regexp += "(";
+        regexp += formatRules_[i].getRegexp() + ")";
+
+        if (i < (formatRules_.size() - 1)) {
+            regexp += "|";
+        }
+    }
+
+    return regexp;
+}
+
+int FormatSpecification::formatRuleSize() {
+    return formatRules_.size();
+}
+
+
 FormatOptions FormatSpecification::getOptions() {
     return formatOptions_;
 }
 
-std::vector<FormatRule> FormatSpecification::getFormatRules() {
-    return formatRules_;
+FormatRule FormatSpecification::getFormatRule(int i) {
+    return formatRules_[i];
 }
 
-std::vector<ReplacementRule> FormatSpecification::getReplacementRules() {
-    return replacementRules_;
+ReplacementRule FormatSpecification::getReplacementRule(int i) {
+    return replacementRules_[i];
 }
 
 
@@ -92,6 +112,8 @@ std::pair<std::vector<FormatRule>, std::vector<ReplacementRule> >
         }
     }
 
+    std::sort(formatRules.begin(), formatRules.end());
+
     return std::pair<std::vector<FormatRule>, std::vector<ReplacementRule> >
         (formatRules, replacementRules);
 }
@@ -116,8 +138,11 @@ FormatRule FormatSpecificationReader::parseFormatRule_(boost::property_tree::ptr
             if (it->first == "tag") {
 
                 regexpOne = it->second.get<std::string>("<xmlattr>.regexp", "");
+                removeQuotations_(regexpOne);
+                removeBackreferences_(regexpOne);
+
                 DEBUG("  with regexp: " << regexpOne);
-                rule.addRule(removeQuotationMarks_(regexpOne));
+                rule.addRule(regexpOne);
             }
         }
 
@@ -125,10 +150,13 @@ FormatRule FormatSpecificationReader::parseFormatRule_(boost::property_tree::ptr
     }
     else {
         std::string regexpTwo = ruleNode.get<std::string>("end.<xmlattr>.regexp");
+        removeQuotations_(regexpOne);
+        removeBackreferences_(regexpOne);
+        removeQuotations_(regexpTwo);
+        removeBackreferences_(regexpTwo);
 
-        DEBUG("  with regexp: " << regexpOne << "; " << regexpTwo);
-        return FormatRule(type, yesNoToBool_(eos), priority,
-            removeQuotationMarks_(regexpOne), removeQuotationMarks_(regexpTwo));
+        DEBUG("  with regexp: [" << regexpOne << "]; " << regexpTwo);
+        return FormatRule(type, yesNoToBool_(eos), priority, regexpOne, regexpTwo);
     }
 }
 
@@ -164,8 +192,24 @@ bool FormatSpecificationReader::yesNoToBool_(std::string& yesNo) {
     return (yesNo == "yes" ? true : false);
 }
 
-std::string FormatSpecificationReader::removeQuotationMarks_(std::string& str) {
-    //FIXME: distinct a raw quotation mark (") from an escaped quatation mark (\")
-    boost::replace_all(str, "\"", "");
-    return str;
+void FormatSpecificationReader::removeQuotations_(std::string& str) {
+    size_t pos = 0;
+
+    while ((pos = str.find("\"", pos)) != std::string::npos) {
+        if (!Escaping::isEscaped(str, pos)) {
+            str.erase(pos, 1);
+            pos += 1;
+        }
+    }
+}
+
+void FormatSpecificationReader::removeBackreferences_(std::string& str) {
+    size_t pos = 0;
+
+    while ((pos = str.find("(", pos)) != std::string::npos) {
+        if (!Escaping::isEscaped(str, pos) && !(pos+1 < str.length() && str[pos+1] == '?')) {
+            str.replace(pos+1, 0, "?:");
+            pos += 2;
+        }
+    }
 }
