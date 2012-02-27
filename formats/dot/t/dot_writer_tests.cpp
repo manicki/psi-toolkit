@@ -1,6 +1,8 @@
 #include "tests.hpp"
 
 #include <fstream>
+#include <set>
+#include <string>
 
 #include <boost/scoped_ptr.hpp>
 
@@ -16,9 +18,12 @@ BOOST_AUTO_TEST_CASE( dot_lattice_writer_simple ) {
     Lattice lattice;
     lattice_preparators::prepareSimpleLattice(lattice);
 
+    std::set<std::string> filter;
+
     boost::scoped_ptr<LatticeWriter<std::ostream> > writer(new DotLatticeWriter(
         true, // show tags
-        false // color
+        false, // color
+        filter // filter
     ));
 
     std::ostringstream osstr;
@@ -42,9 +47,12 @@ BOOST_AUTO_TEST_CASE( dot_lattice_writer_advanced ) {
     Lattice lattice;
     lattice_preparators::prepareAdvancedLattice(lattice);
 
+    std::set<std::string> filter;
+
     boost::scoped_ptr<LatticeWriter<std::ostream> > writer(new DotLatticeWriter(
         true, // show tags
-        false // color
+        false, // color
+        filter // filter
     ));
 
     std::ostringstream osstr;

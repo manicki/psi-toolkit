@@ -4,8 +4,6 @@
 #include <iostream>
 #include <locale>
 
-#include <boost/foreach.hpp>
-
 #include "lattice.hpp"
 #include "logging.hpp"
 
@@ -15,9 +13,17 @@ std::string DotLatticeWriter::getFormatName() {
 
 LatticeWriter<std::ostream>* DotLatticeWriter::Factory::doCreateLatticeWriter(
     const boost::program_options::variables_map& options) {
+
+    std::set<std::string> filter;
+    if (options.count("filter")) {
+        std::vector<std::string> filterVector = options["filter"].as< std::vector<std::string> >();
+        filter.insert(filterVector.begin(), filterVector.end());
+    }
+
     return new DotLatticeWriter(
         options.count("show-tags"),
-        options.count("color")
+        options.count("color"),
+        filter
     );
 }
 
@@ -25,10 +31,12 @@ boost::program_options::options_description DotLatticeWriter::Factory::doOptions
     boost::program_options::options_description optionsDescription("Allowed options");
 
     optionsDescription.add_options()
-        ("show-tags",
-            "prints layer tags")
         ("color",
             "edges with different tags have different colors")
+        ("filter", boost::program_options::value< std::vector<std::string> >()->multitoken(),
+            "filters edges by specified tags")
+        ("show-tags",
+            "prints layer tags")
         ;
 
     return optionsDescription;
@@ -75,6 +83,11 @@ void DotLatticeWriter::Worker::doRun() {
 
         // if (lattice_.isEdgeHidden(edge)) continue;
 
+        std::list<std::string> tagNames
+            = lattice_.getLayerTagManager().getTagNames(lattice_.getEdgeLayerTags(edge));
+
+        if (!processor_.areSomeInFilter(tagNames)) continue;
+
         std::stringstream edgeSs;
 
         Lattice::VertexDescriptor source = lattice_.getEdgeSource(edge);
@@ -103,10 +116,10 @@ void DotLatticeWriter::Worker::doRun() {
 
         std::string tagStr = "";
         std::stringstream colorSs;
+
         if (processor_.isShowTags() || processor_.isColor()) {
-            std::list<std::string> tagNames
-                = lattice_.getLayerTagManager().getTagNames(lattice_.getEdgeLayerTags(edge));
             BOOST_FOREACH(std::string tagName, tagNames) {
+                if (!processor_.isInFilter(tagName)) continue;
                 if (!tagStr.empty()) {
                     tagStr += ",";
                     colorSs << ":";

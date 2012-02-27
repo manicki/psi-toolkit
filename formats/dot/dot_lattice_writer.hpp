@@ -1,6 +1,10 @@
 #ifndef DOT_LATTICE_WRITER_HDR
 #define DOT_LATTICE_WRITER_HDR
 
+#include <set>
+#include <string>
+#include <list>
+
 #include <boost/foreach.hpp>
 
 #include "lattice_writer.hpp"
@@ -26,14 +30,25 @@ public:
 
     DotLatticeWriter(
         bool showTags,
-        bool color
+        bool color,
+        std::set<std::string> filter
     ) :
         showTags_(showTags),
-        color_(color)
+        color_(color),
+        filter_(filter)
     { }
 
     bool isShowTags() const { return showTags_; }
     bool isColor() const { return color_; }
+    bool isInFilter(std::string tag) { return filter_.empty() || filter_.count(tag); }
+
+    bool areSomeInFilter(std::list<std::string> & tags) {
+        if (filter_.empty()) return true;
+        BOOST_FOREACH(std::string tag, tags) {
+            if (filter_.count(tag)) return true;
+        }
+        return false;
+    }
 
 private:
     virtual std::string doInfo();
@@ -59,6 +74,7 @@ private:
 
     bool showTags_;
     bool color_;
+    std::set<std::string> filter_;
 
 };
 
