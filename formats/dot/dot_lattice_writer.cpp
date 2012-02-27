@@ -14,14 +14,18 @@ std::string DotLatticeWriter::getFormatName() {
 }
 
 LatticeWriter<std::ostream>* DotLatticeWriter::Factory::doCreateLatticeWriter(
-    const boost::program_options::variables_map&) {
-    return new DotLatticeWriter();
+    const boost::program_options::variables_map& options) {
+    return new DotLatticeWriter(
+        options.count("color")
+    );
 }
 
 boost::program_options::options_description DotLatticeWriter::Factory::doOptionsHandled() {
     boost::program_options::options_description optionsDescription("Allowed options");
 
     optionsDescription.add_options()
+        ("color",
+            "edges with different tags have different colors")
         ;
 
     return optionsDescription;
@@ -104,15 +108,22 @@ void DotLatticeWriter::Worker::doRun() {
                 colorSs << ":";
             }
             tagStr += tagName;
-            const std::collate<char>& coll = std::use_facet<std::collate<char> >(std::locale());
-            unsigned int color = coll.hash(tagName.data(), tagName.data() + tagName.length()) & 0xffffff;
-            if ((color & 0xe0e0e0) == 0xe0e0e0) color &= 0x7f7f7f;
-            colorSs << "#" << std::setbase(16) << color;
+            if (processor_.isColor()) {
+                const std::collate<char>& coll
+                    = std::use_facet<std::collate<char> >(std::locale());
+                unsigned int color
+                    = coll.hash(tagName.data(), tagName.data() + tagName.length()) & 0xffffff;
+                if ((color & 0xe0e0e0) == 0xe0e0e0) color &= 0x7f7f7f; // darken if too bright
+                colorSs << "#" << std::setbase(16) << color;
+            }
         }
 
 
         edgeSs << " [label=\"" << edgeText << " (" << tagStr << ")\"";
-        edgeSs << "color=\"" << std::setbase(16) << colorSs.str() << "\"]";
+        if (processor_.isColor()) {
+            edgeSs << ",color=\"" << std::setbase(16) << colorSs.str() << "\"";
+        }
+        edgeSs << "]";
 
         alignOutput_(edgeSs.str());
         alignOutputNewline_();

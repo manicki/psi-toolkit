@@ -16,7 +16,9 @@ BOOST_AUTO_TEST_CASE( dot_lattice_writer_simple ) {
     Lattice lattice;
     lattice_preparators::prepareSimpleLattice(lattice);
 
-    boost::scoped_ptr<LatticeWriter<std::ostream> > writer(new DotLatticeWriter());
+    boost::scoped_ptr<LatticeWriter<std::ostream> > writer(new DotLatticeWriter(
+        false // color
+    ));
 
     std::ostringstream osstr;
     writer->writeLattice(lattice, osstr);
@@ -39,7 +41,9 @@ BOOST_AUTO_TEST_CASE( dot_lattice_writer_advanced ) {
     Lattice lattice;
     lattice_preparators::prepareAdvancedLattice(lattice);
 
-    boost::scoped_ptr<LatticeWriter<std::ostream> > writer(new DotLatticeWriter());
+    boost::scoped_ptr<LatticeWriter<std::ostream> > writer(new DotLatticeWriter(
+        false // color
+    ));
 
     std::ostringstream osstr;
     writer->writeLattice(lattice, osstr);

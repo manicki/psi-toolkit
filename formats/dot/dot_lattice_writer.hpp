@@ -24,6 +24,13 @@ public:
         virtual boost::filesystem::path doGetFile();
     };
 
+    DotLatticeWriter(
+        bool color
+    ) :
+        color_(color)
+    { }
+
+    bool isColor() const { return color_; }
 
 private:
     virtual std::string doInfo();
@@ -46,6 +53,8 @@ private:
 
         return new Worker(*this, outputStream, lattice);
     }
+
+    bool color_;
 
 };
 
