@@ -45,6 +45,7 @@ mkdir -p build
 cd build
 cmake -DUSE_JAVA=OFF .. # <- note dots here
 # or cmake -DUSE_JAVA=ON if morfologik is needed
+# if problem with JAVA PATH occurs try forcing dirs by: cmake -DUSE_JAVA=ON -DJAVA_INCLUDE_PATH2=/usr/lib/jvm/java-7-openjdk-amd64/include/linux/ -DJAVA_INCLUDE_PATH=/usr/lib/jvm/java-7-openjdk-amd64/include/ .. (remember to use correct java folder in command)
 make
 
 running:
