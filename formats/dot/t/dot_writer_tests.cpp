@@ -17,6 +17,7 @@ BOOST_AUTO_TEST_CASE( dot_lattice_writer_simple ) {
     lattice_preparators::prepareSimpleLattice(lattice);
 
     boost::scoped_ptr<LatticeWriter<std::ostream> > writer(new DotLatticeWriter(
+        true, // show tags
         false // color
     ));
 
@@ -42,6 +43,7 @@ BOOST_AUTO_TEST_CASE( dot_lattice_writer_advanced ) {
     lattice_preparators::prepareAdvancedLattice(lattice);
 
     boost::scoped_ptr<LatticeWriter<std::ostream> > writer(new DotLatticeWriter(
+        true, // show tags
         false // color
     ));
 

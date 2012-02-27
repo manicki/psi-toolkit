@@ -25,11 +25,14 @@ public:
     };
 
     DotLatticeWriter(
+        bool showTags,
         bool color
     ) :
+        showTags_(showTags),
         color_(color)
     { }
 
+    bool isShowTags() const { return showTags_; }
     bool isColor() const { return color_; }
 
 private:
@@ -54,6 +57,7 @@ private:
         return new Worker(*this, outputStream, lattice);
     }
 
+    bool showTags_;
     bool color_;
 
 };
