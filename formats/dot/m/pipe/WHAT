@@ -1,0 +1,1 @@
+txt-reader ! srx-segmenter --lang pl ! tp-tokenizer --lang pl ! dot-writer --color --show-tags --filter token segment

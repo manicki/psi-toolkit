@@ -20,17 +20,12 @@ namespace poleng {
 
             namespace lattice {
 
-
-            std::string readInputLattice(Lattice &lattice);
-            std::string readMorfologikLattice(Lattice &lattice);
 #if _WITH_BONSAI_PARSEGRAPH
                     ParseGraphPtr convertToBonsaiGraph(Lattice &lattice);
 #endif
                     Lattice::VertexDescriptor getVertex(Lattice &lattice,
-                            //@todo: zmienic nazwe na getStartVertex
                             int edgeIndex, LayerTagMask mask, int offset = 0);
                     Lattice::VertexDescriptor getVertex(Lattice &lattice,
-                            //@todo: zmienic nazwe na getStartVertex
                             int edgeIndex, int offset = 0);
                     std::list<Lattice::EdgeDescriptor> getTopEdges(Lattice &lattice,
                             Lattice::VertexDescriptor start, LayerTagMask mask);
@@ -115,10 +110,6 @@ namespace poleng {
                             std::list<Lattice::EdgeSequence> &partitions,
                             std::list<Lattice::EdgeDescriptor> edges);
 
-//                    bool areAnnotationItemsEqual(Lattice &lattice,
-//                            AnnotationItem a,
-//                            AnnotationItem b);
-
                     std::string getMorphologyString(Lattice &lattice,
                             Lattice::EdgeDescriptor edge);
                     Morphology getMorphology(Lattice &lattice,
@@ -163,8 +154,6 @@ namespace poleng {
                                 ++ it) {
                             if (start == lattice.getEdgeBeginIndex(*it)) {
                                 if (length == lattice.getEdgeLength(*it)) {
-                                    //if (areAnnotationItemsEqual(lattice, annotationItem,
-                                    //            lattice.getEdgeAnnotationItem(*it))) {
                                     if (annotationItem ==
                                                 lattice.getEdgeAnnotationItem(*it)) {
                                         return true;

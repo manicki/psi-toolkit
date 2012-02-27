@@ -185,9 +185,9 @@ endif(SWIG_FOUND)
 # Sets compiler flags
 set(CMAKE_CXX_FLAGS "-g -Wall -Wundef -Wnon-virtual-dtor -Wextra")
 
-set(BASE_TARGETS common utf8case sundown framework formats-psi formats-simple formats-txt formats-utt formats-apertium maxent tools-tokenizers-tp tools-segmenters-srx tools-recognizers-langguesser tools-parsers-gobio tools-taggers-metagger)
+set(BASE_TARGETS common utf8case sundown framework formats-dot formats-psi formats-simple formats-txt formats-utt formats-apertium maxent tools-tokenizers-tp tools-segmenters-srx tools-recognizers-langguesser tools-parsers-gobio tools-taggers-metagger)
 
-set(TESTS_TARGETS common-tests tools-tokenizers-tp-tests tools-segmenters-srx-tests tools-datastructures-psi_query-tests tools-recognizers-langguesser-tests utf8case-tests formats-utt-tests formats-psi-tests formats-simple-tests tools-parsers-gobio-tests)
+set(TESTS_TARGETS common-tests tools-tokenizers-tp-tests tools-segmenters-srx-tests tools-datastructures-psi_query-tests tools-recognizers-langguesser-tests utf8case-tests formats-dot-tests formats-utt-tests formats-psi-tests formats-simple-tests tools-parsers-gobio-tests)
 
 if(USE_JAVA)
     set(BASE_TARGETS ${BASE_TARGETS} tools-lemmatizers-morfologik)
@@ -286,9 +286,9 @@ function(download_artifact FILE)
   if (EXISTS "${_downloaded_file}")
      if ("${CMAKE_VERSION}" VERSION_LESS "2.8.7")
          execute_process(COMMAND "md5sum" "-b" ${_downloaded_file}
-		OUTPUT_VARIABLE _file_md5_line
-		ERROR_QUIET
-		OUTPUT_STRIP_TRAILING_WHITESPACE)
+        OUTPUT_VARIABLE _file_md5_line
+        ERROR_QUIET
+        OUTPUT_STRIP_TRAILING_WHITESPACE)
          string(REGEX MATCH "^[0-9a-f]+" _file_md5 "${_file_md5_line}")
      else()
         file(MD5 "${_downloaded_file}" _file_md5)

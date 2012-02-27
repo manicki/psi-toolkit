@@ -12,9 +12,9 @@
 12 0006 06    &nbsp;       symbol                            '_
 13 0006 06    &nbsp;       token                             '_',type=blank[12]
 14 0012 03    <b>          html,markup                       open[]
-15 0015 *@0                symbol                            'k
+15 0015 *@0   ∅            symbol                            'k
 16 0015 01    k            symbol                k           'k
-17 @0   *0016              symbol                            'o
+17 @0   *0016 ∅            symbol                            'o
 18 0015 03    kta          token                             'kta',type=word[16-]
 19 0015 03    kta          corrector,token                   'kota',type=word[15-17-]
 20 0015 03    kta          lemma,poleng-tagset               kot,pos=R:2,morpho=MżDP[19]
