@@ -384,8 +384,6 @@ namespace poleng {
                         lattice.getAnnotationItemManager().setValue(
                                 annotationItem, valueIt->first, valueIt->second);
                     }
-                    lattice.getAnnotationItemManager().setValue(annotationItem, "orth",
-                            lattice.getEdgeText(*edgeIt));
                     lattice.getAnnotationItemManager().setValue(annotationItem, "head",
                             boost::lexical_cast<std::string>(headEdgeIndex));
 
@@ -504,8 +502,6 @@ namespace poleng {
                                 lattice.getAnnotationItemManager().setValue(
                                         annotationItem, attribIt->first, attribIt->second);
                             }
-                            lattice.getAnnotationItemManager().setValue(
-                                    annotationItem, "orth", concatenatedOrth);
                             lattice.getAnnotationItemManager().setValue(
                                     annotationItem, "head", "0");
                             //@todo: czy tego tu inaczej jakos nie trzeba zrobic
@@ -900,7 +896,7 @@ namespace poleng {
                 for (std::list< std::pair<std::string, std::string> >::iterator avit =
                         //@todo: sortowanie tego
                         av.begin(); avit != av.end(); ++ avit) {
-                    if (avit->first == "head" || avit->first == "orth")
+                    if (avit->first == "head")
                         continue;
                     morpho += ":";
                     morpho += avit->second;
@@ -920,9 +916,7 @@ namespace poleng {
                 for (std::list< std::pair<std::string, std::string> >::iterator avit =
                         //@todo: sortowanie tego
                         av.begin(); avit != av.end(); ++ avit) {
-//                    if (avit->first == "discard")
-//                        continue;
-                    if (avit->first == "head" || avit->first == "orth")
+                    if (avit->first == "head")
                         continue;
                     morphology.insert(std::pair<std::string, std::string>(
                                 avit->first, avit->second));
