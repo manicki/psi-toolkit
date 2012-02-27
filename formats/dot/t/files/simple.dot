@@ -1,0 +1,8 @@
+digraph G {
+rankdir=LR
+0 -> 3 [label="Ala"]
+3 -> 4 [label="_"]
+4 -> 6 [label="ma"]
+6 -> 7 [label="_"]
+7 -> 14 [label="słonia"]
+}
