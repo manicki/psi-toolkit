@@ -51,5 +51,29 @@ void sfstLemmatizer::initializeTurkishTransducer() {
 std::vector<std::string> sfstLemmatizer::simpleStem(const std::string & word) {
 
     std::vector<std::string> result;
+
+	std::streambuf* oldBuf = std::cout.rdbuf();
+	std::ostringstream stdoutCap;
+	std::cout.rdbuf( stdoutCap.rdbuf() );
+    
+	if (turkishTransducer.analyze_string((char*)word.c_str(), stdout, true)) {
+		
+		size_t pos;
+		
+		std::string output = stdoutCap.str();
+
+		while((pos = output.find_first_of('\n')) != -1) {
+			std::string stem = output.substr(0, pos);
+			output = output.substr(pos + 1);
+			if ((pos = stem.find_first_of('<')) == -1)
+				result.insert(result.begin(), stem);
+			else 
+				result.insert(result.begin(), stem.substr(0, pos));
+			}
+		
+	}
+    
+	std::cout.rdbuf( oldBuf );
+    
     return result;
 }
