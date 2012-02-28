@@ -91,10 +91,10 @@ BOOST_AUTO_TEST_CASE( simple_parse ) {
     Lattice::EdgeSequence::Builder blanc_lexeme_builder(lattice);
     blanc_lexeme_builder.addEdge(lattice.firstOutEdge(
                 lattice.getVertexForRawCharIndex(0), lemmaMask));
-    AnnotationItem ai_blanc_lexeme_adj("adj", StringFrag("blanc_adj"));
+    AnnotationItem ai_blanc_lexeme_adj("adj", StringFrag("blanc+adj"));
     lattice.addEdge(pre_blanc, post_blanc, ai_blanc_lexeme_adj, lexeme_tag,
             blanc_lexeme_builder.build());
-    AnnotationItem ai_blanc_lexeme_subst("subst", StringFrag("blanc_subst"));
+    AnnotationItem ai_blanc_lexeme_subst("subst", StringFrag("blanc+subst"));
     lattice.addEdge(pre_blanc, post_blanc, ai_blanc_lexeme_subst, lexeme_tag,
             blanc_lexeme_builder.build());
     Lattice::EdgeSequence::Builder blanc_form_adj_builder(lattice);
@@ -109,12 +109,12 @@ BOOST_AUTO_TEST_CASE( simple_parse ) {
         else if (category == "subst")
             blanc_form_subst_builder.addEdge(edge);
     }
-    AnnotationItem ai_blanc_form_adj("adj", StringFrag("blanc_adj"));
+    AnnotationItem ai_blanc_form_adj("adj", StringFrag("blanc"));
     lattice.getAnnotationItemManager().setValue(ai_blanc_form_adj, "number", "sg");
     lattice.getAnnotationItemManager().setValue(ai_blanc_form_adj, "gender", "m");
     lattice.addEdge(pre_blanc, post_blanc, ai_blanc_form_adj, form_tag,
             blanc_form_adj_builder.build());
-    AnnotationItem ai_blanc_form_subst("subst", StringFrag("blanc_subst"));
+    AnnotationItem ai_blanc_form_subst("subst", StringFrag("blanc"));
     lattice.getAnnotationItemManager().setValue(ai_blanc_form_subst, "number", "sg");
     lattice.getAnnotationItemManager().setValue(ai_blanc_form_subst, "gender", "m");
     lattice.addEdge(pre_blanc, post_blanc, ai_blanc_form_subst, form_tag,
@@ -129,13 +129,13 @@ BOOST_AUTO_TEST_CASE( simple_parse ) {
     Lattice::EdgeSequence::Builder chat_lexeme_builder(lattice);
     chat_lexeme_builder.addEdge(lattice.firstOutEdge(
                 lattice.getVertexForRawCharIndex(6), lemmaMask));
-    AnnotationItem ai_chat_lexeme("subst", StringFrag("chat_subst"));
+    AnnotationItem ai_chat_lexeme("subst", StringFrag("chat+subst"));
     lattice.addEdge(pre_chat, post_chat, ai_chat_lexeme, lexeme_tag,
             chat_lexeme_builder.build());
     Lattice::EdgeSequence::Builder chat_form_builder(lattice);
     chat_form_builder.addEdge(lattice.firstOutEdge(
                 lattice.getVertexForRawCharIndex(6), lexemeMask));
-    AnnotationItem ai_chat_form("subst", StringFrag("chat_subst"));
+    AnnotationItem ai_chat_form("subst", StringFrag("chat"));
     lattice.getAnnotationItemManager().setValue(ai_chat_form, "number", "sg");
     lattice.getAnnotationItemManager().setValue(ai_chat_form, "gender", "m");
     lattice.addEdge(pre_chat, post_chat, ai_chat_form, form_tag,
@@ -346,13 +346,13 @@ BOOST_AUTO_TEST_CASE( load_rules_fr ) {
     Lattice::EdgeSequence::Builder blanc_lexeme_builder(lattice);
     blanc_lexeme_builder.addEdge(lattice.firstOutEdge(
                 lattice.getVertexForRawCharIndex(0), lemmaMask));
-    AnnotationItem ai_blanc_lexeme_adj("adj", StringFrag("blanc_adj"));
+    AnnotationItem ai_blanc_lexeme_adj("adj", StringFrag("blanc+adj"));
     lattice.addEdge(pre_blanc, post_blanc, ai_blanc_lexeme_adj, lexeme_tag,
             blanc_lexeme_builder.build());
     Lattice::EdgeSequence::Builder blanc_form_builder(lattice);
     blanc_form_builder.addEdge(lattice.firstOutEdge(
                 lattice.getVertexForRawCharIndex(0), lexemeMask));
-    AnnotationItem ai_blanc_form("adj", StringFrag("blanc_adj"));
+    AnnotationItem ai_blanc_form("adj", StringFrag("blanc"));
     lattice.getAnnotationItemManager().setValue(ai_blanc_form, "number", "sg");
     lattice.getAnnotationItemManager().setValue(ai_blanc_form, "gender", "m");
     lattice.addEdge(pre_blanc, post_blanc, ai_blanc_form, form_tag, blanc_form_builder.build());
@@ -365,12 +365,12 @@ BOOST_AUTO_TEST_CASE( load_rules_fr ) {
     Lattice::EdgeSequence::Builder chat_lexeme_builder(lattice);
     chat_lexeme_builder.addEdge(lattice.firstOutEdge(
                 lattice.getVertexForRawCharIndex(6), lemmaMask));
-    AnnotationItem ai_chat_lexeme("subst", StringFrag("chat_subst"));
+    AnnotationItem ai_chat_lexeme("subst", StringFrag("chat+subst"));
     lattice.addEdge(pre_chat, post_chat, ai_chat_lexeme, lexeme_tag, chat_lexeme_builder.build());
     Lattice::EdgeSequence::Builder chat_form_builder(lattice);
     chat_form_builder.addEdge(lattice.firstOutEdge(
                 lattice.getVertexForRawCharIndex(6), lexemeMask));
-    AnnotationItem ai_chat_form("subst", StringFrag("chat_subst"));
+    AnnotationItem ai_chat_form("subst", StringFrag("chat"));
     lattice.getAnnotationItemManager().setValue(ai_chat_form, "number", "sg");
     lattice.getAnnotationItemManager().setValue(ai_chat_form, "gender", "m");
     lattice.getAnnotationItemManager().setValue(ai_chat_form, "discard", "0");
@@ -477,11 +477,11 @@ BOOST_AUTO_TEST_CASE( load_rules_pl ) {
     Lattice::EdgeSequence::Builder ala_lexeme_builder(lattice);
     ala_lexeme_builder.addEdge(lattice.firstOutEdge(
                 lattice.getVertexForRawCharIndex(0), lemmaMask));
-    AnnotationItem ai_ala_lexeme("R", StringFrag("Ala_R"));
+    AnnotationItem ai_ala_lexeme("R", StringFrag("Ala+R"));
     lattice.addEdge(pre_ala, post_ala, ai_ala_lexeme, lexeme_tag, ala_lexeme_builder.build());
     Lattice::EdgeSequence::Builder ala_form_builder(lattice);
     ala_form_builder.addEdge(lattice.firstOutEdge(lattice.getVertexForRawCharIndex(0), lexemeMask));
-    AnnotationItem ai_ala_form("R", StringFrag("Ala_R"));
+    AnnotationItem ai_ala_form("R", StringFrag("Ala"));
     lattice.getAnnotationItemManager().setValue(ai_ala_form, "gender", "f");
     lattice.getAnnotationItemManager().setValue(ai_ala_form, "case", "nom");
     lattice.getAnnotationItemManager().setValue(ai_ala_form, "number", "sg");
@@ -493,11 +493,11 @@ BOOST_AUTO_TEST_CASE( load_rules_pl ) {
     lattice.addEdge(pre_ma, post_ma, ai_ma_lemma, lemma_tag, ma_lemma_builder.build());
     Lattice::EdgeSequence::Builder ma_lexeme_builder(lattice);
     ma_lexeme_builder.addEdge(lattice.firstOutEdge(lattice.getVertexForRawCharIndex(4), lemmaMask));
-    AnnotationItem ai_ma_lexeme("C", StringFrag("mieć_C"));
+    AnnotationItem ai_ma_lexeme("C", StringFrag("mieć+C"));
     lattice.addEdge(pre_ma, post_ma, ai_ma_lexeme, lexeme_tag, ma_lexeme_builder.build());
     Lattice::EdgeSequence::Builder ma_form_builder(lattice);
     ma_form_builder.addEdge(lattice.firstOutEdge(lattice.getVertexForRawCharIndex(4), lexemeMask));
-    AnnotationItem ai_ma_form("C", StringFrag("mieć_C"));
+    AnnotationItem ai_ma_form("C", StringFrag("mieć"));
     lattice.getAnnotationItemManager().setValue(ai_ma_form, "tense", "pres");
     lattice.getAnnotationItemManager().setValue(ai_ma_form, "number", "sg");
     lattice.getAnnotationItemManager().setValue(ai_ma_form, "person", "ter");
@@ -512,12 +512,12 @@ BOOST_AUTO_TEST_CASE( load_rules_pl ) {
     Lattice::EdgeSequence::Builder kota_lexeme_builder(lattice);
     kota_lexeme_builder.addEdge(lattice.firstOutEdge(
                 lattice.getVertexForRawCharIndex(7), lemmaMask));
-    AnnotationItem ai_kota_lexeme("R", StringFrag("kot_R"));
+    AnnotationItem ai_kota_lexeme("R", StringFrag("kot+R"));
     lattice.addEdge(pre_kota, post_kota, ai_kota_lexeme, lexeme_tag, kota_lexeme_builder.build());
     Lattice::EdgeSequence::Builder kota_form_builder(lattice);
     kota_form_builder.addEdge(lattice.firstOutEdge(
                 lattice.getVertexForRawCharIndex(7), lexemeMask));
-    AnnotationItem ai_kota_form("R", StringFrag("kot_R"));
+    AnnotationItem ai_kota_form("R", StringFrag("kot"));
     lattice.getAnnotationItemManager().setValue(ai_kota_form, "gender", "m2");
     lattice.getAnnotationItemManager().setValue(ai_kota_form, "case", "acc");
     lattice.getAnnotationItemManager().setValue(ai_kota_form, "number", "sg");
