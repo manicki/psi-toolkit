@@ -515,8 +515,8 @@ std::string MeTagger::getFormLemma(Lattice &lattice,
         LayerTagMask mask = lattice.getLayerTagManager().getMask(tags);
         if (lattice.getLayerTagManager().match(mask, "lexeme")) {
             std::string lemma_pos = lattice.getEdgeAnnotationItem(parentEdge).getText();
-            if (lemma_pos.find("+") != std::string::npos) { //@todo: zamienic te plusy na jakis define albo stala
-                return lemma_pos.substr(0, lemma_pos.find("+"));
+            if (lemma_pos.find(LEMMA_CATEGORY_SEPARATOR) != std::string::npos) {
+                return lemma_pos.substr(0, lemma_pos.find(LEMMA_CATEGORY_SEPARATOR));
             } else {
                 return lemma_pos;
             }
@@ -536,8 +536,8 @@ std::string MeTagger::getFormPartOfSpeech(Lattice &lattice,
         LayerTagMask mask = lattice.getLayerTagManager().getMask(tags);
         if (lattice.getLayerTagManager().match(mask, "lexeme")) {
             std::string lemma_pos = lattice.getEdgeAnnotationItem(parentEdge).getText();
-            if (lemma_pos.find("+") != std::string::npos) {
-                return lemma_pos.substr(lemma_pos.find("+") + 1, std::string::npos);
+            if (lemma_pos.find(LEMMA_CATEGORY_SEPARATOR) != std::string::npos) {
+                return lemma_pos.substr(lemma_pos.find(LEMMA_CATEGORY_SEPARATOR) + 1, std::string::npos);
             } else {
                 return unknownPosLabel; //@todo: co tu ma zwaracac?
             }
@@ -637,7 +637,7 @@ void MeTagger::addLexemeEdge(Lattice &lattice,
             seqBuilder.addEdge(lemmaEdge);
 
             AnnotationItem annotationItem(partOfSpeech, StringFrag(
-                        lemma + "+" + partOfSpeech) );
+                        lemma + LEMMA_CATEGORY_SEPARATOR + partOfSpeech) );
             LayerTagCollection lexemeTag
                 = lattice.getLayerTagManager().createSingletonTagCollection("lexeme");
 
@@ -655,7 +655,7 @@ void MeTagger::addLexemeEdge(Lattice &lattice,
 void MeTagger::addFormEdge(Lattice &lattice,
         Lattice::EdgeDescriptor token, std::string lemma,
         std::string partOfSpeech, std::string tag) {
-    std::string lexemeText(lemma + "+" + partOfSpeech);
+    std::string lexemeText(lemma + LEMMA_CATEGORY_SEPARATOR + partOfSpeech);
     LayerTagMask lexemeMask = lattice.getLayerTagManager().getMask("lexeme");
     Lattice::InOutEdgesIterator lexemeIt =
         lattice.outEdges(lattice.getEdgeSource(token), lexemeMask);
