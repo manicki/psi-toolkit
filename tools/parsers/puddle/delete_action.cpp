@@ -96,7 +96,7 @@ bool DeleteAction::foundEdgesToDelete(Lattice &lattice,
     int offset = vertex;
     int vertexI = 0;
     while (vertexI < count) {
-        vertex = lattice::getVertex(lattice, offset + vertexI);
+        vertex = lattice::getVertex(lattice, vertexI, offset);
         std::list<Lattice::EdgeDescriptor> edges =
             lattice::getTopEdges(lattice, vertex);
         for (std::list<Lattice::EdgeDescriptor>::iterator edgeIt = edges.begin();

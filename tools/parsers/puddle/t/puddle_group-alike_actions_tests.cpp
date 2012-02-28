@@ -108,7 +108,6 @@ BOOST_AUTO_TEST_CASE( puddle_attach ) {
     AnnotationItem ai_np("NP");
     lattice.getAnnotationItemManager().setValue(ai_np, "number", "pl");
     lattice.getAnnotationItemManager().setValue(ai_np, "gender", "m");
-    lattice.getAnnotationItemManager().setValue(ai_np, "orth", "ananas");
     lattice.getAnnotationItemManager().setValue(ai_np, "head", "0");
     lattice.addEdge(pre_ananas, post_ananas, ai_np, parse_tag, np_builder.build());
 
@@ -117,7 +116,6 @@ BOOST_AUTO_TEST_CASE( puddle_attach ) {
     AnnotationItem ai_ap("AP");
     lattice.getAnnotationItemManager().setValue(ai_ap, "number", "pl");
     lattice.getAnnotationItemManager().setValue(ai_ap, "gender", "m");
-    lattice.getAnnotationItemManager().setValue(ai_ap, "orth", "noirs");
     lattice.getAnnotationItemManager().setValue(ai_ap, "head", "0");
     lattice.addEdge(pre_noirs, post_noirs, ai_ap, parse_tag, ap_builder.build());
 
@@ -170,10 +168,6 @@ BOOST_AUTO_TEST_CASE( puddle_attach ) {
     BOOST_CHECK_EQUAL((*avi).second, "m");
     ++avi;
     BOOST_CHECK(avi != av.end());
-    BOOST_CHECK_EQUAL((*avi).first, "orth");
-    BOOST_CHECK_EQUAL((*avi).second, "ananas");
-    ++avi;
-    BOOST_CHECK(avi != av.end());
     BOOST_CHECK_EQUAL((*avi).first, "head");
     BOOST_CHECK_EQUAL((*avi).second, "0");
     ++avi;
@@ -204,10 +198,6 @@ BOOST_AUTO_TEST_CASE( puddle_attach ) {
     BOOST_CHECK_EQUAL((*avi).second, "m");
     ++avi;
     BOOST_CHECK(avi != av.end());
-    BOOST_CHECK_EQUAL((*avi).first, "orth");
-    BOOST_CHECK_EQUAL((*avi).second, "ananas");
-    ++avi;
-    BOOST_CHECK(avi != av.end());
     BOOST_CHECK_EQUAL((*avi).first, "head");
     BOOST_CHECK_EQUAL((*avi).second, "0");
     ++avi;
@@ -236,10 +226,6 @@ BOOST_AUTO_TEST_CASE( puddle_attach ) {
     BOOST_CHECK(avi != av.end());
     BOOST_CHECK_EQUAL((*avi).first, "gender");
     BOOST_CHECK_EQUAL((*avi).second, "m");
-    ++avi;
-    BOOST_CHECK(avi != av.end());
-    BOOST_CHECK_EQUAL((*avi).first, "orth");
-    BOOST_CHECK_EQUAL((*avi).second, "noirs");
     ++avi;
     BOOST_CHECK(avi != av.end());
     BOOST_CHECK_EQUAL((*avi).first, "head");
@@ -273,10 +259,6 @@ BOOST_AUTO_TEST_CASE( puddle_attach ) {
     BOOST_CHECK(avi != av.end());
     BOOST_CHECK_EQUAL((*avi).first, "gender");
     BOOST_CHECK_EQUAL((*avi).second, "m");
-    ++avi;
-    BOOST_CHECK(avi != av.end());
-    BOOST_CHECK_EQUAL((*avi).first, "orth");
-    BOOST_CHECK_EQUAL((*avi).second, "ananas");
     ++avi;
     BOOST_CHECK(avi != av.end());
     BOOST_CHECK_EQUAL((*avi).first, "head");
@@ -459,10 +441,6 @@ BOOST_AUTO_TEST_CASE( puddle_group ) {
     BOOST_CHECK_EQUAL((*avi).second, "m");
     ++avi;
     BOOST_CHECK(avi != av.end());
-    BOOST_CHECK_EQUAL((*avi).first, "orth");
-    BOOST_CHECK_EQUAL((*avi).second, "ananas");
-    ++avi;
-    BOOST_CHECK(avi != av.end());
     BOOST_CHECK_EQUAL((*avi).first, "head");
     BOOST_CHECK_EQUAL((*avi).second, "0");
     ++avi;
@@ -491,10 +469,6 @@ BOOST_AUTO_TEST_CASE( puddle_group ) {
     BOOST_CHECK(avi != av.end());
     BOOST_CHECK_EQUAL((*avi).first, "gender");
     BOOST_CHECK_EQUAL((*avi).second, "m");
-    ++avi;
-    BOOST_CHECK(avi != av.end());
-    BOOST_CHECK_EQUAL((*avi).first, "orth");
-    BOOST_CHECK_EQUAL((*avi).second, "ananas");
     ++avi;
     BOOST_CHECK(avi != av.end());
     BOOST_CHECK_EQUAL((*avi).first, "head");
@@ -607,7 +581,6 @@ BOOST_AUTO_TEST_CASE( puddle_join ) {
     AnnotationItem ai_np("NP");
     lattice.getAnnotationItemManager().setValue(ai_np, "number", "pl");
     lattice.getAnnotationItemManager().setValue(ai_np, "gender", "m");
-    lattice.getAnnotationItemManager().setValue(ai_np, "orth", "ananas");
     lattice.getAnnotationItemManager().setValue(ai_np, "head", "0");
     lattice.addEdge(pre_ananas, post_ananas, ai_np, parse_tag, np_builder.build());
 
@@ -616,7 +589,6 @@ BOOST_AUTO_TEST_CASE( puddle_join ) {
     AnnotationItem ai_ap("AP");
     lattice.getAnnotationItemManager().setValue(ai_ap, "number", "pl");
     lattice.getAnnotationItemManager().setValue(ai_ap, "gender", "m");
-    lattice.getAnnotationItemManager().setValue(ai_ap, "orth", "noirs");
     lattice.getAnnotationItemManager().setValue(ai_ap, "head", "0");
     lattice.addEdge(pre_noirs, post_noirs, ai_ap, parse_tag, ap_builder.build());
 
@@ -668,10 +640,6 @@ BOOST_AUTO_TEST_CASE( puddle_join ) {
     BOOST_CHECK_EQUAL((*avi).second, "m");
     ++avi;
     BOOST_CHECK(avi != av.end());
-    BOOST_CHECK_EQUAL((*avi).first, "orth");
-    BOOST_CHECK_EQUAL((*avi).second, "ananas");
-    ++avi;
-    BOOST_CHECK(avi != av.end());
     BOOST_CHECK_EQUAL((*avi).first, "head");
     BOOST_CHECK_EQUAL((*avi).second, "0");
     ++avi;
@@ -702,10 +670,6 @@ BOOST_AUTO_TEST_CASE( puddle_join ) {
     BOOST_CHECK_EQUAL((*avi).second, "m");
     ++avi;
     BOOST_CHECK(avi != av.end());
-    BOOST_CHECK_EQUAL((*avi).first, "orth");
-    BOOST_CHECK_EQUAL((*avi).second, "ananas");
-    ++avi;
-    BOOST_CHECK(avi != av.end());
     BOOST_CHECK_EQUAL((*avi).first, "head");
     BOOST_CHECK_EQUAL((*avi).second, "0");
     ++avi;
@@ -733,10 +697,6 @@ BOOST_AUTO_TEST_CASE( puddle_join ) {
     ++avi;
     BOOST_CHECK_EQUAL((*avi).first, "gender");
     BOOST_CHECK_EQUAL((*avi).second, "m");
-    ++avi;
-    BOOST_CHECK(avi != av.end());
-    BOOST_CHECK_EQUAL((*avi).first, "orth");
-    BOOST_CHECK_EQUAL((*avi).second, "noirs");
     ++avi;
     BOOST_CHECK(avi != av.end());
     BOOST_CHECK_EQUAL((*avi).first, "head");
@@ -772,10 +732,6 @@ BOOST_AUTO_TEST_CASE( puddle_join ) {
     BOOST_CHECK_EQUAL((*avi).second, "m");
     ++avi;
     BOOST_CHECK(avi != av.end());
-    BOOST_CHECK_EQUAL((*avi).first, "orth");
-    BOOST_CHECK_EQUAL((*avi).second, "ananas");
-    ++avi;
-    BOOST_CHECK(avi != av.end());
     BOOST_CHECK_EQUAL((*avi).first, "head");
     BOOST_CHECK_EQUAL((*avi).second, "0");
     ++avi;
@@ -804,10 +760,6 @@ BOOST_AUTO_TEST_CASE( puddle_join ) {
     ++avi;
     BOOST_CHECK_EQUAL((*avi).first, "gender");
     BOOST_CHECK_EQUAL((*avi).second, "m");
-    ++avi;
-    BOOST_CHECK(avi != av.end());
-    BOOST_CHECK_EQUAL((*avi).first, "orth");
-    BOOST_CHECK_EQUAL((*avi).second, "noirs");
     ++avi;
     BOOST_CHECK(avi != av.end());
     BOOST_CHECK_EQUAL((*avi).first, "head");
@@ -1711,7 +1663,6 @@ BOOST_AUTO_TEST_CASE( puddle_transform ) {
     AnnotationItem ai_np("NP");
     lattice.getAnnotationItemManager().setValue(ai_np, "number", "pl");
     lattice.getAnnotationItemManager().setValue(ai_np, "gender", "m");
-    lattice.getAnnotationItemManager().setValue(ai_np, "orth", "ananas");
     lattice.getAnnotationItemManager().setValue(ai_np, "head", "0");
     lattice.addEdge(pre_ananas, post_ananas, ai_np, parse_tag, np_builder.build());
 
@@ -1764,10 +1715,6 @@ BOOST_AUTO_TEST_CASE( puddle_transform ) {
     BOOST_CHECK_EQUAL((*avi).second, "m");
     ++avi;
     BOOST_CHECK(avi != av.end());
-    BOOST_CHECK_EQUAL((*avi).first, "orth");
-    BOOST_CHECK_EQUAL((*avi).second, "ananas");
-    ++avi;
-    BOOST_CHECK(avi != av.end());
     BOOST_CHECK_EQUAL((*avi).first, "head");
     BOOST_CHECK_EQUAL((*avi).second, "0");
     ++avi;
@@ -1796,10 +1743,6 @@ BOOST_AUTO_TEST_CASE( puddle_transform ) {
     BOOST_CHECK(avi != av.end());
     BOOST_CHECK_EQUAL((*avi).first, "gender");
     BOOST_CHECK_EQUAL((*avi).second, "m");
-    ++avi;
-    BOOST_CHECK(avi != av.end());
-    BOOST_CHECK_EQUAL((*avi).first, "orth");
-    BOOST_CHECK_EQUAL((*avi).second, "ananas");
     ++avi;
     BOOST_CHECK(avi != av.end());
     BOOST_CHECK_EQUAL((*avi).first, "head");
@@ -1833,10 +1776,6 @@ BOOST_AUTO_TEST_CASE( puddle_transform ) {
     BOOST_CHECK(avi != av.end());
     BOOST_CHECK_EQUAL((*avi).first, "gender");
     BOOST_CHECK_EQUAL((*avi).second, "m");
-    ++avi;
-    BOOST_CHECK(avi != av.end());
-    BOOST_CHECK_EQUAL((*avi).first, "orth");
-    BOOST_CHECK_EQUAL((*avi).second, "ananas");
     ++avi;
     BOOST_CHECK(avi != av.end());
     BOOST_CHECK_EQUAL((*avi).first, "head");

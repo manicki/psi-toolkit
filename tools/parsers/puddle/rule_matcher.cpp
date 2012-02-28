@@ -145,8 +145,7 @@ std::string RuleMatcher::generateSentenceString(Lattice &lattice, int startVerte
         if (lattice.getLayerTagManager().match(mask, "parse")) {
             ss << "<" << lattice.getAnnotationItemManager().
                 getCategory(annotationItem);
-            std::string orth = lattice.getAnnotationItemManager().
-                getValue(annotationItem, "orth");
+            std::string orth = lattice.getEdgeText(edge);
             if (orth != "") {
             ss << "<" << util::escapeSpecialChars(orth);
             } else {
