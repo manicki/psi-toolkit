@@ -77,16 +77,18 @@ endif(EXISTS ${CMPH_LIB} AND EXISTS ${CMPH_INCLUDE})
 
 # SFST library (finite state machine)
 find_library(SFST_LIB NAMES sfst)
-find_path(SFST_INCLUDE fst.h)
+find_path(SFST_INCLUDE ../sfst/fst.h)
 
 if(EXISTS ${SFST_LIB} AND EXISTS ${SFST_INCLUDE})
   message("-- Using SFST...")
   include_directories(${SFST_INCLUDE})
   link_directories(${SFST_LIB})
-  set(HAVE_CMPH 1)
+  set(HAVE_SFST 1)
 else()
-  message("-- Not using SFST...")
-  set(HAVE_SFST 0)
+  #message("-- Not using SFST...")
+  message("-- Ugly forced SFST...")
+  #forced but commited...
+  set(HAVE_SFST 1)
 endif(EXISTS ${SFST_LIB} AND EXISTS ${SFST_INCLUDE})
 
 # Finds and includes external libraries
@@ -193,6 +195,11 @@ if(USE_JAVA)
     set(BASE_TARGETS ${BASE_TARGETS} tools-lemmatizers-morfologik)
     set(TESTS_TARGETS ${TESTS_TARGETS} tools-lemmatizers-morfologik-tests)
 endif(USE_JAVA)
+
+if(HAVE_SFST)
+    set(BASE_TARGETS ${BASE_TARGETS} tools-lemmatizers-sfst)
+    set(TESTS_TARGETS ${TESTS_TARGETS} tools-lemmatizers-sfst-tests)
+endif(HAVE_SFST)
 
 if(HAVE_CMPH)
     set(BASE_TARGETS ${BASE_TARGETS} tools-datastructures-lexica)
