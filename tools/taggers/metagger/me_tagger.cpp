@@ -138,17 +138,17 @@ void MeTagger::tag(Lattice &lattice) {
     LayerTagMask segmentMask = lattice.getLayerTagManager().getMask("segment");
     Lattice::EdgesSortedBySourceIterator segmentIt =
         lattice.edgesSortedBySource(segmentMask);
+    if (!segmentIt.hasNext()) {
+        TokenEdgesMap tokenEdgesMap = createTokenEdgesMap(lattice,
+                lattice.getFirstVertex(), lattice.getLastVertex()
+                    );
+        tagSegment(lattice, tokenEdgesMap);
+    }
     while (segmentIt.hasNext()) {
         Lattice::EdgeDescriptor segment = segmentIt.next();
 
         TokenEdgesMap tokenEdgesMap = createTokenEdgesMap(lattice,
                 lattice.getEdgeSource(segment), lattice.getEdgeTarget(segment)
-                    );
-        tagSegment(lattice, tokenEdgesMap);
-    }
-    if (!segmentIt.hasNext()) {
-        TokenEdgesMap tokenEdgesMap = createTokenEdgesMap(lattice,
-                lattice.getFirstVertex(), lattice.getLastVertex()
                     );
         tagSegment(lattice, tokenEdgesMap);
     }
@@ -277,6 +277,12 @@ void MeTagger::addSampleSentences(Lattice &lattice) {
     LayerTagMask segmentMask = lattice.getLayerTagManager().getMask("segment");
     Lattice::EdgesSortedBySourceIterator segmentIt =
         lattice.edgesSortedBySource(segmentMask);
+    if (!segmentIt.hasNext()) {
+        TokenEdgesMap tokenEdgesMap = createTokenEdgesMap(lattice,
+                lattice.getFirstVertex(), lattice.getLastVertex()
+                    );
+        tagSegment(lattice, tokenEdgesMap);
+    }
     while (segmentIt.hasNext()) {
         Lattice::EdgeDescriptor segment = segmentIt.next();
 
@@ -284,12 +290,6 @@ void MeTagger::addSampleSentences(Lattice &lattice) {
                 lattice.getEdgeSource(segment), lattice.getEdgeTarget(segment)
                     );
         addSampleSegment(lattice, tokenEdgesMap);
-    }
-    if (!segmentIt.hasNext()) {
-        TokenEdgesMap tokenEdgesMap = createTokenEdgesMap(lattice,
-                lattice.getFirstVertex(), lattice.getLastVertex()
-                    );
-        tagSegment(lattice, tokenEdgesMap);
     }
 }
 
