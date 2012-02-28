@@ -12,7 +12,7 @@ sfstLemmatizer::sfstLemmatizer(const boost::program_options::variables_map& opti
         setLevel(options["level"].as<int>());
     }
 
-    //initializePolishStemmer();
+    initializeTurkishTransducer();
     //initializeList();
     //initializeWordData();
     //initializeString();
@@ -30,6 +30,22 @@ void sfstLemmatizer::setLevel(int lvl) {
     if (0 <= lvl && lvl <= 0) {
         level = lvl;
     }
+}
+
+void sfstLemmatizer::initializeTurkishTransducer() {
+    FILE *file;
+    
+    //turkishTransducer = NULL;
+
+    if ((file = fopen("data/tr/trmorph-0.2.1.a","rb")) == NULL) {
+        Transducer tmpTrans(file);
+        fclose(file);
+		turkishTransducer = tmpTrans;
+    }
+    else {
+        ERROR("The trmormp's file has been not found");
+    }
+	
 }
 
 std::vector<std::string> sfstLemmatizer::simpleStem(const std::string & word) {

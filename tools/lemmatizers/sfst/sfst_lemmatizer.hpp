@@ -5,7 +5,7 @@
 #include <boost/program_options/variables_map.hpp>
 #include <boost/filesystem.hpp>
 
-#include <sfst/fst.h>
+#include <sfst-1.0/sfst/fst.h>
 #include "annotation_item_manager.hpp"
 #include "lemmatizer_output_iterator.hpp"
 
@@ -47,7 +47,9 @@ class sfstLemmatizer {
 		
 		static std::string tagSeparator;
 		
-		SFST::Transducer turkishTransducer;
+		Transducer turkishTransducer;
+		
+		void initializeTurkishTransducer();
 };
 
 #endif
