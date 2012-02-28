@@ -897,9 +897,7 @@ BOOST_AUTO_TEST_CASE( puddle_syntok ) {
         Lattice::EdgeDescriptor edge = dLexemeEdgeIt.next();
         std::string category = lattice.getEdgeAnnotationItem(edge).getCategory();
         if (category == "prep")
-        { std::cerr << "jazda" << std::endl;
             d__form_builder.addEdge(edge);
-        }
         else if (category == "subst")
             d_form_builder.addEdge(edge);
         else if (category == "det")
