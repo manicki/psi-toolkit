@@ -13,10 +13,10 @@
 #include <list>
 #include <set>
 
-class sfstLemmatizer {
+class SfstLemmatizer {
 	public:
 
-    sfstLemmatizer(const boost::program_options::variables_map& options);
+    SfstLemmatizer(const boost::program_options::variables_map& options);
     
     static std::string getName();
     

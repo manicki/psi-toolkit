@@ -2,6 +2,8 @@ add_library(tools-lemmatizers-sfst SHARED
 	sfst_lemmatizer.cpp
 )
 
+target_link_libraries(tools-lemmatizers-sfst sfst1)
+
 add_subdirectory(t)
 
 install(TARGETS tools-lemmatizers-sfst DESTINATION lib/)
