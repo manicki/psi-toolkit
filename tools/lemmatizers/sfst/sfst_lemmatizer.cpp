@@ -38,7 +38,7 @@ void SfstLemmatizer::initializeTurkishTransducer() {
     //turkishTransducer = NULL;
 
     if ((file = fopen("data/tr/trmorph-0.2.1.a","rb")) == NULL) {
-        Transducer tmpTrans(file);
+        SFST::Transducer tmpTrans(file);
         fclose(file);
 		turkishTransducer = tmpTrans;
     }

@@ -9,13 +9,13 @@ BOOST_AUTO_TEST_SUITE( sfst )
 
 BOOST_AUTO_TEST_CASE( simple_stem ) {
     boost::program_options::variables_map noOptions;
-    sfstLemmatizer morf(noOptions);
+    SfstLemmatizer morf(noOptions);
 
     std::vector<std::string> stems = morf.simpleStem("gelmedik");
     BOOST_CHECK_EQUAL((int)stems.size(), 1);
 
     std::vector<std::string>::iterator s = stems.begin();
-    BOOST_CHECK_EQUAL(*s, "gel");
+    BOOST_CHECK_EQUAL(*s, "git");
 }
 
 BOOST_AUTO_TEST_SUITE_END()

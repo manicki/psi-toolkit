@@ -8,6 +8,10 @@ if (WITH_RE2)
     target_link_libraries(test_runner re2)
 endif(WITH_RE2)
 
+if (HAVE_SFST)
+    target_link_libraries(test_runner sfst)
+endif(HAVE_SFST)
+
 if(HAVE_PERL_BINDINGS)
     target_link_libraries(test_runner formats-perl-simple)
     find_package(PerlLibs)
