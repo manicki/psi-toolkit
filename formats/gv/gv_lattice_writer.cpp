@@ -70,6 +70,15 @@ void GVLatticeWriter::Worker::doRun() {
 
     PsiQuoter quoter;
 
+    GVC_t * gvc = gvContext();
+    char * args[] = {
+        "dot",
+        "-Tdot",
+        "-oout.dot"
+    };
+    gvParseArgs (gvc, sizeof(args)/sizeof(char*), args);
+    Agraph_t * g = agopen("g", AGDIGRAPH);
+/*
     Lattice::EdgesSortedByTargetIterator ei
         = lattice_.edgesSortedByTarget(lattice_.getLayerTagManager().anyTag());
 
@@ -155,6 +164,12 @@ void GVLatticeWriter::Worker::doRun() {
 
     alignOutput_("}");
     alignOutputNewline_();
+*/
+    gvLayoutJobs(gvc, g);
+    gvRenderJobs(gvc, g);
+    gvFreeLayout(gvc, g);
+    agclose(g);
+    gvFreeContext(gvc);
 
     DEBUG("WRITING");
 }

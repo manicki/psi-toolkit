@@ -15,6 +15,10 @@
 #include "lang_guesser.hpp"
 #include "gobio.hpp"
 
+#if HAVE_GRAPHVIZ
+#include "gv_lattice_writer.hpp"
+#endif
+
 #if HAVE_POSTGRESQL
 #include "lex_db_lemmatizer.hpp"
 #endif
@@ -48,6 +52,10 @@ MainFactoriesKeeper::MainFactoriesKeeper() {
     keeper_.takeProcessorFactory(new SrxSegmenter::Factory());
     keeper_.takeProcessorFactory(new LangGuesser::Factory());
     keeper_.takeProcessorFactory(new Gobio::Factory());
+
+#if HAVE_GRAPHVIZ
+    keeper_.takeProcessorFactory(new GVLatticeWriter::Factory());
+#endif
 
 #if HAVE_POSTGRESQL
     keeper_.takeProcessorFactory(new LemmatizerAnnotator<LexDbLemmatizer>::Factory());
