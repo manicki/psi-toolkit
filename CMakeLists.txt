@@ -168,12 +168,48 @@ if(SWIG_FOUND)
   endif(PYTHONLIBS_FOUND)
 endif(SWIG_FOUND)
 
+
+IF (GRAPHVIZ_INCLUDE_DIR AND GRAPHVIZ_CDT_LIBRARY AND GRAPHVIZ_CGRAPH_LIBRARY AND GRAPHVIZ_GRAPH_LIBRARY AND GRAPHVIZ_PATHPLAN_LIBRARY)
+    SET(GRAPHVIZ_FIND_QUIETLY TRUE)
+ENDIF (GRAPHVIZ_INCLUDE_DIR AND GRAPHVIZ_CDT_LIBRARY AND GRAPHVIZ_CGRAPH_LIBRARY AND GRAPHVIZ_GRAPH_LIBRARY AND GRAPHVIZ_PATHPLAN_LIBRARY)
+
+FIND_PATH(GRAPHVIZ_INCLUDE_DIR gvc.h graph.h cdt.h PATHS "/usr/include/graphviz")
+
+FIND_LIBRARY( GRAPHVIZ_CDT_LIBRARY NAMES cdt )
+FIND_LIBRARY( GRAPHVIZ_GVC_LIBRARY NAMES gvc )
+FIND_LIBRARY( GRAPHVIZ_CGRAPH_LIBRARY NAMES cgraph )
+FIND_LIBRARY( GRAPHVIZ_GRAPH_LIBRARY NAMES graph )
+FIND_LIBRARY( GRAPHVIZ_PATHPLAN_LIBRARY NAMES pathplan )
+
+IF (GRAPHVIZ_INCLUDE_DIR AND GRAPHVIZ_CDT_LIBRARY AND GRAPHVIZ_GVC_LIBRARY AND GRAPHVIZ_CGRAPH_LIBRARY AND GRAPHVIZ_GRAPH_LIBRARY AND GRAPHVIZ_PATHPLAN_LIBRARY)
+   SET(GRAPHVIZ_FOUND TRUE)
+ELSE (GRAPHVIZ_INCLUDE_DIR AND GRAPHVIZ_CDT_LIBRARY AND GRAPHVIZ_GVC_LIBRARY AND GRAPHVIZ_CGRAPH_LIBRARY AND GRAPHVIZ_GRAPH_LIBRARY AND GRAPHVIZ_PATHPLAN_LIBRARY)
+   SET(GRAPHVIZ_FOUND FALSE)
+ENDIF (GRAPHVIZ_INCLUDE_DIR AND GRAPHVIZ_CDT_LIBRARY AND GRAPHVIZ_GVC_LIBRARY AND GRAPHVIZ_CGRAPH_LIBRARY AND GRAPHVIZ_GRAPH_LIBRARY AND GRAPHVIZ_PATHPLAN_LIBRARY)
+
+if (GRAPHVIZ_INCLUDE_DIR_NOTFOUND)
+    message(FATAL_ERROR "Could NOT find Graphivz include dir")
+else (GRAPHVIZ_INCLUDE_DIR_NOTFOUND)
+    if (GRAPHVIZ_FOUND)
+        message(STATUS "Found Graphviz: ${GRAPHVIZ_CDT_LIBRARY} ${GRAPHVIZ_GVC_LIBRARY} ${GRAPHVIZ_CGRAPH_LIBRARY} ${GRAPHVIZ_GRAPH_LIBRARY} ${GRAPHVIZ_PATHPLAN_LIBRARY}")
+        message(STATUS "Graphviz include dir: ${GRAPHVIZ_INCLUDE_DIR}")
+        include_directories(${GRAPHVIZ_INCLUDE_DIR})
+        link_directories(${GRAPHVIZ_GVC_LIBRARY})
+    else (GRAPHVIZ_FOUND)
+        if (GRAPHVIZ_FIND_REQUIRED)
+            message(FATAL_ERROR "Could NOT find Graphivz")
+        endif (GRAPHVIZ_FIND_REQUIRED)
+    endif (GRAPHVIZ_FOUND)
+endif (GRAPHVIZ_INCLUDE_DIR_NOTFOUND)
+
+
+
 # Sets compiler flags
 set(CMAKE_CXX_FLAGS "-g -Wall -Wundef -Wnon-virtual-dtor -Wextra")
 
-set(BASE_TARGETS common utf8case sundown framework formats-dot formats-gv formats-psi formats-simple formats-txt formats-utt formats-apertium maxent tools-tokenizers-tp tools-segmenters-srx tools-recognizers-langguesser tools-parsers-gobio tools-taggers-metagger)
+set(BASE_TARGETS common utf8case sundown framework formats-dot formats-psi formats-simple formats-txt formats-utt formats-apertium maxent tools-tokenizers-tp tools-segmenters-srx tools-recognizers-langguesser tools-parsers-gobio tools-taggers-metagger)
 
-set(TESTS_TARGETS common-tests tools-tokenizers-tp-tests tools-segmenters-srx-tests tools-datastructures-psi_query-tests tools-recognizers-langguesser-tests utf8case-tests formats-dot-tests formats-gv-tests formats-utt-tests formats-psi-tests formats-simple-tests tools-parsers-gobio-tests)
+set(TESTS_TARGETS common-tests tools-tokenizers-tp-tests tools-segmenters-srx-tests tools-datastructures-psi_query-tests tools-recognizers-langguesser-tests utf8case-tests formats-dot-tests formats-utt-tests formats-psi-tests formats-simple-tests tools-parsers-gobio-tests)
 
 if(USE_JAVA)
     set(BASE_TARGETS ${BASE_TARGETS} tools-lemmatizers-morfologik)
@@ -200,6 +236,11 @@ if(USE_PUDDLE)
             include_directories(${BONSAI_PATH})
         endif(USE_BONSAI_PARSEGRAPH)
 endif(USE_PUDDLE)
+
+if(GRAPHVIZ_FOUND)
+    set(BASE_TARGETS ${BASE_TARGETS} formats-gv)
+    set(TESTS_TARGETS ${TESTS_TARGETS} formats-gv-tests)
+endif(GRAPHVIZ_FOUND)
 
 include_directories("${psi-toolkit_SOURCE_DIR}/tools/parsers/gobio")
 include_directories("${psi-toolkit_SOURCE_DIR}/tools/parsers/gobio/chart")

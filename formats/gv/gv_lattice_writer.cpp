@@ -4,6 +4,8 @@
 #include <iostream>
 #include <locale>
 
+#include <gvc.h>
+
 #include "lattice.hpp"
 #include "logging.hpp"
 
