@@ -3,11 +3,14 @@
 #include <iomanip>
 #include <iostream>
 #include <locale>
+#include <fstream>
 
 #include <gvc.h>
 
 #include "lattice.hpp"
 #include "logging.hpp"
+
+#define TMPFILENAME ROOT_DIR "formats/gv/tmp/tmp"
 
 std::string GVLatticeWriter::getFormatName() {
     return "GraphViz";
@@ -73,8 +76,8 @@ void GVLatticeWriter::Worker::doRun() {
     GVC_t * gvc = gvContext();
     const char * const args[] = {
         "dot",
-        "-Tps:cairo",
-        "-oout.ps"
+        "-Tdot",
+        "-o" TMPFILENAME
     };
     gvParseArgs (gvc, sizeof(args)/sizeof(char*), (char**)args);
     Agraph_t * g = agopen((char*)"g", AGDIGRAPH);
@@ -167,6 +170,17 @@ void GVLatticeWriter::Worker::doRun() {
     gvFreeLayout(gvc, g);
     agclose(g);
     gvFreeContext(gvc);
+
+    std::string line;
+    std::string contents;
+    std::ifstream s(TMPFILENAME);
+    while (getline(s, line)) {
+        contents += line;
+        contents += "\n";
+    }
+    alignOutput_(contents);
+
+    std::remove(TMPFILENAME);
 
     DEBUG("WRITING");
 }
