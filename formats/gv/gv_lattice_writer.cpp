@@ -30,7 +30,8 @@ LatticeWriter<std::ostream>* GVLatticeWriter::Factory::doCreateLatticeWriter(
         options.count("color"),
         filter,
         options["format"].as<std::string>(),
-        options["file"].as<std::string>()
+        options["file"].as<std::string>(),
+        !options.count("no-tmps")
     );
 }
 
@@ -46,6 +47,8 @@ boost::program_options::options_description GVLatticeWriter::Factory::doOptionsH
             "filters edges by specified tags")
         ("format", boost::program_options::value<std::string>()->default_value("dot"),
             "output format")
+        ("no-tmps",
+            "forbids using temporary files")
         ("show-tags",
             "prints layer tags")
         ;
@@ -80,8 +83,16 @@ void GVLatticeWriter::Worker::doRun() {
     PsiQuoter quoter;
 
     GVC_t * gvc = gvContext();
-    std::string arg1 = "-T" + processor_.getOutputFormat();
-    std::string arg2 = "-o" + ((processor_.getOutputFile() == "") ? (TMPFILENAME) : processor_.getOutputFile());
+    std::string arg1("-T" + processor_.getOutputFormat());
+    std::string arg2("");
+    if (processor_.isUseOutputStream()) {
+        arg2 += "-o" TMPFILENAME;
+    } else {
+        if (processor_.getOutputFile() != "") {
+            arg2 += "-o";
+        }
+        arg2 += processor_.getOutputFile();
+    }
     const char * const args[] = {
         "dot",
         arg1.c_str(),
@@ -179,7 +190,7 @@ void GVLatticeWriter::Worker::doRun() {
     agclose(g);
     gvFreeContext(gvc);
 
-    if (processor_.getOutputFile() == "") {
+    if (processor_.isUseOutputStream()) {
         std::string line;
         std::string contents;
         std::ifstream s(TMPFILENAME);

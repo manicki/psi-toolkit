@@ -33,13 +33,15 @@ public:
         bool color,
         std::set<std::string> filter,
         std::string outputFormat,
-        std::string outputFile
+        std::string outputFile,
+        bool useOutputStream
     ) :
         showTags_(showTags),
         color_(color),
         filter_(filter),
         outputFormat_(outputFormat),
-        outputFile_(outputFile)
+        outputFile_(outputFile),
+        useOutputStream_(useOutputStream)
     { }
 
     bool isShowTags() const { return showTags_; }
@@ -56,6 +58,8 @@ public:
 
     std::string getOutputFormat() const { return outputFormat_; }
     std::string getOutputFile() const { return outputFile_; }
+
+    bool isUseOutputStream() const { return useOutputStream_; }
 
 private:
     virtual std::string doInfo();
@@ -84,6 +88,7 @@ private:
     std::set<std::string> filter_;
     std::string outputFormat_;
     std::string outputFile_;
+    bool useOutputStream_;
 
 };
 
