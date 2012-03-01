@@ -1,0 +1,3 @@
+GraphViz Writer presents the lattice as a directed graph, using GraphViz library.
+
+If gv-writer is not available, you can use dot-writer instead.
