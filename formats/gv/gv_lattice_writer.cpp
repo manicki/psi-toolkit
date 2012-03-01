@@ -10,7 +10,7 @@
 #include "lattice.hpp"
 #include "logging.hpp"
 
-#define TMPFILENAME ROOT_DIR "formats/gv/tmp/tmp"
+#define TMPFILENAME "tmp"
 
 std::string GVLatticeWriter::getFormatName() {
     return "GraphViz";
@@ -88,7 +88,7 @@ void GVLatticeWriter::Worker::doRun() {
     if (processor_.isUseOutputStream()) {
         arg2 += "-o" TMPFILENAME;
     } else {
-        if (processor_.getOutputFile() != "") {
+        if (!processor_.getOutputFile().empty()) {
             arg2 += "-o";
         }
         arg2 += processor_.getOutputFile();
@@ -147,7 +147,7 @@ void GVLatticeWriter::Worker::doRun() {
             edgeLabelSs << quoter.escape(lattice_.getEdgeText(edge));
         }
 
-        std::string tagStr = "";
+        std::string tagStr("");
         std::stringstream colorSs;
         colorSs << std::setbase(16);
 
@@ -191,15 +191,19 @@ void GVLatticeWriter::Worker::doRun() {
     gvFreeContext(gvc);
 
     if (processor_.isUseOutputStream()) {
-        std::string line;
-        std::string contents;
-        std::ifstream s(TMPFILENAME);
-        while (getline(s, line)) {
-            contents += line;
-            contents += "\n";
+        try {
+            std::string line;
+            std::string contents;
+            std::ifstream s(TMPFILENAME);
+            while (getline(s, line)) {
+                contents += line;
+                contents += "\n";
+            }
+            alignOutput_(contents);
+            std::remove(TMPFILENAME);
+        } catch (...) {
+            std::remove(TMPFILENAME);
         }
-        alignOutput_(contents);
-        std::remove(TMPFILENAME);
     }
 
     DEBUG("WRITING");

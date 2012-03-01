@@ -59,7 +59,7 @@ public:
     std::string getOutputFormat() const { return outputFormat_; }
     std::string getOutputFile() const { return outputFile_; }
 
-    bool isUseOutputStream() const { return useOutputStream_; }
+    bool isUseOutputStream() const { return useOutputStream_ && (outputFile_.empty()); }
 
 private:
     virtual std::string doInfo();
