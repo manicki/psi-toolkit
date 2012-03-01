@@ -71,62 +71,63 @@ void GVLatticeWriter::Worker::doRun() {
     PsiQuoter quoter;
 
     GVC_t * gvc = gvContext();
-    char * args[] = {
+    const char * const args[] = {
         "dot",
-        "-Tdot",
-        "-oout.dot"
+        "-Tps:cairo",
+        "-oout.ps"
     };
-    gvParseArgs (gvc, sizeof(args)/sizeof(char*), args);
-    Agraph_t * g = agopen("g", AGDIGRAPH);
-/*
+    gvParseArgs (gvc, sizeof(args)/sizeof(char*), (char**)args);
+    Agraph_t * g = agopen((char*)"g", AGDIGRAPH);
+    Agnode_t * n;
+    Agnode_t * m;
+    Agedge_t * e;
+
     Lattice::EdgesSortedByTargetIterator ei
         = lattice_.edgesSortedByTarget(lattice_.getLayerTagManager().anyTag());
 
-    alignOutput_("digraph G {");
-    alignOutputNewline_();
-
-    alignOutput_("rankdir=LR");
-    alignOutputNewline_();
+    agsafeset(g, (char*)"rankdir", (char*)"LR", (char*)"");
 
     while (ei.hasNext()) {
 
         Lattice::EdgeDescriptor edge = ei.next();
-
-        // if (lattice_.isEdgeHidden(edge)) continue;
 
         std::list<std::string> tagNames
             = lattice_.getLayerTagManager().getTagNames(lattice_.getEdgeLayerTags(edge));
 
         if (!processor_.areSomeInFilter(tagNames)) continue;
 
-        std::stringstream edgeSs;
-
+        std::stringstream nSs;
         Lattice::VertexDescriptor source = lattice_.getEdgeSource(edge);
         if (lattice_.isLooseVertex(source)) {
-            edgeSs << "L" << lattice_.getLooseVertexIndex(source);
+            nSs << "L" << lattice_.getLooseVertexIndex(source);
         } else {
-            edgeSs << lattice_.getVertexRawCharIndex(source);
+            nSs << lattice_.getVertexRawCharIndex(source);
         }
+        n = agnode(g, (char*)(nSs.str().c_str()));
 
-        edgeSs << " -> ";
-
+        std::stringstream mSs;
         Lattice::VertexDescriptor target = lattice_.getEdgeTarget(edge);
         if (lattice_.isLooseVertex(target)) {
-            edgeSs << "L" << lattice_.getLooseVertexIndex(target);
+            mSs << "L" << lattice_.getLooseVertexIndex(target);
         } else {
-            edgeSs << lattice_.getVertexRawCharIndex(target);
+            mSs << lattice_.getVertexRawCharIndex(target);
         }
+        m = agnode(g, (char*)(mSs.str().c_str()));
+
+        e = agedge(g, n, m);
+
+        std::stringstream edgeLabelSs;
 
         const AnnotationItem& annotationItem = lattice_.getEdgeAnnotationItem(edge);
-        std::string edgeText;
         if (lattice_.isLooseVertex(source) || lattice_.isLooseVertex(target)) {
-            edgeText = quoter.escape(annotationItem.getText());
+            edgeLabelSs << quoter.escape(annotationItem.getText());
         } else {
-            edgeText = quoter.escape(lattice_.getEdgeText(edge));
+            edgeLabelSs << quoter.escape(lattice_.getEdgeText(edge));
         }
 
         std::string tagStr = "";
         std::stringstream colorSs;
+        colorSs << std::setbase(16);
 
         if (processor_.isShowTags() || processor_.isColor()) {
             BOOST_FOREACH(std::string tagName, tagNames) {
@@ -147,24 +148,20 @@ void GVLatticeWriter::Worker::doRun() {
             }
         }
 
-        edgeSs << " [label=\"" << edgeText;
         if (processor_.isShowTags()) {
-            edgeSs << " (" << tagStr << ")";
+            edgeLabelSs << " (" << tagStr << ")";
         }
-        edgeSs << " " << annotationItem.getCategory() << "\"";
-        if (processor_.isColor()) {
-            edgeSs << ",color=\"" << std::setbase(16) << colorSs.str() << "\"";
-        }
-        edgeSs << "]";
 
-        alignOutput_(edgeSs.str());
-        alignOutputNewline_();
+        edgeLabelSs << " " << annotationItem.getCategory();
+
+        agsafeset(e, (char*)"label", (char*)(edgeLabelSs.str().c_str()), (char*)"");
+
+        if (processor_.isColor()) {
+            agsafeset(e, (char*)"color", (char*)(colorSs.str().c_str()), (char*)"");
+        }
 
     }
 
-    alignOutput_("}");
-    alignOutputNewline_();
-*/
     gvLayoutJobs(gvc, g);
     gvRenderJobs(gvc, g);
     gvFreeLayout(gvc, g);
