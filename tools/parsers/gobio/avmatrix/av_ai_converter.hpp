@@ -47,7 +47,7 @@ namespace AV_AI_Converter_specialization {
 
     template <>
     inline const std::string toAVMatrix< std::string >(
-        Lattice & lattice,
+        Lattice & /* lattice */,
         AnnotationItem ai
     ) {
         return ai.getCategory();

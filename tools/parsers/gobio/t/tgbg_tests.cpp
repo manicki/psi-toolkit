@@ -1,11 +1,12 @@
 #include "tests.hpp"
 
+#include "agenda.hpp"
+#include "agenda_parser.tpl"
+#include "avinput_parser.tpl"
 #include "number_master.hpp"
+#include "psi_lattice_writer.hpp"
 #include "test_helpers.hpp"
 #include "tgbg_combinator.tpl"
-
-#include "avinput_parser.tpl"
-#include "psi_lattice_writer.hpp"
 
 
 BOOST_AUTO_TEST_SUITE( gobio_tgbg )
@@ -120,40 +121,100 @@ BOOST_AUTO_TEST_CASE( avinput ) {
     boost::scoped_ptr<LatticeWriter<std::ostream> > writer(new PsiLatticeWriter());
     writer->writeLattice(lattice, std::cout);
 
-/*
-        {
-        short_avmatrix_generator<int,number_master> sh_avm_generator(
-            8,
-            attribute_reg,
-            extra_attribute_reg,
-            symbol_reg,
-            master);
+    std::cout << std::endl;
 
-        dot_chart_printer<
-            chart_type,
-            short_avmatrix_generator<int,number_master> > printer(sh_avm_generator);
+    std::ostringstream osstr;
+    writer->writeLattice(lattice, osstr);
+    BOOST_CHECK_EQUAL(
+        osstr.str(),
+        slurp_file(ROOT_DIR "tools/parsers/gobio/t/files/av_1.i.out")
+    );
 
-        std::ostringstream osstr;
-        printer.print(ch, osstr);
-        TS_ASSERT_EQUALS(osstr.str(), slurp_file(GOBIO_TEST_FILES_PATH "av_1a.i.out"));
-        }
+}
 
-        {
-        simple_avmatrix_generator<int,number_master> si_avm_generator(
-            attribute_reg,
-            extra_attribute_reg,
-            symbol_reg,
-            master);
 
-        txt_chart_printer<
-            chart_type,
-            simple_avmatrix_generator<int,number_master> > printer(si_avm_generator);
+BOOST_AUTO_TEST_CASE( tgbg_parsing ) {
 
-        std::ostringstream osstr;
-        printer.print(ch, osstr);
-        TS_ASSERT_EQUALS(osstr.str(), slurp_file(GOBIO_TEST_FILES_PATH "av_1b.i.out"));
-        }
-*/
+    Lattice lattice;
+
+    typedef tgbg_combinator<
+        int,
+        Lattice::Score,
+        number_master,
+        semantics_stub<int, number_master, double>
+    > Combinator;
+
+    Combinator combinator;
+    combinator.add_rules(ROOT_DIR "tools/parsers/gobio/t/files/rules_3.g");
+
+    typedef chart<
+        av_matrix<int, int>,
+        Lattice::Score,
+        Combinator::variant_type,
+        Combinator::rule_type
+    > Chart;
+
+    Chart ch(lattice);
+
+    number_master& master = combinator.get_master();
+    registrar<std::string>& symbol_reg = combinator.get_symbol_registrar();
+    registrar<std::string>& attribute_reg = combinator.get_attribute_registrar();
+    registrar<std::string>& extra_attribute_reg
+        = combinator.get_extra_attribute_registrar();
+
+    simple_converter<int> converter(symbol_reg, attribute_reg, extra_attribute_reg);
+
+    std::vector<Combinator::rule_holder> local_rules;
+
+    avinput_parser<
+        int,
+        Combinator::rule_type,
+        int,
+        number_master,
+        Chart,
+        simple_converter<int>,
+        Combinator::rule_holder
+    > av_parser(
+        master,
+        ch,
+        converter,
+        local_rules
+    );
+
+    BOOST_CHECK(av_parser.parse(slurp_file(ROOT_DIR "tools/parsers/gobio/t/files/av_1.i")));
+
+    boost::scoped_ptr<LatticeWriter<std::ostream> > writer(new PsiLatticeWriter());
+    writer->writeLattice(lattice, std::cout);
+
+    std::cout << std::endl;
+
+    typedef fifo_agenda<Chart::edge_descriptor> Agenda;
+    Agenda agenda;
+
+    agenda_parser<
+        av_matrix<int, int>,
+        Lattice::Score,
+        Combinator::variant_type,
+        Combinator::rule_type,
+        Combinator,
+        Agenda
+    > tgbg_parser(
+        ch,
+        combinator,
+        agenda
+    );
+
+    tgbg_parser.run();
+
+    writer->writeLattice(lattice, std::cout);
+
+    std::ostringstream osstr;
+    writer->writeLattice(lattice, osstr);
+    BOOST_CHECK_EQUAL(
+        osstr.str(),
+        slurp_file(ROOT_DIR "tools/parsers/gobio/t/files/rules_3.g.out")
+    );
+
 }
 
 
