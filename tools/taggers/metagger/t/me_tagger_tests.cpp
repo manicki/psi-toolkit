@@ -313,13 +313,12 @@ BOOST_AUTO_TEST_CASE( training_test ) {
             czarneFormBuilder.build());
 
     std::string modelFile = ROOT_DIR "tools/taggers/metagger/t/files/pl.blm";
-    MeTagger* trainer = new MeTagger(
+    boost::scoped_ptr<MeTagger> trainer(new MeTagger(
             true,
             modelFile
-            );
+            ) );
     trainer->train(lattice);
     trainer->saveModel(trainer->getModelFile());
-    delete trainer;
 
     Lattice test_lattice("Kobieta ma psa.");
     test_lattice.addSymbols(test_lattice.getFirstVertex(), test_lattice.getLastVertex());
@@ -526,13 +525,12 @@ BOOST_AUTO_TEST_CASE( training_test ) {
     test_lattice.addEdge(test_pre_psa, test_post_psa, test_psaFormGenAI, formTag,
             test_psaFormBuilder.build());
 
-    MeTagger* tagger = new MeTagger(
+    boost::scoped_ptr<MeTagger> tagger(new MeTagger(
             true,
             modelFile
-            );
+            ));
     tagger->loadModel(tagger->getModelFile());
     tagger->tag(test_lattice);
-    delete tagger;
 
     LayerTagMask discardedMask = test_lattice.getLayerTagManager().getMask("discarded");
     Lattice::EdgesSortedBySourceIterator discardedIt =
