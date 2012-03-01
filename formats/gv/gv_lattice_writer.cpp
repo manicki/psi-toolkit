@@ -28,7 +28,9 @@ LatticeWriter<std::ostream>* GVLatticeWriter::Factory::doCreateLatticeWriter(
     return new GVLatticeWriter(
         options.count("show-tags"),
         options.count("color"),
-        filter
+        filter,
+        options["format"].as<std::string>(),
+        options["file"].as<std::string>()
     );
 }
 
@@ -38,8 +40,12 @@ boost::program_options::options_description GVLatticeWriter::Factory::doOptionsH
     optionsDescription.add_options()
         ("color",
             "edges with different tags have different colors")
+        ("file", boost::program_options::value<std::string>()->default_value(""),
+            "output file name")
         ("filter", boost::program_options::value< std::vector<std::string> >()->multitoken(),
             "filters edges by specified tags")
+        ("format", boost::program_options::value<std::string>()->default_value("dot"),
+            "output format")
         ("show-tags",
             "prints layer tags")
         ;
@@ -74,12 +80,14 @@ void GVLatticeWriter::Worker::doRun() {
     PsiQuoter quoter;
 
     GVC_t * gvc = gvContext();
+    std::string arg1 = "-T" + processor_.getOutputFormat();
+    std::string arg2 = "-o" + ((processor_.getOutputFile() == "") ? (TMPFILENAME) : processor_.getOutputFile());
     const char * const args[] = {
         "dot",
-        "-Tdot",
-        "-o" TMPFILENAME
+        arg1.c_str(),
+        arg2.c_str()
     };
-    gvParseArgs (gvc, sizeof(args)/sizeof(char*), (char**)args);
+    gvParseArgs(gvc, sizeof(args)/sizeof(char*), (char**)args);
     Agraph_t * g = agopen((char*)"g", AGDIGRAPH);
     Agnode_t * n;
     Agnode_t * m;
@@ -171,16 +179,17 @@ void GVLatticeWriter::Worker::doRun() {
     agclose(g);
     gvFreeContext(gvc);
 
-    std::string line;
-    std::string contents;
-    std::ifstream s(TMPFILENAME);
-    while (getline(s, line)) {
-        contents += line;
-        contents += "\n";
+    if (processor_.getOutputFile() == "") {
+        std::string line;
+        std::string contents;
+        std::ifstream s(TMPFILENAME);
+        while (getline(s, line)) {
+            contents += line;
+            contents += "\n";
+        }
+        alignOutput_(contents);
+        std::remove(TMPFILENAME);
     }
-    alignOutput_(contents);
-
-    std::remove(TMPFILENAME);
 
     DEBUG("WRITING");
 }

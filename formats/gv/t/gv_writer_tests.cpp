@@ -23,7 +23,9 @@ BOOST_AUTO_TEST_CASE( gv_lattice_writer_simple ) {
     boost::scoped_ptr<LatticeWriter<std::ostream> > writer(new GVLatticeWriter(
         true, // show tags
         false, // color
-        filter // filter
+        filter, // filter
+        "dot", // output format
+        "" // output file name
     ));
 
     std::ostringstream osstr;
@@ -52,7 +54,9 @@ BOOST_AUTO_TEST_CASE( gv_lattice_writer_advanced ) {
     boost::scoped_ptr<LatticeWriter<std::ostream> > writer(new GVLatticeWriter(
         true, // show tags
         false, // color
-        filter // filter
+        filter, // filter
+        "dot", // output format
+        "" // output file name
     ));
 
     std::ostringstream osstr;

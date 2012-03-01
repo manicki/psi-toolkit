@@ -31,11 +31,15 @@ public:
     GVLatticeWriter(
         bool showTags,
         bool color,
-        std::set<std::string> filter
+        std::set<std::string> filter,
+        std::string outputFormat,
+        std::string outputFile
     ) :
         showTags_(showTags),
         color_(color),
-        filter_(filter)
+        filter_(filter),
+        outputFormat_(outputFormat),
+        outputFile_(outputFile)
     { }
 
     bool isShowTags() const { return showTags_; }
@@ -49,6 +53,9 @@ public:
         }
         return false;
     }
+
+    std::string getOutputFormat() const { return outputFormat_; }
+    std::string getOutputFile() const { return outputFile_; }
 
 private:
     virtual std::string doInfo();
@@ -75,6 +82,8 @@ private:
     bool showTags_;
     bool color_;
     std::set<std::string> filter_;
+    std::string outputFormat_;
+    std::string outputFile_;
 
 };
 
