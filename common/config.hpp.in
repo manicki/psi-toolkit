@@ -6,6 +6,7 @@
 #cmakedefine01 HAVE_LOG4CPP
 #cmakedefine01 HAVE_PERL_BINDINGS
 #cmakedefine01 HAVE_CMPH
+#cmakedefine01 HAVE_GRAPHVIZ
 #cmakedefine01 _WITH_BONSAI_PARSEGRAPH
 #cmakedefine01 IS_INSTALLABLE
 #cmakedefine01 STRING_FRAG_VALIDATION
