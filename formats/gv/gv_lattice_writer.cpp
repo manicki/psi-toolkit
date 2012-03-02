@@ -31,7 +31,7 @@ LatticeWriter<std::ostream>* GVLatticeWriter::Factory::doCreateLatticeWriter(
         filter,
         options["format"].as<std::string>(),
         options["file"].as<std::string>(),
-        !options.count("no-tmps")
+        options.count("allow-tmp")
     );
 }
 
@@ -39,6 +39,8 @@ boost::program_options::options_description GVLatticeWriter::Factory::doOptionsH
     boost::program_options::options_description optionsDescription("Allowed options");
 
     optionsDescription.add_options()
+        ("allow-tmp",
+            "allows to use temporary files")
         ("color",
             "edges with different tags have different colors")
         ("file", boost::program_options::value<std::string>()->default_value(""),
@@ -47,8 +49,6 @@ boost::program_options::options_description GVLatticeWriter::Factory::doOptionsH
             "filters edges by specified tags")
         ("format", boost::program_options::value<std::string>()->default_value("dot"),
             "output format")
-        ("no-tmps",
-            "forbids using temporary files")
         ("show-tags",
             "prints layer tags")
         ;
