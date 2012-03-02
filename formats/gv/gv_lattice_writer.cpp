@@ -82,14 +82,13 @@ void GVLatticeWriter::Worker::doRun() {
 
     PsiQuoter quoter;
 
-    char * tmpFile = tempnam(NULL, "gv_");
-
-    ERROR("TMP FILE NAME: " << tmpFile);
+    char * tmpFile;
 
     GVC_t * gvc = gvContext();
     std::string arg1("-T" + processor_.getOutputFormat());
     std::string arg2("");
     if (processor_.isUseOutputStream()) {
+        tmpFile = tempnam(NULL, "gv_");
         arg2 += "-o";
         arg2 += tmpFile;
     } else {
