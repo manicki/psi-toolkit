@@ -23,6 +23,11 @@ foreach(dir ${formats_SUBDIRS})
     link_directories("${psi-toolkit_BINARY_DIR}/formats/${dir}")
 endforeach(dir)
 
+if(GRAPHVIZ_FOUND)
+    include_directories("${psi-toolkit_SOURCE_DIR}/formats/gv")
+    link_directories("${psi-toolkit_BINARY_DIR}/formats/gv")
+endif(GRAPHVIZ_FOUND)
+
 foreach(dir ${tools_DIRS})
     include_directories("${psi-toolkit_SOURCE_DIR}/tools/${dir}")
     link_directories("${psi-toolkit_BINARY_DIR}/tools/${dir}")

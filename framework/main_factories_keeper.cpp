@@ -7,12 +7,17 @@
 #include "psi_lattice_reader.hpp"
 #include "psi_lattice_writer.hpp"
 #include "simple_lattice_writer.hpp"
+#include "dot_lattice_writer.hpp"
 #include "apertium_lattice_reader.hpp"
 #include "tp_tokenizer.hpp"
 #include "srx_segmenter.hpp"
 #include "lemmatizer_annotator.hpp"
 #include "lang_guesser.hpp"
 #include "gobio.hpp"
+
+#if HAVE_GRAPHVIZ
+#include "gv_lattice_writer.hpp"
+#endif
 
 #if HAVE_POSTGRESQL
 #include "lex_db_lemmatizer.hpp"
@@ -41,11 +46,16 @@ MainFactoriesKeeper::MainFactoriesKeeper() {
     keeper_.takeProcessorFactory(new PsiLatticeReader::Factory());
     keeper_.takeProcessorFactory(new PsiLatticeWriter::Factory());
     keeper_.takeProcessorFactory(new SimpleLatticeWriter::Factory());
+    keeper_.takeProcessorFactory(new DotLatticeWriter::Factory());
     keeper_.takeProcessorFactory(new ApertiumLatticeReader::Factory());
     keeper_.takeProcessorFactory(new TpTokenizer::Factory());
     keeper_.takeProcessorFactory(new SrxSegmenter::Factory());
     keeper_.takeProcessorFactory(new LangGuesser::Factory());
     keeper_.takeProcessorFactory(new Gobio::Factory());
+
+#if HAVE_GRAPHVIZ
+    keeper_.takeProcessorFactory(new GVLatticeWriter::Factory());
+#endif
 
 #if HAVE_POSTGRESQL
     keeper_.takeProcessorFactory(new LemmatizerAnnotator<LexDbLemmatizer>::Factory());

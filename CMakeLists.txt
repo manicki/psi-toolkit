@@ -168,12 +168,49 @@ if(SWIG_FOUND)
   endif(PYTHONLIBS_FOUND)
 endif(SWIG_FOUND)
 
+
+# Finds GraphViz
+
+if (GRAPHVIZ_INCLUDE_DIR AND GRAPHVIZ_GRAPH_LIBRARY AND GRAPHVIZ_CDT_LIBRARY AND GRAPHVIZ_PATHPLAN_LIBRARY)
+    set(GRAPHVIZ_FIND_QUIETLY TRUE)
+endif (GRAPHVIZ_INCLUDE_DIR AND GRAPHVIZ_GRAPH_LIBRARY AND GRAPHVIZ_CDT_LIBRARY AND GRAPHVIZ_PATHPLAN_LIBRARY)
+
+find_path(GRAPHVIZ_INCLUDE_DIR gvc.h graph.h cdt.h PATHS "/usr/include/graphviz")
+
+find_library( GRAPHVIZ_GVC_LIBRARY NAMES gvc )
+find_library( GRAPHVIZ_GRAPH_LIBRARY NAMES graph )
+find_library( GRAPHVIZ_CDT_LIBRARY NAMES cdt )
+find_library( GRAPHVIZ_PATHPLAN_LIBRARY NAMES pathplan )
+
+if (GRAPHVIZ_INCLUDE_DIR AND GRAPHVIZ_GVC_LIBRARY AND GRAPHVIZ_GRAPH_LIBRARY AND GRAPHVIZ_CDT_LIBRARY AND GRAPHVIZ_PATHPLAN_LIBRARY)
+   set(GRAPHVIZ_FOUND TRUE)
+else (GRAPHVIZ_INCLUDE_DIR AND GRAPHVIZ_GVC_LIBRARY AND GRAPHVIZ_GRAPH_LIBRARY AND GRAPHVIZ_CDT_LIBRARY AND GRAPHVIZ_PATHPLAN_LIBRARY)
+   set(GRAPHVIZ_FOUND FALSE)
+endif (GRAPHVIZ_INCLUDE_DIR AND GRAPHVIZ_GVC_LIBRARY AND GRAPHVIZ_GRAPH_LIBRARY AND GRAPHVIZ_CDT_LIBRARY AND GRAPHVIZ_PATHPLAN_LIBRARY)
+
+if (GRAPHVIZ_INCLUDE_DIR_NOTFOUND)
+    message(FATAL_ERROR "Could NOT find Graphivz include dir")
+else (GRAPHVIZ_INCLUDE_DIR_NOTFOUND)
+    if (GRAPHVIZ_FOUND)
+        set(GRAPHVIZ_LIBRARIES ${GRAPHVIZ_GVC_LIBRARY} ${GRAPHVIZ_GRAPH_LIBRARY} ${GRAPHVIZ_CDT_LIBRARY} ${GRAPHVIZ_PATHPLAN_LIBRARY})
+        message(STATUS "Found Graphviz: ${GRAPHVIZ_LIBRARIES} (include dir: ${GRAPHVIZ_INCLUDE_DIR})")
+        include_directories(${GRAPHVIZ_INCLUDE_DIR})
+        link_directories(${GRAPHVIZ_LIBRARIES})
+        set(HAVE_GRAPHVIZ 1)
+    else (GRAPHVIZ_FOUND)
+        if (GRAPHVIZ_FIND_REQUIRED)
+            message(FATAL_ERROR "Could NOT find Graphivz")
+        endif (GRAPHVIZ_FIND_REQUIRED)
+    endif (GRAPHVIZ_FOUND)
+endif (GRAPHVIZ_INCLUDE_DIR_NOTFOUND)
+
+
 # Sets compiler flags
 set(CMAKE_CXX_FLAGS "-g -Wall -Wundef -Wnon-virtual-dtor -Wextra")
 
-set(BASE_TARGETS common utf8case sundown framework formats-psi formats-simple formats-txt formats-utt formats-apertium maxent tools-tokenizers-tp tools-segmenters-srx tools-recognizers-langguesser tools-parsers-gobio tools-taggers-metagger)
+set(BASE_TARGETS common utf8case sundown framework formats-dot formats-psi formats-simple formats-txt formats-utt formats-apertium maxent tools-tokenizers-tp tools-segmenters-srx tools-recognizers-langguesser tools-parsers-gobio tools-taggers-metagger)
 
-set(TESTS_TARGETS common-tests tools-tokenizers-tp-tests tools-segmenters-srx-tests tools-datastructures-psi_query-tests tools-recognizers-langguesser-tests utf8case-tests formats-utt-tests formats-psi-tests formats-simple-tests tools-parsers-gobio-tests)
+set(TESTS_TARGETS common-tests tools-tokenizers-tp-tests tools-segmenters-srx-tests tools-datastructures-psi_query-tests tools-recognizers-langguesser-tests utf8case-tests formats-dot-tests formats-utt-tests formats-psi-tests formats-simple-tests tools-parsers-gobio-tests tools-taggers-metagger-tests)
 
 if(USE_JAVA)
     set(BASE_TARGETS ${BASE_TARGETS} tools-lemmatizers-morfologik)
@@ -200,6 +237,14 @@ if(USE_PUDDLE)
             include_directories(${BONSAI_PATH})
         endif(USE_BONSAI_PARSEGRAPH)
 endif(USE_PUDDLE)
+
+if(GRAPHVIZ_FOUND)
+    set(BASE_TARGETS ${BASE_TARGETS} formats-gv)
+    set(TESTS_TARGETS ${TESTS_TARGETS} formats-gv-tests)
+endif(GRAPHVIZ_FOUND)
+
+
+# Flex & Bison
 
 if(NOT DEFINED FLEX_PREFIX_OUTPUTS)
     set(FLEX_PREFIX_OUTPUTS FALSE)
@@ -264,6 +309,9 @@ add_custom_command(
     COMMENT "Generating grparser.bis.cpp"
 )
 
+
+# ----------------------------------------------------
+
 include_directories("${psi-toolkit_SOURCE_DIR}/tools/parsers/gobio")
 include_directories("${psi-toolkit_SOURCE_DIR}/tools/parsers/gobio/avmatrix")
 include_directories("${psi-toolkit_SOURCE_DIR}/tools/parsers/gobio/chart")
@@ -317,6 +365,11 @@ foreach(dir ${formats_SUBDIRS})
     link_directories("${psi-toolkit_BINARY_DIR}/formats/${dir}")
 endforeach(dir)
 
+if(GRAPHVIZ_FOUND)
+    include_directories("${psi-toolkit_SOURCE_DIR}/formats/gv")
+    link_directories("${psi-toolkit_BINARY_DIR}/formats/gv")
+endif(GRAPHVIZ_FOUND)
+
 
 set(ALL_TARGETS ${TARGETS} ${TESTS_TARGETS})
 
@@ -349,9 +402,9 @@ function(download_artifact FILE)
   if (EXISTS "${_downloaded_file}")
      if ("${CMAKE_VERSION}" VERSION_LESS "2.8.7")
          execute_process(COMMAND "md5sum" "-b" ${_downloaded_file}
-		OUTPUT_VARIABLE _file_md5_line
-		ERROR_QUIET
-		OUTPUT_STRIP_TRAILING_WHITESPACE)
+        OUTPUT_VARIABLE _file_md5_line
+        ERROR_QUIET
+        OUTPUT_STRIP_TRAILING_WHITESPACE)
          string(REGEX MATCH "^[0-9a-f]+" _file_md5 "${_file_md5_line}")
      else()
         file(MD5 "${_downloaded_file}" _file_md5)

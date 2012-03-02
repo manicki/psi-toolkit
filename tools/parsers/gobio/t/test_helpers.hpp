@@ -9,7 +9,7 @@
 #include "chart.tpl"
 
 
-template< class C, class S, class V, class R >
+template<typename C, typename S, typename V, typename R>
 int count_vertices(chart<C, S, V, R>& ch)
 {
     typename chart<C, S, V, R>::vertex_iterator it = ch.vertices();
@@ -22,7 +22,7 @@ int count_vertices(chart<C, S, V, R>& ch)
 }
 
 
-template< class C, class S, class V, class R >
+template<typename C, typename S, typename V, typename R>
 int count_out_edges(chart<C, S, V, R>& ch)
 {
     typename chart<C, S, V, R>::vertex_iterator vertex_it = ch.vertices();
@@ -38,7 +38,7 @@ int count_out_edges(chart<C, S, V, R>& ch)
 }
 
 
-template< class C, class S, class V, class R >
+template<typename C, typename S, typename V, typename R>
 int count_in_edges(chart<C, S, V, R>& ch)
 {
     typename chart<C, S, V, R>::vertex_iterator vertex_it = ch.vertices();
@@ -54,7 +54,7 @@ int count_in_edges(chart<C, S, V, R>& ch)
 }
 
 
-template< class C, class S, class V, class R >
+template<typename C, typename S, typename V, typename R>
 int count_marked_out_edges(chart<C, S, V, R>& ch)
 {
     typename chart<C, S, V, R>::vertex_iterator vertex_it = ch.vertices();
@@ -74,7 +74,7 @@ int count_marked_out_edges(chart<C, S, V, R>& ch)
 }
 
 
-template< class C, class S, class V, class R >
+template<typename C, typename S, typename V, typename R>
 int count_marked_in_edges(chart<C, S, V, R>& ch)
 {
     typename chart<C, S, V, R>::vertex_iterator vertex_it = ch.vertices();
@@ -94,7 +94,7 @@ int count_marked_in_edges(chart<C, S, V, R>& ch)
 }
 
 
-template< class C, class S, class V, class R >
+template<typename C, typename S, typename V, typename R>
 bool is_vertex_consistent(chart<C, S, V, R>& ch, typename chart<C, S, V, R>::vertex_descriptor v)
 {
     typename chart<C, S, V, R>::out_edge_iterator oei = ch.out_edges(v);
@@ -185,7 +185,7 @@ bool is_vertex_consistent(chart<C, S, V, R>& ch, typename chart<C, S, V, R>::ver
 }
 
 
-template< class C, class S, class V, class R >
+template<typename C, typename S, typename V, typename R>
 bool is_consistent(chart<C, S, V, R>& ch)
 {
     typename chart<C, S, V, R>::vertex_iterator vertex_it = ch.vertices();

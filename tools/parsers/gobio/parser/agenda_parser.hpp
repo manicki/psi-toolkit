@@ -4,8 +4,8 @@
 #include "chart.tpl"
 
 
-template< typename C, typename S, typename V, typename R, typename K, typename A,
-     template< class, class > class I >
+template<typename C, typename S, typename V, typename R, typename K, typename A,
+    template<typename, typename> class I>
 class apply_binary_rules_algorithm;
 
 template<typename C, typename S, typename V, typename R, typename K, typename A>
@@ -227,8 +227,8 @@ private:
  * I - rodzaj indeksu na³o¿onego na krawêdzie, domy¶lnie indeksujemy zarówno
  *     wchodz±ce, jak i wychodz±ce
  */
-template< typename C, typename S, typename V, typename R, typename K, typename A,
-     template< class, class > class I=simple_marked_edges_index >
+template<typename C, typename S, typename V, typename R, typename K, typename A,
+     template<typename, typename> class I=simple_marked_edges_index>
 class agenda_parser
 {
 public:

@@ -8,22 +8,22 @@
 #include <tr1/unordered_map>
 #include <tr1/unordered_set>
 
-template<class A, class B>
+template<typename A, typename B>
 struct HashWrapper {
     typedef std::tr1::unordered_map<A, B> type;
 };
 
-template<class A, class B, class C>
+template<typename A, typename B, typename C>
 struct HashWrapper3 {
     typedef std::tr1::unordered_map<A, B, C> type;
 };
 
-template<class A>
+template<typename A>
 struct HashWrapperSet {
     typedef std::tr1::unordered_set<A> type;
 };
 
-template<class A, class B>
+template<typename A, typename B>
 struct HashWrapperSet2 {
     typedef std::tr1::unordered_set<A, B> type;
 };
@@ -54,22 +54,22 @@ namespace __gnu_cxx {
     };
 };
 
-template<class A, class B>
+template<typename A, typename B>
 struct HashWrapper {
     typedef __gnu_cxx::hash_map<A, B> type;
 };
 
-template<class A, class B, class C>
+template<typename A, typename B, typename C>
 struct HashWrapper3 {
     typedef __gnu_cxx::hash_map<A, B, C> type;
 };
 
-template<class A>
+template<typename A>
 struct HashWrapperSet {
     typedef __gnu_cxx::hash_set<A> type;
 };
 
-template<class A, class B>
+template<typename A, typename B>
 struct HashWrapperSet2 {
     typedef __gnu_cxx::hash_set<A, B> type;
 };
@@ -91,22 +91,22 @@ struct HashWrapperSet2 {
 #include <hash_map>
 #include <hash_set>
 
-template<class A, class B>
+template<typename A, typename B>
 struct HashWrapper {
     typedef stdext::hash_map<A, B> type;
 };
 
-template<class A, class B, class C>
+template<typename A, typename B, typename C>
 struct HashWrapper3 {
     typedef stdext::hash_map<A, B, C> type;
 };
 
-template<class A>
+template<typename A>
 struct HashWrapperSet {
     typedef stdext::hash_set<A> type;
 };
 
-template<class A, class B>
+template<typename A, typename B>
 struct HashWrapperSet2 {
     typedef stdext::hash_set<A, B> type;
 };

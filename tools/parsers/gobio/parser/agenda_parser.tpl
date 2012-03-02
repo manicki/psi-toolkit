@@ -5,7 +5,7 @@
 
 
 template<typename C, typename S, typename V, typename R, typename K, typename A,
-     template<class,class> class I>
+     template<typename, typename> class I>
 agenda_parser<C,S,V,R,K,A,I>::agenda_parser(
     chart_type& chart,
     K& combinator,
@@ -18,7 +18,7 @@ agenda_parser<C,S,V,R,K,A,I>::agenda_parser(
 
 
 template<typename C, typename S, typename V, typename R, typename K, typename A,
-     template<class,class> class I>
+     template<typename, typename> class I>
 void agenda_parser<C,S,V,R,K,A,I>::run()
 {
     fill_();
@@ -26,7 +26,7 @@ void agenda_parser<C,S,V,R,K,A,I>::run()
 }
 
 template<typename C, typename S, typename V, typename R, typename K, typename A,
-     template<class,class> class I>
+     template<typename, typename> class I>
 void agenda_parser<C,S,V,R,K,A,I>::fill_()
 {
     typename chart_type::vertex_iterator vertex_it = chart_.vertices();
@@ -47,7 +47,7 @@ void agenda_parser<C,S,V,R,K,A,I>::fill_()
 }
 
 template<typename C, typename S, typename V, typename R, typename K, typename A,
-     template<class,class> class I>
+     template<typename, typename> class I>
 void agenda_parser<C,S,V,R,K,A,I>::go_()
 {
     assert(combinator_.get_nb_limits() > 0);
@@ -114,7 +114,7 @@ void agenda_parser<C,S,V,R,K,A,I>::go_()
 }
 
 template<typename C, typename S, typename V, typename R, typename K, typename A,
-     template<class,class> class I>
+     template<typename, typename> class I>
 void agenda_parser<C,S,V,R,K,A,I>::apply_unary_rules_(
     typename chart_type::edge_descriptor e)
 {
@@ -146,7 +146,7 @@ void agenda_parser<C,S,V,R,K,A,I>::apply_unary_rules_(
 }
 
 template<typename C, typename S, typename V, typename R, typename K, typename A,
-     template<class,class> class I>
+     template<typename, typename> class I>
 void agenda_parser<C,S,V,R,K,A,I>::apply_binary_rules_(
     typename chart_type::edge_descriptor e, S min_score)
 {
@@ -156,7 +156,7 @@ void agenda_parser<C,S,V,R,K,A,I>::apply_binary_rules_(
 
 
 /* template<typename C, typename S, typename V, typename R, typename K, typename A, */
-/*   template<class,class> class I> */
+/*   template<typename, typename> class I> */
 /* void agenda_parser<C,S,V,R,K,A,I>::apply_binary_rules_( */
 /*     typename chart_type::edge_descriptor e) */
 /* { */
@@ -188,7 +188,7 @@ void agenda_parser<C,S,V,R,K,A,I>::apply_binary_rules_(
 /* } */
 
 /* template<typename C, typename S, typename V, typename R, typename K, typename A, */
-/*   template<class,class> class I> */
+/*   template<typename, typename> class I> */
 /* void agenda_parser<C,S,V,R,K,A,I>::apply_binary_rules_for_pair_( */
 /*     typename chart_type::edge_descriptor e, */
 /*     typename chart_type::edge_descriptor f) */

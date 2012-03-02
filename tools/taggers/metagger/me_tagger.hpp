@@ -36,11 +36,12 @@ class MeTagger : public Annotator {
             static const std::string DEFAULT_PROPER_NOUN_POS_LABEL;
         };
 
-        MeTagger(bool trainMode_, std::string modelFile_, int iterations_,
-                std::string unknownPosLabel_,
-                std::string cardinalNumberPosLabel_,
-                std::string properNounPosLabel_,
-                std::vector<std::string> openClassLabels_);
+        MeTagger(bool trainMode_, std::string modelFile_,
+                int iterations_ = 50,
+                std::string unknownPosLabel_ = "ign",
+                std::string cardinalNumberPosLabel_ = "card",
+                std::string properNounPosLabel_ = "name",
+                std::vector<std::string> openClassLabels_ = std::vector<std::string>());
         void tag(Lattice &lattice);
         void train(Lattice &lattice);
         void saveModel(std::string path);

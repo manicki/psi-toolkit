@@ -1,0 +1,1 @@
+psi-reader ! gv-writer --format dot --color --show-tags --allow-tmp

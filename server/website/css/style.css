@@ -21,6 +21,9 @@ ul, ol { padding:3px 0; }
 ul { list-style:disc inside; }
 ul li, ol li { padding-left:12px; }
 
+table { width:95%; margin:0 auto; }
+td { padding:1px 8px; }
+
 /* Header */
 
 #header { min-height:50px; line-height:20px; margin-bottom:20px; }

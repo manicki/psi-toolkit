@@ -8,262 +8,6 @@ namespace poleng {
 
             namespace lattice {
 
-                struct SentenceToken {
-                    std::string orth;
-                    std::string category;
-                    int start;
-                    int end;
-                    std::vector<std::string> baseForms;
-                    std::vector<std::string> morphology;
-                    std::string type;
-                };
-
-                std::string readMorfologikLattice(Lattice &lattice) {
-                    std::string sentenceString = "";
-
-                    std::map<int, SentenceToken> edgesMap;
-
-                    LayerTagCollection form_tag
-                        = lattice.getLayerTagManager().createSingletonTagCollection("form");
-                    LayerTagMask formMask = lattice.getLayerTagManager().getMask(form_tag);
-                    LayerTagCollection parse_tag
-                        = lattice.getLayerTagManager().createSingletonTagCollection("parse");
-                    LayerTagMask parseMask = lattice.getLayerTagManager().getMask(parse_tag);
-                    LayerTagMask mask = lattice.getLayerTagManager().getMask(
-                            createUnion(form_tag, parse_tag) );
-
-                    Lattice::EdgesSortedBySourceIterator edgeIterator =
-                        lattice.edgesSortedBySource(mask);
-                    while (edgeIterator.hasNext()) {
-                        Lattice::EdgeDescriptor edge = edgeIterator.next();
-                        LayerTagCollection tags = lattice.getEdgeLayerTags(edge);
-                        std::list<std::string> tagNames =
-                            lattice.getLayerTagManager().getTagNames(tags);
-                        bool isParse = false;
-                        for (std::list<std::string>::iterator tagIt = tagNames.begin();
-                                tagIt != tagNames.end(); ++ tagIt) {
-                            if (*tagIt == "parse") {
-                                isParse = true;
-                                break;
-                            }
-                        }
-                        int start = lattice.getEdgeBeginIndex(edge);
-                        int end = start + lattice.getEdgeLength(edge);
-                        std::string orth = lattice.getEdgeText(edge);
-                        //@todo: przerabiac to na wygrzebywaine tej formy z krawedzi 'token'
-                        //czy zostawic jak jest?
-                        AnnotationItem ai = lattice.getEdgeAnnotationItem(edge);
-                        std::string category = ai.getCategory();
-                        std::list< std::pair<std::string, std::string> > av
-                            = lattice.getAnnotationItemManager().getValues(ai);
-                        //if (lattice.getAnnotationItemManager().getValue(
-                        //           ai, "discard") == "1")
-                        //    continue; //skip discarded edges
-                        std::string base = getBase(lattice, edge);
-                        std::string morphology = getMorphologyString(lattice, edge);
-
-                        std::map<int, SentenceToken>::iterator edgesMapIt =
-                            edgesMap.find(start);
-                        if (edgesMapIt != edgesMap.end()) {
-                            if (isParse) {
-                                if (edgesMapIt->second.type == "parse") {
-                                    edgesMapIt->second.baseForms.push_back(base);
-                                    edgesMapIt->second.morphology.push_back(morphology);
-                                } else {
-                                    edgesMapIt->second.baseForms.clear();
-                                    edgesMapIt->second.morphology.clear();
-                                    edgesMapIt->second.type = "parse";
-                                    edgesMapIt->second.category = category;
-                                    edgesMapIt->second.baseForms.push_back(base);
-                                    edgesMapIt->second.morphology.push_back(morphology);
-                                }
-                            } else {
-                                if (edgesMapIt->second.type == "form") {
-                                    edgesMapIt->second.baseForms.push_back(base);
-                                    edgesMapIt->second.morphology.push_back(morphology);
-                                }
-                            }
-                        } else {
-                            SentenceToken edge;
-                            edge.orth = orth;
-                            edge.category = category;
-                            edge.start = start;
-                            edge.end = end;
-                            edge.baseForms.push_back(base);
-                            edge.morphology.push_back(morphology);
-                            if (isParse)
-                                edge.type = "parse";
-                            else
-                                edge.type = "form";
-                            edgesMap.insert(std::pair<int, SentenceToken>(
-                                        start, edge));
-                        }
-
-                    }
-
-                    int start = 0;
-                    int end = 0;
-                    std::stringstream ss;
-                    ss << "<<s<" << start << "<" << start << "<sb<>";
-                    for (std::map<int, SentenceToken>::iterator edgesMapIt =
-                            edgesMap.begin();
-                            edgesMapIt != edgesMap.end(); ++ edgesMapIt) {
-                        start = edgesMapIt->second.start;
-                        end = edgesMapIt->second.end;
-                        std::string type = edgesMapIt->second.type;
-                        ss << "<<";
-                        if (type == "form")
-                            ss << "t";
-                        else
-                            ss << "g";
-                        ss << "<" << start << "<" << end << "<";
-                        if (type == "form")
-                            ss << "TOKEN";
-                        else
-                            ss << edgesMapIt->second.category;
-                        ss << "<" << edgesMapIt->second.orth;
-                        std::vector<std::string>::iterator baseIt =
-                            edgesMapIt->second.baseForms.begin();
-                        std::vector<std::string>::iterator morphIt =
-                            edgesMapIt->second.morphology.begin();
-                        while (baseIt != edgesMapIt->second.baseForms.end()) {
-                            ss << "<" << *baseIt << "<" << *morphIt;
-                            ++ baseIt;
-                            ++ morphIt;
-                        }
-                        ss << ">";
-                    }
-                    ss << "<<s<" << end << "<" << end << "<se<>";
-                    sentenceString = ss.str();
-                    return sentenceString;;
-                }
-
-                std::string readInputLattice(Lattice &lattice) {
-                    std::string sentenceString = "";
-
-                    std::map<int, SentenceToken> edgesMap;
-
-                    LayerTagCollection form_tag
-                        = lattice.getLayerTagManager().createSingletonTagCollection("form");
-                    LayerTagMask formMask = lattice.getLayerTagManager().getMask(form_tag);
-                    LayerTagCollection parse_tag
-                        = lattice.getLayerTagManager().createSingletonTagCollection("parse");
-                    LayerTagMask parseMask = lattice.getLayerTagManager().getMask(parse_tag);
-                    LayerTagMask mask = lattice.getLayerTagManager().getMask(
-                            createUnion(form_tag, parse_tag) );
-
-                    Lattice::EdgesSortedBySourceIterator edgeIterator =
-                        lattice.edgesSortedBySource(mask);
-                    while (edgeIterator.hasNext()) {
-                        Lattice::EdgeDescriptor edge = edgeIterator.next();
-                        LayerTagCollection tags = lattice.getEdgeLayerTags(edge);
-                        std::list<std::string> tagNames =
-                            lattice.getLayerTagManager().getTagNames(tags);
-                        bool isParse = false;
-                        for (std::list<std::string>::iterator tagIt = tagNames.begin();
-                                tagIt != tagNames.end(); ++ tagIt) {
-                            if (*tagIt == "parse") {
-                                isParse = true;
-                                break;
-                            }
-                        }
-                        int start = lattice.getEdgeBeginIndex(edge);
-                        int end = start + lattice.getEdgeLength(edge);
-                        std::string orth = lattice.getEdgeText(edge);
-                        //@todo: przerabiac to na wygrzebywaine tej formy z krawedzi 'token'
-                        //czy zostawic jak jest?
-                        AnnotationItem ai = lattice.getEdgeAnnotationItem(edge);
-                        std::string category = ai.getCategory();
-                        std::list< std::pair<std::string, std::string> > av
-                            = lattice.getAnnotationItemManager().getValues(ai);
-                        if (isDiscarded(lattice, edge))
-                            continue; //skip discarded edges
-                        std::string base = getBase(lattice, edge);
-                        std::string morphology = getMorphologyString(
-                                lattice, edge);
-                        //std::string morpho = lattice.getAnnotationItemManager().getValue(
-                        //        ai, "morpho");
-                        //std::string morphology = partOfSpeech;
-                        //if (morpho != "")
-                        //    morphology += ":" + morpho;
-
-                        std::map<int, SentenceToken>::iterator edgesMapIt =
-                            edgesMap.find(start);
-                        if (edgesMapIt != edgesMap.end()) {
-                            if (isParse) {
-                                if (edgesMapIt->second.type == "parse") {
-                                    edgesMapIt->second.baseForms.push_back(base);
-                                    edgesMapIt->second.morphology.push_back(morphology);
-                                } else {
-                                    edgesMapIt->second.baseForms.clear();
-                                    edgesMapIt->second.morphology.clear();
-                                    edgesMapIt->second.type = "parse";
-                                    edgesMapIt->second.category = category;
-                                    edgesMapIt->second.baseForms.push_back(base);
-                                    edgesMapIt->second.morphology.push_back(morphology);
-                                }
-                            } else {
-                                if (edgesMapIt->second.type == "form") {
-                                    edgesMapIt->second.baseForms.push_back(base);
-                                    edgesMapIt->second.morphology.push_back(morphology);
-                                }
-                            }
-                        } else {
-                            SentenceToken edge;
-                            edge.orth = orth;
-                            edge.category = category;
-                            edge.start = start;
-                            edge.end = end;
-                            edge.baseForms.push_back(base);
-                            edge.morphology.push_back(morphology);
-                            if (isParse)
-                                edge.type = "parse";
-                            else
-                                edge.type = "form";
-                            edgesMap.insert(std::pair<int, SentenceToken>(
-                                        start, edge));
-                        }
-
-                    }
-
-                    int start = 0;
-                    int end = 0;
-                    std::stringstream ss;
-                    ss << "<<s<" << start << "<" << start << "<sb<>";
-                    for (std::map<int, SentenceToken>::iterator edgesMapIt =
-                            edgesMap.begin();
-                            edgesMapIt != edgesMap.end(); ++ edgesMapIt) {
-                        start = edgesMapIt->second.start;
-                        end = edgesMapIt->second.end;
-                        std::string type = edgesMapIt->second.type;
-                        ss << "<<";
-                        if (type == "form")
-                            ss << "t";
-                        else
-                            ss << "g";
-                        ss << "<" << start << "<" << end << "<";
-                        if (type == "form")
-                            ss << "TOKEN";
-                        else
-                            ss << edgesMapIt->second.category;
-                        ss << "<" << edgesMapIt->second.orth;
-                        std::vector<std::string>::iterator baseIt =
-                            edgesMapIt->second.baseForms.begin();
-                        std::vector<std::string>::iterator morphIt =
-                            edgesMapIt->second.morphology.begin();
-                        while (baseIt != edgesMapIt->second.baseForms.end()) {
-                            ss << "<" << *baseIt << "<" << *morphIt;
-                            ++ baseIt;
-                            ++ morphIt;
-                        }
-                        ss << ">";
-                    }
-                    ss << "<<s<" << end << "<" << end << "<se<>";
-                    sentenceString = ss.str();
-
-                    return sentenceString;;
-                }
-
 #if _WITH_BONSAI_PARSEGRAPH
             ParseGraphPtr convertToBonsaiGraph(Lattice &lattice) {
                 ParseGraphPtr pg = ParseGraphPtr(new ParseGraph());
@@ -640,8 +384,6 @@ namespace poleng {
                         lattice.getAnnotationItemManager().setValue(
                                 annotationItem, valueIt->first, valueIt->second);
                     }
-                    lattice.getAnnotationItemManager().setValue(annotationItem, "orth",
-                            lattice.getEdgeText(*edgeIt));
                     lattice.getAnnotationItemManager().setValue(annotationItem, "head",
                             boost::lexical_cast<std::string>(headEdgeIndex));
 
@@ -751,8 +493,6 @@ namespace poleng {
 
                         if (syntokCategory != concatenatedOrth) { //adding parse edge 'SYNTOK'
                             AnnotationItem annotationItem(syntokCategory);
-                            //lattice.getAnnotationItemManager().setValue(
-                            //        annotationItem, "morpho", morpho);
                             for (Morphology::iterator attribIt = morphIt->begin();
                                     attribIt != morphIt->end(); ++ attribIt) {
                                 if (attribIt->first == "pos")
@@ -760,8 +500,6 @@ namespace poleng {
                                 lattice.getAnnotationItemManager().setValue(
                                         annotationItem, attribIt->first, attribIt->second);
                             }
-                            lattice.getAnnotationItemManager().setValue(
-                                    annotationItem, "orth", concatenatedOrth);
                             lattice.getAnnotationItemManager().setValue(
                                     annotationItem, "head", "0");
                             //@todo: czy tego tu inaczej jakos nie trzeba zrobic
@@ -783,9 +521,7 @@ namespace poleng {
                         } else { //adding a 'form' edge
                             Lattice::EdgeSequence::Builder formBuilder(lattice);
                             formBuilder.addEdge(lexemeEdge);
-                            AnnotationItem annotationItem(partOfSpeech, StringFrag(lexeme));
-                            //lattice.getAnnotationItemManager().setValue(
-                            //        annotationItem, "morpho", morpho);
+                            AnnotationItem annotationItem(partOfSpeech, StringFrag(*baseIt));
                             for (Morphology::iterator attribIt = morphIt->begin();
                                     attribIt != morphIt->end(); ++ attribIt) {
                                 if (attribIt->first == "pos")
@@ -844,7 +580,7 @@ namespace poleng {
                                 *morphIt);
                         size_t delimPos = morphoString.find(":");
                         std::string partOfSpeech = morphoString.substr(0, delimPos);
-                        std::string lexeme = *baseIt + "_" + partOfSpeech;
+                        std::string lexeme = *baseIt + LEMMA_CATEGORY_SEPARATOR + partOfSpeech;
 
                         Lattice::EdgeDescriptor lexemeEdge;
                         if (! matchLexemeEdge(lattice, startVertex,
@@ -863,7 +599,7 @@ namespace poleng {
 
                         Lattice::EdgeSequence::Builder formBuilder(lattice);
                         formBuilder.addEdge(lexemeEdge);
-                        AnnotationItem annotationItem(partOfSpeech, StringFrag(lexeme));
+                        AnnotationItem annotationItem(partOfSpeech, StringFrag(*baseIt));
                         for (Morphology::iterator attribIt = morphIt->begin();
                                 attribIt != morphIt->end(); ++ attribIt) {
                             if (attribIt->first == "pos")
@@ -1156,7 +892,7 @@ namespace poleng {
                 for (std::list< std::pair<std::string, std::string> >::iterator avit =
                         //@todo: sortowanie tego
                         av.begin(); avit != av.end(); ++ avit) {
-                    if (avit->first == "head" || avit->first == "orth")
+                    if (avit->first == "head")
                         continue;
                     morpho += ":";
                     morpho += avit->second;
@@ -1176,9 +912,7 @@ namespace poleng {
                 for (std::list< std::pair<std::string, std::string> >::iterator avit =
                         //@todo: sortowanie tego
                         av.begin(); avit != av.end(); ++ avit) {
-//                    if (avit->first == "discard")
-//                        continue;
-                    if (avit->first == "head" || avit->first == "orth")
+                    if (avit->first == "head")
                         continue;
                     morphology.insert(std::pair<std::string, std::string>(
                                 avit->first, avit->second));
