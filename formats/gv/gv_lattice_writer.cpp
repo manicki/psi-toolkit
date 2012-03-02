@@ -178,6 +178,10 @@ void GVLatticeWriter::Worker::doRun() {
 
             n = agnode(g, (char*)(edgeLabelSs.str().c_str()));
 
+            if (processor_.isColor()) {
+                agsafeset(n, (char*)"color", (char*)(colorSs.str().c_str()), (char*)"");
+            }
+
             std::list<Lattice::Partition> partitions = lattice_.getEdgePartitions(edge);
             BOOST_FOREACH(Lattice::Partition partition, partitions) {
                 Lattice::Partition::Iterator ei(lattice_, partition);
