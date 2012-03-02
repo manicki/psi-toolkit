@@ -1,5 +1,6 @@
 #include "gv_lattice_writer.hpp"
 
+#include <cstdio>
 #include <iomanip>
 #include <iostream>
 #include <locale>
@@ -10,7 +11,6 @@
 #include "lattice.hpp"
 #include "logging.hpp"
 
-#define TMPFILENAME "tmp"
 
 std::string GVLatticeWriter::getFormatName() {
     return "GraphViz";
@@ -82,11 +82,16 @@ void GVLatticeWriter::Worker::doRun() {
 
     PsiQuoter quoter;
 
+    char * tmpFile = tempnam(NULL, "gv_");
+
+    ERROR("TMP FILE NAME: " << tmpFile);
+
     GVC_t * gvc = gvContext();
     std::string arg1("-T" + processor_.getOutputFormat());
     std::string arg2("");
     if (processor_.isUseOutputStream()) {
-        arg2 += "-o" TMPFILENAME;
+        arg2 += "-o";
+        arg2 += tmpFile;
     } else {
         if (!processor_.getOutputFile().empty()) {
             arg2 += "-o";
@@ -194,15 +199,15 @@ void GVLatticeWriter::Worker::doRun() {
         try {
             std::string line;
             std::string contents;
-            std::ifstream s(TMPFILENAME);
+            std::ifstream s(tmpFile);
             while (getline(s, line)) {
                 contents += line;
                 contents += "\n";
             }
             alignOutput_(contents);
-            std::remove(TMPFILENAME);
+            std::remove(tmpFile);
         } catch (...) {
-            std::remove(TMPFILENAME);
+            std::remove(tmpFile);
         }
     }
 
