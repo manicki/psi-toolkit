@@ -26,7 +26,8 @@ BOOST_AUTO_TEST_CASE( gv_lattice_writer_simple ) {
         filter, // filter
         "dot", // output format
         "", // output file name
-        true // use outputStream
+        true, // use outputStream
+        false // tree
     ));
 
     std::ostringstream osstr;
@@ -58,7 +59,8 @@ BOOST_AUTO_TEST_CASE( gv_lattice_writer_advanced ) {
         filter, // filter
         "dot", // output format
         "", // output file name
-        true // use outputStream
+        true, // use outputStream
+        false // tree
     ));
 
     std::ostringstream osstr;
