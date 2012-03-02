@@ -40,7 +40,7 @@ namespace AV_AI_Converter_specialization {
             int v;
             attrSs >> a;
             valSs >> v;
-            result.set_attr(a, v, v);
+            result.set_attr(a, v, -1L); // -1L is number_master's false value
         }
         return result;
     }
