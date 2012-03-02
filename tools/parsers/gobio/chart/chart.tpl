@@ -255,7 +255,7 @@ template<typename C, typename S, typename V, typename R, template<typename, type
 typename chart<C,S,V,R,I>::category_type chart<C,S,V,R,I>::edge_category(
     edge_descriptor edge)
 {
-    return (chart<C,S,V,R,I>::category_type)(lattice_.getAnnotationCategory(edge));
+    return av_ai_converter_.toAVMatrix<category_type>(lattice_.getEdgeAnnotationItem(edge));
 }
 
 template<typename C, typename S, typename V, typename R, template<typename, typename> class I>

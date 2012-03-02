@@ -66,11 +66,20 @@ public:
 
     const AnnotationItem toAnnotationItem(std::string av);
 
+    template <typename CategoryType>
+    const CategoryType toAVMatrix(AnnotationItem ai);
+
 private:
 
     Lattice & lattice_;
 
 };
+
+
+template <typename CategoryType>
+const CategoryType AV_AI_Converter::toAVMatrix(AnnotationItem ai) {
+    return AV_AI_Converter_specialization::toAVMatrix<CategoryType>(lattice_, ai);
+}
 
 
 #endif
