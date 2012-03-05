@@ -1,0 +1,3 @@
+Reading text in various formats according to Apertium format handling
+rules specified in XML, see
+http://wiki.apertium.org/wiki/Format_handling [under construction]
