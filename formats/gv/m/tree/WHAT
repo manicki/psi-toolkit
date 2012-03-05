@@ -1,1 +1,0 @@
-psi-reader ! gv-writer --format dot --color --tree --allow-tmp
