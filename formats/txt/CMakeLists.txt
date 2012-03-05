@@ -3,4 +3,4 @@ add_library(formats-txt SHARED
 )
 
 install(TARGETS formats-txt DESTINATION lib/)
-install(DIRECTORY data/ DESTINATION ${PSITOOLKIT_INSTALL_DATA_DIR}/txt-reader)
+install(DIRECTORY data/ DESTINATION ${PSITOOLKIT_INSTALL_DATA_DIR}/txt-lattice-reader)
