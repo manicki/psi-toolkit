@@ -6,3 +6,4 @@ add_library(formats-apertium SHARED
 )
 
 install(TARGETS formats-apertium DESTINATION lib/)
+install(DIRECTORY data/ DESTINATION ${PSITOOLKIT_INSTALL_DATA_DIR}/apertium-reader)

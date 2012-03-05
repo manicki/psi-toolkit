@@ -16,3 +16,4 @@ add_subdirectory("t")
 target_link_libraries(tools-parsers-gobio)
 
 install(TARGETS tools-parsers-gobio DESTINATION lib/)
+install(DIRECTORY data/ DESTINATION ${PSITOOLKIT_INSTALL_DATA_DIR}/gobio)
