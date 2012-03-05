@@ -6,4 +6,4 @@ add_library(formats-utt SHARED
 add_subdirectory(t)
 
 install(TARGETS formats-utt DESTINATION lib/)
-install(DIRECTORY data/ DESTINATION ${PSITOOLKIT_INSTALL_DATA_DIR}/utt-reader)
+install(DIRECTORY data/ DESTINATION ${PSITOOLKIT_INSTALL_DATA_DIR}/utt-lattice-reader)

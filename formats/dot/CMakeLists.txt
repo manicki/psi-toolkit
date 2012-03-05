@@ -5,5 +5,5 @@ add_library(formats-dot SHARED
 add_subdirectory(t)
 
 install(TARGETS formats-dot DESTINATION lib/)
-install(DIRECTORY data/ DESTINATION ${PSITOOLKIT_INSTALL_DATA_DIR}/dot-writer)
+install(DIRECTORY data/ DESTINATION ${PSITOOLKIT_INSTALL_DATA_DIR}/dot-lattice-writer)
 
