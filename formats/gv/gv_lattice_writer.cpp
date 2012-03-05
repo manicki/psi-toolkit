@@ -187,7 +187,8 @@ void GVLatticeWriter::Worker::doRun() {
                 Lattice::Partition::Iterator ei(lattice_, partition);
                 while (ei.hasNext()) {
                     Lattice::EdgeDescriptor ed = ei.next();
-                    std::map<Lattice::EdgeDescriptor, std::string>::iterator mi = edgeDescriptionMap.find(ed);
+                    std::map<Lattice::EdgeDescriptor, std::string>::iterator
+                        mi = edgeDescriptionMap.find(ed);
                     if (mi != edgeDescriptionMap.end()) {
                         m = agnode(g, (char*)((*mi).second.c_str()));
                         e = agedge(g, n, m);
