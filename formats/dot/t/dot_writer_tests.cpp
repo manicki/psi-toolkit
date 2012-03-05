@@ -23,7 +23,8 @@ BOOST_AUTO_TEST_CASE( dot_lattice_writer_simple ) {
     boost::scoped_ptr<LatticeWriter<std::ostream> > writer(new DotLatticeWriter(
         true, // show tags
         false, // color
-        filter // filter
+        filter, // filter
+        false // tree
     ));
 
     std::ostringstream osstr;
@@ -52,7 +53,8 @@ BOOST_AUTO_TEST_CASE( dot_lattice_writer_advanced ) {
     boost::scoped_ptr<LatticeWriter<std::ostream> > writer(new DotLatticeWriter(
         true, // show tags
         false, // color
-        filter // filter
+        filter, // filter
+        false // tree
     ));
 
     std::ostringstream osstr;

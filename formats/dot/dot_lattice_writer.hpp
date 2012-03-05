@@ -31,11 +31,13 @@ public:
     DotLatticeWriter(
         bool showTags,
         bool color,
-        std::set<std::string> filter
+        std::set<std::string> filter,
+        bool tree
     ) :
         showTags_(showTags),
         color_(color),
-        filter_(filter)
+        filter_(filter),
+        tree_(tree)
     { }
 
     bool isShowTags() const { return showTags_; }
@@ -49,6 +51,8 @@ public:
         }
         return false;
     }
+
+    bool isTree() const { return tree_; }
 
 private:
     virtual std::string doInfo();
@@ -75,6 +79,7 @@ private:
     bool showTags_;
     bool color_;
     std::set<std::string> filter_;
+    bool tree_;
 
 };
 

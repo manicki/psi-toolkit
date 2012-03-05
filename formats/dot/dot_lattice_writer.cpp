@@ -23,7 +23,8 @@ LatticeWriter<std::ostream>* DotLatticeWriter::Factory::doCreateLatticeWriter(
     return new DotLatticeWriter(
         options.count("show-tags"),
         options.count("color"),
-        filter
+        filter,
+        options.count("tree")
     );
 }
 
@@ -37,6 +38,8 @@ boost::program_options::options_description DotLatticeWriter::Factory::doOptions
             "filters edges by specified tags")
         ("show-tags",
             "prints layer tags")
+        ("tree",
+            "shows dependencies between edges instead of the content of the lattice")
         ;
 
     return optionsDescription;
