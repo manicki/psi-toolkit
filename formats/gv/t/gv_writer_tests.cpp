@@ -26,8 +26,6 @@ BOOST_AUTO_TEST_CASE( gv_lattice_writer_simple ) {
         false, // color
         filter, // filter
         "dot", // output format
-        "", // output file name
-        true, // use outputStream
         false // tree
     ));
 
@@ -66,8 +64,6 @@ BOOST_AUTO_TEST_CASE( gv_lattice_writer_advanced ) {
         false, // color
         filter, // filter
         "dot", // output format
-        "", // output file name
-        true, // use outputStream
         false // tree
     ));
 
@@ -106,8 +102,6 @@ BOOST_AUTO_TEST_CASE( dot_lattice_writer_tree ) {
         false, // color
         filter, // filter
         "dot", // output format
-        "", // output file name
-        true, // use outputStream
         true // tree
     ));
 
