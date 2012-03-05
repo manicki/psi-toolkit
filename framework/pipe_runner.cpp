@@ -296,8 +296,8 @@ void PipeRunner::runPipelineNode_(
             boost::dynamic_pointer_cast<LatticeWriter<Sink> >(
                 currentPipelineNode.getProcessor());
 
-        if (!writer)
-            throw Exception("last element of the pipeline should be a writer");
+                if (!writer)
+                    throw Exception("last element of the pipeline should be a writer");
 
         writer->writeLattice(lattice, out);
     }

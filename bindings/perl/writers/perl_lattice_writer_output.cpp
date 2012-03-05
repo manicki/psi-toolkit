@@ -9,17 +9,16 @@
 typedef std::pair<std::string, std::string> string_pair;
 
 PerlLatticeWriterOutput::PerlLatticeWriterOutput(AV * arrayPointer)
-    : currentArrayPointer_(arrayPointer) {
-    latticeAnnotationItemManager_ =  NULL;
+    : AbstractSimpleDataLatticeWriterOutput() {
+    currentArrayPointer_ = arrayPointer;
 }
 
-void PerlLatticeWriterOutput::push(const std::string & textElement) {
-
+void PerlLatticeWriterOutput::pushToCurrentArrayPointer_(const std::string & textElement) {
     SV * element_sv = newSVpv(textElement.c_str(), 0);
-    av_push( currentArrayPointer_, element_sv);
+    av_push(getPerlCurrentArrayPointer_(), element_sv);
 }
 
-void PerlLatticeWriterOutput::push(
+void PerlLatticeWriterOutput::pushToCurrentArrayPointer_(
      const AnnotationItem & element,
      AnnotationItemManager * latticeAnnotationItemManager) {
 
@@ -51,69 +50,21 @@ void PerlLatticeWriterOutput::push(
              newRV_inc((SV *)itemValuesHash), 0);
 
     PerlReference newHashEntryReference = newRV_inc((PerlReference) newHashEntry);
-    av_push( currentArrayPointer_, newHashEntryReference);
+    av_push( getPerlCurrentArrayPointer_(), newHashEntryReference);
 
 }
 
-void PerlLatticeWriterOutput::openNewSubArray() {
-    arraysStack_.push(currentArrayPointer_);
-
-    currentArrayPointer_ = newAV();
-}
-
-void PerlLatticeWriterOutput::closeSubArray() {
-    closeSubArray_(false);
-}
-
-void PerlLatticeWriterOutput::closeSubArrayWithFlattenOneElement() {
-    closeSubArray_(true);
-}
-
-void PerlLatticeWriterOutput::closeSubArray_(bool flattenOneElement) {
-    if ( !arraysStack_.empty() ) {
-        PerlArrayPointer parentArrayPointer = arraysStack_.top();
-        arraysStack_.pop();
-
-        PerlReference currentArrayReference = getCurrentArrayReference_();
-
-        if ( !isCurrentArrayEmpty_()){
-            if (flattenOneElement) {
-                currentArrayReference = tryToFlattenOneElementCurrentArray();
-            }
-
-            if (currentArrayReference) {
-                av_push(parentArrayPointer, currentArrayReference);
-            }
-        }
-
-        currentArrayPointer_ = parentArrayPointer;
-    }
-}
-
-bool PerlLatticeWriterOutput::isCurrentArrayEmpty_() {
-    return 0 == getCurrentArrayLength_();
+void PerlLatticeWriterOutput::pushToArrayPointer_(ArrayPointer arrayPointer, ReferencePointer what) {
+    av_push( (AV*) arrayPointer, (SV *) what);
 }
 
 
-long PerlLatticeWriterOutput::getCurrentArrayLength_() {
-    long arrayLength = av_len(currentArrayPointer_) + 1;
-    return arrayLength;
+ArrayPointer PerlLatticeWriterOutput::createNewArrayPointer_() {
+    return newAV();
 }
 
-PerlReference PerlLatticeWriterOutput::tryToFlattenOneElementCurrentArray() {
-
-    long arrayLength = av_len(currentArrayPointer_) + 1;
-
-    if ( 1 == arrayLength) {
-        PerlReference elementReference = av_pop(currentArrayPointer_);
-        av_undef(currentArrayPointer_);
-        return elementReference;
-    } else {
-        return getCurrentArrayReference_();
-    }
-}
-
-
-PerlReference PerlLatticeWriterOutput::getCurrentArrayReference_() {
-    return newRV_inc((PerlReference) currentArrayPointer_);
+ReferencePointer PerlLatticeWriterOutput::doFlattenOneElementCurrentArray() {
+    PerlReference elementReference = av_pop(getPerlCurrentArrayPointer_());
+    av_undef(getPerlCurrentArrayPointer_());
+    return elementReference;
 }
