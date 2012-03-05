@@ -1,1 +1,1 @@
-A deep parser (**under construction**).
+A deep parser [under construction].
