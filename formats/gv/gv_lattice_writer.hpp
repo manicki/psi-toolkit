@@ -34,14 +34,16 @@ public:
         std::set<std::string> filter,
         std::string outputFormat,
         std::string outputFile,
-        bool useOutputStream
+        bool useOutputStream,
+        bool tree
     ) :
         showTags_(showTags),
         color_(color),
         filter_(filter),
         outputFormat_(outputFormat),
         outputFile_(outputFile),
-        useOutputStream_(useOutputStream)
+        useOutputStream_(useOutputStream),
+        tree_(tree)
     { }
 
     bool isShowTags() const { return showTags_; }
@@ -60,6 +62,7 @@ public:
     std::string getOutputFile() const { return outputFile_; }
 
     bool isUseOutputStream() const { return useOutputStream_ && (outputFile_.empty()); }
+    bool isTree() const { return tree_; }
 
 private:
     virtual std::string doInfo();
@@ -89,6 +92,7 @@ private:
     std::string outputFormat_;
     std::string outputFile_;
     bool useOutputStream_;
+    bool tree_;
 
 };
 
