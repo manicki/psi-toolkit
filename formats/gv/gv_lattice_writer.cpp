@@ -182,8 +182,12 @@ void GVLatticeWriter::Worker::doRun() {
                 agsafeset(n, (char*)"color", (char*)(colorSs.str().c_str()), (char*)"");
             }
 
+            int partitionNumber = 1;
             std::list<Lattice::Partition> partitions = lattice_.getEdgePartitions(edge);
             BOOST_FOREACH(Lattice::Partition partition, partitions) {
+                std::stringstream partSs;
+                partSs << partitionNumber;
+                ++partitionNumber;
                 Lattice::Partition::Iterator ei(lattice_, partition);
                 while (ei.hasNext()) {
                     Lattice::EdgeDescriptor ed = ei.next();
@@ -192,9 +196,11 @@ void GVLatticeWriter::Worker::doRun() {
                     if (mi != edgeDescriptionMap.end()) {
                         m = agnode(g, (char*)((*mi).second.c_str()));
                         e = agedge(g, n, m);
+                        if (partitions.size() > 1) {
+                            agsafeset(e, (char*)"label", (char*)(partSs.str().c_str()), (char*)"");
+                        }
                     }
                 }
-                break;
             }
 
         } else {
