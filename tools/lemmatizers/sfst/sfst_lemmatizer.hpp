@@ -6,6 +6,7 @@
 #include <boost/filesystem.hpp>
 
 #include "fst.h"
+#include "sfst_tags_parser.hpp"
 #include "annotation_item_manager.hpp"
 #include "lemmatizer_output_iterator.hpp"
 
@@ -22,6 +23,12 @@ class SfstLemmatizer {
     
     std::string getLanguage() const;
     
+	void lemmatize(
+        const std::string & word,
+        AnnotationItemManager & manager,
+        LemmatizerOutputIterator & iterator
+    );
+    
     /**
      * Sets the word processing level, default 0.
      * @param level
@@ -32,7 +39,19 @@ class SfstLemmatizer {
     
     
     /**
-     * Stems word using sfstLematizer tool.
+     * Stems word using sfstLemmatizer tool storing lexical information.
+     * @param word
+     *  A string containing word to stem.
+     * @return
+     *  A multimap object with stem-tags pairs. Each stem may have more than
+     *  one tag (in Morfologik tags are separated by plus sign).
+     * @see simpleStem()
+     */
+    std::multimap<std::string, std::vector<std::string> > stem(
+        const std::string & word);
+    
+    /**
+     * Stems word using sfstLemmatizer tool.
      * @param word
      *  A string containing word to stem.
      * @return
@@ -45,11 +64,34 @@ class SfstLemmatizer {
 		AnnotationItemManager * annotationManager;
 		int level;
 		
+		void stemsOnLemmaLevel(const std::string &, LemmatizerOutputIterator &);
+		void stemsOnLexemeLevel(const std::string &, LemmatizerOutputIterator &);
+		void stemsOnFormLevel(const std::string &, LemmatizerOutputIterator &);
+
+		AnnotationItem createLexemeAnnotation(
+			const std::string & stem, std::string & tag
+		);
+		AnnotationItem createFormAnnotation(
+			AnnotationItem & lexemeItem,
+			const std::string& word,
+			std::map<std::string, std::string> &
+		);
+
+		
+		std::set<std::string> getLemmasFromStems(
+			std::multimap<std::string, std::vector<std::string> > stems
+		);
+		std::vector<std::string> getLexemeTagsFromStems(
+			std::multimap<std::string, std::vector<std::string> > & stems,
+			const std::string & lemma
+		);
 		static std::string tagSeparator;
 		
 		SFST::Transducer turkishTransducer;
 		
 		void initializeTurkishTransducer();
+		
+		SfstTagsParser tagsParser;
 };
 
 #endif

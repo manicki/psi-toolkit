@@ -1,4 +1,5 @@
 add_library(tools-lemmatizers-sfst SHARED
+	sfst_tags_parser.cpp
 	sfst_lemmatizer.cpp
 )
 
