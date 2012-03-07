@@ -50,4 +50,4 @@ add_subdirectory(mpfd-parser)
 add_subdirectory(server)
 
 install(TARGETS server DESTINATION lib/)
-install(DIRECTORY website/ DESTINATION ${ROOT_DIR})
+install(DIRECTORY website/ DESTINATION ${WEBSITE_ROOT})
