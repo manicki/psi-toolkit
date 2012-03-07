@@ -11,8 +11,8 @@ ApertiumDeformatter::ApertiumDeformatter(const boost::filesystem::path& specFile
     SET_LOGGING_LEVEL("DEBUG");
 
     perlRegexpOptions_.set_utf8(true);
-    perlRegexpOptions_.set_multiline(true);
-    perlRegexpOptions_.set_dotall(true);
+//    perlRegexpOptions_.set_multiline(true);
+//    perlRegexpOptions_.set_dotall(true);
     perlRegexpOptions_.set_caseless(!formatSpecification_.getOptions().isCaseSensitive());
 }
 
@@ -25,15 +25,16 @@ FormatSpecification ApertiumDeformatter::initializeFormatSpecification_(
 
 std::string ApertiumDeformatter::deformat(const std::string& input) {
     initialInputSize_ = 0;
-    deformatData_.clear();
 
-    processFormatRules_(input);
+    std::vector<DeformatIndex> deformatIndexes = processFormatRules_(input);
     processReplacementRules_(input);
 
-    return input;
+    std::string output = clearFromDeformatData_(input, deformatIndexes);
+
+    return output;
 }
 
-void ApertiumDeformatter::processFormatRules_(const std::string& input) {
+std::vector<DeformatIndex> ApertiumDeformatter::processFormatRules_(const std::string& input) {
     PerlStringPiece currentInput(input);
     initialInputSize_ = currentInput.size();
 
@@ -52,30 +53,43 @@ void ApertiumDeformatter::processFormatRules_(const std::string& input) {
         args[i] = new PerlArg(&matches[i]);
     }
 
+    std::vector<DeformatIndex> deformatIndexes;
+
     while (PerlRegExp::FindAndConsumeN(&currentInput, re, args, rulesSize)) {
         for (int i = 0; i < rulesSize; i++) {
             if (!matches[i].empty()) {
                 std::pair<int, int> indexes = getMatchedStringIndexes(currentInput, matches[i]);
                 std::string info = formatSpecification_.getFormatRule(i).getType();
 
-                storeDeformatData_(indexes, info);
+                deformatIndexes.push_back(DeformatIndex(indexes, info));
 
                 DEBUG(matches[i] << " (" << indexes.first << ", " << indexes.second << ")"
                     << " as " << info);
             }
         }
     }
-    //FIXME: delete args?
-}
 
-void ApertiumDeformatter::storeDeformatData_(std::pair<int, int> indexes, const std::string& info) {
-    deformatData_.push_back(DeformatData(indexes, info));
+    return deformatIndexes;
 }
 
 void ApertiumDeformatter::processReplacementRules_(const std::string& input) {
     PerlStringPiece currentInput(input);
 
-    //PerlRegExp::GlobalReplace(&input, sourceRegexp, target);
+    std::string inputFake = input;
+}
+
+std::string ApertiumDeformatter::clearFromDeformatData_(const std::string& input,
+    std::vector<DeformatIndex>& indexes) {
+
+    std::string clearInput = input;
+
+    int length = 0;
+    for (unsigned int i = 0; i < indexes.size(); i++) {
+        clearInput.erase(indexes[i].begin - length, indexes[i].length());
+        length += indexes[i].length();
+    }
+
+    return clearInput;
 }
 
 const std::string DELIMITER_BEGIN = "[";

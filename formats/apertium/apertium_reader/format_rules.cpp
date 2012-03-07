@@ -51,13 +51,21 @@ int FormatRule::getPriority() const {
 }
 
 std::string FormatRule::getRegexp() {
+    std::string coreRegexp;
+
+    //TODO: refaktoryzacja
     if (!tags_.empty()) {
-        return tagsToRegexAlternative_();
+        coreRegexp = tagsToRegexAlternative_();
     }
     else {
-        std::string result = begin_ + "(?:.*?)" + end_;
-        return result;
+        coreRegexp = begin_ + "(?:(?:\\s|.)*?)" + end_;
     }
+
+    std::string fullRegexp = "(?:\t*?)"; //"(?:\\s*?)";
+    fullRegexp += coreRegexp;
+    fullRegexp += "(?:\t*)"; //"(?:\\s*)";
+
+    return fullRegexp;
 }
 
 std::string FormatRule::tagsToRegexAlternative_() {
