@@ -16,6 +16,7 @@
 #if HAVE_PERL_BINDINGS
 #include <EXTERN.h>
 #include <perl.h>
+#include <XSUB.h>
 #endif
 
 class PipeRunner {

@@ -1,13 +1,17 @@
 #include "perl_simple_lattice_writer_output_iterator.hpp"
 
+#if HAVE_PERL_BINDINGS
+
 #include "logging.hpp"
 
 PerlSimpleLatticeWriterOutputIterator::PerlSimpleLatticeWriterOutputIterator(
-  PerlLatticeWriterOutput & output,
-  bool withArgs) :
-    output_(output),
+  Sink & output,
+  bool withArgs)
+    : 
+    outputWrapper_(output),
     withArgs_(withArgs)
 {
+    
 }
 
 PerlSimpleLatticeWriterOutputIterator::~PerlSimpleLatticeWriterOutputIterator() {
@@ -16,27 +20,29 @@ PerlSimpleLatticeWriterOutputIterator::~PerlSimpleLatticeWriterOutputIterator() 
 void PerlSimpleLatticeWriterOutputIterator::doPutElement(const AnnotationItem& element) {
 
     if (withArgs_) {
-        output_.push(element, getLatticeAnnotationItemManagerPointer());
+        outputWrapper_.push(element, getLatticeAnnotationItemManagerPointer());
     } else {
-        output_.push(getElementAnnotationItemStringToPut(element));
+        outputWrapper_.push(getElementAnnotationItemStringToPut(element));
     }
 }
 
 void PerlSimpleLatticeWriterOutputIterator::doOpenAlternative() {
-    output_.openNewSubArray();
+    outputWrapper_.openNewSubArray();
 }
 
 void PerlSimpleLatticeWriterOutputIterator::doCloseAlternative() {
-    output_.closeSubArrayWithFlattenOneElement();
+    outputWrapper_.closeSubArrayWithFlattenOneElement();
 }
 
 void PerlSimpleLatticeWriterOutputIterator::doOpenGroup(const std::string& /*group*/) {
-    output_.openNewSubArray();
+    outputWrapper_.openNewSubArray();
 }
 
 void PerlSimpleLatticeWriterOutputIterator::doCloseGroup(const std::string& /*group*/) {
-    output_.closeSubArray();
+    outputWrapper_.closeSubArray();
 }
 
 void PerlSimpleLatticeWriterOutputIterator::doFlush() {
 }
+
+#endif
