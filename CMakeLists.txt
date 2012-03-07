@@ -208,7 +208,7 @@ endif (GRAPHVIZ_INCLUDE_DIR_NOTFOUND)
 # Sets compiler flags
 set(CMAKE_CXX_FLAGS "-g -Wall -Wundef -Wnon-virtual-dtor -Wextra")
 
-set(BASE_TARGETS common utf8case sundown framework formats-dot formats-psi formats-simple formats-txt formats-utt formats-apertium maxent tools-tokenizers-tp tools-segmenters-srx tools-recognizers-langguesser tools-parsers-gobio tools-taggers-metagger)
+set(BASE_TARGETS common utf8case sundown framework formats-dot formats-pdf formats-psi formats-simple formats-txt formats-utt formats-apertium maxent tools-tokenizers-tp tools-segmenters-srx tools-recognizers-langguesser tools-parsers-gobio tools-taggers-metagger)
 
 set(TESTS_TARGETS common-tests tools-tokenizers-tp-tests tools-segmenters-srx-tests tools-datastructures-psi_query-tests tools-recognizers-langguesser-tests utf8case-tests formats-dot-tests formats-utt-tests formats-psi-tests formats-simple-tests tools-parsers-gobio-tests tools-taggers-metagger-tests)
 
