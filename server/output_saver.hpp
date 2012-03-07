@@ -12,10 +12,10 @@ public:
 
 private:
 
-    GUIDGenerator guidGenerator;
+    GUIDGenerator guidGenerator_;
+    std::string websiteRoot_;
 
-    std::string websiteRoot;
-    static std::string fileExtension;
-    static std::string storageDir;
+    static std::string FILE_EXTENSION;
+    static std::string STORAGE_DIR;
 
 };
