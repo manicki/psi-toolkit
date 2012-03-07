@@ -11,5 +11,6 @@
 #cmakedefine01 IS_INSTALLABLE
 #cmakedefine01 STRING_FRAG_VALIDATION
 #cmakedefine INSTALL_DATA_DIR "@INSTALL_DATA_DIR@"
-#cmakedefine ROOT_DIR "@ROOT_DIR@"
+#cmakedefine WEBSITE_ROOT "@WEBSITE_ROOT@"
+#define ROOT_DIR "../"
 #define LEMMA_CATEGORY_SEPARATOR '+'
