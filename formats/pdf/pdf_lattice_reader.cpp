@@ -1,7 +1,10 @@
 #include "pdf_lattice_reader.hpp"
 
+#include <sstream>
+
 #include <boost/assign/list_of.hpp>
 
+#include <gtk/gtk.h>
 #include <poppler.h>
 
 #include "logging.hpp"
@@ -57,9 +60,26 @@ PDFLatticeReader::Worker::Worker(PDFLatticeReader& processor,
 
 void PDFLatticeReader::Worker::doRun() {
     std::string line;
+    std::string documentStr;
     while (getline(inputStream_, line)) {
-        appendParagraphToLattice_(line);
-        lattice_.appendString("\n");
+        documentStr += line + "\n";
+    }
+    gtk_init(NULL, NULL);
+    PopplerDocument * document = poppler_document_new_from_data(
+        (char*)(documentStr.c_str()),
+        documentStr.length(),
+        NULL,
+        NULL
+    );
+    PopplerPage * page;
+    for (int i = 0; i < poppler_document_get_n_pages(document); ++i) {
+        page = poppler_document_get_page(document, i);
+        char * text = poppler_page_get_text(page);
+        std::stringstream textStream(text);
+        while (getline(textStream, line)) {
+            appendParagraphToLattice_(line);
+            lattice_.appendString("\n");
+        }
     }
 }
 
