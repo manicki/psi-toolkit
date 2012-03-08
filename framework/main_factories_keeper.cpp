@@ -19,6 +19,10 @@
 #include "gv_lattice_writer.hpp"
 #endif
 
+#if HAVE_POPPLER
+#include "pdf_lattice_reader.hpp"
+#endif
+
 #if HAVE_POSTGRESQL
 #include "lex_db_lemmatizer.hpp"
 #endif
@@ -55,6 +59,10 @@ MainFactoriesKeeper::MainFactoriesKeeper() {
 
 #if HAVE_GRAPHVIZ
     keeper_.takeProcessorFactory(new GVLatticeWriter::Factory());
+#endif
+
+#if HAVE_POPPLER
+    keeper_.takeProcessorFactory(new PDFLatticeReader::Factory());
 #endif
 
 #if HAVE_POSTGRESQL

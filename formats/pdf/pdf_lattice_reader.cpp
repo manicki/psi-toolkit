@@ -1,8 +1,11 @@
 #include "pdf_lattice_reader.hpp"
 
+#include <boost/assign/list_of.hpp>
+
+#include <poppler.h>
+
 #include "logging.hpp"
 
-#include <boost/assign/list_of.hpp>
 
 std::string PDFLatticeReader::getFormatName() {
     return "PDF";

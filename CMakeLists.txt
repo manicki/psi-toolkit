@@ -209,10 +209,13 @@ endif (GRAPHVIZ_INCLUDE_DIR_NOTFOUND)
 
 find_package(Poppler)
 if (POPPLER_FOUND)
+    message(STATUS "Found Poppler")
     include_directories(${POPPLER_INCLUDE_DIRS})
     link_directories(${POPPLER_LIBRARIES})
     set(HAVE_POPPLER 1)
 else (POPPLER_FOUND)
+    message(WARNING "Could not find Poppler: pdf-reader disabled")
+    set(HAVE_POPPLER 0)
 endif (POPPLER_FOUND)
 
 
