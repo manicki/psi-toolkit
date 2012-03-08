@@ -28,6 +28,11 @@ if(GRAPHVIZ_FOUND)
     link_directories("${psi-toolkit_BINARY_DIR}/formats/gv")
 endif(GRAPHVIZ_FOUND)
 
+if(HAVE_POPPLER)
+    include_directories("${psi-toolkit_SOURCE_DIR}/formats/pdf")
+    link_directories("${psi-toolkit_BINARY_DIR}/formats/pdf")
+endif(HAVE_POPPLER)
+
 foreach(dir ${tools_DIRS})
     include_directories("${psi-toolkit_SOURCE_DIR}/tools/${dir}")
     link_directories("${psi-toolkit_BINARY_DIR}/tools/${dir}")
