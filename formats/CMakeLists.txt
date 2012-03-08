@@ -1,5 +1,5 @@
 set(formats_SUBDIRS
-    dot pdf psi psi/psi_reader psi/psi_writer utt txt simple apertium apertium/apertium_reader
+    dot psi psi/psi_reader psi/psi_writer utt txt simple apertium apertium/apertium_reader
 CACHE PATH "Formats subdirectories" FORCE)
 
 foreach(dir ${formats_SUBDIRS})
@@ -11,3 +11,9 @@ if(GRAPHVIZ_FOUND)
 else(GRAPHVIZ_FOUND)
   unset(gv-t CACHE)
 endif(GRAPHVIZ_FOUND)
+
+if(HAVE_POPPLER)
+  add_subdirectory(pdf)
+else(HAVE_POPPLER)
+  unset(pdf-t CACHE)
+endif(HAVE_POPPLER)

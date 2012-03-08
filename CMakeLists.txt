@@ -205,10 +205,21 @@ else (GRAPHVIZ_INCLUDE_DIR_NOTFOUND)
 endif (GRAPHVIZ_INCLUDE_DIR_NOTFOUND)
 
 
+# Finds Poppler
+
+find_package(Poppler)
+if (POPPLER_FOUND)
+    include_directories(${POPPLER_INCLUDE_DIRS})
+    link_directories(${POPPLER_LIBRARIES})
+    set(HAVE_POPPLER 1)
+else (POPPLER_FOUND)
+endif (POPPLER_FOUND)
+
+
 # Sets compiler flags
 set(CMAKE_CXX_FLAGS "-g -Wall -Wundef -Wnon-virtual-dtor -Wextra")
 
-set(BASE_TARGETS common utf8case sundown framework formats-dot formats-pdf formats-psi formats-simple formats-txt formats-utt formats-apertium maxent tools-tokenizers-tp tools-segmenters-srx tools-recognizers-langguesser tools-parsers-gobio tools-taggers-metagger)
+set(BASE_TARGETS common utf8case sundown framework formats-dot formats-psi formats-simple formats-txt formats-utt formats-apertium maxent tools-tokenizers-tp tools-segmenters-srx tools-recognizers-langguesser tools-parsers-gobio tools-taggers-metagger)
 
 set(TESTS_TARGETS common-tests tools-tokenizers-tp-tests tools-segmenters-srx-tests tools-datastructures-psi_query-tests tools-recognizers-langguesser-tests utf8case-tests formats-dot-tests formats-utt-tests formats-psi-tests formats-simple-tests tools-parsers-gobio-tests tools-taggers-metagger-tests)
 
@@ -242,6 +253,11 @@ if(GRAPHVIZ_FOUND)
     set(BASE_TARGETS ${BASE_TARGETS} formats-gv)
     set(TESTS_TARGETS ${TESTS_TARGETS} formats-gv-tests)
 endif(GRAPHVIZ_FOUND)
+
+if(HAVE_POPPLER)
+    set(BASE_TARGETS ${BASE_TARGETS} formats-pdf)
+    # set(TESTS_TARGETS ${TESTS_TARGETS} formats-pdf-tests)
+endif(HAVE_POPPLER)
 
 include_directories("${psi-toolkit_SOURCE_DIR}/tools/parsers/gobio")
 include_directories("${psi-toolkit_SOURCE_DIR}/tools/parsers/gobio/chart")
@@ -286,6 +302,11 @@ if(GRAPHVIZ_FOUND)
     include_directories("${psi-toolkit_SOURCE_DIR}/formats/gv")
     link_directories("${psi-toolkit_BINARY_DIR}/formats/gv")
 endif(GRAPHVIZ_FOUND)
+
+if(HAVE_POPPLER)
+    include_directories("${psi-toolkit_SOURCE_DIR}/formats/pdf")
+    link_directories("${psi-toolkit_BINARY_DIR}/formats/pdf")
+endif(HAVE_POPPLER)
 
 
 set(ALL_TARGETS ${TARGETS} ${TESTS_TARGETS})
