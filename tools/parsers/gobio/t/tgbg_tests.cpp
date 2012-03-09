@@ -349,6 +349,15 @@ BOOST_AUTO_TEST_CASE( tgbg_prehook ) {
 }
 
 
+BOOST_AUTO_TEST_CASE( tgbg_finalhook ) {
+    RUN_PARSER(
+        "tools/parsers/gobio/t/files/rules_16.g",
+        "tools/parsers/gobio/t/files/av_4.i",
+        "tools/parsers/gobio/t/files/av_4.i.out"
+    );
+}
+
+
 BOOST_AUTO_TEST_CASE( setscore_factor ) {
 
     tgbg_combinator<
