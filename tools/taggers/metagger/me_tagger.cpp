@@ -30,7 +30,7 @@ Annotator* MeTagger::Factory::doCreateAnnotator(
                 ? options["open-class-labels"].as<std::vector<std::string> >()
                 : std::vector<std::string>()
             );
-    if (! options.count("train")) {
+    if (!options.count("train") || options.count("append")) {
         tagger->loadModel(tagger->getModelFile());
     }
     return tagger;
@@ -57,6 +57,7 @@ void MeTagger::Factory::doAddLanguageIndependentOptionsHandled(
          boost::program_options::value<std::vector<std::string> >()
          ->multitoken(), "open class labels")
         ("train", "training mode")
+        ("append", "append to the current model file while training")
         ;
 }
 

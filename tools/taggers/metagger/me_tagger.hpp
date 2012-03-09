@@ -41,7 +41,9 @@ class MeTagger : public Annotator {
                 std::string unknownPosLabel_ = "ign",
                 std::string cardinalNumberPosLabel_ = "card",
                 std::string properNounPosLabel_ = "name",
-                std::vector<std::string> openClassLabels_ = std::vector<std::string>());
+                std::vector<std::string> openClassLabels_ =
+                    std::vector<std::string>()
+                );
         void tag(Lattice &lattice);
         void train(Lattice &lattice);
         void saveModel(std::string path);
