@@ -201,6 +201,8 @@ if (USE_GV_WRITER)
         message(WARNING "Could not find GraphViz: gv-writer disabled")
         set(HAVE_GRAPHVIZ 0)
     endif (GRAPHVIZ_FOUND)
+else (USE_GV_WRITER)
+    set(HAVE_GRAPHVIZ 0)
 endif (USE_GV_WRITER)
 
 
@@ -217,6 +219,8 @@ if (USE_PDF_READER)
         message(WARNING "Could not find Poppler: pdf-reader disabled")
         set(HAVE_POPPLER 0)
     endif (POPPLER_FOUND)
+else (USE_PDF_READER)
+    set(HAVE_POPPLER 0)
 endif (USE_PDF_READER)
 
 
