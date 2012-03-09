@@ -83,7 +83,10 @@ MaxentModel::MaxentModel():
  * adding events.
  */
 void MaxentModel::begin_add_event() {
-    m_es.reset(new MEEventSpace);
+    if (! m_pred_map) //LM: if model has not been loaded yet
+        m_es.reset(new MEEventSpace);
+    else
+        m_es.reset(new MEEventSpace(m_pred_map, m_outcome_map));
     m_pred_map = m_es->feat_map();
     m_outcome_map = m_es->outcome_map();
     m_heldout_es.reset(new MEEventSpace(m_pred_map, m_outcome_map));

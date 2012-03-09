@@ -7,7 +7,7 @@
  * Copyright (C) 2003 by Zhang Le <ejoy@users.sourceforge.net>
  * Begin       : 29-Oct-2003
  * Last Change : 12-Jun-2006.
- * 
+ *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
  * License as published by the Free Software Foundation; either
@@ -38,19 +38,20 @@ using namespace std;
 //
 // This behavior can be changed by setting \sa m_newfeat_mode
 template<typename Ev>
-EventSpace<Ev>::EventSpace(boost::shared_ptr<featmap_type> featmap, 
+EventSpace<Ev>::EventSpace(boost::shared_ptr<featmap_type> featmap,
         boost::shared_ptr<outcomemap_type> outcomemap) {
     if (!featmap)
         m_feat_map.reset(new featmap_type);
     else
         m_feat_map = featmap;
 
-    if (!outcomemap) 
+    if (!outcomemap)
         m_outcome_map.reset(new outcomemap_type);
-    else 
+    else
         m_outcome_map = outcomemap;
 
-    m_newfeat_mode = (!featmap && !outcomemap) ? true : false;
+    //LM was:m_newfeat_mode = (!featmap && !outcomemap) ? true : false;
+    m_newfeat_mode = true;
     // cerr << "EventSpace():new feat mode: " <<  m_newfeat_mode << endl;
 }
 
@@ -74,7 +75,7 @@ EventSpace<Ev>::~EventSpace() {
 template<typename Ev>
 void EventSpace<Ev>::add_event( const context_type& context,
         size_t count,
-        const std::string& outcome, 
+        const std::string& outcome,
         double prior) {
     if (m_newfeat_mode) {
         // TODO: how to handle duplicate predicates?
@@ -99,7 +100,7 @@ void EventSpace<Ev>::add_event( const context_type& context,
     // all outcomes in events must have been seen in training events
 //    cerr << oid << " " << m_outcome_map->null_id << endl;
     if (oid == m_outcome_map->null_id) {
-        cerr << "Invalid outcome:" << outcome 
+        cerr << "Invalid outcome:" << outcome
             << " in heldout events, ignored." << endl;
         return;
     }
@@ -150,8 +151,8 @@ void EventSpace<Ev>::merge_events(size_t cutoff) {
     // Apply cutoff and remove events with zero freq (merged events)
     //
     // I hate writing explicit delete operation.
-    // But I have to do so since these elements will not be 
-    // destoried in ~EventSpace() 
+    // But I have to do so since these elements will not be
+    // destoried in ~EventSpace()
     // And they must be freed before calling remove_if() since remove_if()
     // simply overwrites these elements to be erased with remained elements.
     //
