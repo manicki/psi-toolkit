@@ -190,7 +190,7 @@ BOOST_AUTO_TEST_CASE( tgbg_parsing ) {
     );
 }
 
-/* TOO SLOW AND WRONG RESULT --- TODO
+/* TEST PASSES BUT TOO SLOW (> 2 min)
 BOOST_AUTO_TEST_CASE( tgbg_parsing_tougher ) {
     RUN_PARSER(
         "tools/parsers/gobio/t/files/rules_5.g",
@@ -198,7 +198,7 @@ BOOST_AUTO_TEST_CASE( tgbg_parsing_tougher ) {
         "tools/parsers/gobio/t/files/av_2.i.out"
     );
 }
-*/
+// */
 
 BOOST_AUTO_TEST_CASE( tgbg_linearization_optional ) {
 
