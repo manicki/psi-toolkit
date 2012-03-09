@@ -7,10 +7,11 @@
 
 if (POPPLER_LIBRARIES)
    # in cache already
-   SET(Poppler_FIND_QUIETLY TRUE)
+   SET(POPPLER_FIND_QUIETLY TRUE)
 endif (POPPLER_LIBRARIES)
 
 find_package(PkgConfig)
+
 if (PKG_CONFIG_FOUND)
     pkg_check_modules(GLIB_PKG glib-2.0)
     find_path(GTK2_GLIBCONFIG_INCLUDE_DIR
@@ -23,29 +24,7 @@ find_package(GTK2)
 
 pkg_check_modules(POPPLER_PKG poppler poppler-glib)
 
-find_library(POPPLER_LIBRARIES
-    NAMES poppler libpoppler
-    HINTS ${POPPLER_PKG_LIBRARY_DIRS}
-    PATHS /usr/lib /usr/local/lib
-)
-if (NOT POPPLER_LIBRARIES)
-    message(STATUS "Could not find libpoppler")
-    set(POPPLER_FOUND FALSE)
-else (NOT POPPLER_LIBRARIES)
-    set(POPPLER_FOUND TRUE)
-endif (NOT POPPLER_LIBRARIES)
-
-find_library(POPPLER_GLIB_LIBRARIES
-    NAMES poppler-glib libpoppler-glib
-    HINTS ${POPPLER_PKG_LIBRARY_DIRS}
-    PATHS /usr/lib /usr/local/lib
-)
-if (NOT POPPLER_GLIB_LIBRARIES)
-    message(STATUS "Could not find libpoppler-glib")
-    set(POPPLER_FOUND FALSE)
-else (NOT POPPLER_GLIB_LIBRARIES)
-    set(POPPLER_FOUND TRUE)
-endif (NOT POPPLER_GLIB_LIBRARIES)
+# Paths
 
 find_path(POPPLER_GLIB_INCLUDE_DIR
     NAMES poppler.h
@@ -56,10 +35,36 @@ find_path(POPPLER_GLIB_INCLUDE_DIR
 if (NOT POPPLER_GLIB_INCLUDE_DIR)
     message(STATUS "Could not find poppler-glib include dir")
     set(POPPLER_FOUND FALSE)
-else (NOT POPPLER_GLIB_INCLUDE_DIR)
-    set(POPPLER_FOUND TRUE)
 endif (NOT POPPLER_GLIB_INCLUDE_DIR)
 
-list(APPEND POPPLER_LIBRARIES ${GTK2_LIBRARIES} ${POPPLER_GLIB_LIBRARIES})
+# Libraries
+
+find_library(POPPLER_LIBRARY
+    NAMES poppler libpoppler
+    HINTS ${POPPLER_PKG_LIBRARY_DIRS}
+    PATHS /usr/lib /usr/local/lib
+)
+if (NOT POPPLER_LIBRARY)
+    message(STATUS "Could not find libpoppler")
+    set(POPPLER_FOUND FALSE)
+endif (NOT POPPLER_LIBRARY)
+
+find_library(POPPLER_GLIB_LIBRARY
+    NAMES poppler-glib libpoppler-glib
+    HINTS ${POPPLER_PKG_LIBRARY_DIRS}
+    PATHS /usr/lib /usr/local/lib
+)
+if (NOT POPPLER_GLIB_LIBRARY)
+    message(STATUS "Could not find libpoppler-glib")
+    set(POPPLER_FOUND FALSE)
+endif (NOT POPPLER_GLIB_LIBRARY)
+
 
 set(POPPLER_INCLUDE_DIRS ${GTK2_INCLUDE_DIRS} ${POPPLER_GLIB_INCLUDE_DIR})
+set(POPPLER_LIBRARIES ${GTK2_LIBRARIES} ${POPPLER_LIBRARY} ${POPPLER_GLIB_LIBRARY})
+
+if (POPPLER_INCLUDE_DIRS AND POPPLER_LIBRARIES)
+    set(POPPLER_FOUND TRUE)
+else (POPPLER_INCLUDE_DIRS AND POPPLER_LIBRARIES)
+    set(POPPLER_FOUND FALSE)
+endif (POPPLER_INCLUDE_DIRS AND POPPLER_LIBRARIES)
