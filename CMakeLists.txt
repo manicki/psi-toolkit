@@ -161,6 +161,14 @@ if(USE_STRING_FRAG_VALIDATION)
     set(STRING_FRAG_VALIDATION 1)
 endif(USE_STRING_FRAG_VALIDATION)
 
+option(USE_GV_WRITER "Using gv-writer" ON)
+message(STATUS "Using gv-writer ${USE_GV_WRITER}")
+
+option(USE_PDF_READER "Using pdf-reader" ON)
+message(STATUS "Using pdf-reader ${USE_PDF_READER}")
+
+
+# Finds SWIG
 
 find_package(SWIG)
 if(SWIG_FOUND)
@@ -182,30 +190,34 @@ endif(SWIG_FOUND)
 
 # Finds GraphViz
 
-find_package(Graphviz)
-if (GRAPHVIZ_FOUND)
-    message(STATUS "Found GraphViz")
-    include_directories(${GRAPHVIZ_INCLUDE_DIRS})
-    link_directories(${GRAPHVIZR_LIBRARIES})
-    set(HAVE_GRAPHVIZ 1)
-else (GRAPHVIZ_FOUND)
-    message(WARNING "Could not find GraphViz: gv-writer disabled")
-    set(HAVE_GRAPHVIZ 0)
-endif (GRAPHVIZ_FOUND)
+if (USE_GV_WRITER)
+    find_package(Graphviz)
+    if (GRAPHVIZ_FOUND)
+        message(STATUS "Found GraphViz")
+        include_directories(${GRAPHVIZ_INCLUDE_DIRS})
+        link_directories(${GRAPHVIZR_LIBRARIES})
+        set(HAVE_GRAPHVIZ 1)
+    else (GRAPHVIZ_FOUND)
+        message(WARNING "Could not find GraphViz: gv-writer disabled")
+        set(HAVE_GRAPHVIZ 0)
+    endif (GRAPHVIZ_FOUND)
+endif (USE_GV_WRITER)
 
 
 # Finds Poppler
 
-find_package(Poppler)
-if (POPPLER_FOUND)
-    message(STATUS "Found Poppler")
-    include_directories(${POPPLER_INCLUDE_DIRS})
-    link_directories(${POPPLER_LIBRARIES})
-    set(HAVE_POPPLER 1)
-else (POPPLER_FOUND)
-    message(WARNING "Could not find Poppler: pdf-reader disabled")
-    set(HAVE_POPPLER 0)
-endif (POPPLER_FOUND)
+if (USE_PDF_READER)
+    find_package(Poppler)
+    if (POPPLER_FOUND)
+        message(STATUS "Found Poppler")
+        include_directories(${POPPLER_INCLUDE_DIRS})
+        link_directories(${POPPLER_LIBRARIES})
+        set(HAVE_POPPLER 1)
+    else (POPPLER_FOUND)
+        message(WARNING "Could not find Poppler: pdf-reader disabled")
+        set(HAVE_POPPLER 0)
+    endif (POPPLER_FOUND)
+endif (USE_PDF_READER)
 
 
 # Sets compiler flags
