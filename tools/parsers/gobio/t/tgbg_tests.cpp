@@ -9,6 +9,59 @@
 #include "tgbg_combinator.tpl"
 
 
+#ifdef RUN_PARSER
+#error "RUN_PARSER already defined"
+#endif
+#define RUN_PARSER(FILE_RULES, FILE_INPUT, FILE_OUTPUT) \
+    Lattice lattice; \
+    typedef tgbg_combinator< \
+        int, \
+        Lattice::Score, \
+        number_master, \
+        semantics_stub<int, number_master, double> \
+    > Combinator; \
+    Combinator combinator; \
+    combinator.add_rules(ROOT_DIR FILE_RULES); \
+    typedef chart< \
+        av_matrix<int, int>, \
+        Lattice::Score, \
+        Combinator::variant_type, \
+        Combinator::rule_type \
+    > Chart; \
+    Chart ch(lattice); \
+    number_master& master = combinator.get_master(); \
+    registrar<std::string>& symbol_reg = combinator.get_symbol_registrar(); \
+    registrar<std::string>& attribute_reg = combinator.get_attribute_registrar(); \
+    registrar<std::string>& extra_attribute_reg = combinator.get_extra_attribute_registrar(); \
+    simple_converter<int> converter(symbol_reg, attribute_reg, extra_attribute_reg); \
+    std::vector<Combinator::rule_holder> local_rules; \
+    avinput_parser< \
+        int, \
+        Combinator::rule_type, \
+        int, \
+        number_master, \
+        Chart, \
+        simple_converter<int>, \
+        Combinator::rule_holder \
+    > av_parser(master, ch, converter, local_rules); \
+    BOOST_CHECK(av_parser.parse(slurp_file(ROOT_DIR FILE_INPUT))); \
+    boost::scoped_ptr<LatticeWriter<std::ostream> > writer(new PsiLatticeWriter()); \
+    typedef fifo_agenda<Chart::edge_descriptor> Agenda; \
+    Agenda agenda; \
+    agenda_parser< \
+        av_matrix<int, int>, \
+        Lattice::Score, \
+        Combinator::variant_type, \
+        Combinator::rule_type, \
+        Combinator, \
+        Agenda \
+    > tgbg_parser(ch, combinator, agenda); \
+    tgbg_parser.run(); \
+    std::ostringstream osstr; \
+    writer->writeLattice(lattice, osstr); \
+    BOOST_CHECK_EQUAL(osstr.str(), slurp_file(ROOT_DIR FILE_OUTPUT));
+
+
 BOOST_AUTO_TEST_SUITE( gobio_tgbg )
 
 
@@ -119,10 +172,6 @@ BOOST_AUTO_TEST_CASE( avinput ) {
     BOOST_CHECK(av_parser.parse(slurp_file(ROOT_DIR "tools/parsers/gobio/t/files/av_1.i")));
 
     boost::scoped_ptr<LatticeWriter<std::ostream> > writer(new PsiLatticeWriter());
-    writer->writeLattice(lattice, std::cout);
-
-    std::cout << std::endl;
-
     std::ostringstream osstr;
     writer->writeLattice(lattice, osstr);
     BOOST_CHECK_EQUAL(
@@ -134,89 +183,22 @@ BOOST_AUTO_TEST_CASE( avinput ) {
 
 
 BOOST_AUTO_TEST_CASE( tgbg_parsing ) {
-
-    Lattice lattice;
-
-    typedef tgbg_combinator<
-        int,
-        Lattice::Score,
-        number_master,
-        semantics_stub<int, number_master, double>
-    > Combinator;
-
-    Combinator combinator;
-    combinator.add_rules(ROOT_DIR "tools/parsers/gobio/t/files/rules_3.g");
-
-    typedef chart<
-        av_matrix<int, int>,
-        Lattice::Score,
-        Combinator::variant_type,
-        Combinator::rule_type
-    > Chart;
-
-    Chart ch(lattice);
-
-    number_master& master = combinator.get_master();
-    registrar<std::string>& symbol_reg = combinator.get_symbol_registrar();
-    registrar<std::string>& attribute_reg = combinator.get_attribute_registrar();
-    registrar<std::string>& extra_attribute_reg
-        = combinator.get_extra_attribute_registrar();
-
-    simple_converter<int> converter(symbol_reg, attribute_reg, extra_attribute_reg);
-
-    std::vector<Combinator::rule_holder> local_rules;
-
-    avinput_parser<
-        int,
-        Combinator::rule_type,
-        int,
-        number_master,
-        Chart,
-        simple_converter<int>,
-        Combinator::rule_holder
-    > av_parser(
-        master,
-        ch,
-        converter,
-        local_rules
+    RUN_PARSER(
+        "tools/parsers/gobio/t/files/rules_3.g",
+        "tools/parsers/gobio/t/files/av_1.i",
+        "tools/parsers/gobio/t/files/rules_3.g.out"
     );
-
-    BOOST_CHECK(av_parser.parse(slurp_file(ROOT_DIR "tools/parsers/gobio/t/files/av_1.i")));
-
-    boost::scoped_ptr<LatticeWriter<std::ostream> > writer(new PsiLatticeWriter());
-    writer->writeLattice(lattice, std::cout);
-
-    std::cout << std::endl;
-
-    typedef fifo_agenda<Chart::edge_descriptor> Agenda;
-    Agenda agenda;
-
-    agenda_parser<
-        av_matrix<int, int>,
-        Lattice::Score,
-        Combinator::variant_type,
-        Combinator::rule_type,
-        Combinator,
-        Agenda
-    > tgbg_parser(
-        ch,
-        combinator,
-        agenda
-    );
-
-    tgbg_parser.run();
-
-    writer->writeLattice(lattice, std::cout);
-
-    std::ostringstream osstr;
-    writer->writeLattice(lattice, osstr);
-    BOOST_CHECK_EQUAL(
-        osstr.str(),
-        slurp_file(ROOT_DIR "tools/parsers/gobio/t/files/rules_3.g.out")
-    );
-
 }
 
+/* TOO SLOW AND WRONG RESULT --- TODO
+BOOST_AUTO_TEST_CASE( tgbg_parsing_tougher ) {
+    RUN_PARSER(
+        "tools/parsers/gobio/t/files/rules_5.g",
+        "tools/parsers/gobio/t/files/av_2.i",
+        "tools/parsers/gobio/t/files/av_2.i.out"
+    );
+}
+*/
 
 BOOST_AUTO_TEST_CASE( tgbg_linearization_optional ) {
 
