@@ -379,6 +379,15 @@ BOOST_AUTO_TEST_CASE( setscore_factor ) {
 }
 
 
+BOOST_AUTO_TEST_CASE( shambo ) {
+    RUN_PARSER(
+        "tools/parsers/gobio/t/files/rules_24.g",
+        "tools/parsers/gobio/t/files/av_8.i",
+        "tools/parsers/gobio/t/files/av_8.i.out"
+    );
+}
+
+
 BOOST_AUTO_TEST_CASE( options ) {
 
     tgbg_combinator<
