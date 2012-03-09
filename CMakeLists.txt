@@ -100,7 +100,7 @@ else()
     set(WEBSITE_ROOT "../server/website" CACHE STRING "The website root directory")
 endif(IS_INSTALLABLE)
 
-message(STATUS "The psi-server root directory is set to ${ROOT_DIR}")
+message(STATUS "The psi-server root directory is set to ${WEBSITE_ROOT}")
 
 # USE_xxx
 if(USE_JAVA)
