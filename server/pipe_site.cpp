@@ -2,6 +2,7 @@
 #include "pipe_runner.hpp"
 #include "logging.hpp"
 #include "session_manager.hpp"
+#include "filetype_recognizer.hpp"
 
 #include <iostream>
 #include <sstream>

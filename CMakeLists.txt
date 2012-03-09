@@ -201,11 +201,23 @@ if (POPPLER_FOUND)
     message(STATUS "Found Poppler")
     include_directories(${POPPLER_INCLUDE_DIRS})
     link_directories(${POPPLER_LIBRARIES})
-    set(HAVE_POPPLER 1)
+    set(HAVE_POPPLER 1) #FIXME
 else (POPPLER_FOUND)
     message(WARNING "Could not find Poppler: pdf-reader disabled")
     set(HAVE_POPPLER 0)
 endif (POPPLER_FOUND)
+
+# libmagic
+find_package(LibMagic)
+if(LIBMAGIC_FOUND)
+    message(STATUS "Found libmagic")
+    include_directories(${LibMagic_INCLUDE_DIRS})
+    link_directories(${LibMagic_LIBRARY})
+    set(HAVE_LIBMAGIC 1)
+else()
+    message(WARNING "Could not find libmagic library")
+    set(HAVE_LIBMAGIC 0)
+endif(LIBMAGIC_FOUND)
 
 
 # Sets compiler flags
