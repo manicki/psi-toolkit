@@ -161,10 +161,10 @@ if(USE_STRING_FRAG_VALIDATION)
     set(STRING_FRAG_VALIDATION 1)
 endif(USE_STRING_FRAG_VALIDATION)
 
-option(USE_GV_WRITER "Using gv-writer" ON)
+option(USE_GV_WRITER "Using gv-writer" OFF)
 message(STATUS "Using gv-writer ${USE_GV_WRITER}")
 
-option(USE_PDF_READER "Using pdf-reader" ON)
+option(USE_PDF_READER "Using pdf-reader" OFF)
 message(STATUS "Using pdf-reader ${USE_PDF_READER}")
 
 
