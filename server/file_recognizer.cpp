@@ -7,17 +7,20 @@ const std::string FileRecognizer::UNKNOWN_TYPE = "UKNOWN";
 
 std::map<std::string, std::string> FileRecognizer::magicFileTypeToFileExtension_ =
     boost::assign::map_list_of
-        ("text/plain", "txt")
+        ("application/octet-stream", "bin") //?
         ("application/pdf", "pdf")
         ("application/postscript", "eps")
-        ("application/octet-stream", "bin") //?
         ("application/xml", "xml")
         ("application/x-empty", "") //?
-        ("image/svg+xml", "svg")
-        ("image/jpeg", "jpg")
+        ("application/x-gzip", "gz")
         ("image/gif", "gif")
+        ("image/jpeg", "jpg")
         ("image/png", "png")
+        ("image/svg+xml", "svg")
         ("image/tiff", "tiff")
+        ("model/vrml", "wrl")
+        ("text/html", "html")
+        ("text/plain", "txt")
         ;
 
 FileRecognizer::FileRecognizer() {
