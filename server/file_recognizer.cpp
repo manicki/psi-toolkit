@@ -42,7 +42,7 @@ FileRecognizer::~FileRecognizer() {
 #if HAVE_LIBMAGIC
 std::string FileRecognizer::recognizeType(const std::string & data) {
 #else
-std::string FileRecognizer::recognizeType(/*const std::string & data*/) {
+std::string FileRecognizer::recognizeType(const std::string & /*data*/) {
 #endif
     std::string type = UNKNOWN_TYPE;
 
@@ -69,7 +69,7 @@ std::string FileRecognizer::getFileType_(const std::string& magicFileInfo) {
 #if HAVE_LIBMAGIC
 std::string FileRecognizer::recognizeExtension(const std::string & data) {
 #else
-std::string FileRecognizer::recognizeExtension(/*const std::string & data*/) {
+std::string FileRecognizer::recognizeExtension(const std::string & /*data*/) {
 #endif
     std::string extension = UNKNOWN_TYPE;
 
