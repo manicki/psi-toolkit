@@ -148,7 +148,8 @@ std::string PipeSite::generateOutput_(const std::string& rawOutput) {
             output << rawOutput;
         }
         else {
-            output << "<a href=\"" << psiServer_.session()->getData("output-file") << "\">"
+            output << "<a href=\"" << psiServer_.session()->getData("output-file")
+                << "\" target=\"_blank\" >"
                 << "<img src=\"" << psiServer_.session()->getData("output-file")
                 << "\" alt=\"image output\" />"
                 << "</a>";
