@@ -61,6 +61,7 @@ input.alert { color:#FF0000; }
 
 /* Output */
 
+#output { display:block; overflow:auto; }
 #output pre { border-width:1px; border-style:solid; padding:8px; }
 #download { margin-bottom:50px; }
 
