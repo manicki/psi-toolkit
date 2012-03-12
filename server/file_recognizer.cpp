@@ -9,16 +9,19 @@ std::map<std::string, std::string> FileRecognizer::magicFileTypeToFileExtension_
     boost::assign::map_list_of
         ("text/plain", "txt")
         ("application/pdf", "pdf")
-        ("application/postscript", "ps")
+        ("application/postscript", "eps")
         ("image/svg+xml", "svg")
         ("image/jpeg", "jpg")
         ("image/jpg", "jpg")
         ("image/gif", "gif")
         ("image/png", "png")
-        ("image/tiff", "tiff");
+        ("image/tiff", "tiff")
+        ;
 
-FileRecognizer::FileRecognizer() : magicCookie_(magic_open(MAGIC_MIME)) {
+FileRecognizer::FileRecognizer() {
 #if HAVE_LIBMAGIC
+    magicCookie_ = magic_open(MAGIC_MIME);
+
     if (magicCookie_ == NULL) {
         ERROR("Unable to initialize magic library");
     }
