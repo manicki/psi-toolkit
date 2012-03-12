@@ -16,6 +16,7 @@ Optional
   * Poppler (Ubuntu package: libpoppler-dev)
   * Poppler-glib (Ubuntu package: libpoppler-glib-dev)
   * GTK2 (Ubuntu package: libgtk2.0-dev)
+* LibMagic library: development files - (Ubuntu package: libmagic-dev)
 
 
 Ubuntu 11.10
@@ -23,7 +24,7 @@ Ubuntu 11.10
 
 Required packages: g++ cmake make libpcre3-dev libboost-program-options-dev libboost-graph-dev libboost-filesystem-dev libboost-serialization-dev libboost-thread-dev libboost-system-dev libboost-test-dev
 
-Optional packages: swig libperl-dev python python-all-dev openjdk-6-jdk libgraphviz-dev libpoppler-dev libpoppler-glib-dev libgtk2.0-dev
+Optional packages: swig libperl-dev python python-all-dev openjdk-6-jdk libgraphviz-dev libpoppler-dev libpoppler-glib-dev libgtk2.0-dev libmagic-dev
 
 Ubuntu 10.04
 ------------
