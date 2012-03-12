@@ -10,9 +10,11 @@ std::map<std::string, std::string> FileRecognizer::magicFileTypeToFileExtension_
         ("text/plain", "txt")
         ("application/pdf", "pdf")
         ("application/postscript", "eps")
+        ("application/octet-stream", "bin") //?
+        ("application/xml", "xml")
+        ("application/x-empty", "") //?
         ("image/svg+xml", "svg")
         ("image/jpeg", "jpg")
-        ("image/jpg", "jpg")
         ("image/gif", "gif")
         ("image/png", "png")
         ("image/tiff", "tiff")
@@ -37,7 +39,11 @@ FileRecognizer::~FileRecognizer() {
 #endif
 }
 
+#if HAVE_LIBMAGIC
 std::string FileRecognizer::recognizeType(const std::string & data) {
+#else
+std::string FileRecognizer::recognizeType(/*const std::string & data*/) {
+#endif
     std::string type = UNKNOWN_TYPE;
 
 #if HAVE_LIBMAGIC
@@ -49,6 +55,7 @@ std::string FileRecognizer::recognizeType(const std::string & data) {
 
     return type;
 }
+
 std::string FileRecognizer::getFileType_(const std::string& magicFileInfo) {
     size_t sep = magicFileInfo.find_first_of('/');
 
@@ -59,7 +66,11 @@ std::string FileRecognizer::getFileType_(const std::string& magicFileInfo) {
     return UNKNOWN_TYPE;
 }
 
+#if HAVE_LIBMAGIC
 std::string FileRecognizer::recognizeExtension(const std::string & data) {
+#else
+std::string FileRecognizer::recognizeExtension(/*const std::string & data*/) {
+#endif
     std::string extension = UNKNOWN_TYPE;
 
 #if HAVE_LIBMAGIC
@@ -71,6 +82,7 @@ std::string FileRecognizer::recognizeExtension(const std::string & data) {
 
     return extension;
 }
+
 std::string FileRecognizer::getFileExtension_(const std::string& magicFileInfo) {
     size_t sep = magicFileInfo.find_first_of(';');
     std::string magicFileType;
