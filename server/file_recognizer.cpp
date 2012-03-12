@@ -26,7 +26,6 @@ FileRecognizer::FileRecognizer() : magicCookie_(magic_open(MAGIC_MIME)) {
         ERROR("Cannot load magic database: " << magic_error(magicCookie_));
     };
 #endif
-    SET_LOGGING_LEVEL("INFO"); //FIXME
 }
 
 FileRecognizer::~FileRecognizer() {

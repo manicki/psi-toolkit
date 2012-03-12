@@ -160,7 +160,8 @@ std::string PipeSite::generateOutput_(const std::string& rawOutput) {
         output << "<pre>" << rawOutput << "</pre>";
     }
     if (type == FileRecognizer::UNKNOWN_TYPE) {
-        output << "Output format not recognized";
+        output << "<pre>" << rawOutput << "</pre>";
+        output << "[output format not recognized]";
     }
 
     return output.str();
