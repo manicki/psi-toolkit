@@ -2,7 +2,6 @@
 #include "pipe_runner.hpp"
 #include "logging.hpp"
 #include "session_manager.hpp"
-#include "filetype_recognizer.hpp"
 
 #include <iostream>
 #include <sstream>
@@ -13,7 +12,7 @@
 PipeSite::PipeSite(PsiServer& server, const std::string & pipe)
     : TemplateSite(server),
     initialText("Ala ma kota"), initialPipe(pipe.c_str()), initialOutput(""),
-    outputSaver(std::string(psiServer_.websiteRoot))
+    outputSaver_(std::string(psiServer_.websiteRoot))
 {
     registerIncludesAndActions();
 }
@@ -51,9 +50,7 @@ char * PipeSite::outputText() {
     }
 
     std::string output = getOrSetDefaultData("output-text", initialOutput);
-    output = std::string("<pre>") + output + std::string("</pre>");
-
-    return stringToChar(output);
+    return stringToChar(generateOutput_(output));
 }
 
 char * PipeSite::actionPipe() {
@@ -132,11 +129,39 @@ std::string PipeSite::runPipe(std::string input) {
     return oss.str();
 }
 
-void PipeSite::createFileFromOutput(std::string output) {
-    std::string filename = outputSaver.storeOutput(output);
+void PipeSite::clearPreviousFileFromOutput() {
+    psiServer_.session()->clearData("output-file");
+}
+
+void PipeSite::createFileFromOutput(const std::string& output) {
+    std::string filename = outputSaver_.storeOutput(output);
     psiServer_.session()->setData("output-file", filename);
 }
 
-void PipeSite::clearPreviousFileFromOutput() {
-    psiServer_.session()->clearData("output-file");
+std::string PipeSite::generateOutput_(const std::string& rawOutput) {
+    std::ostringstream output;
+
+    std::string type = fileRecognizer_.recognizeType(rawOutput);
+
+    if (type == "image") {
+        if (fileRecognizer_.recognizeExtension(rawOutput) == "svg") {
+            output << rawOutput;
+        }
+        else {
+            output << "<img alt=\"output\" src=\""
+                << psiServer_.session()->getData("output-file")
+                << "\" />";
+        }
+    }
+    if (type == "application") {
+        output << "No output preview.";
+    }
+    if (type == "text") {
+        output << "<pre>" << rawOutput << "</pre>";
+    }
+    if (type == FileRecognizer::UNKNOWN_TYPE) {
+        output << "Output format not recognized";
+    }
+
+    return output.str();
 }

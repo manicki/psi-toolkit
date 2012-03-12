@@ -8,11 +8,14 @@
 #include <iostream>
 #include <fstream>
 
-std::string OutputSaver::FILE_EXTENSION = ".txt";
-std::string OutputSaver::STORAGE_DIR = "storage";
+const int OutputSaver::GUID_LENGTH = 20;
 
-OutputSaver::OutputSaver(std::string rootPath)
-    : guidGenerator_(20, true), websiteRoot_(rootPath + '/') {
+const std::string OutputSaver::DEFAULT_FILE_EXTENSION = "txt";
+
+const std::string OutputSaver::STORAGE_DIR = "storage";
+
+OutputSaver::OutputSaver(const std::string& rootPath)
+    : guidGenerator_(GUID_LENGTH, true), websiteRoot_(rootPath + '/') {
 
     boost::filesystem::path storageDir(websiteRoot_ + STORAGE_DIR);
 
@@ -28,17 +31,34 @@ OutputSaver::OutputSaver(std::string rootPath)
     }
 }
 
-std::string OutputSaver::storeOutput(std::string content) {
+std::string OutputSaver::storeOutput(const std::string& content) {
+    std::string ext = fileRecognizer_.recognizeExtension(content);
 
+    if (ext == FileRecognizer::UNKNOWN_TYPE) {
+        ext = DEFAULT_FILE_EXTENSION;
+    }
+
+    return storeOutput(content, ext);
+}
+
+std::string OutputSaver::storeOutput(const std::string& content, const std::string& ext) {
     std::string newGuid = guidGenerator_.getGUID();
-    std::string filePathToSave(websiteRoot_ + STORAGE_DIR + '/' + newGuid + FILE_EXTENSION);
-    std::string filePathToReturn(STORAGE_DIR + '/' + newGuid + FILE_EXTENSION);
+    std::string pathToStore = filePathToStore_(newGuid, ext);
+    std::string pathForHtml = filePathForHtml_(newGuid, ext);
 
-    INFO("Output saved to file: " << filePathToSave);
+    INFO("Output saved to file: " << pathToStore);
 
-    std::ofstream outfile(filePathToSave.c_str());
+    std::ofstream outfile(pathToStore.c_str());
     outfile << content;
     outfile.close();
 
-    return filePathToReturn;
+    return pathForHtml;
+}
+
+std::string OutputSaver::filePathToStore_(const std::string& guid, const std::string& ext) {
+    return std::string(websiteRoot_ + STORAGE_DIR + '/' + guid + '.' + ext);
+}
+
+std::string OutputSaver::filePathForHtml_(const std::string& guid, const std::string& ext) {
+    return std::string(STORAGE_DIR + '/' + guid + '.' + ext);
 }

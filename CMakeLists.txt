@@ -197,23 +197,25 @@ if (USE_GV_WRITER)
         include_directories(${GRAPHVIZ_INCLUDE_DIRS})
         link_directories(${GRAPHVIZR_LIBRARIES})
         set(HAVE_GRAPHVIZ 1)
+
     else (GRAPHVIZ_FOUND)
         message(WARNING "Could not find GraphViz: gv-writer disabled")
         set(HAVE_GRAPHVIZ 0)
     endif (GRAPHVIZ_FOUND)
-
-    # libmagic
-    find_package(LibMagic)
-    if(LIBMAGIC_FOUND)
-        message(STATUS "Found libmagic")
-        include_directories(${LibMagic_INCLUDE_DIRS})
-        link_directories(${LibMagic_LIBRARY})
-        set(HAVE_LIBMAGIC 1)
-    else()
-        message(WARNING "Could not find libmagic library")
-        set(HAVE_LIBMAGIC 0)
-    endif(LIBMAGIC_FOUND)
 endif (USE_GV_WRITER)
+
+# libmagic
+
+find_package(LibMagic)
+if(LIBMAGIC_FOUND)
+    message(STATUS "Found libmagic")
+    include_directories(${LibMagic_INCLUDE_DIRS})
+    link_directories(${LibMagic_LIBRARY})
+    set(HAVE_LIBMAGIC 1)
+else()
+    message(WARNING "Could not find libmagic library")
+    set(HAVE_LIBMAGIC 0)
+endif(LIBMAGIC_FOUND)
 
 # Finds Poppler
 
@@ -223,7 +225,7 @@ if (USE_PDF_READER)
         message(STATUS "Found Poppler")
         include_directories(${POPPLER_INCLUDE_DIRS})
         link_directories(${POPPLER_LIBRARIES})
-        set(HAVE_POPPLER 1)
+        set(HAVE_POPPLER 0)
     else (POPPLER_FOUND)
         message(WARNING "Could not find Poppler: pdf-reader disabled")
         set(HAVE_POPPLER 0)
