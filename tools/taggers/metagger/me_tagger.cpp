@@ -181,7 +181,7 @@ void MeTagger::tagSegment(Lattice &lattice, TokenEdgesMap tokenEdgesMap) {
         }
         Context context = createContext(lattice, tokenEdgesMap,
                 tokenIndex, 2);
-        if (prevTag != "") { //@todo czy ten warunek ma obejmowac tylko te linie nizej czy ten kontekst tez?
+        if (prevTag != "") {
             context.push_back(Feature("prevtag=" + prevTag));
         }
 
@@ -335,7 +335,7 @@ void MeTagger::addSampleSegment(Lattice &lattice,
         }
         Context context = createContext(lattice, tokenEdgesMap,
                 tokenIndex, 2);
-        if (prevTag != "") { //@todo czy ten warunek ma obejmowac tylko te linie nizej czy ten kontekst tez?
+        if (prevTag != "") {
             context.push_back(Feature("prevtag=" + prevTag));
         }
 
@@ -543,7 +543,7 @@ std::string MeTagger::getFormLemma(Lattice &lattice,
             }
         }
     }
-    return ""; //@todo: co tu ma zwracac?
+    return lattice.getEdgeText(edge);
 }
 
 std::string MeTagger::getFormPartOfSpeech(Lattice &lattice,
@@ -564,11 +564,11 @@ std::string MeTagger::getFormPartOfSpeech(Lattice &lattice,
                         lemma_pos.find(LEMMA_CATEGORY_SEPARATOR) + 1,
                         std::string::npos);
             } else {
-                return unknownPosLabel; //@todo: co tu ma zwaracac?
+                return unknownPosLabel;
             }
         }
     }
-    return unknownPosLabel; //@todo: co tu ma zwracac?
+    return unknownPosLabel;
 }
 
 std::string MeTagger::getFormMorphoTag(Lattice &lattice,
@@ -700,8 +700,10 @@ void MeTagger::addFormEdge(Lattice &lattice,
 
                 AnnotationItem annotationItem(partOfSpeech,
                         StringFrag(lattice.getEdgeText(token)) );
+                //@todo: nie mam pomyslu, jak z tagu zgadywac,
+                //      jaki atrybut morfosyntaktyczny mamy ustawic
                 lattice.getAnnotationItemManager().setValue(
-                        annotationItem, "morphology", tag); //@todo: nie mam pomyslu jak z tagu zgadywac jaki atrybut morfosyntaktyczny mamy ustawic
+                        annotationItem, "morphology", tag);
                 LayerTagCollection formTag
                     = lattice.getLayerTagManager().
                         createSingletonTagCollection("form");
