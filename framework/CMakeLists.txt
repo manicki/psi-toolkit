@@ -18,6 +18,10 @@ if (WITH_RE2)
     target_link_libraries(framework re2)
 endif(WITH_RE2)
 
+if (HAVE_SFST)
+    target_link_libraries(framework sfst)
+endif(HAVE_SFST)
+
 foreach(dir ${formats_SUBDIRS})
     include_directories("${psi-toolkit_SOURCE_DIR}/formats/${dir}")
     link_directories("${psi-toolkit_BINARY_DIR}/formats/${dir}")
@@ -45,6 +49,12 @@ if(USE_JAVA)
     link_directories("${psi-toolkit_BINARY_DIR}/tools/lemmatizers/morfologik")
     target_link_libraries(psi-pipe tools-lemmatizers-morfologik)
 endif(USE_JAVA)
+
+if(HAVE_SFST)
+    include_directories("${psi-toolkit_SOURCE_DIR}/tools/lemmatizers/sfst")
+    link_directories("${psi-toolkit_BINARY_DIR}/tools/lemmatizers/sfst")
+    target_link_libraries(psi-pipe tools-lemmatizers-sfst)
+endif(HAVE_SFST)
 
 if(USE_POSTGRESQL)
     include_directories("${psi-toolkit_SOURCE_DIR}/tools/lemmatizers/lex_db")

@@ -21,6 +21,9 @@
 #if HAVE_JAVA
 #include "morfologik.hpp"
 #endif
+#if HAVE_SFST
+#include "sfst_lemmatizer.hpp"
+#endif
 #if HAVE_PUDDLE
 #include "puddle.hpp"
 #endif
@@ -54,6 +57,9 @@ MainFactoriesKeeper::MainFactoriesKeeper() {
 #endif
 #if HAVE_JAVA
     keeper_.takeProcessorFactory(new LemmatizerAnnotator<Morfologik>::Factory());
+#endif
+#if HAVE_SFST
+    keeper_.takeProcessorFactory(new LemmatizerAnnotator<SfstLemmatizer>::Factory());
 #endif
 #if HAVE_PUDDLE
     keeper_.takeProcessorFactory(new poleng::bonsai::puddle::Puddle::Factory());

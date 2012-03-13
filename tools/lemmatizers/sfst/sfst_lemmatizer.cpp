@@ -15,15 +15,45 @@ SfstLemmatizer::SfstLemmatizer(const boost::program_options::variables_map& opti
     if (options.count("lang") > 0) {
         setLanguage(options["lang"].as<std::string>());
     }
+    
+    if (options.count("automaton") > 0) {
+        setAutomaton(options["automaton"].as<std::string>());
+    }
 
     initializeTransducer();
     //initializeList();
     //initializeWordData();
     //initializeString();
 }
+boost::filesystem::path SfstLemmatizer::getFile() {
+    return __FILE__;
+}
+
+std::list<std::string> SfstLemmatizer::getLayerTags() {
+    std::list<std::string> layerTags;
+
+    layerTags.push_back("sfst");
+    layerTags.push_back("sfst-tagset");
+
+    return layerTags;
+}
+
+boost::program_options::options_description SfstLemmatizer::optionsHandled() {
+    boost::program_options::options_description desc("Allowed options");
+
+    desc.add_options()
+        ("level", boost::program_options::value<int>()->default_value(1),
+            "set word processing level 0-3")
+        ("lang", boost::program_options::value<std::string>()->default_value("tr"),
+            "set default language")
+        ("automaton", boost::program_options::value<std::string>(),
+            "set file name");
+
+    return desc;
+}
 
 std::string SfstLemmatizer::getName() {
-    return "sfstLemmatizer";
+    return "sfst-Lemmatizer";
 }
 
 std::string SfstLemmatizer::getLanguage() const {
@@ -122,7 +152,7 @@ std::vector<std::string> SfstLemmatizer::getLexemeTagsFromStems(
 AnnotationItem SfstLemmatizer::createLexemeAnnotation(
     const std::string & stem, std::string & tag
 ) {
-
+//UWAGA! przygotować tabelę dla różnych atrybutów
     //std::map<std::string, std::string> attributes =
         //tagsParser.getLexemeAttributes(tag);
     //std::map<std::string, std::string>::iterator atr;
@@ -134,7 +164,7 @@ AnnotationItem SfstLemmatizer::createLexemeAnnotation(
     AnnotationItem lexeme(/*partOfSpeech*/tag, StringFrag(wordId));
 
     //for (atr = attributes.begin(); atr != attributes.end(); ++atr) {
-        annotationManager->setValue(lexeme, tag, "");
+        annotationManager->setValue(lexeme, tag, "pos");
     //}
     return lexeme;
 }
@@ -209,6 +239,12 @@ void SfstLemmatizer::setLanguage(std::string lang) {
     }
 }
 
+void SfstLemmatizer::setAutomaton(std::string automa) {
+    //if (boost::trim(automa) != "") {
+        automaton = automa;
+    //}
+}
+
 std::vector<std::string> SfstLemmatizer::wordToRaw(std::string word) {
 	
 	std::vector<std::string> result;
@@ -229,7 +265,7 @@ std::vector<std::string> SfstLemmatizer::wordToRaw(std::string word) {
 	return result;
 }
 
-void SfstLemmatizer::cookRaw(std::string word) {
+void SfstLemmatizer::cookRaw(std::string & word) {
 	boost::trim(word);
 	boost::replace_first(word, "<", ":");
 	boost::erase_last(word, ">");
@@ -262,7 +298,8 @@ std::vector<std::string> SfstLemmatizer::getCookedTags(std::string word){
 void SfstLemmatizer::initializeTransducer() {
     FILE *file;
 
-	std::string file_name = "data/"+language+"/sfst-"+language+".a";
+	//std::string file_name = "data/"+language+"/sfst-"+language+".a";
+	std::string file_name = automaton;
 	
     if ((file = fopen(file_name.c_str(),"rb")) == NULL) {
         ERROR("Proper lang file (" + language + ") has not been found.");        

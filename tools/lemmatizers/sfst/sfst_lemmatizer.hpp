@@ -22,8 +22,14 @@ class SfstLemmatizer {
 	public:
 
     SfstLemmatizer(const boost::program_options::variables_map& options);
+
+
+    static boost::program_options::options_description optionsHandled();
     
     static std::string getName();
+    static boost::filesystem::path getFile();
+    
+    std::list<std::string> getLayerTags();
     
     std::string getLanguage() const;
 
@@ -48,6 +54,7 @@ class SfstLemmatizer {
      * lang name
      */    
     void setLanguage(std::string);
+    void setAutomaton(std::string);
     
     
     /**
@@ -76,6 +83,7 @@ class SfstLemmatizer {
 		AnnotationItemManager * annotationManager;
 		int level;
 		std::string language;
+		std::string automaton;
 		
 		void stemsOnLemmaLevel(const std::string &, LemmatizerOutputIterator &);
 		void stemsOnLexemeLevel(const std::string &, LemmatizerOutputIterator &);
@@ -103,6 +111,7 @@ class SfstLemmatizer {
 		static std::string tagSeparator;
 		//End of takens..
 		SFST::Transducer * transducer;
+		//scoped ptr... (Inteligenty wskaźnik..)
 		
 		/***
 		 * Outpusts raw word analysis from sfst transducer.
@@ -113,7 +122,7 @@ class SfstLemmatizer {
 		 */ 
 		std::vector<std::string> wordToRaw(std::string);
 		
-		void cookRaw(std::string);
+		void cookRaw(std::string &);
 		
 		std::string getCookedStem(std::string);
 		std::vector<std::string> getCookedTags(std::string);
