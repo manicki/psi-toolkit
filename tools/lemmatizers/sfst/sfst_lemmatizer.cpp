@@ -3,7 +3,7 @@
 #include <iostream>
 #include <boost/algorithm/string.hpp>
 
-std::string SfstLemmatizer::tagSeparator = "+";
+std::string SfstLemmatizer::tagSeparator = ":";
 
 SfstLemmatizer::SfstLemmatizer(const boost::program_options::variables_map& options)
     : annotationManager(NULL), level(3)
@@ -12,7 +12,11 @@ SfstLemmatizer::SfstLemmatizer(const boost::program_options::variables_map& opti
         setLevel(options["level"].as<int>());
     }
 
-    initializeTurkishTransducer();
+    if (options.count("lang") > 0) {
+        setLanguage(options["lang"].as<std::string>());
+    }
+
+    initializeTransducer();
     //initializeList();
     //initializeWordData();
     //initializeString();
@@ -23,7 +27,7 @@ std::string SfstLemmatizer::getName() {
 }
 
 std::string SfstLemmatizer::getLanguage() const {
-    return "tr";
+    return language;
 }
 
 void SfstLemmatizer::lemmatize(const std::string & word,
@@ -44,24 +48,21 @@ void SfstLemmatizer::lemmatize(const std::string & word,
             stemsOnFormLevel(word, iterator);
     }
 }
-//todo
+
+//Finished - adds unique stems to lemmas list
 void SfstLemmatizer::stemsOnLemmaLevel(
     const std::string & word, LemmatizerOutputIterator & outputIterator
 ) {
 
     std::vector<std::string> stems = simpleStem(word);
-    std::vector<std::string>::iterator i;
+    
 
-    // Remove duplicated values
-    i = unique(stems.begin(), stems.end());
-    stems.resize(i - stems.begin() );
-
-    for (i = stems.begin(); i != stems.end(); ++i) {
-        std::string stem = *i;
+    for (std::vector<std::string>::iterator i = stems.begin(); i != stems.end(); ++i) {
+        std::string stem = *(i);
         outputIterator.addLemma(stem);
     }
 }
-//todo
+//partialy...
 void SfstLemmatizer::stemsOnLexemeLevel(
     const std::string & word, LemmatizerOutputIterator & outputIterator
 ) {
@@ -85,7 +86,7 @@ void SfstLemmatizer::stemsOnLexemeLevel(
         }
     }
 }
-//todo
+//WOrks... ? :P
 std::set<std::string> SfstLemmatizer::getLemmasFromStems(
     std::multimap<std::string, std::vector<std::string> > stems
 ) {
@@ -98,11 +99,50 @@ std::set<std::string> SfstLemmatizer::getLemmasFromStems(
 
     return lemmas;
 }
+//should work as in morfo...
+std::vector<std::string> SfstLemmatizer::getLexemeTagsFromStems(
+    std::multimap<std::string, std::vector<std::string> > & stems,
+    const std::string & lemma
+) {
+    std::vector<std::string> tags;
+    std::vector<std::string>::iterator t;
+
+    std::multimap<std::string, std::vector<std::string> >::iterator s;
+    for (s = stems.begin(); s != stems.end(); ++s) {
+
+        if (s->first == lemma) {
+            t = (s->second).begin();
+            tags.insert(tags.begin(), *t);
+        }
+    }
+
+    return tags;
+}
+
+AnnotationItem SfstLemmatizer::createLexemeAnnotation(
+    const std::string & stem, std::string & tag
+) {
+
+    //std::map<std::string, std::string> attributes =
+        //tagsParser.getLexemeAttributes(tag);
+    //std::map<std::string, std::string>::iterator atr;
+
+    //std::string partOfSpeech = attributes["pos"];
+    std::string wordId = stem + LEMMA_CATEGORY_SEPARATOR + tag;//partOfSpeech;
+    //attributes.erase("pos");
+
+    AnnotationItem lexeme(/*partOfSpeech*/tag, StringFrag(wordId));
+
+    //for (atr = attributes.begin(); atr != attributes.end(); ++atr) {
+        annotationManager->setValue(lexeme, tag, "");
+    //}
+    return lexeme;
+}
 
 void SfstLemmatizer::stemsOnFormLevel(
     const std::string & word, LemmatizerOutputIterator & outputIterator
 ){
-
+/*will wait with this for tests...
     std::multimap<std::string, std::vector<std::string> > stems =
         stem(word);
 
@@ -139,6 +179,7 @@ void SfstLemmatizer::stemsOnFormLevel(
 
         }
     }
+    */
 }
 
 AnnotationItem SfstLemmatizer::createFormAnnotation(
@@ -162,18 +203,73 @@ void SfstLemmatizer::setLevel(int lvl) {
     }
 }
 
-void SfstLemmatizer::initializeTurkishTransducer() {
-    FILE *file;
-    
-    //turkishTransducer = NULL;
-
-    if ((file = fopen("data/tr/trmorph-0.2.1.a","rb")) == NULL) {
-        SFST::Transducer tmpTrans(file);
-        fclose(file);
-		turkishTransducer = tmpTrans;
+void SfstLemmatizer::setLanguage(std::string lang) {
+    if (lang.length() == 2) {
+        language = lang;
     }
+}
+
+std::vector<std::string> SfstLemmatizer::wordToRaw(std::string word) {
+	
+	std::vector<std::string> result;
+	
+	char *buffer;
+	size_t buffer_size;
+	FILE* memory_file = open_memstream(&buffer, &buffer_size);
+	
+	
+	
+	if (!transducer->analyze_string((char*)word.c_str(), memory_file, true)) {
+            return result;
+        } else {            
+		fclose (memory_file); //fflush for further read/write
+					
+		boost::split(result, buffer, boost::is_any_of("\n") );
+	}  
+	return result;
+}
+
+void SfstLemmatizer::cookRaw(std::string word) {
+	boost::trim(word);
+	boost::replace_first(word, "<", ":");
+	boost::erase_last(word, ">");
+	boost::replace_all(word, "><", ":");
+}
+
+std::string SfstLemmatizer::getCookedStem(std::string word){
+	
+	std::vector<std::string> tags;
+	std::string stem;
+
+	boost::split(tags, word, boost::is_any_of(tagSeparator));
+
+	stem = *(tags.begin());
+	
+	return stem;
+};
+
+std::vector<std::string> SfstLemmatizer::getCookedTags(std::string word){
+	std::vector<std::string> tags;
+	std::string stem;
+	
+	boost::split(tags, word, boost::is_any_of(tagSeparator));
+	
+	tags.erase(tags.begin());
+	
+	return tags;
+};
+
+void SfstLemmatizer::initializeTransducer() {
+    FILE *file;
+
+	std::string file_name = "data/"+language+"/sfst-"+language+".a";
+	
+    if ((file = fopen(file_name.c_str(),"rb")) == NULL) {
+        ERROR("Proper lang file (" + language + ") has not been found.");        
+	}
     else {
-        ERROR("The trmormp's file has been not found");
+		transducer = new SFST::Transducer(file);
+        fclose(file);
     }
 	
 }
@@ -182,66 +278,39 @@ std::vector<std::string> SfstLemmatizer::simpleStem(const std::string & word) {
 
     std::vector<std::string> result;
 
-	std::streambuf* oldBuf = std::cout.rdbuf();
-	std::ostringstream stdoutCap;
-	std::cout.rdbuf( stdoutCap.rdbuf() );
-    
-	if (turkishTransducer.analyze_string((char*)word.c_str(), stdout, true)) {
-		
-		size_t pos;
-		
-		std::string output = stdoutCap.str();
-
-		while((pos = output.find_first_of('\n')) != -1) {
-			std::string stem = output.substr(0, pos);
-			output = output.substr(pos + 1);
-			if ((pos = stem.find_first_of('<')) == -1)
-				result.insert(result.begin(), stem);
-			else 
-				result.insert(result.begin(), stem.substr(0, pos));
-			}
-		
+	std::vector<std::string> raw = wordToRaw(word);
+	
+	for(vector<std::string>::iterator i = raw.begin(); i != raw.end(); ++i) {
+		cookRaw(*(i));
+		if (*(i) != "") {
+				result.push_back(getCookedStem(*(i)));
+		} 
 	}
     
-	std::cout.rdbuf( oldBuf );
+        
+    boost::sort(result);
+    boost::erase_range(result, boost::unique<boost::return_found_end>(result));
     
     return result;
 }
-//todo
+
+//Finished - return what it should from raw data
 std::multimap<std::string, std::vector<std::string> > SfstLemmatizer::stem(
     const std::string & word
 ) {
 	
     std::multimap<std::string, std::vector<std::string> > result;
     std::vector<std::string> tags;
+    
+	std::vector<std::string> raw = wordToRaw(word);
 	
-/*oldie
-    jstring jword = jenv->NewStringUTF(word.c_str());
-    jobject objList = (jobject)jenv->CallObjectMethod
-        (objPolishStemmer, midPolishStemmerLookup, jword);
-    jenv->DeleteLocalRef(jword);
-
-    int stemsCount = (int)jenv->CallIntMethod(objList, midListGetSize, NULL);
-
-    jobject objWordData = NULL;
-    const char *pstem = NULL;
-    const char *ptags = NULL;
-
-    for (int i = 0; i < stemsCount; ++i) {
-        objWordData = (jobject)jenv->CallObjectMethod
-            (objList, midListGetElement, (jint)i);
-
-        pstem = getStemByJNI(objWordData);
-        ptags = getTagsByJNI(objWordData);
-
-        tags.clear();
-        boost::split(tags, ptags, boost::is_any_of(tagSeparator));
-        result.insert(std::pair<std::string, std::vector<std::string> >
-            (pstem, tags) );
-    }
-
-    jenv->DeleteLocalRef(objList);
-    jenv->DeleteLocalRef(objWordData);
-    * */
+	for(vector<std::string>::iterator i = raw.begin(); i != raw.end(); ++i) {
+		cookRaw(*(i));
+		if (*(i) != "") {
+				result.insert(std::pair<std::string, std::vector<std::string> >
+					(getCookedStem(*(i)), getCookedTags(*(i))) );
+		} 
+	}
+    
     return result;
 }

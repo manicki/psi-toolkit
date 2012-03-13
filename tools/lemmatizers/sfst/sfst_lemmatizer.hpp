@@ -5,6 +5,10 @@
 #include <boost/program_options/variables_map.hpp>
 #include <boost/filesystem.hpp>
 
+
+#include <boost/algorithm/string.hpp>
+#include <boost/range/algorithm.hpp>
+
 #include "fst.h"
 #include "sfst_tags_parser.hpp"
 #include "annotation_item_manager.hpp"
@@ -22,6 +26,7 @@ class SfstLemmatizer {
     static std::string getName();
     
     std::string getLanguage() const;
+
     
 	void lemmatize(
         const std::string & word,
@@ -36,6 +41,13 @@ class SfstLemmatizer {
      *  0 - normal mode...
      */
     void setLevel(int);
+
+    /**
+     * Sets language and reloads dict
+     * @param lang
+     * lang name
+     */    
+    void setLanguage(std::string);
     
     
     /**
@@ -63,14 +75,17 @@ class SfstLemmatizer {
     private:
 		AnnotationItemManager * annotationManager;
 		int level;
+		std::string language;
 		
 		void stemsOnLemmaLevel(const std::string &, LemmatizerOutputIterator &);
 		void stemsOnLexemeLevel(const std::string &, LemmatizerOutputIterator &);
 		void stemsOnFormLevel(const std::string &, LemmatizerOutputIterator &);
 
+		//Ugly taken from morfo...
 		AnnotationItem createLexemeAnnotation(
 			const std::string & stem, std::string & tag
 		);
+		
 		AnnotationItem createFormAnnotation(
 			AnnotationItem & lexemeItem,
 			const std::string& word,
@@ -86,10 +101,24 @@ class SfstLemmatizer {
 			const std::string & lemma
 		);
 		static std::string tagSeparator;
+		//End of takens..
+		SFST::Transducer * transducer;
 		
-		SFST::Transducer turkishTransducer;
+		/***
+		 * Outpusts raw word analysis from sfst transducer.
+		 * @param word
+		 * A word that will be analysed.
+		 * @return
+		 * String vector containing output of transducer.
+		 */ 
+		std::vector<std::string> wordToRaw(std::string);
 		
-		void initializeTurkishTransducer();
+		void cookRaw(std::string);
+		
+		std::string getCookedStem(std::string);
+		std::vector<std::string> getCookedTags(std::string);
+		
+		void initializeTransducer();
 		
 		SfstTagsParser tagsParser;
 };

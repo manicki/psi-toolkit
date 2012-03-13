@@ -10,7 +10,7 @@ endif(WITH_RE2)
 
 if (HAVE_SFST)
     #target_link_libraries(test_runner sfst)
-    target_link_libraries(test_runner tools-lemmatizers-sfst)
+    target_link_libraries(test_runner sfst)
 endif(HAVE_SFST)
 
 if(HAVE_PERL_BINDINGS)

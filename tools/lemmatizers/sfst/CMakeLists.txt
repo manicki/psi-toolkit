@@ -3,7 +3,7 @@ add_library(tools-lemmatizers-sfst SHARED
 	sfst_lemmatizer.cpp
 )
 
-target_link_libraries(tools-lemmatizers-sfst sfst)
+target_link_libraries(sfst)
 
 add_subdirectory(t)
 
