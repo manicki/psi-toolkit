@@ -6,8 +6,6 @@
 #include <locale>
 #include <fstream>
 
-#include <gvc.h>
-
 #include "lattice.hpp"
 #include "logging.hpp"
 

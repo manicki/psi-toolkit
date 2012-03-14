@@ -7,6 +7,26 @@
 
 #include <boost/foreach.hpp>
 
+// Fixes warnings "... not defined" from GraphViz include files
+
+#ifndef _BLD_cdt
+#define _BLD_cdt 0
+#endif
+
+#ifndef _DLL_BLD
+#define _DLL_BLD 0
+#endif
+
+#ifndef _dll_import
+#define _dll_import 0
+#endif
+
+#ifndef _PACKAGE_ast
+#define _PACKAGE_ast 0
+#endif
+
+#include <gvc.h>
+
 #include "lattice_writer.hpp"
 #include "lattice_writer_factory.hpp"
 #include "aligning_writer_worker.hpp"
