@@ -40,7 +40,7 @@ boost::program_options::options_description GVLatticeWriter::Factory::doOptionsH
             "edges with different tags have different colors")
         ("filter", boost::program_options::value< std::vector<std::string> >()->multitoken(),
             "filters edges by specified tags")
-        ("format", boost::program_options::value<std::string>()->default_value("dot"),
+        ("format", boost::program_options::value<std::string>()->default_value("canon"),
             "output format")
         ("show-tags",
             "prints layer tags")

@@ -1,0 +1,5 @@
+01 0000 03    Ala          token                             word,type=word
+02 0003 01    _            token                             blank
+03 0004 02    ma           token                             word,type=word
+04 0006 01    _            token                             blank
+05 0007 07    słonia       token                             word,type=word
