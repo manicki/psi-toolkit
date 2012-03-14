@@ -1,3 +1,5 @@
+#include <boost/algorithm/string/join.hpp>
+
 #include "format_rules.hpp"
 #include "logging.hpp"
 
@@ -25,23 +27,18 @@ bool FormatOptions::isCaseSensitive() {
 //FormatRule
 
 FormatRule::FormatRule(const std::string& type, bool eos, int priority)
-        : type_(type), eos_(eos), priority_(priority) {
-}
-
-void FormatRule::addRule(const std::string& ruleRegexp) {
-    tags_.push_back(ruleRegexp);
-}
+        : type_(type), eos_(eos), priority_(priority) { }
 
 FormatRule::FormatRule(const std::string& type, bool eos, int priority,
     const std::string& begin, const std::string& end)
         : type_(type), eos_(eos), priority_(priority), begin_(begin), end_(end) { }
 
-std::string FormatRule::getType() {
-    return type_;
+void FormatRule::addRule(const std::string& ruleRegexp) {
+    tags_.push_back(ruleRegexp);
 }
 
-bool FormatRule::isEos() {
-    return eos_;
+std::string FormatRule::getType() {
+    return type_;
 }
 
 int FormatRule::getPriority() const {
@@ -49,36 +46,28 @@ int FormatRule::getPriority() const {
 }
 
 std::string FormatRule::getRegexp() {
-    std::string coreRegexp;
+    std::string regexp = "(?:\\s*?)";//"(?:\t*?)";
+    regexp += getRegexp_() + "(?:\t*)"; //"(?:\\s*)";
 
-    //TODO: refaktoryzacja
-    if (!tags_.empty()) {
-        coreRegexp = tagsToRegexAlternative_();
-    }
-    else {
-        coreRegexp = begin_ + "(?:(?:\\s|.)*?)" + end_;
-    }
-
-    std::string fullRegexp = "(?:\t*?)"; //"(?:\\s*?)";
-    fullRegexp += coreRegexp;
-    fullRegexp += "(?:\t*)"; //"(?:\\s*)";
-
-    return fullRegexp;
+    return regexp;
 }
 
-std::string FormatRule::tagsToRegexAlternative_() {
+std::string FormatRule::getRegexp_() {
+    if (!tags_.empty()) {
+        return tagsToRegexpDisjunctions_();
+    }
+    return begin_ + "(?:(?:\\s|.)*?)" + end_;
+}
+
+std::string FormatRule::tagsToRegexpDisjunctions_() {
     if (tags_.size() == 1) {
         return tags_[0];
     }
 
-    std::string regexAlternative = "(";
-    for (unsigned int i = 0; i < tags_.size(); i++) {
-        if (i != 0) regexAlternative += ")|(";
-        regexAlternative += tags_[i];
-    }
-    regexAlternative += ")";
+    std::string regexps = "(?:";
+    regexps += boost::algorithm::join(tags_, ")|(?:") + ")";
 
-    return regexAlternative;
+    return regexps;
 }
 
 bool FormatRule::operator< (const FormatRule &other) const {

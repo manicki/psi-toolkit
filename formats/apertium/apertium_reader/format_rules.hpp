@@ -32,12 +32,11 @@ public:
     FormatRule(const std::string& type, bool eos, int priority,
         const std::string& begin, const std::string& end);
 
+    void addRule(const std::string& ruleRegexp);
+
     std::string getType();
-    bool isEos();
     int getPriority() const;
     std::string getRegexp();
-
-    void addRule(const std::string& ruleRegexp);
 
     bool operator< (const FormatRule &other) const;
 
@@ -51,7 +50,8 @@ private:
     std::string begin_;
     std::string end_;
 
-    std::string tagsToRegexAlternative_();
+    std::string getRegexp_();
+    std::string tagsToRegexpDisjunctions_();
 };
 
 

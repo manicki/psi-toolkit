@@ -1,5 +1,5 @@
-#include <boost/algorithm/string/join.hpp>
 #include <boost/foreach.hpp>
+#include <algorithm>
 
 #include "format_specification.hpp"
 #include "object_cache.hpp"
@@ -16,17 +16,12 @@ FormatSpecification::FormatSpecification(std::string name, FormatOptions options
             formatRules_(rules.first), replacementRules_(rules.second) { }
 
 std::string FormatSpecification::formatRulesRegexp() {
-    std::string regexp = "";
+    std::string regexp;
 
     for (unsigned int i = 0; i < formatRules_.size(); ++i) {
-        regexp += "(";
-        regexp += formatRules_[i].getRegexp() + ")";
-
-        if (i < (formatRules_.size() - 1)) {
-            regexp += "|";
-        }
+        regexp += std::string("(") + formatRules_[i].getRegexp() + ")";
+        if (i < (formatRules_.size() - 1)) regexp += "|";
     }
-
     return regexp;
 }
 
@@ -66,10 +61,6 @@ FormatOptions FormatSpecification::getOptions() {
 
 FormatRule FormatSpecification::getFormatRule(int i) {
     return formatRules_[i];
-}
-
-ReplacementRule FormatSpecification::getReplacementRule(int i) {
-    return replacementRules_[i];
 }
 
 

@@ -19,12 +19,10 @@ public:
     FormatOptions getOptions();
 
     std::string formatRulesRegexp();
+    FormatRule getFormatRule(int i);
     int formatRuleSize();
 
     std::map<std::string, std::string> replacementRulesRegexp();
-
-    FormatRule getFormatRule(int i);
-    ReplacementRule getReplacementRule(int i);
 
 private:
 
@@ -56,9 +54,7 @@ public:
             : Exception(std::string("unexpected element `") + elementName + "'") { }
     };
 
-
     FormatSpecificationReader(const boost::filesystem::path& filePath);
-
     FormatSpecification readFormatSpecification();
 
 private:

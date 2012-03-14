@@ -11,8 +11,8 @@ ApertiumDeformatter::ApertiumDeformatter(const boost::filesystem::path& specFile
     SET_LOGGING_LEVEL("DEBUG");
 
     perlRegexpOptions_.set_utf8(true);
-//    perlRegexpOptions_.set_multiline(true);
-//    perlRegexpOptions_.set_dotall(true);
+    //perlRegexpOptions_.set_multiline(true);
+    //perlRegexpOptions_.set_dotall(true);
     perlRegexpOptions_.set_caseless(!formatSpecification_.getOptions().isCaseSensitive());
 }
 
@@ -38,10 +38,11 @@ std::vector<DeformatIndex> ApertiumDeformatter::processFormatRules_(const std::s
     initialInputSize_ = currentInput.size();
 
     std::string regexp = formatSpecification_.formatRulesRegexp();
-    PerlRegExp re(regexp, perlRegexpOptions_);
+    PerlRegExp re(regexp, pcrecpp::UTF8());
     DEBUG("looking for: " << regexp);
 
     const int rulesSize = formatSpecification_.formatRuleSize();
+    //FIXME: możliwa większa liczba reguł
     if (rulesSize > PerlRegExp::MAX_MATCHES)
         ERROR("the number of rules is larger than " << PerlRegExp::MAX_MATCHES << "!");
 
@@ -79,7 +80,7 @@ std::string ApertiumDeformatter::processReplacementRules_(const std::string& inp
 
     for (it = rules.begin(); it != rules.end(); ++it) {
         PerlStringPiece target(it->first);
-        PerlRegExp re(it->second);
+        PerlRegExp re(it->second, perlRegexpOptions_);
         PerlRegExp::GlobalReplace(&text, re, target);
     }
 
