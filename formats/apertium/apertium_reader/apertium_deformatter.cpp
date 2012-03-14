@@ -8,8 +8,6 @@
 ApertiumDeformatter::ApertiumDeformatter(const boost::filesystem::path& specFilePath)
     : formatSpecification_(initializeFormatSpecification_(specFilePath)) {
 
-    SET_LOGGING_LEVEL("DEBUG");
-
     perlRegexpOptions_.set_utf8(true);
     //perlRegexpOptions_.set_multiline(true);
     //perlRegexpOptions_.set_dotall(true);

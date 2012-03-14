@@ -21,10 +21,7 @@ const std::string ApertiumLatticeReader::Factory::DEFAULT_SPEC_FILES_DIR = "%ITS
 const std::string ApertiumLatticeReader::Factory::DEFAULT_SPEC_FILE_ENDING = "-format.xml";
 
 ApertiumLatticeReader::ApertiumLatticeReader(const boost::filesystem::path& specificationFile)
-    : apertiumDeformatter_(specificationFile) {
-
-    SET_LOGGING_LEVEL("DEBUG"); //FIXME
-}
+    : apertiumDeformatter_(specificationFile) { }
 
 ApertiumLatticeReader::Factory::~Factory() { }
 
