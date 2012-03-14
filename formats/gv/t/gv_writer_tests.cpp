@@ -128,4 +128,35 @@ BOOST_AUTO_TEST_CASE( dot_lattice_writer_tree ) {
 }
 
 
+BOOST_AUTO_TEST_CASE( dot_lattice_writer_tree_canon ) {
+
+    Lattice lattice;
+    lattice_preparators::prepareRegularLattice(lattice);
+
+    std::set<std::string> filter;
+
+    boost::scoped_ptr<LatticeWriter<std::ostream> > writer(new GVLatticeWriter(
+        false, // show tags
+        false, // color
+        filter, // filter
+        "canon", // output format
+        true // tree
+    ));
+
+    std::ostringstream osstr;
+    writer->writeLattice(lattice, osstr);
+
+    std::string line;
+    std::string contents;
+    std::ifstream s(ROOT_DIR "formats/gv/t/files/tree_canon.dot");
+    while (getline(s, line)) {
+        contents += line;
+        contents += "\n";
+    }
+
+    BOOST_CHECK_EQUAL(osstr.str(), contents);
+
+}
+
+
 BOOST_AUTO_TEST_SUITE_END()
