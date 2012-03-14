@@ -294,8 +294,10 @@ void GVLatticeWriter::Worker::doRun() {
         }
         alignOutput_(contents);
         std::remove(tmpFile);
+        free(tmpFile);
     } catch (...) {
         std::remove(tmpFile);
+        free(tmpFile);
     }
 
     DEBUG("WRITING");
