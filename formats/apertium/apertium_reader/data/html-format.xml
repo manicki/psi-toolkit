@@ -22,11 +22,6 @@
     </format-rule>
 
     <format-rule type="comment" eos="no" priority="2">
-      <begin regexp='"&lt;apertium-notrans&gt;"'/>
-      <end regexp='"&lt;/apertium-notrans&gt;"'/>
-    </format-rule>
-
-    <format-rule type="comment" eos="no" priority="2">
       <begin regexp='"&lt;style"(" "[^&gt;]*)?"&gt;"'/>
       <end regexp='"&lt;/style"(" "[^&gt;]*)?"&gt;"'/>
     </format-rule>
@@ -72,7 +67,7 @@
     </format-rule>
 
     <format-rule type="empty" eos="no" priority="5">
-      <tag regexp='("&lt;!"|"&lt;?")[a-zA-Z][^&gt;]*"&gt;"'/>
+      <tag regexp='("&lt;!"|"&lt;\?")[a-zA-Z][^&gt;]*"&gt;"'/>
     </format-rule>
 
 <!-- End (Cambios hechos por Gorka L.)-->
