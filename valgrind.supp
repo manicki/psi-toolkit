@@ -11,3 +11,95 @@
    fun:*moneypunct*
    ...
 }
+{
+   graphviz leak textsize
+   Memcheck:Leak
+   ...
+   fun:textsize
+   ...
+}
+{
+   graphviz leak pango font map
+   Memcheck:Leak
+   ...
+   fun:pango_cairo_font_map_new
+   ...
+}
+{
+   graphviz leak pango itemize
+   Memcheck:Leak
+   ...
+   fun:pango_itemize_with_base_dir
+   ...
+}
+{
+   graphviz leak pango font description
+   Memcheck:Leak
+   ...
+   fun:pango_font_description_set_family
+   fun:pango_fc_font_description_from_pattern
+   ...
+}
+{
+   graphviz leak g_object newv
+   Memcheck:Leak
+   ...
+   fun:g_object_newv
+   fun:g_object_new
+   ...
+}
+{
+   graphviz leak g_object new valist
+   Memcheck:Leak
+   ...
+   fun:g_object_new_valist
+   fun:g_object_new
+   ...
+}
+{
+   graphviz leak pango ot ruleset
+   Memcheck:Leak
+   ...
+   fun:pango_ot_ruleset_new_from_description
+   fun:pango_ot_ruleset_get_for_description
+   ...
+}
+{
+   graphviz leak pango ot buffer
+   Memcheck:Leak
+   ...
+   fun:pango_ot_buffer_new
+   ...
+}
+{
+   graphviz leak pango coverage
+   Memcheck:Leak
+   ...
+   fun:pango_coverage_set
+   ...
+}
+{
+   graphviz leak ft
+   Memcheck:Leak
+   ...
+   fun:ft_mem_qalloc
+   fun:ft_mem_alloc
+   ...
+   fun:FT_Add_Module
+   fun:FT_Add_Default_Modules
+   fun:FT_Init_FreeType
+}
+{
+   <insert_a_suppression_name_here>
+   Memcheck:Leak
+   ...
+   fun:gvplugin_install
+   fun:gvconfig
+   fun:dotneato_args_initialize
+   fun:gvParseArgs
+   ...
+}
+
+
+
+
