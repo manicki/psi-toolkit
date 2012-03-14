@@ -21,7 +21,7 @@ public:
     std::string formatRulesRegexp();
     int formatRuleSize();
 
-    //std::map<std::string, std::string> replacementRulesRegexp();
+    std::map<std::string, std::string> replacementRulesRegexp();
 
     FormatRule getFormatRule(int i);
     ReplacementRule getReplacementRule(int i);

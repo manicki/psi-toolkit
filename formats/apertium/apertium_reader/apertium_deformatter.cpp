@@ -26,10 +26,9 @@ FormatSpecification ApertiumDeformatter::initializeFormatSpecification_(
 std::string ApertiumDeformatter::deformat(const std::string& input) {
     initialInputSize_ = 0;
 
-    std::vector<DeformatIndex> deformatIndexes = processFormatRules_(input);
-    processReplacementRules_(input);
-
-    std::string output = clearFromDeformatData_(input, deformatIndexes);
+    std::string text = processReplacementRules_(input);
+    std::vector<DeformatIndex> deformatIndexes = processFormatRules_(text);
+    std::string output = clearFromDeformatData_(text, deformatIndexes);
 
     return output;
 }
@@ -72,10 +71,19 @@ std::vector<DeformatIndex> ApertiumDeformatter::processFormatRules_(const std::s
     return deformatIndexes;
 }
 
-void ApertiumDeformatter::processReplacementRules_(const std::string& input) {
-    PerlStringPiece currentInput(input);
+std::string ApertiumDeformatter::processReplacementRules_(const std::string& input) {
+    std::string text = input;
 
-    std::string inputFake = input;
+    std::map<std::string, std::string>::iterator it;
+    std::map<std::string, std::string> rules = formatSpecification_.replacementRulesRegexp();
+
+    for (it = rules.begin(); it != rules.end(); ++it) {
+        PerlStringPiece target(it->first);
+        PerlRegExp re(it->second);
+        PerlRegExp::GlobalReplace(&text, re, target);
+    }
+
+    return text;
 }
 
 std::string ApertiumDeformatter::clearFromDeformatData_(const std::string& input,

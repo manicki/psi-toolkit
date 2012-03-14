@@ -59,12 +59,11 @@ class ReplacementRule {
 public:
 
     ReplacementRule(const std::string& regexp);
-
     void addReplacement(std::string source, std::string target);
     void addPreferredReplacement(std::string target, std::string source);
 
     std::string getRegexp();
-    unsigned int replacementsCount();
+    const std::map<std::string, std::string>* sourceToTargetMap();
 
 private:
 

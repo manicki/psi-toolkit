@@ -30,6 +30,31 @@ std::string FormatSpecification::formatRulesRegexp() {
     return regexp;
 }
 
+std::map<std::string, std::string> FormatSpecification::replacementRulesRegexp() {
+    typedef std::map<std::string, std::string> String2StringMap;
+
+    String2StringMap charToRegexp;
+    String2StringMap::iterator it;
+
+    BOOST_FOREACH(ReplacementRule rule, replacementRules_) {
+        BOOST_FOREACH(const String2StringMap::value_type& replace, *rule.sourceToTargetMap()) {
+
+            std::string source(replace.first);
+            std::string target(replace.second);
+
+            it = charToRegexp.find(target);
+            if (it != charToRegexp.end()) {
+                charToRegexp[target] += std::string("|") + source;
+            }
+            else {
+                charToRegexp[target] = source;
+            }
+        }
+    }
+
+    return charToRegexp;
+}
+
 int FormatSpecification::formatRuleSize() {
     return formatRules_.size();
 }
@@ -182,8 +207,8 @@ ReplacementRule FormatSpecificationReader::parseReplacementRule_(
         }
     }
 
-    DEBUG("found replacement rule: " << regex << " contains " << rule.replacementsCount()
-        << " replacements");
+    DEBUG("found replacement rule: " << regex << " contains "
+        << (*rule.sourceToTargetMap()).size() << " replacements");
 
     return rule;
 }

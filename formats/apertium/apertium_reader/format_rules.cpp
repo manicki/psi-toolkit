@@ -12,12 +12,10 @@ FormatOptions::FormatOptions(int largeblocksSize,
         escapeChars_(escapeChars), spaceChars_(spaceChars),
         caseSensitive_(caseSensitive) {
 
-    if (inputEncoding != "UTF-8") {
+    if (inputEncoding != "UTF-8")
         WARN("input encoding specified in format options is " << inputEncoding);
-    }
-    if (outputEncoding != "UTF-8") {
+    if (outputEncoding != "UTF-8")
         WARN("ouput encoding specified in format options is " << outputEncoding);
-    }
 }
 
 bool FormatOptions::isCaseSensitive() {
@@ -90,9 +88,7 @@ bool FormatRule::operator< (const FormatRule &other) const {
 
 //ReplacementRule
 
-ReplacementRule::ReplacementRule(const std::string& regexp)
-    : regexp_(regexp) {
-}
+ReplacementRule::ReplacementRule(const std::string& regexp) : regexp_(regexp) { }
 
 void ReplacementRule::addReplacement(std::string source, std::string target) {
     sourceToTargetMap_.insert(std::pair<std::string, std::string>(source, target));
@@ -106,6 +102,7 @@ std::string ReplacementRule::getRegexp() {
     return regexp_;
 }
 
-unsigned int ReplacementRule::replacementsCount() {
-    return sourceToTargetMap_.size();
+const std::map<std::string, std::string>* ReplacementRule::sourceToTargetMap() {
+    return &sourceToTargetMap_;
 }
+
