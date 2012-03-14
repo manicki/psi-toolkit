@@ -85,8 +85,6 @@ void GVLatticeWriter::Worker::doRun() {
     char * tmpFile;
 
     GVC_t * gvc = gvContext();
-    std::string mainFormat
-        = processor_.getOutputFormat().substr(0, processor_.getOutputFormat().find(":"));
     if (
         processor_.getOutputFormat() != "canon" &&
         processor_.getOutputFormat() != "dot" &&
