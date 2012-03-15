@@ -41,6 +41,13 @@
    ...
 }
 {
+   graphviz leak pango font get
+   Memcheck:Leak
+   ...
+   fun:pango_cairo_fc_font_get_type
+   ...
+}
+{
    graphviz leak g_object newv
    Memcheck:Leak
    ...
@@ -72,6 +79,13 @@
    ...
 }
 {
+   graphviz leak pango ot info
+   Memcheck:Leak
+   ...
+   fun:pango_ot_info_get
+   ...
+}
+{
    graphviz leak pango coverage
    Memcheck:Leak
    ...
@@ -90,7 +104,7 @@
    fun:FT_Init_FreeType
 }
 {
-   <insert_a_suppression_name_here>
+   graphviz leak gvplugin
    Memcheck:Leak
    ...
    fun:gvplugin_install
@@ -98,6 +112,14 @@
    fun:dotneato_args_initialize
    fun:gvParseArgs
    ...
+}
+{
+   graphviz leak xml parsebuffer
+   Memcheck:Leak
+   ...
+   fun:XML_ParseBuffer
+   fun:FcConfigParseAndLoad
+   fun:FcConfigParseAndLoad
 }
 
 
