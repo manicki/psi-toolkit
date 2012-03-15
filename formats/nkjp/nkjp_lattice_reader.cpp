@@ -1,5 +1,12 @@
 #include "nkjp_lattice_reader.hpp"
 
+#include <cstring>
+
+#include <boost/foreach.hpp>
+#include <boost/property_tree/ptree.hpp>
+
+#include "xml_property_tree.hpp"
+
 #include "logging.hpp"
 
 
@@ -47,10 +54,25 @@ NKJPLatticeReader::Worker::Worker(
 
 void NKJPLatticeReader::Worker::doRun() {
     SET_LOGGING_LEVEL("DEBUG");
-    std::string line;
-    std::string input;
-    while (std::getline(inputStream_, line)) {
-        input += line + "\n";
+    XmlPropertyTree xpt(inputStream_);
+    BOOST_FOREACH(
+        boost::property_tree::ptree::value_type &vP,
+        xpt.get_child("teiCorpus.TEI.text.body")
+    ) {
+        if (strcmp(vP.first.data(), "p") == 0) {
+            BOOST_FOREACH(
+                boost::property_tree::ptree::value_type &vS,
+                vP.second.get_child("")
+            ) {
+                if (strcmp(vS.first.data(), "s") == 0) {
+                    BOOST_FOREACH(
+                        boost::property_tree::ptree::value_type &vSeg,
+                        vS.second.get_child("")
+                    ) {
+                        DEBUG(vSeg.second.get("fs.f.string", "BŁĄD"));
+                    }
+                }
+            }
+        }
     }
-    DEBUG(input);
 }
