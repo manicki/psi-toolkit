@@ -114,11 +114,9 @@
    ...
 }
 {
-   graphviz leak xml parsebuffer
+   graphviz leak fcconfig
    Memcheck:Leak
    ...
-   fun:XML_ParseBuffer
-   fun:FcConfigParseAndLoad
    fun:FcConfigParseAndLoad
 }
 
