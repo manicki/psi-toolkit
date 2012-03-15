@@ -22,8 +22,8 @@ PDFLatticeReader::Factory::~Factory() {
 }
 
 LatticeReader<std::istream>* PDFLatticeReader::Factory::doCreateLatticeReader(
-    const boost::program_options::variables_map&) {
-        // TODO implement program options
+    const boost::program_options::variables_map& /*options*/
+) {
     return new PDFLatticeReader();
 }
 
@@ -31,11 +31,6 @@ boost::program_options::options_description PDFLatticeReader::Factory::doOptions
     boost::program_options::options_description optionsDescription("Allowed options");
 
     optionsDescription.add_options()
-        ("line-by-line", "processes line by line")
-        ("whole-text",   "read the whole text")
-        ("paragraphs",   "paragraphs are delimited with double newlines")
-        ("discard-comments", "discards comments")
-        ("pass-through-comments", "marks comments as single markup")
         ;
 
     return optionsDescription;
@@ -49,19 +44,21 @@ boost::filesystem::path PDFLatticeReader::Factory::doGetFile() {
     return __FILE__;
 }
 
-PDFLatticeReader::Worker::Worker(PDFLatticeReader& processor,
-                                 std::istream& inputStream,
-                                 Lattice& lattice):
+PDFLatticeReader::Worker::Worker(
+    PDFLatticeReader& processor,
+    std::istream& inputStream,
+    Lattice& lattice
+) :
     ReaderWorker<std::istream>(inputStream, lattice),
     processor_(processor),
     textTags_(lattice_.getLayerTagManager().createTagCollectionFromList(
-                  boost::assign::list_of("frag")("pdf-reader"))) {
-}
+        boost::assign::list_of("frag")("pdf-reader")))
+{ }
 
 void PDFLatticeReader::Worker::doRun() {
     std::string line;
     std::string documentStr;
-    while (getline(inputStream_, line)) {
+    while (std::getline(inputStream_, line)) {
         documentStr += line + "\n";
     }
     gtk_init(NULL, NULL);
