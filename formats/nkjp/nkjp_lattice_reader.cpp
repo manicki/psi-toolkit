@@ -1,7 +1,9 @@
 #include "nkjp_lattice_reader.hpp"
 
 #include <cstring>
+#include <locale>
 
+#include <boost/assign/list_of.hpp>
 #include <boost/foreach.hpp>
 #include <boost/property_tree/ptree.hpp>
 
@@ -49,7 +51,10 @@ NKJPLatticeReader::Worker::Worker(
     Lattice& lattice
 ) :
     ReaderWorker<std::istream>(inputStream, lattice),
-    processor_(processor)
+    processor_(processor),
+    textTags_(lattice_.getLayerTagManager().createTagCollectionFromList(
+        boost::assign::list_of("token")("nkjp-reader")
+    ))
 { }
 
 void NKJPLatticeReader::Worker::doRun() {
@@ -69,10 +74,38 @@ void NKJPLatticeReader::Worker::doRun() {
                         boost::property_tree::ptree::value_type &vSeg,
                         vS.second.get_child("")
                     ) {
-                        DEBUG(vSeg.second.get("fs.f.string", "BŁĄD"));
+                        try {
+                            std::string segment(vSeg.second.get<std::string>("fs.f.string"));
+                            DEBUG(segment);
+                            appendSegmentToLattice_(segment);
+                        } catch (boost::property_tree::ptree_bad_data) {
+                            DEBUG("! bad data");
+                        } catch (boost::property_tree::ptree_bad_path) {
+                            DEBUG("! bad path");
+                        }
                     }
                 }
             }
         }
     }
+}
+
+void NKJPLatticeReader::Worker::appendSegmentToLattice_(std::string segment) {
+
+    //temporary solution for inserting spaces
+    std::locale loc;
+    if (isalpha(segment.at(0), loc)) {
+        Lattice::VertexDescriptor sPrevEnd = lattice_.getLastVertex();
+        lattice_.appendStringWithSymbols(" ");
+        Lattice::VertexDescriptor sNowEnd = lattice_.getLastVertex();
+        std::string blank(" ");
+        AnnotationItem sItem("B", blank);
+        lattice_.addEdge(sPrevEnd, sNowEnd, sItem, textTags_);
+    }
+
+    Lattice::VertexDescriptor prevEnd = lattice_.getLastVertex();
+    lattice_.appendStringWithSymbols(segment);
+    Lattice::VertexDescriptor nowEnd = lattice_.getLastVertex();
+    AnnotationItem item("seg", segment);
+    lattice_.addEdge(prevEnd, nowEnd, item, textTags_);
 }

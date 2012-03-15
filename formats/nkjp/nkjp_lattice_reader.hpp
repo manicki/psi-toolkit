@@ -37,6 +37,9 @@ private:
 
     private:
         Processor& processor_;
+        LayerTagCollection textTags_;
+
+        void appendSegmentToLattice_(std::string segment);
     };
 
     virtual ReaderWorker<std::istream>* doCreateReaderWorker(
