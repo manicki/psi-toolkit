@@ -119,6 +119,12 @@
    ...
    fun:FcConfigParseAndLoad
 }
+{
+   graphviz addr4 fcconfig
+   Memcheck:Addr4
+   ...
+   fun:FcConfigParseAndLoad
+}
 
 
 
