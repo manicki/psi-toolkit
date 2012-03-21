@@ -23,15 +23,19 @@ std::string NKJPLatticeReader::doInfo() {
 NKJPLatticeReader::Factory::~Factory() { }
 
 LatticeReader<std::istream>* NKJPLatticeReader::Factory::doCreateLatticeReader(
-    const boost::program_options::variables_map& /*options*/
+    const boost::program_options::variables_map& options
 ) {
-    return new NKJPLatticeReader();
+    return new NKJPLatticeReader(
+        options["layer"].as<std::string>()
+    );
 }
 
 boost::program_options::options_description NKJPLatticeReader::Factory::doOptionsHandled() {
     boost::program_options::options_description optionsDescription("Allowed options");
 
     optionsDescription.add_options()
+        ("layer", boost::program_options::value<std::string>()->default_value("morphosyntax"),
+            "specifies the annotation layer represented by the given NKJP file")
         ;
 
     return optionsDescription;
