@@ -2,12 +2,69 @@
 #define NKJP_LATTICE_READER_HDR
 
 
+#include <boost/fusion/include/adapt_struct.hpp>
+#include <boost/spirit/include/qi.hpp>
+
 #include "stream_lattice_reader.hpp"
 #include "lattice_reader_factory.hpp"
+
+
+namespace qi = boost::spirit::qi;
+
+
+struct NKJPMorphosyntaxCommentItem {
+    std::string form;
+    int beginning;
+    int length;
+};
+
+
+BOOST_FUSION_ADAPT_STRUCT(
+    NKJPMorphosyntaxCommentItem,
+    (std::string, form)
+    (int, beginning)
+    (int, length)
+)
+
+
+struct NKJPMorphosyntaxCommentGrammar : public qi::grammar<
+    std::string::const_iterator,
+    NKJPMorphosyntaxCommentItem()
+> {
+
+    NKJPMorphosyntaxCommentGrammar() : NKJPMorphosyntaxCommentGrammar::base_type(start) {
+
+        start
+            %= qi::lit(" ")
+            >> +(qi::char_ - ' ')
+            >> qi::lit(" [")
+            >> qi::int_
+            >> qi::lit(",")
+            >> qi::int_
+            >> qi::lit("] ")
+            ;
+
+    }
+
+    qi::rule<std::string::const_iterator, NKJPMorphosyntaxCommentItem()> start;
+
+};
+
 
 class NKJPLatticeReader : public StreamLatticeReader {
 
 public:
+
+    enum AnnotationLayer {
+        TEXT,
+        ANN_SEGMENTATION,
+        ANN_MORPHOSYNTAX,
+        ANN_SENSES,
+        ANN_WORDS,
+        ANN_NAMED,
+        ANN_GROUPS
+    };
+
     virtual std::string getFormatName();
 
     class Factory : public LatticeReaderFactory<std::istream> {
@@ -24,6 +81,33 @@ public:
         virtual boost::filesystem::path doGetFile();
     };
 
+    NKJPLatticeReader(
+        std::string layer
+    ) {
+        if (layer == "text") {
+            layer_ = TEXT;
+        } else if (layer == "segmentation") {
+            layer_ = ANN_SEGMENTATION;
+        } else if (layer == "morphosyntax") {
+            layer_ = ANN_MORPHOSYNTAX;
+        } else if (layer == "senses") {
+            layer_ = ANN_SENSES;
+        } else if (layer == "words") {
+            layer_ = ANN_WORDS;
+        } else if (layer == "named") {
+            layer_ = ANN_NAMED;
+        } else if (layer == "groups") {
+            layer_ = ANN_GROUPS;
+        } else {
+            throw PsiException(
+                "Unknown type of NKJP layer: " + layer + ". Use one of the following: " +
+                "text segmentation morphosyntax senses words named groups"
+            );
+        }
+    }
+
+    AnnotationLayer getLayer() { return layer_; }
+
 private:
     virtual std::string doInfo();
 
@@ -37,9 +121,13 @@ private:
 
     private:
         Processor& processor_;
-        LayerTagCollection textTags_;
 
-        void appendSegmentToLattice_(std::string segment);
+        LayerTagCollection getTags_(std::string mainTag);
+
+        Lattice::EdgeDescriptor appendSegmentToLattice_(
+            std::string segment,
+            bool insertSpace
+        );
     };
 
     virtual ReaderWorker<std::istream>* doCreateReaderWorker(
@@ -47,6 +135,8 @@ private:
 
         return new Worker(*this, inputStream, lattice);
     }
+
+    AnnotationLayer layer_;
 };
 
 #endif
