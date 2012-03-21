@@ -6,9 +6,9 @@
 #include <boost/assign/list_of.hpp>
 #include <boost/foreach.hpp>
 #include <boost/property_tree/ptree.hpp>
+#include <boost/property_tree/xml_parser.hpp>
 
 #include "string_frag.hpp"
-#include "xml_property_tree.hpp"
 
 #include "logging.hpp"
 
@@ -61,7 +61,9 @@ NKJPLatticeReader::Worker::Worker(
 
 void NKJPLatticeReader::Worker::doRun() {
     // SET_LOGGING_LEVEL("DEBUG");
-    XmlPropertyTree xpt(inputStream_);
+    boost::property_tree::ptree xpt;
+    boost::property_tree::read_xml(inputStream_, xpt);
+    int prevEnding = 0;
     BOOST_FOREACH(
         boost::property_tree::ptree::value_type &vP,
         xpt.get_child("teiCorpus.TEI.text.body")
@@ -81,9 +83,34 @@ void NKJPLatticeReader::Worker::doRun() {
                         vS.second.get_child("")
                     ) {
                         if (strcmp(vSeg.first.data(), "seg") == 0) {
+                            bool insertSpace = false;
                             try {
-                                std::string segment(vSeg.second.get<std::string>("fs.f.string"));
-                                Lattice::EdgeDescriptor segEdge = appendSegmentToLattice_(segment);
+                                std::string comment(
+                                    vSeg.second.get<std::string>("fs.<xmlcomment>")
+                                );
+                                NKJPMorphosyntaxCommentGrammar grammar;
+                                NKJPMorphosyntaxCommentItem item;
+                                std::string::const_iterator begin = comment.begin();
+                                std::string::const_iterator end = comment.end();
+                                if (parse(begin, end, grammar, item)) {
+                                    if (item.beginning - prevEnding > 0) {
+                                        insertSpace = true;
+                                    } else {
+                                        insertSpace = false;
+                                    }
+                                    prevEnding = item.beginning + item.length;
+                                } else {
+                                    insertSpace = false;
+                                }
+                            } catch (boost::property_tree::ptree_error) {
+                                insertSpace = false;
+                            }
+                            try {
+                                std::string segment(
+                                    vSeg.second.get<std::string>("fs.f.string")
+                                );
+                                Lattice::EdgeDescriptor segEdge
+                                    = appendSegmentToLattice_(segment, insertSpace);
                                 sBuilder.addEdge(segEdge);
                             } catch (boost::property_tree::ptree_error) {
                                 throw PsiException("nkjp-reader: input file error");
@@ -129,11 +156,11 @@ LayerTagCollection NKJPLatticeReader::Worker::getTags_(std::string mainTag) {
 }
 
 
-Lattice::EdgeDescriptor NKJPLatticeReader::Worker::appendSegmentToLattice_(std::string segment) {
-
-    //temporary solution for inserting spaces
-    std::locale loc;
-    if (isalpha(segment.at(0), loc)) {
+Lattice::EdgeDescriptor NKJPLatticeReader::Worker::appendSegmentToLattice_(
+    std::string segment,
+    bool insertSpace
+) {
+    if (insertSpace) {
         Lattice::VertexDescriptor sFrom = lattice_.getLastVertex();
         lattice_.appendStringWithSymbols(" ");
         Lattice::VertexDescriptor sTo = lattice_.getLastVertex();

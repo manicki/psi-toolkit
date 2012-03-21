@@ -2,8 +2,53 @@
 #define NKJP_LATTICE_READER_HDR
 
 
+#include <boost/fusion/include/adapt_struct.hpp>
+#include <boost/spirit/include/qi.hpp>
+
 #include "stream_lattice_reader.hpp"
 #include "lattice_reader_factory.hpp"
+
+
+namespace qi = boost::spirit::qi;
+
+
+struct NKJPMorphosyntaxCommentItem {
+    std::string form;
+    int beginning;
+    int length;
+};
+
+
+BOOST_FUSION_ADAPT_STRUCT(
+    NKJPMorphosyntaxCommentItem,
+    (std::string, form)
+    (int, beginning)
+    (int, length)
+)
+
+
+struct NKJPMorphosyntaxCommentGrammar : public qi::grammar<
+    std::string::const_iterator,
+    NKJPMorphosyntaxCommentItem()
+> {
+
+    NKJPMorphosyntaxCommentGrammar() : NKJPMorphosyntaxCommentGrammar::base_type(start) {
+
+        start
+            %= qi::lit(" ")
+            >> +(qi::char_ - ' ')
+            >> qi::lit(" [")
+            >> qi::int_
+            >> qi::lit(",")
+            >> qi::int_
+            >> qi::lit("] ")
+            ;
+
+    }
+
+    qi::rule<std::string::const_iterator, NKJPMorphosyntaxCommentItem()> start;
+
+};
 
 
 class NKJPLatticeReader : public StreamLatticeReader {
@@ -79,7 +124,10 @@ private:
 
         LayerTagCollection getTags_(std::string mainTag);
 
-        Lattice::EdgeDescriptor appendSegmentToLattice_(std::string segment);
+        Lattice::EdgeDescriptor appendSegmentToLattice_(
+            std::string segment,
+            bool insertSpace
+        );
     };
 
     virtual ReaderWorker<std::istream>* doCreateReaderWorker(
