@@ -5,6 +5,7 @@
 #include "stream_lattice_reader.hpp"
 #include "lattice_reader_factory.hpp"
 
+
 class NKJPLatticeReader : public StreamLatticeReader {
 
 public:
@@ -75,9 +76,10 @@ private:
 
     private:
         Processor& processor_;
-        LayerTagCollection textTags_;
 
-        void appendSegmentToLattice_(std::string segment);
+        LayerTagCollection getTags_(std::string mainTag);
+
+        Lattice::EdgeDescriptor appendSegmentToLattice_(std::string segment);
     };
 
     virtual ReaderWorker<std::istream>* doCreateReaderWorker(
