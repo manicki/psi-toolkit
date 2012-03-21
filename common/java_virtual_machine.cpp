@@ -10,16 +10,32 @@ std::string JavaVirtualMachine::javaClassPath =
         boost::filesystem::path("morfologik"),
         boost::filesystem::path("tools/lemmatizers/morfologik"),
         boost::filesystem::path("j")).string()
-    + "/morfologik-stemming-1.5.0.jar";
+    + "/morfologik-stemming-1.5.2.jar:"
+    + Configurator::getInstance().getFinalPath(
+        boost::filesystem::path("morfologik"),
+        boost::filesystem::path("tools/lemmatizers/morfologik"),
+        boost::filesystem::path("j")).string()
+    + "/morfologik-polish-1.5.2.jar:"
+    + Configurator::getInstance().getFinalPath(
+        boost::filesystem::path("morfologik"),
+        boost::filesystem::path("tools/lemmatizers/morfologik"),
+        boost::filesystem::path("j")).string()
+    + "/morfologik-fsa-1.5.2.jar:"
+    + Configurator::getInstance().getFinalPath(
+        boost::filesystem::path("morfologik"),
+        boost::filesystem::path("tools/lemmatizers/morfologik"),
+        boost::filesystem::path("j")).string()
+    + "/hppc-0.4.0.jar";
 
 std::string JavaVirtualMachine::javaLibraryPath = "";
 
 JavaVirtualMachine* JavaVirtualMachine::jvmInstance = NULL;
 
 JavaVirtualMachine* JavaVirtualMachine::Instance () {
-  if (!jvmInstance) {
-    jvmInstance = new JavaVirtualMachine();
-  }
+    if (!jvmInstance) {
+        jvmInstance = new JavaVirtualMachine();
+    }
+
     return jvmInstance;
 }
 
@@ -46,7 +62,7 @@ JNIEnv* JavaVirtualMachine::create(JavaVM ** jvm) {
 
     int result = JNI_CreateJavaVM(jvm, (void**)&env, &vm_args);
     if (result < 0) {
-        throw JavaVirtualMachineException("Unable to Launch JVM\n");
+        throw JavaVirtualMachineException("Unable to Launch JVM");
     }
     else {
         inited = true;
