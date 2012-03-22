@@ -60,6 +60,41 @@ NKJPLatticeReader::Worker::Worker(
 { }
 
 void NKJPLatticeReader::Worker::doRun() {
+
+    switch (processor_.getLayer()) {
+        case TEXT :
+
+        // TODO
+
+        break;
+        case ANN_SEGMENTATION :
+
+        // TODO
+
+        break;
+        case ANN_SENSES :
+
+        // TODO
+
+        break;
+        case ANN_WORDS :
+
+        // TODO
+
+        break;
+        case ANN_NAMED :
+
+        // TODO
+
+        break;
+        case ANN_GROUPS :
+
+        // TODO
+
+        break;
+        case ANN_MORPHOSYNTAX :
+        default:
+
     // SET_LOGGING_LEVEL("DEBUG");
     boost::property_tree::ptree xpt;
     boost::property_tree::read_xml(inputStream_, xpt);
@@ -183,6 +218,9 @@ void NKJPLatticeReader::Worker::doRun() {
             pBuilder.build()
         );
     }
+
+    } // end of switch statement
+
 }
 
 

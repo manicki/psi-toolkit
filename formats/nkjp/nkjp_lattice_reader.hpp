@@ -120,7 +120,7 @@ private:
         virtual void doRun();
 
     private:
-        Processor& processor_;
+        NKJPLatticeReader& processor_;
 
         LayerTagCollection getTags_(std::string mainTag);
 
