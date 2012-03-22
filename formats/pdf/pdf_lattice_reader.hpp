@@ -38,7 +38,7 @@ private:
     private:
         void appendParagraphToLattice_(std::string paragraph);
 
-        Processor& processor_;
+        PDFLatticeReader& processor_;
 
         LayerTagCollection textTags_;
     };
