@@ -68,7 +68,11 @@ void NKJPLatticeReader::Worker::doRun() {
         boost::property_tree::ptree::value_type &vP,
         xpt.get_child("teiCorpus.TEI.text.body")
     ) {
-        if (strcmp(vP.first.data(), "p") == 0) {
+        if (
+            strcmp(vP.first.data(), "p") == 0 ||
+            strcmp(vP.first.data(), "ab") == 0 ||
+            strcmp(vP.first.data(), "u") == 0
+        ) {
             Lattice::VertexDescriptor pBegin = lattice_.getLastVertex();
             Lattice::EdgeSequence::Builder pBuilder(lattice_);
             BOOST_FOREACH(
@@ -134,7 +138,7 @@ void NKJPLatticeReader::Worker::doRun() {
             }
             Lattice::VertexDescriptor pEnd = lattice_.getLastVertex();
             AnnotationItem pItem(
-                "p",
+                vP.first.data(),
                 StringFrag(lattice_.getAllText(), pBegin, pEnd-pBegin)
             );
             lattice_.addEdge(
