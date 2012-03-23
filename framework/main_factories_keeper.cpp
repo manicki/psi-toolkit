@@ -7,6 +7,7 @@
 #include "psi_lattice_reader.hpp"
 #include "psi_lattice_writer.hpp"
 #include "simple_lattice_writer.hpp"
+#include "json_lattice_writer.hpp"
 #include "dot_lattice_writer.hpp"
 #include "apertium_lattice_reader.hpp"
 #include "tp_tokenizer.hpp"
@@ -46,6 +47,7 @@ MainFactoriesKeeper::MainFactoriesKeeper() {
     keeper_.takeProcessorFactory(new PsiLatticeReader::Factory());
     keeper_.takeProcessorFactory(new PsiLatticeWriter::Factory());
     keeper_.takeProcessorFactory(new SimpleLatticeWriter::Factory());
+    keeper_.takeProcessorFactory(new JSONLatticeWriter::Factory());
     keeper_.takeProcessorFactory(new DotLatticeWriter::Factory());
     keeper_.takeProcessorFactory(new ApertiumLatticeReader::Factory());
     keeper_.takeProcessorFactory(new TpTokenizer::Factory());
