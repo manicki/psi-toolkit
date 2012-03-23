@@ -214,7 +214,7 @@ void NKJPLatticeReader::Worker::doRun() {
                                                     "symbol.<xmlattr>.value")
                                             )
                                         );
-                                        Lattice::EdgeDescriptor ctagEdge = lattice_.addEdge(
+                                        lattice_.addEdge(
                                             segBegin,
                                             segEnd,
                                             ctagItem,
@@ -242,7 +242,7 @@ void NKJPLatticeReader::Worker::doRun() {
                                                 vFF.second.get<std::string>(
                                                     "symbol.<xmlattr>.value")
                                             );
-                                            Lattice::EdgeDescriptor msdEdge = lattice_.addEdge(
+                                            lattice_.addEdge(
                                                 segBegin,
                                                 segEnd,
                                                 msdItem,
