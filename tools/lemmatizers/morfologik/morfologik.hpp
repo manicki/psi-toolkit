@@ -47,6 +47,8 @@ public:
      */
     void setLevel(int);
 
+    void setDictionary(const std::string &);
+
     /**
      * Stems word using Morfologik tool storing lexical information.
      * @param word
@@ -73,6 +75,9 @@ private:
 
     AnnotationItemManager * annotationManager;
     int level;
+    std::string dictionary_;
+
+    static const std::vector<std::string> DICTIONARIES;
 
     void stemsOnLemmaLevel(const std::string &, LemmatizerOutputIterator &);
     void stemsOnLexemeLevel(const std::string &, LemmatizerOutputIterator &);
@@ -117,6 +122,11 @@ private:
     jclass clsString;
     jmethodID midStringToString;
     void initializeString();
+
+    jclass enmDictionary;
+    jfieldID fidDictionary;
+    jobject objDictionary;
+    void initializeDictionary();
 
     const char * getStemByJNI(jobject);
     const char * getTagsByJNI(jobject);

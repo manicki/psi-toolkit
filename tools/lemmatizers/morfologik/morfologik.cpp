@@ -5,20 +5,24 @@
 #include <iostream>
 #include <boost/algorithm/string.hpp>
 #include <boost/algorithm/string/join.hpp>
+#include <boost/assign.hpp>
 
 std::string Morfologik::tagSeparator = "+";
 
-Morfologik::Morfologik(const boost::program_options::variables_map& options)
-    : annotationManager(NULL), level(3)
-{
-    if (options.count("level") > 0) {
-        setLevel(options["level"].as<int>());
-    }
-    jenv = NULL;
+const std::vector<std::string> Morfologik::DICTIONARIES = boost::assign::list_of
+    ("MORFOLOGIK")/*("MORFEUSZ")*/("COMBINED");
 
+Morfologik::Morfologik(const boost::program_options::variables_map& options)
+    : annotationManager(NULL), level(3), dictionary_("MORFOLOGIK")
+{
+    if (options.count("level") > 0) setLevel(options["level"].as<int>());
+    if (options.count("dict") > 0) setDictionary(options["dict"].as<std::string>());
+
+    jenv = NULL;
     JavaVirtualMachine *jvm = JavaVirtualMachine::Instance();
     jenv = jvm->getENV();
 
+    initializeDictionary();
     initializePolishStemmer();
     initializeList();
     initializeWordData();
@@ -35,7 +39,6 @@ boost::filesystem::path Morfologik::getFile() {
 
 std::list<std::string> Morfologik::getLayerTags() {
     std::list<std::string> layerTags;
-
     layerTags.push_back("morfologik");
     layerTags.push_back("morfologik-tagset");
 
@@ -49,6 +52,16 @@ std::string Morfologik::getLanguage() const {
 void Morfologik::setLevel(int lvl) {
     if (0 <= lvl && lvl <= 3) {
         level = lvl;
+    }
+}
+
+void Morfologik::setDictionary(const std::string& dict) {
+    if (std::find(DICTIONARIES.begin(), DICTIONARIES.end(), dict) != DICTIONARIES.end()) {
+        dictionary_ = dict;
+    }
+    else {
+        ERROR("An unknown dictionary " << dict << ", thereby dictionary is still set to "
+            << dictionary_);
     }
 }
 
@@ -74,9 +87,15 @@ void Morfologik::lemmatize(const std::string & word,
 boost::program_options::options_description Morfologik::optionsHandled() {
     boost::program_options::options_description desc("Allowed options");
 
+    std::string dictionaryDescription = "set dictionary, one of "
+        + boost::algorithm::join(DICTIONARIES, ", ");
+
     desc.add_options()
         ("level", boost::program_options::value<int>()->default_value(3),
-            "set word processing level 0-3");
+            "set word processing level 0-3")
+        ("dict", boost::program_options::value<std::string>()
+            ->default_value(DICTIONARIES[0]), dictionaryDescription.c_str())
+    ;
 
     return desc;
 }
@@ -317,6 +336,26 @@ const char* Morfologik::getTagsByJNI(jobject objWordData) {
     return ptags;
 }
 
+void Morfologik::initializeDictionary() {
+    enmDictionary = NULL;
+    fidDictionary = NULL;
+    objDictionary = NULL;
+
+    enmDictionary = jenv->FindClass("morfologik/stemming/PolishStemmer$DICTIONARY");
+
+    if (enmDictionary != NULL) {
+        fidDictionary = jenv->GetStaticFieldID(enmDictionary, dictionary_.c_str(),
+            "Lmorfologik/stemming/PolishStemmer$DICTIONARY;");
+        if (jenv->ExceptionCheck()) jenv->ExceptionDescribe();
+
+        objDictionary = jenv->GetStaticObjectField(enmDictionary, fidDictionary);
+        if (jenv->ExceptionCheck()) jenv->ExceptionDescribe();
+    }
+    else {
+        ERROR("The DICTIONARY enum has been not found");
+    }
+}
+
 void Morfologik::initializePolishStemmer() {
     clsPolishStemmer = NULL;
     objPolishStemmer = NULL;
@@ -326,7 +365,8 @@ void Morfologik::initializePolishStemmer() {
     clsPolishStemmer = jenv->FindClass("morfologik/stemming/PolishStemmer");
 
     if (clsPolishStemmer != NULL) {
-        midPolishStemmerConstructor = jenv->GetMethodID(clsPolishStemmer, "<init>", "()V");
+        midPolishStemmerConstructor = jenv->GetMethodID
+            (clsPolishStemmer, "<init>", "(Lmorfologik/stemming/PolishStemmer$DICTIONARY;)V");
         midPolishStemmerLookup = jenv->GetMethodID
             (clsPolishStemmer, "lookup", "(Ljava/lang/CharSequence;)Ljava/util/List;");
     }
@@ -334,7 +374,9 @@ void Morfologik::initializePolishStemmer() {
         ERROR("The PolishStemmer class from morfologik's jar file has been not found");
     }
 
-    objPolishStemmer = jenv->NewObject(clsPolishStemmer, midPolishStemmerConstructor, NULL);
+    objPolishStemmer = jenv->NewObject
+        (clsPolishStemmer, midPolishStemmerConstructor, objDictionary);
+    if (jenv->ExceptionCheck()) jenv->ExceptionDescribe();
 }
 
 void Morfologik::initializeList() {
