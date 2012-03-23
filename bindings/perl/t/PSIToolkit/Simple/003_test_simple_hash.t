@@ -24,7 +24,7 @@ binmode(STDERR, ":utf8");
 
 _test_run_pipe_run_for_perl_with_args_tokenizer();
 # @ignore (compilation with java is needed)
-_test_run_pipe_run_for_perl_with_args_morfologik();
+#_test_run_pipe_run_for_perl_with_args_morfologik();
 
 END:
 done_testing();
