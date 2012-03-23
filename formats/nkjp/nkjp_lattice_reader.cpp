@@ -69,6 +69,8 @@ void NKJPLatticeReader::Worker::doRun() {
     switch (processor_.getLayer()) {
         case TEXT :
 
+    {
+
     BOOST_FOREACH(
         boost::property_tree::ptree::value_type &vDiv,
         xpt.get_child("teiCorpus.TEI.text.body")
@@ -98,9 +100,14 @@ void NKJPLatticeReader::Worker::doRun() {
         );
     }
 
+    } // end of case block (text)
+
         break;
         case ANN_SEGMENTATION :
 
+    {
+
+    int prevEnding = 0;
     BOOST_FOREACH(
         boost::property_tree::ptree::value_type &vP,
         xpt.get_child("teiCorpus.TEI.text.body")
@@ -125,10 +132,28 @@ void NKJPLatticeReader::Worker::doRun() {
                 vS.second.get_child("")
             ) {
                 if (strcmp(vSeg.first.data(), "seg") == 0) {
-                    Lattice::VertexDescriptor segBegin = lattice_.getLastVertex();
-                    lattice_.appendStringWithSymbols(segText);
-                    Lattice::VertexDescriptor segEnd = lattice_.getLastVertex();
-                    std::string abText(vSeg.second.get<std::string>(""));
+
+                    bool insertSpace = false;
+                    try {
+                        std::string corresp(vSeg.second.get<std::string>("<xmlattr>.corresp"));
+                        NKJPSegmentationCorrespGrammar grammar;
+                        NKJPSegmentationCorrespItem item;
+                        std::string::const_iterator begin = corresp.begin();
+                        std::string::const_iterator end = corresp.end();
+                        if (parse(begin, end, grammar, item)) {
+                            if (item.beginning - prevEnding > 0) {
+                                insertSpace = true;
+                            } else {
+                                insertSpace = false;
+                            }
+                            prevEnding = item.beginning + item.length;
+                        } else {
+                            insertSpace = false;
+                        }
+                    } catch (boost::property_tree::ptree_error) {
+                        insertSpace = false;
+                    }
+
                     AnnotationItem segItem(
                         vSeg.second.get<std::string>("<xmlattr>.xml:id"),
                         StringFrag(segText)
@@ -137,14 +162,11 @@ void NKJPLatticeReader::Worker::doRun() {
                     if (!npsValue.empty()) {
                         lattice_.getAnnotationItemManager().setValue(segItem, "nps", npsValue);
                     }
-                    Lattice::EdgeDescriptor segEdge = lattice_.addEdge(
-                        segBegin,
-                        segEnd,
-                        segItem,
-                        getTags_("token")
-                    );
+                    Lattice::EdgeDescriptor segEdge
+                        = appendSegmentToLattice_(segText, segItem, "token", insertSpace);
                     sBuilder.addEdge(segEdge);
-                    sEnd = segEnd;
+                    sEnd = lattice_.getEdgeTarget(segEdge);
+
                 } else if (strcmp(vSeg.first.data(), "<xmlcomment>") == 0) {
                     segText = boost::algorithm::trim_copy(vSeg.second.get<std::string>(""));
                 }
@@ -176,6 +198,8 @@ void NKJPLatticeReader::Worker::doRun() {
         );
     }
 
+    } // end of case block (segmentation)
+
         break;
         case ANN_SENSES :
 
@@ -199,6 +223,8 @@ void NKJPLatticeReader::Worker::doRun() {
         break;
         case ANN_MORPHOSYNTAX :
         default:
+
+    {
 
     int prevEnding = 0;
     BOOST_FOREACH(
@@ -427,6 +453,8 @@ void NKJPLatticeReader::Worker::doRun() {
             pBuilder.build()
         );
     }
+
+    } // end of case block (morphosyntax/default)
 
     } // end of switch statement
 
