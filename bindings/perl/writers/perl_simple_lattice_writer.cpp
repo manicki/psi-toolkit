@@ -56,6 +56,7 @@ boost::program_options::options_description PerlSimpleLatticeWriter::Factory::do
     return optionsDescription;
 }
 
+
 std::string PerlSimpleLatticeWriter::Factory::doGetName() {
     return "perl-simple-writer";
 }
@@ -64,21 +65,8 @@ boost::filesystem::path PerlSimpleLatticeWriter::Factory::doGetFile() {
     return __FILE__;
 }
 
-LatticeWriter<AbstractSimpleDataLatticeWriterOutput>* PerlSimpleLatticeWriter::Factory::createLatticeWriter(
-           bool linear,
-           bool noAlts,
-           bool withBlank,
-           std::string basicTag,
-           std::set<std::string> higherOrderTags,
-           bool withArgs ) {
-
-    return new PerlSimpleLatticeWriter(
-           linear,
-           noAlts,
-           withBlank,
-           basicTag,
-           higherOrderTags,
-           withArgs );
+std::string PerlSimpleLatticeWriter::doInfo() {
+    return "Perl simple writer";
 }
 
 PerlSimpleLatticeWriter::Worker::Worker(PerlSimpleLatticeWriter & processor,
@@ -88,8 +76,29 @@ PerlSimpleLatticeWriter::Worker::Worker(PerlSimpleLatticeWriter & processor,
     processor_(processor) {
 }
 
-std::string PerlSimpleLatticeWriter::doInfo() {
-    return "Perl simple writer";
+void PerlSimpleLatticeWriter::Worker::doRun() {
+
+    PerlSimpleLatticeWriterOutputIterator outputIterator(
+                                                         getOutputStream(),
+                                                         processor_.isWithArgs()
+        );
+
+    std::vector<std::string> handledTags;
+    BOOST_FOREACH(std::string higherOrderTag, processor_.getHigherOrderTags()) {
+        handledTags.push_back(higherOrderTag);
+    }
+
+    LatticeIterWriter writer(
+        lattice_,
+        outputIterator,
+        processor_.isLinear(),
+        processor_.isNoAlts(),
+        processor_.isWithBlank(),
+        processor_.getBasicTag(),
+        handledTags
+    );
+
+    writer.run();
 }
 
 PerlSimpleLatticeWriter::Worker::~Worker() {

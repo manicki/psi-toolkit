@@ -16,10 +16,10 @@ PerlLatticeWriterOutput::PerlLatticeWriterOutput(Sink &arrayPointer) {
 
 void PerlLatticeWriterOutput::push(const std::string & textElement) {
     SV * element_sv = newSVpv(textElement.c_str(), 0);
-    av_push(getPerlCurrentArrayPointer_(), element_sv);
+    av_push( currentArrayPointer_, element_sv);
 }
 
-void PerlLatticeWriterOutput::pushToCurrentArrayPointer_(
+void PerlLatticeWriterOutput::push(
      const AnnotationItem & element,
      AnnotationItemManager * latticeAnnotationItemManager) {
 
@@ -60,9 +60,12 @@ void PerlLatticeWriterOutput::openNewSubArray() {
     currentArrayPointer_ = newAV();
 }
 
+void PerlLatticeWriterOutput::closeSubArray() {
+    closeSubArray_(false);
+}
 
-ArrayPointer PerlLatticeWriterOutput::createNewArrayPointer_() {
-    return newAV();
+void PerlLatticeWriterOutput::closeSubArrayWithFlattenOneElement() {
+    closeSubArray_(true);
 }
 
 void PerlLatticeWriterOutput::closeSubArray_(bool flattenOneElement) {

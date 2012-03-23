@@ -32,19 +32,9 @@ public:
 
         virtual boost::program_options::options_description doOptionsHandled();
 
-    class Factory : public AbstractSimpleDataLatticeWriter::Factory {
-    protected:
         virtual std::string doGetName();
 
         virtual boost::filesystem::path doGetFile();
-
-        virtual LatticeWriter<AbstractSimpleDataLatticeWriterOutput>* createLatticeWriter(
-           bool linear,
-           bool noAlts,
-           bool withBlank,
-           std::string basicTag,
-           std::set<std::string> higherOrderTags,
-           bool withArgs );
     };
 
     PerlSimpleLatticeWriter(
@@ -54,17 +44,40 @@ public:
         std::string basicTag,
         std::set<std::string> higherOrderTags,
         bool withArgs
-                            ) : AbstractSimpleDataLatticeWriter(
-                                  linear,
-                                  noAlts,
-                                  withBlank,
-                                  basicTag,
-                                  higherOrderTags,
-                                  withArgs
-                              )
+    ) :
+        linear_(linear),
+        noAlts_(noAlts),
+        withBlank_(withBlank),
+        basicTag_(basicTag),
+        higherOrderTags_(higherOrderTags),
+        withArgs_(withArgs)
     { }
 
-protected:
+    bool isLinear() const {
+        return linear_;
+    }
+
+    bool isNoAlts() const {
+        return noAlts_;
+    }
+
+    bool isWithBlank() const {
+        return withBlank_;
+    }
+
+    bool isWithArgs() const {
+        return withArgs_;
+    }
+
+    std::string getBasicTag() const {
+        return basicTag_;
+    }
+
+    std::set<std::string> getHigherOrderTags() const {
+        return higherOrderTags_;
+    }
+
+private:
     virtual std::string doInfo();
 
     class Worker : public WriterWorker<Sink> {

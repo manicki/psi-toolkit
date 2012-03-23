@@ -1,7 +1,12 @@
 #ifndef PERL_LATTICE_WRITER_OUTPUT_HDR
 #define PERL_LATTICE_WRITER_OUTPUT_HDR
 
-#include "abstract_simple_data_lattice_writer_output.hpp"
+
+#include <string>
+#include "config.hpp"
+#include  <stack>
+#include "annotation_item.hpp"
+#include "annotation_item_manager.hpp"
 
 #if HAVE_PERL_BINDINGS
 
@@ -11,19 +16,19 @@
 
 typedef AV * Sink;
 
-class PerlLatticeWriterOutput : public AbstractSimpleDataLatticeWriterOutput{
+class PerlLatticeWriterOutput {
 public:
     PerlLatticeWriterOutput(Sink & arrayPointer);
 
     void push(const std::string & textElement);
     void push(const AnnotationItem & element,
               AnnotationItemManager * latticeAnnotationItemManager);
-    virtual void pushToArrayPointer_(ArrayPointer arrayPointer, ReferencePointer what);
 
-    virtual long getCurrentArrayLength_() {
-        long arrayLength = av_len(getPerlCurrentArrayPointer_()) + 1;
-        return arrayLength;
-    }
+    void openNewSubArray();
+    void closeSubArray();
+    void closeSubArrayWithFlattenOneElement();
+
+private:
 
     SV * getCurrentArrayReference_();
     void closeSubArray_(bool flattenOneElement);
