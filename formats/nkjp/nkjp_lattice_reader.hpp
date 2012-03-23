@@ -127,7 +127,8 @@ private:
         Lattice::EdgeDescriptor appendSegmentToLattice_(
             std::string segment,
             AnnotationItem item,
-            bool insertSpace
+            std::string mainTag,
+            bool insertSpace = false
         );
     };
 
