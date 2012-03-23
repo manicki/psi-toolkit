@@ -28,13 +28,12 @@ _start_simple_json_test();
 _start_json_test_with_polish_letters();
 _start_json_test_with_simple_tokenized_hash();
 
-#_start_json_test_with_alternatives();
+_start_json_test_with_alternatives();
 
-# @todo do sprawdzenia
+_start_json_test_nasty_examples();
+
 # @ignore (compilation with java is needed)
 #_start_json_test_with_morfologik_hash();
-
-# @todo json unusual(empty string)
 
 END:
 done_testing();
@@ -44,6 +43,7 @@ done_testing();
 # Helper functions
 
 sub _start_simple_json_test {
+    _run_json_test("tp-tokenizer --lang pl", "ą");
     _run_json_test("tp-tokenizer --lang pl", "Ala ma kota");
     _run_json_test("tp-tokenizer --lang pl", "Ala ma \" \\ kota");
 
@@ -62,6 +62,11 @@ sub _start_json_test_with_simple_tokenized_hash {
 
 sub _start_json_test_with_alternatives {
     _run_json_test("tp-tokenizer --lang pl", "ąż ółń", "--tag symbol --spec token");
+}
+
+sub _start_json_test_nasty_examples {
+    _run_json_test("tp-tokenizer --lang pl", "");
+    _run_json_test("tp-tokenizer --lang pl", "", "--tag symbol --spec token");
 }
 
 sub _start_json_test_with_morfologik_hash {

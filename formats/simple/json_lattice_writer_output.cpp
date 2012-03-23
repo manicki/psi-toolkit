@@ -17,33 +17,44 @@ JSONLatticeWriterOutput::JSONLatticeWriterOutput(std::ostream & outputStream)
 {
     latticeAnnotationItemManager_ =  NULL;
 
-    currentArrayPointer_ = new std::vector<std::string>();
-    openNewSubArray();
+    numberOfMainElements_ = 0;
+    currentArrayPointer_ = NULL;
+
+    outputStream_ << "[";
 }
 
 
 JSONLatticeWriterOutput::~JSONLatticeWriterOutput() {
-    closeSubArray();
+    outputStream_ << "]\n";
 }
 
 
 void JSONLatticeWriterOutput::push(const std::string & textElement) {
     std::string jsonStringElement;
     createEscapedJSONString_(textElement, jsonStringElement);
-    currentArrayPointer_->push_back(jsonStringElement);
+
+    pushTextElementToOutput_(jsonStringElement);
+}
+
+void JSONLatticeWriterOutput::pushTextElementToOutput_(const std::string & textElement) {
+    if (currentArrayPointer_) {
+        currentArrayPointer_->push_back(textElement);
+    } else {
+        printElementToMainOutput_(textElement);
+    }
 }
 
 void JSONLatticeWriterOutput::push(
-     const AnnotationItem & element,
-     AnnotationItemManager * latticeAnnotationItemManager) {
+                                   const AnnotationItem & element,
+                                   AnnotationItemManager * latticeAnnotationItemManager) {
 
     std::stringstream temporaryStream;
 
-    temporaryStream << "{\n";
+    temporaryStream << "{";
     printHashValueToTemporaryString_(temporaryStream, "category", element.getCategory());
-    temporaryStream << ",\n";
+    temporaryStream << ",";
     printHashValueToTemporaryString_(temporaryStream, "text", element.getText());
-    temporaryStream << ",\n";
+    temporaryStream << ",";
 
     temporaryStream << "\"values\" : {";
     std::list< std::pair<std::string, std::string> > values =
@@ -60,15 +71,15 @@ void JSONLatticeWriterOutput::push(
 
         printHashValueToTemporaryString_(temporaryStream, currentValue.first, currentValue.second);
     }
-    temporaryStream << "}\n";
+    temporaryStream << "}";
 
-    temporaryStream << "}\n";
+    temporaryStream << "}";
 
-    currentArrayPointer_->push_back(temporaryStream.str());
+    pushTextElementToOutput_(temporaryStream.str());
 }
 
 void JSONLatticeWriterOutput::printHashValueToTemporaryString_(
-    std::stringstream & outputStream, const std::string & key, const std::string & value) {
+                                                               std::stringstream & outputStream, const std::string & key, const std::string & value) {
 
     std::string escapedKey;
     createEscapedJSONString_(key, escapedKey);
@@ -79,7 +90,10 @@ void JSONLatticeWriterOutput::printHashValueToTemporaryString_(
 }
 
 void JSONLatticeWriterOutput::openNewSubArray() {
-    arraysStack_.push(currentArrayPointer_);
+    if (currentArrayPointer_) {
+        arraysStack_.push(currentArrayPointer_);
+    }
+
     currentArrayPointer_ = new std::vector<std::string>();
 }
 
@@ -92,6 +106,10 @@ void JSONLatticeWriterOutput::closeSubArrayWithFlattenOneElement() {
 }
 
 void JSONLatticeWriterOutput::closeSubArray_(bool flattenOneElement) {
+    if ( !currentArrayPointer_) {
+        return;
+    }
+
     if ( !arraysStack_.empty() ) {
 
         std::vector<std::string> * parentArrayPointer = arraysStack_.top();
@@ -99,38 +117,69 @@ void JSONLatticeWriterOutput::closeSubArray_(bool flattenOneElement) {
 
         if ( !isCurrentArrayEmpty_()){
 
-            if (flattenOneElement) {
-                std::string elementToPrint;
-                if (tryToFlattenOneElementCurrentArray(elementToPrint)) {
-                    parentArrayPointer->push_back(elementToPrint);
-                } else {
-                    printCurrentArrayToOutput_();
-                }
-            } else {
-                printCurrentArrayToOutput_();
-            }
+            std::string elementToPrint;
+            printCurrentArrayToStringWithFlatten_(elementToPrint, flattenOneElement);
 
+            if(!elementToPrint.empty()) {
+                parentArrayPointer->push_back(elementToPrint);
+            }
         }
 
+        delete currentArrayPointer_;
         currentArrayPointer_ = parentArrayPointer;
+    } else {
+
+        if (currentArrayPointer_ && currentArrayPointer_->size()) {
+            std::string elementToPrint;
+            printCurrentArrayToStringWithFlatten_(elementToPrint, flattenOneElement);
+            printElementToMainOutput_(elementToPrint);
+        }
+
+        delete currentArrayPointer_;
+        currentArrayPointer_ = NULL;
     }
 }
 
-void JSONLatticeWriterOutput::printCurrentArrayToOutput_() {
-
-    outputStream_ << "[\n";
-
-    bool first = true;
-    BOOST_FOREACH(std::string currentValue, *currentArrayPointer_) {
-        if (!first) {
-            outputStream_ << ",\n";
-        } else {
-            first = false;
-        }
-
-        outputStream_ << currentValue;
+void JSONLatticeWriterOutput::printElementToMainOutput_(const std::string & textElement) {
+    if (numberOfMainElements_) {
+        outputStream_ << "," << textElement;
+    } else {
+        outputStream_ << textElement;
     }
-    outputStream_ << "\n]\n";
+
+    ++numberOfMainElements_;
+}
+
+void JSONLatticeWriterOutput::printCurrentArrayToStringWithFlatten_(std::string & elementToPrint, bool flattenOneElement) {
+    if (flattenOneElement) {
+        if ( ! tryToFlattenOneElementCurrentArray(elementToPrint)) {
+            printCurrentArrayToString_(elementToPrint);
+        }
+    } else {
+        printCurrentArrayToString_(elementToPrint);
+    }
+}
+
+void JSONLatticeWriterOutput::printCurrentArrayToString_(std::string & output) {
+
+    if (currentArrayPointer_->size()) {
+        std::stringstream tempStream;
+        tempStream << "[";
+
+        bool first = true;
+        BOOST_FOREACH(std::string currentValue, *currentArrayPointer_) {
+            if (!first) {
+                tempStream << ",";
+            } else {
+                first = false;
+            }
+
+            tempStream << currentValue;
+        }
+        tempStream << "]";
+
+        output = tempStream.str();
+    }
 }
 
 void JSONLatticeWriterOutput::createEscapedJSONString_(
