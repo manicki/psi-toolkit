@@ -181,73 +181,55 @@ void NKJPLatticeReader::Worker::doRun() {
                                 boost::property_tree::ptree::value_type &vFS,
                                 vF.second.get_child("")
                             ) if (strcmp(vFS.first.data(), "fs") == 0) {
-                            BOOST_FOREACH(
-                                boost::property_tree::ptree::value_type &vFF,
-                                vFS.second.get_child("")
-                            ) if (strcmp(vFF.first.data(), "f") == 0) {
-                                if (vFF.second.get<std::string>("<xmlattr>.name")=="base") {
-                                    Lattice::EdgeSequence::Builder baseBuilder(lattice_);
-                                    baseBuilder.addEdge(segEdge);
-                                    AnnotationItem baseItem(
-                                        vFF.second.get<std::string>("string"),
-                                        StringFrag(
-                                            vFF.second.get<std::string>("string")
-                                        )
-                                    );
-                                    Lattice::EdgeDescriptor baseEdge = lattice_.addEdge(
-                                        segBegin,
-                                        segEnd,
-                                        baseItem,
-                                        getTags_("base"),
-                                        baseBuilder.build()
-                                    );
-                                } else if (vFF.second.get<std::string>("<xmlattr>.name")=="ctag") {
-                                    Lattice::EdgeSequence::Builder ctagBuilder(lattice_);
-                                    ctagBuilder.addEdge(segEdge);
-                                    AnnotationItem ctagItem(
-                                        vFF.second.get<std::string>("symbol.<xmlattr>.value"),
-                                        StringFrag(
-                                            vFF.second.get<std::string>("symbol.<xmlattr>.value")
-                                        )
-                                    );
-                                    Lattice::EdgeDescriptor ctagEdge = lattice_.addEdge(
-                                        segBegin,
-                                        segEnd,
-                                        ctagItem,
-                                        getTags_("ctag"),
-                                        ctagBuilder.build()
-                                    );
-                                } else if (vFF.second.get<std::string>("<xmlattr>.name")=="msd") {
-                                    try {
-                                        Lattice::EdgeSequence::Builder msdBuilder(lattice_);
-                                        msdBuilder.addEdge(segEdge);
-                                        AnnotationItem msdItem(
-                                            vFF.second.get<std::string>("symbol.<xmlattr>.xml:id"),
+                                std::string base(vF.second.get("f.string", std::string()));
+                                BOOST_FOREACH(
+                                    boost::property_tree::ptree::value_type &vFF,
+                                    vFS.second.get_child("")
+                                ) if (strcmp(vFF.first.data(), "f") == 0) {
+                                    if (vFF.second.get<std::string>("<xmlattr>.name")=="base") {
+                                        base = vFF.second.get<std::string>("string");
+                                    }
+                                }
+                                Lattice::EdgeSequence::Builder baseBuilder(lattice_);
+                                baseBuilder.addEdge(segEdge);
+                                AnnotationItem baseItem(base, StringFrag(base));
+                                Lattice::EdgeDescriptor baseEdge = lattice_.addEdge(
+                                    segBegin,
+                                    segEnd,
+                                    baseItem,
+                                    getTags_("base"),
+                                    baseBuilder.build()
+                                );
+                                BOOST_FOREACH(
+                                    boost::property_tree::ptree::value_type &vFF,
+                                    vFS.second.get_child("")
+                                ) if (strcmp(vFF.first.data(), "f") == 0) {
+                                    if (vFF.second.get<std::string>("<xmlattr>.name")=="ctag") {
+                                        Lattice::EdgeSequence::Builder ctagBuilder(lattice_);
+                                        ctagBuilder.addEdge(baseEdge);
+                                        AnnotationItem ctagItem(
+                                            vFF.second.get<std::string>("symbol.<xmlattr>.value"),
                                             StringFrag(
-                                                lattice_.getAllText(), segBegin, segEnd-segBegin
+                                                base + "+" + vFF.second.get<std::string>(
+                                                    "symbol.<xmlattr>.value")
                                             )
                                         );
-                                        lattice_.getAnnotationItemManager().setValue(
-                                            msdItem,
-                                            "value",
-                                            vFF.second.get<std::string>("symbol.<xmlattr>.value")
-                                        );
-                                        Lattice::EdgeDescriptor msdEdge = lattice_.addEdge(
+                                        Lattice::EdgeDescriptor ctagEdge = lattice_.addEdge(
                                             segBegin,
                                             segEnd,
-                                            msdItem,
-                                            getTags_("msd"),
-                                            msdBuilder.build()
+                                            ctagItem,
+                                            getTags_("ctag"),
+                                            ctagBuilder.build()
                                         );
-                                    } catch (boost::property_tree::ptree_bad_path) {
-                                        BOOST_FOREACH(
-                                            boost::property_tree::ptree::value_type &vVAlt,
-                                            vFF.second.get_child("vAlt")
-                                        ) if (strcmp(vVAlt.first.data(), "symbol") == 0) {
-                                            Lattice::EdgeSequence::Builder vAltBuilder(lattice_);
-                                            vAltBuilder.addEdge(segEdge);
-                                            AnnotationItem vAltItem(
-                                                vVAlt.second.get<std::string>("<xmlattr>.xml:id"),
+                                    } else if (
+                                        vFF.second.get<std::string>("<xmlattr>.name")=="msd"
+                                    ) {
+                                        try {
+                                            Lattice::EdgeSequence::Builder msdBuilder(lattice_);
+                                            msdBuilder.addEdge(baseEdge);
+                                            AnnotationItem msdItem(
+                                                vFF.second.get<std::string>(
+                                                    "symbol.<xmlattr>.xml:id"),
                                                 StringFrag(
                                                     lattice_.getAllText(),
                                                     segBegin,
@@ -255,29 +237,60 @@ void NKJPLatticeReader::Worker::doRun() {
                                                 )
                                             );
                                             lattice_.getAnnotationItemManager().setValue(
-                                                vAltItem,
+                                                msdItem,
                                                 "value",
-                                                vVAlt.second.get<std::string>("<xmlattr>.value")
+                                                vFF.second.get<std::string>(
+                                                    "symbol.<xmlattr>.value")
                                             );
-                                            Lattice::EdgeDescriptor vAltEdge = lattice_.addEdge(
+                                            Lattice::EdgeDescriptor msdEdge = lattice_.addEdge(
                                                 segBegin,
                                                 segEnd,
-                                                vAltItem,
+                                                msdItem,
                                                 getTags_("msd"),
-                                                vAltBuilder.build()
+                                                msdBuilder.build()
                                             );
-                                            if (
-                                                !disambId.empty() &&
-                                                disambId != vVAlt.second.get<std::string>(
-                                                    "<xmlattr>.xml:id"
-                                                )
-                                            ) {
-                                                lattice_.discard(vAltEdge);
+                                        } catch (boost::property_tree::ptree_bad_path) {
+                                            BOOST_FOREACH(
+                                                boost::property_tree::ptree::value_type &vVAlt,
+                                                vFF.second.get_child("vAlt")
+                                            ) if (strcmp(vVAlt.first.data(), "symbol") == 0) {
+                                                Lattice::EdgeSequence::Builder
+                                                    vAltBuilder(lattice_);
+                                                vAltBuilder.addEdge(baseEdge);
+                                                AnnotationItem vAltItem(
+                                                    vVAlt.second.get<std::string>(
+                                                        "<xmlattr>.xml:id"),
+                                                    StringFrag(
+                                                        lattice_.getAllText(),
+                                                        segBegin,
+                                                        segEnd-segBegin
+                                                    )
+                                                );
+                                                lattice_.getAnnotationItemManager().setValue(
+                                                    vAltItem,
+                                                    "value",
+                                                    vVAlt.second.get<std::string>("<xmlattr>.value")
+                                                );
+                                                Lattice::EdgeDescriptor vAltEdge = lattice_.addEdge(
+                                                    segBegin,
+                                                    segEnd,
+                                                    vAltItem,
+                                                    getTags_("msd"),
+                                                    vAltBuilder.build()
+                                                );
+                                                if (
+                                                    !disambId.empty() &&
+                                                    disambId != vVAlt.second.get<std::string>(
+                                                        "<xmlattr>.xml:id"
+                                                    )
+                                                ) {
+                                                    lattice_.discard(vAltEdge);
+                                                }
                                             }
                                         }
                                     }
                                 }
-                            }} // end of double boost foreach
+                            }
                         }
                     }
                     sBuilder.addEdge(segEdge);
