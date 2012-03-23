@@ -32,10 +32,13 @@ private:
     bool tryToFlattenOneElementCurrentArray(std::string & flattenElement);
 
     void printCurrentArrayToOutput_();
+    void printHashValueToTemporaryString_(
+                       std::stringstream & outputStream, const std::string & key, const std::string & value);
+
     void createEscapedJSONString_(const std::string & content, std::string & output);
 
     std::ostream & outputStream_;
-    bool isAtomicElementInCurrentArray_;
+
     std::vector<std::string> * currentArrayPointer_;
     std::stack<std::vector<std::string> * > arraysStack_;
 

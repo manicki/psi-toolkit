@@ -26,6 +26,15 @@ binmode(STDERR, ":utf8");
 
 _start_simple_json_test();
 _start_json_test_with_polish_letters();
+_start_json_test_with_simple_tokenized_hash();
+
+#_start_json_test_with_alternatives();
+
+# @todo do sprawdzenia
+# @ignore (compilation with java is needed)
+#_start_json_test_with_morfologik_hash();
+
+# @todo json unusual(empty string)
 
 END:
 done_testing();
@@ -44,6 +53,30 @@ sub _start_simple_json_test {
 sub _start_json_test_with_polish_letters {
     _run_json_test("tp-tokenizer --lang pl", "ążśźęćółń ĄŻŚŹĘĆÓŁŃ 123456789 ! @ # $ % ^ & * ( ) [ ]");
     _run_json_test("srx-segmenter --lang pl", "Ala ma kota. Kot ma Alę.", "--tag segment");
+}
+
+sub _start_json_test_with_simple_tokenized_hash {
+    _run_json_test_as_with_args("tp-tokenizer --lang pl", "Ala ma kota.", "--tag token");
+    _run_json_test_as_with_args("tp-tokenizer --lang pl", "Chrząszcz będzie śmiesznym prezentem w Łodzi!!!", "--tag token");
+}
+
+sub _start_json_test_with_alternatives {
+    _run_json_test("tp-tokenizer --lang pl", "ąż ółń", "--tag symbol --spec token");
+}
+
+sub _start_json_test_with_morfologik_hash {
+    _run_json_test_as_with_args("tp-tokenizer --lang pl ! morfologik", "Ala ma kota.", "--tag form");
+}
+
+sub _run_json_test_as_with_args {
+    my ($pipe_command, $input_text, $writer_params) = @_;
+
+    if (not $writer_params) {
+        $writer_params = '';
+    }
+
+    $writer_params .= " --with-args";
+    _run_json_test($pipe_command, $input_text, $writer_params);
 }
 
 sub _run_json_test {

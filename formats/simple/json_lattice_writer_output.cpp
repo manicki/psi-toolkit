@@ -16,7 +16,6 @@ JSONLatticeWriterOutput::JSONLatticeWriterOutput(std::ostream & outputStream)
   : outputStream_(outputStream)
 {
     latticeAnnotationItemManager_ =  NULL;
-    isAtomicElementInCurrentArray_ = true;
 
     currentArrayPointer_ = new std::vector<std::string>();
     openNewSubArray();
@@ -38,11 +37,48 @@ void JSONLatticeWriterOutput::push(
      const AnnotationItem & element,
      AnnotationItemManager * latticeAnnotationItemManager) {
 
-    // @todo
+    std::stringstream temporaryStream;
+
+    temporaryStream << "{\n";
+    printHashValueToTemporaryString_(temporaryStream, "category", element.getCategory());
+    temporaryStream << ",\n";
+    printHashValueToTemporaryString_(temporaryStream, "text", element.getText());
+    temporaryStream << ",\n";
+
+    temporaryStream << "\"values\" : {";
+    std::list< std::pair<std::string, std::string> > values =
+        latticeAnnotationItemManager->getValues(element);
+
+    bool first = true;
+    BOOST_FOREACH(string_pair currentValue, values) {
+
+        if (!first) {
+            temporaryStream << ",";
+        } else {
+            first = false;
+        }
+
+        printHashValueToTemporaryString_(temporaryStream, currentValue.first, currentValue.second);
+    }
+    temporaryStream << "}\n";
+
+    temporaryStream << "}\n";
+
+    currentArrayPointer_->push_back(temporaryStream.str());
+}
+
+void JSONLatticeWriterOutput::printHashValueToTemporaryString_(
+    std::stringstream & outputStream, const std::string & key, const std::string & value) {
+
+    std::string escapedKey;
+    createEscapedJSONString_(key, escapedKey);
+    std::string escapedValue;
+    createEscapedJSONString_(value, escapedValue);
+
+    outputStream << escapedKey << ":" << escapedValue;
 }
 
 void JSONLatticeWriterOutput::openNewSubArray() {
-    isAtomicElementInCurrentArray_ = true;
     arraysStack_.push(currentArrayPointer_);
     currentArrayPointer_ = new std::vector<std::string>();
 }
@@ -63,16 +99,17 @@ void JSONLatticeWriterOutput::closeSubArray_(bool flattenOneElement) {
 
         if ( !isCurrentArrayEmpty_()){
 
-            std::string flattenElement;
             if (flattenOneElement) {
-                if (tryToFlattenOneElementCurrentArray(flattenElement)) {
-                    parentArrayPointer->push_back(flattenElement);
+                std::string elementToPrint;
+                if (tryToFlattenOneElementCurrentArray(elementToPrint)) {
+                    parentArrayPointer->push_back(elementToPrint);
                 } else {
                     printCurrentArrayToOutput_();
                 }
             } else {
                 printCurrentArrayToOutput_();
             }
+
         }
 
         currentArrayPointer_ = parentArrayPointer;
@@ -80,6 +117,7 @@ void JSONLatticeWriterOutput::closeSubArray_(bool flattenOneElement) {
 }
 
 void JSONLatticeWriterOutput::printCurrentArrayToOutput_() {
+
     outputStream_ << "[\n";
 
     bool first = true;
