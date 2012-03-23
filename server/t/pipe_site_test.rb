@@ -43,7 +43,7 @@ class PipeSiteTest < Test::Unit::TestCase
         assert active_li_class.include?('active')
     end
 
-    def test_if_submiting_of_an_input_text_works
+    def test_if_submitting_of_an_input_text_works
         input  = @browser.text_field(:name => 'input-text')
         assert input.exists?
         assert !input.value.empty?
@@ -108,10 +108,13 @@ class PipeSiteTest < Test::Unit::TestCase
 
         # compare pipe output and generated file content
         output = @browser.pre.text
+
         file = @browser.div(:id => 'download').link.download
         file_content = file.readlines.join
+        file_content.gsub!(/(\n| )+/, ' ')
+        file_content.strip!
 
-        assert output, file_content
+        assert_equal output, file_content
     end
 
 end

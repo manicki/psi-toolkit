@@ -30,8 +30,6 @@ LatticeWriter<std::ostream>* GVLatticeWriter::Factory::doCreateLatticeWriter(
         options.count("color"),
         filter,
         options["format"].as<std::string>(),
-        options["file"].as<std::string>(),
-        options.count("allow-tmp"),
         options.count("tree")
     );
 }
@@ -40,12 +38,8 @@ boost::program_options::options_description GVLatticeWriter::Factory::doOptionsH
     boost::program_options::options_description optionsDescription("Allowed options");
 
     optionsDescription.add_options()
-        ("allow-tmp",
-            "allows to use temporary files")
         ("color",
             "edges with different tags have different colors")
-        ("file", boost::program_options::value<std::string>()->default_value(""),
-            "output file name")
         ("filter", boost::program_options::value< std::vector<std::string> >()->multitoken(),
             "filters edges by specified tags")
         ("format", boost::program_options::value<std::string>()->default_value("dot"),
@@ -93,16 +87,9 @@ void GVLatticeWriter::Worker::doRun() {
     GVC_t * gvc = gvContext();
     std::string arg1("-T" + processor_.getOutputFormat());
     std::string arg2("");
-    if (processor_.isUseOutputStream()) {
-        tmpFile = tempnam(NULL, "gv_");
-        arg2 += "-o";
-        arg2 += tmpFile;
-    } else {
-        if (!processor_.getOutputFile().empty()) {
-            arg2 += "-o";
-        }
-        arg2 += processor_.getOutputFile();
-    }
+    tmpFile = tempnam(NULL, "gv_");
+    arg2 += "-o";
+    arg2 += tmpFile;
     const char * const args[] = {
         "dot",
         arg1.c_str(),
@@ -246,20 +233,18 @@ void GVLatticeWriter::Worker::doRun() {
     agclose(g);
     gvFreeContext(gvc);
 
-    if (processor_.isUseOutputStream()) {
-        try {
-            std::string line;
-            std::string contents;
-            std::ifstream s(tmpFile);
-            while (getline(s, line)) {
-                contents += line;
-                contents += "\n";
-            }
-            alignOutput_(contents);
-            std::remove(tmpFile);
-        } catch (...) {
-            std::remove(tmpFile);
+    try {
+        std::string line;
+        std::string contents;
+        std::ifstream s(tmpFile);
+        while (getline(s, line)) {
+            contents += line;
+            contents += "\n";
         }
+        alignOutput_(contents);
+        std::remove(tmpFile);
+    } catch (...) {
+        std::remove(tmpFile);
     }
 
     DEBUG("WRITING");

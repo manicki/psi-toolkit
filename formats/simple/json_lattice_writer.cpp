@@ -1,14 +1,12 @@
-#include "perl_simple_lattice_writer.hpp"
-
-#if HAVE_PERL_BINDINGS
+#include "json_lattice_writer.hpp"
 
 #include "logging.hpp"
 
-std::string PerlSimpleLatticeWriter::getFormatName() {
+std::string JSONLatticeWriter::getFormatName() {
     return "simple";
 }
 
-LatticeWriter<Sink> * PerlSimpleLatticeWriter::Factory::doCreateLatticeWriter(
+LatticeWriter<std::ostream> * JSONLatticeWriter::Factory::doCreateLatticeWriter(
     const boost::program_options::variables_map& options
 ) {
     PsiQuoter quoter;
@@ -25,7 +23,7 @@ LatticeWriter<Sink> * PerlSimpleLatticeWriter::Factory::doCreateLatticeWriter(
         }
     }
 
-    return new PerlSimpleLatticeWriter(
+    return new JSONLatticeWriter(
         options.count("linear"),
         options.count("no-alts"),
         options.count("with-blank"),
@@ -35,7 +33,7 @@ LatticeWriter<Sink> * PerlSimpleLatticeWriter::Factory::doCreateLatticeWriter(
         );
 }
 
-boost::program_options::options_description PerlSimpleLatticeWriter::Factory::doOptionsHandled() {
+boost::program_options::options_description JSONLatticeWriter::Factory::doOptionsHandled() {
     boost::program_options::options_description optionsDescription("Allowed options");
 
     optionsDescription.add_options()
@@ -56,43 +54,50 @@ boost::program_options::options_description PerlSimpleLatticeWriter::Factory::do
     return optionsDescription;
 }
 
-std::string PerlSimpleLatticeWriter::Factory::doGetName() {
-    return "perl-simple-writer";
+
+std::string JSONLatticeWriter::Factory::doGetName() {
+    return "json-simple-writer";
 }
 
-boost::filesystem::path PerlSimpleLatticeWriter::Factory::doGetFile() {
+boost::filesystem::path JSONLatticeWriter::Factory::doGetFile() {
     return __FILE__;
 }
 
-LatticeWriter<AbstractSimpleDataLatticeWriterOutput>* PerlSimpleLatticeWriter::Factory::createLatticeWriter(
-           bool linear,
-           bool noAlts,
-           bool withBlank,
-           std::string basicTag,
-           std::set<std::string> higherOrderTags,
-           bool withArgs ) {
-
-    return new PerlSimpleLatticeWriter(
-           linear,
-           noAlts,
-           withBlank,
-           basicTag,
-           higherOrderTags,
-           withArgs );
+std::string JSONLatticeWriter::doInfo() {
+    return "JSON simple writer";
 }
 
-PerlSimpleLatticeWriter::Worker::Worker(PerlSimpleLatticeWriter & processor,
-                                 Sink & output,
+JSONLatticeWriter::Worker::Worker(JSONLatticeWriter & processor,
+                                  std::ostream & output,
                                  Lattice& lattice):
-    WriterWorker<Sink>(output, lattice),
+    WriterWorker<std::ostream>(output, lattice),
     processor_(processor) {
 }
 
-std::string PerlSimpleLatticeWriter::doInfo() {
-    return "Perl simple writer";
+void JSONLatticeWriter::Worker::doRun() {
+
+    JSONLatticeWriterOutputIterator outputIterator(
+                                                         getOutputStream(),
+                                                         processor_.isWithArgs()
+        );
+
+    std::vector<std::string> handledTags;
+    BOOST_FOREACH(std::string higherOrderTag, processor_.getHigherOrderTags()) {
+        handledTags.push_back(higherOrderTag);
+    }
+
+    LatticeIterWriter writer(
+        lattice_,
+        outputIterator,
+        processor_.isLinear(),
+        processor_.isNoAlts(),
+        processor_.isWithBlank(),
+        processor_.getBasicTag(),
+        handledTags
+    );
+
+    writer.run();
 }
 
-PerlSimpleLatticeWriter::Worker::~Worker() {
+JSONLatticeWriter::Worker::~Worker() {
 }
-
-#endif

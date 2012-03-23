@@ -9,16 +9,14 @@
 #include <perl.h>
 #include <XSUB.h>
 
-typedef HV* PerlHashPointer;
-typedef AV* PerlArrayPointer;
-typedef SV* PerlReference;
+typedef AV * Sink;
 
 class PerlLatticeWriterOutput : public AbstractSimpleDataLatticeWriterOutput{
 public:
-    PerlLatticeWriterOutput(AV * arrayPointer);
-protected:
-    virtual void pushToCurrentArrayPointer_(const std::string & textElement);
-    virtual void pushToCurrentArrayPointer_(const AnnotationItem & element,
+    PerlLatticeWriterOutput(Sink & arrayPointer);
+
+    void push(const std::string & textElement);
+    void push(const AnnotationItem & element,
               AnnotationItemManager * latticeAnnotationItemManager);
     virtual void pushToArrayPointer_(ArrayPointer arrayPointer, ReferencePointer what);
 
@@ -27,17 +25,17 @@ protected:
         return arrayLength;
     }
 
-    virtual ReferencePointer getCurrentArrayReference_() {
-        return newRV_inc((PerlReference) getPerlCurrentArrayPointer_());
-        
-    }
+    SV * getCurrentArrayReference_();
+    void closeSubArray_(bool flattenOneElement);
 
-    virtual ArrayPointer createNewArrayPointer_();
-    virtual ReferencePointer doFlattenOneElementCurrentArray();
-private:
-    PerlArrayPointer getPerlCurrentArrayPointer_() {
-        return (PerlArrayPointer) currentArrayPointer_;
-    }
+    bool isCurrentArrayEmpty_();
+    long getCurrentArrayLength_();
+    SV * tryToFlattenOneElementCurrentArray();
+
+    AV * currentArrayPointer_;
+    std::stack<AV *> arraysStack_;
+
+    AnnotationItemManager * latticeAnnotationItemManager_;
 };
 
 #endif

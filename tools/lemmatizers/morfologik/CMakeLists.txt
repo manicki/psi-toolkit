@@ -8,3 +8,4 @@ add_subdirectory(t)
 
 install(TARGETS tools-lemmatizers-morfologik DESTINATION lib/)
 install(FILES j/morfologik-stemming-1.5.0.jar DESTINATION ${PSITOOLKIT_INSTALL_DATA_DIR}/morfologik/)
+install(DIRECTORY data/ DESTINATION ${PSITOOLKIT_INSTALL_DATA_DIR}/morfologik)

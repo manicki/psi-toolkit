@@ -362,7 +362,8 @@ BOOST_AUTO_TEST_CASE( training_test ) {
                     symbolMask
                     ));
     }
-    test_lattice.addEdge(test_pre_kobieta, test_post_dot1, senSegment, segmentTag, test_sentence1Builder.build());
+    test_lattice.addEdge(test_pre_kobieta, test_post_dot1, senSegment,
+            segmentTag, test_sentence1Builder.build());
 
     Lattice::EdgeSequence::Builder test_kobietaBuilder(test_lattice);
     for (int i = 0; i < 7; i ++) {
@@ -371,7 +372,8 @@ BOOST_AUTO_TEST_CASE( training_test ) {
                     symbolMask
                     ));
     }
-    test_lattice.addEdge(test_pre_kobieta, test_post_kobieta, wordToken, tokenTag, test_kobietaBuilder.build());
+    test_lattice.addEdge(test_pre_kobieta, test_post_kobieta, wordToken,
+            tokenTag, test_kobietaBuilder.build());
     Lattice::EdgeSequence::Builder test_blank1Builder(test_lattice);
     for (int i = 7; i < 8; i ++) {
         test_blank1Builder.addEdge(test_lattice.firstOutEdge(
@@ -379,7 +381,8 @@ BOOST_AUTO_TEST_CASE( training_test ) {
                     symbolMask
                     ));
     }
-    test_lattice.addEdge(test_pre_blank1, test_post_blank1, blankToken, tokenTag, test_blank1Builder.build());
+    test_lattice.addEdge(test_pre_blank1, test_post_blank1, blankToken,
+            tokenTag, test_blank1Builder.build());
     Lattice::EdgeSequence::Builder test_maBuilder(test_lattice);
     for (int i = 8; i < 10; i ++) {
         test_maBuilder.addEdge(test_lattice.firstOutEdge(
@@ -395,7 +398,8 @@ BOOST_AUTO_TEST_CASE( training_test ) {
                     symbolMask
                     ));
     }
-    test_lattice.addEdge(test_pre_blank2, test_post_blank2, blankToken, tokenTag, test_blank2Builder.build());
+    test_lattice.addEdge(test_pre_blank2, test_post_blank2, blankToken,
+            tokenTag, test_blank2Builder.build());
     Lattice::EdgeSequence::Builder test_psaBuilder(test_lattice);
     for (int i = 11; i < 14; i ++) {
         test_psaBuilder.addEdge(test_lattice.firstOutEdge(
@@ -411,7 +415,8 @@ BOOST_AUTO_TEST_CASE( training_test ) {
                     symbolMask
                     ));
     }
-    test_lattice.addEdge(test_pre_dot1, test_post_dot1, punctuationToken, tokenTag, test_dot1Builder.build());
+    test_lattice.addEdge(test_pre_dot1, test_post_dot1, punctuationToken,
+            tokenTag, test_dot1Builder.build());
 
     Lattice::EdgeSequence::Builder test_kobietaLemmaBuilder(test_lattice);
     test_kobietaLemmaBuilder.addEdge(test_lattice.firstOutEdge(

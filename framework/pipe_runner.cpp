@@ -15,10 +15,6 @@
 #include "logging.hpp"
 #include "version_information.hpp"
 
-#if HAVE_PERL_BINDINGS
-#include "perl_lattice_writer_output.hpp"
-#endif
-
 PipeRunner::PipeRunner(const std::string& pipeline)
     : justInformation_(false), runnerOptionsDescription_("PipeRunner options") {
 
@@ -452,13 +448,10 @@ std::string PipeRunner::run(const std::string & inputString) {
 
 #if HAVE_PERL_BINDINGS
 SV * PipeRunner::run_for_perl(const std::string & inputString) {
-    AV * outputArray = newAV();
+    AV * outputArrayPointer = newAV();
 
     std::istringstream inputStream (inputString, std::istringstream::in);
-    PerlLatticeWriterOutput output(outputArray);
-
-    run_<std::istream, PerlLatticeWriterOutput>(inputStream, output);
-
-    return newRV_inc((SV *) outputArray);
+    run_<std::istream, AV *>(inputStream, outputArrayPointer);
+    return newRV_inc((SV *) outputArrayPointer);
 }
 #endif
