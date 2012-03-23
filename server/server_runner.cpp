@@ -55,9 +55,7 @@ void ServerRunner::setOptionsDescription_() {
         ("threads", boost::program_options::value<std::string>()->default_value("1"),
             "Specify number of threads")
         ("root", boost::program_options::value<std::string>()->default_value(
-            (boost::filesystem::path(
-                Configurator::getInstance().isRunAsInstalled() ? INSTALL_DATA_DIR : ROOT_DIR)
-             / "server/website").string()),
+            (boost::filesystem::path(WEBSITE_ROOT)).string()),
             "Set root of website files");
 
     optionsDescription_.add_options()

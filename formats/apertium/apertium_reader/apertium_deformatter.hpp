@@ -5,7 +5,21 @@
 
 #include <boost/filesystem.hpp>
 
+#include "regexp.hpp"
 #include "format_specification.hpp"
+
+struct DeformatIndex {
+    int begin;
+    int end;
+    std::string info;
+
+    DeformatIndex(std::pair<int, int> indexes, const std::string& str)
+    : begin(indexes.first), end(indexes.second), info(str) { }
+
+    int length() {
+        return end - begin;
+    }
+};
 
 class ApertiumDeformatter {
 public:
@@ -19,6 +33,20 @@ private:
     FormatSpecification formatSpecification_;
     FormatSpecification initializeFormatSpecification_(const boost::filesystem::path& path);
 
+    int initialInputSize_;
+
+    std::vector<DeformatIndex> processFormatRules_(const std::string&);
+    std::string processReplacementRules_(const std::string&);
+    std::string clearFromDeformatData_(const std::string& input,
+        std::vector<DeformatIndex>& indexes);
+
+    //FIXME: jak dodać RE_Options do regexp.hpp?
+    pcrecpp::RE_Options perlRegexpOptions_;
+
+    std::pair<int, int> getMatchedStringIndexes(PerlStringPiece currentInput, std::string);
+
+    const static std::string DELIMITER_BEGIN;
+    const static std::string DELIMITER_END;
 };
 
 #endif

@@ -71,7 +71,7 @@ class PipeSiteTest < Test::Unit::TestCase
         assert input_file.exists?
 
         file_name = "file.txt"
-        txt = "Zosia nie ma nic"
+        txt = 'Zosia nie ma nic'
 
         # create file to test
         File.open(file_name, "w") { |f| f.puts txt }
@@ -81,9 +81,7 @@ class PipeSiteTest < Test::Unit::TestCase
         # switch to file bookmark
         @browser.a(:class => 'input-file').click
 
-        # click a submit button
-        btn = @browser.button(:name => 'pipe-submit')
-        btn.click
+        submit
 
         # check if pipe output contains all words
         txt.split.each do |word|
@@ -98,13 +96,8 @@ class PipeSiteTest < Test::Unit::TestCase
     end
 
     def test_if_downloading_a_file_with_output_works
-        txt = "Marysia ma rysia"
-
-        # submit some text
-        input  = @browser.text_field(:name => 'input-text')
-        input.set txt
-        btn = @browser.button(:name => 'pipe-submit')
-        btn.click
+        set_input 'Marysia ma rysia'
+        submit
 
         # compare pipe output and generated file content
         output = @browser.pre.text
@@ -115,6 +108,39 @@ class PipeSiteTest < Test::Unit::TestCase
         file_content.strip!
 
         assert_equal output, file_content
+    end
+
+    def test_picture_output
+        set_pipe 'gv-writer --format jpg'
+        set_input 'Ala ma kota i psa.'
+        submit
+
+        output = @browser.div(:id => 'output')
+
+        assert output.image.exists?
+        assert output.image.src.end_with? 'jpg'
+
+        assert output.link.exists?
+        assert output.link.href.end_with? 'jpg'
+    end
+
+    private
+
+    def set_pipe(txt)
+        pipe = @browser.text_field(:name => 'pipe-text')
+        pipe.set txt
+        return pipe
+    end
+
+    def set_input(txt)
+        input = @browser.text_field(:name => 'input-text')
+        input.set txt
+        return input
+    end
+
+    def submit
+        btn = @browser.button(:name => 'pipe-submit')
+        btn.click
     end
 
 end

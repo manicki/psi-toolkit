@@ -10,6 +10,7 @@
 #include "json_lattice_writer.hpp"
 #include "dot_lattice_writer.hpp"
 #include "apertium_lattice_reader.hpp"
+#include "nkjp_lattice_reader.hpp"
 #include "tp_tokenizer.hpp"
 #include "srx_segmenter.hpp"
 #include "lemmatizer_annotator.hpp"
@@ -18,6 +19,10 @@
 
 #if HAVE_GRAPHVIZ
 #include "gv_lattice_writer.hpp"
+#endif
+
+#if HAVE_POPPLER
+#include "pdf_lattice_reader.hpp"
 #endif
 
 #if HAVE_POSTGRESQL
@@ -50,6 +55,7 @@ MainFactoriesKeeper::MainFactoriesKeeper() {
     keeper_.takeProcessorFactory(new JSONLatticeWriter::Factory());
     keeper_.takeProcessorFactory(new DotLatticeWriter::Factory());
     keeper_.takeProcessorFactory(new ApertiumLatticeReader::Factory());
+    keeper_.takeProcessorFactory(new NKJPLatticeReader::Factory());
     keeper_.takeProcessorFactory(new TpTokenizer::Factory());
     keeper_.takeProcessorFactory(new SrxSegmenter::Factory());
     keeper_.takeProcessorFactory(new LangGuesser::Factory());
@@ -57,6 +63,10 @@ MainFactoriesKeeper::MainFactoriesKeeper() {
 
 #if HAVE_GRAPHVIZ
     keeper_.takeProcessorFactory(new GVLatticeWriter::Factory());
+#endif
+
+#if HAVE_POPPLER
+    keeper_.takeProcessorFactory(new PDFLatticeReader::Factory());
 #endif
 
 #if HAVE_POSTGRESQL

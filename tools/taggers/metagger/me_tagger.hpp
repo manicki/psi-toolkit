@@ -41,7 +41,9 @@ class MeTagger : public Annotator {
                 std::string unknownPosLabel_ = "ign",
                 std::string cardinalNumberPosLabel_ = "card",
                 std::string properNounPosLabel_ = "name",
-                std::vector<std::string> openClassLabels_ = std::vector<std::string>());
+                std::vector<std::string> openClassLabels_ =
+                    std::vector<std::string>()
+                );
         void tag(Lattice &lattice);
         void train(Lattice &lattice);
         void saveModel(std::string path);
@@ -91,9 +93,19 @@ class MeTagger : public Annotator {
         void addSampleSentences(Lattice &lattice);
         void addSampleSegment(Lattice &lattice, TokenEdgesMap tokenEdgesMap);
 
+        std::vector<Outcome> getTokenTags(Lattice &lattice,
+                TokenEdgesMap tokenEdgesMap);
+        Outcome getBestTag(Lattice &lattice, Lattice::EdgeDescriptor token,
+                Context context);
+        void applyTokenTags(Lattice &lattice, TokenEdgesMap tokenEdgesMap,
+                std::vector<Outcome> tags);
         Context createContext(Lattice &lattice,
                 TokenEdgesMap tokenEdgesMap,
                 int currentIndex, int window);
+        std::string getPrevTag(Lattice &lattice, TokenEdgesMap tokenEdgesMap,
+                int tokenIndex);
+        void addCurrentTag(Lattice &lattice, Lattice::EdgeDescriptor token,
+                Context context);
 
         std::string getFormLemma(Lattice &lattice,
                 Lattice::EdgeDescriptor edge);

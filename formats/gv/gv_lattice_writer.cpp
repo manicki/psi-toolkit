@@ -6,8 +6,6 @@
 #include <locale>
 #include <fstream>
 
-#include <gvc.h>
-
 #include "lattice.hpp"
 #include "logging.hpp"
 
@@ -42,7 +40,7 @@ boost::program_options::options_description GVLatticeWriter::Factory::doOptionsH
             "edges with different tags have different colors")
         ("filter", boost::program_options::value< std::vector<std::string> >()->multitoken(),
             "filters edges by specified tags")
-        ("format", boost::program_options::value<std::string>()->default_value("dot"),
+        ("format", boost::program_options::value<std::string>()->default_value("canon"),
             "output format")
         ("show-tags",
             "prints layer tags")
@@ -85,6 +83,59 @@ void GVLatticeWriter::Worker::doRun() {
     char * tmpFile;
 
     GVC_t * gvc = gvContext();
+    if (
+        processor_.getOutputFormat() != "canon" &&
+        processor_.getOutputFormat() != "dot" &&
+        processor_.getOutputFormat() != "eps" &&
+        processor_.getOutputFormat() != "fig" &&
+        processor_.getOutputFormat() != "gd" &&
+        processor_.getOutputFormat() != "gd:cairo" &&
+        processor_.getOutputFormat() != "gd:gd" &&
+        processor_.getOutputFormat() != "gd2" &&
+        processor_.getOutputFormat() != "gd2:cairo" &&
+        processor_.getOutputFormat() != "gd2:gd" &&
+        processor_.getOutputFormat() != "gif" &&
+        processor_.getOutputFormat() != "gif:cairo" &&
+        processor_.getOutputFormat() != "gif:gd" &&
+        processor_.getOutputFormat() != "gv" &&
+        processor_.getOutputFormat() != "jpe" &&
+        processor_.getOutputFormat() != "jpe:cairo" &&
+        processor_.getOutputFormat() != "jpe:gd" &&
+        processor_.getOutputFormat() != "jpeg" &&
+        processor_.getOutputFormat() != "jpeg:cairo" &&
+        processor_.getOutputFormat() != "jpeg:gd" &&
+        processor_.getOutputFormat() != "jpg" &&
+        processor_.getOutputFormat() != "jpg:cairo" &&
+        processor_.getOutputFormat() != "jpg:gd" &&
+        processor_.getOutputFormat() != "pdf" &&
+        processor_.getOutputFormat() != "plain" &&
+        processor_.getOutputFormat() != "plain-ext" &&
+        processor_.getOutputFormat() != "png" &&
+        processor_.getOutputFormat() != "png:cairo" &&
+        processor_.getOutputFormat() != "png:gd" &&
+        processor_.getOutputFormat() != "ps" &&
+        processor_.getOutputFormat() != "ps:cairo" &&
+        processor_.getOutputFormat() != "ps:ps" &&
+        processor_.getOutputFormat() != "ps2" &&
+        processor_.getOutputFormat() != "svg" &&
+        processor_.getOutputFormat() != "svg:cairo" &&
+        processor_.getOutputFormat() != "svg:svg" &&
+        processor_.getOutputFormat() != "svgz" &&
+        processor_.getOutputFormat() != "tk" &&
+        processor_.getOutputFormat() != "vml" &&
+        processor_.getOutputFormat() != "vmlz" &&
+        processor_.getOutputFormat() != "wbmp" &&
+        processor_.getOutputFormat() != "wbmp:cairo" &&
+        processor_.getOutputFormat() != "wbmp:gd" &&
+        processor_.getOutputFormat() != "xdot"
+    ) {
+        throw PsiException("Format \"" + processor_.getOutputFormat() +
+            "\" not recognized. Use one of the following formats: " +
+            "canon dot eps fig gd(:cairo,:gd) gd2(:cairo,:gd) gif(:cairo,:gd) gv " +
+            "jpe(:cairo,:gd) jpeg(:cairo,:gd) jpg(:cairo,:gd) pdf plain plain-ext " +
+            "png(:cairo,:gd) ps(:cairo,:ps) ps2 svg(:cairo,:svg) svgz tk vml vmlz " +
+            "wbmp(:cairo,:gd) xdot");
+    }
     std::string arg1("-T" + processor_.getOutputFormat());
     std::string arg2("");
     tmpFile = tempnam(NULL, "gv_");
@@ -243,8 +294,10 @@ void GVLatticeWriter::Worker::doRun() {
         }
         alignOutput_(contents);
         std::remove(tmpFile);
+        free(tmpFile);
     } catch (...) {
         std::remove(tmpFile);
+        free(tmpFile);
     }
 
     DEBUG("WRITING");

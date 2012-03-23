@@ -13,19 +13,23 @@
 class FormatSpecification {
 public:
 
-    FormatSpecification(FormatOptions options,
-        std::vector<FormatRule> formatRules, std::vector<ReplacementRule> replacementRules);
+    FormatSpecification(std::string name, FormatOptions options,
+        std::pair<std::vector<FormatRule>, std::vector<ReplacementRule> > rules);
 
     FormatOptions getOptions();
-    std::vector<FormatRule> getFormatRules();
-    std::vector<ReplacementRule> getReplacementRules();
+
+    std::string formatRulesRegexp();
+    FormatRule getFormatRule(int i);
+    int formatRuleSize();
+
+    std::map<std::string, std::string> replacementRulesRegexp();
 
 private:
 
+    std::string name_;
     FormatOptions formatOptions_;
     std::vector<FormatRule> formatRules_;
     std::vector<ReplacementRule> replacementRules_;
-
 };
 
 
@@ -50,19 +54,23 @@ public:
             : Exception(std::string("unexpected element `") + elementName + "'") { }
     };
 
-
     FormatSpecificationReader(const boost::filesystem::path& filePath);
-
     FormatSpecification readFormatSpecification();
 
 private:
 
     boost::shared_ptr<XmlPropertyTree> xmlParsed_;
 
+    std::string parseName_();
     FormatOptions parseOptions_();
-    std::vector<FormatRule> parseFormatRules_();
-    std::vector<ReplacementRule> parseReplacementRules_();
+    std::pair<std::vector<FormatRule>, std::vector<ReplacementRule> > parseRules_();
 
+    FormatRule parseFormatRule_(boost::property_tree::ptree&);
+    ReplacementRule parseReplacementRule_(boost::property_tree::ptree&);
+
+    bool yesNoToBool_(std::string &);
+    void removeQuotations_(std::string&);
+    void removeBackreferences_(std::string&);
 };
 
 #endif

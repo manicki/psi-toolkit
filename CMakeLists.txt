@@ -92,6 +92,17 @@ message(STATUS "Compiling Java components ${USE_JAVA}")
 option(DOWNLOAD_DATA "Downloading data (artifacts)" ON)
 message(STATUS "Downloading data (artifacts) ${DOWNLOAD_DATA}")
 
+# Set psi-server variables
+if(IS_INSTALLABLE)
+    # ./server/website content has to be moved to /var/psi-server/website during installation
+    set(WEBSITE_ROOT "/var/psi-server/website" CACHE STRING "The website root directory")
+else()
+    set(WEBSITE_ROOT "../server/website" CACHE STRING "The website root directory")
+endif(IS_INSTALLABLE)
+
+message(STATUS "The psi-server root directory is set to ${WEBSITE_ROOT}")
+
+# USE_xxx
 if(USE_JAVA)
     enable_language(Java)
 
@@ -150,6 +161,14 @@ if(USE_STRING_FRAG_VALIDATION)
     set(STRING_FRAG_VALIDATION 1)
 endif(USE_STRING_FRAG_VALIDATION)
 
+option(USE_GV_WRITER "Using gv-writer" ON)
+message(STATUS "Using gv-writer ${USE_GV_WRITER}")
+
+option(USE_PDF_READER "Using pdf-reader" OFF)
+message(STATUS "Using pdf-reader ${USE_PDF_READER}")
+
+
+# Finds SWIG
 
 find_package(SWIG)
 if(SWIG_FOUND)
@@ -171,46 +190,57 @@ endif(SWIG_FOUND)
 
 # Finds GraphViz
 
-if (GRAPHVIZ_INCLUDE_DIR AND GRAPHVIZ_GRAPH_LIBRARY AND GRAPHVIZ_CDT_LIBRARY AND GRAPHVIZ_PATHPLAN_LIBRARY)
-    set(GRAPHVIZ_FIND_QUIETLY TRUE)
-endif (GRAPHVIZ_INCLUDE_DIR AND GRAPHVIZ_GRAPH_LIBRARY AND GRAPHVIZ_CDT_LIBRARY AND GRAPHVIZ_PATHPLAN_LIBRARY)
-
-find_path(GRAPHVIZ_INCLUDE_DIR gvc.h graph.h cdt.h PATHS "/usr/include/graphviz")
-
-find_library( GRAPHVIZ_GVC_LIBRARY NAMES gvc )
-find_library( GRAPHVIZ_GRAPH_LIBRARY NAMES graph )
-find_library( GRAPHVIZ_CDT_LIBRARY NAMES cdt )
-find_library( GRAPHVIZ_PATHPLAN_LIBRARY NAMES pathplan )
-
-if (GRAPHVIZ_INCLUDE_DIR AND GRAPHVIZ_GVC_LIBRARY AND GRAPHVIZ_GRAPH_LIBRARY AND GRAPHVIZ_CDT_LIBRARY AND GRAPHVIZ_PATHPLAN_LIBRARY)
-   set(GRAPHVIZ_FOUND TRUE)
-else (GRAPHVIZ_INCLUDE_DIR AND GRAPHVIZ_GVC_LIBRARY AND GRAPHVIZ_GRAPH_LIBRARY AND GRAPHVIZ_CDT_LIBRARY AND GRAPHVIZ_PATHPLAN_LIBRARY)
-   set(GRAPHVIZ_FOUND FALSE)
-endif (GRAPHVIZ_INCLUDE_DIR AND GRAPHVIZ_GVC_LIBRARY AND GRAPHVIZ_GRAPH_LIBRARY AND GRAPHVIZ_CDT_LIBRARY AND GRAPHVIZ_PATHPLAN_LIBRARY)
-
-if (GRAPHVIZ_INCLUDE_DIR_NOTFOUND)
-    message(FATAL_ERROR "Could NOT find Graphivz include dir")
-else (GRAPHVIZ_INCLUDE_DIR_NOTFOUND)
+if (USE_GV_WRITER)
+    find_package(Graphviz)
     if (GRAPHVIZ_FOUND)
-        set(GRAPHVIZ_LIBRARIES ${GRAPHVIZ_GVC_LIBRARY} ${GRAPHVIZ_GRAPH_LIBRARY} ${GRAPHVIZ_CDT_LIBRARY} ${GRAPHVIZ_PATHPLAN_LIBRARY})
-        message(STATUS "Found Graphviz: ${GRAPHVIZ_LIBRARIES} (include dir: ${GRAPHVIZ_INCLUDE_DIR})")
-        include_directories(${GRAPHVIZ_INCLUDE_DIR})
-        link_directories(${GRAPHVIZ_LIBRARIES})
+        message(STATUS "Found GraphViz")
+        include_directories(${GRAPHVIZ_INCLUDE_DIRS})
+        link_directories(${GRAPHVIZR_LIBRARIES})
         set(HAVE_GRAPHVIZ 1)
     else (GRAPHVIZ_FOUND)
-        if (GRAPHVIZ_FIND_REQUIRED)
-            message(FATAL_ERROR "Could NOT find Graphivz")
-        endif (GRAPHVIZ_FIND_REQUIRED)
+        message(WARNING "Could not find GraphViz: gv-writer disabled")
+        set(HAVE_GRAPHVIZ 0)
     endif (GRAPHVIZ_FOUND)
-endif (GRAPHVIZ_INCLUDE_DIR_NOTFOUND)
+else (USE_GV_WRITER)
+    set(HAVE_GRAPHVIZ 0)
+endif (USE_GV_WRITER)
 
+# libmagic
+
+find_package(LibMagic)
+if(LIBMAGIC_FOUND)
+    message(STATUS "Found libmagic")
+    include_directories(${LibMagic_INCLUDE_DIRS})
+    link_directories(${LibMagic_LIBRARY})
+    set(HAVE_LIBMAGIC 1)
+else()
+    message(WARNING "Could not find libmagic library")
+    set(HAVE_LIBMAGIC 0)
+endif(LIBMAGIC_FOUND)
+
+# Finds Poppler
+
+if (USE_PDF_READER)
+    find_package(Poppler)
+    if (POPPLER_FOUND)
+        message(STATUS "Found Poppler")
+        include_directories(${POPPLER_INCLUDE_DIRS})
+        link_directories(${POPPLER_LIBRARIES})
+        set(HAVE_POPPLER 1)
+    else (POPPLER_FOUND)
+        message(WARNING "Could not find Poppler: pdf-reader disabled")
+        set(HAVE_POPPLER 0)
+    endif (POPPLER_FOUND)
+else (USE_PDF_READER)
+    set(HAVE_POPPLER 0)
+endif (USE_PDF_READER)
 
 # Sets compiler flags
 set(CMAKE_CXX_FLAGS "-g -Wall -Wundef -Wnon-virtual-dtor -Wextra")
 
-set(BASE_TARGETS common utf8case sundown framework formats-dot formats-psi formats-simple formats-txt formats-utt formats-apertium maxent tools-tokenizers-tp tools-segmenters-srx tools-recognizers-langguesser tools-parsers-gobio tools-taggers-metagger)
+set(BASE_TARGETS common utf8case sundown framework formats-apertium formats-dot formats-nkjp formats-psi formats-simple formats-txt formats-utt maxent tools-tokenizers-tp tools-segmenters-srx tools-recognizers-langguesser tools-parsers-gobio tools-taggers-metagger)
 
-set(TESTS_TARGETS common-tests tools-tokenizers-tp-tests tools-segmenters-srx-tests tools-datastructures-psi_query-tests tools-recognizers-langguesser-tests utf8case-tests formats-dot-tests formats-utt-tests formats-psi-tests formats-simple-tests tools-parsers-gobio-tests tools-taggers-metagger-tests)
+set(TESTS_TARGETS common-tests tools-tokenizers-tp-tests tools-segmenters-srx-tests tools-datastructures-psi_query-tests tools-recognizers-langguesser-tests utf8case-tests formats-dot-tests formats-utt-tests formats-psi-tests formats-simple-tests tools-parsers-gobio-tests tools-taggers-metagger-tests formats-apertium-tests)
 
 if(USE_JAVA)
     set(BASE_TARGETS ${BASE_TARGETS} tools-lemmatizers-morfologik)
@@ -238,10 +268,15 @@ if(USE_PUDDLE)
         endif(USE_BONSAI_PARSEGRAPH)
 endif(USE_PUDDLE)
 
-if(GRAPHVIZ_FOUND)
+if(HAVE_GRAPHVIZ)
     set(BASE_TARGETS ${BASE_TARGETS} formats-gv)
     set(TESTS_TARGETS ${TESTS_TARGETS} formats-gv-tests)
-endif(GRAPHVIZ_FOUND)
+endif(HAVE_GRAPHVIZ)
+
+if(HAVE_POPPLER)
+    set(BASE_TARGETS ${BASE_TARGETS} formats-pdf)
+    # set(TESTS_TARGETS ${TESTS_TARGETS} formats-pdf-tests)
+endif(HAVE_POPPLER)
 
 include_directories("${psi-toolkit_SOURCE_DIR}/tools/parsers/gobio")
 include_directories("${psi-toolkit_SOURCE_DIR}/tools/parsers/gobio/chart")
@@ -282,10 +317,15 @@ foreach(dir ${formats_SUBDIRS})
     link_directories("${psi-toolkit_BINARY_DIR}/formats/${dir}")
 endforeach(dir)
 
-if(GRAPHVIZ_FOUND)
+if(HAVE_GRAPHVIZ)
     include_directories("${psi-toolkit_SOURCE_DIR}/formats/gv")
     link_directories("${psi-toolkit_BINARY_DIR}/formats/gv")
-endif(GRAPHVIZ_FOUND)
+endif(HAVE_GRAPHVIZ)
+
+if(HAVE_POPPLER)
+    include_directories("${psi-toolkit_SOURCE_DIR}/formats/pdf")
+    link_directories("${psi-toolkit_BINARY_DIR}/formats/pdf")
+endif(HAVE_POPPLER)
 
 
 set(ALL_TARGETS ${TARGETS} ${TESTS_TARGETS})
