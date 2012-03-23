@@ -16,3 +16,4 @@ include(${SWIG_USE_FILE})
 find_package(PerlLibs)
 
 install(TARGETS formats-perl-simple DESTINATION lib/)
+install(DIRECTORY data/ DESTINATION ${PSITOOLKIT_INSTALL_DATA_DIR}/perl-simple-lattice-writer)
