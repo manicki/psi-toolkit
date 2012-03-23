@@ -178,8 +178,12 @@ void NKJPLatticeReader::Worker::doRun() {
                     ) if (strcmp(vF.first.data(), "f") == 0) {
                         if (vF.second.get<std::string>("<xmlattr>.name")=="interps") {
                             BOOST_FOREACH(
+                                boost::property_tree::ptree::value_type &vFS,
+                                vF.second.get_child("")
+                            ) if (strcmp(vFS.first.data(), "fs") == 0) {
+                            BOOST_FOREACH(
                                 boost::property_tree::ptree::value_type &vFF,
-                                vF.second.get_child("fs")
+                                vFS.second.get_child("")
                             ) if (strcmp(vFF.first.data(), "f") == 0) {
                                 if (vFF.second.get<std::string>("<xmlattr>.name")=="base") {
                                     Lattice::EdgeSequence::Builder baseBuilder(lattice_);
@@ -218,10 +222,15 @@ void NKJPLatticeReader::Worker::doRun() {
                                         Lattice::EdgeSequence::Builder msdBuilder(lattice_);
                                         msdBuilder.addEdge(segEdge);
                                         AnnotationItem msdItem(
-                                            vFF.second.get<std::string>("symbol.<xmlattr>.value"),
+                                            vFF.second.get<std::string>("symbol.<xmlattr>.xml:id"),
                                             StringFrag(
                                                 lattice_.getAllText(), segBegin, segEnd-segBegin
                                             )
+                                        );
+                                        lattice_.getAnnotationItemManager().setValue(
+                                            msdItem,
+                                            "value",
+                                            vFF.second.get<std::string>("symbol.<xmlattr>.value")
                                         );
                                         Lattice::EdgeDescriptor msdEdge = lattice_.addEdge(
                                             segBegin,
@@ -238,12 +247,17 @@ void NKJPLatticeReader::Worker::doRun() {
                                             Lattice::EdgeSequence::Builder vAltBuilder(lattice_);
                                             vAltBuilder.addEdge(segEdge);
                                             AnnotationItem vAltItem(
-                                                vVAlt.second.get<std::string>("<xmlattr>.value"),
+                                                vVAlt.second.get<std::string>("<xmlattr>.xml:id"),
                                                 StringFrag(
                                                     lattice_.getAllText(),
                                                     segBegin,
                                                     segEnd-segBegin
                                                 )
+                                            );
+                                            lattice_.getAnnotationItemManager().setValue(
+                                                vAltItem,
+                                                "value",
+                                                vVAlt.second.get<std::string>("<xmlattr>.value")
                                             );
                                             Lattice::EdgeDescriptor vAltEdge = lattice_.addEdge(
                                                 segBegin,
@@ -263,7 +277,7 @@ void NKJPLatticeReader::Worker::doRun() {
                                         }
                                     }
                                 }
-                            }
+                            }} // end of double boost foreach
                         }
                     }
                     sBuilder.addEdge(segEdge);
