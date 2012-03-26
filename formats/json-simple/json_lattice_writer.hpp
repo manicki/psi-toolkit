@@ -1,9 +1,7 @@
-#ifndef PERL_SIMPLE_LATTICE_WRITER_HDR
-#define PERL_SIMPLE_LATTICE_WRITER_HDR
+#ifndef JSON_LATTICE_WRITER_HDR
+#define JSON_LATTICE_WRITER_HDR
 
 #include "config.hpp"
-
-#if HAVE_PERL_BINDINGS
 
 #include <boost/filesystem.hpp>
 #include <boost/foreach.hpp>
@@ -14,20 +12,16 @@
 #include "lattice_writer_factory.hpp"
 #include "writer_worker.hpp"
 #include "psi_quoter.hpp"
-#include "perl_simple_lattice_writer_output_iterator.hpp"
+#include "json_lattice_writer_output_iterator.hpp"
 
-#include <EXTERN.h>
-#include <perl.h>
-#include <XSUB.h>
-
-class PerlSimpleLatticeWriter : public LatticeWriter<Sink> {
+class JSONLatticeWriter : public LatticeWriter<std::ostream> {
 
 public:
     virtual std::string getFormatName();
 
-    class Factory : public LatticeWriterFactory<Sink> {
+    class Factory : public LatticeWriterFactory<std::ostream> {
     private:
-        virtual LatticeWriter<Sink> * doCreateLatticeWriter(
+        virtual LatticeWriter<std::ostream> * doCreateLatticeWriter(
             const boost::program_options::variables_map& options);
 
         virtual boost::program_options::options_description doOptionsHandled();
@@ -37,7 +31,7 @@ public:
         virtual boost::filesystem::path doGetFile();
     };
 
-    PerlSimpleLatticeWriter(
+    JSONLatticeWriter(
         bool linear,
         bool noAlts,
         bool withBlank,
@@ -80,21 +74,21 @@ public:
 private:
     virtual std::string doInfo();
 
-    class Worker : public WriterWorker<Sink> {
+    class Worker : public WriterWorker<std::ostream> {
     public:
-        Worker(PerlSimpleLatticeWriter& processor,
-               Sink & output,
+        Worker(JSONLatticeWriter& processor,
+               std::ostream & output,
                Lattice& lattice);
 
         virtual void doRun();
 
         virtual ~Worker();
     private:
-        PerlSimpleLatticeWriter& processor_;
+        JSONLatticeWriter& processor_;
     };
 
-    virtual WriterWorker<Sink> * doCreateWriterWorker(
-        Sink & output, Lattice& lattice) {
+    virtual WriterWorker<std::ostream> * doCreateWriterWorker(
+        std::ostream & output, Lattice& lattice) {
 
         return new Worker(*this, output, lattice);
     }
@@ -106,7 +100,5 @@ private:
     std::set<std::string> higherOrderTags_;
     bool withArgs_;
 };
-
-#endif
 
 #endif

@@ -1,0 +1,1 @@
+Writes output of a pipe in JSON format.

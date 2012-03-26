@@ -85,7 +85,7 @@ if(HAVE_PERL_BINDINGS)
     include_directories("${psi-toolkit_SOURCE_DIR}/bindings/perl/writers")
     link_directories("${psi-toolkit_BINARY_DIR}/bindings/perl/writers")
 
-    target_link_libraries(psi-pipe formats-perl-simple)
+    target_link_libraries(psi-pipe formats-perl-simple formats-simple formats-json-simple)
     target_link_libraries(framework formats-perl-simple)
 
     find_package(SWIG)

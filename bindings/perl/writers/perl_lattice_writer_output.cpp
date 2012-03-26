@@ -8,13 +8,13 @@
 
 typedef std::pair<std::string, std::string> string_pair;
 
-PerlLatticeWriterOutput::PerlLatticeWriterOutput(AV * arrayPointer)
-    : currentArrayPointer_(arrayPointer) {
+PerlLatticeWriterOutput::PerlLatticeWriterOutput(Sink &arrayPointer) {
     latticeAnnotationItemManager_ =  NULL;
+    
+    currentArrayPointer_ = arrayPointer;
 }
 
 void PerlLatticeWriterOutput::push(const std::string & textElement) {
-
     SV * element_sv = newSVpv(textElement.c_str(), 0);
     av_push( currentArrayPointer_, element_sv);
 }
@@ -50,14 +50,13 @@ void PerlLatticeWriterOutput::push(
              "values", 6,
              newRV_inc((SV *)itemValuesHash), 0);
 
-    PerlReference newHashEntryReference = newRV_inc((PerlReference) newHashEntry);
+    SV * newHashEntryReference = newRV_inc((SV *) newHashEntry);
     av_push( currentArrayPointer_, newHashEntryReference);
 
 }
 
 void PerlLatticeWriterOutput::openNewSubArray() {
     arraysStack_.push(currentArrayPointer_);
-
     currentArrayPointer_ = newAV();
 }
 
@@ -71,10 +70,10 @@ void PerlLatticeWriterOutput::closeSubArrayWithFlattenOneElement() {
 
 void PerlLatticeWriterOutput::closeSubArray_(bool flattenOneElement) {
     if ( !arraysStack_.empty() ) {
-        PerlArrayPointer parentArrayPointer = arraysStack_.top();
+        AV * parentArrayPointer = arraysStack_.top();
         arraysStack_.pop();
 
-        PerlReference currentArrayReference = getCurrentArrayReference_();
+        SV * currentArrayReference = getCurrentArrayReference_();
 
         if ( !isCurrentArrayEmpty_()){
             if (flattenOneElement) {
@@ -85,7 +84,6 @@ void PerlLatticeWriterOutput::closeSubArray_(bool flattenOneElement) {
                 av_push(parentArrayPointer, currentArrayReference);
             }
         }
-
         currentArrayPointer_ = parentArrayPointer;
     }
 }
@@ -100,12 +98,12 @@ long PerlLatticeWriterOutput::getCurrentArrayLength_() {
     return arrayLength;
 }
 
-PerlReference PerlLatticeWriterOutput::tryToFlattenOneElementCurrentArray() {
+SV * PerlLatticeWriterOutput::tryToFlattenOneElementCurrentArray() {
 
     long arrayLength = av_len(currentArrayPointer_) + 1;
 
     if ( 1 == arrayLength) {
-        PerlReference elementReference = av_pop(currentArrayPointer_);
+        SV * elementReference = av_pop(currentArrayPointer_);
         av_undef(currentArrayPointer_);
         return elementReference;
     } else {
@@ -114,6 +112,6 @@ PerlReference PerlLatticeWriterOutput::tryToFlattenOneElementCurrentArray() {
 }
 
 
-PerlReference PerlLatticeWriterOutput::getCurrentArrayReference_() {
-    return newRV_inc((PerlReference) currentArrayPointer_);
+SV * PerlLatticeWriterOutput::getCurrentArrayReference_() {
+    return newRV_inc((SV*) currentArrayPointer_);
 }

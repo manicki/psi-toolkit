@@ -12,6 +12,45 @@
 namespace qi = boost::spirit::qi;
 
 
+struct NKJPSegmentationCorrespItem {
+    std::string id;
+    int beginning;
+    int length;
+};
+
+
+BOOST_FUSION_ADAPT_STRUCT(
+    NKJPSegmentationCorrespItem,
+    (std::string, id)
+    (int, beginning)
+    (int, length)
+)
+
+
+struct NKJPSegmentationCorrespGrammar : public qi::grammar<
+    std::string::const_iterator,
+    NKJPSegmentationCorrespItem()
+> {
+
+    NKJPSegmentationCorrespGrammar() : NKJPSegmentationCorrespGrammar::base_type(start) {
+
+        start
+            %= qi::lit("text.xml#string-range(")
+            >> +(qi::char_ - ',')
+            >> qi::lit(",")
+            >> qi::int_
+            >> qi::lit(",")
+            >> qi::int_
+            >> qi::lit(")")
+            ;
+
+    }
+
+    qi::rule<std::string::const_iterator, NKJPSegmentationCorrespItem()> start;
+
+};
+
+
 struct NKJPMorphosyntaxCommentItem {
     std::string form;
     int beginning;
@@ -127,7 +166,8 @@ private:
         Lattice::EdgeDescriptor appendSegmentToLattice_(
             std::string segment,
             AnnotationItem item,
-            bool insertSpace
+            std::string mainTag,
+            bool insertSpace = false
         );
     };
 
