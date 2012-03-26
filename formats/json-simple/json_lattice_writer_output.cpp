@@ -8,7 +8,7 @@
 
 #include "json_lattice_writer_output.hpp"
 
-#include <boost/algorithm/string.hpp> 
+#include <boost/algorithm/string.hpp>
 
 typedef std::pair<std::string, std::string> string_pair;
 
@@ -45,8 +45,8 @@ void JSONLatticeWriterOutput::pushTextElementToOutput_(const std::string & textE
 }
 
 void JSONLatticeWriterOutput::push(
-                                   const AnnotationItem & element,
-                                   AnnotationItemManager * latticeAnnotationItemManager) {
+     const AnnotationItem & element,
+     AnnotationItemManager * latticeAnnotationItemManager) {
 
     std::stringstream temporaryStream;
 
@@ -79,7 +79,7 @@ void JSONLatticeWriterOutput::push(
 }
 
 void JSONLatticeWriterOutput::printHashValueToTemporaryString_(
-                                                               std::stringstream & outputStream, const std::string & key, const std::string & value) {
+     std::stringstream & outputStream, const std::string & key, const std::string & value) {
 
     std::string escapedKey;
     createEscapedJSONString_(key, escapedKey);
@@ -115,12 +115,12 @@ void JSONLatticeWriterOutput::closeSubArray_(bool flattenOneElement) {
         std::vector<std::string> * parentArrayPointer = arraysStack_.top();
         arraysStack_.pop();
 
-        if ( !isCurrentArrayEmpty_()){
+        if ( !isCurrentArrayEmpty_()) {
 
             std::string elementToPrint;
             printCurrentArrayToStringWithFlatten_(elementToPrint, flattenOneElement);
 
-            if(!elementToPrint.empty()) {
+            if ( !elementToPrint.empty()) {
                 parentArrayPointer->push_back(elementToPrint);
             }
         }
@@ -150,7 +150,8 @@ void JSONLatticeWriterOutput::printElementToMainOutput_(const std::string & text
     ++numberOfMainElements_;
 }
 
-void JSONLatticeWriterOutput::printCurrentArrayToStringWithFlatten_(std::string & elementToPrint, bool flattenOneElement) {
+void JSONLatticeWriterOutput::printCurrentArrayToStringWithFlatten_(
+     std::string & elementToPrint, bool flattenOneElement) {
     if (flattenOneElement) {
         if ( ! tryToFlattenOneElementCurrentArray(elementToPrint)) {
             printCurrentArrayToString_(elementToPrint);
@@ -162,7 +163,7 @@ void JSONLatticeWriterOutput::printCurrentArrayToStringWithFlatten_(std::string 
 
 void JSONLatticeWriterOutput::printCurrentArrayToString_(std::string & output) {
 
-    if (currentArrayPointer_->size()) {
+    if (currentArrayPointer_ && (currentArrayPointer_->size() > 0)) {
         std::stringstream tempStream;
         tempStream << "[";
 
@@ -213,5 +214,3 @@ bool JSONLatticeWriterOutput::tryToFlattenOneElementCurrentArray(std::string & f
         return false;
     }
 }
-
-

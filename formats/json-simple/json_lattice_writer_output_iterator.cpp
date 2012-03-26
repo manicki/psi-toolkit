@@ -5,11 +5,10 @@
 JSONLatticeWriterOutputIterator::JSONLatticeWriterOutputIterator(
                                                                  std::ostream & output,
                                                                  bool withArgs)
-    : 
+    :
     outputWrapper_(output),
     withArgs_(withArgs)
 {
-    
 }
 
 JSONLatticeWriterOutputIterator::~JSONLatticeWriterOutputIterator() {
@@ -42,4 +41,3 @@ void JSONLatticeWriterOutputIterator::doCloseGroup(const std::string& /*group*/)
 
 void JSONLatticeWriterOutputIterator::doFlush() {
 }
-
