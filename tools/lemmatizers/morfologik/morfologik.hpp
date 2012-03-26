@@ -22,16 +22,11 @@ public:
 
     static std::string getName();
     static boost::filesystem::path getFile();
-
     std::list<std::string> getLayerTags();
-
     std::string getLanguage() const;
 
-    void lemmatize(
-        const std::string & word,
-        AnnotationItemManager & manager,
-        LemmatizerOutputIterator & iterator
-    );
+    void lemmatize(const std::string & word, AnnotationItemManager & manager,
+        LemmatizerOutputIterator & iterator);
 
     static boost::program_options::options_description optionsHandled();
 
@@ -58,8 +53,7 @@ public:
      *  one tag (in Morfologik tags are separated by plus sign).
      * @see simpleStem()
      */
-    std::multimap<std::string, std::vector<std::string> > stem(
-        const std::string & word);
+    std::multimap<std::string, std::vector<std::string> > stem(const std::string & word);
 
     /**
      * Stems word using Morfologik tool without lexical information.
@@ -73,65 +67,58 @@ public:
 
 private:
 
-    AnnotationItemManager * annotationManager;
-    int level;
-    std::string dictionary_;
-
+    static const std::string TAGS_SEPARATOR;
     static const std::vector<std::string> DICTIONARIES;
 
-    void stemsOnLemmaLevel(const std::string &, LemmatizerOutputIterator &);
-    void stemsOnLexemeLevel(const std::string &, LemmatizerOutputIterator &);
-    void stemsOnFormLevel(const std::string &, LemmatizerOutputIterator &);
+    int level_;
+    std::string dictionary_;
+    MorfologikTagsParser tagsParser_;
 
-    AnnotationItem createLexemeAnnotation(
-        const std::string & stem, std::string & tag
-    );
-    AnnotationItem createFormAnnotation(
-        AnnotationItem & lexemeItem,
-        const std::string& word,
-        std::map<std::string, std::string> &
-    );
+    AnnotationItemManager * annotationManager_;
 
-    std::set<std::string> getLemmasFromStems(
-        std::multimap<std::string, std::vector<std::string> > stems
-    );
-    std::vector<std::string> getLexemeTagsFromStems(
-        std::multimap<std::string, std::vector<std::string> > & stems,
-        const std::string & lemma
-    );
+    void stemsOnLemmaLevel_(const std::string &, LemmatizerOutputIterator &);
+    void stemsOnLexemeLevel_(const std::string &, LemmatizerOutputIterator &);
+    void stemsOnFormLevel_(const std::string &, LemmatizerOutputIterator &);
 
-    JNIEnv * jenv;
-    static std::string tagSeparator;
+    AnnotationItem createLexemeAnnotation_(const std::string& stem, std::string& tag);
+    AnnotationItem createFormAnnotation_(AnnotationItem& lexemeItem, const std::string& word,
+        std::map<std::string, std::string>&);
 
-    jclass clsPolishStemmer;
-    jobject objPolishStemmer;
-    jmethodID midPolishStemmerConstructor;
-    jmethodID midPolishStemmerLookup;
-    void initializePolishStemmer();
+    std::set<std::string> getLemmasFromStems_(
+        std::multimap<std::string, std::vector<std::string> > stems);
+    std::vector<std::string> getLexemeTagsFromStems_(
+        std::multimap<std::string, std::vector<std::string> >& stems, const std::string& lemma);
 
-    jclass clsList;
-    jmethodID midListGetElement;
-    jmethodID midListGetSize;
-    void initializeList();
+    JNIEnv * jenv_;
 
-    jclass clsWordData;
-    jmethodID midWordDataGetStem;
-    jmethodID midWordDataGetTag;
-    void initializeWordData();
+    jclass clsPolishStemmer_;
+    jobject objPolishStemmer_;
+    jmethodID midPolishStemmerConstructor_;
+    jmethodID midPolishStemmerLookup_;
+    void initializePolishStemmer_();
 
-    jclass clsString;
-    jmethodID midStringToString;
-    void initializeString();
+    jclass clsList_;
+    jmethodID midListGetElement_;
+    jmethodID midListGetSize_;
+    void initializeList_();
 
-    jclass enmDictionary;
-    jfieldID fidDictionary;
-    jobject objDictionary;
-    void initializeDictionary();
+    jclass clsWordData_;
+    jmethodID midWordDataGetStem_;
+    jmethodID midWordDataGetTag_;
+    void initializeWordData_();
 
-    const char * getStemByJNI(jobject);
-    const char * getTagsByJNI(jobject);
+    jclass clsString_;
+    jmethodID midStringToString_;
+    void initializeString_();
 
-    MorfologikTagsParser tagsParser;
+    jclass enmDictionary_;
+    jfieldID fidDictionary_;
+    jobject objDictionary_;
+    void initializeDictionary_();
+
+    const char * getStemByJNI_(jobject);
+    const char * getTagsByJNI_(jobject);
+
 
 };
 
