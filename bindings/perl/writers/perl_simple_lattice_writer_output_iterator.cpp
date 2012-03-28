@@ -7,11 +7,10 @@
 PerlSimpleLatticeWriterOutputIterator::PerlSimpleLatticeWriterOutputIterator(
   Sink & output,
   bool withArgs)
-    : 
+    :
     outputWrapper_(output),
     withArgs_(withArgs)
 {
-    
 }
 
 PerlSimpleLatticeWriterOutputIterator::~PerlSimpleLatticeWriterOutputIterator() {

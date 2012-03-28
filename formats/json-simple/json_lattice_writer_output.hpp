@@ -38,7 +38,7 @@ private:
     void printCurrentArrayToStringWithFlatten_(std::string & output, bool flattenOneElement);
     void printCurrentArrayToString_(std::string & output);
     void printHashValueToTemporaryString_(
-                       std::stringstream & outputStream, const std::string & key, const std::string & value);
+         std::stringstream & outputStream, const std::string & key, const std::string & value);
 
     void createEscapedJSONString_(const std::string & content, std::string & output);
 
