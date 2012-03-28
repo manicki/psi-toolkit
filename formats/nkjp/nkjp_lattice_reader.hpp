@@ -79,17 +79,6 @@ class NKJPLatticeReader : public StreamLatticeReader {
 
 public:
 
-    enum AnnotationLayer {
-        TEXT,
-        ANN_SEGMENTATION,
-        ANN_MORPHOSYNTAX,
-        ANN_SENSES,
-        ANN_WORDS,
-        ANN_NAMED,
-        ANN_GROUPS,
-        GUESS
-    };
-
     virtual std::string getFormatName();
 
     class Factory : public LatticeReaderFactory<std::istream> {
@@ -105,35 +94,6 @@ public:
         virtual std::string doGetName();
         virtual boost::filesystem::path doGetFile();
     };
-
-    NKJPLatticeReader(
-        std::string layer
-    ) {
-        if (layer == "text") {
-            layer_ = TEXT;
-        } else if (layer == "segmentation") {
-            layer_ = ANN_SEGMENTATION;
-        } else if (layer == "morphosyntax") {
-            layer_ = ANN_MORPHOSYNTAX;
-        } else if (layer == "senses") {
-            layer_ = ANN_SENSES;
-        } else if (layer == "words") {
-            layer_ = ANN_WORDS;
-        } else if (layer == "named") {
-            layer_ = ANN_NAMED;
-        } else if (layer == "groups") {
-            layer_ = ANN_GROUPS;
-        } else if (layer.empty()) {
-            layer_ = GUESS;
-        } else {
-            throw PsiException(
-                "Unknown type of NKJP layer: " + layer + ". Use one of the following: " +
-                "text segmentation morphosyntax senses words named groups"
-            );
-        }
-    }
-
-    AnnotationLayer getLayer() { return layer_; }
 
 private:
     virtual std::string doInfo();
@@ -164,8 +124,6 @@ private:
 
         return new Worker(*this, inputStream, lattice);
     }
-
-    AnnotationLayer layer_;
 };
 
 #endif
