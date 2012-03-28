@@ -12,16 +12,16 @@
 namespace qi = boost::spirit::qi;
 
 
-struct NKJPSegmentationCorrespItem {
-    std::string id;
+struct NKJPSpaceHintItem {
+    std::string text;
     int beginning;
     int length;
 };
 
 
 BOOST_FUSION_ADAPT_STRUCT(
-    NKJPSegmentationCorrespItem,
-    (std::string, id)
+    NKJPSpaceHintItem,
+    (std::string, text)
     (int, beginning)
     (int, length)
 )
@@ -29,7 +29,7 @@ BOOST_FUSION_ADAPT_STRUCT(
 
 struct NKJPSegmentationCorrespGrammar : public qi::grammar<
     std::string::const_iterator,
-    NKJPSegmentationCorrespItem()
+    NKJPSpaceHintItem()
 > {
 
     NKJPSegmentationCorrespGrammar() : NKJPSegmentationCorrespGrammar::base_type(start) {
@@ -46,29 +46,14 @@ struct NKJPSegmentationCorrespGrammar : public qi::grammar<
 
     }
 
-    qi::rule<std::string::const_iterator, NKJPSegmentationCorrespItem()> start;
+    qi::rule<std::string::const_iterator, NKJPSpaceHintItem()> start;
 
 };
-
-
-struct NKJPMorphosyntaxCommentItem {
-    std::string form;
-    int beginning;
-    int length;
-};
-
-
-BOOST_FUSION_ADAPT_STRUCT(
-    NKJPMorphosyntaxCommentItem,
-    (std::string, form)
-    (int, beginning)
-    (int, length)
-)
 
 
 struct NKJPMorphosyntaxCommentGrammar : public qi::grammar<
     std::string::const_iterator,
-    NKJPMorphosyntaxCommentItem()
+    NKJPSpaceHintItem()
 > {
 
     NKJPMorphosyntaxCommentGrammar() : NKJPMorphosyntaxCommentGrammar::base_type(start) {
@@ -85,7 +70,7 @@ struct NKJPMorphosyntaxCommentGrammar : public qi::grammar<
 
     }
 
-    qi::rule<std::string::const_iterator, NKJPMorphosyntaxCommentItem()> start;
+    qi::rule<std::string::const_iterator, NKJPSpaceHintItem()> start;
 
 };
 

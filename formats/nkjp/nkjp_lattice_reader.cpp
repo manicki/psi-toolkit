@@ -137,7 +137,7 @@ void NKJPLatticeReader::Worker::doRun() {
                     try {
                         std::string corresp(vSeg.second.get<std::string>("<xmlattr>.corresp"));
                         NKJPSegmentationCorrespGrammar grammar;
-                        NKJPSegmentationCorrespItem item;
+                        NKJPSpaceHintItem item;
                         std::string::const_iterator begin = corresp.begin();
                         std::string::const_iterator end = corresp.end();
                         if (parse(begin, end, grammar, item)) {
@@ -250,7 +250,7 @@ void NKJPLatticeReader::Worker::doRun() {
                 try {
                     std::string comment(vSeg.second.get<std::string>("fs.<xmlcomment>"));
                     NKJPMorphosyntaxCommentGrammar grammar;
-                    NKJPMorphosyntaxCommentItem item;
+                    NKJPSpaceHintItem item;
                     std::string::const_iterator begin = comment.begin();
                     std::string::const_iterator end = comment.end();
                     if (parse(begin, end, grammar, item)) {
@@ -470,37 +470,46 @@ void NKJPLatticeReader::Worker::doRun() {
         strcmp(vP.first.data(), "u") == 0
     ) {
         Lattice::VertexDescriptor pBegin = lattice_.getLastVertex();
+        Lattice::VertexDescriptor pEnd = lattice_.getLastVertex();
         Lattice::EdgeSequence::Builder pBuilder(lattice_);
         BOOST_FOREACH(
             boost::property_tree::ptree::value_type &vS,
             vP.second.get_child("")
         ) if (strcmp(vS.first.data(), "s") == 0) {
             Lattice::VertexDescriptor sBegin = lattice_.getLastVertex();
+            Lattice::VertexDescriptor sEnd = lattice_.getLastVertex();
             Lattice::EdgeSequence::Builder sBuilder(lattice_);
+            std::string segText;
             BOOST_FOREACH(
                 boost::property_tree::ptree::value_type &vSeg,
                 vS.second.get_child("")
             ) if (strcmp(vSeg.first.data(), "seg") == 0) {
+
+                // hinting space insertion
                 bool insertSpace = false;
-                try {
-                    std::string comment(vSeg.second.get<std::string>("fs.<xmlcomment>"));
-                    NKJPMorphosyntaxCommentGrammar grammar;
-                    NKJPMorphosyntaxCommentItem item;
-                    std::string::const_iterator begin = comment.begin();
-                    std::string::const_iterator end = comment.end();
-                    if (parse(begin, end, grammar, item)) {
-                        if (item.beginning - prevEnding > 0) {
-                            insertSpace = true;
-                        } else {
-                            insertSpace = false;
-                        }
-                        prevEnding = item.beginning + item.length;
+                std::string corresp(vSeg.second.get("<xmlattr>.corresp", ""));
+                std::string::const_iterator correspBegin = corresp.begin();
+                std::string::const_iterator correspEnd = corresp.end();
+                NKJPSegmentationCorrespGrammar correspGrammar;
+                std::string comment(vSeg.second.get("fs.<xmlcomment>", ""));
+                std::string::const_iterator commentBegin = comment.begin();
+                std::string::const_iterator commentEnd = comment.end();
+                NKJPMorphosyntaxCommentGrammar commentGrammar;
+                NKJPSpaceHintItem item;
+                if (
+                    parse(correspBegin, correspEnd, correspGrammar, item) ||
+                    parse(commentBegin, commentEnd, commentGrammar, item)
+                ) {
+                    if (item.beginning - prevEnding > 0) {
+                        insertSpace = true;
                     } else {
                         insertSpace = false;
                     }
-                } catch (boost::property_tree::ptree_error) {
+                    prevEnding = item.beginning + item.length;
+                } else {
                     insertSpace = false;
                 }
+
                 try {
                     std::string segment(vSeg.second.get("fs.f.string", std::string()));
                     std::string npsValue;
@@ -656,11 +665,13 @@ void NKJPLatticeReader::Worker::doRun() {
                         }
                     }
                     sBuilder.addEdge(segEdge);
+                    sEnd = segEnd;
                 } catch (boost::property_tree::ptree_error) {
                     throw PsiException("nkjp-reader: input file error");
                 }
+            } else if (strcmp(vSeg.first.data(), "<xmlcomment>") == 0) {
+                segText = boost::algorithm::trim_copy(vSeg.second.get<std::string>(""));
             }
-            Lattice::VertexDescriptor sEnd = lattice_.getLastVertex();
             AnnotationItem sItem(
                 "s",
                 StringFrag(lattice_.getAllText(), sBegin, sEnd-sBegin)
@@ -673,8 +684,8 @@ void NKJPLatticeReader::Worker::doRun() {
                 sBuilder.build()
             );
             pBuilder.addEdge(sEdge);
+            pEnd = sEnd;
         }
-        Lattice::VertexDescriptor pEnd = lattice_.getLastVertex();
         AnnotationItem pItem(
             vP.first.data(),
             StringFrag(lattice_.getAllText(), pBegin, pEnd-pBegin)
@@ -686,13 +697,19 @@ void NKJPLatticeReader::Worker::doRun() {
             getTags_("paragraph"),
             pBuilder.build()
         );
-    } else if (strcmp(vP.first.data(), "<xmlattr>") != 0) {
+    } else if (
+        strcmp(vP.first.data(), "<xmlattr>") != 0 &&
+        strcmp(vP.first.data(), "<xmlcomment>") != 0
+    ) {
         Lattice::VertexDescriptor divBegin = lattice_.getLastVertex();
         Lattice::EdgeSequence::Builder divBuilder(lattice_);
         BOOST_FOREACH(
             boost::property_tree::ptree::value_type &vAB,
             vP.second.get_child("")
-        ) if (strcmp(vAB.first.data(), "<xmlattr>") != 0) {
+        ) if (
+            strcmp(vAB.first.data(), "<xmlattr>") != 0 &&
+            strcmp(vAB.first.data(), "<xmlcomment>") != 0
+        ) {
             std::string abText(vAB.second.get<std::string>(""));
             AnnotationItem abItem(vAB.first.data(), abText);
             Lattice::EdgeDescriptor abEdge = appendSegmentToLattice_(abText, abItem, "paragraph");
