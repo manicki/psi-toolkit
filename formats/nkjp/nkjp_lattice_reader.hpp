@@ -101,7 +101,8 @@ public:
         ANN_SENSES,
         ANN_WORDS,
         ANN_NAMED,
-        ANN_GROUPS
+        ANN_GROUPS,
+        GUESS
     };
 
     virtual std::string getFormatName();
@@ -137,6 +138,8 @@ public:
             layer_ = ANN_NAMED;
         } else if (layer == "groups") {
             layer_ = ANN_GROUPS;
+        } else if (layer.empty()) {
+            layer_ = GUESS;
         } else {
             throw PsiException(
                 "Unknown type of NKJP layer: " + layer + ". Use one of the following: " +
