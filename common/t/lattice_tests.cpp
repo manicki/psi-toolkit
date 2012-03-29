@@ -836,8 +836,9 @@ void initAndTokenize_(Lattice& lattice, const std::string& paragraph, bool addSy
     LayerTagCollection textTags(
         lattice.getLayerTagManager().createSingletonTagCollection("text"));
     AnnotationItem item("TEXT", paragraph);
-    lattice.addEdge(lattice.getFirstVertex(), lattice.getLastVertex(),
-                    item, textTags);
+    try {
+        lattice.addEdge(lattice.getFirstVertex(), lattice.getLastVertex(), item, textTags);
+    } catch (LoopEdgeException) { }
 
     BySpacesCutter cutter;
 
@@ -902,6 +903,7 @@ BOOST_AUTO_TEST_CASE( edge_self_reference ) {
         lattice.addPartitionToEdge(edge, tags, builder.build()),
         EdgeSelfReferenceException
     );
+
 }
 
 BOOST_AUTO_TEST_CASE( reversed_edges ) {
@@ -914,6 +916,19 @@ BOOST_AUTO_TEST_CASE( reversed_edges ) {
     BOOST_CHECK_THROW(
         lattice.addEdge(from, to, item, tags),
         ReversedEdgeException
+    );
+}
+
+
+BOOST_AUTO_TEST_CASE( loop_edges ) {
+    Lattice lattice("ab");
+    Lattice::VertexDescriptor vertex = lattice.getVertexForRawCharIndex(1);
+    AnnotationItem item("item");
+    LayerTagCollection tags(lattice.getLayerTagManager().createSingletonTagCollection("tag"));
+
+    BOOST_CHECK_THROW(
+        lattice.addEdge(vertex, vertex, item, tags),
+        LoopEdgeException
     );
 }
 

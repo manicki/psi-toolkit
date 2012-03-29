@@ -371,7 +371,7 @@ public:
      /**
      * Gets the last vertex
      */
-    VertexDescriptor getLastVertex() const;
+    VertexDescriptor getLastVertex();
 
     size_t getVertexRawCharIndex(VertexDescriptor vd);
 

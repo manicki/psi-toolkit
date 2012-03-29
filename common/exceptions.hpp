@@ -61,6 +61,12 @@ public:
 };
 
 
+class LoopEdgeException : public PsiException {
+public:
+    LoopEdgeException(std::string message) : PsiException(message) { }
+};
+
+
 class EdgeInsertionException : public PsiException {
 public:
     EdgeInsertionException(std::string message) : PsiException(message) { }
