@@ -63,12 +63,11 @@ void TxtLatticeReader::Worker::doRun() {
 }
 
 void TxtLatticeReader::Worker::appendParagraphToLattice_(std::string paragraph) {
-    Lattice::VertexDescriptor prevEnd = lattice_.getLastVertex();
-    lattice_.appendStringWithSymbols(paragraph);
-    Lattice::VertexDescriptor nowEnd = lattice_.getLastVertex();
-
-    AnnotationItem item("FRAG", paragraph);
-    lattice_.addEdge(prevEnd, nowEnd,
-                     item, textTags_);
-
+    if (!paragraph.empty()) {
+        Lattice::VertexDescriptor prevEnd = lattice_.getLastVertex();
+        lattice_.appendStringWithSymbols(paragraph);
+        Lattice::VertexDescriptor nowEnd = lattice_.getLastVertex();
+        AnnotationItem item("FRAG", paragraph);
+        lattice_.addEdge(prevEnd, nowEnd, item, textTags_);
+    }
 }
