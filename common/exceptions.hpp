@@ -2,6 +2,8 @@
 #define PsiExceptionS_HDR
 
 
+#include "config.hpp"
+
 #include <string>
 
 #include "psi_exception.hpp"

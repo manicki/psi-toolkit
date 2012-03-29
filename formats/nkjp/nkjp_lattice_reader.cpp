@@ -61,7 +61,7 @@ void NKJPLatticeReader::Worker::doRun() {
     boost::property_tree::ptree xpt;
     boost::property_tree::read_xml(inputStream_, xpt);
 
-    int prevEnding = std::numeric_limits<int>::max();
+    int prevEnding = (std::numeric_limits<int>::max)();
     BOOST_FOREACH(
         boost::property_tree::ptree::value_type &vP,
         xpt.get_child("teiCorpus.TEI.text.body")
