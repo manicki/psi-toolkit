@@ -86,6 +86,8 @@ BOOST_AUTO_TEST_CASE( tags_masks ) {
     LayerTagMask maskAny = layer_tag_manager.anyTag();
     LayerTagMask maskPlane = layer_tag_manager.planeTags();
 
+    BOOST_CHECK(maskFoo.isSome());
+    BOOST_CHECK(maskBar.isSome());
     BOOST_CHECK(layer_tag_manager.match(maskFoo, "foo"));
     BOOST_CHECK(!layer_tag_manager.match(maskFoo, "bar"));
     BOOST_CHECK(!layer_tag_manager.match(maskFoo, "boo"));
@@ -113,6 +115,7 @@ BOOST_AUTO_TEST_CASE( tags_masks ) {
     BOOST_CHECK(!layer_tag_manager.match(maskNone, "!foo"));
 
     BOOST_CHECK(maskAny.isAny());
+    BOOST_CHECK(maskAny.isSome());
     BOOST_CHECK(layer_tag_manager.match(maskAny, "foo"));
     BOOST_CHECK(layer_tag_manager.match(maskAny, "bar"));
     BOOST_CHECK(layer_tag_manager.match(maskAny, "boo"));

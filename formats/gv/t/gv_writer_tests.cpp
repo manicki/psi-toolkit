@@ -29,6 +29,9 @@ BOOST_AUTO_TEST_CASE( gv_lattice_writer_simple ) {
         false // tree
     ));
 
+    BOOST_CHECK_EQUAL(writer->getFormatName(), "GraphViz");
+    BOOST_CHECK_EQUAL(writer->info(), "GraphViz writer");
+
     std::stringstream outSs;
     writer->writeLattice(lattice, outSs);
     std::string refLine;

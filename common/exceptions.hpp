@@ -43,10 +43,12 @@ public:
 };
 
 
+#if STRING_FRAG_VALIDATION
 class StringFragException : public PsiException {
 public:
     StringFragException(std::string message) : PsiException(message) { }
 };
+#endif
 
 
 class EdgeSelfReferenceException : public PsiException {

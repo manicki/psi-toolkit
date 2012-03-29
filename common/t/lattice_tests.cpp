@@ -213,6 +213,7 @@ BOOST_AUTO_TEST_CASE( get_path ) {
     Lattice::VertexDescriptor vertex = lattice.getFirstVertex();
 
     Lattice::EdgeSequence sequence = lattice.getPath(vertex, symbolMask);
+    BOOST_CHECK_EQUAL(lattice.getSequenceText(sequence), "ćma zielona");
 
     Lattice::InOutEdgesIterator iter = lattice.outEdges(vertex, symbolMask);
     BOOST_CHECK(!iter.hasNext());
@@ -565,6 +566,9 @@ BOOST_AUTO_TEST_CASE( loose_vertices ) {
     Lattice::VertexDescriptor vertexPre = lattice.getVertexForRawCharIndex(1);
     Lattice::VertexDescriptor vertexPost = lattice.getVertexForRawCharIndex(2);
     Lattice::VertexDescriptor vertexLoose = lattice.addLooseVertex();
+
+    BOOST_CHECK_EQUAL(lattice.getLooseVertexIndex(vertexLoose), 0);
+    BOOST_CHECK_THROW(lattice.getLooseVertexIndex(vertexPre), WrongVertexException);
 
     AnnotationItem tokenX("x");
     AnnotationItem tokenY("y");

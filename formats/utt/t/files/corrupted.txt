@@ -1,0 +1,50 @@
+BOS *
+0000 06 W Amelie lemma:Amelie,name:sg:f
+0006 01 B _
+0007 01 W a lemma:a,subst:pl:m;a,subst:sg:m;avoir,verb:ind:fin:ter:sg
+0008 01 B _
+0009 02 W un lemma:un,adj;un,det:sg:m;un,pron;un,subst:sg:m
+0011 01 B _
+0012 04 W chat lemma:chat,subst:sg:m
+0016 01 P .
+0017 00 EOS *
+00 BOS *
+0017 06 W Quelle lemma:quel,det:sg:f;quelle,intpron
+0023 01 B _
+0024 03 W âge lemma:âge,subst:sg:m
+0027 01 B _
+0028 02 W as lemma:as,subst:sg:m;avoir,verb:ind:fin:sec:sg
+0030 03 W -tu lemma:-tu,postpron:sec:sg
+0033 01 P ?
+0034 00 EOS *
+BOS *
+0034 05 W Karol lemma:Karol,name:sg:m
+0039 01 B _
+0040 05 W Józef lemma:Józef,ign
+0045 01 B _
+0046 07 W Wojtyła lemma:Wojtyła,ign
+0053 01 B _
+0054 03 W est lemma:est,adj:pl:f;est,adj:sg:f;est,adj:pl:m;est,adj:sg:m;est,adv;est,subst:sg:m;être,verb:ind:fin:ter:sg
+0057 01 B _
+0058 03 W élu lemma:élire,ppas:sg:m;élu,adj:sg:m;élu,subst:sg:m
+0061 01 B _
+0062 04 W pape lemma:pape,subst:sg:m
+0066 01 B _
+0067 02 W de lemma:de,det:pl:f;de,det:pl:m;de,prep
+0069 01 B _
+0070 02 W l' lemma:la,perspron:ter:sg:f;le,det:sg:f;le,det:sg:m;le,perspron:ter:sg:m
+0072 06 W Église lemma:église,subst:sg:f
+0078 01 B _
+0079 10 W catholique lemma:catholique,adj:sg:f;catholique,adj:sg:m;catholique,subst:sg:f;catholique,subst:sg:m;
+0089 01 B _
+0090 07 W romaine lemma:romain,adj:sg:f;romain,subst:sg:f
+0097 01 B _
+0098 02 W le lemma:le,det:sg:m;le,perspron:ter:sg:m
+0100 01 B _
+0101 02 N 16
+0103 01 B _
+0104 07 W octobre lemma:octobre,subst:sg:m
+0111 01 B _
+0112 04 N 1978
+0116 01 P .
+0117 00 EOS *

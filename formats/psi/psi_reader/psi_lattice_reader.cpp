@@ -2,11 +2,11 @@
 
 
 std::string PsiLatticeReader::getFormatName() {
-    return "Psi";
+    return "PSI";
 }
 
 std::string PsiLatticeReader::doInfo() {
-    return "Psi reader";
+    return "PSI reader";
 }
 
 
