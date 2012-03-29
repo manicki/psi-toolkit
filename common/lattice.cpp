@@ -97,6 +97,9 @@ Lattice::VertexDescriptor Lattice::getLastVertex() {
 }
 
 size_t Lattice::getVertexRawCharIndex(VertexDescriptor vd) {
+    if (isLooseVertex(vd)) {
+        throw WrongVertexException("Loose vertex have no raw char index");
+    }
     return size_t(vd);
 }
 
