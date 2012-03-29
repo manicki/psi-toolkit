@@ -58,7 +58,6 @@ NKJPLatticeReader::Worker::Worker(
 
 void NKJPLatticeReader::Worker::doRun() {
 
-    // SET_LOGGING_LEVEL("DEBUG");
     boost::property_tree::ptree xpt;
     boost::property_tree::read_xml(inputStream_, xpt);
 
@@ -158,7 +157,8 @@ void NKJPLatticeReader::Worker::doRun() {
                         std::string value(
                             vF.second.get("string",
                                 vF.second.get("symbol.<xmlattr>.value",
-                                    vF.second.get("binary.<xmlattr>.value", std::string()))));
+                                    vF.second.get("binary.<xmlattr>.value",
+                                        vF.second.get("<xmlattr>.fVal", std::string())))));
                         if (!attr.empty() && !value.empty()) {
                             if (attr == "nps") {
                                 npsValue = value;
@@ -235,15 +235,20 @@ void NKJPLatticeReader::Worker::doRun() {
                                         try {
                                             Lattice::EdgeSequence::Builder msdBuilder(lattice_);
                                             msdBuilder.addEdge(baseEdge);
+                                            StringFrag msdAnnotationText;
+                                            try {
+                                                msdAnnotationText = StringFrag(
+                                                    lattice_.getAllText(),
+                                                    segBegin,
+                                                    lattice_.getVertexRawCharIndex(segEnd)
+                                                        - lattice_.getVertexRawCharIndex(segBegin)
+                                                );
+                                            } catch (WrongVertexException) { }
                                             AnnotationItem msdItem(
                                                 vFF.second.get<std::string>(
                                                     "symbol.<xmlattr>.xml:id"
                                                 ),
-                                                StringFrag(
-                                                    lattice_.getAllText(),
-                                                    segBegin,
-                                                    segEnd-segBegin
-                                                )
+                                                msdAnnotationText
                                             );
                                             lattice_.getAnnotationItemManager().setValue(
                                                 msdItem,
@@ -267,13 +272,18 @@ void NKJPLatticeReader::Worker::doRun() {
                                                 Lattice::EdgeSequence::Builder
                                                     vAltBuilder(lattice_);
                                                 vAltBuilder.addEdge(baseEdge);
-                                                AnnotationItem vAltItem(
-                                                    vVAlt.second.get("<xmlattr>.xml:id", "msd"),
-                                                    StringFrag(
+                                                StringFrag vAltAnnotationText;
+                                                try {
+                                                    vAltAnnotationText = StringFrag(
                                                         lattice_.getAllText(),
                                                         segBegin,
-                                                        segEnd-segBegin
-                                                    )
+                                                        lattice_.getVertexRawCharIndex(segEnd)
+                                                        - lattice_.getVertexRawCharIndex(segBegin)
+                                                    );
+                                                } catch (WrongVertexException) { }
+                                                AnnotationItem vAltItem(
+                                                    vVAlt.second.get("<xmlattr>.xml:id", "msd"),
+                                                    vAltAnnotationText
                                                 );
                                                 lattice_.getAnnotationItemManager().setValue(
                                                     vAltItem,
@@ -308,12 +318,20 @@ void NKJPLatticeReader::Worker::doRun() {
                 sEnd = segEnd;
 
             } else if (strcmp(vSeg.first.data(), "<xmlcomment>") == 0) {
-                segText = boost::algorithm::trim_copy(vSeg.second.get<std::string>(""));
+                segText = boost::algorithm::trim_copy(vSeg.second.get("", std::string()));
             }
-            AnnotationItem sItem(
-                "s",
-                StringFrag(lattice_.getAllText(), sBegin, sEnd-sBegin)
-            );
+            StringFrag sAnnotationText;
+            try {
+                sAnnotationText = StringFrag(
+                    lattice_.getAllText(),
+                    sBegin,
+                    lattice_.getVertexRawCharIndex(sEnd) - lattice_.getVertexRawCharIndex(sBegin)
+                );
+            } catch (WrongVertexException) { }
+            AnnotationItem sItem("s", sAnnotationText);
+            if (sBegin == sEnd) {
+                sEnd = lattice_.addLooseVertex();
+            }
             Lattice::EdgeDescriptor sEdge = lattice_.addEdge(
                 sBegin,
                 sEnd,
@@ -324,10 +342,18 @@ void NKJPLatticeReader::Worker::doRun() {
             pBuilder.addEdge(sEdge);
             pEnd = sEnd;
         }
-        AnnotationItem pItem(
-            vP.first.data(),
-            StringFrag(lattice_.getAllText(), pBegin, pEnd-pBegin)
-        );
+        StringFrag pAnnotationText;
+        try {
+            pAnnotationText = StringFrag(
+                lattice_.getAllText(),
+                pBegin,
+                lattice_.getVertexRawCharIndex(pEnd) - lattice_.getVertexRawCharIndex(pBegin)
+            );
+        } catch (WrongVertexException) { }
+        AnnotationItem pItem(vP.first.data(), pAnnotationText);
+        if (pBegin == pEnd) {
+            pEnd = lattice_.addLooseVertex();
+        }
         lattice_.addEdge(
             pBegin,
             pEnd,
@@ -348,16 +374,21 @@ void NKJPLatticeReader::Worker::doRun() {
             strcmp(vAB.first.data(), "<xmlattr>") != 0 &&
             strcmp(vAB.first.data(), "<xmlcomment>") != 0
         ) {
-            std::string abText(vAB.second.get<std::string>(""));
+            std::string abText(vAB.second.get("", std::string()));
             AnnotationItem abItem(vAB.first.data(), abText);
             Lattice::EdgeDescriptor abEdge = appendSegmentToLattice_(abText, abItem, "paragraph");
             divBuilder.addEdge(abEdge);
         }
         Lattice::VertexDescriptor divEnd = lattice_.getLastVertex();
-        AnnotationItem divItem(
-            vP.first.data(),
-            StringFrag(lattice_.getAllText(), divBegin, divEnd-divBegin)
-        );
+        StringFrag divAnnotationText;
+        try {
+            divAnnotationText = StringFrag(
+                lattice_.getAllText(),
+                divBegin,
+                lattice_.getVertexRawCharIndex(divEnd) - lattice_.getVertexRawCharIndex(divBegin)
+            );
+        } catch (WrongVertexException) { }
+        AnnotationItem divItem(vP.first.data(), divAnnotationText);
         lattice_.addEdge(
             divBegin,
             divEnd,
@@ -398,18 +429,25 @@ Lattice::EdgeDescriptor NKJPLatticeReader::Worker::appendSegmentToLattice_(
     }
 
     Lattice::VertexDescriptor from = lattice_.getLastVertex();
-    lattice_.appendStringWithSymbols(segment);
-    Lattice::VertexDescriptor to = lattice_.getLastVertex();
-    Lattice::EdgeSequence::Builder seqBuilder(lattice_);
-    Lattice::VertexDescriptor currentVertex = from;
-    Lattice::EdgeDescriptor currentEdge;
-    while (currentVertex != to) {
-        currentEdge = lattice_.firstOutEdge(
-            currentVertex,
-            lattice_.getLayerTagManager().getMask("symbol")
-        );
-        seqBuilder.addEdge(currentEdge);
-        currentVertex = lattice_.getEdgeTarget(currentEdge);
+    Lattice::VertexDescriptor to;
+    if (segment.empty()) {
+        to = lattice_.addLooseVertex();
+    } else {
+        lattice_.appendStringWithSymbols(segment);
+        to = lattice_.getLastVertex();
     }
+    Lattice::EdgeSequence::Builder seqBuilder(lattice_);
+    try {
+        Lattice::VertexDescriptor currentVertex = from;
+        Lattice::EdgeDescriptor currentEdge;
+        while (currentVertex != to) {
+            currentEdge = lattice_.firstOutEdge(
+                currentVertex,
+                lattice_.getLayerTagManager().getMask("symbol")
+            );
+            seqBuilder.addEdge(currentEdge);
+            currentVertex = lattice_.getEdgeTarget(currentEdge);
+        }
+    } catch (NoEdgeException) { }
     return lattice_.addEdge(from, to, item, getTags_(mainTag), seqBuilder.build());
 }
