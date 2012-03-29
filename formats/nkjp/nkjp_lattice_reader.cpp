@@ -1,7 +1,7 @@
 #include "nkjp_lattice_reader.hpp"
 
 #include <cstring>
-#include <locale>
+#include <limits>
 
 #include <boost/algorithm/string/trim.hpp>
 #include <boost/assign/list_of.hpp>
@@ -61,7 +61,7 @@ void NKJPLatticeReader::Worker::doRun() {
     boost::property_tree::ptree xpt;
     boost::property_tree::read_xml(inputStream_, xpt);
 
-    int prevEnding = 0;
+    int prevEnding = std::numeric_limits<int>::max();
     BOOST_FOREACH(
         boost::property_tree::ptree::value_type &vP,
         xpt.get_child("teiCorpus.TEI.text.body")
@@ -92,7 +92,8 @@ void NKJPLatticeReader::Worker::doRun() {
                 std::string::const_iterator correspBegin = corresp.begin();
                 std::string::const_iterator correspEnd = corresp.end();
                 NKJPSegmentationCorrespGrammar correspGrammar;
-                std::string comment(vSeg.second.get("fs.<xmlcomment>", ""));
+                std::string comment(vSeg.second.get("fs.<xmlcomment>",
+                    vSeg.second.get("<xmlcomment>", "")));
                 std::string::const_iterator commentBegin = comment.begin();
                 std::string::const_iterator commentEnd = comment.end();
                 NKJPMorphosyntaxCommentGrammar commentGrammar;
@@ -107,6 +108,9 @@ void NKJPLatticeReader::Worker::doRun() {
                         insertSpace = false;
                     }
                     prevEnding = item.beginning + item.length;
+                    if (segText.empty()) {
+                        segText = item.text;
+                    }
                 } else {
                     insertSpace = false;
                 }

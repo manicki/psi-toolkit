@@ -1,5 +1,5 @@
-01 0000 *@0   ∅            nkjp-reader,sense                 senses\_1.5-seg,sense=NKJP\_WSI.xml\#zostac.1[]
-02 0000 *@0   ∅            nkjp-reader,sentence              s[1]
-03 @0   *@1   ∅            nkjp-reader,sentence              s[]
-04 @1   *@2   ∅            nkjp-reader,sentence              s[]
-05 0000 *@2   ∅            nkjp-reader,paragraph             p[2-3-4]
+01 0000 07    został       nkjp-reader,sense     został      senses\_1.5-seg,sense=NKJP\_WSI.xml\#zostac.1
+02 0000 07    został       nkjp-reader,sentence  został      s[1]
+03 0007 *@0   ∅            nkjp-reader,sentence              s[]
+04 @0   *@1   ∅            nkjp-reader,sentence              s[]
+05 0000 *@1   ∅            nkjp-reader,paragraph             p[2-3-4]
