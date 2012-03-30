@@ -1,10 +1,13 @@
 #ifndef PSI_ASPELL_HDR
 #define PSI_ASPELL_HDR
 
+#include <aspell.h>
+
 #include "annotator.hpp"
 #include "language_dependent_annotator_factory.hpp"
+#include "annotator_factory.hpp"
 
-class PSIAspell : public Annotator {
+class PSIAspell : Annotator {
 
 public:
     class Factory : public LanguageDependentAnnotatorFactory {
@@ -28,7 +31,14 @@ public:
             const boost::program_options::variables_map& options) const;
     };
 
-    PSIAspell();
+    PSIAspell(const std::string & langCode);
+    ~PSIAspell();
+
+    bool isWordCorrect(const std::string & word);
+    void getSuggestionsForLastWord(
+                                   std::list<std::string> & suggestionsList,
+                                   const std::string & word
+                                   );
 
 private:
 
@@ -43,6 +53,10 @@ private:
     virtual LatticeWorker* doCreateLatticeWorker(Lattice& lattice);
 
     virtual std::string doInfo();
+
+    std::string langCode_;
+    AspellConfig * aspellConfig_;
+    AspellSpeller * aspellSpeller_;
 };
 
 #endif
