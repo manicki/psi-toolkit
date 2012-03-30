@@ -6,6 +6,7 @@ add_subdirectory(datastructures)
 add_subdirectory(recognizers)
 add_subdirectory(lexica)
 add_subdirectory(taggers)
+add_subdirectory(spellcheckers)
 
 set(tools_DIRS
     tokenizers/tp
@@ -17,6 +18,7 @@ set(tools_DIRS
     lexica/bilexicon
     datastructures/lexica
     taggers/metagger
+    spellcheckers/aspell
     CACHE PATH "Tools' paths to use in include_ and link_directories" FORCE
 )
 

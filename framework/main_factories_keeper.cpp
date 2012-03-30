@@ -45,6 +45,9 @@
 #endif
 
 #include "me_tagger.hpp"
+#if HAVE_ASPELL
+#include "psi_aspell.hpp"
+#endif
 
 MainFactoriesKeeper::MainFactoriesKeeper() {
     keeper_.takeProcessorFactory(new TxtLatticeReader::Factory());
@@ -87,6 +90,10 @@ MainFactoriesKeeper::MainFactoriesKeeper() {
     keeper_.takeProcessorFactory(new PerlSimpleLatticeWriter::Factory());
 #endif
     keeper_.takeProcessorFactory(new MeTagger::Factory());
+
+#if HAVE_ASPELL
+    keeper_.takeProcessorFactory(new PSIAspell::Factory());
+#endif
 }
 
 ProcessorFactory& MainFactoriesKeeper::getProcessorFactory(std::string processorName) {
