@@ -13,6 +13,8 @@ BiLexicon::BiLexicon(const boost::program_options::variables_map& options) {
     std::string lang = options["lang"].as<std::string>();
     std::string trg_lang = options["trg-lang"].as<std::string>();
 
+    createTags_(trg_lang);
+
     BiLangSpecificProcessorFileFetcher fileFetcher(__FILE__, lang, trg_lang);
 
     if (options.count("plain-text-lexicon") > 0) {
@@ -104,7 +106,7 @@ void BiLexicon::addEntry_(
     Lattice& lattice, Lattice::EdgeDescriptor edge, const std::string& record) {
 
     LayerTagCollection tags = lattice.getLayerTagManager().createTagCollectionFromList(
-        providedLayerTags());
+        tags_);
 
     Lattice::EdgeSequence::Builder builder(lattice);
     builder.addEdge(edge);
@@ -205,6 +207,11 @@ void BiLexicon::removeComment_(std::string& s) {
 
 bool BiLexicon::isEmptyLine_(const std::string& s) {
     return s.find_first_not_of(" \t");
+}
+
+void BiLexicon::createTags_(const std::string& trg_lang) {
+    tags_ = providedLayerTags();
+    tags_.push_back(std::string("!") + trg_lang);
 }
 
 const std::string BiLexicon::DEFAULT_BINARY_LEXICON_SPEC
