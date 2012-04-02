@@ -11,6 +11,8 @@ add_library(common SHARED
     annotator.cpp
     annotator_factory.cpp
     ant_like_path_glob.cpp
+    bi_lang_specific_processor_file_fetcher.cpp
+    bi_language_dependent_annotator_factory.cpp
     configurator.cpp
     cutter.cpp
     cutter_annotator_options.cpp

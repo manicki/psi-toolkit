@@ -44,6 +44,8 @@ private:
 
     boost::shared_ptr<KeyValueStore> store_;
     UTTLikeQuoter quoter_;
+
+    static const std::string DEFAULT_BINARY_LEXICON_SPEC;
 };
 
 #endif

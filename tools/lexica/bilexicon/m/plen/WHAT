@@ -1,0 +1,2 @@
+tp-tokenizer --lang pl ! morfologik ! bilexicon --lang pl --trg-lang en ! simple-writer --tag !translation
+

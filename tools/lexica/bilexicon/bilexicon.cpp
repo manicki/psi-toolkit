@@ -6,16 +6,20 @@
 #include <boost/assign.hpp>
 #include <boost/bind.hpp>
 
-#include "processor_file_fetcher.hpp"
+#include "bi_lang_specific_processor_file_fetcher.hpp"
+#include "bi_language_dependent_annotator_factory.hpp"
 
 BiLexicon::BiLexicon(const boost::program_options::variables_map& options) {
-    ProcessorFileFetcher fileFetcher(__FILE__);
+    std::string lang = options["lang"].as<std::string>();
+    std::string trg_lang = options["trg-lang"].as<std::string>();
+
+    BiLangSpecificProcessorFileFetcher fileFetcher(__FILE__, lang, trg_lang);
 
     if (options.count("plain-text-lexicon") > 0) {
-        if (options.count("binary-lexicon") > 0)
+        if (options.count("binary-lexicon") > 0
+            && options["binary-lexicon"].as<std::string>() != DEFAULT_BINARY_LEXICON_SPEC)
             throw new Exception(
                 "either --plain-text-lexicon or --binary-lexicon expected, not both");
-
 
         boost::filesystem::path plainTextLexiconPath =
             fileFetcher.getOneFile(
@@ -52,9 +56,12 @@ boost::filesystem::path BiLexicon::getFile() {
 boost::program_options::options_description BiLexicon::optionsHandled() {
     boost::program_options::options_description desc("Allowed options");
 
+    BiLanguageDependentAnnotatorFactory::addBiLanguageDependentOptions(desc);
+
     desc.add_options()
         ("binary-lexicon",
-         boost::program_options::value<std::string>(),
+         boost::program_options::value<std::string>()
+         ->default_value(DEFAULT_BINARY_LEXICON_SPEC),
          "path to the lexicon in the binary format")
         ("plain-text-lexicon",
          boost::program_options::value<std::string>(),
@@ -199,3 +206,6 @@ void BiLexicon::removeComment_(std::string& s) {
 bool BiLexicon::isEmptyLine_(const std::string& s) {
     return s.find_first_not_of(" \t");
 }
+
+const std::string BiLexicon::DEFAULT_BINARY_LEXICON_SPEC
+= "%ITSDATA%/%LANG%%TRGLANG%.bin";
