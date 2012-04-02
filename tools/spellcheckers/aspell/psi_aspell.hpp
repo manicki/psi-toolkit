@@ -7,7 +7,9 @@
 #include "language_dependent_annotator_factory.hpp"
 #include "annotator_factory.hpp"
 
-class PSIAspell : Annotator {
+typedef std::list<std::string> SuggestionsList;
+
+class PSIAspell : public Annotator {
 
 public:
     class Factory : public LanguageDependentAnnotatorFactory {
@@ -32,11 +34,13 @@ public:
     };
 
     PSIAspell(const std::string & langCode);
+    PSIAspell(const std::string & langCode,
+              const boost::program_options::variables_map& options);
     ~PSIAspell();
 
     bool isWordCorrect(const std::string & word);
     void getSuggestionsForLastWord(
-                                   std::list<std::string> & suggestionsList,
+                                   SuggestionsList & suggestionsList,
                                    const std::string & word
                                    );
 
@@ -47,10 +51,20 @@ private:
         Worker(Processor& processor, Lattice& lattice);
     private:
         virtual void doRun();
+        bool processCheckEdgeIsIncorrect_(const Lattice::EdgeDescriptor & edgeToCheck);
+        bool processCheckMultiEdgesAreIncorrect_(const Lattice::EdgeDescriptor & firstEdgeToCheck,
+                                     const Lattice::EdgeDescriptor & separatingEdge,
+                                     const Lattice::EdgeDescriptor & secondEdgeToCheck);
+        bool processCheckMultiEdgesAreIncorrect_(const Lattice::EdgeDescriptor & firstEdgeToCheck,
+                                     const Lattice::EdgeDescriptor & secondEdgeToCheck);
+        
+        SuggestionsList * checkWordInAspell_(const std::string & text);
+        
         Processor& processor_;
     };
 
     virtual LatticeWorker* doCreateLatticeWorker(Lattice& lattice);
+    void initPSIAspell_(const std::string & langCode);
 
     virtual std::string doInfo();
 
