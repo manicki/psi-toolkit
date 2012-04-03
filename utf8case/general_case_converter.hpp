@@ -78,14 +78,13 @@ public:
     }
 
     void convertSingleCodePoint(
-        uint32_t /*prev_code_point*/,
+        uint32_t prev_code_point,
         uint32_t current_code_point,
-        uint32_t /*next_code_point*/,
+        uint32_t next_code_point,
         output_iterator out) const {
 
         if (const char* special = specialCasingConverter_->convert(current_code_point)) {
-            while (*special)
-                *out++ = *special++;
+            copyCharArrayToOutputIterator_(special, out);
         } else {
             uint32_t converted_code_point = rangeBasedCaseConverter_->convert(current_code_point);
             utf8::unchecked::append(converted_code_point, out);
@@ -119,6 +118,10 @@ public:
 
 
 private:
+    void copyCharArrayToOutputIterator_(const char* charVector, output_iterator out) const {
+        while (*charVector)
+            *out++ = *charVector++;
+    }
 
     boost::shared_ptr<RangeBasedCaseConverter> rangeBasedCaseConverter_;
     boost::shared_ptr<SpecialCasingConverter> specialCasingConverter_;
