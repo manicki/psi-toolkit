@@ -5,6 +5,7 @@
 
 #include "general_case_converter.hpp"
 #include "psi_exception.hpp"
+#include "regular_contextual_case_converter.hpp"
 
 const size_t NUMBER_OF_CASE_TYPES = 3;
 
@@ -20,6 +21,9 @@ private:
 
     boost::shared_ptr<RangeBasedCaseConverter> rangeBasedCaseConverters_[NUMBER_OF_CASE_TYPES];
     boost::shared_ptr<SpecialCasingConverter> specialCasingConverters_[NUMBER_OF_CASE_TYPES];
+
+    boost::shared_ptr<ContextualCaseConverter> regularContextualCaseConverter_;
+
 
     class Exception : public PsiException  {
     public:
@@ -94,10 +98,15 @@ private:
         return boost::shared_ptr<GeneralCaseConverter<octet_iterator, output_iterator> >(
             new GeneralCaseConverter<octet_iterator, output_iterator> (
                 rangeBasedCaseConverters_[case_index],
-                specialCasingConverters_[case_index]));
+                specialCasingConverters_[case_index],
+                regularContextualCaseConverter_));
     }
 
 public:
+    CaseConverterFactory():regularContextualCaseConverter_(
+        boost::shared_ptr<ContextualCaseConverter>(new RegularContextualCaseConverter())) {
+    }
+
     boost::shared_ptr<GeneralCaseConverter<octet_iterator, output_iterator> >
     getLowerCaseConverter(const std::string& language_code) {
         return getCaseConverter_(LOWER_INDEX, language_code);

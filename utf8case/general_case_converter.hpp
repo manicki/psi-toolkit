@@ -5,6 +5,7 @@
 
 #include "range_based_case_converter.hpp"
 #include "special_casing_converter.hpp"
+#include "contextual_case_converter.hpp"
 
 #include "utf8/utf8.h"
 
@@ -14,9 +15,11 @@ class GeneralCaseConverter {
 public:
     GeneralCaseConverter(
         boost::shared_ptr<RangeBasedCaseConverter> rangeBasedCaseConverter,
-        boost::shared_ptr<SpecialCasingConverter> specialCasingConverter)
+        boost::shared_ptr<SpecialCasingConverter> specialCasingConverter,
+        boost::shared_ptr<ContextualCaseConverter> contextualCaseConverter)
         :rangeBasedCaseConverter_(rangeBasedCaseConverter),
-         specialCasingConverter_(specialCasingConverter) {
+         specialCasingConverter_(specialCasingConverter),
+         contextualCaseConverter_(contextualCaseConverter) {
     }
 
     bool willBeTouchedWhenConverted(octet_iterator start, octet_iterator end) const {
@@ -92,7 +95,9 @@ private:
 
     boost::shared_ptr<RangeBasedCaseConverter> rangeBasedCaseConverter_;
     boost::shared_ptr<SpecialCasingConverter> specialCasingConverter_;
+    boost::shared_ptr<ContextualCaseConverter> contextualCaseConverter_;
 
+    const static uint32_t SPECIAL_CODE_POINT = 0xFFFFFFFF;
 };
 
 #endif
