@@ -52,15 +52,29 @@ public:
     }
 
     void convert(octet_iterator start, octet_iterator end, output_iterator out) const {
+        uint32_t prev_prev_code_point = SPECIAL_CODE_POINT;
+        uint32_t prev_code_point = SPECIAL_CODE_POINT;
+
         while (start != end) {
             uint32_t code_point = utf8::unchecked::next(start);
 
+            if (prev_code_point != SPECIAL_CODE_POINT)
+                convertSingleCodePoint(
+                    prev_prev_code_point,
+                    prev_code_point,
+                    code_point,
+                    out);
+
+            prev_prev_code_point = prev_code_point;
+            prev_code_point = code_point;
+        }
+
+        if (prev_code_point != SPECIAL_CODE_POINT)
             convertSingleCodePoint(
-                SPECIAL_CODE_POINT,
-                code_point,
+                prev_prev_code_point,
+                prev_code_point,
                 SPECIAL_CODE_POINT,
                 out);
-        }
     }
 
     void convertSingleCodePoint(
