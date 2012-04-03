@@ -1,0 +1,74 @@
+<?xml version="1.0"?>
+<!-- <!DOCTYPE srx PUBLIC "-//SRX//DTD SRX//EN" "srx.dtd"> -->
+<!-- Copyright (C) 2012 Piotr Janu
+
+     This file is part of psi-toolkit.
+
+     Translatica segmentation rules can be redistributed and/or modified
+     under the terms of the GNU Lesser General Public Licence as
+     published by the Free Software Foundation. -->
+<srx version="1.0">
+
+	<header segmentsubflows="yes">
+		<formathandle type="start" include="no"/>
+		<formathandle type="end" include="yes"/>
+		<formathandle type="isolated" include="yes"/>
+	</header>
+
+	<body>
+		<languagerules>
+			<languagerule languagerulename="tr">
+
+				<rule break="no">
+					<beforebreak>^\s*\p{Ll}\.</beforebreak>
+					<afterbreak>\s</afterbreak>
+				</rule>
+
+				<!-- Inicjały -->
+				<rule break="no">
+					<beforebreak>\b\p{Lu}\.</beforebreak>
+					<afterbreak>\s</afterbreak>
+				</rule>
+
+			    <!--skróty dni tygodnia - przyjmuję, że nie należy po nich
+					robić podziału zdania -->
+				<rule break="no">
+					<beforebreak>\b(?:[pP]on|[wW]t|[śŚ]r|[cZ]zw|[pP]t|[sS]ob|[nN]iedz)\.</beforebreak>
+					<afterbreak>\s</afterbreak>
+				</rule>
+
+
+				<rule break="yes">
+					<beforebreak>[\.\?!]+</beforebreak>
+					<afterbreak>\s+\p{Lu}</afterbreak>
+				</rule>
+
+				<rule break="yes">
+					<beforebreak></beforebreak>
+					<afterbreak>\n</afterbreak>
+				</rule>
+
+
+                                   <!-- przypisy -->
+				<rule break="yes">
+					<beforebreak>\.(?:\[[0-9]+\])+</beforebreak>
+					<afterbreak> </afterbreak>
+				</rule>
+			</languagerule>
+
+
+
+
+		</languagerules>
+
+		<maprules>
+			<maprule maprulename="tr">
+				<languagemap languagepattern="(?:TR|tr).*" languagerulename="tr"/>
+			</maprule>
+		</maprules>
+
+	</body>
+
+</srx>
+
+
