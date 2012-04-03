@@ -83,7 +83,12 @@ public:
         uint32_t next_code_point,
         output_iterator out) const {
 
-        if (const char* special = specialCasingConverter_->convert(current_code_point)) {
+        if (const char* contextual = contextualCaseConverter_->convert(
+                prev_code_point,
+                current_code_point,
+                next_code_point)) {
+            copyCharArrayToOutputIterator_(contextual, out);
+        } else if (const char* special = specialCasingConverter_->convert(current_code_point)) {
             copyCharArrayToOutputIterator_(special, out);
         } else {
             uint32_t converted_code_point = rangeBasedCaseConverter_->convert(current_code_point);
