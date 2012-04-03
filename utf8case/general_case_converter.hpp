@@ -55,13 +55,26 @@ public:
         while (start != end) {
             uint32_t code_point = utf8::unchecked::next(start);
 
-            if (const char* special = specialCasingConverter_->convert(code_point)) {
-                while (*special)
-                    *out++ = *special++;
-            } else {
-                uint32_t converted_code_point = rangeBasedCaseConverter_->convert(code_point);
-                utf8::unchecked::append(converted_code_point, out);
-            }
+            convertSingleCodePoint(
+                SPECIAL_CODE_POINT,
+                code_point,
+                SPECIAL_CODE_POINT,
+                out);
+        }
+    }
+
+    void convertSingleCodePoint(
+        uint32_t /*prev_code_point*/,
+        uint32_t current_code_point,
+        uint32_t /*next_code_point*/,
+        output_iterator out) const {
+
+        if (const char* special = specialCasingConverter_->convert(current_code_point)) {
+            while (*special)
+                *out++ = *special++;
+        } else {
+            uint32_t converted_code_point = rangeBasedCaseConverter_->convert(current_code_point);
+            utf8::unchecked::append(converted_code_point, out);
         }
     }
 
