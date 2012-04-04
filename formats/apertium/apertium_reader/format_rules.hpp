@@ -35,6 +35,7 @@ public:
     void addRule(const std::string& ruleRegexp);
 
     std::string getType();
+    bool getEos();
     int getPriority() const;
     std::string getRegexp();
 

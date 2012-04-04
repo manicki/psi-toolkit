@@ -68,8 +68,6 @@ FormatRule FormatSpecification::getFormatRule(int i) {
 
 FormatSpecificationReader::FormatSpecificationReader(const boost::filesystem::path& filePath)
     : xmlParsed_(ObjectCache::getInstance().getObject<XmlPropertyTree>(filePath)) {
-
-    SET_LOGGING_LEVEL("DEBUG");
 }
 
 FormatSpecification FormatSpecificationReader::readFormatSpecification() {
