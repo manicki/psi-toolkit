@@ -2,8 +2,8 @@
 <format name="html">
   <options>
     <largeblocks size="8192"/>
-    <input encoding="ISO-8859-1"/>
-    <output encoding="ISO-8859-1"/>
+    <input encoding="UTF-8"/>
+    <output encoding="UTF-8"/>
     <tag-name regexp="[a-zA-Z]+"/>
     <escape-chars regexp='[][^@\\/${}]'/>
     <space-chars regexp='[ \n\t\r&lt;&gt;{}]'/>
@@ -30,11 +30,11 @@
       <tag regexp='"&lt;br"(" "[^&gt;]*)?"&gt;"|"&lt;hr"(" "[^&gt;]*)?"&gt;"|"&lt;p"(" "[^&gt;]*)?"&gt;"'/>
     </format-rule>
 
-    <format-rule type="open" eos="yes" priority="3"> 
+    <format-rule type="open" eos="yes" priority="3">
       <tag regexp='"&lt;li"(" "[^&gt;]*)?"&gt;"|"&lt;ul"(" "[^&gt;]*)?"&gt;"|"&lt;ol"(" "[^&gt;]*)?"&gt;"'/>
     </format-rule>
 
-    <format-rule type="open" eos="yes" priority="3"> 
+    <format-rule type="open" eos="yes" priority="3">
       <tag regexp='"&lt;tr"(" "[^&gt;]*)?"&gt;"|"&lt;td"(" "[^&gt;]*)?"&gt;"|"&lt;th"(" "[^&gt;]*)?"&gt;"'/>
     </format-rule>
 
@@ -42,21 +42,21 @@
       <tag regexp='"&lt;/br"(" "[^&gt;]*)?"&gt;"|"&lt;/hr"(" "[^&gt;]*)?"&gt;"|"&lt;/p"(" "[^&gt;]*)?"&gt;"'/>
     </format-rule>
 
-    <format-rule type="close" eos="yes" priority="3"> 
+    <format-rule type="close" eos="yes" priority="3">
       <tag regexp='"&lt;/li"(" "[^&gt;]*)?"&gt;"|"&lt;/ul"(" "[^&gt;]*)?"&gt;"|"&lt;/ol"(" "[^&gt;]*)?"&gt;"'/>
     </format-rule>
 
-    <format-rule type="close" eos="yes" priority="3"> 
+    <format-rule type="close" eos="yes" priority="3">
       <tag regexp='"&lt;/tr"(" "[^&gt;]*)?"&gt;"|"&lt;/td"(" "[^&gt;]*)?"&gt;"|"&lt;/th"(" "[^&gt;]*)?"&gt;"'/>
     </format-rule>
 
 <!-- Faltan algunas etiquetas de final de frase. -->
 
-    <format-rule type="open" eos="yes" priority="3"> 
+    <format-rule type="open" eos="yes" priority="3">
       <tag regexp='"&lt;title"(" "[^&gt;]*)?"&gt;"|"&lt;div"(" "[^&gt;]*)?"&gt;"|"&lt;option"(" "[^&gt;]*)?"&gt;"|"&lt;h"[1-6](" "[^&gt;]*)?"&gt;"'/>
     </format-rule>
 
-    <format-rule type="close" eos="yes" priority="3"> 
+    <format-rule type="close" eos="yes" priority="3">
       <tag regexp='"&lt;/title"(" "[^&gt;]*)?"&gt;"|"&lt;/div"(" "[^&gt;]*)?"&gt;"|"&lt;/option"(" "[^&gt;]*)?"&gt;"|"&lt;/h"[1-6](" "[^&gt;]*)?"&gt;"'/>
     </format-rule>
 
@@ -75,11 +75,11 @@
     <format-rule type="open" eos="no" priority="5">
       <tag regexp='"&lt;"[a-zA-Z][^&gt;]*"&gt;"'/>
     </format-rule>
-    
+
     <format-rule type="close" eos="no" priority="5">
       <tag regexp='"&lt;/"[a-zA-Z][^&gt;]*"&gt;"'/>
     </format-rule>
-    
+
     <replacement-rule regexp='"&amp;"([a-zA-Z]+|"#x"[0-9a-fA-F]{1,4}|"#"[0-9]{1,8});'>
       <replace source="&amp;Agrave;" target="À" prefer="yes"/>
       <replace source="&amp;#192;" target="À"/>
@@ -364,10 +364,10 @@
       <replace source="'" target="'" prefer="yes"/>
 
 
-      
+
 <!--      <replace source="&amp;apos;" target="'"/>
       <replace source="&amp;quot;" target="\&quot;"/> -->
-    </replacement-rule>  
+    </replacement-rule>
   </rules>
 
 </format>

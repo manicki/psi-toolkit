@@ -1,0 +1,113 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+ "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <title>Psi Server :: API</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    
+<link href="css/reset.css" rel="stylesheet" type="text/css" />
+<link href="css/style.css" rel="stylesheet" type="text/css" />
+
+
+</head>
+
+<body>
+
+<div class="wrapper">
+
+        <div id="header">
+        <div id="main-logo">
+            <a href="index.html" title="Psi Server">Psi Server</a>
+        </div>
+
+        <ul id="menu">
+            <li><a href="about.html">About</a></li>
+            <!--
+            <li><a href="api.html">API</a></li>
+            -->
+            <li><a href="help.html">Help</a></li>
+        </ul>
+    </div>
+
+
+
+    <div id="content">
+
+        <h1>psi-toolkit</h1>
+
+        <h2>Project factsheet</h2>
+
+        <table>
+            <tbody>
+                <tr>
+                    <td>English name:</td>
+                    <td>Publicly available tools for automatic processing of Polish language </td>
+
+                </tr>
+                <!--
+                <tr>
+                    <td>Polish name:</td>
+                    <td>Narzędzia do automatycznego przetwarzania języka polskiego udostępnione publicznie </td>
+                </tr>
+                -->
+                <tr>
+                    <td>Project type:</td>
+                    <td>A national <a class="http" href="http://www.eng.nauka.gov.pl/meinen/">
+                        Ministry of Science and Higher Education</a> research grant (number N N516 480540)
+                    </td>
+                </tr>
+                <tr>
+                    <td>Duration:</td>
+                    <td>2011 ‒ 2013 </td>
+
+                </tr>
+                <tr>
+                    <td>Principal investigator:</td>
+                    <td>Krzysztof Jassem </td>
+                </tr>
+                <tr>
+                    <td>Institution:</td>
+
+                    <td><a class="http" href="http://psi.wmi.amu.edu.pl/en/index.php?title=Main_Page">Information Systems Laboratory</a>,
+                        Faculty of Mathematics and Computer Science,<br />Adam Mickiewicz University
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+
+        <h2>Project description</h2>
+
+        <p>
+
+            The aim of the project is to develop a tool chain (called <strong>psi-toolkit</strong>)
+            for automatic processing of Polish (and - to lesser extent - other languages: English, German,
+            French, Spanish and Russian) with the focus on machine translation. The tool chain will include:
+        </p>
+        <ul>
+            <li>segmentation/tokenization/lemmatization,</li>
+            <li>shallow parsing,</li>
+            <li>deep parsing,</li>
+            <li>rule-based machine translation,</li>
+
+            <li>statistical machine translation,</li>
+            <li>automatic generation of inflected forms from lemma sequences</li>
+            <li>automatic postedition.</li>
+        </ul>
+
+    </div>
+</div>
+
+	<div id="footer">
+
+		<div class="wrapper">
+			<div class="logo">Psi Server</div>
+            <div class="version">psi-toolkit v. 2012-04-04 [0e52668d30a43976c982f7f3756b54fc85d30718]</div>
+		</div>
+	</div>
+
+
+
+</body>
+
+</html>
+
