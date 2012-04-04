@@ -248,6 +248,7 @@ void NKJPLatticeReader::Worker::doRun() {
                                                 );
                                             } catch (WrongVertexException) { }
                                             AnnotationItem msdItem(
+                                                // lattice_.getAnnotationCategory(baseEdge),
                                                 vFF.second.get<std::string>(
                                                     "symbol.<xmlattr>.xml:id"
                                                 ),
@@ -264,7 +265,7 @@ void NKJPLatticeReader::Worker::doRun() {
                                                 segBegin,
                                                 segEnd,
                                                 msdItem,
-                                                getTags_("msd"),
+                                                getTags_("form"),
                                                 msdBuilder.build()
                                             );
                                         } catch (boost::property_tree::ptree_bad_path) {
@@ -285,6 +286,7 @@ void NKJPLatticeReader::Worker::doRun() {
                                                     );
                                                 } catch (WrongVertexException) { }
                                                 AnnotationItem vAltItem(
+                                                    // lattice_.getAnnotationCategory(baseEdge),
                                                     vVAlt.second.get("<xmlattr>.xml:id", "msd"),
                                                     vAltAnnotationText
                                                 );
@@ -297,7 +299,7 @@ void NKJPLatticeReader::Worker::doRun() {
                                                     segBegin,
                                                     segEnd,
                                                     vAltItem,
-                                                    getTags_("msd"),
+                                                    getTags_("form"),
                                                     vAltBuilder.build()
                                                 );
                                                 if (
