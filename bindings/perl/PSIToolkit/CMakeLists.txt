@@ -3,8 +3,8 @@ include(${SWIG_USE_FILE})
 
 find_package(PerlLibs)
 
-set(${INSTALL_MODULES_PATH} ${PERL_SITELIB})
-STRING(REGEX REPLACE "^(/usr/)" "" INSTALL_PERL_MODULES_PATH ${PERL_SITELIB})
+set(${INSTALL_MODULES_PATH} ${PERL_VENDORLIB})
+STRING(REGEX REPLACE "^(/usr/)" "" INSTALL_PERL_MODULES_PATH ${PERL_VENDORLIB})
 
 if ( "${CMAKE_INSTALL_RPATH}" MATCHES "/local(/|$)")
   STRING(REGEX REPLACE "((^|/)local/)" "" INSTALL_PERL_MODULES_PATH ${INSTALL_PERL_MODULES_PATH})
@@ -44,6 +44,7 @@ swig_link_libraries(_psitoolkit_perl_simple
   framework)
 
 link_directories("${psi-toolkit_BINARY_DIR}/bindings/perl/PSIToolkit")
+
 
 install(TARGETS _psitoolkit_perl_simple DESTINATION lib)
 INSTALL(FILES
