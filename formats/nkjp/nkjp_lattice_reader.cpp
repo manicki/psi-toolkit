@@ -123,7 +123,6 @@ void NKJPLatticeReader::Worker::doRun() {
                     boost::property_tree::ptree::value_type &vFS,
                     vSeg.second.get_child("")
                 ) if (strcmp(vFS.first.data(), "fs") == 0) {
-                    mainTag = vFS.second.get("<xmlattr>.type", mainTag);
                     BOOST_FOREACH(
                         boost::property_tree::ptree::value_type &vF,
                         vFS.second.get_child("")
@@ -144,10 +143,7 @@ void NKJPLatticeReader::Worker::doRun() {
                         }
                     }
                 }
-                AnnotationItem segItem(
-                    vSeg.second.get("<xmlattr>.xml:id", "seg"),
-                    StringFrag(segment)
-                );
+                AnnotationItem segItem("T", StringFrag(segment));
                 BOOST_FOREACH(
                     boost::property_tree::ptree::value_type &vFS,
                     vSeg.second.get_child("")
@@ -175,8 +171,12 @@ void NKJPLatticeReader::Worker::doRun() {
                 if (!npsValue.empty()) {
                     lattice_.getAnnotationItemManager().setValue(segItem, "nps", npsValue);
                 }
-                Lattice::EdgeDescriptor segEdge
-                    = appendSegmentToLattice_(segment, segItem, mainTag, insertSpace);
+                Lattice::EdgeDescriptor segEdge = appendSegmentToLattice_(
+                    segment,
+                    segItem,
+                    (mainTag=="morph"?"token":mainTag),
+                    insertSpace
+                );
                 Lattice::VertexDescriptor segBegin = lattice_.getEdgeSource(segEdge);
                 Lattice::VertexDescriptor segEnd = lattice_.getEdgeTarget(segEdge);
 
@@ -184,7 +184,6 @@ void NKJPLatticeReader::Worker::doRun() {
                     boost::property_tree::ptree::value_type &vFS,
                     vSeg.second.get_child("")
                 ) if (strcmp(vFS.first.data(), "fs") == 0) {
-                    mainTag = vFS.second.get("<xmlattr>.type", mainTag);
                     BOOST_FOREACH(
                         boost::property_tree::ptree::value_type &vF,
                         vFS.second.get_child("")

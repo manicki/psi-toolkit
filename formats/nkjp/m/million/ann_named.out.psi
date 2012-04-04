@@ -1,9 +1,9 @@
-01 0000 03    UŁ           named,nkjp-reader     UŁ          named\_1.11-s\_n1,type=orgName,base=UŁ,certainty=high
+01 0000 03    UŁ           named,nkjp-reader     UŁ          T,type=orgName,base=UŁ,certainty=high
 02 0000 03    UŁ           nkjp-reader,sentence  UŁ          s[1]
-03 0003 08    polskich     named,nkjp-reader     polskich    named\_1.23-s\_n1,type=placeName,base=polski,certainty=high,subtype=country
+03 0003 08    polskich     named,nkjp-reader     polskich    T,type=placeName,base=polski,certainty=high,subtype=country
 04 0003 08    polskich     nkjp-reader,sentence  polskich    s[3]
-05 0011 25    Wydziale_Zarządzania_UŁ named,nkjp-reader Wydziale_Zarządzania_UŁ named\_1.40-s\_n1,type=orgName,base=Wydział_Zarządzania_UŁ,certainty=high
-06 0036 03    UŁ           named,nkjp-reader     UŁ          named\_1.40-s\_n3,type=orgName,base=UŁ,certainty=high
-07 0039 21    Wydziale_Zarządzania named,nkjp-reader Wydziale_Zarządzania named\_1.40-s\_n2,type=orgName,base=Wydział_Zarządzania,certainty=high
+05 0011 25    Wydziale_Zarządzania_UŁ named,nkjp-reader Wydziale_Zarządzania_UŁ T,type=orgName,base=Wydział_Zarządzania_UŁ,certainty=high
+06 0036 03    UŁ           named,nkjp-reader     UŁ          T,type=orgName,base=UŁ,certainty=high
+07 0039 21    Wydziale_Zarządzania named,nkjp-reader Wydziale_Zarządzania T,type=orgName,base=Wydział_Zarządzania,certainty=high
 08 0011 49    Wydzia...nia nkjp-reader,sentence  Wydziale_Zarządzania_UŁUŁWydziale_Zarządzania s[5-6-7]
 09 0000 60    UŁpols...nia nkjp-reader,paragraph UŁpolskichWydziale_Zarządzania_UŁUŁWydziale_Zarządzania p[2-4-8]
