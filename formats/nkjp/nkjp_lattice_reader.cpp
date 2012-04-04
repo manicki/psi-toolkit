@@ -229,7 +229,7 @@ void NKJPLatticeReader::Worker::doRun() {
                                             segBegin,
                                             segEnd,
                                             ctagItem,
-                                            getTags_("ctag"),
+                                            getTags_("lexeme"),
                                             ctagBuilder.build()
                                         );
                                     } else if (
