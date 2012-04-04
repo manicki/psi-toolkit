@@ -9,6 +9,7 @@ class MainFactoriesKeeper {
 public:
     ProcessorFactory& getProcessorFactory(std::string processorName);
     std::vector<std::string> getProcessorNames();
+    std::set<std::string> getAliasNames();
 
     std::list<ProcessorFactory*> getProcessorFactoriesForName(std::string name);
 

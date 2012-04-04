@@ -1,7 +1,7 @@
 #include "factories_keeper.hpp"
 
 #include "logging.hpp"
-#include "boost/foreach.hpp"
+#include <boost/foreach.hpp>
 
 void FactoriesKeeper::takeProcessorFactory(ProcessorFactory* processorFactory) {
     DEBUG("registering processor " << processorFactory->getName());
@@ -52,6 +52,10 @@ std::vector<std::string> FactoriesKeeper::getProcessorNames() {
     }
 
     return names;
+}
+
+std::set<std::string> FactoriesKeeper::getAliasNames() {
+    return aliaser_.getAliasNames();
 }
 
 std::list<ProcessorFactory*>

@@ -104,6 +104,10 @@ std::vector<std::string> MainFactoriesKeeper::getProcessorNames() {
     return keeper_.getProcessorNames();
 }
 
+std::set<std::string> MainFactoriesKeeper::getAliasNames() {
+    return keeper_.getAliasNames();
+}
+
 std::list<ProcessorFactory*> MainFactoriesKeeper::getProcessorFactoriesForName(std::string name) {
     return keeper_.getProcessorFactoriesForName(name);
 }
