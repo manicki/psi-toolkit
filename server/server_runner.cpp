@@ -107,11 +107,7 @@ int ServerRunner::run() {
 bool ServerRunner::stopAfterExecutingOptions_() {
     if (options_.count("help")) {
         std::cout << optionsDescription_ << std::endl;
-
-        HelpFormatter* helpFormatter = new ConsoleHelpFormatter;
-        helpFormatter->formatHelps(std::cout);
-        delete helpFormatter;
-
+        ConsoleHelpFormatter().formatHelps(std::cout);
         return true;
     }
 
