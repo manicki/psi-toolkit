@@ -63,6 +63,24 @@ else()
   set(HAVE_LOG4CPP 0)
 endif(EXISTS ${LOG4CPP_LIB} AND EXISTS ${LOG4CPP_INCLUDE})
 
+if (USE_ASPELL)
+  find_library(ASPELL_LIB NAMES aspell)
+  find_path(ASPELL_INCLUDE aspell.h)
+  if(EXISTS ${ASPELL_LIB} AND EXISTS ${ASPELL_INCLUDE})
+    message("-- Using Aspell...")
+    include_directories(${ASPELL_INCLUDE})
+    link_directories(${ASPELL_LIB})
+    set(HAVE_ASPELL 1)
+  else()
+    message("-- Not using Aspell (can not find required libraries)...")
+    set(HAVE_ASPELL 0)
+  endif(EXISTS ${ASPELL_LIB} AND EXISTS ${ASPELL_INCLUDE})
+else()
+  message("-- Not using Aspell...")
+  set(HAVE_ASPELL 0)
+endif(USE_ASPELL)
+
+
 # CMPH library (for perfect hashing)
 find_library(CMPH_LIB NAMES cmph)
 find_path(CMPH_INCLUDE cmph.h)
@@ -169,6 +187,8 @@ message(STATUS "Using gv-writer ${USE_GV_WRITER}")
 option(USE_PDF_READER "Using pdf-reader" OFF)
 message(STATUS "Using pdf-reader ${USE_PDF_READER}")
 
+option(USE_ASPELL "Using aspell" OFF)
+message(STATUS "Using aspell ${USE_ASPELL}")
 
 # Finds SWIG
 
@@ -248,6 +268,10 @@ endif (WITH_LOW_MEMORY_COMPILATION)
 set(BASE_TARGETS common utf8case sundown framework formats-apertium formats-dot formats-nkjp formats-psi formats-simple formats-json-simple formats-txt formats-utt maxent tools-tokenizers-tp tools-segmenters-srx tools-recognizers-langguesser tools-parsers-gobio tools-taggers-metagger)
 
 set(TESTS_TARGETS common-tests framework-tests tools-tokenizers-tp-tests tools-segmenters-srx-tests tools-datastructures-psi_query-tests tools-recognizers-langguesser-tests utf8case-tests formats-dot-tests formats-utt-tests formats-psi-tests formats-simple-tests tools-parsers-gobio-tests tools-taggers-metagger-tests formats-apertium-tests)
+
+if(HAVE_ASPELL)
+    set(TESTS_TARGETS ${TESTS_TARGETS} tools-spellcheckers-aspell-tests)  
+endif(HAVE_ASPELL)
 
 if(USE_JAVA)
     set(BASE_TARGETS ${BASE_TARGETS} tools-lemmatizers-morfologik)
