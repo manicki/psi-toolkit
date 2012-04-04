@@ -1,4 +1,5 @@
 #include <boost/algorithm/string/trim.hpp>
+#include <boost/algorithm/string.hpp>
 #include <boost/assign/list_of.hpp>
 
 #include "apertium_lattice_reader.hpp"
@@ -142,7 +143,7 @@ void ApertiumLatticeReader::Worker::appendTagToLattice_(
     lattice_.appendStringWithSymbols(tag);
     Lattice::VertexDescriptor nowEnd = lattice_.getLastVertex();
 
-    AnnotationItem item(type + "-tag", StringFrag(tag));
+    AnnotationItem item(boost::to_upper_copy(type) + "-TAG", StringFrag(tag));
     AnnotationItemManager& manager = lattice_.getAnnotationItemManager();
     manager.setValue(item, "eos", eos ? "yes" : "no");
 
