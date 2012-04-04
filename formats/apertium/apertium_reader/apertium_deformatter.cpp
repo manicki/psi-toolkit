@@ -68,6 +68,8 @@ std::vector<DeformatIndex> ApertiumDeformatter::processFormatRules_(const std::s
                     formatSpecification_.getFormatRule(i).getType(),
                     formatSpecification_.getFormatRule(i).getEos()
                 ));
+
+                DEBUG("matched with rule " << i << ": " << matches[i]);
             }
         }
     }
