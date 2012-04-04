@@ -54,6 +54,11 @@ public:
     std::string getName();
 
     /**
+     * Get processor's aliases (alternative names).
+     */
+    std::list<std::string> getAliases();
+
+    /**
      * Returns the path to the given processor source file based on the __FILE__ variable.
      */
     boost::filesystem::path getFile();
@@ -86,6 +91,8 @@ private:
     virtual std::string doGetName() = 0;
 
     virtual std::string doGetDescription();
+
+    virtual std::list<std::string> doGetAliases();
 
     std::string getFileContent(boost::filesystem::path path);
 

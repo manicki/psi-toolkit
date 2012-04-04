@@ -8,6 +8,9 @@ void FactoriesKeeper::takeProcessorFactory(ProcessorFactory* processorFactory) {
 
     checkAnnotator_(processorFactory);
 
+    BOOST_FOREACH(const std::string& alias, processorFactory->getAliases())
+        aliaser_.addAlias(alias, processorFactory->getName());
+
     nameToFactoryMap_[processorFactory->getName()]
         = boost::shared_ptr<ProcessorFactory>(processorFactory);
 }
