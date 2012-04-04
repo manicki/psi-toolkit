@@ -1,4 +1,6 @@
 #include <boost/algorithm/string/trim.hpp>
+#include <boost/algorithm/string.hpp>
+#include <boost/assign/list_of.hpp>
 
 #include "apertium_lattice_reader.hpp"
 #include "processor_file_fetcher.cpp"
@@ -12,10 +14,13 @@ std::string ApertiumLatticeReader::doInfo() {
     return "Apertium reader";
 }
 
-std::string ApertiumLatticeReader::deformat(const std::string& input) {
-    return apertiumDeformatter_.deformat(input);
+std::string ApertiumLatticeReader::processReplacementRules(const std::string& input) {
+    return apertiumDeformatter_.processReplacementRules(input);
 }
 
+std::vector<DeformatIndex> ApertiumLatticeReader::processFormatRules(const std::string& input) {
+    return apertiumDeformatter_.processFormatRules(input);
+}
 
 const std::string ApertiumLatticeReader::Factory::DEFAULT_SPEC_FILES_DIR = "%ITSDATA%/";
 const std::string ApertiumLatticeReader::Factory::DEFAULT_SPEC_FILE_ENDING = "-format.xml";
@@ -67,8 +72,13 @@ boost::filesystem::path ApertiumLatticeReader::Factory::doGetFile() {
 
 ApertiumLatticeReader::Worker::Worker(ApertiumLatticeReader& processor,
                                       std::istream& inputStream,
-                                      Lattice& lattice)
-    : ReaderWorker<std::istream>(inputStream, lattice), processor_(processor) {
+                                      Lattice& lattice) :
+    ReaderWorker<std::istream>(inputStream, lattice),
+    processor_(processor),
+    fragTags_(lattice_.getLayerTagManager().createTagCollectionFromList(
+        boost::assign::list_of("frag")("apertium-reader"))),
+    tagTags_(lattice_.getLayerTagManager().createTagCollectionFromList(
+        boost::assign::list_of("tag")("apertium-reader"))) {
 }
 
 void ApertiumLatticeReader::Worker::doRun() {
@@ -81,9 +91,59 @@ void ApertiumLatticeReader::Worker::doRun() {
         if (boost::algorithm::trim_copy(line).empty()) {
             continue;
         }
-        input += line + "\n";
+        input += line;// + "\n";
     }
 
-    std::string output = processor_.deformat(input);
-    DEBUG(output);
+    input = processor_.processReplacementRules(input);
+    std::vector<DeformatIndex> indexes = processor_.processFormatRules(input);
+
+    if (!indexes.empty()) {
+        std::string text;
+
+        if (indexes[0].begin != 0) {
+            text = input.substr(0, indexes[0].begin);
+            appendFragmentToLattice_(text);
+
+            DEBUG("frag: " << text);
+        }
+
+        for (unsigned int i = 0; i < indexes.size(); i++) {
+            text = input.substr(indexes[i].begin, indexes[i].length());
+            appendTagToLattice_(text, indexes[i].type, indexes[i].eos);
+
+            DEBUG("tag: " << text << " [" << indexes[i].type << ", " << indexes[i].eos << "]");
+
+            unsigned int length = (i == indexes.size() - 1) ? input.length() : indexes[i+1].begin;
+            length -= indexes[i].end;
+
+            if (length != 0) {
+                text = input.substr(indexes[i].end, length);
+                appendFragmentToLattice_(text);
+
+                DEBUG("frag: " << text);
+            }
+        }
+    }
+}
+
+void ApertiumLatticeReader::Worker::appendFragmentToLattice_(std::string fragment) {
+    Lattice::VertexDescriptor prevEnd = lattice_.getLastVertex();
+    lattice_.appendStringWithSymbols(fragment);
+    Lattice::VertexDescriptor nowEnd = lattice_.getLastVertex();
+    AnnotationItem item("FRAG", fragment);
+    lattice_.addEdge(prevEnd, nowEnd, item, fragTags_);
+}
+
+void ApertiumLatticeReader::Worker::appendTagToLattice_(
+    std::string tag, std::string type, bool eos) {
+
+    Lattice::VertexDescriptor prevEnd = lattice_.getLastVertex();
+    lattice_.appendStringWithSymbols(tag);
+    Lattice::VertexDescriptor nowEnd = lattice_.getLastVertex();
+
+    AnnotationItem item(boost::to_upper_copy(type) + "-TAG", StringFrag(tag));
+    AnnotationItemManager& manager = lattice_.getAnnotationItemManager();
+    manager.setValue(item, "eos", eos ? "yes" : "no");
+
+    lattice_.addEdge(prevEnd, nowEnd, item, tagTags_);
 }

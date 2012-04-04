@@ -6,11 +6,10 @@
 #include "apertium_deformatter.hpp"
 
 ApertiumDeformatter::ApertiumDeformatter(const boost::filesystem::path& specFilePath)
-    : formatSpecification_(initializeFormatSpecification_(specFilePath)) {
+    : formatSpecification_(initializeFormatSpecification_(specFilePath)),
+    initialInputSize_(0) {
 
     perlRegexpOptions_.set_utf8(true);
-    //perlRegexpOptions_.set_multiline(true);
-    //perlRegexpOptions_.set_dotall(true);
     perlRegexpOptions_.set_caseless(!formatSpecification_.getOptions().isCaseSensitive());
 }
 
@@ -19,6 +18,14 @@ FormatSpecification ApertiumDeformatter::initializeFormatSpecification_(
 
     FormatSpecificationReader formatSpecRdr(path);
     return formatSpecRdr.readFormatSpecification();
+}
+
+std::string ApertiumDeformatter::processReplacementRules(const std::string& input) {
+    return processReplacementRules_(input);
+}
+
+std::vector<DeformatIndex> ApertiumDeformatter::processFormatRules(const std::string& input) {
+    return processFormatRules_(input);
 }
 
 std::string ApertiumDeformatter::deformat(const std::string& input) {
@@ -40,7 +47,7 @@ std::vector<DeformatIndex> ApertiumDeformatter::processFormatRules_(const std::s
     DEBUG("looking for: " << regexp);
 
     const int rulesSize = formatSpecification_.formatRuleSize();
-    //FIXME: możliwa większa liczba reguł
+    //FIXME: the maximum number of rules is 16 because of the regexp wrapper constraint
     if (rulesSize > PerlRegExp::MAX_MATCHES)
         ERROR("the number of rules is larger than " << PerlRegExp::MAX_MATCHES << "!");
 
@@ -56,13 +63,11 @@ std::vector<DeformatIndex> ApertiumDeformatter::processFormatRules_(const std::s
     while (PerlRegExp::FindAndConsumeN(&currentInput, re, args, rulesSize)) {
         for (int i = 0; i < rulesSize; i++) {
             if (!matches[i].empty()) {
-                std::pair<int, int> indexes = getMatchedStringIndexes(currentInput, matches[i]);
-                std::string info = formatSpecification_.getFormatRule(i).getType();
-
-                deformatIndexes.push_back(DeformatIndex(indexes, info));
-
-                DEBUG(matches[i] << " (" << indexes.first << ", " << indexes.second << ")"
-                    << " as " << info);
+                deformatIndexes.push_back(DeformatIndex(
+                    getMatchedStringIndexes(currentInput, matches[i]),
+                    formatSpecification_.getFormatRule(i).getType(),
+                    formatSpecification_.getFormatRule(i).getEos()
+                ));
             }
         }
     }
@@ -98,9 +103,6 @@ std::string ApertiumDeformatter::clearFromDeformatData_(const std::string& input
 
     return clearInput;
 }
-
-const std::string DELIMITER_BEGIN = "[";
-const std::string DELIMITER_END = "]";
 
 std::pair<int, int> ApertiumDeformatter::getMatchedStringIndexes(
      PerlStringPiece currentInput, std::string matchedString) {

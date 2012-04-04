@@ -5,7 +5,7 @@
 jint const JavaVirtualMachine::JNI_VERSION = JNI_VERSION_1_6;
 // Each class path is separated by colon (:)
 std::string JavaVirtualMachine::javaClassPath =
-    ":./common/j/common-j.jar:"
+    ":./common/j/libpsitoolkit_common-j.jar:"
     + Configurator::getInstance().getFinalPath(
         boost::filesystem::path("morfologik"),
         boost::filesystem::path("tools/lemmatizers/morfologik"),
