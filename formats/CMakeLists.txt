@@ -1,5 +1,5 @@
 set(formats_SUBDIRS
-    apertium apertium/apertium_reader dot nkjp psi psi/psi_reader psi/psi_writer simple json-simple txt utt
+    apertium apertium/apertium_reader doc dot nkjp psi psi/psi_reader psi/psi_writer simple json-simple txt utt
 CACHE PATH "Formats subdirectories" FORCE)
 
 foreach(dir ${formats_SUBDIRS})

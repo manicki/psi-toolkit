@@ -11,6 +11,7 @@
 #include "dot_lattice_writer.hpp"
 #include "apertium_lattice_reader.hpp"
 #include "nkjp_lattice_reader.hpp"
+#include "doc_lattice_reader.hpp"
 #include "tp_tokenizer.hpp"
 #include "srx_segmenter.hpp"
 #include "lemmatizer_annotator.hpp"
@@ -56,6 +57,7 @@ MainFactoriesKeeper::MainFactoriesKeeper() {
     keeper_.takeProcessorFactory(new DotLatticeWriter::Factory());
     keeper_.takeProcessorFactory(new ApertiumLatticeReader::Factory());
     keeper_.takeProcessorFactory(new NKJPLatticeReader::Factory());
+    keeper_.takeProcessorFactory(new DocLatticeReader::Factory());
     keeper_.takeProcessorFactory(new TpTokenizer::Factory());
     keeper_.takeProcessorFactory(new SrxSegmenter::Factory());
     keeper_.takeProcessorFactory(new LangGuesser::Factory());
