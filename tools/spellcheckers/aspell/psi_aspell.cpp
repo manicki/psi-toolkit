@@ -7,6 +7,8 @@
 #include "logging.hpp"
 #include "config.hpp"
 
+const unsigned int PSIAspell::Factory::DEFAULT_LIMIT = 5;
+
 Annotator* PSIAspell::Factory::doCreateAnnotator(
     const boost::program_options::variables_map& options) {
 
@@ -20,6 +22,10 @@ void PSIAspell::Factory::doAddLanguageIndependentOptionsHandled(
     boost::program_options::options_description& optionsDescription) {
 
     optionsDescription.add_options()
+        ("limit",
+         boost::program_options::value<unsigned int>()
+         ->default_value(DEFAULT_LIMIT),
+         "Take only limit candidates into account. If set to zero, then take all into account.")
         ("size",
          boost::program_options::value<std::string>(),
          "The preferred size of the word list. This consists of a two char digit code describing the size of the list, with typical values of: 10=tiny, 20=really small, 30=small, 40=med-small, 50=med, 60=med-large, 70=large, 80=huge, 90=insane.")
@@ -75,13 +81,13 @@ LatticeWorker* PSIAspell::doCreateLatticeWorker(Lattice& lattice) {
 }
 
 PSIAspell::Worker::Worker(Processor& processor, Lattice& lattice):
-    LatticeWorker(lattice), processor_(processor){
+    LatticeWorker(lattice), processor_(processor),
+    textTags_(lattice_.getLayerTagManager().createTagCollectionFromList(
+                                                                        boost::assign::list_of("token")))
+{
 }
 
 void PSIAspell::Worker::doRun() {
-    DEBUG("starting aspell...");
-
-
     std::list<std::string> tagsToOperateOn_ =
         boost::assign::list_of(std::string("token"));
 
@@ -141,16 +147,10 @@ void PSIAspell::Worker::doRun() {
 
 bool PSIAspell::Worker::processCheckEdgeIsIncorrect_(const Lattice::EdgeDescriptor & edgeToCheck) {
     std::string textToCheck = lattice_.getAnnotationText(edgeToCheck);
-
-    SuggestionsList * suggestions = checkWordInAspell_(textToCheck);
-
-    if (suggestions) {
-        // @todo
-        delete suggestions;
-        return true;
-    } else {
-        return false;
-    }
+    return processAspellCheckOnText_(textToCheck,
+                                     lattice_.getEdgeSource(edgeToCheck),
+                                     lattice_.getEdgeTarget(edgeToCheck)
+                                     );
 }
 
 bool PSIAspell::Worker::processCheckMultiEdgesAreIncorrect_(const Lattice::EdgeDescriptor & firstEdgeToCheck,
@@ -160,15 +160,10 @@ bool PSIAspell::Worker::processCheckMultiEdgesAreIncorrect_(const Lattice::EdgeD
         + lattice_.getAnnotationText(separatingEdge)
         + lattice_.getAnnotationText(secondEdgeToCheck);
 
-    SuggestionsList * suggestions = checkWordInAspell_(textToCheck);
-
-    if (suggestions) {
-        // @todo
-        delete suggestions;
-        return true;
-    } else {
-        return false;
-    }
+    return processAspellCheckOnText_(textToCheck,
+                                     lattice_.getEdgeSource(firstEdgeToCheck),
+                                     lattice_.getEdgeTarget(secondEdgeToCheck)
+                                     );
 }
 
 bool PSIAspell::Worker::processCheckMultiEdgesAreIncorrect_(const Lattice::EdgeDescriptor & firstEdgeToCheck,
@@ -176,34 +171,41 @@ bool PSIAspell::Worker::processCheckMultiEdgesAreIncorrect_(const Lattice::EdgeD
     std::string textToCheck = lattice_.getAnnotationText(firstEdgeToCheck)
         + lattice_.getAnnotationText(secondEdgeToCheck);
 
+    return processAspellCheckOnText_(textToCheck,
+                                     lattice_.getEdgeSource(firstEdgeToCheck),
+                                     lattice_.getEdgeTarget(secondEdgeToCheck)
+                                     );
+}
+
+bool PSIAspell::Worker::processAspellCheckOnText_(const std::string & textToCheck,
+                                     const Lattice::VertexDescriptor & sourceVertex,
+                                     const Lattice::VertexDescriptor & targetVertex) {
     SuggestionsList * suggestions = checkWordInAspell_(textToCheck);
 
     if (suggestions) {
-        // @todo
+        BOOST_FOREACH(std::string suggestion, *suggestions) {
+            AnnotationItem annotationItem("T", suggestion);
+            lattice_.addEdge(sourceVertex,
+                             targetVertex,
+                             annotationItem,
+                             textTags_
+                             );
+        }
+
         delete suggestions;
         return true;
     } else {
         return false;
     }
 }
+                                                  
 
 SuggestionsList * PSIAspell::Worker::checkWordInAspell_(const std::string & text) {
     PSIAspell & aspellProcessor = dynamic_cast<PSIAspell&>(processor_);
 
-    DEBUG("PROCESSING TEXT: " << text);
     if (!aspellProcessor.isWordCorrect(text)) {
-        DEBUG("INCORRECT WORD: " << text);
-
         SuggestionsList * suggestions = new SuggestionsList();
         aspellProcessor.getSuggestionsForLastWord(*suggestions, text);
-
-        if (!suggestions->empty()) {
-            BOOST_FOREACH(std::string& suggestion, *suggestions) {
-                DEBUG("\t" << suggestion);
-            }
-        } else {
-            DEBUG("No suggestions...");
-        }
 
         return suggestions;
     } else {
@@ -223,9 +225,15 @@ PSIAspell::PSIAspell(const std::string & langCode) {
 }
 
 PSIAspell::PSIAspell(const std::string & langCode,
-                     const boost::program_options::variables_map& options)
+                     const boost::program_options::variables_map& options) :
+    limitCandidates_(0)
 {
     initPSIAspell_(langCode);
+
+    if (options.count("limit")) {
+        limitCandidates_ = options["limit"].as<unsigned int>();
+    }
+    
     std::list<std::string> stringOptions =
         boost::assign::list_of
         (std::string("size"))
@@ -238,7 +246,6 @@ PSIAspell::PSIAspell(const std::string & langCode,
     BOOST_FOREACH (std::string & optionName, stringOptions) {
         if (options.count(optionName.c_str())) {
             std::string optionValue = options[optionName.c_str()].as<std::string>();
-            DEBUG("SETTING OPTION: " << optionName << " = " << optionValue);
             aspell_config_replace(aspellConfig_, optionName.c_str(), optionValue.c_str());
         }
     }
@@ -302,8 +309,14 @@ void PSIAspell::getSuggestionsForLastWord(
 
     const char * currentWordSuggestion;
     while ( (currentWordSuggestion = aspell_string_enumeration_next(elements)) != NULL ) {
+        if (limitCandidates_ &&
+            (limitCandidates_ <= suggestionsList.size())) {
+            break;
+        }
+
         suggestionsList.push_back(std::string(currentWordSuggestion));
     }
+
     delete_aspell_string_enumeration(elements);
 
     return;

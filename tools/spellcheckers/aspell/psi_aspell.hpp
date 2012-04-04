@@ -31,6 +31,8 @@ public:
 
         virtual std::string doGetContinuation(
             const boost::program_options::variables_map& options) const;
+
+        static const unsigned int DEFAULT_LIMIT;
     };
 
     PSIAspell(const std::string & langCode);
@@ -57,10 +59,15 @@ private:
                                      const Lattice::EdgeDescriptor & secondEdgeToCheck);
         bool processCheckMultiEdgesAreIncorrect_(const Lattice::EdgeDescriptor & firstEdgeToCheck,
                                      const Lattice::EdgeDescriptor & secondEdgeToCheck);
+        bool processAspellCheckOnText_(const std::string & textToCheck,
+                                       const Lattice::VertexDescriptor & sourceVertex,
+                                       const Lattice::VertexDescriptor & targetVertex);
         
         SuggestionsList * checkWordInAspell_(const std::string & text);
         
         Processor& processor_;
+        LayerTagCollection textTags_;
+        
     };
 
     virtual LatticeWorker* doCreateLatticeWorker(Lattice& lattice);
@@ -69,6 +76,8 @@ private:
     virtual std::string doInfo();
 
     std::string langCode_;
+    unsigned int limitCandidates_;
+    
     AspellConfig * aspellConfig_;
     AspellSpeller * aspellSpeller_;
 };
