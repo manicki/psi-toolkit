@@ -2,6 +2,8 @@ cmake_minimum_required(VERSION 2.8)
 
 project(psi-toolkit CXX)
 
+SET(MY_TARGETLIB_PREFIX "libpsitoolkit_")
+
 SET(CMAKE_INSTALL_RPATH "${CMAKE_INSTALL_PREFIX}/lib")
 
 # coverage mode
@@ -421,3 +423,38 @@ endfunction(download_artifact)
 if(DOWNLOAD_DATA)
         download_artifact("tools/lexica/bilexicon/data/plen.bin")
 endif(DOWNLOAD_DATA)
+
+# =====================================
+# Sets prefix for all generated libraries
+
+# Helping macro
+MACRO(LIST_CONTAINS var value)
+  SET(${var})
+  FOREACH (value2 ${ARGN})
+    IF (${value} STREQUAL ${value2})
+      SET(${var} TRUE)
+    ENDIF (${value} STREQUAL ${value2})
+  ENDFOREACH (value2)
+ENDMACRO(LIST_CONTAINS)
+                          
+GET_CMAKE_PROPERTY(all_variables VARIABLES)
+
+FOREACH(variable_name ${all_variables})
+
+  if(variable_name MATCHES "_LIB_DEPENDS$")
+    STRING(REGEX REPLACE "_LIB_DEPENDS.*" "" library_name ${variable_name})
+
+    GET_TARGET_PROPERTY(target_location ${library_name} LOCATION)
+
+    if(NOT target_location MATCHES "NOTFOUND")
+      if (NOT target_location MATCHES "psitoolkit_perl_simple")
+        SET_TARGET_PROPERTIES(${library_name}
+          PROPERTIES
+          PREFIX ${MY_TARGETLIB_PREFIX}
+          )
+      endif()
+    endif()
+  endif()
+
+endforeach(variable_name)
+

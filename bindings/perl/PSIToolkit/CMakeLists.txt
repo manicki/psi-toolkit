@@ -29,9 +29,9 @@ foreach(filename ${CXX_FILES})
   set_source_files_properties(${filename} PROPERTIES COMPILE_FLAGS "-w")
 endforeach(filename)
 
-swig_add_module(_psitoolkit_perl_simple perl PSIToolkitSimple.i)
+swig_add_module(psitoolkit_perl_simple perl PSIToolkitSimple.i)
 
-swig_link_libraries(_psitoolkit_perl_simple
+swig_link_libraries(psitoolkit_perl_simple
   common
   formats-utt
   formats-simple
@@ -46,9 +46,9 @@ swig_link_libraries(_psitoolkit_perl_simple
 link_directories("${psi-toolkit_BINARY_DIR}/bindings/perl/PSIToolkit")
 
 
-install(TARGETS _psitoolkit_perl_simple DESTINATION lib)
+install(TARGETS psitoolkit_perl_simple DESTINATION lib)
 INSTALL(FILES
-  ${CMAKE_SWIG_CURRENT_LANG_BINDINGS_DIRECTORY}/_psitoolkit_perl_simple.pm
+  ${CMAKE_SWIG_CURRENT_LANG_BINDINGS_DIRECTORY}/psitoolkit_perl_simple.pm
   DESTINATION ${INSTALL_PERL_MODULES_PATH})
 
 INSTALL(FILES
