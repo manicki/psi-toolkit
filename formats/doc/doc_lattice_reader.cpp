@@ -1,11 +1,9 @@
 #include "doc_lattice_reader.hpp"
 
-#include <sstream>
+#include <cstdio>
+#include <cstdlib>
 
 #include <boost/assign/list_of.hpp>
-
-#include <gtk/gtk.h>
-#include <poppler.h>
 
 #include "logging.hpp"
 
@@ -56,28 +54,34 @@ DocLatticeReader::Worker::Worker(
 { }
 
 void DocLatticeReader::Worker::doRun() {
-    std::string line;
-    std::string documentStr;
-    while (std::getline(inputStream_, line)) {
-        documentStr += line + "\n";
-    }
-    gtk_init(NULL, NULL);
-    PopplerDocument * document = poppler_document_new_from_data(
-        (char*)(documentStr.c_str()),
-        documentStr.length(),
-        NULL,
-        NULL
-    );
-    PopplerPage * page;
-    for (int i = 0; i < poppler_document_get_n_pages(document); ++i) {
-        page = poppler_document_get_page(document, i);
-        char * text = poppler_page_get_text(page);
-        std::stringstream textStream(text);
-        while (getline(textStream, line)) {
+// SET_LOGGING_LEVEL("DEBUG");
+    char * tmpFileIn = tempnam(NULL, "psii_");
+    std::ofstream s1(tmpFileIn);
+    s1 << inputStream_.rdbuf();
+    std::string tmpFileInName(tmpFileIn);
+    std::string command("antiword " + tmpFileInName);
+    // std::string command("antiword /tmp/psii_psb5XX");
+DEBUG(command);
+    system(command.c_str());
+
+    std::remove(tmpFileIn);
+    free(tmpFileIn);
+/*
+    char * tmpFileOut = tempnam(NULL, "psio_");
+    try {
+        std::ifstream s2(tmpFileOut);
+        std::string line;
+        while (std::getline(s2, line)) {
             appendParagraphToLattice_(line);
             lattice_.appendString("\n");
         }
+        std::remove(tmpFileOut);
+        free(tmpFileOut);
+    } catch (...) {
+        std::remove(tmpFileOut);
+        free(tmpFileOut);
     }
+    */
 }
 
 void DocLatticeReader::Worker::appendParagraphToLattice_(std::string paragraph) {
