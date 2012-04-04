@@ -5,6 +5,8 @@
 #include <boost/program_options/variables_map.hpp>
 #include <boost/filesystem.hpp>
 
+#include <list>
+
 #include "processor.hpp"
 
 /*!
