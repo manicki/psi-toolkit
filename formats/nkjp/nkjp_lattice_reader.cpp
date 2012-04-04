@@ -204,12 +204,12 @@ void NKJPLatticeReader::Worker::doRun() {
                                 }
                                 Lattice::EdgeSequence::Builder baseBuilder(lattice_);
                                 baseBuilder.addEdge(segEdge);
-                                AnnotationItem baseItem(base, StringFrag(base));
+                                AnnotationItem baseItem("word", StringFrag(base));
                                 Lattice::EdgeDescriptor baseEdge = lattice_.addEdge(
                                     segBegin,
                                     segEnd,
                                     baseItem,
-                                    getTags_("base"),
+                                    getTags_("lemma"),
                                     baseBuilder.build()
                                 );
                                 BOOST_FOREACH(
