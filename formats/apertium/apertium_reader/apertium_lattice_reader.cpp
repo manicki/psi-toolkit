@@ -104,15 +104,11 @@ void ApertiumLatticeReader::Worker::doRun() {
         if (indexes[0].begin != 0) {
             text = input.substr(0, indexes[0].begin);
             appendFragmentToLattice_(text);
-
-            //DEBUG("frag: " << text);
         }
 
         for (unsigned int i = 0; i < indexes.size(); i++) {
             text = input.substr(indexes[i].begin, indexes[i].length());
             appendTagToLattice_(text, indexes[i].type, indexes[i].eos);
-
-            //DEBUG("tag: " << text << " [" << indexes[i].type << ", " << indexes[i].eos << "]");
 
             int length = (i == indexes.size() - 1) ? input.length() : indexes[i+1].begin;
             length -= indexes[i].end;
@@ -120,8 +116,6 @@ void ApertiumLatticeReader::Worker::doRun() {
             if (length != 0) {
                 text = input.substr(indexes[i].end, length);
                 appendFragmentToLattice_(text);
-
-                //DEBUG("frag: " << text);
             }
         }
     }

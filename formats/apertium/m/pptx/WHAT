@@ -1,0 +1,1 @@
+apertium-reader --format pptx ! simple-writer --tag frag
