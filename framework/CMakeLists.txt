@@ -2,6 +2,7 @@ configure_file("${CMAKE_CURRENT_SOURCE_DIR}/git_info.cpp.in" "${CMAKE_CURRENT_BI
 
 # library framework
 add_library(framework SHARED
+    aliaser.cpp
     factories_keeper.cpp
     main_factories_keeper.cpp
     help_formatter.cpp
@@ -92,6 +93,8 @@ if(HAVE_PERL_BINDINGS)
     include(${SWIG_USE_FILE})
     find_package(PerlLibs)
 endif(HAVE_PERL_BINDINGS)
+
+add_subdirectory(t)
 
 install(TARGETS framework DESTINATION lib/)
 install(TARGETS psi-pipe DESTINATION bin/)
