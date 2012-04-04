@@ -2,6 +2,8 @@ cmake_minimum_required(VERSION 2.8)
 
 project(psi-toolkit CXX)
 
+SET(MY_TARGETLIB_PREFIX "libpsitoolkit_")
+
 SET(CMAKE_INSTALL_RPATH "${CMAKE_INSTALL_PREFIX}/lib")
 
 # coverage mode
@@ -60,6 +62,24 @@ else()
   message("-- Not using Log4cpp...")
   set(HAVE_LOG4CPP 0)
 endif(EXISTS ${LOG4CPP_LIB} AND EXISTS ${LOG4CPP_INCLUDE})
+
+if (USE_ASPELL)
+  find_library(ASPELL_LIB NAMES aspell)
+  find_path(ASPELL_INCLUDE aspell.h)
+  if(EXISTS ${ASPELL_LIB} AND EXISTS ${ASPELL_INCLUDE})
+    message("-- Using Aspell...")
+    include_directories(${ASPELL_INCLUDE})
+    link_directories(${ASPELL_LIB})
+    set(HAVE_ASPELL 1)
+  else()
+    message("-- Not using Aspell (can not find required libraries)...")
+    set(HAVE_ASPELL 0)
+  endif(EXISTS ${ASPELL_LIB} AND EXISTS ${ASPELL_INCLUDE})
+else()
+  message("-- Not using Aspell...")
+  set(HAVE_ASPELL 0)
+endif(USE_ASPELL)
+
 
 # CMPH library (for perfect hashing)
 find_library(CMPH_LIB NAMES cmph)
@@ -167,6 +187,8 @@ message(STATUS "Using gv-writer ${USE_GV_WRITER}")
 option(USE_PDF_READER "Using pdf-reader" OFF)
 message(STATUS "Using pdf-reader ${USE_PDF_READER}")
 
+option(USE_ASPELL "Using aspell" OFF)
+message(STATUS "Using aspell ${USE_ASPELL}")
 
 # Finds SWIG
 
@@ -240,12 +262,16 @@ set(CMAKE_CXX_FLAGS "-g -Wall -Wundef -Wnon-virtual-dtor -Wextra")
 
 if (WITH_LOW_MEMORY_COMPILATION)
   message("Setting low memory compilation flags")
-  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} --param ggc-min-expand=30 --param ggc-min-heapsize=8192")
+  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} --param ggc-min-expand=20 --param ggc-min-heapsize=8192")
 endif (WITH_LOW_MEMORY_COMPILATION)
 
 set(BASE_TARGETS common utf8case sundown framework formats-apertium formats-dot formats-nkjp formats-psi formats-simple formats-json-simple formats-txt formats-utt maxent tools-tokenizers-tp tools-segmenters-srx tools-recognizers-langguesser tools-parsers-gobio tools-taggers-metagger)
 
-set(TESTS_TARGETS common-tests tools-tokenizers-tp-tests tools-segmenters-srx-tests tools-datastructures-psi_query-tests tools-recognizers-langguesser-tests utf8case-tests formats-dot-tests formats-utt-tests formats-psi-tests formats-simple-tests tools-parsers-gobio-tests tools-taggers-metagger-tests formats-apertium-tests)
+set(TESTS_TARGETS common-tests framework-tests tools-tokenizers-tp-tests tools-segmenters-srx-tests tools-datastructures-psi_query-tests tools-recognizers-langguesser-tests utf8case-tests formats-dot-tests formats-utt-tests formats-psi-tests formats-simple-tests tools-parsers-gobio-tests tools-taggers-metagger-tests formats-apertium-tests)
+
+if(HAVE_ASPELL)
+    set(TESTS_TARGETS ${TESTS_TARGETS} tools-spellcheckers-aspell-tests)  
+endif(HAVE_ASPELL)
 
 if(USE_JAVA)
     set(BASE_TARGETS ${BASE_TARGETS} tools-lemmatizers-morfologik)
@@ -421,3 +447,38 @@ endfunction(download_artifact)
 if(DOWNLOAD_DATA)
         download_artifact("tools/lexica/bilexicon/data/plen.bin")
 endif(DOWNLOAD_DATA)
+
+# =====================================
+# Sets prefix for all generated libraries
+
+# Helping macro
+MACRO(LIST_CONTAINS var value)
+  SET(${var})
+  FOREACH (value2 ${ARGN})
+    IF (${value} STREQUAL ${value2})
+      SET(${var} TRUE)
+    ENDIF (${value} STREQUAL ${value2})
+  ENDFOREACH (value2)
+ENDMACRO(LIST_CONTAINS)
+                          
+GET_CMAKE_PROPERTY(all_variables VARIABLES)
+
+FOREACH(variable_name ${all_variables})
+
+  if(variable_name MATCHES "_LIB_DEPENDS$")
+    STRING(REGEX REPLACE "_LIB_DEPENDS.*" "" library_name ${variable_name})
+
+    GET_TARGET_PROPERTY(target_location ${library_name} LOCATION)
+
+    if(NOT target_location MATCHES "NOTFOUND")
+      if (NOT target_location MATCHES "psitoolkit_perl_simple")
+        SET_TARGET_PROPERTIES(${library_name}
+          PROPERTIES
+          PREFIX ${MY_TARGETLIB_PREFIX}
+          )
+      endif()
+    endif()
+  endif()
+
+endforeach(variable_name)
+

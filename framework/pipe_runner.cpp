@@ -44,7 +44,21 @@ int PipeRunner::run(std::istream& in, std::ostream& out) {
 const std::string PipeRunner::PIPELINE_SEPARATOR = "!";
 
 ProcessorFactory& PipeRunner::getFactory_(const PipelineElementSpecification& elementSpec) {
-    return MainFactoriesKeeper::getInstance().getProcessorFactory(elementSpec.processorName);
+    std::list<ProcessorFactory*> factories =
+        MainFactoriesKeeper::getInstance().getProcessorFactoriesForName(
+            elementSpec.processorName);
+
+    size_t numberOfFactoriesFound = factories.size();
+
+    if (numberOfFactoriesFound == 0)
+        throw Exception(std::string("no processor found for `")
+                        + elementSpec.processorName + "`");
+    else if (numberOfFactoriesFound > 1)
+        throw Exception(std::string("too many processors found for `")
+                        + elementSpec.processorName
+                        + "`, processor resolution not implemented yet");
+
+    return *factories.front();
 }
 
 template<typename Source, typename Sink>
@@ -98,11 +112,7 @@ void PipeRunner::setRunnerOptionsDescription_() {
 bool PipeRunner::stopAfterExecutingRunnerOptions_() {
     if (runnerOptions_.count("help")) {
         std::cout << runnerOptionsDescription_ << std::endl;
-
-        HelpFormatter* helpFormatter = new ConsoleHelpFormatter;
-        helpFormatter->formatHelps(std::cout);
-        delete helpFormatter;
-
+        ConsoleHelpFormatter().formatHelps(std::cout);
         return true;
     }
 

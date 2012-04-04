@@ -2,8 +2,8 @@
 <format name="html">
   <options>
     <largeblocks size="8192"/>
-    <input encoding="ISO-8859-1"/>
-    <output encoding="ISO-8859-1"/>
+    <input encoding="UTF-8"/>
+    <output encoding="UTF-8"/>
     <tag-name regexp="[a-zA-Z]+"/>
     <escape-chars regexp='[][^@\\/${}]'/>
     <space-chars regexp='[ \n\t\r&lt;&gt;{}]'/>
@@ -19,6 +19,11 @@
     <format-rule type="comment" eos="no" priority="2">
       <begin regexp='"&lt;script"(" "[^&gt;]*)?"&gt;"'/>
       <end regexp='"&lt;/script"(" "[^&gt;]*)?"&gt;"'/>
+    </format-rule>
+
+    <format-rule type="comment" eos="no" priority="2">
+      <begin regexp='"&lt;apertium-notrans&gt;"'/>
+      <end regexp='"&lt;/apertium-notrans&gt;"'/>
     </format-rule>
 
     <format-rule type="comment" eos="no" priority="2">
@@ -67,7 +72,7 @@
     </format-rule>
 
     <format-rule type="empty" eos="no" priority="5">
-      <tag regexp='("&lt;!"|"&lt;\?")[a-zA-Z][^&gt;]*"&gt;"'/>
+      <tag regexp='("&lt;!"|"&lt;\?")[a-zA-Z][^&gt;]*"&gt;"'/><!-- added \ before ? -->
     </format-rule>
 
 <!-- End (Cambios hechos por Gorka L.)-->

@@ -41,6 +41,10 @@ std::string FormatRule::getType() {
     return type_;
 }
 
+bool FormatRule::getEos() {
+    return eos_;
+}
+
 int FormatRule::getPriority() const {
     return priority_;
 }

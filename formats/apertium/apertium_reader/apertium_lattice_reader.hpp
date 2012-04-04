@@ -16,7 +16,9 @@ public:
     ApertiumLatticeReader(const boost::filesystem::path&);
 
     std::string getFormatName();
-    std::string deformat(const std::string& input);
+
+    std::string processReplacementRules(const std::string& input);
+    std::vector<DeformatIndex> processFormatRules(const std::string& input);
 
     class Factory : public LatticeReaderFactory<std::istream> {
     public:
@@ -49,6 +51,11 @@ private:
 
     private:
         ApertiumLatticeReader& processor_;
+        LayerTagCollection fragTags_;
+        LayerTagCollection tagTags_;
+
+        void appendFragmentToLattice_(std::string);
+        void appendTagToLattice_(std::string, std::string, bool);
     };
 
     virtual ReaderWorker<std::istream>* doCreateReaderWorker(

@@ -45,8 +45,18 @@
 #endif
 
 #include "me_tagger.hpp"
+#if HAVE_ASPELL
+#include "psi_aspell.hpp"
+#endif
 
 MainFactoriesKeeper::MainFactoriesKeeper() {
+    keeper_.addTagBasedIzeAliases("token", "token");
+    keeper_.addTagBasedAlias("segment", "segment");
+    keeper_.addTagBasedAlias("segment", "segmenter");
+    keeper_.addTagBasedAlias("parse", "parse");
+    keeper_.addTagBasedAlias("parse", "parser");
+    keeper_.addTagBasedIzeAliases("lemma", "lemmat");
+
     keeper_.takeProcessorFactory(new TxtLatticeReader::Factory());
     keeper_.takeProcessorFactory(new UTTLatticeReader::Factory());
     keeper_.takeProcessorFactory(new PsiLatticeReader::Factory());
@@ -87,6 +97,10 @@ MainFactoriesKeeper::MainFactoriesKeeper() {
     keeper_.takeProcessorFactory(new PerlSimpleLatticeWriter::Factory());
 #endif
     keeper_.takeProcessorFactory(new MeTagger::Factory());
+
+#if HAVE_ASPELL
+    keeper_.takeProcessorFactory(new PSIAspell::Factory());
+#endif
 }
 
 ProcessorFactory& MainFactoriesKeeper::getProcessorFactory(std::string processorName) {
@@ -95,6 +109,14 @@ ProcessorFactory& MainFactoriesKeeper::getProcessorFactory(std::string processor
 
 std::vector<std::string> MainFactoriesKeeper::getProcessorNames() {
     return keeper_.getProcessorNames();
+}
+
+std::set<std::string> MainFactoriesKeeper::getAliasNames() {
+    return keeper_.getAliasNames();
+}
+
+std::list<ProcessorFactory*> MainFactoriesKeeper::getProcessorFactoriesForName(std::string name) {
+    return keeper_.getProcessorFactoriesForName(name);
 }
 
 MainFactoriesKeeper& MainFactoriesKeeper::getInstance() {

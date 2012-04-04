@@ -1,0 +1,3 @@
+Przykładowy dokument XLSX
+Pierwsza komórka
+Druga komórka

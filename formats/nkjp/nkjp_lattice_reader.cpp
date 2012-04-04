@@ -123,7 +123,6 @@ void NKJPLatticeReader::Worker::doRun() {
                     boost::property_tree::ptree::value_type &vFS,
                     vSeg.second.get_child("")
                 ) if (strcmp(vFS.first.data(), "fs") == 0) {
-                    mainTag = vFS.second.get("<xmlattr>.type", mainTag);
                     BOOST_FOREACH(
                         boost::property_tree::ptree::value_type &vF,
                         vFS.second.get_child("")
@@ -144,10 +143,7 @@ void NKJPLatticeReader::Worker::doRun() {
                         }
                     }
                 }
-                AnnotationItem segItem(
-                    vSeg.second.get("<xmlattr>.xml:id", "seg"),
-                    StringFrag(segment)
-                );
+                AnnotationItem segItem("T", StringFrag(segment));
                 BOOST_FOREACH(
                     boost::property_tree::ptree::value_type &vFS,
                     vSeg.second.get_child("")
@@ -175,8 +171,12 @@ void NKJPLatticeReader::Worker::doRun() {
                 if (!npsValue.empty()) {
                     lattice_.getAnnotationItemManager().setValue(segItem, "nps", npsValue);
                 }
-                Lattice::EdgeDescriptor segEdge
-                    = appendSegmentToLattice_(segment, segItem, mainTag, insertSpace);
+                Lattice::EdgeDescriptor segEdge = appendSegmentToLattice_(
+                    segment,
+                    segItem,
+                    (mainTag=="morph"?"token":mainTag),
+                    insertSpace
+                );
                 Lattice::VertexDescriptor segBegin = lattice_.getEdgeSource(segEdge);
                 Lattice::VertexDescriptor segEnd = lattice_.getEdgeTarget(segEdge);
 
@@ -184,7 +184,6 @@ void NKJPLatticeReader::Worker::doRun() {
                     boost::property_tree::ptree::value_type &vFS,
                     vSeg.second.get_child("")
                 ) if (strcmp(vFS.first.data(), "fs") == 0) {
-                    mainTag = vFS.second.get("<xmlattr>.type", mainTag);
                     BOOST_FOREACH(
                         boost::property_tree::ptree::value_type &vF,
                         vFS.second.get_child("")
@@ -205,12 +204,12 @@ void NKJPLatticeReader::Worker::doRun() {
                                 }
                                 Lattice::EdgeSequence::Builder baseBuilder(lattice_);
                                 baseBuilder.addEdge(segEdge);
-                                AnnotationItem baseItem(base, StringFrag(base));
+                                AnnotationItem baseItem("word", StringFrag(base));
                                 Lattice::EdgeDescriptor baseEdge = lattice_.addEdge(
                                     segBegin,
                                     segEnd,
                                     baseItem,
-                                    getTags_("base"),
+                                    getTags_("lemma"),
                                     baseBuilder.build()
                                 );
                                 BOOST_FOREACH(
@@ -230,7 +229,7 @@ void NKJPLatticeReader::Worker::doRun() {
                                             segBegin,
                                             segEnd,
                                             ctagItem,
-                                            getTags_("ctag"),
+                                            getTags_("lexeme"),
                                             ctagBuilder.build()
                                         );
                                     } else if (
@@ -249,6 +248,7 @@ void NKJPLatticeReader::Worker::doRun() {
                                                 );
                                             } catch (WrongVertexException) { }
                                             AnnotationItem msdItem(
+                                                // lattice_.getAnnotationCategory(baseEdge),
                                                 vFF.second.get<std::string>(
                                                     "symbol.<xmlattr>.xml:id"
                                                 ),
@@ -265,7 +265,7 @@ void NKJPLatticeReader::Worker::doRun() {
                                                 segBegin,
                                                 segEnd,
                                                 msdItem,
-                                                getTags_("msd"),
+                                                getTags_("form"),
                                                 msdBuilder.build()
                                             );
                                         } catch (boost::property_tree::ptree_bad_path) {
@@ -286,6 +286,7 @@ void NKJPLatticeReader::Worker::doRun() {
                                                     );
                                                 } catch (WrongVertexException) { }
                                                 AnnotationItem vAltItem(
+                                                    // lattice_.getAnnotationCategory(baseEdge),
                                                     vVAlt.second.get("<xmlattr>.xml:id", "msd"),
                                                     vAltAnnotationText
                                                 );
@@ -298,7 +299,7 @@ void NKJPLatticeReader::Worker::doRun() {
                                                     segBegin,
                                                     segEnd,
                                                     vAltItem,
-                                                    getTags_("msd"),
+                                                    getTags_("form"),
                                                     vAltBuilder.build()
                                                 );
                                                 if (

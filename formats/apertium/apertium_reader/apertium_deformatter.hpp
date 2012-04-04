@@ -11,10 +11,11 @@
 struct DeformatIndex {
     int begin;
     int end;
-    std::string info;
+    std::string type;
+    bool eos;
 
-    DeformatIndex(std::pair<int, int> indexes, const std::string& str)
-    : begin(indexes.first), end(indexes.second), info(str) { }
+    DeformatIndex(std::pair<int, int> indexes, const std::string& str, bool attr)
+    : begin(indexes.first), end(indexes.second), type(str), eos(attr) { }
 
     int length() {
         return end - begin;
@@ -26,6 +27,8 @@ public:
 
     ApertiumDeformatter(const boost::filesystem::path& specFilePath);
 
+    std::string processReplacementRules(const std::string& input);
+    std::vector<DeformatIndex> processFormatRules(const std::string& input);
     std::string deformat(const std::string& input);
 
 private:
@@ -40,13 +43,10 @@ private:
     std::string clearFromDeformatData_(const std::string& input,
         std::vector<DeformatIndex>& indexes);
 
-    //FIXME: jak dodać RE_Options do regexp.hpp?
+    //FIXME: RE_options should be added to the regexp wrapper?
     pcrecpp::RE_Options perlRegexpOptions_;
 
     std::pair<int, int> getMatchedStringIndexes(PerlStringPiece currentInput, std::string);
-
-    const static std::string DELIMITER_BEGIN;
-    const static std::string DELIMITER_END;
 };
 
 #endif
