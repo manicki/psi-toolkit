@@ -6,7 +6,8 @@
 #include "apertium_deformatter.hpp"
 
 ApertiumDeformatter::ApertiumDeformatter(const boost::filesystem::path& specFilePath)
-    : formatSpecification_(initializeFormatSpecification_(specFilePath)) {
+    : formatSpecification_(initializeFormatSpecification_(specFilePath)),
+    initialInputSize_(0) {
 
     perlRegexpOptions_.set_utf8(true);
     perlRegexpOptions_.set_caseless(!formatSpecification_.getOptions().isCaseSensitive());

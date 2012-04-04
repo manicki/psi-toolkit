@@ -97,35 +97,33 @@ void ApertiumLatticeReader::Worker::doRun() {
     input = processor_.processReplacementRules(input);
     std::vector<DeformatIndex> indexes = processor_.processFormatRules(input);
 
-    if (indexes.size() != 0) {
+    if (!indexes.empty()) {
         std::string text;
-        unsigned int length;
 
         if (indexes[0].begin != 0) {
             text = input.substr(0, indexes[0].begin);
-            DEBUG("frag: " << text);
             appendFragmentToLattice_(text);
+
+            DEBUG("frag: " << text);
         }
 
         for (unsigned int i = 0; i < indexes.size(); i++) {
             text = input.substr(indexes[i].begin, indexes[i].length());
-            DEBUG("tag: " << text << " [" << indexes[i].type << ", " << indexes[i].eos << "]");
             appendTagToLattice_(text, indexes[i].type, indexes[i].eos);
 
-            length = (i == indexes.size() - 1) ? input.length() : indexes[i+1].begin;
+            DEBUG("tag: " << text << " [" << indexes[i].type << ", " << indexes[i].eos << "]");
+
+            unsigned int length = (i == indexes.size() - 1) ? input.length() : indexes[i+1].begin;
             length -= indexes[i].end;
 
             if (length != 0) {
                 text = input.substr(indexes[i].end, length);
-                DEBUG("frag: " << text);
                 appendFragmentToLattice_(text);
+
+                DEBUG("frag: " << text);
             }
         }
-
     }
-
-    std::string output = "";
-    DEBUG(output);
 }
 
 void ApertiumLatticeReader::Worker::appendFragmentToLattice_(std::string fragment) {
