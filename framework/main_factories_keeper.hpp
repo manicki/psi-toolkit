@@ -10,6 +10,8 @@ public:
     ProcessorFactory& getProcessorFactory(std::string processorName);
     std::vector<std::string> getProcessorNames();
 
+    std::list<ProcessorFactory*> getProcessorFactoriesForName(std::string name);
+
     // singleton pattern used here
     static MainFactoriesKeeper& getInstance();
 

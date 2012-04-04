@@ -53,6 +53,19 @@ BOOST_AUTO_TEST_CASE( simple ) {
             expectedSet);
     }
 
+    {
+        std::set<std::string> expectedSet =
+            boost::assign::list_of
+            (std::string("foo"))
+            (std::string("bar"))
+            (std::string("baq"))
+            (std::string("baz"));
+
+        BOOST_CHECK(
+            aliaser.getAliasNames() ==
+            expectedSet);
+    }
+
     BOOST_CHECK(aliaser.getAllDestinations("baq").empty());
     BOOST_CHECK(aliaser.getAllAliases("zzz").empty());
     BOOST_CHECK(aliaser.isAlias("baq"));

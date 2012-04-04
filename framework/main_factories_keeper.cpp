@@ -47,6 +47,13 @@
 #include "me_tagger.hpp"
 
 MainFactoriesKeeper::MainFactoriesKeeper() {
+    keeper_.addTagBasedIzeAliases("token", "token");
+    keeper_.addTagBasedAlias("segment", "segment");
+    keeper_.addTagBasedAlias("segment", "segmenter");
+    keeper_.addTagBasedAlias("parse", "parse");
+    keeper_.addTagBasedAlias("parse", "parser");
+    keeper_.addTagBasedIzeAliases("lemma", "lemmat");
+
     keeper_.takeProcessorFactory(new TxtLatticeReader::Factory());
     keeper_.takeProcessorFactory(new UTTLatticeReader::Factory());
     keeper_.takeProcessorFactory(new PsiLatticeReader::Factory());
@@ -95,6 +102,10 @@ ProcessorFactory& MainFactoriesKeeper::getProcessorFactory(std::string processor
 
 std::vector<std::string> MainFactoriesKeeper::getProcessorNames() {
     return keeper_.getProcessorNames();
+}
+
+std::list<ProcessorFactory*> MainFactoriesKeeper::getProcessorFactoriesForName(std::string name) {
+    return keeper_.getProcessorFactoriesForName(name);
 }
 
 MainFactoriesKeeper& MainFactoriesKeeper::getInstance() {
