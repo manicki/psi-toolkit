@@ -96,6 +96,11 @@ endif(HAVE_PERL_BINDINGS)
 
 add_subdirectory(t)
 
+if (HAVE_ASPELL)
+  target_link_libraries(framework tools-spellcheckers-aspell)
+  target_link_libraries(psi-pipe tools-spellcheckers-aspell)
+endif (HAVE_ASPELL)
+
 install(TARGETS framework DESTINATION lib/)
 install(TARGETS psi-pipe DESTINATION bin/)
 install(FILES DESTINATION "${psi-toolkit_BINARY_DIR}")

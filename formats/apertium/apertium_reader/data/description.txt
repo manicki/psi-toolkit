@@ -1,3 +1,6 @@
 Reading text in various formats according to Apertium format handling
 rules specified in XML, see
 <http://wiki.apertium.org/wiki/Format_handling> [under construction]
+
+Note: XML files with rules come from Apertium platform and they are licensed
+under GNU General Public License.

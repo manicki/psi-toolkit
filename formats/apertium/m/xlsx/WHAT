@@ -1,0 +1,1 @@
+apertium-reader --format xlsx ! simple-writer --tag frag
