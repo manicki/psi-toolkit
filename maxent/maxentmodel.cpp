@@ -39,7 +39,6 @@
 #include <set>
 #include <map>
 
-//LM#include "hash_map.hpp"
 #include <boost/unordered_map.hpp>
 
 #include <boost/lexical_cast.hpp>
@@ -83,10 +82,7 @@ MaxentModel::MaxentModel():
  * adding events.
  */
 void MaxentModel::begin_add_event() {
-    if (! m_pred_map) //LM: if model has not been loaded yet
-        m_es.reset(new MEEventSpace);
-    else
-        m_es.reset(new MEEventSpace(m_pred_map, m_outcome_map));
+    m_es.reset(new MEEventSpace);
     m_pred_map = m_es->feat_map();
     m_outcome_map = m_es->outcome_map();
     m_heldout_es.reset(new MEEventSpace(m_pred_map, m_outcome_map));
@@ -244,7 +240,6 @@ double MaxentModel::build_params(shared_ptr<ParamsType>& params,
         size_t& n_theta) const {
     boost::timer t;
     assert(m_es);
-    //LM:typedef hash_map <pair<size_t, size_t>, bool, featid_hasher> FeatMap;
     typedef boost::unordered_map <pair<size_t, size_t>, bool, featid_hasher> FeatMap;
 
     FeatMap feat_map;

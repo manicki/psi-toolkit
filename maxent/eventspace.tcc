@@ -50,8 +50,7 @@ EventSpace<Ev>::EventSpace(boost::shared_ptr<featmap_type> featmap,
     else
         m_outcome_map = outcomemap;
 
-    //LM was:m_newfeat_mode = (!featmap && !outcomemap) ? true : false;
-    m_newfeat_mode = true;
+    m_newfeat_mode = (!featmap && !outcomemap) ? true : false;
     // cerr << "EventSpace():new feat mode: " <<  m_newfeat_mode << endl;
 }
 
