@@ -436,7 +436,7 @@ MACRO(LIST_CONTAINS var value)
     ENDIF (${value} STREQUAL ${value2})
   ENDFOREACH (value2)
 ENDMACRO(LIST_CONTAINS)
-                          
+
 GET_CMAKE_PROPERTY(all_variables VARIABLES)
 
 FOREACH(variable_name ${all_variables})
