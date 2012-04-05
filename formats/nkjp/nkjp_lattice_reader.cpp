@@ -212,32 +212,33 @@ void NKJPLatticeReader::Worker::doRun() {
                                     getTags_("lemma"),
                                     baseBuilder.build()
                                 );
+                                std::string lexeme;
                                 BOOST_FOREACH(
                                     boost::property_tree::ptree::value_type &vFF,
                                     vFFS.second.get_child("")
                                 ) if (strcmp(vFF.first.data(), "f") == 0) {
                                     if (vFF.second.get("<xmlattr>.name", std::string())=="ctag") {
-                                        Lattice::EdgeSequence::Builder ctagBuilder(lattice_);
-                                        ctagBuilder.addEdge(baseEdge);
-                                        AnnotationItem ctagItem(
-                                            vFF.second.get("symbol.<xmlattr>.value", "ctag"),
-                                            StringFrag(base + "+" +
-                                                vFF.second.get("symbol.<xmlattr>.value", "ctag")
-                                            )
-                                        );
-                                        lattice_.addEdge(
-                                            segBegin,
-                                            segEnd,
-                                            ctagItem,
-                                            getTags_("lexeme"),
-                                            ctagBuilder.build()
-                                        );
-                                    } else if (
-                                        vFF.second.get("<xmlattr>.name", std::string())=="msd"
-                                    ) {
+                                        lexeme = vFF.second.get("symbol.<xmlattr>.value", "ctag");
+                                    }
+                                }
+                                Lattice::EdgeSequence::Builder ctagBuilder(lattice_);
+                                ctagBuilder.addEdge(baseEdge);
+                                AnnotationItem ctagItem(lexeme, StringFrag(base + "+" + lexeme));
+                                Lattice::EdgeDescriptor ctagEdge = lattice_.addEdge(
+                                    segBegin,
+                                    segEnd,
+                                    ctagItem,
+                                    getTags_("lexeme"),
+                                    ctagBuilder.build()
+                                );
+                                BOOST_FOREACH(
+                                    boost::property_tree::ptree::value_type &vFF,
+                                    vFFS.second.get_child("")
+                                ) if (strcmp(vFF.first.data(), "f") == 0) {
+                                    if (vFF.second.get("<xmlattr>.name", std::string())=="msd") {
                                         try {
                                             Lattice::EdgeSequence::Builder msdBuilder(lattice_);
-                                            msdBuilder.addEdge(baseEdge);
+                                            msdBuilder.addEdge(ctagEdge);
                                             StringFrag msdAnnotationText;
                                             try {
                                                 msdAnnotationText = StringFrag(
@@ -247,13 +248,7 @@ void NKJPLatticeReader::Worker::doRun() {
                                                         - lattice_.getVertexRawCharIndex(segBegin)
                                                 );
                                             } catch (WrongVertexException) { }
-                                            AnnotationItem msdItem(
-                                                // lattice_.getAnnotationCategory(baseEdge),
-                                                vFF.second.get<std::string>(
-                                                    "symbol.<xmlattr>.xml:id"
-                                                ),
-                                                msdAnnotationText
-                                            );
+                                            AnnotationItem msdItem(lexeme, msdAnnotationText);
                                             lattice_.getAnnotationItemManager().setValue(
                                                 msdItem,
                                                 "value",
@@ -275,7 +270,7 @@ void NKJPLatticeReader::Worker::doRun() {
                                             ) if (strcmp(vVAlt.first.data(), "symbol") == 0) {
                                                 Lattice::EdgeSequence::Builder
                                                     vAltBuilder(lattice_);
-                                                vAltBuilder.addEdge(baseEdge);
+                                                vAltBuilder.addEdge(ctagEdge);
                                                 StringFrag vAltAnnotationText;
                                                 try {
                                                     vAltAnnotationText = StringFrag(
@@ -285,11 +280,7 @@ void NKJPLatticeReader::Worker::doRun() {
                                                         - lattice_.getVertexRawCharIndex(segBegin)
                                                     );
                                                 } catch (WrongVertexException) { }
-                                                AnnotationItem vAltItem(
-                                                    // lattice_.getAnnotationCategory(baseEdge),
-                                                    vVAlt.second.get("<xmlattr>.xml:id", "msd"),
-                                                    vAltAnnotationText
-                                                );
+                                                AnnotationItem vAltItem(lexeme, vAltAnnotationText);
                                                 lattice_.getAnnotationItemManager().setValue(
                                                     vAltItem,
                                                     "value",
