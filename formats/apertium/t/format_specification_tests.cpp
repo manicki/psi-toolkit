@@ -23,7 +23,7 @@ BOOST_AUTO_TEST_CASE( format_specification_xml_reading ) {
     expectedInRegexp.push_back(")|(");
 
     BOOST_FOREACH(std::string str, expectedInRegexp) {
-        BOOST_CHECK(specification.formatRulesRegexp().find(str) != std::string::npos);
+        BOOST_CHECK(specification.formatRulesRegexp()[0].find(str) != std::string::npos);
     }
 
     std::map<std::string, std::string> replacements = specification.replacementRulesRegexp();

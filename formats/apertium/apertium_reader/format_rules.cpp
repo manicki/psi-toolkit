@@ -50,10 +50,7 @@ int FormatRule::getPriority() const {
 }
 
 std::string FormatRule::getRegexp() {
-    std::string regexp = "(?:\\s*?)";//"(?:\t*?)";
-    regexp += getRegexp_() + "(?:\t*)"; //"(?:\\s*)";
-
-    return regexp;
+    return std::string("(?:\\s*?)") + getRegexp_() + "(?:\t*)";
 }
 
 std::string FormatRule::getRegexp_() {
@@ -67,11 +64,7 @@ std::string FormatRule::tagsToRegexpDisjunctions_() {
     if (tags_.size() == 1) {
         return tags_[0];
     }
-
-    std::string regexps = "(?:";
-    regexps += boost::algorithm::join(tags_, ")|(?:") + ")";
-
-    return regexps;
+    return std::string("(?:") + boost::algorithm::join(tags_, ")|(?:") + ")";
 }
 
 bool FormatRule::operator< (const FormatRule &other) const {
