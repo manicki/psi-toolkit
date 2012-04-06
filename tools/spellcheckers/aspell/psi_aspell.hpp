@@ -62,7 +62,7 @@ private:
         bool processAspellCheckOnText_(const std::string & textToCheck,
                                        const Lattice::VertexDescriptor & sourceVertex,
                                        const Lattice::VertexDescriptor & targetVertex);
-        
+
         SuggestionsList * checkWordInAspell_(const std::string & text);
         
         Processor& processor_;
@@ -83,4 +83,3 @@ private:
 };
 
 #endif
-

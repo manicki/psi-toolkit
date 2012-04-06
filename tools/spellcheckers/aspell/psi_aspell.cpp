@@ -28,7 +28,10 @@ void PSIAspell::Factory::doAddLanguageIndependentOptionsHandled(
          "Take only limit candidates into account. If set to zero, then take all into account.")
         ("size",
          boost::program_options::value<std::string>(),
-         "The preferred size of the word list. This consists of a two char digit code describing the size of the list, with typical values of: 10=tiny, 20=really small, 30=small, 40=med-small, 50=med, 60=med-large, 70=large, 80=huge, 90=insane.")
+         "The preferred size of the word list."
+         "This consists of a two char digit code describing the size of the list, "
+         "with typical values of: 10=tiny, 20=really small, 30=small, 40=med-small, "
+         "50=med, 60=med-large, 70=large, 80=huge, 90=insane.")
         ("personal",
          boost::program_options::value<std::string>(),
          "Personal word list file name (proceed by ./ if you want to use current directory).")
@@ -83,7 +86,7 @@ LatticeWorker* PSIAspell::doCreateLatticeWorker(Lattice& lattice) {
 PSIAspell::Worker::Worker(Processor& processor, Lattice& lattice):
     LatticeWorker(lattice), processor_(processor),
     textTags_(lattice_.getLayerTagManager().createTagCollectionFromList(
-                                                                        boost::assign::list_of("token")))
+                                            boost::assign::list_of("token")))
 {
 }
 
@@ -153,7 +156,8 @@ bool PSIAspell::Worker::processCheckEdgeIsIncorrect_(const Lattice::EdgeDescript
                                      );
 }
 
-bool PSIAspell::Worker::processCheckMultiEdgesAreIncorrect_(const Lattice::EdgeDescriptor & firstEdgeToCheck,
+bool PSIAspell::Worker::processCheckMultiEdgesAreIncorrect_(
+                                       const Lattice::EdgeDescriptor & firstEdgeToCheck,
                                        const Lattice::EdgeDescriptor & separatingEdge,
                                        const Lattice::EdgeDescriptor & secondEdgeToCheck) {
     std::string textToCheck = lattice_.getAnnotationText(firstEdgeToCheck)
@@ -166,7 +170,8 @@ bool PSIAspell::Worker::processCheckMultiEdgesAreIncorrect_(const Lattice::EdgeD
                                      );
 }
 
-bool PSIAspell::Worker::processCheckMultiEdgesAreIncorrect_(const Lattice::EdgeDescriptor & firstEdgeToCheck,
+bool PSIAspell::Worker::processCheckMultiEdgesAreIncorrect_(
+                                       const Lattice::EdgeDescriptor & firstEdgeToCheck,
                                        const Lattice::EdgeDescriptor & secondEdgeToCheck) {
     std::string textToCheck = lattice_.getAnnotationText(firstEdgeToCheck)
         + lattice_.getAnnotationText(secondEdgeToCheck);
@@ -198,7 +203,6 @@ bool PSIAspell::Worker::processAspellCheckOnText_(const std::string & textToChec
         return false;
     }
 }
-                                                  
 
 SuggestionsList * PSIAspell::Worker::checkWordInAspell_(const std::string & text) {
     PSIAspell & aspellProcessor = dynamic_cast<PSIAspell&>(processor_);
@@ -220,7 +224,9 @@ std::string PSIAspell::doInfo() {
 // ===================================
 // PSIAspell
 
-PSIAspell::PSIAspell(const std::string & langCode) {
+PSIAspell::PSIAspell(const std::string & langCode) :
+    limitCandidates_(0)
+{
     initPSIAspell_(langCode);
 }
 
