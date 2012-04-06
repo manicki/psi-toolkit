@@ -16,13 +16,20 @@ boost::program_options::options_description LanguageDependentAnnotatorFactory::d
 
 }
 
-AnnotatorFactory::LanguagesHandling LanguageDependentAnnotatorFactory::doLanguagesHandling(
-    const boost::program_options::variables_map& options) const {
+AnnotatorFactory::LanguagesHandling LanguageDependentAnnotatorFactory::checkLangOption(
+    const boost::program_options::variables_map& options) {
     std::string lang = options["lang"].as<std::string>();
 
     return lang == GUESS_VALUE_FOR_LANG_OPTION
            ? AnnotatorFactory::LANGUAGE_DEPENDENT
            : AnnotatorFactory::JUST_ONE_LANGUAGE;
+}
+
+
+AnnotatorFactory::LanguagesHandling LanguageDependentAnnotatorFactory::doLanguagesHandling(
+    const boost::program_options::variables_map& options) const {
+
+    return checkLangOption(options);
 }
 
 std::list<std::string> LanguageDependentAnnotatorFactory::doLanguagesHandled(

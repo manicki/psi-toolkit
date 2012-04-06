@@ -19,6 +19,9 @@ public:
     static void addLanguageDependentOptions(
         boost::program_options::options_description& optionsDescription);
 
+    static LanguagesHandling checkLangOption(
+        const boost::program_options::variables_map& options);
+
 private:
 
     virtual boost::program_options::options_description doOptionsHandled();
