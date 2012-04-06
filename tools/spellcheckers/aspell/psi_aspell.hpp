@@ -48,6 +48,8 @@ public:
                                    const std::string & word
                                    );
 
+    static const std::list<std::string> tagsToOperateOn;
+    static const std::list<std::string> tagsToPut;
 private:
 
     class Worker : public LatticeWorker {

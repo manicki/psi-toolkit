@@ -9,6 +9,8 @@
 #include "psi_exception.hpp"
 
 const unsigned int PSIAspell::Factory::DEFAULT_LIMIT = 5;
+const std::list<std::string> PSIAspell::tagsToOperateOn = boost::assign::list_of("token");
+const std::list<std::string> PSIAspell::tagsToPut = boost::assign::list_of("token")("aspell")("corrected");
 
 Annotator* PSIAspell::Factory::doCreateAnnotator(
     const boost::program_options::variables_map& options) {
@@ -62,7 +64,7 @@ boost::filesystem::path PSIAspell::Factory::doGetFile() const {
 }
 
 std::list<std::list<std::string> > PSIAspell::Factory::doRequiredLayerTags() {
-    return std::list<std::list<std::string> >();
+    return boost::assign::list_of(boost::assign::list_of("token"));
 }
 
 std::list<std::list<std::string> > PSIAspell::Factory::doOptionalLayerTags() {
@@ -70,9 +72,7 @@ std::list<std::list<std::string> > PSIAspell::Factory::doOptionalLayerTags() {
 }
 
 std::list<std::string> PSIAspell::Factory::doProvidedLayerTags() {
-    std::list<std::string> layerTags;
-    layerTags.push_back("token");
-    return layerTags;
+    return PSIAspell::tagsToPut;
 }
 
 std::string PSIAspell::Factory::doGetContinuation(
@@ -183,17 +183,15 @@ LatticeWorker* PSIAspell::doCreateLatticeWorker(Lattice& lattice) {
 PSIAspell::Worker::Worker(Processor& processor, Lattice& lattice):
     LatticeWorker(lattice), processor_(processor),
     textTags_(lattice_.getLayerTagManager().createTagCollectionFromList(
-                                            boost::assign::list_of("token")))
+                                            PSIAspell::tagsToPut))
 {
 }
 
 void PSIAspell::Worker::doRun() {
-    std::list<std::string> tagsToOperateOn_ =
-        boost::assign::list_of(std::string("token"));
 
     LayerTagMask tokenMask_ =
           lattice_.getLayerTagManager().getMask(
-                         tagsToOperateOn_);
+                   PSIAspell::tagsToOperateOn);
 
     Lattice::EdgesSortedByTargetIterator edgeIterator
         = lattice_.edgesSortedByTarget(tokenMask_);
