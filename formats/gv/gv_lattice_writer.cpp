@@ -75,11 +75,6 @@ void GVLatticeWriter::Worker::doRun() {
 
     DEBUG("starting writer...");
 
-    PsiQuoter quoter;
-
-    std::map<Lattice::EdgeDescriptor, int> edgeOrdinalMap;
-    int ordinal = 0;
-
     char * tmpFile;
 
     GVC_t * gvc = gvContext();
@@ -151,6 +146,11 @@ void GVLatticeWriter::Worker::doRun() {
     Agnode_t * n;
     Agnode_t * m;
     Agedge_t * e;
+
+    PsiQuoter quoter;
+
+    std::map<Lattice::EdgeDescriptor, int> edgeOrdinalMap;
+    int ordinal = 0;
 
     Lattice::EdgesSortedByTargetIterator ei
         = lattice_.edgesSortedByTarget(lattice_.getLayerTagManager().anyTag());

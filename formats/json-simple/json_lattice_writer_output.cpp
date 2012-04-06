@@ -163,7 +163,7 @@ void JSONLatticeWriterOutput::printCurrentArrayToStringWithFlatten_(
 
 void JSONLatticeWriterOutput::printCurrentArrayToString_(std::string & output) {
 
-    if (currentArrayPointer_ && (currentArrayPointer_->size() > 0)) {
+    if (currentArrayPointer_ && (! currentArrayPointer_->empty())) {
         std::stringstream tempStream;
         tempStream << "[";
 

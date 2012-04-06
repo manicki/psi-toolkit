@@ -2,6 +2,9 @@
 
 #include <cstring>
 #include <limits>
+#include <map>
+#include <vector>
+#include <utility>
 
 #include <boost/algorithm/string/trim.hpp>
 #include <boost/assign/list_of.hpp>
@@ -9,6 +12,7 @@
 #include <boost/property_tree/ptree.hpp>
 #include <boost/property_tree/xml_parser.hpp>
 
+#include "morfologik_tags_parser.hpp"
 #include "string_frag.hpp"
 
 #include "logging.hpp"
@@ -236,6 +240,11 @@ void NKJPLatticeReader::Worker::doRun() {
                                     vFFS.second.get_child("")
                                 ) if (strcmp(vFF.first.data(), "f") == 0) {
                                     if (vFF.second.get("<xmlattr>.name", std::string())=="msd") {
+                                        MorfologikTagsParser morphoparser;
+                                        std::string morphostr;
+                                        typedef std::map<std::string, std::string> StrStrMap;
+                                        typedef std::pair<std::string, std::string> StrStrPair;
+                                        std::vector<StrStrMap> morphotags;
                                         try {
                                             Lattice::EdgeSequence::Builder msdBuilder(lattice_);
                                             msdBuilder.addEdge(ctagEdge);
@@ -249,13 +258,21 @@ void NKJPLatticeReader::Worker::doRun() {
                                                 );
                                             } catch (WrongVertexException) { }
                                             AnnotationItem msdItem(lexeme, msdAnnotationText);
-                                            lattice_.getAnnotationItemManager().setValue(
-                                                msdItem,
-                                                "value",
-                                                vFF.second.get<std::string>(
-                                                    "symbol.<xmlattr>.value"
-                                                )
+                                            morphostr = vFF.second.get<std::string>(
+                                                "symbol.<xmlattr>.value"
                                             );
+                                            if (!morphostr.empty()) {
+                                            morphotags = morphoparser.parse(morphostr);
+                                            BOOST_FOREACH(StrStrMap morphomap, morphotags) {
+                                            BOOST_FOREACH(StrStrPair morphopair, morphomap) {
+                                                lattice_.getAnnotationItemManager().setValue(
+                                                    msdItem,
+                                                    morphopair.first,
+                                                    morphopair.second
+                                                );
+                                            }
+                                            }
+                                            }
                                             lattice_.addEdge(
                                                 segBegin,
                                                 segEnd,
@@ -281,11 +298,19 @@ void NKJPLatticeReader::Worker::doRun() {
                                                     );
                                                 } catch (WrongVertexException) { }
                                                 AnnotationItem vAltItem(lexeme, vAltAnnotationText);
-                                                lattice_.getAnnotationItemManager().setValue(
-                                                    vAltItem,
-                                                    "value",
-                                                    vVAlt.second.get("<xmlattr>.value", "msd")
-                                                );
+                                                morphostr = vVAlt.second.get("<xmlattr>.value", "");
+                                                if (!morphostr.empty()) {
+                                                morphotags = morphoparser.parse(morphostr);
+                                                BOOST_FOREACH(StrStrMap morphomap, morphotags) {
+                                                BOOST_FOREACH(StrStrPair morphopair, morphomap) {
+                                                    lattice_.getAnnotationItemManager().setValue(
+                                                        vAltItem,
+                                                        morphopair.first,
+                                                        morphopair.second
+                                                    );
+                                                }
+                                                }
+                                                }
                                                 Lattice::EdgeDescriptor vAltEdge = lattice_.addEdge(
                                                     segBegin,
                                                     segEnd,
