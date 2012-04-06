@@ -27,7 +27,7 @@ boost::program_options::options_description PsiLatticeReader::Factory::doOptions
     return optionsDescription;
 }
 
-std::string PsiLatticeReader::Factory::doGetName() {
+std::string PsiLatticeReader::Factory::doGetName() const {
     return "psi-reader";
 }
 

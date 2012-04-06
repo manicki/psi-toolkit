@@ -39,7 +39,7 @@ boost::program_options::options_description NKJPLatticeReader::Factory::doOption
     return optionsDescription;
 }
 
-std::string NKJPLatticeReader::Factory::doGetName() {
+std::string NKJPLatticeReader::Factory::doGetName() const {
     return "nkjp-reader";
 }
 

@@ -60,7 +60,7 @@ boost::program_options::options_description SimpleLatticeWriter::Factory::doOpti
 }
 
 
-std::string SimpleLatticeWriter::Factory::doGetName() {
+std::string SimpleLatticeWriter::Factory::doGetName() const {
     return "simple-writer";
 }
 

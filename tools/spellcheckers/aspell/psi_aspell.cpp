@@ -49,7 +49,7 @@ void PSIAspell::Factory::doAddLanguageIndependentOptionsHandled(
         ;
 }
 
-std::string PSIAspell::Factory::doGetName() {
+std::string PSIAspell::Factory::doGetName() const {
     return "aspell";
 }
 

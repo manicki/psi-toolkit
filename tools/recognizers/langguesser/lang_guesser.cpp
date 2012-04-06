@@ -196,7 +196,7 @@ Annotator* LangGuesser::Factory::doCreateAnnotator(
     return langGuesser;
 }
 
-std::string LangGuesser::Factory::doGetName() {
+std::string LangGuesser::Factory::doGetName() const {
     return "lang-guesser";
 }
 

@@ -38,7 +38,7 @@ public:
             return T::languagesHandled(options);
         }
 
-        virtual std::string doGetName() {
+        virtual std::string doGetName() const {
             return T::getName();
         }
 

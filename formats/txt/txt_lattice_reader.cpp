@@ -35,7 +35,7 @@ boost::program_options::options_description TxtLatticeReader::Factory::doOptions
     return optionsDescription;
 }
 
-std::string TxtLatticeReader::Factory::doGetName() {
+std::string TxtLatticeReader::Factory::doGetName() const {
     return "txt-reader";
 }
 

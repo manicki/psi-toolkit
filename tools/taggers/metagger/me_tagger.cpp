@@ -60,7 +60,7 @@ void MeTagger::Factory::doAddLanguageIndependentOptionsHandled(
         ;
 }
 
-std::string MeTagger::Factory::doGetName() {
+std::string MeTagger::Factory::doGetName() const {
     return "metagger";
 }
 

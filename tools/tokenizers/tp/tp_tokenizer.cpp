@@ -57,7 +57,7 @@ void TpTokenizer::Factory::doAddLanguageIndependentOptionsHandled(
 
 }
 
-std::string TpTokenizer::Factory::doGetName() {
+std::string TpTokenizer::Factory::doGetName() const {
     return "tp-tokenizer";
 }
 

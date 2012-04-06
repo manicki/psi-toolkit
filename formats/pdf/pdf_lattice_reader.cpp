@@ -36,7 +36,7 @@ boost::program_options::options_description PDFLatticeReader::Factory::doOptions
     return optionsDescription;
 }
 
-std::string PDFLatticeReader::Factory::doGetName() {
+std::string PDFLatticeReader::Factory::doGetName() const {
     return "pdf-reader";
 }
 

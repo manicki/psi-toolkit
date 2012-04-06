@@ -54,7 +54,7 @@ void SrxSegmenter::Factory::doAddLanguageIndependentOptionsHandled(
 
 }
 
-std::string SrxSegmenter::Factory::doGetName() {
+std::string SrxSegmenter::Factory::doGetName() const {
     return "srx-segmenter";
 }
 

@@ -52,7 +52,7 @@ public:
             return L::languagesHandled(options);
         }
 
-        virtual std::string doGetName() {
+        virtual std::string doGetName() const {
             return L::getName();
         }
 

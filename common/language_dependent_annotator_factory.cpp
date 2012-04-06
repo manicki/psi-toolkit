@@ -35,7 +35,7 @@ std::list<std::string> LanguageDependentAnnotatorFactory::doLanguagesHandled(
 }
 
 std::list<std::string> LanguageDependentAnnotatorFactory::doAllLanguagesHandled() const {
-    std::list<std::string> langs;
+    std::vector<std::string> langs;
 
     boost::filesystem::path dataDirectory = getDataDirectory();
 
@@ -54,7 +54,9 @@ std::list<std::string> LanguageDependentAnnotatorFactory::doAllLanguagesHandled(
         }
     }
 
-    return langs;
+    std::sort(langs.begin(), langs.end());
+
+    return std::list<std::string>(langs.begin(), langs.end());
 }
 
 

@@ -20,7 +20,7 @@ public:
         virtual void doAddLanguageIndependentOptionsHandled(
             boost::program_options::options_description& optionsDescription);
 
-        virtual std::string doGetName();
+        virtual std::string doGetName() const;
         virtual boost::filesystem::path doGetFile() const;
 
         virtual std::list<std::list<std::string> > doRequiredLayerTags();

@@ -51,7 +51,7 @@ boost::filesystem::path ProcessorFactory::getDataDirectory() const {
     return getItsData(doGetFile());
 }
 
-std::string ProcessorFactory::getName() {
+std::string ProcessorFactory::getName() const {
     return doGetName();
 }
 

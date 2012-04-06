@@ -46,7 +46,7 @@ boost::program_options::options_description DotLatticeWriter::Factory::doOptions
 }
 
 
-std::string DotLatticeWriter::Factory::doGetName() {
+std::string DotLatticeWriter::Factory::doGetName() const {
     return "dot-writer";
 }
 

@@ -60,7 +60,7 @@ namespace puddle {
             ;
     }
 
-    std::string Puddle::Factory::doGetName() {
+    std::string Puddle::Factory::doGetName() const {
         return "puddle";
     }
 

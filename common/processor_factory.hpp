@@ -54,7 +54,7 @@ public:
     /**
      * Name as used in the psi toolkit.
      */
-    std::string getName();
+    std::string getName() const;
 
     /**
      * Get processor's aliases (alternative names).
@@ -96,7 +96,7 @@ private:
 
     virtual boost::filesystem::path doGetFile() const = 0;
 
-    virtual std::string doGetName() = 0;
+    virtual std::string doGetName() const = 0;
 
     virtual std::string doGetDescription();
 

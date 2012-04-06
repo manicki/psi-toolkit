@@ -52,7 +52,7 @@ boost::program_options::options_description GVLatticeWriter::Factory::doOptionsH
 }
 
 
-std::string GVLatticeWriter::Factory::doGetName() {
+std::string GVLatticeWriter::Factory::doGetName() const {
     return "gv-writer";
 }
 
