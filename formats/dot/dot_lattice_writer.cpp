@@ -46,11 +46,11 @@ boost::program_options::options_description DotLatticeWriter::Factory::doOptions
 }
 
 
-std::string DotLatticeWriter::Factory::doGetName() {
+std::string DotLatticeWriter::Factory::doGetName() const {
     return "dot-writer";
 }
 
-boost::filesystem::path DotLatticeWriter::Factory::doGetFile() {
+boost::filesystem::path DotLatticeWriter::Factory::doGetFile() const {
     return __FILE__;
 }
 

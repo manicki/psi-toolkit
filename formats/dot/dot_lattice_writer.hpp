@@ -24,8 +24,8 @@ public:
 
         virtual boost::program_options::options_description doOptionsHandled();
 
-        virtual std::string doGetName();
-        virtual boost::filesystem::path doGetFile();
+        virtual std::string doGetName() const;
+        virtual boost::filesystem::path doGetFile() const;
     };
 
     DotLatticeWriter(

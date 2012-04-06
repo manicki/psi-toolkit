@@ -55,11 +55,11 @@ boost::program_options::options_description JSONLatticeWriter::Factory::doOption
 }
 
 
-std::string JSONLatticeWriter::Factory::doGetName() {
+std::string JSONLatticeWriter::Factory::doGetName() const {
     return "json-simple-writer";
 }
 
-boost::filesystem::path JSONLatticeWriter::Factory::doGetFile() {
+boost::filesystem::path JSONLatticeWriter::Factory::doGetFile() const {
     return __FILE__;
 }
 

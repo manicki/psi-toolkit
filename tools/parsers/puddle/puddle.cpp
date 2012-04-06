@@ -60,11 +60,11 @@ namespace puddle {
             ;
     }
 
-    std::string Puddle::Factory::doGetName() {
+    std::string Puddle::Factory::doGetName() const {
         return "puddle";
     }
 
-    boost::filesystem::path Puddle::Factory::doGetFile() {
+    boost::filesystem::path Puddle::Factory::doGetFile() const {
         return __FILE__;
     }
 

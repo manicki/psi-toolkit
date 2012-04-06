@@ -49,11 +49,11 @@ void PSIAspell::Factory::doAddLanguageIndependentOptionsHandled(
         ;
 }
 
-std::string PSIAspell::Factory::doGetName() {
+std::string PSIAspell::Factory::doGetName() const {
     return "aspell";
 }
 
-boost::filesystem::path PSIAspell::Factory::doGetFile() {
+boost::filesystem::path PSIAspell::Factory::doGetFile() const {
     return __FILE__;
 }
 
@@ -74,6 +74,102 @@ std::list<std::string> PSIAspell::Factory::doProvidedLayerTags() {
 std::string PSIAspell::Factory::doGetContinuation(
     const boost::program_options::variables_map& /* options */) const {
     return "simple-writer";
+}
+
+std::list<std::string> PSIAspell::Factory::doAllLanguagesHandled() const {
+    // taken from ftp://ftp.gnu.org/gnu/aspell/dict/0index.html
+    return boost::assign::list_of
+        (std::string("af"))
+        (std::string("am"))
+        (std::string("ar"))
+        (std::string("ast"))
+        (std::string("az"))
+        (std::string("be"))
+        (std::string("bg"))
+        (std::string("bn"))
+        (std::string("br"))
+        (std::string("ca"))
+        (std::string("cs"))
+        (std::string("csb"))
+        (std::string("cy"))
+        (std::string("da"))
+        (std::string("de"))
+        (std::string("de-alt"))
+        (std::string("el"))
+        (std::string("en"))
+        (std::string("eo"))
+        (std::string("es"))
+        (std::string("et"))
+        (std::string("fa"))
+        (std::string("fi"))
+        (std::string("fo"))
+        (std::string("fr"))
+        (std::string("fy"))
+        (std::string("ga"))
+        (std::string("gd"))
+        (std::string("gl"))
+        (std::string("grc"))
+        (std::string("gu"))
+        (std::string("gv"))
+        (std::string("he"))
+        (std::string("hi"))
+        (std::string("hil"))
+        (std::string("hr"))
+        (std::string("hsb"))
+        (std::string("hu"))
+        (std::string("hus"))
+        (std::string("hy"))
+        (std::string("ia"))
+        (std::string("id"))
+        (std::string("is"))
+        (std::string("it"))
+        (std::string("kn"))
+        (std::string("ku"))
+        (std::string("ky"))
+        (std::string("la"))
+        (std::string("lt"))
+        (std::string("lv"))
+        (std::string("mg"))
+        (std::string("mi"))
+        (std::string("mk"))
+        (std::string("ml"))
+        (std::string("mn"))
+        (std::string("mr"))
+        (std::string("ms"))
+        (std::string("mt"))
+        (std::string("nb"))
+        (std::string("nds"))
+        (std::string("nl"))
+        (std::string("nn"))
+        (std::string("ny"))
+        (std::string("or"))
+        (std::string("pa"))
+        (std::string("pl"))
+        (std::string("pt_BR"))
+        (std::string("pt_PT"))
+        (std::string("qu"))
+        (std::string("ro"))
+        (std::string("ru"))
+        (std::string("rw"))
+        (std::string("sc"))
+        (std::string("sk"))
+        (std::string("sl"))
+        (std::string("sr"))
+        (std::string("sv"))
+        (std::string("sw"))
+        (std::string("ta"))
+        (std::string("te"))
+        (std::string("tet"))
+        (std::string("tk"))
+        (std::string("tl"))
+        (std::string("tn"))
+        (std::string("tr"))
+        (std::string("uk"))
+        (std::string("uz"))
+        (std::string("vi"))
+        (std::string("wa"))
+        (std::string("yi"))
+        (std::string("zu"));
 }
 
 LatticeWorker* PSIAspell::doCreateLatticeWorker(Lattice& lattice) {
@@ -102,7 +198,7 @@ void PSIAspell::Worker::doRun() {
     Lattice::EdgeDescriptor lastSeparatingEdge;
     bool wasLastSeparatingEdge = false;
     bool wasTokenEdgeInShortDistanceIncorrect = false;
-    
+
     while (edgeIterator.hasNext()) {
         Lattice::EdgeDescriptor currentEdge = edgeIterator.next();
         std::string category = lattice_.getAnnotationCategory(currentEdge);
@@ -198,7 +294,7 @@ bool PSIAspell::Worker::processAspellCheckOnText_(const std::string & textToChec
         return false;
     }
 }
-                                                  
+
 
 SuggestionsList * PSIAspell::Worker::checkWordInAspell_(const std::string & text) {
     PSIAspell & aspellProcessor = dynamic_cast<PSIAspell&>(processor_);
@@ -233,7 +329,7 @@ PSIAspell::PSIAspell(const std::string & langCode,
     if (options.count("limit")) {
         limitCandidates_ = options["limit"].as<unsigned int>();
     }
-    
+
     std::list<std::string> stringOptions =
         boost::assign::list_of
         (std::string("size"))
@@ -259,7 +355,7 @@ PSIAspell::PSIAspell(const std::string & langCode,
         std::string ignoreLengthString = boost::lexical_cast<std::string>( ignoreLength);
         aspell_config_replace(aspellConfig_, "ignore", ignoreLengthString.c_str());
     }
-    
+
     AspellCanHaveError * possibleError = new_aspell_speller(aspellConfig_);
     if (aspell_error_number(possibleError) != 0) {
         // @todo
@@ -267,7 +363,7 @@ PSIAspell::PSIAspell(const std::string & langCode,
     } else {
         aspellSpeller_ = to_aspell_speller(possibleError);
     }
-    
+
 }
 
 void PSIAspell::initPSIAspell_(const std::string & langCode) {

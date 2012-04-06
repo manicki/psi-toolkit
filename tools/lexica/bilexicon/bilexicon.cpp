@@ -8,6 +8,7 @@
 
 #include "bi_lang_specific_processor_file_fetcher.hpp"
 #include "bi_language_dependent_annotator_factory.hpp"
+#include "its_data.hpp"
 
 BiLexicon::BiLexicon(const boost::program_options::variables_map& options) {
     std::string lang = options["lang"].as<std::string>();
@@ -53,6 +54,47 @@ std::string BiLexicon::getName() {
 
 boost::filesystem::path BiLexicon::getFile() {
     return __FILE__;
+}
+
+AnnotatorFactory::LanguagesHandling BiLexicon::languagesHandling(
+    const boost::program_options::variables_map& options) {
+
+    return LanguageDependentAnnotatorFactory::checkLangOption(options);
+}
+
+std::list<std::string> BiLexicon::languagesHandled(
+    const boost::program_options::variables_map& options) {
+
+    if (LanguageDependentAnnotatorFactory::checkLangOption(options)
+        == AnnotatorFactory::JUST_ONE_LANGUAGE)
+        return boost::assign::list_of(options["lang"].as<std::string>());
+
+    std::string trgLang = options["trg-lang"].as<std::string>();
+
+    std::string fileSuffix = trgLang + ".bin";
+
+    std::vector<std::string> langs;
+
+    boost::filesystem::path dataDirectory = getItsData(getFile());
+
+    boost::filesystem::directory_iterator end_iter;
+    for (boost::filesystem::directory_iterator fiter(dataDirectory);
+         fiter != end_iter;
+         ++fiter) {
+            boost::filesystem::path seg(fiter->path().filename());
+            std::string lexiconFileName = seg.string();
+
+            if (lexiconFileName.length() > fileSuffix.length()
+                && lexiconFileName.substr(
+                    lexiconFileName.length() - fileSuffix.length())
+                == fileSuffix)
+                langs.push_back(lexiconFileName.substr(
+                                    0, lexiconFileName.length() - fileSuffix.length()));
+    }
+
+    std::sort(langs.begin(), langs.end());
+
+    return std::list<std::string>(langs.begin(), langs.end());
 }
 
 boost::program_options::options_description BiLexicon::optionsHandled() {
