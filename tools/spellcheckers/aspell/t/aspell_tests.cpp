@@ -28,6 +28,7 @@ BOOST_AUTO_TEST_CASE( run_aspell_polish_simple ) {
     PSIAspell aspellAdapter(std::string("pl_PL"));
 
     BOOST_CHECK(aspellAdapter.isWordCorrect("słowo"));
+    BOOST_CHECK(aspellAdapter.isWordCorrect("polska"));
     BOOST_CHECK(!aspellAdapter.isWordCorrect("slowo"));
 
     checkIsSuggestionOccurs_(aspellAdapter, "slowo", "słowo");
@@ -47,6 +48,5 @@ BOOST_AUTO_TEST_CASE( run_aspell_english_simple ) {
     checkIsSuggestionOccurs_(aspellAdapter, "london", "London");
     checkIsSuggestionOccurs_(aspellAdapter, "wassnowing", "was snowing");
 }
-
 
 BOOST_AUTO_TEST_SUITE_END()
