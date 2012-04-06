@@ -59,6 +59,11 @@ std::string PSIAspell::Factory::doGetName() const {
     return "aspell";
 }
 
+std::list<std::string> PSIAspell::Factory::doGetAliases() {
+    return boost::assign::list_of<std::string>
+        (std::string("spell"));
+}
+
 boost::filesystem::path PSIAspell::Factory::doGetFile() const {
     return __FILE__;
 }
