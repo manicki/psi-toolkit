@@ -72,6 +72,9 @@ private:
 
     virtual LatticeWorker* doCreateLatticeWorker(Lattice& lattice);
     void initPSIAspell_(const std::string & langCode);
+    void passOptionsToAspellConfig_(
+         const boost::program_options::variables_map& options);
+    void createAspellInstance_();
 
     virtual std::string doInfo();
 

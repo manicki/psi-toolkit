@@ -6,6 +6,7 @@
 
 #include "logging.hpp"
 #include "config.hpp"
+#include "psi_exception.hpp"
 
 const unsigned int PSIAspell::Factory::DEFAULT_LIMIT = 5;
 
@@ -14,7 +15,6 @@ Annotator* PSIAspell::Factory::doCreateAnnotator(
 
     std::string lang = options["lang"].as<std::string>();
 
-    // @todo
     return new PSIAspell(lang, options);
 }
 
@@ -28,10 +28,11 @@ void PSIAspell::Factory::doAddLanguageIndependentOptionsHandled(
          "Take only limit candidates into account. If set to zero, then take all into account.")
         ("size",
          boost::program_options::value<std::string>(),
-         "The preferred size of the word list."
-         "This consists of a two char digit code describing the size of the list, "
-         "with typical values of: 10=tiny, 20=really small, 30=small, 40=med-small, "
-         "50=med, 60=med-large, 70=large, 80=huge, 90=insane.")
+         "The preferred size of the word list. "
+         "This consists of a two char digit code describing the size of "
+         "the list, with typical values of: 10=tiny, 20=really small, 30=small, "
+         "40=med-small, 50=med, 60=med-large, 70=large, 80=huge, 90=insane."
+         )
         ("personal",
          boost::program_options::value<std::string>(),
          "Personal word list file name (proceed by ./ if you want to use current directory).")
@@ -228,6 +229,7 @@ PSIAspell::PSIAspell(const std::string & langCode) :
     limitCandidates_(0)
 {
     initPSIAspell_(langCode);
+    createAspellInstance_();
 }
 
 PSIAspell::PSIAspell(const std::string & langCode,
@@ -235,6 +237,23 @@ PSIAspell::PSIAspell(const std::string & langCode,
     limitCandidates_(0)
 {
     initPSIAspell_(langCode);
+
+    passOptionsToAspellConfig_(options);
+    
+    createAspellInstance_();
+}
+
+void PSIAspell::initPSIAspell_(const std::string & langCode) {
+    langCode_ = langCode;
+    aspellConfig_ = NULL;
+    aspellSpeller_ = NULL;
+    aspellConfig_ = new_aspell_config();
+    aspell_config_replace(aspellConfig_, "lang", langCode.c_str());
+    aspell_config_replace(aspellConfig_, "encoding", "utf-8");
+}
+
+void PSIAspell::passOptionsToAspellConfig_(
+                const boost::program_options::variables_map& options) {
 
     if (options.count("limit")) {
         limitCandidates_ = options["limit"].as<unsigned int>();
@@ -265,24 +284,16 @@ PSIAspell::PSIAspell(const std::string & langCode,
         std::string ignoreLengthString = boost::lexical_cast<std::string>( ignoreLength);
         aspell_config_replace(aspellConfig_, "ignore", ignoreLengthString.c_str());
     }
-    
+}
+
+void PSIAspell::createAspellInstance_() {
     AspellCanHaveError * possibleError = new_aspell_speller(aspellConfig_);
     if (aspell_error_number(possibleError) != 0) {
-        // @todo
         ERROR("ASPELL CREATION ERROR: " << aspell_error_message(possibleError));
+        throw PsiException(aspell_error_message(possibleError));
     } else {
         aspellSpeller_ = to_aspell_speller(possibleError);
     }
-    
-}
-
-void PSIAspell::initPSIAspell_(const std::string & langCode) {
-    langCode_ = langCode;
-    aspellConfig_ = NULL;
-    aspellSpeller_ = NULL;
-    aspellConfig_ = new_aspell_config();
-    aspell_config_replace(aspellConfig_, "lang", langCode.c_str());
-    aspell_config_replace(aspellConfig_, "encoding", "utf-8");
 }
 
 PSIAspell::~PSIAspell() {
