@@ -68,7 +68,7 @@ std::list<std::string> TpTokenizer::Factory::doGetAliases() {
         (std::string("tp-tokenize"));
 }
 
-boost::filesystem::path TpTokenizer::Factory::doGetFile() {
+boost::filesystem::path TpTokenizer::Factory::doGetFile() const {
     return __FILE__;
 }
 

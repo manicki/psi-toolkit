@@ -64,7 +64,7 @@ std::string MeTagger::Factory::doGetName() {
     return "metagger";
 }
 
-boost::filesystem::path MeTagger::Factory::doGetFile() {
+boost::filesystem::path MeTagger::Factory::doGetFile() const {
     return __FILE__;
 }
 

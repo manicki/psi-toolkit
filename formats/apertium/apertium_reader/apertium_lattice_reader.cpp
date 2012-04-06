@@ -67,7 +67,7 @@ std::string ApertiumLatticeReader::Factory::doGetName() {
     return "apertium-reader";
 }
 
-boost::filesystem::path ApertiumLatticeReader::Factory::doGetFile() {
+boost::filesystem::path ApertiumLatticeReader::Factory::doGetFile() const {
     return __FILE__;
 }
 

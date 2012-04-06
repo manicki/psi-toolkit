@@ -64,7 +64,7 @@ namespace puddle {
         return "puddle";
     }
 
-    boost::filesystem::path Puddle::Factory::doGetFile() {
+    boost::filesystem::path Puddle::Factory::doGetFile() const {
         return __FILE__;
     }
 

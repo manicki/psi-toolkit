@@ -31,7 +31,7 @@ std::string PsiLatticeReader::Factory::doGetName() {
     return "psi-reader";
 }
 
-boost::filesystem::path PsiLatticeReader::Factory::doGetFile() {
+boost::filesystem::path PsiLatticeReader::Factory::doGetFile() const {
     return __FILE__;
 }
 

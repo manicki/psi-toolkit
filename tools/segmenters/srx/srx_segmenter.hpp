@@ -27,7 +27,7 @@ public:
             boost::program_options::options_description& optionsDescription);
 
         virtual std::string doGetName();
-        virtual boost::filesystem::path doGetFile();
+        virtual boost::filesystem::path doGetFile() const;
 
         virtual std::list<std::list<std::string> > doRequiredLayerTags();
 

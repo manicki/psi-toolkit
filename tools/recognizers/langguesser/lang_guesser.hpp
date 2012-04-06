@@ -43,8 +43,13 @@ public:
             const boost::program_options::variables_map& options);
 
         virtual std::string doGetName();
-        virtual boost::filesystem::path doGetFile();
+        virtual boost::filesystem::path doGetFile() const;
         virtual boost::program_options::options_description doOptionsHandled();
+
+        LanguagesHandling doLanguagesHandling(
+            const boost::program_options::variables_map& options) const;
+        std::list<std::string> doLanguagesHandled(
+            const boost::program_options::variables_map& options) const;
 
         virtual std::list<std::list<std::string> > doRequiredLayerTags();
         virtual std::list<std::list<std::string> > doOptionalLayerTags();

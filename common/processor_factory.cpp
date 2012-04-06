@@ -47,6 +47,9 @@ boost::filesystem::path ProcessorFactory::getFile() {
     return doGetFile();
 }
 
+boost::filesystem::path ProcessorFactory::getDataDirectory() const {
+    return getItsData(doGetFile());
+}
 
 std::string ProcessorFactory::getName() {
     return doGetName();

@@ -56,7 +56,7 @@ std::string GVLatticeWriter::Factory::doGetName() {
     return "gv-writer";
 }
 
-boost::filesystem::path GVLatticeWriter::Factory::doGetFile() {
+boost::filesystem::path GVLatticeWriter::Factory::doGetFile() const {
     return __FILE__;
 }
 

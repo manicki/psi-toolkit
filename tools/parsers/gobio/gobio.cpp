@@ -19,7 +19,7 @@ std::string Gobio::Factory::doGetName() {
     return "gobio";
 }
 
-boost::filesystem::path Gobio::Factory::doGetFile() {
+boost::filesystem::path Gobio::Factory::doGetFile() const {
     return __FILE__;
 }
 

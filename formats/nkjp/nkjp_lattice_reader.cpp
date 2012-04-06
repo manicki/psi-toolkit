@@ -43,7 +43,7 @@ std::string NKJPLatticeReader::Factory::doGetName() {
     return "nkjp-reader";
 }
 
-boost::filesystem::path NKJPLatticeReader::Factory::doGetFile() {
+boost::filesystem::path NKJPLatticeReader::Factory::doGetFile() const {
     return __FILE__;
 }
 

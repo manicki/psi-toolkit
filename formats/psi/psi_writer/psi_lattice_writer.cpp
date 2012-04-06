@@ -28,7 +28,7 @@ std::string PsiLatticeWriter::Factory::doGetName() {
     return "psi-writer";
 }
 
-boost::filesystem::path PsiLatticeWriter::Factory::doGetFile() {
+boost::filesystem::path PsiLatticeWriter::Factory::doGetFile() const {
     return __FILE__;
 }
 

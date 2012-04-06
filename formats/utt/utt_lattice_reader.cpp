@@ -31,7 +31,7 @@ std::string UTTLatticeReader::Factory::doGetName() {
     return "utt-reader";
 }
 
-boost::filesystem::path UTTLatticeReader::Factory::doGetFile() {
+boost::filesystem::path UTTLatticeReader::Factory::doGetFile() const {
     return __FILE__;
 }
 

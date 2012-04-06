@@ -28,7 +28,7 @@ public:
 
         virtual std::string doGetName();
 
-        virtual boost::filesystem::path doGetFile();
+        virtual boost::filesystem::path doGetFile() const;
     };
 
     JSONLatticeWriter(

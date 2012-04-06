@@ -40,7 +40,7 @@ std::string PDFLatticeReader::Factory::doGetName() {
     return "pdf-reader";
 }
 
-boost::filesystem::path PDFLatticeReader::Factory::doGetFile() {
+boost::filesystem::path PDFLatticeReader::Factory::doGetFile() const {
     return __FILE__;
 }
 

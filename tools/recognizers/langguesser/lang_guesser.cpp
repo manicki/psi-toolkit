@@ -200,7 +200,7 @@ std::string LangGuesser::Factory::doGetName() {
     return "lang-guesser";
 }
 
-boost::filesystem::path LangGuesser::Factory::doGetFile() {
+boost::filesystem::path LangGuesser::Factory::doGetFile() const {
     return __FILE__;
 }
 
@@ -226,6 +226,16 @@ boost::program_options::options_description LangGuesser::Factory::doOptionsHandl
             "Guesses language only from the given list of languages");
 
     return optionsDescription;
+}
+
+AnnotatorFactory::LanguagesHandling LangGuesser::Factory::doLanguagesHandling(
+    const boost::program_options::variables_map& /*options*/) const {
+    return LANGUAGE_GUESSER;
+}
+
+std::list<std::string> LangGuesser::Factory::doLanguagesHandled(
+    const boost::program_options::variables_map& /*options*/) const {
+    return std::list<std::string>();
 }
 
 /*

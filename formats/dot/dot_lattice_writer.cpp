@@ -50,7 +50,7 @@ std::string DotLatticeWriter::Factory::doGetName() {
     return "dot-writer";
 }
 
-boost::filesystem::path DotLatticeWriter::Factory::doGetFile() {
+boost::filesystem::path DotLatticeWriter::Factory::doGetFile() const {
     return __FILE__;
 }
 

@@ -58,7 +58,7 @@ std::string SrxSegmenter::Factory::doGetName() {
     return "srx-segmenter";
 }
 
-boost::filesystem::path SrxSegmenter::Factory::doGetFile() {
+boost::filesystem::path SrxSegmenter::Factory::doGetFile() const {
     return __FILE__;
 }
 

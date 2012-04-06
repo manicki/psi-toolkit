@@ -23,9 +23,18 @@ private:
 
     virtual boost::program_options::options_description doOptionsHandled();
 
+    virtual LanguagesHandling doLanguagesHandling(
+        const boost::program_options::variables_map& options) const;
+
+    virtual std::list<std::string> doLanguagesHandled(
+        const boost::program_options::variables_map& options) const;
+
     virtual void doAddLanguageIndependentOptionsHandled(
         boost::program_options::options_description& optionsDescription) = 0;
 
+    virtual std::list<std::string> doAllLanguagesHandled() const;
+
+    const static std::string GUESS_VALUE_FOR_LANG_OPTION;
 };
 
 #endif

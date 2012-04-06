@@ -4,6 +4,7 @@
 #include "lattice.hpp"
 #include "key_value_store.hpp"
 #include "utt_like_quoter.hpp"
+#include "annotator_factory.hpp"
 
 #include <boost/filesystem.hpp>
 #include <boost/shared_ptr.hpp>
@@ -17,6 +18,13 @@ public:
 
     static std::string getName();
     static boost::filesystem::path getFile();
+
+    static AnnotatorFactory::LanguagesHandling languagesHandling(
+        const boost::program_options::variables_map& options);
+
+    static std::list<std::string> languagesHandled(
+        const boost::program_options::variables_map& options);
+
     static boost::program_options::options_description optionsHandled();
     static std::list<std::string> providedLayerTags();
     static std::list<std::string> tagsToOperateOn();

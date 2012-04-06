@@ -59,7 +59,7 @@ std::string JSONLatticeWriter::Factory::doGetName() {
     return "json-simple-writer";
 }
 
-boost::filesystem::path JSONLatticeWriter::Factory::doGetFile() {
+boost::filesystem::path JSONLatticeWriter::Factory::doGetFile() const {
     return __FILE__;
 }
 

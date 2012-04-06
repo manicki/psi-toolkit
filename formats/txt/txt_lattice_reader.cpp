@@ -39,7 +39,7 @@ std::string TxtLatticeReader::Factory::doGetName() {
     return "txt-reader";
 }
 
-boost::filesystem::path TxtLatticeReader::Factory::doGetFile() {
+boost::filesystem::path TxtLatticeReader::Factory::doGetFile() const {
     return __FILE__;
 }
 

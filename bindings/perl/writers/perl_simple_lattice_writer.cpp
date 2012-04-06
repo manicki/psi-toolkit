@@ -61,7 +61,7 @@ std::string PerlSimpleLatticeWriter::Factory::doGetName() {
     return "perl-simple-writer";
 }
 
-boost::filesystem::path PerlSimpleLatticeWriter::Factory::doGetFile() {
+boost::filesystem::path PerlSimpleLatticeWriter::Factory::doGetFile() const {
     return __FILE__;
 }
 

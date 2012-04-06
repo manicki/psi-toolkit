@@ -55,6 +55,16 @@ boost::filesystem::path BiLexicon::getFile() {
     return __FILE__;
 }
 
+AnnotatorFactory::LanguagesHandling BiLexicon::languagesHandling(
+    const boost::program_options::variables_map& /*options*/) {
+    return AnnotatorFactory::JUST_ONE_LANGUAGE;
+}
+
+std::list<std::string> BiLexicon::languagesHandled(
+    const boost::program_options::variables_map& /*options*/) {
+    return boost::assign::list_of(std::string("pl"));
+}
+
 boost::program_options::options_description BiLexicon::optionsHandled() {
     boost::program_options::options_description desc("Allowed options");
 

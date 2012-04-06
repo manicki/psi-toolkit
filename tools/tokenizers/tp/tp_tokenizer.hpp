@@ -22,7 +22,7 @@ public:
 
         virtual std::string doGetName();
         virtual std::list<std::string> doGetAliases();
-        virtual boost::filesystem::path doGetFile();
+        virtual boost::filesystem::path doGetFile() const;
 
         virtual std::list<std::list<std::string> > doRequiredLayerTags();
 
