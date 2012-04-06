@@ -83,8 +83,6 @@ ApertiumLatticeReader::Worker::Worker(ApertiumLatticeReader& processor,
 }
 
 void ApertiumLatticeReader::Worker::doRun() {
-    DEBUG("starting apertium reader...");
-
     std::string input;
     std::string line;
 
@@ -92,7 +90,7 @@ void ApertiumLatticeReader::Worker::doRun() {
         if (boost::algorithm::trim_copy(line).empty()) {
             continue;
         }
-        input += line;// + "\n";
+        input += line;
     }
 
     input = processor_.processReplacementRules(input);

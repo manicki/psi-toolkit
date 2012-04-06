@@ -10,18 +10,78 @@
 
 //FormatSpecification
 
-FormatSpecification::FormatSpecification(std::string name, FormatOptions options,
-        std::pair<std::vector<FormatRule>, std::vector<ReplacementRule> > rules)
-            : name_(name), formatOptions_(options),
-            formatRules_(rules.first), replacementRules_(rules.second) { }
+int const FormatSpecification::MAX_RULES_PER_LEVEL = 16;
 
-std::string FormatSpecification::formatRulesRegexp() {
+FormatSpecification::FormatSpecification(
+    std::string name,
+    FormatOptions options,
+    std::pair<std::vector<FormatRule>, std::vector<ReplacementRule> > rules) :
+        name_(name),
+        formatOptions_(options),
+        formatRules_(rules.first),
+        replacementRules_(rules.second) {
+
+    setLevels_();
+}
+
+void FormatSpecification::setLevels_() {
+    levels_ = std::vector<int>(formatRules_.size() / (MAX_RULES_PER_LEVEL), MAX_RULES_PER_LEVEL);
+
+    if ((int)formatRules_.size() != MAX_RULES_PER_LEVEL) {
+        int lastLevel = (formatRules_.size() % MAX_RULES_PER_LEVEL) + levels_.size();
+        if (lastLevel != 0) levels_.push_back(lastLevel);
+    }
+}
+
+std::vector<int> FormatSpecification::getLevels() {
+    return levels_;
+}
+
+std::vector<std::string> FormatSpecification::formatRulesRegexp() {
+    std::vector<std::string> regexps;
+
+    for (unsigned int i = 0; i < levels_.size(); i++) {
+        std::string regexp;
+
+        for (int j = 0; j < levels_[i]; j++) {
+            unsigned int k = i * MAX_RULES_PER_LEVEL + j - i;
+
+            regexp += std::string("(");
+            if (j != levels_[i] - 1 && !isTheLastRule_(k)) {
+                regexp += formatRules_[k].getRegexp() + ")|";
+                DEBUG("k = " << k);
+            }
+            else {
+                if (!isTheLastRule_(k)) {
+                    regexp += getFormatRulesRegexpStartedFrom_(k, true) + ")";
+                    DEBUG("k = " << k << " ALL IN ONE");
+                }
+                else {
+                    regexp += formatRules_[k].getRegexp() + ")";
+                    DEBUG("k = " << k << " LAST");
+                    break;
+                }
+            }
+        }
+
+        regexps.push_back(regexp);
+    }
+
+    return regexps;
+}
+
+bool FormatSpecification::isTheLastRule_(unsigned int k) {
+    return (k == formatRules_.size() - 1);
+}
+
+std::string FormatSpecification::getFormatRulesRegexpStartedFrom_(unsigned int from, bool escaped) {
     std::string regexp;
 
-    for (unsigned int i = 0; i < formatRules_.size(); ++i) {
-        regexp += std::string("(") + formatRules_[i].getRegexp() + ")";
+    for (unsigned int i = from; i < formatRules_.size(); i++) {
+        regexp += std::string(escaped ? "(?:" : "(") + formatRules_[i].getRegexp() + ")";
         if (i < (formatRules_.size() - 1)) regexp += "|";
     }
+
     return regexp;
 }
 
