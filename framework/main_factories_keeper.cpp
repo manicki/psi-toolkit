@@ -57,6 +57,11 @@ MainFactoriesKeeper::MainFactoriesKeeper() {
     keeper_.addTagBasedAlias("parse", "parser");
     keeper_.addTagBasedIzeAliases("lemma", "lemmat");
 
+    keeper_.addAlias("spell-checker", "spell");
+    keeper_.addAlias("spell-check", "spell");
+    keeper_.addAlias("spellchecker", "spell");
+    keeper_.addAlias("spellcheck", "spell");
+
     keeper_.takeProcessorFactory(new TxtLatticeReader::Factory());
     keeper_.takeProcessorFactory(new UTTLatticeReader::Factory());
     keeper_.takeProcessorFactory(new PsiLatticeReader::Factory());

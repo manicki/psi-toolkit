@@ -27,6 +27,10 @@ void FactoriesKeeper::addTagBasedIzeAliases(const std::string& tag, const std::s
     addTagBasedAlias(tag, aliasRoot + "izer");
 }
 
+void FactoriesKeeper::addAlias(const std::string& alias, const std::string& destination) {
+    aliaser_.addAlias(alias, destination);
+}
+
 std::string FactoriesKeeper::getBaseAliasForTag(const std::string& tag) {
     return tag + "-generator";
 }
@@ -87,8 +91,22 @@ void FactoriesKeeper::checkAnnotator_(ProcessorFactory* processorFactory) {
         BOOST_FOREACH(std::string tag, annotatorFactory->providedLayerTags()) {
             std::string baseAlias = getBaseAliasForTag(tag);
 
-            if (aliaser_.isAlias(baseAlias))
+            if (aliaser_.isAlias(baseAlias)
+                // e.g. aspell requires and provides tokens
+                // - we don't want to treat it as a tokenizer
+                && !isTagRequiredByAnnotator_(tag, annotatorFactory))
                 aliaser_.addAlias(baseAlias, annotatorFactory->getName());
         }
     }
+}
+
+typedef std::list<std::string> list_of_strings;
+
+bool FactoriesKeeper::isTagRequiredByAnnotator_(
+    const std::string& tag, AnnotatorFactory* annotatorFactory) {
+    BOOST_FOREACH(const list_of_strings& seq, annotatorFactory->requiredLayerTags())
+        BOOST_FOREACH(const std::string& requiredTag, seq)
+            if (requiredTag == tag)
+                return true;
+    return false;
 }

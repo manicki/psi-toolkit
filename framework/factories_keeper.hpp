@@ -17,6 +17,7 @@ public:
 
     void addTagBasedAlias(const std::string& tag, const std::string& alias);
     void addTagBasedIzeAliases(const std::string& tag, const std::string& aliasRoot);
+    void addAlias(const std::string& alias, const std::string& destination);
 
     static std::string getBaseAliasForTag(const std::string& tag);
 
@@ -44,6 +45,8 @@ public:
 
 private:
     void checkAnnotator_(ProcessorFactory* processorFactory);
+    bool isTagRequiredByAnnotator_(
+        const std::string& tag, AnnotatorFactory* annotatorFactory);
 
     std::map<std::string, boost::shared_ptr<ProcessorFactory> > nameToFactoryMap_;
     Aliaser aliaser_;
