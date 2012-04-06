@@ -49,6 +49,16 @@ std::string Morfologik::getLanguage() const {
     return "pl";
 }
 
+AnnotatorFactory::LanguagesHandling Morfologik::languagesHandling(
+    const boost::program_options::variables_map& /*options*/) {
+    return AnnotatorFactory::JUST_ONE_LANGUAGE;
+}
+
+std::list<std::string> Morfologik::languagesHandled(
+    const boost::program_options::variables_map& /*options*/) {
+    return boost::assign::list_of(std::string("pl"));
+}
+
 void Morfologik::setLevel(int lvl) {
     if (0 <= lvl && lvl <= 3) {
         level_ = lvl;

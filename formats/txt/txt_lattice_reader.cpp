@@ -35,11 +35,11 @@ boost::program_options::options_description TxtLatticeReader::Factory::doOptions
     return optionsDescription;
 }
 
-std::string TxtLatticeReader::Factory::doGetName() {
+std::string TxtLatticeReader::Factory::doGetName() const {
     return "txt-reader";
 }
 
-boost::filesystem::path TxtLatticeReader::Factory::doGetFile() {
+boost::filesystem::path TxtLatticeReader::Factory::doGetFile() const {
     return __FILE__;
 }
 

@@ -79,6 +79,13 @@ void PipeRunner::parseIntoGraph_(std::vector<std::string> args, bool isTheFirstA
     }
 
     pipelineSpecification2Graph_(pipelineSpecification_, firstNode, lastNode);
+
+    if (stopAfterParsingPipeline_()) {
+        justInformation_ = true;
+
+        return;
+    }
+
     completeGraph_<Source, Sink>();
 }
 
@@ -101,6 +108,7 @@ void PipeRunner::parseRunnerProgramOptions_(std::vector<std::string> &args) {
 void PipeRunner::setRunnerOptionsDescription_() {
     runnerOptionsDescription_.add_options()
         ("help", "Produce help message for each processor")
+        ("list-languages", "List languages handled for each processor specified")
         ("log-level", boost::program_options::value<std::string>(),
          "Set logging level")
         ("log-file", boost::program_options::value<std::string>(),
@@ -130,6 +138,43 @@ bool PipeRunner::stopAfterExecutingRunnerOptions_() {
     }
 
     return false;
+}
+
+bool PipeRunner::stopAfterParsingPipeline_() {
+    if (runnerOptions_.count("list-languages")) {
+        listLanguages_();
+        return true;
+    }
+
+    return false;
+}
+
+void PipeRunner::listLanguages_() {
+    PipelineGraph::vertex_descriptor current = firstNode;
+
+    do {
+        listLanguagesForPipelineNode_(current);
+        if (!goToNextNode_(current))
+            break;
+    } while (1);
+}
+
+void PipeRunner::listLanguagesForPipelineNode_(PipelineGraph::vertex_descriptor current) {
+    PipelineNode& currentPipelineNode = pipelineGraph_[current];
+
+    const AnnotatorFactory* asAnnotatorFactory =
+        dynamic_cast<const AnnotatorFactory*>(
+            currentPipelineNode.getFactory());
+
+    if (asAnnotatorFactory) {
+        std::cout << currentPipelineNode.getFactory()->getName() << ":";
+
+        BOOST_FOREACH(const std::string& langCode,
+                      asAnnotatorFactory->languagesHandled(currentPipelineNode.options_))
+            std::cout << " " << langCode;
+
+        std::cout << "\n";
+    }
 }
 
 bool PipeRunner::parseIntoPipelineSpecification_(

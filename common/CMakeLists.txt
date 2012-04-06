@@ -30,6 +30,7 @@ add_library(common SHARED
     lang_specific_processor_file_fetcher.cpp
     lemmatizer_output_iterator.cpp
     logging.cpp
+    morfologik_tags_parser.cpp
     object_cache.cpp
     processor.cpp
     processor_factory.cpp

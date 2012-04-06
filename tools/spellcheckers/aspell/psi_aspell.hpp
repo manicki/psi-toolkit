@@ -20,8 +20,8 @@ public:
         virtual void doAddLanguageIndependentOptionsHandled(
             boost::program_options::options_description& optionsDescription);
 
-        virtual std::string doGetName();
-        virtual boost::filesystem::path doGetFile();
+        virtual std::string doGetName() const;
+        virtual boost::filesystem::path doGetFile() const;
 
         virtual std::list<std::list<std::string> > doRequiredLayerTags();
 
@@ -31,6 +31,8 @@ public:
 
         virtual std::string doGetContinuation(
             const boost::program_options::variables_map& options) const;
+
+        virtual std::list<std::string> doAllLanguagesHandled() const;
 
         static const unsigned int DEFAULT_LIMIT;
     };
@@ -66,10 +68,10 @@ private:
                                        const Lattice::VertexDescriptor & targetVertex);
 
         SuggestionsList * checkWordInAspell_(const std::string & text);
-        
+
         Processor& processor_;
         LayerTagCollection textTags_;
-        
+
     };
 
     virtual LatticeWorker* doCreateLatticeWorker(Lattice& lattice);
@@ -82,7 +84,7 @@ private:
 
     std::string langCode_;
     unsigned int limitCandidates_;
-    
+
     AspellConfig * aspellConfig_;
     AspellSpeller * aspellSpeller_;
 };

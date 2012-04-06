@@ -27,11 +27,11 @@ boost::program_options::options_description UTTLatticeReader::Factory::doOptions
     return optionsDescription;
 }
 
-std::string UTTLatticeReader::Factory::doGetName() {
+std::string UTTLatticeReader::Factory::doGetName() const {
     return "utt-reader";
 }
 
-boost::filesystem::path UTTLatticeReader::Factory::doGetFile() {
+boost::filesystem::path UTTLatticeReader::Factory::doGetFile() const {
     return __FILE__;
 }
 

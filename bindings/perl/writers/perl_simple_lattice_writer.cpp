@@ -57,11 +57,11 @@ boost::program_options::options_description PerlSimpleLatticeWriter::Factory::do
 }
 
 
-std::string PerlSimpleLatticeWriter::Factory::doGetName() {
+std::string PerlSimpleLatticeWriter::Factory::doGetName() const {
     return "perl-simple-writer";
 }
 
-boost::filesystem::path PerlSimpleLatticeWriter::Factory::doGetFile() {
+boost::filesystem::path PerlSimpleLatticeWriter::Factory::doGetFile() const {
     return __FILE__;
 }
 

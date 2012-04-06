@@ -24,11 +24,11 @@ boost::program_options::options_description PsiLatticeWriter::Factory::doOptions
 }
 
 
-std::string PsiLatticeWriter::Factory::doGetName() {
+std::string PsiLatticeWriter::Factory::doGetName() const {
     return "psi-writer";
 }
 
-boost::filesystem::path PsiLatticeWriter::Factory::doGetFile() {
+boost::filesystem::path PsiLatticeWriter::Factory::doGetFile() const {
     return __FILE__;
 }
 

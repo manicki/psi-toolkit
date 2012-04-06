@@ -54,11 +54,11 @@ void SrxSegmenter::Factory::doAddLanguageIndependentOptionsHandled(
 
 }
 
-std::string SrxSegmenter::Factory::doGetName() {
+std::string SrxSegmenter::Factory::doGetName() const {
     return "srx-segmenter";
 }
 
-boost::filesystem::path SrxSegmenter::Factory::doGetFile() {
+boost::filesystem::path SrxSegmenter::Factory::doGetFile() const {
     return __FILE__;
 }
 

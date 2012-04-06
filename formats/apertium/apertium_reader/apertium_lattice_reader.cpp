@@ -63,11 +63,11 @@ boost::program_options::options_description ApertiumLatticeReader::Factory::doOp
     return optionsDescription;
 }
 
-std::string ApertiumLatticeReader::Factory::doGetName() {
+std::string ApertiumLatticeReader::Factory::doGetName() const {
     return "apertium-reader";
 }
 
-boost::filesystem::path ApertiumLatticeReader::Factory::doGetFile() {
+boost::filesystem::path ApertiumLatticeReader::Factory::doGetFile() const {
     return __FILE__;
 }
 

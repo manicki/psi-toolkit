@@ -8,6 +8,7 @@
 #include <list>
 
 #include "processor.hpp"
+#include "its_data.hpp"
 
 /*!
   Processor factory is used to create a given processor.
@@ -53,7 +54,7 @@ public:
     /**
      * Name as used in the psi toolkit.
      */
-    std::string getName();
+    std::string getName() const;
 
     /**
      * Get processor's aliases (alternative names).
@@ -64,6 +65,11 @@ public:
      * Returns the path to the given processor source file based on the __FILE__ variable.
      */
     boost::filesystem::path getFile();
+
+    /**
+     * Returns the path to the data directory of a processor.
+     */
+    boost::filesystem::path getDataDirectory() const;
 
     /**
      * Loads and returns the processor's description from markdown file.
@@ -88,9 +94,9 @@ private:
     virtual double doGetEstimatedTime(
         const boost::program_options::variables_map& options) const;
 
-    virtual boost::filesystem::path doGetFile() = 0;
+    virtual boost::filesystem::path doGetFile() const = 0;
 
-    virtual std::string doGetName() = 0;
+    virtual std::string doGetName() const = 0;
 
     virtual std::string doGetDescription();
 

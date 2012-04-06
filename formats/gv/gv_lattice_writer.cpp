@@ -52,11 +52,11 @@ boost::program_options::options_description GVLatticeWriter::Factory::doOptionsH
 }
 
 
-std::string GVLatticeWriter::Factory::doGetName() {
+std::string GVLatticeWriter::Factory::doGetName() const {
     return "gv-writer";
 }
 
-boost::filesystem::path GVLatticeWriter::Factory::doGetFile() {
+boost::filesystem::path GVLatticeWriter::Factory::doGetFile() const {
     return __FILE__;
 }
 
@@ -74,11 +74,6 @@ GVLatticeWriter::Worker::Worker(GVLatticeWriter& processor,
 void GVLatticeWriter::Worker::doRun() {
 
     DEBUG("starting writer...");
-
-    PsiQuoter quoter;
-
-    std::map<Lattice::EdgeDescriptor, int> edgeOrdinalMap;
-    int ordinal = 0;
 
     char * tmpFile;
 
@@ -151,6 +146,11 @@ void GVLatticeWriter::Worker::doRun() {
     Agnode_t * n;
     Agnode_t * m;
     Agedge_t * e;
+
+    PsiQuoter quoter;
+
+    std::map<Lattice::EdgeDescriptor, int> edgeOrdinalMap;
+    int ordinal = 0;
 
     Lattice::EdgesSortedByTargetIterator ei
         = lattice_.edgesSortedByTarget(lattice_.getLayerTagManager().anyTag());

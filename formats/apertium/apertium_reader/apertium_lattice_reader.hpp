@@ -30,8 +30,8 @@ public:
 
         virtual boost::program_options::options_description doOptionsHandled();
 
-        virtual std::string doGetName();
-        virtual boost::filesystem::path doGetFile();
+        virtual std::string doGetName() const;
+        virtual boost::filesystem::path doGetFile() const;
 
         static const std::string DEFAULT_SPEC_FILES_DIR;
         static const std::string DEFAULT_SPEC_FILE_ENDING;
