@@ -149,6 +149,30 @@ std::vector<std::string> SfstLemmatizer::getLexemeTagsFromStems(
     return tags;
 }
 
+//should work as in morfo...
+std::vector<std::string> SfstLemmatizer::getFormTagsFromLexem(
+    std::multimap<std::string, std::vector<std::string> > & stems,
+    const std::string & lemma,
+    const std::string & lexem
+) {
+    std::vector<std::string> tags;
+    std::vector<std::string>::iterator t;
+
+    std::multimap<std::string, std::vector<std::string> >::iterator s;
+    for (s = stems.begin(); s != stems.end(); ++s) {
+		if (s->first == lemma){
+			if (*(s->second).begin() == lexem) {
+				t = (s->second).begin();
+				for (t++; t != (s->second).end(); ++t) {
+					tags.insert(tags.begin(), *t);
+				}
+			}
+		}
+    }
+
+    return tags;
+}
+
 AnnotationItem SfstLemmatizer::createLexemeAnnotation(
     const std::string & stem, std::string & tag
 ) {
@@ -172,13 +196,37 @@ AnnotationItem SfstLemmatizer::createLexemeAnnotation(
 void SfstLemmatizer::stemsOnFormLevel(
     const std::string & word, LemmatizerOutputIterator & outputIterator
 ){
-/*will wait with this for tests...
-    std::multimap<std::string, std::vector<std::string> > stems =
-        stem(word);
+	
+	std::multimap<std::string, std::vector<std::string> > stems =
+	stem(word);
 
     std::set<std::string> lemmas = getLemmasFromStems(stems);
     std::set<std::string>::iterator lem;
 
+    for (lem = lemmas.begin(); lem != lemmas.end(); ++lem) {
+        outputIterator.addLemma(*lem);
+
+        std::vector<std::string> lexemeTags =
+            getLexemeTagsFromStems(stems, *lem);
+        std::vector<std::string>::iterator lxt;
+
+        for (lxt = lexemeTags.begin(); lxt != lexemeTags.end(); ++lxt) {
+            AnnotationItem lexItem = createLexemeAnnotation(*lem, *lxt);
+            outputIterator.addLexeme(lexItem);
+            
+            std::vector<std::string> formTags = getFormTagsFromLexem(stems, *lem, *lxt);
+            
+            
+			std::vector<std::string>::iterator frm;
+            
+            for (frm = formTags.begin(); frm != formTags.end(); ++frm) {
+                    AnnotationItem frmItm = createFormAnnotation(lexItem, *lem, *frm);
+                    outputIterator.addForm(frmItm);
+			}
+        }
+    }
+/*will wait with this for tests...
+    
     for (lem = lemmas.begin(); lem != lemmas.end(); ++lem) {
 
         outputIterator.addLemma(*lem);
@@ -210,21 +258,6 @@ void SfstLemmatizer::stemsOnFormLevel(
         }
     }
     */
-}
-
-AnnotationItem SfstLemmatizer::createFormAnnotation(
-    AnnotationItem & lexemeItem,
-    const std::string& word,
-    std::map<std::string, std::string> & attributes
-) {
-
-    AnnotationItem formItem(lexemeItem, word);
-
-    std::map<std::string, std::string>::iterator atr;
-    for (atr = attributes.begin(); atr != attributes.end(); ++atr) {
-        annotationManager->setValue(formItem, atr->first, atr->second);
-    }
-    return formItem;
 }
 
 void SfstLemmatizer::setLevel(int lvl) {
@@ -309,6 +342,21 @@ void SfstLemmatizer::initializeTransducer() {
         fclose(file);
     }
 	
+}
+
+AnnotationItem SfstLemmatizer::createFormAnnotation(
+    AnnotationItem & lexemeItem,
+    const std::string & word,
+    std::string & attributes
+) {
+
+    AnnotationItem formItem(lexemeItem, word);
+
+    //std::vector<std::string>::iterator atr;
+    //for (atr = attributes.begin(); atr != attributes.end(); ++atr) {
+        annotationManager->setValue(formItem, attributes, "yes");
+    //}
+    return formItem;
 }
 
 std::vector<std::string> SfstLemmatizer::simpleStem(const std::string & word) {

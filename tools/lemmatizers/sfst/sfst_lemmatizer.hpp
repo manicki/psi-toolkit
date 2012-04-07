@@ -96,8 +96,8 @@ class SfstLemmatizer {
 		
 		AnnotationItem createFormAnnotation(
 			AnnotationItem & lexemeItem,
-			const std::string& word,
-			std::map<std::string, std::string> &
+			const std::string & word,
+			std::string &
 		);
 
 		
@@ -107,6 +107,11 @@ class SfstLemmatizer {
 		std::vector<std::string> getLexemeTagsFromStems(
 			std::multimap<std::string, std::vector<std::string> > & stems,
 			const std::string & lemma
+		);
+		std::vector<std::string> getFormTagsFromLexem(
+			std::multimap<std::string, std::vector<std::string> > & stems,
+			const std::string & lemma,
+			const std::string & lexem
 		);
 		static std::string tagSeparator;
 		//End of takens..
@@ -129,7 +134,6 @@ class SfstLemmatizer {
 		
 		void initializeTransducer();
 		
-		SfstTagsParser tagsParser;
 };
 
 #endif
