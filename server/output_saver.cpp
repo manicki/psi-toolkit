@@ -2,27 +2,63 @@
 #include "logging.hpp"
 
 #include <boost/lexical_cast.hpp>
+#include <boost/filesystem/operations.hpp>
+#include <boost/filesystem/path.hpp>
 
 #include <iostream>
 #include <fstream>
 
-std::string OutputSaver::fileExtension = ".txt";
-std::string OutputSaver::storageDir = "storage/";
+const int OutputSaver::GUID_LENGTH = 20;
 
-OutputSaver::OutputSaver(std::string rootPath)
-    : guidGenerator(20, true), websiteRoot(rootPath + "/") { }
+const std::string OutputSaver::DEFAULT_FILE_EXTENSION = "txt";
 
-std::string OutputSaver::storeOutput(std::string content) {
+const std::string OutputSaver::STORAGE_DIR = "storage";
 
-    std::string newGuid = guidGenerator.getGUID();
-    std::string filePathToSave(websiteRoot + storageDir + newGuid + fileExtension);
-    std::string filePathToReturn(storageDir + newGuid + fileExtension);
+OutputSaver::OutputSaver(const std::string& rootPath)
+    : guidGenerator_(GUID_LENGTH, true), websiteRoot_(rootPath + '/') {
 
-    INFO("Output saved to file: " << filePathToSave);
+    boost::filesystem::path storageDir(websiteRoot_ + STORAGE_DIR);
 
-    std::ofstream outfile(filePathToSave.c_str());
+    if (!boost::filesystem::is_directory(storageDir)) {
+        WARN("The " << storageDir.string() << " does not exist.");
+
+        if (!boost::filesystem::create_directory(storageDir)) {
+            WARN("The storage directory can not be created.");
+        }
+        else {
+            INFO("The storage directory is created successfully.");
+        }
+    }
+}
+
+std::string OutputSaver::storeOutput(const std::string& content) {
+    std::string ext = fileRecognizer_.recognizeExtension(content);
+
+    if (ext == FileRecognizer::UNKNOWN_TYPE) {
+        ext = DEFAULT_FILE_EXTENSION;
+    }
+
+    return storeOutput(content, ext);
+}
+
+std::string OutputSaver::storeOutput(const std::string& content, const std::string& ext) {
+    std::string newGuid = guidGenerator_.getGUID();
+    std::string pathToStore = filePathToStore_(newGuid, ext);
+    std::string pathForHtml = filePathForHtml_(newGuid, ext);
+
+    INFO("Output saved to file: " << pathToStore);
+
+    std::ofstream outfile(pathToStore.c_str());
     outfile << content;
     outfile.close();
 
-    return filePathToReturn;
+    return pathForHtml;
+}
+
+std::string OutputSaver::filePathToStore_(const std::string& guid, const std::string& ext) {
+    return std::string(websiteRoot_ + STORAGE_DIR + '/' + guid + '.' + ext);
+}
+
+std::string OutputSaver::filePathForHtml_(const std::string& guid, const std::string& ext) {
+    return std::string(STORAGE_DIR + '/' + guid + '.' + ext);
 }

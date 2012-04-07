@@ -53,6 +53,7 @@ BOOST_AUTO_TEST_CASE( lattice_simple ) {
     );
     BOOST_CHECK_EQUAL(lattice.getAnnotationCategory(lastEdge), "'a");
     BOOST_CHECK(!ei.hasNext());
+    BOOST_CHECK_THROW(ei.next(), NoEdgeException);
 
     Lattice::VertexDescriptor pre_ala = lattice.getFirstVertex();
     Lattice::VertexDescriptor post_ala = lattice.getVertexForRawCharIndex(3);
@@ -166,6 +167,24 @@ BOOST_AUTO_TEST_CASE( lattice_simple ) {
         );
     BOOST_CHECK(!tokenIter.hasNext());
 
+    BOOST_CHECK_THROW(
+        lattice.firstInEdge(lattice.getFirstVertex(), lattice.getLayerTagManager().anyTag()),
+        NoEdgeException
+    );
+    BOOST_CHECK_THROW(
+        lattice.firstOutEdge(lattice.getLastVertex(), lattice.getLayerTagManager().anyTag()),
+        NoEdgeException
+    );
+
+    BOOST_CHECK_THROW(
+        lattice.getVertexForRawCharIndex(lattice.getVertexRawCharIndex(lattice.getFirstVertex())-1),
+        NoVertexException
+    );
+    BOOST_CHECK_THROW(
+        lattice.getVertexForRawCharIndex(lattice.getVertexRawCharIndex(lattice.getLastVertex())+1),
+        NoVertexException
+    );
+
 }
 
 BOOST_AUTO_TEST_CASE( vertex_iterator ) {
@@ -194,6 +213,7 @@ BOOST_AUTO_TEST_CASE( get_path ) {
     Lattice::VertexDescriptor vertex = lattice.getFirstVertex();
 
     Lattice::EdgeSequence sequence = lattice.getPath(vertex, symbolMask);
+    BOOST_CHECK_EQUAL(lattice.getSequenceText(sequence), "ćma zielona");
 
     Lattice::InOutEdgesIterator iter = lattice.outEdges(vertex, symbolMask);
     BOOST_CHECK(!iter.hasNext());
@@ -547,6 +567,9 @@ BOOST_AUTO_TEST_CASE( loose_vertices ) {
     Lattice::VertexDescriptor vertexPost = lattice.getVertexForRawCharIndex(2);
     Lattice::VertexDescriptor vertexLoose = lattice.addLooseVertex();
 
+    BOOST_CHECK_EQUAL(lattice.getLooseVertexIndex(vertexLoose), 0);
+    BOOST_CHECK_THROW(lattice.getLooseVertexIndex(vertexPre), WrongVertexException);
+
     AnnotationItem tokenX("x");
     AnnotationItem tokenY("y");
 
@@ -560,7 +583,7 @@ BOOST_AUTO_TEST_CASE( loose_vertices ) {
     BOOST_CHECK(eiLooseIn.hasNext());
     BOOST_CHECK_EQUAL(lattice.getAnnotationCategory(eiLooseIn.next()), "x");
 
-    lattice.addEdge(vertexLoose, vertexPost, tokenY, token_tag);
+    Lattice::EdgeDescriptor edgeLoose = lattice.addEdge(vertexLoose, vertexPost, tokenY, token_tag);
 
     Lattice::InOutEdgesIterator eiLooseOut = lattice.outEdges(vertexLoose, tokenMask);
     BOOST_CHECK(eiLooseOut.hasNext());
@@ -569,6 +592,12 @@ BOOST_AUTO_TEST_CASE( loose_vertices ) {
     Lattice::InOutEdgesIterator eiPostIn = lattice.inEdges(vertexPost, tokenMask);
     BOOST_CHECK(eiPostIn.hasNext());
     BOOST_CHECK_EQUAL(lattice.getAnnotationCategory(eiPostIn.next()), "y");
+
+    Lattice::VertexDescriptor vertexLoose2 = lattice.addLooseVertex();
+    BOOST_CHECK_THROW(lattice.addSymbols(vertexPre, vertexLoose), WrongVertexException);
+    BOOST_CHECK_THROW(lattice.addSymbols(vertexLoose, vertexPost), WrongVertexException);
+    BOOST_CHECK_THROW(lattice.addSymbols(vertexLoose, vertexLoose2), WrongVertexException);
+    BOOST_CHECK_THROW(lattice.getEdgeLength(edgeLoose), WrongVertexException);
 }
 
 BOOST_AUTO_TEST_CASE( vertex_iterator_advanced ) {
@@ -642,6 +671,11 @@ BOOST_AUTO_TEST_CASE( correction_erase ) {
         BOOST_CHECK(ei.hasNext());
         ed = ei.next();
     }
+
+    BOOST_CHECK_THROW(
+        lattice.correctionErase(lattice.getFirstVertex(), lattice.getLastVertex()),
+        WrongVertexException
+    );
 }
 
 BOOST_AUTO_TEST_CASE( correction_insert ) {
@@ -747,6 +781,11 @@ BOOST_AUTO_TEST_CASE( correction_replace ) {
         BOOST_CHECK(ei.hasNext());
         ed = ei.next();
     }
+
+    BOOST_CHECK_THROW(
+        lattice.correctionReplace(lattice.getFirstVertex(), lattice.getLastVertex(), "x"),
+        WrongVertexException
+    );
 }
 
 BOOST_AUTO_TEST_CASE( correction_replace_advanced ) {
@@ -801,8 +840,9 @@ void initAndTokenize_(Lattice& lattice, const std::string& paragraph, bool addSy
     LayerTagCollection textTags(
         lattice.getLayerTagManager().createSingletonTagCollection("text"));
     AnnotationItem item("TEXT", paragraph);
-    lattice.addEdge(lattice.getFirstVertex(), lattice.getLastVertex(),
-                    item, textTags);
+    try {
+        lattice.addEdge(lattice.getFirstVertex(), lattice.getLastVertex(), item, textTags);
+    } catch (LoopEdgeException) { }
 
     BySpacesCutter cutter;
 
@@ -867,6 +907,7 @@ BOOST_AUTO_TEST_CASE( edge_self_reference ) {
         lattice.addPartitionToEdge(edge, tags, builder.build()),
         EdgeSelfReferenceException
     );
+
 }
 
 BOOST_AUTO_TEST_CASE( reversed_edges ) {
@@ -879,6 +920,19 @@ BOOST_AUTO_TEST_CASE( reversed_edges ) {
     BOOST_CHECK_THROW(
         lattice.addEdge(from, to, item, tags),
         ReversedEdgeException
+    );
+}
+
+
+BOOST_AUTO_TEST_CASE( loop_edges ) {
+    Lattice lattice("ab");
+    Lattice::VertexDescriptor vertex = lattice.getVertexForRawCharIndex(1);
+    AnnotationItem item("item");
+    LayerTagCollection tags(lattice.getLayerTagManager().createSingletonTagCollection("tag"));
+
+    BOOST_CHECK_THROW(
+        lattice.addEdge(vertex, vertex, item, tags),
+        LoopEdgeException
     );
 }
 

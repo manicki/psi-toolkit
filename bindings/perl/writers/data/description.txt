@@ -1,0 +1,2 @@
+Non text writer, which creates Perl array.
+Used in Perl bindings.

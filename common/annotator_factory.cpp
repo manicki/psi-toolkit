@@ -26,3 +26,13 @@ std::string AnnotatorFactory::doGetContinuation(
     const boost::program_options::variables_map& /*options*/) const {
     return "psi-writer";
 }
+
+AnnotatorFactory::LanguagesHandling AnnotatorFactory::languagesHandling(
+    const boost::program_options::variables_map& options) const {
+    return doLanguagesHandling(options);
+}
+
+std::list<std::string> AnnotatorFactory::languagesHandled(
+    const boost::program_options::variables_map& options) const {
+    return doLanguagesHandled(options);
+}

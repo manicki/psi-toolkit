@@ -6,3 +6,4 @@ add_library(formats-simple SHARED
 add_subdirectory(t)
 
 install(TARGETS formats-simple DESTINATION lib/)
+install(DIRECTORY data/ DESTINATION ${PSITOOLKIT_INSTALL_DATA_DIR}/simple-lattice-writer)

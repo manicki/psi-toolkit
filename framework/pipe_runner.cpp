@@ -15,10 +15,6 @@
 #include "logging.hpp"
 #include "version_information.hpp"
 
-#if HAVE_PERL_BINDINGS
-#include "perl_lattice_writer_output.hpp"
-#endif
-
 PipeRunner::PipeRunner(const std::string& pipeline)
     : justInformation_(false), runnerOptionsDescription_("PipeRunner options") {
 
@@ -48,7 +44,21 @@ int PipeRunner::run(std::istream& in, std::ostream& out) {
 const std::string PipeRunner::PIPELINE_SEPARATOR = "!";
 
 ProcessorFactory& PipeRunner::getFactory_(const PipelineElementSpecification& elementSpec) {
-    return MainFactoriesKeeper::getInstance().getProcessorFactory(elementSpec.processorName);
+    std::list<ProcessorFactory*> factories =
+        MainFactoriesKeeper::getInstance().getProcessorFactoriesForName(
+            elementSpec.processorName);
+
+    size_t numberOfFactoriesFound = factories.size();
+
+    if (numberOfFactoriesFound == 0)
+        throw Exception(std::string("no processor found for `")
+                        + elementSpec.processorName + "`");
+    else if (numberOfFactoriesFound > 1)
+        throw Exception(std::string("too many processors found for `")
+                        + elementSpec.processorName
+                        + "`, processor resolution not implemented yet");
+
+    return *factories.front();
 }
 
 template<typename Source, typename Sink>
@@ -69,6 +79,13 @@ void PipeRunner::parseIntoGraph_(std::vector<std::string> args, bool isTheFirstA
     }
 
     pipelineSpecification2Graph_(pipelineSpecification_, firstNode, lastNode);
+
+    if (stopAfterParsingPipeline_()) {
+        justInformation_ = true;
+
+        return;
+    }
+
     completeGraph_<Source, Sink>();
 }
 
@@ -91,6 +108,7 @@ void PipeRunner::parseRunnerProgramOptions_(std::vector<std::string> &args) {
 void PipeRunner::setRunnerOptionsDescription_() {
     runnerOptionsDescription_.add_options()
         ("help", "Produce help message for each processor")
+        ("list-languages", "List languages handled for each processor specified")
         ("log-level", boost::program_options::value<std::string>(),
          "Set logging level")
         ("log-file", boost::program_options::value<std::string>(),
@@ -102,11 +120,7 @@ void PipeRunner::setRunnerOptionsDescription_() {
 bool PipeRunner::stopAfterExecutingRunnerOptions_() {
     if (runnerOptions_.count("help")) {
         std::cout << runnerOptionsDescription_ << std::endl;
-
-        HelpFormatter* helpFormatter = new ConsoleHelpFormatter;
-        helpFormatter->formatHelps(std::cout);
-        delete helpFormatter;
-
+        ConsoleHelpFormatter().formatHelps(std::cout);
         return true;
     }
 
@@ -124,6 +138,43 @@ bool PipeRunner::stopAfterExecutingRunnerOptions_() {
     }
 
     return false;
+}
+
+bool PipeRunner::stopAfterParsingPipeline_() {
+    if (runnerOptions_.count("list-languages")) {
+        listLanguages_();
+        return true;
+    }
+
+    return false;
+}
+
+void PipeRunner::listLanguages_() {
+    PipelineGraph::vertex_descriptor current = firstNode;
+
+    do {
+        listLanguagesForPipelineNode_(current);
+        if (!goToNextNode_(current))
+            break;
+    } while (1);
+}
+
+void PipeRunner::listLanguagesForPipelineNode_(PipelineGraph::vertex_descriptor current) {
+    PipelineNode& currentPipelineNode = pipelineGraph_[current];
+
+    const AnnotatorFactory* asAnnotatorFactory =
+        dynamic_cast<const AnnotatorFactory*>(
+            currentPipelineNode.getFactory());
+
+    if (asAnnotatorFactory) {
+        std::cout << currentPipelineNode.getFactory()->getName() << ":";
+
+        BOOST_FOREACH(const std::string& langCode,
+                      asAnnotatorFactory->languagesHandled(currentPipelineNode.options_))
+            std::cout << " " << langCode;
+
+        std::cout << "\n";
+    }
 }
 
 bool PipeRunner::parseIntoPipelineSpecification_(
@@ -296,8 +347,8 @@ void PipeRunner::runPipelineNode_(
             boost::dynamic_pointer_cast<LatticeWriter<Sink> >(
                 currentPipelineNode.getProcessor());
 
-        if (!writer)
-            throw Exception("last element of the pipeline should be a writer");
+                if (!writer)
+                    throw Exception("last element of the pipeline should be a writer");
 
         writer->writeLattice(lattice, out);
     }
@@ -452,13 +503,10 @@ std::string PipeRunner::run(const std::string & inputString) {
 
 #if HAVE_PERL_BINDINGS
 SV * PipeRunner::run_for_perl(const std::string & inputString) {
-    AV * outputArray = newAV();
+    AV * outputArrayPointer = newAV();
 
     std::istringstream inputStream (inputString, std::istringstream::in);
-    PerlLatticeWriterOutput output(outputArray);
-
-    run_<std::istream, PerlLatticeWriterOutput>(inputStream, output);
-
-    return newRV_inc((SV *) outputArray);
+    run_<std::istream, AV *>(inputStream, outputArrayPointer);
+    return newRV_inc((SV *) outputArrayPointer);
 }
 #endif

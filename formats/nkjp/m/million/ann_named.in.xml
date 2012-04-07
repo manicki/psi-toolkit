@@ -1,0 +1,119 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<teiCorpus xmlns:xi="http://www.w3.org/2001/XInclude" xmlns:nkjp="http://www.nkjp.pl/ns/1.0" xmlns="http://www.tei-c.org/ns/1.0">
+  <xi:include href="NKJP_1M_header.xml"/>
+  <TEI>
+    <xi:include href="header.xml"/>
+    <text xml:lang="pl">
+      <body>
+        <p xml:id="named_1-p" corresp="ann_morphosyntax.xml#morph_1-p">
+          <s xml:id="named_1.11-s" corresp="ann_morphosyntax.xml#morph_1.11-s">
+            <seg xml:id="named_1.11-s_n1">
+              <fs type="named">
+                <f name="type">
+                  <symbol value="orgName"/>
+                </f>
+                <f name="orth">
+                  <string>UŁ</string>
+                </f>
+                <f name="base">
+                  <string>UŁ</string>
+                </f>
+                <f name="certainty">
+                  <symbol value="high"/>
+                </f>
+              </fs>
+              <ptr target="ann_morphosyntax.xml#morph_1.10-seg"/>
+            </seg>
+          </s>
+          <s xml:id="named_1.23-s" corresp="ann_morphosyntax.xml#morph_1.23-s">
+            <seg xml:id="named_1.23-s_n1">
+              <fs type="named">
+                <f name="derived">
+                  <fs type="derivation">
+                    <f name="derivType">
+                      <symbol value="relAdj"/>
+                    </f>
+                    <f name="derivedFrom">
+                      <string>Polska</string>
+                    </f>
+                  </fs>
+                </f>
+                <f name="type">
+                  <symbol value="placeName"/>
+                </f>
+                <f name="subtype">
+                  <symbol value="country"/>
+                </f>
+                <f name="orth">
+                  <string>polskich</string>
+                </f>
+                <f name="base">
+                  <string>polski</string>
+                </f>
+                <f name="certainty">
+                  <symbol value="high"/>
+                </f>
+              </fs>
+              <ptr target="ann_morphosyntax.xml#morph_1.19-seg"/>
+            </seg>
+          </s>
+          <s xml:id="named_1.40-s" corresp="ann_morphosyntax.xml#morph_1.40-s">
+            <seg xml:id="named_1.40-s_n1">
+              <fs type="named">
+                <f name="type">
+                  <symbol value="orgName"/>
+                </f>
+                <f name="orth">
+                  <string>Wydziale Zarządzania UŁ</string>
+                </f>
+                <f name="base">
+                  <string>Wydział Zarządzania UŁ</string>
+                </f>
+                <f name="certainty">
+                  <symbol value="high"/>
+                </f>
+              </fs>
+              <ptr target="named_1.40-s_n3"/>
+              <ptr target="named_1.40-s_n2"/>
+            </seg>
+            <seg xml:id="named_1.40-s_n3">
+              <fs type="named">
+                <f name="type">
+                  <symbol value="orgName"/>
+                </f>
+                <f name="orth">
+                  <string>UŁ</string>
+                </f>
+                <f name="base">
+                  <string>UŁ</string>
+                </f>
+                <f name="certainty">
+                  <symbol value="high"/>
+                </f>
+              </fs>
+              <ptr target="ann_morphosyntax.xml#morph_1.30-seg"/>
+            </seg>
+            <seg xml:id="named_1.40-s_n2">
+              <fs type="named">
+                <f name="type">
+                  <symbol value="orgName"/>
+                </f>
+                <f name="orth">
+                  <string>Wydziale Zarządzania</string>
+                </f>
+                <f name="base">
+                  <string>Wydział Zarządzania</string>
+                </f>
+                <f name="certainty">
+                  <symbol value="high"/>
+                </f>
+              </fs>
+              <ptr target="ann_morphosyntax.xml#morph_1.28-seg"/>
+              <ptr target="ann_morphosyntax.xml#morph_1.29-seg"/>
+            </seg>
+          </s>
+        </p>
+      </body>
+    </text>
+  </TEI>
+</teiCorpus>

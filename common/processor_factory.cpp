@@ -47,9 +47,16 @@ boost::filesystem::path ProcessorFactory::getFile() {
     return doGetFile();
 }
 
+boost::filesystem::path ProcessorFactory::getDataDirectory() const {
+    return getItsData(doGetFile());
+}
 
-std::string ProcessorFactory::getName() {
+std::string ProcessorFactory::getName() const {
     return doGetName();
+}
+
+std::list<std::string> ProcessorFactory::getAliases() {
+    return doGetAliases();
 }
 
 std::string ProcessorFactory::getDescription() {
@@ -71,6 +78,10 @@ std::string ProcessorFactory::doGetDescription() {
     }
 
     return description;
+}
+
+std::list<std::string> ProcessorFactory::doGetAliases() {
+    return std::list<std::string>();
 }
 
 std::string ProcessorFactory::getFileContent(boost::filesystem::path path) {

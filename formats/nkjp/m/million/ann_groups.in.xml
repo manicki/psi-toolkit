@@ -1,0 +1,140 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<teiCorpus xmlns:xi="http://www.w3.org/2001/XInclude" xmlns:nkjp="http://www.nkjp.pl/ns/1.0" xmlns="http://www.tei-c.org/ns/1.0">
+  <xi:include href="NKJP_1M_header.xml"/>
+  <TEI>
+    <xi:include href="header.xml"/>
+    <text xml:lang="pl">
+      <body>
+        <p xml:id="groups_1-p" corresp="ann_words.xml#words_1-p">
+          <s xml:id="groups_1.11-s" corresp="ann_words.xml#words_1.11-s">
+            <seg xml:id="groups_1.11-s_ga14">
+              <fs type="group">
+                <f name="orth">
+                  <string>Za swe publikacje naukowe</string>
+                </f>
+                <f name="type">
+                  <symbol value="PrepNG"/>
+                </f>
+              </fs>
+              <ptr type="synh" target="ann_words.xml#words_1.11-s_sad"/>
+              <ptr type="nonhead" target="ann_words.xml#words_1.11-s_sa9"/>
+              <ptr type="semh" target="ann_words.xml#words_1.11-s_sae"/>
+              <ptr type="nonhead" target="ann_words.xml#words_1.11-s_saa"/>
+            </seg>
+            <seg xml:id="groups_1.11-s_ga15">
+              <fs type="group">
+                <f name="orth">
+                  <string>7-krotnie</string>
+                </f>
+                <f name="type">
+                  <symbol value="AdvG"/>
+                </f>
+              </fs>
+              <ptr type="head" target="ann_words.xml#words_1.11-s_sab"/>
+            </seg>
+            <seg xml:id="groups_1.11-s_ga13">
+              <fs type="group">
+                <f name="orth">
+                  <string>nagrodą Rektora UŁ</string>
+                </f>
+                <f name="type">
+                  <symbol value="NG"/>
+                </f>
+              </fs>
+              <ptr type="head" target="ann_words.xml#words_1.11-s_saf"/>
+              <ptr type="nonhead" target="ann_words.xml#words_1.11-s_sa10"/>
+              <ptr type="nonhead" target="ann_words.xml#words_1.11-s_sa11"/>
+            </seg>
+          </s>
+          <s xml:id="groups_1.23-s" corresp="ann_words.xml#words_1.23-s">
+            <seg xml:id="groups_1.23-s_ga2b">
+              <fs type="group">
+                <f name="orth">
+                  <string>doradcą znanych polskich i zagranicznych przedsiębiorstw</string>
+                </f>
+                <f name="type">
+                  <symbol value="NG"/>
+                </f>
+              </fs>
+              <ptr type="head" target="ann_words.xml#words_1.23-s_sa23"/>
+              <ptr type="nonhead" target="ann_words.xml#words_1.23-s_sa1e"/>
+              <ptr type="nonhead" target="ann_words.xml#words_1.23-s_sa1f"/>
+              <ptr type="nonhead" target="ann_words.xml#words_1.23-s_sa21"/>
+              <ptr type="nonhead" target="ann_words.xml#words_1.23-s_sa20"/>
+              <ptr type="nonhead" target="ann_words.xml#words_1.23-s_sa25"/>
+            </seg>
+            <seg xml:id="groups_1.23-s_ga2a">
+              <fs type="group">
+                <f name="orth">
+                  <string>ds. strategii marketingowych</string>
+                </f>
+                <f name="type">
+                  <symbol value="PrepNGb"/>
+                </f>
+              </fs>
+              <ptr type="head" target="ann_words.xml#words_1.23-s_sa18"/>
+              <ptr type="nonhead" target="ann_words.xml#words_1.23-s_sa24"/>
+              <ptr type="nonhead" target="ann_words.xml#words_1.23-s_sa1d"/>
+            </seg>
+          </s>
+          <s xml:id="groups_1.40-s" corresp="ann_words.xml#words_1.40-s">
+            <seg xml:id="groups_1.40-s_ga43">
+              <fs type="group">
+                <f name="orth">
+                  <string>3 doktorów</string>
+                </f>
+                <f name="type">
+                  <symbol value="NumGr"/>
+                </f>
+              </fs>
+              <ptr type="synh" target="ann_words.xml#words_1.40-s_sa3f"/>
+              <ptr type="semh" target="ann_words.xml#words_1.40-s_sa37"/>
+            </seg>
+            <seg xml:id="groups_1.40-s_ga46">
+              <fs type="group">
+                <f name="orth">
+                  <string>na Wydziale Zarządzania UŁ</string>
+                </f>
+                <f name="type">
+                  <symbol value="PrepNG"/>
+                </f>
+              </fs>
+              <ptr type="synh" target="ann_words.xml#words_1.40-s_sa35"/>
+              <ptr type="semh" target="ann_words.xml#words_1.40-s_sa38"/>
+              <ptr type="nonhead" target="ann_words.xml#words_1.40-s_sa39"/>
+              <ptr type="nonhead" target="ann_words.xml#words_1.40-s_sa3a"/>
+            </seg>
+            <seg xml:id="groups_1.40-s_ga44">
+              <fs type="group">
+                <f name="orth">
+                  <string>88 magistrów</string>
+                </f>
+                <f name="type">
+                  <symbol value="NumGr"/>
+                </f>
+              </fs>
+              <ptr type="synh" target="ann_words.xml#words_1.40-s_sa40"/>
+              <ptr type="semh" target="ann_words.xml#words_1.40-s_sa3b"/>
+            </seg>
+            <seg xml:id="groups_1.40-s_ga47">
+              <fs type="group">
+                <f name="orth">
+                  <string>na kierunku zarządzanie oraz stosunki międzynarodowe</string>
+                </f>
+                <f name="type">
+                  <symbol value="PrepNG"/>
+                </f>
+              </fs>
+              <ptr type="synh" target="ann_words.xml#words_1.40-s_sa36"/>
+              <ptr type="semh" target="ann_words.xml#words_1.40-s_sa3c"/>
+              <ptr type="nonhead" target="ann_words.xml#words_1.40-s_sa3d"/>
+              <ptr type="nonhead" target="ann_words.xml#words_1.40-s_sa33"/>
+              <ptr type="nonhead" target="ann_words.xml#words_1.40-s_sa3e"/>
+              <ptr type="nonhead" target="ann_words.xml#words_1.40-s_sa31"/>
+            </seg>
+          </s>
+        </p>
+      </body>
+    </text>
+  </TEI>
+</teiCorpus>

@@ -1,0 +1,37 @@
+digraph g {
+    node [label="\N"];
+    graph [rankdir=LR,
+        bb="?"];
+    0 [pos="?", width="?", height="?"];
+    1 [pos="?", width="?", height="?"];
+    2 [pos="?", width="?", height="?"];
+    3 [pos="?", width="?", height="?"];
+    4 [pos="?", width="?", height="?"];
+    5 [pos="?", width="?", height="?"];
+    6 [pos="?", width="?", height="?"];
+    7 [pos="?", width="?", height="?"];
+    8 [pos="?", width="?", height="?"];
+    10 [pos="?", width="?", height="?"];
+    11 [pos="?", width="?", height="?"];
+    12 [pos="?", width="?", height="?"];
+    13 [pos="?", width="?", height="?"];
+    14 [pos="?", width="?", height="?"];
+    0 -> 1 [label="A (symbol) 'A", pos="?", lp="?"];
+    1 -> 2 [label="l (symbol) 'l", pos="?", lp="?"];
+    2 -> 3 [label="a (symbol) 'a", pos="?", lp="?"];
+    0 -> 3 [label="Ala (token) word", pos="?", lp="?"];
+    3 -> 4 [label="_ (symbol) ' ", pos="?", lp="?"];
+    3 -> 4 [label="_ (token) blank", pos="?", lp="?"];
+    4 -> 5 [label="m (symbol) 'm", pos="?", lp="?"];
+    5 -> 6 [label="a (symbol) 'a", pos="?", lp="?"];
+    4 -> 6 [label="ma (token) word", pos="?", lp="?"];
+    6 -> 7 [label="_ (symbol) ' ", pos="?", lp="?"];
+    6 -> 7 [label="_ (token) blank", pos="?", lp="?"];
+    7 -> 8 [label="s (symbol) 's", pos="?", lp="?"];
+    8 -> 10 [label="ł (symbol) 'ł", pos="?", lp="?"];
+    10 -> 11 [label="o (symbol) 'o", pos="?", lp="?"];
+    11 -> 12 [label="n (symbol) 'n", pos="?", lp="?"];
+    12 -> 13 [label="i (symbol) 'i", pos="?", lp="?"];
+    13 -> 14 [label="a (symbol) 'a", pos="?", lp="?"];
+    7 -> 14 [label="słonia (token) word", pos="?", lp="?"];
+}

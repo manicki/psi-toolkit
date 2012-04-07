@@ -84,11 +84,22 @@ Lattice::VertexDescriptor Lattice::getFirstVertex() const {
     return 0;
 }
 
-Lattice::VertexDescriptor Lattice::getLastVertex() const {
+Lattice::VertexDescriptor Lattice::getLastVertex() {
+    if (outEdges(allText_.length(), layerTagManager_.anyTag()).hasNext()) {
+        VertexIterator vi(*this);
+        VertexDescriptor vd;
+        while (vi.hasNext()) {
+            vd = vi.next();
+        }
+        return vd;
+    }
     return allText_.length();
 }
 
 size_t Lattice::getVertexRawCharIndex(VertexDescriptor vd) {
+    if (isLooseVertex(vd)) {
+        throw WrongVertexException("Loose vertex have no raw char index");
+    }
     return size_t(vd);
 }
 
@@ -101,6 +112,10 @@ Lattice::EdgeDescriptor Lattice::addEdge(
     Score score,
     int ruleId)
 {
+
+    if (from == to) {
+        throw LoopEdgeException("Cannot add a loop edge");
+    }
 
     // doesn't check if a loose edge is reversed!
     if (from >= 0 && to >= 0 && from > to) {

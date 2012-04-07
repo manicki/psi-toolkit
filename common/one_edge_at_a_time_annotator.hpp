@@ -26,11 +26,23 @@ public:
             return T::optionsHandled();
         }
 
-        virtual std::string doGetName() {
+        virtual LanguagesHandling doLanguagesHandling(
+            const boost::program_options::variables_map& options) const {
+
+            return T::languagesHandling(options);
+        }
+
+        virtual std::list<std::string> doLanguagesHandled(
+            const boost::program_options::variables_map& options) const {
+
+            return T::languagesHandled(options);
+        }
+
+        virtual std::string doGetName() const {
             return T::getName();
         }
 
-        virtual boost::filesystem::path doGetFile() {
+        virtual boost::filesystem::path doGetFile() const {
             return T::getFile();
         }
 

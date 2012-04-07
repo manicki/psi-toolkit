@@ -1,0 +1,5 @@
+NKJP Reader reads texts from Polish National Corpus's XML files into the lattice.
+
+You can find more information about NKJP on the project's website: <http://nkjp.pl>
+
+Papers describing NKJP format and sample files: <http://nlp.ipipan.waw.pl/TEI4NKJP/>

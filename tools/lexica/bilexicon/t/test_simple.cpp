@@ -20,13 +20,17 @@ void testOnLattice(
 BOOST_AUTO_TEST_SUITE( bilexicon )
 
 BOOST_AUTO_TEST_CASE( bilexicon_simple ) {
-    const char* argv[4] = {
+    const char* argv[8] = {
         "fakename",
+        "--lang",
+        "pl",
+        "--trg-lang",
+        "en",
         "--plain-text-lexicon",
         ROOT_DIR "tools/lexica/bilexicon/t/plen.txt",
         0};
 
-    const int argc = 3;
+    const int argc = 7;
 
     boost::program_options::variables_map options;
     // const_casting because of Boost 1.42 bug
@@ -55,15 +59,19 @@ BOOST_AUTO_TEST_CASE( bilexicon_save_and_load ) {
     char* tmpFile = tempnam(0, "bilexicon_save_and_load_bin");
 
     {
-        const char* argv[6] = {
+        const char* argv[10] = {
             "fakename",
+            "--lang",
+            "pl",
+            "--trg-lang",
+            "en",
             "--plain-text-lexicon",
             ROOT_DIR "tools/lexica/bilexicon/t/plen.txt",
             "--save-binary-lexicon",
             tmpFile,
             0};
 
-        const int argc = 5;
+        const int argc = 9;
 
         boost::program_options::variables_map options;
         boost::program_options::store(
@@ -78,13 +86,17 @@ BOOST_AUTO_TEST_CASE( bilexicon_save_and_load ) {
     }
 
     {
-        const char* argv[4] = {
+        const char* argv[8] = {
             "fakename",
+            "--lang",
+            "pl",
+            "--trg-lang",
+            "en",
             "--binary-lexicon",
             tmpFile,
             0};
 
-        const int argc = 3;
+        const int argc = 7;
 
         boost::program_options::variables_map options;
         boost::program_options::store(

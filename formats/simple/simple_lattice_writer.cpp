@@ -60,11 +60,11 @@ boost::program_options::options_description SimpleLatticeWriter::Factory::doOpti
 }
 
 
-std::string SimpleLatticeWriter::Factory::doGetName() {
+std::string SimpleLatticeWriter::Factory::doGetName() const {
     return "simple-writer";
 }
 
-boost::filesystem::path SimpleLatticeWriter::Factory::doGetFile() {
+boost::filesystem::path SimpleLatticeWriter::Factory::doGetFile() const {
     return __FILE__;
 }
 

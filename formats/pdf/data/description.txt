@@ -1,0 +1,3 @@
+PDF Reader reads text from PDF file into the lattice.
+
+To use it, you have to have poppler-glib library installed on your system.

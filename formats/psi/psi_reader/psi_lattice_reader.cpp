@@ -2,11 +2,11 @@
 
 
 std::string PsiLatticeReader::getFormatName() {
-    return "Psi";
+    return "PSI";
 }
 
 std::string PsiLatticeReader::doInfo() {
-    return "Psi reader";
+    return "PSI reader";
 }
 
 
@@ -27,11 +27,11 @@ boost::program_options::options_description PsiLatticeReader::Factory::doOptions
     return optionsDescription;
 }
 
-std::string PsiLatticeReader::Factory::doGetName() {
+std::string PsiLatticeReader::Factory::doGetName() const {
     return "psi-reader";
 }
 
-boost::filesystem::path PsiLatticeReader::Factory::doGetFile() {
+boost::filesystem::path PsiLatticeReader::Factory::doGetFile() const {
     return __FILE__;
 }
 

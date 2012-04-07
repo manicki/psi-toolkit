@@ -1,12 +1,14 @@
 #include "perl_simple_lattice_writer.hpp"
 
+#if HAVE_PERL_BINDINGS
+
 #include "logging.hpp"
 
 std::string PerlSimpleLatticeWriter::getFormatName() {
     return "simple";
 }
 
-LatticeWriter<PerlLatticeWriterOutput>* PerlSimpleLatticeWriter::Factory::doCreateLatticeWriter(
+LatticeWriter<Sink> * PerlSimpleLatticeWriter::Factory::doCreateLatticeWriter(
     const boost::program_options::variables_map& options
 ) {
     PsiQuoter quoter;
@@ -55,11 +57,11 @@ boost::program_options::options_description PerlSimpleLatticeWriter::Factory::do
 }
 
 
-std::string PerlSimpleLatticeWriter::Factory::doGetName() {
+std::string PerlSimpleLatticeWriter::Factory::doGetName() const {
     return "perl-simple-writer";
 }
 
-boost::filesystem::path PerlSimpleLatticeWriter::Factory::doGetFile() {
+boost::filesystem::path PerlSimpleLatticeWriter::Factory::doGetFile() const {
     return __FILE__;
 }
 
@@ -68,9 +70,9 @@ std::string PerlSimpleLatticeWriter::doInfo() {
 }
 
 PerlSimpleLatticeWriter::Worker::Worker(PerlSimpleLatticeWriter & processor,
-                                 PerlLatticeWriterOutput & output,
+                                 Sink & output,
                                  Lattice& lattice):
-    WriterWorker<PerlLatticeWriterOutput>(output, lattice),
+    WriterWorker<Sink>(output, lattice),
     processor_(processor) {
 }
 
@@ -101,3 +103,5 @@ void PerlSimpleLatticeWriter::Worker::doRun() {
 
 PerlSimpleLatticeWriter::Worker::~Worker() {
 }
+
+#endif

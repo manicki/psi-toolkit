@@ -493,8 +493,6 @@ namespace poleng {
 
                         if (syntokCategory != concatenatedOrth) { //adding parse edge 'SYNTOK'
                             AnnotationItem annotationItem(syntokCategory);
-                            //lattice.getAnnotationItemManager().setValue(
-                            //        annotationItem, "morpho", morpho);
                             for (Morphology::iterator attribIt = morphIt->begin();
                                     attribIt != morphIt->end(); ++ attribIt) {
                                 if (attribIt->first == "pos")
@@ -523,9 +521,7 @@ namespace poleng {
                         } else { //adding a 'form' edge
                             Lattice::EdgeSequence::Builder formBuilder(lattice);
                             formBuilder.addEdge(lexemeEdge);
-                            AnnotationItem annotationItem(partOfSpeech, StringFrag(lexeme));
-                            //lattice.getAnnotationItemManager().setValue(
-                            //        annotationItem, "morpho", morpho);
+                            AnnotationItem annotationItem(partOfSpeech, StringFrag(*baseIt));
                             for (Morphology::iterator attribIt = morphIt->begin();
                                     attribIt != morphIt->end(); ++ attribIt) {
                                 if (attribIt->first == "pos")
@@ -584,7 +580,7 @@ namespace poleng {
                                 *morphIt);
                         size_t delimPos = morphoString.find(":");
                         std::string partOfSpeech = morphoString.substr(0, delimPos);
-                        std::string lexeme = *baseIt + "_" + partOfSpeech;
+                        std::string lexeme = *baseIt + LEMMA_CATEGORY_SEPARATOR + partOfSpeech;
 
                         Lattice::EdgeDescriptor lexemeEdge;
                         if (! matchLexemeEdge(lattice, startVertex,
@@ -603,7 +599,7 @@ namespace poleng {
 
                         Lattice::EdgeSequence::Builder formBuilder(lattice);
                         formBuilder.addEdge(lexemeEdge);
-                        AnnotationItem annotationItem(partOfSpeech, StringFrag(lexeme));
+                        AnnotationItem annotationItem(partOfSpeech, StringFrag(*baseIt));
                         for (Morphology::iterator attribIt = morphIt->begin();
                                 attribIt != morphIt->end(); ++ attribIt) {
                             if (attribIt->first == "pos")

@@ -1,0 +1,5 @@
+Dot Writer presents the lattice as a directed graph, described in [GraphViz _dot_ format](www.graphviz.org).
+
+To produce the graphics from _dot_ file, use _dot_ program (available in _graphviz_ package).
+Example:
+    dot input.dot -T ps:cairo -o output.ps

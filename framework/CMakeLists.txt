@@ -2,6 +2,7 @@ configure_file("${CMAKE_CURRENT_SOURCE_DIR}/git_info.cpp.in" "${CMAKE_CURRENT_BI
 
 # library framework
 add_library(framework SHARED
+    aliaser.cpp
     factories_keeper.cpp
     main_factories_keeper.cpp
     help_formatter.cpp
@@ -26,6 +27,16 @@ foreach(dir ${formats_SUBDIRS})
     include_directories("${psi-toolkit_SOURCE_DIR}/formats/${dir}")
     link_directories("${psi-toolkit_BINARY_DIR}/formats/${dir}")
 endforeach(dir)
+
+if(HAVE_GRAPHVIZ)
+    include_directories("${psi-toolkit_SOURCE_DIR}/formats/gv")
+    link_directories("${psi-toolkit_BINARY_DIR}/formats/gv")
+endif(HAVE_GRAPHVIZ)
+
+if(HAVE_POPPLER)
+    include_directories("${psi-toolkit_SOURCE_DIR}/formats/pdf")
+    link_directories("${psi-toolkit_BINARY_DIR}/formats/pdf")
+endif(HAVE_POPPLER)
 
 foreach(dir ${tools_DIRS})
     include_directories("${psi-toolkit_SOURCE_DIR}/tools/${dir}")
@@ -85,13 +96,20 @@ if(HAVE_PERL_BINDINGS)
     include_directories("${psi-toolkit_SOURCE_DIR}/bindings/perl/writers")
     link_directories("${psi-toolkit_BINARY_DIR}/bindings/perl/writers")
 
-    target_link_libraries(psi-pipe formats-perl-simple)
+    target_link_libraries(psi-pipe formats-perl-simple formats-simple formats-json-simple)
     target_link_libraries(framework formats-perl-simple)
 
     find_package(SWIG)
     include(${SWIG_USE_FILE})
     find_package(PerlLibs)
 endif(HAVE_PERL_BINDINGS)
+
+add_subdirectory(t)
+
+if (HAVE_ASPELL)
+  target_link_libraries(framework tools-spellcheckers-aspell)
+  target_link_libraries(psi-pipe tools-spellcheckers-aspell)
+endif (HAVE_ASPELL)
 
 install(TARGETS framework DESTINATION lib/)
 install(TARGETS psi-pipe DESTINATION bin/)

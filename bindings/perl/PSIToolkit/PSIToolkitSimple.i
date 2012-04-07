@@ -1,5 +1,5 @@
 #if defined(SWIGPERL)
-%module "_psitoolkit_perl_simple"
+%module "psitoolkit_perl_simple"
 #endif
 
 %{
@@ -16,7 +16,7 @@
     sub run {
         my ($self, $input_string) = @_;
         
-        my $result_string = _psitoolkit_perl_simplec::PipeRunner_run($self, $input_string);
+        my $result_string = psitoolkit_perl_simplec::PipeRunner_run($self, $input_string);
         my $decoded = Encode::decode('utf-8', $result_string);
         return $decoded;
     }
@@ -28,7 +28,7 @@
     sub run_for_perl {
         my ($self, $input_string) = @_;
         
-        my $result_array = _psitoolkit_perl_simplec::PipeRunner_run_for_perl($self, $input_string);
+        my $result_array = psitoolkit_perl_simplec::PipeRunner_run_for_perl($self, $input_string);
 
         my $decoded_array = _decode_array($result_array);
         return $decoded_array;

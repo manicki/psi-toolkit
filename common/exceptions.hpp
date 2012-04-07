@@ -2,6 +2,8 @@
 #define PsiExceptionS_HDR
 
 
+#include "config.hpp"
+
 #include <string>
 
 #include "psi_exception.hpp"
@@ -43,10 +45,12 @@ public:
 };
 
 
+#if STRING_FRAG_VALIDATION
 class StringFragException : public PsiException {
 public:
     StringFragException(std::string message) : PsiException(message) { }
 };
+#endif
 
 
 class EdgeSelfReferenceException : public PsiException {
@@ -58,6 +62,12 @@ public:
 class ReversedEdgeException : public PsiException {
 public:
     ReversedEdgeException(std::string message) : PsiException(message) { }
+};
+
+
+class LoopEdgeException : public PsiException {
+public:
+    LoopEdgeException(std::string message) : PsiException(message) { }
 };
 
 

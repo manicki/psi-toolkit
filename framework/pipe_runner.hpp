@@ -16,6 +16,7 @@
 #if HAVE_PERL_BINDINGS
 #include <EXTERN.h>
 #include <perl.h>
+#include <XSUB.h>
 #endif
 
 class PipeRunner {
@@ -53,6 +54,8 @@ private:
     boost::program_options::variables_map runnerOptions_;
     void parseRunnerProgramOptions_(std::vector<std::string> &args);
     bool stopAfterExecutingRunnerOptions_();
+    bool stopAfterParsingPipeline_();
+    void listLanguages_();
 
     bool parseIntoPipelineSpecification_(
         std::vector<std::string> args, bool isTheFirstArgProgramName,
@@ -141,6 +144,8 @@ private:
         PipelineGraph::vertex_descriptor current,
         Lattice& lattice,
         std::istream& in, Sink & out);
+
+    void listLanguagesForPipelineNode_(PipelineGraph::vertex_descriptor current);
 
     bool goToNextNode_(PipelineGraph::vertex_descriptor& current);
 

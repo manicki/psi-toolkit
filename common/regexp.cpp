@@ -203,4 +203,6 @@ bool PCREWrapper::FindAndConsumeN(PerlStringPiece* input,
     }
 }
 
+const int PCREWrapper::MAX_MATCHES = 16;
+
 #endif

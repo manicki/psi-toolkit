@@ -23,7 +23,8 @@ LatticeWriter<std::ostream>* DotLatticeWriter::Factory::doCreateLatticeWriter(
     return new DotLatticeWriter(
         options.count("show-tags"),
         options.count("color"),
-        filter
+        filter,
+        options.count("tree")
     );
 }
 
@@ -37,17 +38,19 @@ boost::program_options::options_description DotLatticeWriter::Factory::doOptions
             "filters edges by specified tags")
         ("show-tags",
             "prints layer tags")
+        ("tree",
+            "shows dependencies between edges instead of the content of the lattice")
         ;
 
     return optionsDescription;
 }
 
 
-std::string DotLatticeWriter::Factory::doGetName() {
+std::string DotLatticeWriter::Factory::doGetName() const {
     return "dot-writer";
 }
 
-boost::filesystem::path DotLatticeWriter::Factory::doGetFile() {
+boost::filesystem::path DotLatticeWriter::Factory::doGetFile() const {
     return __FILE__;
 }
 
@@ -68,20 +71,25 @@ void DotLatticeWriter::Worker::doRun() {
 
     PsiQuoter quoter;
 
+    std::map<Lattice::EdgeDescriptor, int> edgeOrdinalMap;
+    int ordinal = 0;
+
     Lattice::EdgesSortedByTargetIterator ei
         = lattice_.edgesSortedByTarget(lattice_.getLayerTagManager().anyTag());
 
     alignOutput_("digraph G {");
     alignOutputNewline_();
 
-    alignOutput_("rankdir=LR");
+    if (processor_.isTree()) {
+        alignOutput_("rankdir=TB");
+    } else {
+        alignOutput_("rankdir=LR");
+    }
     alignOutputNewline_();
 
     while (ei.hasNext()) {
 
         Lattice::EdgeDescriptor edge = ei.next();
-
-        // if (lattice_.isEdgeHidden(edge)) continue;
 
         std::list<std::string> tagNames
             = lattice_.getLayerTagManager().getTagNames(lattice_.getEdgeLayerTags(edge));
@@ -91,31 +99,21 @@ void DotLatticeWriter::Worker::doRun() {
         std::stringstream edgeSs;
 
         Lattice::VertexDescriptor source = lattice_.getEdgeSource(edge);
-        if (lattice_.isLooseVertex(source)) {
-            edgeSs << "L" << lattice_.getLooseVertexIndex(source);
-        } else {
-            edgeSs << lattice_.getVertexRawCharIndex(source);
-        }
-
-        edgeSs << " -> ";
-
         Lattice::VertexDescriptor target = lattice_.getEdgeTarget(edge);
-        if (lattice_.isLooseVertex(target)) {
-            edgeSs << "L" << lattice_.getLooseVertexIndex(target);
-        } else {
-            edgeSs << lattice_.getVertexRawCharIndex(target);
-        }
+
+        std::stringstream edgeIdSs;
+        std::stringstream edgeLabelSs;
 
         const AnnotationItem& annotationItem = lattice_.getEdgeAnnotationItem(edge);
-        std::string edgeText;
         if (lattice_.isLooseVertex(source) || lattice_.isLooseVertex(target)) {
-            edgeText = quoter.escape(annotationItem.getText());
+            edgeLabelSs << quoter.escape(annotationItem.getText());
         } else {
-            edgeText = quoter.escape(lattice_.getEdgeText(edge));
+            edgeLabelSs << quoter.escape(lattice_.getEdgeText(edge));
         }
 
-        std::string tagStr = "";
+        std::string tagStr("");
         std::stringstream colorSs;
+        colorSs << std::setbase(16);
 
         if (processor_.isShowTags() || processor_.isColor()) {
             BOOST_FOREACH(std::string tagName, tagNames) {
@@ -136,15 +134,70 @@ void DotLatticeWriter::Worker::doRun() {
             }
         }
 
-        edgeSs << " [label=\"" << edgeText;
         if (processor_.isShowTags()) {
-            edgeSs << " (" << tagStr << ")";
+            edgeLabelSs << " (" << tagStr << ")";
         }
-        edgeSs << " " << annotationItem.getCategory() << "\"";
-        if (processor_.isColor()) {
-            edgeSs << ",color=\"" << std::setbase(16) << colorSs.str() << "\"";
+
+        edgeLabelSs << " " << annotationItem.getCategory();
+
+        if (processor_.isTree()) {
+
+            ++ordinal;
+            edgeOrdinalMap[edge] = ordinal;
+            edgeIdSs << ordinal;
+
+            edgeSs << edgeIdSs.str() << " [label=\"" << edgeLabelSs.str() << "\"";
+            if (processor_.isColor()) {
+                edgeSs << "color=\"" << colorSs.str() << "\"";
+            }
+            edgeSs << "]";
+
+            int partitionNumber = 0;
+            std::list<Lattice::Partition> partitions = lattice_.getEdgePartitions(edge);
+            BOOST_FOREACH(Lattice::Partition partition, partitions) {
+                std::stringstream partSs;
+                ++partitionNumber;
+                partSs << partitionNumber;
+                Lattice::Partition::Iterator ei(lattice_, partition);
+                while (ei.hasNext()) {
+                    Lattice::EdgeDescriptor ed = ei.next();
+                    std::map<Lattice::EdgeDescriptor, int>::iterator
+                        moi = edgeOrdinalMap.find(ed);
+                    if (moi != edgeOrdinalMap.end()) {
+                        std::stringstream edSs;
+                        edSs << moi->second;
+                        edgeSs << "\n" << edgeIdSs.str() << " -> " << edSs.str();
+                        if (partitions.size() > 1) {
+                            edgeSs << " [label=\"" << partSs.str() << "]";
+                        }
+                    }
+                }
+            }
+
+        } else {
+
+            std::stringstream nSs;
+            if (lattice_.isLooseVertex(source)) {
+                nSs << "L" << lattice_.getLooseVertexIndex(source);
+            } else {
+                nSs << lattice_.getVertexRawCharIndex(source);
+            }
+
+            std::stringstream mSs;
+            if (lattice_.isLooseVertex(target)) {
+                mSs << "L" << lattice_.getLooseVertexIndex(target);
+            } else {
+                mSs << lattice_.getVertexRawCharIndex(target);
+            }
+
+            edgeSs << nSs.str() << " -> " << mSs.str();
+            edgeSs << " [label=\"" << edgeLabelSs.str() << "\"";
+            if (processor_.isColor()) {
+                edgeSs << ",color=\"" << colorSs.str() << "\"";
+            }
+            edgeSs << "]";
+
         }
-        edgeSs << "]";
 
         alignOutput_(edgeSs.str());
         alignOutputNewline_();

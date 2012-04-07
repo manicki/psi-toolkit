@@ -68,18 +68,18 @@ BOOST_AUTO_TEST_CASE( puddle_add ) {
     Lattice::EdgeSequence::Builder ananas_lexeme_builder(lattice);
     ananas_lexeme_builder.addEdge(lattice.firstOutEdge(
                 lattice.getVertexForRawCharIndex(0), lemmaMask));
-    AnnotationItem ai_ananas_lexeme("subst", StringFrag("ananas_subst"));
+    AnnotationItem ai_ananas_lexeme("subst", StringFrag("ananas+subst"));
     lattice.addEdge(pre_ananas, post_ananas, ai_ananas_lexeme, lexeme_tag,
             ananas_lexeme_builder.build());
     Lattice::EdgeSequence::Builder ananas_form_builder(lattice);
     ananas_form_builder.addEdge(lattice.firstOutEdge(
                 lattice.getVertexForRawCharIndex(0), lexemeMask));
-    AnnotationItem ai_ananas_sg_form("subst", StringFrag("ananas_subst"));
+    AnnotationItem ai_ananas_sg_form("subst", StringFrag("ananas"));
     lattice.getAnnotationItemManager().setValue(ai_ananas_sg_form, "number", "sg");
     lattice.getAnnotationItemManager().setValue(ai_ananas_sg_form, "gender", "m");
     lattice.addEdge(pre_ananas, post_ananas, ai_ananas_sg_form, form_tag,
             ananas_form_builder.build());
-    AnnotationItem ai_ananas_pl_form("subst", StringFrag("ananas_subst"));
+    AnnotationItem ai_ananas_pl_form("subst", StringFrag("ananas"));
     lattice.getAnnotationItemManager().setValue(ai_ananas_pl_form, "number", "pl");
     lattice.getAnnotationItemManager().setValue(ai_ananas_pl_form, "gender", "m");
     lattice.addEdge(pre_ananas, post_ananas, ai_ananas_pl_form, form_tag,
@@ -94,10 +94,10 @@ BOOST_AUTO_TEST_CASE( puddle_add ) {
     Lattice::EdgeSequence::Builder noirs_lexeme_builder(lattice);
     noirs_lexeme_builder.addEdge(lattice.firstOutEdge(
                 lattice.getVertexForRawCharIndex(7), lemmaMask));
-    AnnotationItem ai_noirs_adj_lexeme("adj", StringFrag("noir_adj"));
+    AnnotationItem ai_noirs_adj_lexeme("adj", StringFrag("noir+adj"));
     lattice.addEdge(pre_noirs, post_noirs, ai_noirs_adj_lexeme, lexeme_tag,
             noirs_lexeme_builder.build());
-    AnnotationItem ai_noirs_subst_lexeme("subst", StringFrag("noir_subst"));
+    AnnotationItem ai_noirs_subst_lexeme("subst", StringFrag("noir+subst"));
     lattice.addEdge(pre_noirs, post_noirs, ai_noirs_subst_lexeme, lexeme_tag,
             noirs_lexeme_builder.build());
     Lattice::EdgeSequence::Builder noirs_form_adj_builder(lattice);
@@ -112,12 +112,12 @@ BOOST_AUTO_TEST_CASE( puddle_add ) {
         else if (category == "subst")
             noirs_form_subst_builder.addEdge(edge);
     }
-    AnnotationItem ai_noirs_adj_form("adj", StringFrag("noir_adj"));
+    AnnotationItem ai_noirs_adj_form("adj", StringFrag("noir"));
     lattice.getAnnotationItemManager().setValue(ai_noirs_adj_form, "number", "pl");
     lattice.getAnnotationItemManager().setValue(ai_noirs_adj_form, "gender", "m");
     lattice.addEdge(pre_noirs, post_noirs, ai_noirs_adj_form, form_tag,
             noirs_form_adj_builder.build());
-    AnnotationItem ai_noirs_subst_form("subst", StringFrag("noir_subst"));
+    AnnotationItem ai_noirs_subst_form("subst", StringFrag("noir"));
     lattice.getAnnotationItemManager().setValue(ai_noirs_subst_form, "number", "pl");
     lattice.getAnnotationItemManager().setValue(ai_noirs_subst_form, "gender", "m");
     lattice.addEdge(pre_noirs, post_noirs, ai_noirs_subst_form, form_tag,
@@ -320,18 +320,18 @@ BOOST_AUTO_TEST_CASE( puddle_delete ) {
     Lattice::EdgeSequence::Builder ananas_lexeme_builder(lattice);
     ananas_lexeme_builder.addEdge(lattice.firstOutEdge(
                 lattice.getVertexForRawCharIndex(0), lemmaMask));
-    AnnotationItem ai_ananas_lexeme("subst", StringFrag("ananas_subst"));
+    AnnotationItem ai_ananas_lexeme("subst", StringFrag("ananas+subst"));
     lattice.addEdge(pre_ananas, post_ananas, ai_ananas_lexeme, lexeme_tag,
             ananas_lexeme_builder.build());
     Lattice::EdgeSequence::Builder ananas_form_builder(lattice);
     ananas_form_builder.addEdge(lattice.firstOutEdge(
                 lattice.getVertexForRawCharIndex(0), lexemeMask));
-    AnnotationItem ai_ananas_sg_form("subst", StringFrag("ananas_subst"));
+    AnnotationItem ai_ananas_sg_form("subst", StringFrag("ananas"));
     lattice.getAnnotationItemManager().setValue(ai_ananas_sg_form, "number", "sg");
     lattice.getAnnotationItemManager().setValue(ai_ananas_sg_form, "gender", "m");
     lattice.addEdge(pre_ananas, post_ananas, ai_ananas_sg_form, form_tag,
             ananas_form_builder.build());
-    AnnotationItem ai_ananas_pl_form("subst", StringFrag("ananas_subst"));
+    AnnotationItem ai_ananas_pl_form("subst", StringFrag("ananas"));
     lattice.getAnnotationItemManager().setValue(ai_ananas_pl_form, "number", "pl");
     lattice.getAnnotationItemManager().setValue(ai_ananas_pl_form, "gender", "m");
     lattice.addEdge(pre_ananas, post_ananas, ai_ananas_pl_form, form_tag,
@@ -346,10 +346,10 @@ BOOST_AUTO_TEST_CASE( puddle_delete ) {
     Lattice::EdgeSequence::Builder noirs_lexeme_builder(lattice);
     noirs_lexeme_builder.addEdge(lattice.firstOutEdge(
                 lattice.getVertexForRawCharIndex(7), lemmaMask));
-    AnnotationItem ai_noirs_adj_lexeme("adj", StringFrag("noir_adj"));
+    AnnotationItem ai_noirs_adj_lexeme("adj", StringFrag("noir+adj"));
     lattice.addEdge(pre_noirs, post_noirs, ai_noirs_adj_lexeme, lexeme_tag,
             noirs_lexeme_builder.build());
-    AnnotationItem ai_noirs_subst_lexeme("subst", StringFrag("noir_subst"));
+    AnnotationItem ai_noirs_subst_lexeme("subst", StringFrag("noir+subst"));
     lattice.addEdge(pre_noirs, post_noirs, ai_noirs_subst_lexeme, lexeme_tag,
             noirs_lexeme_builder.build());
     Lattice::EdgeSequence::Builder noirs_form_adj_builder(lattice);
@@ -364,12 +364,12 @@ BOOST_AUTO_TEST_CASE( puddle_delete ) {
         else if (category == "subst")
             noirs_form_subst_builder.addEdge(edge);
     }
-    AnnotationItem ai_noirs_adj_form("adj", StringFrag("noir_adj"));
+    AnnotationItem ai_noirs_adj_form("adj", StringFrag("noir"));
     lattice.getAnnotationItemManager().setValue(ai_noirs_adj_form, "number", "pl");
     lattice.getAnnotationItemManager().setValue(ai_noirs_adj_form, "gender", "m");
     lattice.addEdge(pre_noirs, post_noirs, ai_noirs_adj_form, form_tag,
             noirs_form_adj_builder.build());
-    AnnotationItem ai_noirs_subst_form("subst", StringFrag("noir_subst"));
+    AnnotationItem ai_noirs_subst_form("subst", StringFrag("noir"));
     lattice.getAnnotationItemManager().setValue(ai_noirs_subst_form, "number", "pl");
     lattice.getAnnotationItemManager().setValue(ai_noirs_subst_form, "gender", "m");
     lattice.addEdge(pre_noirs, post_noirs, ai_noirs_subst_form, form_tag,
@@ -480,7 +480,7 @@ BOOST_AUTO_TEST_CASE( puddle_delete ) {
     BOOST_CHECK(discardedIter.hasNext());
     Lattice::EdgeDescriptor discardedEdge = discardedIter.next();
     AnnotationItem discardedItem = lattice.getEdgeAnnotationItem(discardedEdge);
-    BOOST_CHECK_EQUAL(discardedItem.getText(), "ananas_subst");
+    BOOST_CHECK_EQUAL(discardedItem.getText(), "ananas");
     BOOST_CHECK_EQUAL(discardedItem.getCategory(), "subst");
     av = lattice.getAnnotationItemManager().getValues(
             discardedItem
@@ -497,7 +497,7 @@ BOOST_AUTO_TEST_CASE( puddle_delete ) {
     BOOST_CHECK(discardedIter.hasNext());
     discardedEdge = discardedIter.next();
     discardedItem = lattice.getEdgeAnnotationItem(discardedEdge); // StringFrag assignment
-    BOOST_CHECK_EQUAL(discardedItem.getText(), "noir_subst");
+    BOOST_CHECK_EQUAL(discardedItem.getText(), "noir");
     BOOST_CHECK_EQUAL(discardedItem.getCategory(), "subst");
     av = lattice.getAnnotationItemManager().getValues(
             discardedItem
@@ -575,18 +575,18 @@ BOOST_AUTO_TEST_CASE( puddle_unify ) {
     Lattice::EdgeSequence::Builder ananas_lexeme_builder(lattice);
     ananas_lexeme_builder.addEdge(lattice.firstOutEdge(
                 lattice.getVertexForRawCharIndex(0), lemmaMask));
-    AnnotationItem ai_ananas_lexeme("subst", StringFrag("ananas_subst"));
+    AnnotationItem ai_ananas_lexeme("subst", StringFrag("ananas+subst"));
     lattice.addEdge(pre_ananas, post_ananas, ai_ananas_lexeme, lexeme_tag,
             ananas_lexeme_builder.build());
     Lattice::EdgeSequence::Builder ananas_form_builder(lattice);
     ananas_form_builder.addEdge(lattice.firstOutEdge(
                 lattice.getVertexForRawCharIndex(0), lexemeMask));
-    AnnotationItem ai_ananas_sg_form("subst", StringFrag("ananas_subst"));
+    AnnotationItem ai_ananas_sg_form("subst", StringFrag("ananas"));
     lattice.getAnnotationItemManager().setValue(ai_ananas_sg_form, "number", "sg");
     lattice.getAnnotationItemManager().setValue(ai_ananas_sg_form, "gender", "m");
     lattice.addEdge(pre_ananas, post_ananas, ai_ananas_sg_form, form_tag,
             ananas_form_builder.build());
-    AnnotationItem ai_ananas_pl_form("subst", StringFrag("ananas_subst"));
+    AnnotationItem ai_ananas_pl_form("subst", StringFrag("ananas"));
     lattice.getAnnotationItemManager().setValue(ai_ananas_pl_form, "number", "pl");
     lattice.getAnnotationItemManager().setValue(ai_ananas_pl_form, "gender", "m");
     lattice.addEdge(pre_ananas, post_ananas, ai_ananas_pl_form, form_tag,
@@ -601,10 +601,10 @@ BOOST_AUTO_TEST_CASE( puddle_unify ) {
     Lattice::EdgeSequence::Builder noirs_lexeme_builder(lattice);
     noirs_lexeme_builder.addEdge(lattice.firstOutEdge(
                 lattice.getVertexForRawCharIndex(7), lemmaMask));
-    AnnotationItem ai_noirs_lexeme_adj("adj", StringFrag("noir_adj"));
+    AnnotationItem ai_noirs_lexeme_adj("adj", StringFrag("noir+adj"));
     lattice.addEdge(pre_noirs, post_noirs, ai_noirs_lexeme_adj, lexeme_tag,
             noirs_lexeme_builder.build());
-    AnnotationItem ai_noirs_lexeme_subst("subst", StringFrag("noir_subst"));
+    AnnotationItem ai_noirs_lexeme_subst("subst", StringFrag("noir+subst"));
     lattice.addEdge(pre_noirs, post_noirs, ai_noirs_lexeme_subst, lexeme_tag,
             noirs_lexeme_builder.build());
     Lattice::EdgeSequence::Builder noirs_form_adj_builder(lattice);
@@ -619,12 +619,12 @@ BOOST_AUTO_TEST_CASE( puddle_unify ) {
         else if (category == "subst")
             noirs_form_subst_builder.addEdge(edge);
     }
-    AnnotationItem ai_noirs_adj_form("adj", StringFrag("noir_adj"));
+    AnnotationItem ai_noirs_adj_form("adj", StringFrag("noir"));
     lattice.getAnnotationItemManager().setValue(ai_noirs_adj_form, "number", "pl");
     lattice.getAnnotationItemManager().setValue(ai_noirs_adj_form, "gender", "m");
     lattice.addEdge(pre_noirs, post_noirs, ai_noirs_adj_form, form_tag,
             noirs_form_adj_builder.build());
-    AnnotationItem ai_noirs_subst_form("subst", StringFrag("noir_subst"));
+    AnnotationItem ai_noirs_subst_form("subst", StringFrag("noir"));
     lattice.getAnnotationItemManager().setValue(ai_noirs_subst_form, "number", "pl");
     lattice.getAnnotationItemManager().setValue(ai_noirs_subst_form, "gender", "m");
     lattice.addEdge(pre_noirs, post_noirs, ai_noirs_subst_form, form_tag,
@@ -735,7 +735,7 @@ BOOST_AUTO_TEST_CASE( puddle_unify ) {
     BOOST_CHECK(discardedIter.hasNext());
     Lattice::EdgeDescriptor discardedEdge = discardedIter.next();
     AnnotationItem discardedItem = lattice.getEdgeAnnotationItem(discardedEdge);
-    BOOST_CHECK_EQUAL(discardedItem.getText(), "ananas_subst");
+    BOOST_CHECK_EQUAL(discardedItem.getText(), "ananas");
     BOOST_CHECK_EQUAL(discardedItem.getCategory(), "subst");
     av = lattice.getAnnotationItemManager().getValues(
             discardedItem

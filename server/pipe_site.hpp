@@ -2,6 +2,7 @@
 
 #include "template_site.hpp"
 #include "output_saver.hpp"
+#include "file_recognizer.hpp"
 
 class PipeSite : public TemplateSite
 {
@@ -29,7 +30,11 @@ private:
     std::string getInput();
     std::string runPipe(std::string);
 
-    OutputSaver outputSaver;
-    void createFileFromOutput(std::string output);
+    OutputSaver outputSaver_;
+    FileRecognizer fileRecognizer_;
+
     void clearPreviousFileFromOutput();
+    void createFileFromOutput(const std::string& output);
+
+    std::string generateOutput_(const std::string& rawOuput);
 };
