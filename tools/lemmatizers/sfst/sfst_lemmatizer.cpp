@@ -2,6 +2,7 @@
 
 #include <iostream>
 #include <boost/algorithm/string.hpp>
+#include <boost/assign.hpp>
 
 std::string SfstLemmatizer::tagSeparator = ":";
 
@@ -21,9 +22,6 @@ SfstLemmatizer::SfstLemmatizer(const boost::program_options::variables_map& opti
     }
 
     initializeTransducer();
-    //initializeList();
-    //initializeWordData();
-    //initializeString();
 }
 boost::filesystem::path SfstLemmatizer::getFile() {
     return __FILE__;
@@ -58,6 +56,16 @@ std::string SfstLemmatizer::getName() {
 
 std::string SfstLemmatizer::getLanguage() const {
     return language;
+}
+
+AnnotatorFactory::LanguagesHandling SfstLemmatizer::languagesHandling(
+    const boost::program_options::variables_map& /*options*/) {
+    return AnnotatorFactory::JUST_ONE_LANGUAGE;
+}
+
+std::list<std::string> SfstLemmatizer::languagesHandled(
+    const boost::program_options::variables_map& /*options*/) {
+    return boost::assign::list_of(std::string("tr"));
 }
 
 void SfstLemmatizer::lemmatize(const std::string & word,

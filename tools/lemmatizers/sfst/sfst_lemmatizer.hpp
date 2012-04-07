@@ -13,6 +13,7 @@
 #include "sfst_tags_parser.hpp"
 #include "annotation_item_manager.hpp"
 #include "lemmatizer_output_iterator.hpp"
+#include "annotator_factory.hpp"
 
 #include <map>
 #include <list>
@@ -33,6 +34,11 @@ class SfstLemmatizer {
     
     std::string getLanguage() const;
 
+	static AnnotatorFactory::LanguagesHandling languagesHandling(
+        const boost::program_options::variables_map& options);
+
+    static std::list<std::string> languagesHandled(
+        const boost::program_options::variables_map& options);
     
 	void lemmatize(
         const std::string & word,
