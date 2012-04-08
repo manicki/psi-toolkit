@@ -1,12 +1,6 @@
 <?xml version="1.0"?>
 <!-- <!DOCTYPE srx PUBLIC "-//SRX//DTD SRX//EN" "srx.dtd"> -->
-<!-- Copyright (C) 2012 Piotr Janu
-
-     This file is part of psi-toolkit.
-
-     Translatica segmentation rules can be redistributed and/or modified
-     under the terms of the GNU Lesser General Public Licence as
-     published by the Free Software Foundation. -->
+<!-- Copyright (C) 2012 Piotr Janus. -->
 <srx version="1.0">
 
 	<header segmentsubflows="yes">
@@ -19,40 +13,10 @@
 		<languagerules>
 			<languagerule languagerulename="tr">
 
+			    <!-- Brak podziału po skrótach znanych. -->
 				<rule break="no">
-					<beforebreak>^\s*\p{Ll}\.</beforebreak>
+					<beforebreak>\b(?:Lv\.Sa\.Al\.Kom|Hrp\.T\.D\.Bşk|S\.M\.A\.R\.T|Hst\.Bş\.Hek|Dr\. Doktor|T\.C\.D\.D|T\.B\.M\.M|Kur\. Bşk|Koll\.Şti|D\.T\.C\.F|Yrd\.Doç|Ord\.Prof|Ltd\.Şti|Kom\.Şti|Hrk\.Bşk|Dz\.Ataş|Cmh\.Bşk|Bş\.Öğ|T\.A\.Ş|Mv\.Hast|Ç\.E\.K|Ar\.Gör|Y\.Müh|Üçvş|S\.O\.S|s\.a\.v|M\.E\.B|Hv\.Kuv|Gn\.Kur|E\.G\.O|Dz\.Kuv|c\.i\.f|C\.I\.A|C\.H\.P|C\.G\.S|B\.J\.K|B\.B\.C|B\.A\.C|Yd\.Sb|Ütğm|K\.Kuv|Ed\. F|Dz\.HO|Bştbp|Bçvş|Tümg|Tuğg|Öğr|Mrşl|M\.Ö|Dz\.K|Çvş|BI\.K|Atğm|Astsb|A\.Ş|Tğm|Telg|Şrt|Prof|P\.K|O\.W|ölm|Öğ|Müh|M\.S|K\.S|Korg|Kora|İmp|H\.O|G\.S|Gram|Gön|F\.B|Doç|Dipl|Çev|C\.C|Bşk|a\.s|Yzb|Vet|Uzm|Tug|Tel|Tbp|Sok|Sin|Şb|Pş|Oto|Ort|Org|Ord|Ora|Ör|Opr|Onb|mad|Ltd|Log|Kur|Kor|Kom|Khz|Hst|Gmr|Gal|Ecz|Cad|Bul|Bnb|Bkz|Atm|Apt|Ank|Amp|Alb|Adr|yy|Yd|Yb|vs|vd|vb|Tb|sm|Sb|sa|Rd|Or|No|Mu|mm|mg|Md|Lv|lt|km|Kl|kg|Kd|Hz|Hv|GS|FB|Ef|cm|cm|Bn|Bl|As|s|r|P|M|m|H|g|d|A)\.</beforebreak>
 					<afterbreak>\s</afterbreak>
-				</rule>
-
-				<!-- Inicjały -->
-				<rule break="no">
-					<beforebreak>\b\p{Lu}\.</beforebreak>
-					<afterbreak>\s</afterbreak>
-				</rule>
-
-			    <!--skróty dni tygodnia - przyjmuję, że nie należy po nich
-					robić podziału zdania -->
-				<rule break="no">
-					<beforebreak>\b(?:[pP]on|[wW]t|[śŚ]r|[cZ]zw|[pP]t|[sS]ob|[nN]iedz)\.</beforebreak>
-					<afterbreak>\s</afterbreak>
-				</rule>
-
-
-				<rule break="yes">
-					<beforebreak>[\.\?!]+</beforebreak>
-					<afterbreak>\s+\p{Lu}</afterbreak>
-				</rule>
-
-				<rule break="yes">
-					<beforebreak></beforebreak>
-					<afterbreak>\n</afterbreak>
-				</rule>
-
-
-                                   <!-- przypisy -->
-				<rule break="yes">
-					<beforebreak>\.(?:\[[0-9]+\])+</beforebreak>
-					<afterbreak> </afterbreak>
 				</rule>
 			</languagerule>
 
