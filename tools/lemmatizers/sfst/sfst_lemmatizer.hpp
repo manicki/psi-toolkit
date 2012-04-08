@@ -61,7 +61,7 @@ class SfstLemmatizer {
      */    
     void setLanguage(std::string);
     void setAutomaton(std::string);
-    
+    void setRawRoots(bool raw);
     
     /**
      * Stems word using sfstLemmatizer tool storing lexical information.
@@ -90,6 +90,7 @@ class SfstLemmatizer {
 		int level;
 		std::string language;
 		std::string automaton;
+		bool rawRoots;
 		
 		void stemsOnLemmaLevel(const std::string &, LemmatizerOutputIterator &);
 		void stemsOnLexemeLevel(const std::string &, LemmatizerOutputIterator &);
@@ -97,24 +98,24 @@ class SfstLemmatizer {
 
 		//Ugly taken from morfo...
 		AnnotationItem createLexemeAnnotation(
-			const std::string & stem, std::string & tag
+			const std::string & stem, const std::string & tag
 		);
 		
 		AnnotationItem createFormAnnotation(
 			AnnotationItem & lexemeItem,
 			const std::string & word,
-			std::string &
+			std::vector<std::string> &
 		);
 
 		
 		std::set<std::string> getLemmasFromStems(
 			std::multimap<std::string, std::vector<std::string> > stems
 		);
-		std::vector<std::string> getLexemeTagsFromStems(
+		std::set<std::string> getLexemeTagsFromStems(
 			std::multimap<std::string, std::vector<std::string> > & stems,
 			const std::string & lemma
 		);
-		std::vector<std::string> getFormTagsFromLexem(
+		std::vector<std::vector<std::string> > getFormTagsFromLexem(
 			std::multimap<std::string, std::vector<std::string> > & stems,
 			const std::string & lemma,
 			const std::string & lexem
@@ -134,6 +135,7 @@ class SfstLemmatizer {
 		std::vector<std::string> wordToRaw(std::string);
 		
 		void cookRaw(std::string &);
+		void cookTurkishVerb(std::string &);
 		
 		std::string getCookedStem(std::string);
 		std::vector<std::string> getCookedTags(std::string);
