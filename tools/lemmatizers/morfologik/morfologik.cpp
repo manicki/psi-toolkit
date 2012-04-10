@@ -7,14 +7,14 @@
 #include <boost/algorithm/string/join.hpp>
 #include <boost/assign.hpp>
 
-const std::string Morfologik::TAGS_SEPARATOR = "+";
+const std::string Morfologik::TAG_SEPARATORS = "+,|";
 
 const std::vector<std::string> Morfologik::DICTIONARIES = boost::assign::list_of
     ("MORFOLOGIK")("MORFEUSZ")("COMBINED");
 
 Morfologik::Morfologik(const boost::program_options::variables_map& options)
-    : level_(3), dictionary_("MORFOLOGIK"), annotationManager_(NULL)
-{
+    : level_(3), dictionary_("MORFOLOGIK"), annotationManager_(NULL) {
+
     if (options.count("level") > 0) setLevel(options["level"].as<int>());
     if (options.count("dict") > 0) setDictionary(options["dict"].as<std::string>());
 
@@ -298,7 +298,7 @@ std::multimap<std::string, std::vector<std::string> > Morfologik::stem(const std
         ptags = getTagsByJNI_(objWordData);
 
         tags.clear();
-        boost::split(tags, ptags, boost::is_any_of(TAGS_SEPARATOR));
+        boost::split(tags, ptags, boost::is_any_of(TAG_SEPARATORS));
         result.insert(std::pair<std::string, std::vector<std::string> > (pstem, tags));
     }
 

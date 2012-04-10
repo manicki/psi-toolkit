@@ -74,7 +74,7 @@ public:
 
 private:
 
-    static const std::string TAGS_SEPARATOR;
+    static const std::string TAG_SEPARATORS;
     static const std::vector<std::string> DICTIONARIES;
 
     int level_;

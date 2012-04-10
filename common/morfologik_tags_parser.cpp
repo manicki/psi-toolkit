@@ -67,9 +67,12 @@ std::map<std::string, std::string> MorfologikTagsParser::PREDEFINED_TAGS =
         ("m3", "gender")
         ("m4", "gender")
         ("n", "gender")
+        ("f", "gender")
         ("n1", "gender")
         ("n2", "gender")
-        ("f", "gender")
+        ("p1", "gender")
+        ("p2", "gender")
+        ("p3", "gender")
         ("pri", "person")
         ("sec", "person")
         ("ter", "person")
@@ -100,12 +103,13 @@ std::map<std::string, std::string> MorfologikTagsParser::PREDEFINED_TAGS =
         ("wok", "vocalicity")
         ("nwok", "vocalicity")
         ("agl", "agglutination")
-        ("nagl", "agglutination");
+        ("nagl", "agglutination")
+        ("_", "unknown")
+        ("congr", "unknown")
+        ("rec", "unknown");
 
 std::vector<std::string> MorfologikTagsParser::TAGS_ALLOWED_AS_POS =
-    boost::assign::list_of("pos")
-        ("siebie")("fin")("bedzie")("aglt")("praet")("impt")("imps")("inf")("pcon")("pant");
-
+    boost::assign::list_of("pos")("depreciativity")("tense")("mode");
 
 std::vector<std::map<std::string, std::string> > MorfologikTagsParser::getFormAttributes(
     std::string & tag) {
@@ -220,7 +224,7 @@ std::map<std::string, std::string> MorfologikTagsParser::parseSimple(std::string
     std::vector<std::string> attributes;
     boost::split(attributes, tag, boost::is_any_of(OUTER_SEPARATOR));
 
-    for (int i = 0; i < (int)attributes.size(); ++i) {
+    for (unsigned int i = 0; i < attributes.size(); ++i) {
         foundAttribute = PREDEFINED_TAGS.find(getAttributeToSeek_(attributes[i], counter));
 
         if (foundAttribute != PREDEFINED_TAGS.end()) {
@@ -262,15 +266,11 @@ std::map<std::string, std::string> MorfologikTagsParser::getLexemeAttributes(std
 std::string MorfologikTagsParser::getPartOfSpeechTag_(
     std::map<std::string, std::string> attributes) {
 
-    //TODO:
-/*
     BOOST_FOREACH(std::string pos, TAGS_ALLOWED_AS_POS) {
-        if (!attributes[pos].empty()) {
-            return attributes[pos];
-        }
+        if (!attributes[pos.c_str()].empty()) return attributes[pos];
     }
-*/
-    return attributes["pos"];
+
+    return "";
 }
 
 std::string MorfologikTagsParser::getAttributeToSeek_(std::string& attribute,
