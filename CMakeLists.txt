@@ -187,6 +187,9 @@ message(STATUS "Using gv-writer ${USE_GV_WRITER}")
 option(USE_PDF_READER "Using pdf-reader" OFF)
 message(STATUS "Using pdf-reader ${USE_PDF_READER}")
 
+option(USE_DOC_READER "Using doc-reader" ON)
+message(STATUS "Using doc-reader ${USE_DOC_READER}")
+
 option(USE_ASPELL "Using aspell" OFF)
 message(STATUS "Using aspell ${USE_ASPELL}")
 
@@ -309,6 +312,10 @@ if(HAVE_POPPLER)
     # set(TESTS_TARGETS ${TESTS_TARGETS} formats-pdf-tests)
 endif(HAVE_POPPLER)
 
+if(USE_DOC_READER)
+    set(BASE_TARGETS ${BASE_TARGETS} formats-doc)
+endif(USE_DOC_READER)
+
 include_directories("${psi-toolkit_SOURCE_DIR}/tools/parsers/gobio")
 include_directories("${psi-toolkit_SOURCE_DIR}/tools/parsers/gobio/chart")
 include_directories("${psi-toolkit_SOURCE_DIR}/tools/parsers/gobio/parser")
@@ -357,6 +364,11 @@ if(HAVE_POPPLER)
     include_directories("${psi-toolkit_SOURCE_DIR}/formats/pdf")
     link_directories("${psi-toolkit_BINARY_DIR}/formats/pdf")
 endif(HAVE_POPPLER)
+
+if(USE_DOC_READER)
+    include_directories("${psi-toolkit_SOURCE_DIR}/formats/doc")
+    link_directories("${psi-toolkit_BINARY_DIR}/formats/doc")
+endif(USE_DOC_READER)
 
 
 set(ALL_TARGETS ${TARGETS} ${TESTS_TARGETS})

@@ -34,6 +34,11 @@ if(HAVE_POPPLER)
     link_directories("${psi-toolkit_BINARY_DIR}/formats/pdf")
 endif(HAVE_POPPLER)
 
+if(USE_DOC_READER)
+    include_directories("${psi-toolkit_SOURCE_DIR}/formats/doc")
+    link_directories("${psi-toolkit_BINARY_DIR}/formats/doc")
+endif(USE_DOC_READER)
+
 foreach(dir ${tools_DIRS})
     include_directories("${psi-toolkit_SOURCE_DIR}/tools/${dir}")
     link_directories("${psi-toolkit_BINARY_DIR}/tools/${dir}")

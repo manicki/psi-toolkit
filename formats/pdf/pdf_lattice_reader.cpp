@@ -74,19 +74,8 @@ void PDFLatticeReader::Worker::doRun() {
         char * text = poppler_page_get_text(page);
         std::stringstream textStream(text);
         while (getline(textStream, line)) {
-            appendParagraphToLattice_(line);
+            appendParagraphToLattice_(line, textTags_);
             lattice_.appendString("\n");
         }
     }
-}
-
-void PDFLatticeReader::Worker::appendParagraphToLattice_(std::string paragraph) {
-    Lattice::VertexDescriptor prevEnd = lattice_.getLastVertex();
-    lattice_.appendStringWithSymbols(paragraph);
-    Lattice::VertexDescriptor nowEnd = lattice_.getLastVertex();
-
-    AnnotationItem item("FRAG", paragraph);
-    lattice_.addEdge(prevEnd, nowEnd,
-                     item, textTags_);
-
 }

@@ -1,11 +1,11 @@
-#ifndef PDF_LATTICE_READER_HDR
-#define PDF_LATTICE_READER_HDR
+#ifndef DOC_LATTICE_READER_HDR
+#define DOC_LATTICE_READER_HDR
 
 
 #include "stream_lattice_reader.hpp"
 #include "lattice_reader_factory.hpp"
 
-class PDFLatticeReader : public StreamLatticeReader {
+class DocLatticeReader : public StreamLatticeReader {
 
 public:
     virtual std::string getFormatName();
@@ -29,14 +29,14 @@ private:
 
     class Worker : public ReaderWorker<std::istream> {
     public:
-        Worker(PDFLatticeReader& processor,
+        Worker(DocLatticeReader& processor,
                std::istream& inputStream,
                Lattice& lattice);
 
         virtual void doRun();
 
     private:
-        PDFLatticeReader& processor_;
+        DocLatticeReader& processor_;
         LayerTagCollection textTags_;
     };
 
