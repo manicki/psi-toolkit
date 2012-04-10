@@ -1,9 +1,8 @@
 add_library(tools-lemmatizers-sfst SHARED
-	sfst_tags_parser.cpp
 	sfst_lemmatizer.cpp
 )
 
-target_link_libraries(sfst)
+#target_link_libraries(sfst)
 
 add_subdirectory(t)
 

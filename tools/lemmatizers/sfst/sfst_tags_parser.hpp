@@ -1,5 +1,5 @@
-#ifndef MORFOLOGIK_TAGS_PARSER_HDR
-#define MORFOLOGIK_TAGS_PARSER_HDR
+#ifndef SFST_TAGS_PARSER_HDR
+#define SFST_TAGS_PARSER_HDR
 
 #include <string>
 #include <map>

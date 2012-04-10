@@ -97,6 +97,7 @@ endif(EXISTS ${CMPH_LIB} AND EXISTS ${CMPH_INCLUDE})
 
 # SFST library (for TRmorph)
 find_path(SFST_LIB libsfst.so /usr/lib/sfst)
+find_path(SFST_LIB libsfst.so /usr/lib)
 find_path(SFST_INCLUDE fst.h /usr/include/sfst)
 
 if(EXISTS ${SFST_LIB} AND EXISTS ${SFST_INCLUDE})
