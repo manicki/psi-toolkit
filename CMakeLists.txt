@@ -169,6 +169,9 @@ message(STATUS "Using gv-writer ${USE_GV_WRITER}")
 option(USE_PDF_READER "Using pdf-reader" OFF)
 message(STATUS "Using pdf-reader ${USE_PDF_READER}")
 
+option(USE_DOC_READER "Using doc-reader" ON)
+message(STATUS "Using doc-reader ${USE_DOC_READER}")
+
 
 # Finds SWIG
 
@@ -245,7 +248,7 @@ if (WITH_LOW_MEMORY_COMPILATION)
   set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} --param ggc-min-expand=30 --param ggc-min-heapsize=8192")
 endif (WITH_LOW_MEMORY_COMPILATION)
 
-set(BASE_TARGETS common utf8case sundown framework formats-apertium formats-doc formats-dot formats-nkjp formats-psi formats-simple formats-json-simple formats-txt formats-utt maxent tools-tokenizers-tp tools-segmenters-srx tools-recognizers-langguesser tools-parsers-gobio tools-taggers-metagger)
+set(BASE_TARGETS common utf8case sundown framework formats-apertium formats-dot formats-nkjp formats-psi formats-simple formats-json-simple formats-txt formats-utt maxent tools-tokenizers-tp tools-segmenters-srx tools-recognizers-langguesser tools-parsers-gobio tools-taggers-metagger)
 
 set(TESTS_TARGETS common-tests tools-tokenizers-tp-tests tools-segmenters-srx-tests tools-datastructures-psi_query-tests tools-recognizers-langguesser-tests utf8case-tests formats-dot-tests formats-utt-tests formats-psi-tests formats-simple-tests tools-parsers-gobio-tests tools-taggers-metagger-tests formats-apertium-tests)
 
@@ -284,6 +287,10 @@ if(HAVE_POPPLER)
     set(BASE_TARGETS ${BASE_TARGETS} formats-pdf)
     # set(TESTS_TARGETS ${TESTS_TARGETS} formats-pdf-tests)
 endif(HAVE_POPPLER)
+
+if(USE_DOC_READER)
+    set(BASE_TARGETS ${BASE_TARGETS} formats-doc)
+endif(USE_DOC_READER)
 
 include_directories("${psi-toolkit_SOURCE_DIR}/tools/parsers/gobio")
 include_directories("${psi-toolkit_SOURCE_DIR}/tools/parsers/gobio/chart")
@@ -333,6 +340,11 @@ if(HAVE_POPPLER)
     include_directories("${psi-toolkit_SOURCE_DIR}/formats/pdf")
     link_directories("${psi-toolkit_BINARY_DIR}/formats/pdf")
 endif(HAVE_POPPLER)
+
+if(USE_DOC_READER)
+    include_directories("${psi-toolkit_SOURCE_DIR}/formats/doc")
+    link_directories("${psi-toolkit_BINARY_DIR}/formats/doc")
+endif(USE_DOC_READER)
 
 
 set(ALL_TARGETS ${TARGETS} ${TESTS_TARGETS})

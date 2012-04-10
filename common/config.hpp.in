@@ -8,6 +8,7 @@
 #cmakedefine01 HAVE_CMPH
 #cmakedefine01 HAVE_GRAPHVIZ
 #cmakedefine01 HAVE_POPPLER
+#cmakedefine01 USE_DOC_READER
 #cmakedefine01 HAVE_LIBMAGIC
 #cmakedefine01 _WITH_BONSAI_PARSEGRAPH
 #cmakedefine01 IS_INSTALLABLE
