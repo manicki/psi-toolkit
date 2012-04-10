@@ -187,7 +187,7 @@ message(STATUS "Using gv-writer ${USE_GV_WRITER}")
 option(USE_PDF_READER "Using pdf-reader" OFF)
 message(STATUS "Using pdf-reader ${USE_PDF_READER}")
 
-option(USE_DOC_READER "Using doc-reader" ON)
+option(USE_DOC_READER "Using doc-reader" OFF)
 message(STATUS "Using doc-reader ${USE_DOC_READER}")
 
 option(USE_ASPELL "Using aspell" OFF)
