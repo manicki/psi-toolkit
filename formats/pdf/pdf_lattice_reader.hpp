@@ -36,10 +36,7 @@ private:
         virtual void doRun();
 
     private:
-        void appendParagraphToLattice_(std::string paragraph);
-
         PDFLatticeReader& processor_;
-
         LayerTagCollection textTags_;
     };
 

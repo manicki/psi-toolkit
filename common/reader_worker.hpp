@@ -19,6 +19,16 @@ public:
 protected:
     std::istream& inputStream_;
 
+    void appendParagraphToLattice_(std::string paragraph, LayerTagCollection tags) {
+        if (!paragraph.empty()) {
+            Lattice::VertexDescriptor prevEnd = lattice_.getLastVertex();
+            lattice_.appendStringWithSymbols(paragraph);
+            Lattice::VertexDescriptor nowEnd = lattice_.getLastVertex();
+            AnnotationItem item("FRAG", paragraph);
+            lattice_.addEdge(prevEnd, nowEnd, item, tags);
+        }
+    }
+
 };
 
 #endif
