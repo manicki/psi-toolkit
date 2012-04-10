@@ -21,6 +21,8 @@ protected:
         std::list<std::string> processorNames,
         std::ostream& output);
 
+    void doFormatHelpIntroduction(std::string text, std::ostream& output);
+
 };
 
 #endif

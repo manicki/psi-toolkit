@@ -96,7 +96,7 @@ div.grippie { width:760px; height:8px; overflow:hidden; margin-left:20px; cursor
 
 /* Help list */
 
-#help-list, #aliases { margin:0 0 20px 0; }
+#help-intro, #help-list, #aliases { margin:0 0 20px 0; }
 .help-item { padding:10px 0; border-top:1px dotted #CCC; }
 .alias-item { padding:3px 0; }
 

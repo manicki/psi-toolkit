@@ -9,6 +9,7 @@ class HelpSite : public TemplateSite
 public:
     HelpSite(PsiServer& servers);
 
+    char * introduction();
     char * processorHelps();
     char * aliases();
 

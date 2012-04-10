@@ -56,6 +56,10 @@ void HtmlHelpFormatter::formatUsingExamples_(std::vector<TestBatch> batches, std
     output << "</div>" << std::endl;
 }
 
+void HtmlHelpFormatter::doFormatHelpIntroduction(std::string text, std::ostream& output) {
+    output << markdownString2String(text) << std::endl;
+}
+
 void HtmlHelpFormatter::formatAllowedOptions_(boost::program_options::options_description options,
     std::ostream& output) {
 

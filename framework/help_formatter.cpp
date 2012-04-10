@@ -5,6 +5,7 @@
 
 #include "help_formatter.hpp"
 #include "its_data.hpp"
+#include "configurator.hpp"
 
 void HelpFormatter::formatHelps(std::ostream& output) {
     std::vector<std::string> processors = MainFactoriesKeeper::getInstance().getProcessorNames();
@@ -37,6 +38,14 @@ void HelpFormatter::formatOneAlias(std::string aliasName, std::ostream& output) 
     doFormatOneAlias(aliasName, getProcessorNamesForAlias(aliasName), output);
 }
 
+void HelpFormatter::formatHelpIntroduction(std::ostream& output) {
+    boost::filesystem::path path = Configurator::getInstance().isRunAsInstalled()
+        ? Configurator::getInstance().getDataDir().string() + "/framework/description.txt"
+        : "../framework/data/description.txt";
+
+    doFormatHelpIntroduction(getFileContent(path), output);
+}
+
 HelpFormatter::~HelpFormatter() { }
 
 std::string HelpFormatter::getProcessorDescription(std::string processorName) {
@@ -49,8 +58,8 @@ boost::program_options::options_description HelpFormatter::getProcessorOptions(
 }
 
 std::vector<TestBatch> HelpFormatter::getProcessorUsingExamples(std::string processorName) {
-    boost::filesystem::path processorFile = MainFactoriesKeeper::getInstance()
-        .getProcessorFactory(processorName).getFile();
+    boost::filesystem::path processorFile =
+        MainFactoriesKeeper::getInstance().getProcessorFactory(processorName).getFile();
 
     std::vector<boost::filesystem::path> directories;
     directories.push_back(getItsData(processorFile));
