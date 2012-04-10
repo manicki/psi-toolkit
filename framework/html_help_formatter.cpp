@@ -1,3 +1,5 @@
+#include <boost/algorithm/string/join.hpp>
+
 #include "html_help_formatter.hpp"
 
 #include "sundown/cpp/stringwrapper.hpp"
@@ -62,6 +64,18 @@ void HtmlHelpFormatter::formatAllowedOptions(boost::program_options::options_des
     output << "<div class=\"help-opts\">"
         << "<h3>" << OPTIONS_HEADER << "</h3>" << std::endl
         << "<pre>" << options << "</pre>" << std::endl
+        << "</div>" << std::endl;
+}
+
+void HtmlHelpFormatter::doFormatOneAlias(
+    std::string aliasName,
+    std::list<std::string> processorNames,
+    std::ostream& output) {
+
+    if (processorNames.empty()) return;
+
+    output << "<div class=\"alias-item\">"
+        << aliasName << " = " << boost::algorithm::join(processorNames, ", ")
         << "</div>" << std::endl;
 }
 

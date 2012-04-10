@@ -16,6 +16,11 @@ protected:
         std::vector<TestBatch> usingExamples,
         std::ostream& output);
 
+    void doFormatOneAlias(
+        std::string aliasName,
+        std::list<std::string> processorNames,
+        std::ostream& output);
+
 };
 
 #endif

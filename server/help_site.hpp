@@ -9,5 +9,6 @@ public:
     HelpSite(PsiServer& servers);
 
     char * processorHelps();
+    char * aliases();
 
 };

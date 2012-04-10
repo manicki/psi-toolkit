@@ -108,6 +108,7 @@ void PipeRunner::parseRunnerProgramOptions_(std::vector<std::string> &args) {
 void PipeRunner::setRunnerOptionsDescription_() {
     runnerOptionsDescription_.add_options()
         ("help", "Produce help message for each processor")
+        ("aliases", "Show aliases, i.e. alternative names for processors")
         ("list-languages", "List languages handled for each processor specified")
         ("log-level", boost::program_options::value<std::string>(),
          "Set logging level")
@@ -121,6 +122,12 @@ bool PipeRunner::stopAfterExecutingRunnerOptions_() {
     if (runnerOptions_.count("help")) {
         std::cout << runnerOptionsDescription_ << std::endl;
         ConsoleHelpFormatter().formatHelps(std::cout);
+        return true;
+    }
+
+    if (runnerOptions_.count("aliases")) {
+        std::cout << "Aliases:" << std::endl;
+        ConsoleHelpFormatter().formatAliases(std::cout);
         return true;
     }
 
