@@ -1,0 +1,5 @@
+Read text, tokenize, produce morphologic interpretations of each
+word, generate translations for all morphological interpetations,
+return simplified output: filtered to show only translations.
+
+
