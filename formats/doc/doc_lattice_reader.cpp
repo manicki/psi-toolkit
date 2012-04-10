@@ -53,44 +53,40 @@ DocLatticeReader::Worker::Worker(
         boost::assign::list_of("frag")("doc-reader")))
 { }
 
+
 void DocLatticeReader::Worker::doRun() {
-// SET_LOGGING_LEVEL("DEBUG");
+
     char * tmpFileIn = tempnam(NULL, "psii_");
-    std::ofstream s1(tmpFileIn);
-    s1 << inputStream_.rdbuf();
+    char * tmpFileOut = tempnam(NULL, "psio_");
     std::string tmpFileInName(tmpFileIn);
-    std::string command("antiword " + tmpFileInName);
-    // std::string command("antiword /tmp/psii_psb5XX");
-DEBUG(command);
+    std::string tmpFileOutName(tmpFileOut);
+
+    std::ofstream strIn(tmpFileIn);
+    strIn << inputStream_.rdbuf() << std::flush;
+    std::string command("antiword " + tmpFileInName + " 1>" + tmpFileOutName);
     system(command.c_str());
 
-    std::remove(tmpFileIn);
-    free(tmpFileIn);
-/*
-    char * tmpFileOut = tempnam(NULL, "psio_");
-    try {
-        std::ifstream s2(tmpFileOut);
-        std::string line;
-        while (std::getline(s2, line)) {
-            appendParagraphToLattice_(line);
-            lattice_.appendString("\n");
-        }
-        std::remove(tmpFileOut);
-        free(tmpFileOut);
-    } catch (...) {
-        std::remove(tmpFileOut);
-        free(tmpFileOut);
+    std::ifstream strOut(tmpFileOut);
+    std::string line;
+    while (std::getline(strOut, line)) {
+        appendParagraphToLattice_(line);
+        lattice_.appendString("\n");
     }
-    */
+
+    std::remove(tmpFileIn);
+    std::remove(tmpFileOut);
+    free(tmpFileIn);
+    free(tmpFileOut);
+
 }
 
+
 void DocLatticeReader::Worker::appendParagraphToLattice_(std::string paragraph) {
-    Lattice::VertexDescriptor prevEnd = lattice_.getLastVertex();
-    lattice_.appendStringWithSymbols(paragraph);
-    Lattice::VertexDescriptor nowEnd = lattice_.getLastVertex();
-
-    AnnotationItem item("FRAG", paragraph);
-    lattice_.addEdge(prevEnd, nowEnd,
-                     item, textTags_);
-
+    if (!paragraph.empty()) {
+        Lattice::VertexDescriptor prevEnd = lattice_.getLastVertex();
+        lattice_.appendStringWithSymbols(paragraph);
+        Lattice::VertexDescriptor nowEnd = lattice_.getLastVertex();
+        AnnotationItem item("FRAG", paragraph);
+        lattice_.addEdge(prevEnd, nowEnd, item, textTags_);
+    }
 }
