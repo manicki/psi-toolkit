@@ -319,7 +319,7 @@ Lattice::EdgeDescriptor Lattice::addPartitionToEdge(
 }
 
 void Lattice::discard(EdgeDescriptor edge) {
-    addPartitionToEdge(edge, discardedTag_, EdgeSequence(), (std::numeric_limits<Score>::min)());
+    addPartitionToEdge(edge, discardedTag_, EdgeSequence(), -(std::numeric_limits<Score>::max)());
 }
 
 Lattice::InOutEdgesIterator Lattice::outEdges(
