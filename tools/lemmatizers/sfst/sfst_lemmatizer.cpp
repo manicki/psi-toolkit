@@ -53,7 +53,7 @@ boost::program_options::options_description SfstLemmatizer::optionsHandled() {
 }
 
 std::string SfstLemmatizer::getName() {
-    return "sfst-Lemmatizer";
+    return "sfst-lemmatizer";
 }
 
 std::string SfstLemmatizer::getLanguage() const {
