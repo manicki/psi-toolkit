@@ -3,9 +3,10 @@
 
 #include "html_help_formatter.hpp"
 
-HelpSite::HelpSite(PsiServer& server)
-    : TemplateSite(server)
+HelpSite::HelpSite(PsiServer& server) : TemplateSite(server)
 {
+    htmlHelpFormatter_ = HtmlHelpFormatter();
+
     psiServer_.registerIncludeCode(
         "help_site_processor_helps", boost::bind(&HelpSite::processorHelps, this));
     psiServer_.registerIncludeCode(
@@ -14,14 +15,14 @@ HelpSite::HelpSite(PsiServer& server)
 
 char * HelpSite::processorHelps() {
     std::ostringstream streamForHelps;
-    HtmlHelpFormatter().formatHelps(streamForHelps);
+    htmlHelpFormatter_.formatHelps(streamForHelps);
 
     return stringToChar(streamForHelps.str());
 }
 
 char * HelpSite::aliases() {
     std::ostringstream streamForAliases;
-    HtmlHelpFormatter().formatAliases(streamForAliases);
+    htmlHelpFormatter_.formatAliases(streamForAliases);
 
     return stringToChar(streamForAliases.str());
 }
