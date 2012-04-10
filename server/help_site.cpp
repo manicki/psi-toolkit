@@ -1,8 +1,6 @@
 #include "help_site.hpp"
 #include "logging.hpp"
 
-#include "html_help_formatter.hpp"
-
 HelpSite::HelpSite(PsiServer& server) : TemplateSite(server)
 {
     htmlHelpFormatter_ = HtmlHelpFormatter();
