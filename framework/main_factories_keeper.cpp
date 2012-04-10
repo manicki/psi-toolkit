@@ -25,6 +25,10 @@
 #include "pdf_lattice_reader.hpp"
 #endif
 
+#if USE_DOC_READER
+#include "doc_lattice_reader.hpp"
+#endif
+
 #if HAVE_POSTGRESQL
 #include "lex_db_lemmatizer.hpp"
 #endif
@@ -83,6 +87,10 @@ MainFactoriesKeeper::MainFactoriesKeeper() {
 
 #if HAVE_POPPLER
     keeper_.takeProcessorFactory(new PDFLatticeReader::Factory());
+#endif
+
+#if USE_DOC_READER
+    keeper_.takeProcessorFactory(new DocLatticeReader::Factory());
 #endif
 
 #if HAVE_POSTGRESQL

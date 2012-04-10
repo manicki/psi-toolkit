@@ -1,3 +1,5 @@
+#include <boost/algorithm/string/join.hpp>
+
 #include "console_help_formatter.hpp"
 
 void ConsoleHelpFormatter::doFormatOneProcessorHelp(
@@ -15,6 +17,16 @@ void ConsoleHelpFormatter::doFormatOneProcessorHelp(
             << std::endl << std::endl;
 
     output << options;
+}
+
+void ConsoleHelpFormatter::doFormatOneAlias(
+    std::string aliasName,
+    std::list<std::string> processorNames,
+    std::ostream& output) {
+
+    if (processorNames.empty()) return;
+
+    output << aliasName << " -> " << boost::algorithm::join(processorNames, ", ") << std::endl;
 }
 
 ConsoleHelpFormatter::~ConsoleHelpFormatter() { }

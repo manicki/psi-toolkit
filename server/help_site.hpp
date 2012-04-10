@@ -1,4 +1,5 @@
 #include "template_site.hpp"
+#include "html_help_formatter.hpp"
 
 #include <boost/program_options/options_description.hpp>
 
@@ -9,5 +10,9 @@ public:
     HelpSite(PsiServer& servers);
 
     char * processorHelps();
+    char * aliases();
+
+private:
+    HtmlHelpFormatter htmlHelpFormatter_;
 
 };

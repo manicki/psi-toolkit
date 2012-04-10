@@ -13,8 +13,11 @@ class HelpFormatter {
 
 public:
 
-    void formatOneProcessorHelp(std::string processorName, std::ostream& output);
     void formatHelps(std::ostream& output);
+    void formatOneProcessorHelp(std::string processorName, std::ostream& output);
+
+    void formatOneAlias(std::string aliasName, std::ostream& output);
+    void formatAliases(std::ostream& output);
 
     virtual ~HelpFormatter();
 
@@ -35,8 +38,16 @@ protected:
 
     std::string getFileContent(const boost::filesystem::path& path);
 
+    virtual void doFormatOneAlias(
+        std::string aliasName,
+        std::list<std::string> processorNames,
+        std::ostream& output) =0;
+
+    std::list<std::string> getProcessorNamesForAlias(std::string alias);
+
     const static std::string EXAMPLES_HEADER;
     const static std::string OPTIONS_HEADER;
+    const static std::string ALIASES_HEADER;
 };
 
 #endif

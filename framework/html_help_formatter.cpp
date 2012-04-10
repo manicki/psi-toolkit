@@ -1,3 +1,5 @@
+#include <boost/algorithm/string/join.hpp>
+
 #include "html_help_formatter.hpp"
 
 #include "sundown/cpp/stringwrapper.hpp"
@@ -7,10 +9,10 @@ void HtmlHelpFormatter::doFormatOneProcessorHelp(
     std::string description,
     boost::program_options::options_description options,
     std::vector<TestBatch> usingExamples,
-    std::ostream& output)
-{
+    std::ostream& output) {
+
     output << "<div class=\"help-item\">"
-        << "<h2>" << processorName << "</h2>" << std::endl;
+        << "<h2><a name=\"" << processorName << "\">" << processorName << "</a></h2>" << std::endl;
 
     if (description.size() != 0) {
         output << "<div class=\"help-desc\">" << markdownString2String(description)
@@ -18,16 +20,14 @@ void HtmlHelpFormatter::doFormatOneProcessorHelp(
     }
 
     if (!usingExamples.empty()) {
-        formatUsingExamples(usingExamples, output);
+        formatUsingExamples_(usingExamples, output);
     }
 
-    formatAllowedOptions(options, output);
+    formatAllowedOptions_(options, output);
     output << "</div>" << std::endl;
 }
 
-void HtmlHelpFormatter::formatUsingExamples(std::vector<TestBatch> batches,
-    std::ostream& output)
-{
+void HtmlHelpFormatter::formatUsingExamples_(std::vector<TestBatch> batches, std::ostream& output) {
     output << "<div class=\"help-example\">"
         << "<h3>" << EXAMPLES_HEADER << "</h3>" << std::endl;
 
@@ -56,13 +56,30 @@ void HtmlHelpFormatter::formatUsingExamples(std::vector<TestBatch> batches,
     output << "</div>" << std::endl;
 }
 
-void HtmlHelpFormatter::formatAllowedOptions(boost::program_options::options_description options,
+void HtmlHelpFormatter::formatAllowedOptions_(boost::program_options::options_description options,
     std::ostream& output) {
 
     output << "<div class=\"help-opts\">"
         << "<h3>" << OPTIONS_HEADER << "</h3>" << std::endl
         << "<pre>" << options << "</pre>" << std::endl
         << "</div>" << std::endl;
+}
+
+void HtmlHelpFormatter::doFormatOneAlias(
+    std::string aliasName,
+    std::list<std::string> processorNames,
+    std::ostream& output) {
+
+    if (processorNames.empty()) return;
+
+    output << "<div class=\"alias-item\">" << aliasName << " &rarr; ";
+
+    unsigned int i = 0;
+    BOOST_FOREACH(std::string processorName, processorNames) {
+        output << "<a href=\"#" << processorName << "\">" << processorName << "</a>";
+        if (++i != processorNames.size()) output << ", ";
+    }
+    output << "</div>" << std::endl;
 }
 
 HtmlHelpFormatter::~HtmlHelpFormatter() { }
