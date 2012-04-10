@@ -16,7 +16,7 @@ public:
      * @return
      *  A map object with tag-attribute pairs.
      */
-    std::map<std::string, std::string> getLexemeAttributes(std::string & tag);
+    std::map<std::string, std::string> getLexemeAttributes(std::string& tag);
 
     /**
      * Finds attributes that are not associated with parts of speech recognized
@@ -26,9 +26,7 @@ public:
      * @return
      *  A map object with tag-attribute pairs.
      */
-    std::vector<std::map<std::string, std::string> > getFormAttributes(
-        std::string & tag
-    );
+    std::vector<std::map<std::string, std::string> > getFormAttributes(std::string& tag);
 
     /**
      * Complex parses Morfologik tags.
@@ -37,7 +35,7 @@ public:
      * @return
      *  A vector of tag-attribute pairs in map object.
      */
-    std::vector<std::map<std::string, std::string> > parse(std::string & tag);
+    std::vector<std::map<std::string, std::string> > parse(std::string& tag);
 
     /**
      * Simple parses Morfologik tags without splitting the complex attributes.
@@ -48,28 +46,27 @@ public:
      * @return
      *  Map object with tag-attribute pairs. Complex tags are not splitted.
      */
-    std::map<std::string, std::string> parseSimple(
-        std::string & tag, int & counter
-    );
+    std::map<std::string, std::string> parseSimple(std::string& tag, int& counter);
 
 private:
 
-    static std::string outerSeparator;
-    static std::string innerSeparator;
+    const static std::string OUTER_SEPARATOR;
+    const static std::string INNER_SEPARATOR;
 
-    static std::map<std::string, std::string> predefinedTags;
-    static std::multimap<std::string, std::string> lexemeTags;
+    static std::map<std::string, std::string> PREDEFINED_TAGS;
+    static std::multimap<std::string, std::string> LEXEME_TAGS;
+    static std::vector<std::string> TAGS_ALLOWED_AS_POS;
 
-    void removeLexemeAttributes(std::map<std::string, std::string> &);
+    void removeLexemeAttributes_(std::map<std::string, std::string>&);
+    std::string getPartOfSpeechTag_(std::map<std::string, std::string>);
 
     std::vector<std::map<std::string, std::string> >
-        expandDescriptions (std::map<std::string, std::string>, int &);
+        expandDescriptions_(std::map<std::string, std::string>, int&);
     std::vector<std::map<std::string, std::string> >
-        expandSingleDescription (std::map<std::string, std::string>);
+        expandSingleDescription_(std::map<std::string, std::string>);
 
-    std::string getAttributeToSeek (std::string & tags, int &);
-    int getLengthOfFirstComplexAttribute (std::map<std::string,
-                                          std::string> tag);
+    std::string getAttributeToSeek_(std::string& tags, int&);
+    int getLengthOfFirstComplexAttribute_(std::map<std::string, std::string> tag);
 };
 
 #endif

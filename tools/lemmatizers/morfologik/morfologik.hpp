@@ -74,7 +74,7 @@ public:
 
 private:
 
-    static const std::string TAGS_SEPARATOR;
+    static const std::string TAG_SEPARATORS;
     static const std::vector<std::string> DICTIONARIES;
 
     int level_;
@@ -125,8 +125,6 @@ private:
 
     const char * getStemByJNI_(jobject);
     const char * getTagsByJNI_(jobject);
-
-
 };
 
 #endif
