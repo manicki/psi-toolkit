@@ -31,6 +31,10 @@ void FactoriesKeeper::addAlias(const std::string& alias, const std::string& dest
     aliaser_.addAlias(alias, destination);
 }
 
+void FactoriesKeeper::addVoidAlias(const std::string& alias) {
+    aliaser_.addVoidAlias(alias);
+}
+
 std::string FactoriesKeeper::getBaseAliasForTag(const std::string& tag) {
     return tag + "-generator";
 }

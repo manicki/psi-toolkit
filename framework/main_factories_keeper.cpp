@@ -57,6 +57,7 @@ MainFactoriesKeeper::MainFactoriesKeeper() {
     keeper_.addTagBasedAlias("parse", "parser");
     keeper_.addTagBasedIzeAliases("lemma", "lemmat");
 
+    keeper_.addVoidAlias("spell");
     keeper_.addAlias("spell-checker", "spell");
     keeper_.addAlias("spell-check", "spell");
     keeper_.addAlias("spellchecker", "spell");

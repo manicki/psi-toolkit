@@ -18,6 +18,7 @@ public:
     void addTagBasedAlias(const std::string& tag, const std::string& alias);
     void addTagBasedIzeAliases(const std::string& tag, const std::string& aliasRoot);
     void addAlias(const std::string& alias, const std::string& destination);
+    void addVoidAlias(const std::string& alias);
 
     static std::string getBaseAliasForTag(const std::string& tag);
 
