@@ -21,6 +21,11 @@ private:
 
     void formatAllowedOptions(boost::program_options::options_description options,
         std::ostream& output);
+
+    void doFormatOneAlias(
+        std::string aliasName,
+        std::list<std::string> processorNames,
+        std::ostream& output);
 };
 
 #endif
