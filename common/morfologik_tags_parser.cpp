@@ -44,10 +44,6 @@ std::map<std::string, std::string> MorfologikTagsParser::PREDEFINED_TAGS =
         ("brev", "pos")     //abbreviation
         ("nie", "pos")
         ("ign", "pos")
-        ("conj", "pos")
-        ("ign", "pos")
-        ("indecl", "pos")
-        ("refl", "pos")     //?
         ("sg", "number")
         ("pl", "number")
         ("pltant", "number")

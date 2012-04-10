@@ -137,7 +137,7 @@
 137 0093 02   ds           discarded,form,nkjp-reader ds     subst<2.22507e-308>,case=acc,gender=m3,number=sg[135(form,nkjp-reader)<0>,]
 138 0093 02   ds           lemma,nkjp-reader     do spraw    word[133]
 139 0093 02   ds           lexeme,nkjp-reader    do spraw+brev brev[138]
-140 0093 02   ds           form,nkjp-reader      ds          brev[139]
+140 0093 02   ds           form,nkjp-reader      ds          brev,fullstoppedness=pun[139]
 141 0095 01   .            nkjp-reader,token     .           T,nps=true
 142 0095 01   .            lemma,nkjp-reader     .           word[141]
 143 0095 01   .            lexeme,nkjp-reader    .+interp    interp[142]
@@ -271,7 +271,7 @@
 271 0185 01   3            form,nkjp-reader      3           ign[270]
 272 0185 01   3            lemma,nkjp-reader     3           word[268]
 273 0185 01   3            lexeme,nkjp-reader    3+num       num[272]
-274 0185 01   3            form,nkjp-reader      3           num,case=acc,gender=m1,number=pl[273]
+274 0185 01   3            form,nkjp-reader      3           num,case=acc,gender=m1,number=pl,unknown=rec[273]
 275 0186 01   _            nkjp-reader,token     _           B
 276 0187 09   doktorów     nkjp-reader,token     doktorów    T
 277 0187 09   doktorów     lemma,nkjp-reader     doktor      word[276]
@@ -335,7 +335,7 @@
 335 0231 02   88           form,nkjp-reader      88          ign[334]
 336 0231 02   88           lemma,nkjp-reader     88          word[332]
 337 0231 02   88           lexeme,nkjp-reader    88+num      num[336]
-338 0231 02   88           form,nkjp-reader      88          num,case=acc,gender=m1,number=pl[337]
+338 0231 02   88           form,nkjp-reader      88          num,case=acc,gender=m1,number=pl,unknown=rec[337]
 339 0233 01   _            nkjp-reader,token     _           B
 340 0234 10   magistrów    nkjp-reader,token     magistrów   T
 341 0234 10   magistrów    lemma,nkjp-reader     magister    word[340]
