@@ -10,7 +10,7 @@
 const std::string Morfologik::TAGS_SEPARATOR = "+";
 
 const std::vector<std::string> Morfologik::DICTIONARIES = boost::assign::list_of
-    ("MORFOLOGIK")/*("MORFEUSZ")*/("COMBINED");
+    ("MORFOLOGIK")("MORFEUSZ")("COMBINED");
 
 Morfologik::Morfologik(const boost::program_options::variables_map& options)
     : level_(3), dictionary_("MORFOLOGIK"), annotationManager_(NULL)

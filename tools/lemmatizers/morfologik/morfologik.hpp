@@ -125,8 +125,6 @@ private:
 
     const char * getStemByJNI_(jobject);
     const char * getTagsByJNI_(jobject);
-
-
 };
 
 #endif
