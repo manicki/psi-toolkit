@@ -57,17 +57,7 @@ void TxtLatticeReader::Worker::doRun() {
 
     std::string line;
     while (getline(inputStream_, line)) {
-        appendParagraphToLattice_(line);
+        appendParagraphToLattice_(line, textTags_);
         lattice_.appendString("\n");
-    }
-}
-
-void TxtLatticeReader::Worker::appendParagraphToLattice_(std::string paragraph) {
-    if (!paragraph.empty()) {
-        Lattice::VertexDescriptor prevEnd = lattice_.getLastVertex();
-        lattice_.appendStringWithSymbols(paragraph);
-        Lattice::VertexDescriptor nowEnd = lattice_.getLastVertex();
-        AnnotationItem item("FRAG", paragraph);
-        lattice_.addEdge(prevEnd, nowEnd, item, textTags_);
     }
 }

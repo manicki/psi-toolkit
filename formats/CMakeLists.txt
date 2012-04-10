@@ -17,3 +17,10 @@ if(HAVE_POPPLER)
 else(HAVE_POPPLER)
   unset(pdf-t CACHE)
 endif(HAVE_POPPLER)
+
+if(USE_DOC_READER)
+  add_subdirectory(doc)
+else(USE_DOC_READER)
+  unset(doc-t CACHE)
+endif(USE_DOC_READER)
+
