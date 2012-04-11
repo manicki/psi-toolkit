@@ -27,7 +27,7 @@ namespace psi {
         template <typename InputIterator>
         bool in(InputIterator it, InputIterator end) {
             state_type current_state = 0;
-            while(it != end) {
+            while (it != end) {
                 state_type next_state = delta(current_state, *it);
                 if (next_state != state_type(-1))
                     current_state = next_state;

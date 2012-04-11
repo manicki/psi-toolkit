@@ -17,8 +17,8 @@ struct Tescik {
     }
 
     ~Tescik() {
-        delete[] poprawne;
-        delete[] niePoprawne;
+        delete [] poprawne;
+        delete [] niePoprawne;
     }
 
 };
@@ -27,7 +27,7 @@ BOOST_AUTO_TEST_CASE(NDFSA_test)
 {
     //Automat powinien akceptowac język w postaci:
     //{a + b}* b {a + b} b {a + b}*
-    Tescik a(8,7);
+    Tescik a(8, 7);
     psi::State q0 = a.ndfsa.addState();
     psi::State q1 = a.ndfsa.addState();
     psi::State q2 = a.ndfsa.addState();
@@ -81,7 +81,7 @@ BOOST_AUTO_TEST_CASE(NDFSA_test)
 
     //Automat powinien akceptowac język w postaci:
     //{a + b}* c
-    Tescik b(8,7);
+    Tescik b(8, 7);
     psi::State g0 = b.ndfsa.addState();
     psi::State g1 = b.ndfsa.addState();
 
@@ -209,5 +209,3 @@ BOOST_AUTO_TEST_CASE(NDFSA_test)
     //                                d.niePoprawne[i].end()), false);
     //}
 }
-
-
