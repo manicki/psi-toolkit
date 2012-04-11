@@ -34,6 +34,11 @@ if(HAVE_POPPLER)
     link_directories("${psi-toolkit_BINARY_DIR}/formats/pdf")
 endif(HAVE_POPPLER)
 
+if(HAVE_DJVULIBRE)
+    include_directories("${psi-toolkit_SOURCE_DIR}/formats/djvu")
+    link_directories("${psi-toolkit_BINARY_DIR}/formats/djvu")
+endif(HAVE_DJVULIBRE)
+
 if(USE_DOC_READER)
     include_directories("${psi-toolkit_SOURCE_DIR}/formats/doc")
     link_directories("${psi-toolkit_BINARY_DIR}/formats/doc")
