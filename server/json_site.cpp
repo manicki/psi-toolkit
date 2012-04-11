@@ -27,7 +27,7 @@ char * JsonSite::jsonOutput() {
 }
 
 char * JsonSite::actionJson() {
-    output_.clear();
+    output_.str(std::string());
     output_ << "{ " << std::endl;
 
     std::string pipe = psiServer_.session()->getData(PIPE_KEY_NAME);

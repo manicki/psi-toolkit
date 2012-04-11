@@ -8,9 +8,11 @@ task :test, :host, :port do |t, args|
     $host = args.host
     $port = args.port
 
-	require 'psi_server_test'
-	require 'index_site_test'
+    require 'psi_server_test'
+
+    require 'index_site_test'
     require 'pipe_site_test'
     require 'help_site_test'
+    require 'json_site_test'
 end
 
