@@ -25,6 +25,10 @@
 #include "pdf_lattice_reader.hpp"
 #endif
 
+#if USE_DOC_READER
+#include "doc_lattice_reader.hpp"
+#endif
+
 #if HAVE_POSTGRESQL
 #include "lex_db_lemmatizer.hpp"
 #endif
@@ -57,6 +61,12 @@ MainFactoriesKeeper::MainFactoriesKeeper() {
     keeper_.addTagBasedAlias("parse", "parser");
     keeper_.addTagBasedIzeAliases("lemma", "lemmat");
 
+    keeper_.addVoidAlias("spell");
+    keeper_.addAlias("spell-checker", "spell");
+    keeper_.addAlias("spell-check", "spell");
+    keeper_.addAlias("spellchecker", "spell");
+    keeper_.addAlias("spellcheck", "spell");
+
     keeper_.takeProcessorFactory(new TxtLatticeReader::Factory());
     keeper_.takeProcessorFactory(new UTTLatticeReader::Factory());
     keeper_.takeProcessorFactory(new PsiLatticeReader::Factory());
@@ -77,6 +87,10 @@ MainFactoriesKeeper::MainFactoriesKeeper() {
 
 #if HAVE_POPPLER
     keeper_.takeProcessorFactory(new PDFLatticeReader::Factory());
+#endif
+
+#if USE_DOC_READER
+    keeper_.takeProcessorFactory(new DocLatticeReader::Factory());
 #endif
 
 #if HAVE_POSTGRESQL

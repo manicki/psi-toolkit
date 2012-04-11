@@ -17,12 +17,14 @@ public:
         std::pair<std::vector<FormatRule>, std::vector<ReplacementRule> > rules);
 
     FormatOptions getOptions();
-
-    std::string formatRulesRegexp();
+    std::vector<int> getLevels();
     FormatRule getFormatRule(int i);
     int formatRuleSize();
 
+    std::vector<std::string> formatRulesRegexp();
     std::map<std::string, std::string> replacementRulesRegexp();
+
+    static int const MAX_RULES_PER_LEVEL;
 
 private:
 
@@ -30,6 +32,12 @@ private:
     FormatOptions formatOptions_;
     std::vector<FormatRule> formatRules_;
     std::vector<ReplacementRule> replacementRules_;
+
+    std::string getFormatRulesRegexpStartedFrom_(unsigned int, bool);
+    bool isTheLastRule_(unsigned int);
+
+    std::vector<int> levels_;
+    void setLevels_();
 };
 
 

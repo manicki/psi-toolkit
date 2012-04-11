@@ -1,0 +1,24 @@
+PSI-Toolkit is a set of linguistic tools for processing texts written
+in various formats and various languages. Currently, PSI-Toolkit
+supports textual and HTML formats. The largest number of tools has
+been designed for Polish. Each tool is called a PSI-processor. There
+are three types pf PSI-processors: readers, annotators and writers.
+Readers convert input text into an internal PSI data structure, called
+PSI-Lattice, annotators annotate the text with linguistic information,
+adding new edges to PSI-Lattice, writers print the PSI-lattice in a
+readable form.
+
+A text to be processed may be either uploaded (use the File tab) or
+typed in (use the Text tab).
+
+To start processing a file you have to specify a command in the "pipe
+line" window. A standard PSI command has the following format:
+
+    reader ! annotator(1) ! ... ! annotator(n) ! writer
+
+The following command:
+
+    txt-reader ! tp-tokenizer --lang pl ! psi-writer
+
+reads a textual file, tokenizes the file assuming that the text
+language is Polish, and returns the PSI-lattice.

@@ -1,0 +1,3 @@
+novel+subst|succeed+verb
+about+prep|of+prep|on+prep|for+prep|against+prep
+spaceman+subst

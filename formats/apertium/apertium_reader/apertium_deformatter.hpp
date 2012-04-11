@@ -36,17 +36,14 @@ private:
     FormatSpecification formatSpecification_;
     FormatSpecification initializeFormatSpecification_(const boost::filesystem::path& path);
 
+    //FIXME: should the RE_Options be added to the regexp wrapper?
+    pcrecpp::RE_Options perlRegexpOptions_;
     int initialInputSize_;
 
-    std::vector<DeformatIndex> processFormatRules_(const std::string&);
-    std::string processReplacementRules_(const std::string&);
     std::string clearFromDeformatData_(const std::string& input,
         std::vector<DeformatIndex>& indexes);
 
-    //FIXME: RE_options should be added to the regexp wrapper?
-    pcrecpp::RE_Options perlRegexpOptions_;
-
-    std::pair<int, int> getMatchedStringIndexes(PerlStringPiece currentInput, std::string);
+    std::pair<int, int> getMatchedStringIndexes_(PerlStringPiece currentInput, std::string);
 };
 
 #endif

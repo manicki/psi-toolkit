@@ -20,64 +20,70 @@ FormatSpecification ApertiumDeformatter::initializeFormatSpecification_(
     return formatSpecRdr.readFormatSpecification();
 }
 
-std::string ApertiumDeformatter::processReplacementRules(const std::string& input) {
-    return processReplacementRules_(input);
-}
-
-std::vector<DeformatIndex> ApertiumDeformatter::processFormatRules(const std::string& input) {
-    return processFormatRules_(input);
-}
-
 std::string ApertiumDeformatter::deformat(const std::string& input) {
     initialInputSize_ = 0;
 
-    std::string text = processReplacementRules_(input);
-    std::vector<DeformatIndex> deformatIndexes = processFormatRules_(text);
+    std::string text = processReplacementRules(input);
+    std::vector<DeformatIndex> deformatIndexes = processFormatRules(text);
     std::string output = clearFromDeformatData_(text, deformatIndexes);
 
     return output;
 }
 
-std::vector<DeformatIndex> ApertiumDeformatter::processFormatRules_(const std::string& input) {
+std::vector<DeformatIndex> ApertiumDeformatter::processFormatRules(const std::string& input) {
     PerlStringPiece currentInput(input);
     initialInputSize_ = currentInput.size();
 
-    std::string regexp = formatSpecification_.formatRulesRegexp();
-    PerlRegExp re(regexp, pcrecpp::UTF8());
-    DEBUG("looking for: " << regexp);
+    std::vector<std::string> regexps = formatSpecification_.formatRulesRegexp();
+    std::vector<PerlRegExp> res;
 
-    const int rulesSize = formatSpecification_.formatRuleSize();
-    //FIXME: the maximum number of rules is 16 because of the regexp wrapper constraint
-    if (rulesSize > PerlRegExp::MAX_MATCHES)
-        ERROR("the number of rules is larger than " << PerlRegExp::MAX_MATCHES << "!");
+    std::vector<int> levels = formatSpecification_.getLevels();
 
-    const PerlArg *args[rulesSize];
-    std::string matches[rulesSize];
+    const PerlArg *args[levels.size()][FormatSpecification::MAX_RULES_PER_LEVEL];
+    std::string matches[levels.size()][FormatSpecification::MAX_RULES_PER_LEVEL];
 
-    for (int i = 0; i < rulesSize; i++) {
-        args[i] = new PerlArg(&matches[i]);
+    for (unsigned int i = 0; i < levels.size(); i++) {
+        res.push_back(PerlRegExp(regexps[i], pcrecpp::UTF8()));
+
+        for (int j = 0; j < levels[i]; j++) {
+            args[i][j] = new PerlArg(&matches[i][j]);
+        }
     }
 
     std::vector<DeformatIndex> deformatIndexes;
 
-    while (PerlRegExp::FindAndConsumeN(&currentInput, re, args, rulesSize)) {
-        for (int i = 0; i < rulesSize; i++) {
-            if (!matches[i].empty()) {
+    while (PerlRegExp::FindAndConsumeN(&currentInput, res[0], args[0], levels[0])) {
+        unsigned int lvl = 0;
+        std::string text = matches[0][levels[lvl] - 1];
+
+        while (!text.empty() && (lvl + 1) < levels.size()) {
+            lvl++;
+            PerlRegExp::FullMatchN(text, res[lvl], args[lvl], levels[lvl]);
+            text = matches[lvl][levels[lvl] - 1];
+        }
+
+        PerlRegExp::FullMatchN(text, res[lvl], args[lvl], levels[lvl]);
+
+        for (int i = 0; i < levels[lvl]; i++) {
+            if (!matches[lvl][i].empty()) {
+                int ruleNr = lvl * FormatSpecification::MAX_RULES_PER_LEVEL + i - lvl;
+
                 deformatIndexes.push_back(DeformatIndex(
-                    getMatchedStringIndexes(currentInput, matches[i]),
-                    formatSpecification_.getFormatRule(i).getType(),
-                    formatSpecification_.getFormatRule(i).getEos()
+                    getMatchedStringIndexes_(currentInput, matches[lvl][i]),
+                    formatSpecification_.getFormatRule(ruleNr).getType(),
+                    formatSpecification_.getFormatRule(ruleNr).getEos()
                 ));
 
-                DEBUG("matched with rule " << i << ": " << matches[i]);
+                DEBUG("rule " << ruleNr << " found " << matches[lvl][i]);
             }
         }
     }
 
+
     return deformatIndexes;
 }
 
-std::string ApertiumDeformatter::processReplacementRules_(const std::string& input) {
+std::string ApertiumDeformatter::processReplacementRules(const std::string& input) {
     std::string text = input;
 
     std::map<std::string, std::string>::iterator it;
@@ -106,7 +112,7 @@ std::string ApertiumDeformatter::clearFromDeformatData_(const std::string& input
     return clearInput;
 }
 
-std::pair<int, int> ApertiumDeformatter::getMatchedStringIndexes(
+std::pair<int, int> ApertiumDeformatter::getMatchedStringIndexes_(
      PerlStringPiece currentInput, std::string matchedString) {
 
     return std::pair<int, int>(initialInputSize_ - currentInput.size() - matchedString.size(),
