@@ -1,5 +1,5 @@
-#ifndef NDFSA_HPP__
-#define NDFSA_HPP__
+#ifndef NDFSA_HDR
+#define NDFSA_HDR
 
 #include <vector>
 #include <map>

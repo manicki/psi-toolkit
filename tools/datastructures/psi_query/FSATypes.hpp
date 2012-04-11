@@ -1,5 +1,5 @@
-#ifndef FSATYPES_HPP__
-#define FSATYPES_HPP__
+#ifndef FSATYPES_HDR
+#define FSATYPES_HDR
 
 namespace psi {
 

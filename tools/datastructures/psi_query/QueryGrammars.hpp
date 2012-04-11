@@ -1,5 +1,5 @@
-#ifndef QUERYGRAMMARS_HPP__
-#define QUERYGRAMMARS_HPP__
+#ifndef QUERYGRAMMARS_HDR
+#define QUERYGRAMMARS_HDR
 
 #include <string>
 

@@ -1,5 +1,5 @@
-#ifndef ALGORITHMS_HPP__
-#define ALGORITHMS_HPP__
+#ifndef ALGORITHMS_HDR
+#define ALGORITHMS_HDR
 
 #include <map>
 #include <vector>

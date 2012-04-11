@@ -7,7 +7,7 @@ BOOST_AUTO_TEST_SUITE( psi_query )
 
 BOOST_AUTO_TEST_CASE(DFSA_test)
 {
-	psi::DFSA<> fsa;
+    psi::DFSA<> fsa;
     psi::State q0 = fsa.addState();
     psi::State q1 = fsa.addState();
     psi::State q2 = fsa.addState();

@@ -1,5 +1,5 @@
-#ifndef DFSA_HPP__
-#define DFSA_HPP__
+#ifndef DFSA_HDR
+#define DFSA_HDR
 
 #include "NDFSA.hpp"
 

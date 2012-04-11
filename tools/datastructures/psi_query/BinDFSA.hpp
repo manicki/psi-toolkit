@@ -1,5 +1,5 @@
-#ifndef BinDFSA_HPP__
-#define BinDFSA_HPP__
+#ifndef BinDFSA_HDR
+#define BinDFSA_HDR
 
 #include <vector>
 #include <map>

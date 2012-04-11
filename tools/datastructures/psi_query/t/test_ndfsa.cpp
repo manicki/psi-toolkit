@@ -123,7 +123,7 @@ BOOST_AUTO_TEST_CASE(NDFSA_test)
 
     //Automat powinien akceptowac język w postaci:
     //{a + b + c}*
-    Tescik c(12,7);
+    Tescik c(12, 7);
     psi::State d0 = c.ndfsa.addState();
 
     c.ndfsa.addArc(d0, psi::Arc<>('a', d0));
@@ -169,7 +169,7 @@ BOOST_AUTO_TEST_CASE(NDFSA_test)
 
     //Automat powinien akceptowac język w postaci:
     //... MJD: wedlug mnie to b*ab*a(bb*ab*a)*
-    Tescik d(3,7);
+    Tescik d(3, 7);
     psi::State e0 = d.ndfsa.addState();
     psi::State e1 = d.ndfsa.addState();
     psi::State e2 = d.ndfsa.addState();
