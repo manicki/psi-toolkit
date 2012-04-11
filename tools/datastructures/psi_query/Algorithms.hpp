@@ -230,7 +230,7 @@ namespace psi {
             queue.push_back(s);
         }
 
-        while(!queue.empty()) {
+        while (!queue.empty()) {
             WrapperState s = queue.back();
             queue.pop_back();
 

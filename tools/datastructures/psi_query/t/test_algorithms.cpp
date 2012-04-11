@@ -36,15 +36,13 @@ BOOST_AUTO_TEST_CASE(algorithms_test)
 	//BOOST_CHECK_EQUAL(fsa.getStartStates().size(), reverser.finalFn().size());
 	////////////////////////////////////////////////////////////////////
 
-
-
 	//Checking reverser start-end states////////////////////////////////
 	std::set< psi::DFSA<>::state_type >::iterator reverserIt;
 	std::set< psi::DFSA<>::state_type >::iterator fsaIt;
 
     std::set< psi::DFSA<>::state_type > startfn = reverser.startFn();
-	for ( reverserIt = startfn.begin() ; reverserIt != startfn.end(); ++reverserIt ) {
-		BOOST_CHECK_EQUAL( fsa.isEndState( *reverserIt ), true );
+	for (reverserIt = startfn.begin(); reverserIt != startfn.end(); ++reverserIt) {
+		BOOST_CHECK_EQUAL(fsa.isEndState( *reverserIt ), true);
 	}
 
 	//I dont check the size of fsa it should be equal in previous test
@@ -56,12 +54,11 @@ BOOST_AUTO_TEST_CASE(algorithms_test)
 	}
 
 	//End states
-
 	for (fsaIt = fsa.getStartStates().begin();
         fsaIt != fsa.getStartStates().end();
-        ++fsaIt ) {
+        ++fsaIt) {
 
-		BOOST_CHECK_EQUAL( reverser.finalFn( *fsaIt ),  true );
+		BOOST_CHECK_EQUAL(reverser.finalFn( *fsaIt ), true);
 	}
 
 	////////////////////////////////////////////////////////////////////

@@ -98,7 +98,7 @@ namespace psi {
             if (p < m_states.size()-1)
                 end = unsetLastBit(m_states[p+1]);
 
-            while(pos < end && cmp(m_arcs[pos], a))
+            while (pos < end && cmp(m_arcs[pos], a))
                 pos++;
             m_arcs.insert(m_arcs.begin() + pos, a);
 
@@ -138,7 +138,7 @@ namespace psi {
     template <typename InputIterator>
     bool BinDFSA<ArcT, PosT>::in(InputIterator it, InputIterator end) {
         size_t current_state = 0;
-        while(it != end) {
+        while (it != end) {
             size_t next_state = delta(current_state, *it);
             if (next_state != size_t(-1))
                 current_state = next_state;
