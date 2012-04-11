@@ -68,14 +68,14 @@ BOOST_AUTO_TEST_CASE(NDFSA_test)
     a.niePoprawne[5] = "bbaaaaaa";
     a.niePoprawne[6] = "bab";
 
-    for(int i = 0;i < a.poprawneSize; ++i) {
+    for (int i = 0;i < a.poprawneSize; ++i) {
         BOOST_CHECK_EQUAL(a.ndfsa.in(a.poprawne[i].begin(),
-                                    a.poprawne[i].end()) , true);
+                                    a.poprawne[i].end()), true);
     }
 
     //for(int i = 0;i < a.niePoprawneSize; ++i) {
         //BOOST_CHECK_EQUAL(a.ndfsa.in(a.niePoprawne[i].begin(),
-        //                            a.niePoprawne[i].end()) , false);
+        //                            a.niePoprawne[i].end()), false);
     //}
 
 
@@ -111,14 +111,14 @@ BOOST_AUTO_TEST_CASE(NDFSA_test)
     b.niePoprawne[5] = "abbbbaaacaaba";
     b.niePoprawne[6] = "bab";
 
-    for(int i = 0;i < b.poprawneSize; ++i) {
+    for (int i = 0;i < b.poprawneSize; ++i) {
         BOOST_CHECK_EQUAL(b.ndfsa.in(b.poprawne[i].begin(),
-                                    b.poprawne[i].end()) , true);
+                                    b.poprawne[i].end()), true);
     }
 
     //for(int i = 0;i < b.niePoprawneSize; ++i) {
         //BOOST_CHECK_EQUAL(b.ndfsa.in(b.niePoprawne[i].begin(),
-        //                            b.niePoprawne[i].end()) , false);
+        //                            b.niePoprawne[i].end()), false);
     //}
 
     //Automat powinien akceptowac język w postaci:
@@ -156,14 +156,14 @@ BOOST_AUTO_TEST_CASE(NDFSA_test)
     c.niePoprawne[5] = "bbaaaaaa";
     c.niePoprawne[6] = "bab";
 
-    for(int i = 0;i < c.poprawneSize; ++i) {
+    for (int i = 0;i < c.poprawneSize; ++i) {
         BOOST_CHECK_EQUAL(c.ndfsa.in(c.poprawne[i].begin(),
-                                    c.poprawne[i].end()) , true);
+                                    c.poprawne[i].end()), true);
     }
 
     //for(int i = 0;i < c.niePoprawneSize; ++i) {
         //BOOST_CHECK_EQUAL(c.ndfsa.in(c.niePoprawne[i].begin(),
-        //                            c.niePoprawne[i].end()) , false);
+        //                            c.niePoprawne[i].end()), false);
     //}
 
 
@@ -173,8 +173,6 @@ BOOST_AUTO_TEST_CASE(NDFSA_test)
     psi::State e0 = d.ndfsa.addState();
     psi::State e1 = d.ndfsa.addState();
     psi::State e2 = d.ndfsa.addState();
-
-
 
     d.ndfsa.addArc(e0, psi::Arc<>('a', e1));
     d.ndfsa.addArc(e0, psi::Arc<>('b', e0));
@@ -201,14 +199,14 @@ BOOST_AUTO_TEST_CASE(NDFSA_test)
     d.niePoprawne[5] = "a";
     d.niePoprawne[6] = "b";
 
-    for(int i = 0;i < d.poprawneSize; ++i) {
+    for (int i = 0;i < d.poprawneSize; ++i) {
         BOOST_CHECK_EQUAL(d.ndfsa.in(d.poprawne[i].begin(),
-                                    d.poprawne[i].end()) , true);
+                                    d.poprawne[i].end()), true);
     }
 
     //for(int i = 0;i < d.niePoprawneSize; ++i) {
     //    BOOST_CHECK_EQUAL(d.ndfsa.in(d.niePoprawne[i].begin(),
-    //                                d.niePoprawne[i].end()) , false);
+    //                                d.niePoprawne[i].end()), false);
     //}
 }
 

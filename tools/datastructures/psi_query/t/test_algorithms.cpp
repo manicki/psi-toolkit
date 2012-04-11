@@ -10,7 +10,6 @@ BOOST_AUTO_TEST_CASE(algorithms_test)
     psi::State q2 = fsa.addState();
     psi::State q3 = fsa.addState();
 
-
     fsa.setStartState(q0);
     fsa.setEndState(q3);
 
@@ -33,8 +32,8 @@ BOOST_AUTO_TEST_CASE(algorithms_test)
 	psi::Reverser<psi::DFSA<> > reverser(fsa); //Warning signed and unsigned
 
 	//Check the size of sets////////////////////////////////////////////
-	BOOST_CHECK_EQUAL(fsa.getEndStates().size() , reverser.startFn().size());
-	//BOOST_CHECK_EQUAL(fsa.getStartStates().size() , reverser.finalFn().size());
+	BOOST_CHECK_EQUAL(fsa.getEndStates().size(), reverser.startFn().size());
+	//BOOST_CHECK_EQUAL(fsa.getStartStates().size(), reverser.finalFn().size());
 	////////////////////////////////////////////////////////////////////
 
 
@@ -43,23 +42,27 @@ BOOST_AUTO_TEST_CASE(algorithms_test)
 	std::set< psi::DFSA<>::state_type >::iterator reverserIt;
 	std::set< psi::DFSA<>::state_type >::iterator fsaIt;
 
-        std::set< psi::DFSA<>::state_type > startfn = reverser.startFn();
+    std::set< psi::DFSA<>::state_type > startfn = reverser.startFn();
 	for ( reverserIt = startfn.begin() ; reverserIt != startfn.end(); ++reverserIt ) {
-		BOOST_CHECK_EQUAL( fsa.isEndState( *reverserIt ) , true );
+		BOOST_CHECK_EQUAL( fsa.isEndState( *reverserIt ), true );
 	}
 
 	//I dont check the size of fsa it should be equal in previous test
-	for ( reverserIt = startfn.begin(), fsaIt = fsa.getEndStates().begin() ; reverserIt != startfn.end() ; ++reverserIt , ++fsaIt ) {
-		BOOST_CHECK_EQUAL( *reverserIt , *fsaIt );
+	for (reverserIt = startfn.begin(), fsaIt = fsa.getEndStates().begin();
+        reverserIt != startfn.end();
+        ++reverserIt, ++fsaIt ) {
+
+		BOOST_CHECK_EQUAL( *reverserIt, *fsaIt );
 	}
 
 	//End states
 
-	for ( fsaIt = fsa.getStartStates().begin() ; fsaIt != fsa.getStartStates().end(); ++fsaIt ) {
-		BOOST_CHECK_EQUAL( reverser.finalFn( *fsaIt ) ,  true );
+	for (fsaIt = fsa.getStartStates().begin();
+        fsaIt != fsa.getStartStates().end();
+        ++fsaIt ) {
+
+		BOOST_CHECK_EQUAL( reverser.finalFn( *fsaIt ),  true );
 	}
 
 	////////////////////////////////////////////////////////////////////
 }
-
-

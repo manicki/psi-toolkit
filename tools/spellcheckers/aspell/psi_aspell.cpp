@@ -10,7 +10,8 @@
 
 const unsigned int PSIAspell::Factory::DEFAULT_LIMIT = 5;
 const std::list<std::string> PSIAspell::tagsToOperateOn = boost::assign::list_of("token");
-const std::list<std::string> PSIAspell::tagsToPut = boost::assign::list_of("token")("aspell")("corrected");
+const std::list<std::string> PSIAspell::tagsToPut = boost::assign::list_of
+    ("token")("aspell")("corrected");
 
 Annotator* PSIAspell::Factory::doCreateAnnotator(
     const boost::program_options::variables_map& options) {
