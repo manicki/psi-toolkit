@@ -25,7 +25,7 @@ JSONLatticeWriterOutput::JSONLatticeWriterOutput(std::ostream & outputStream)
 
 
 JSONLatticeWriterOutput::~JSONLatticeWriterOutput() {
-    outputStream_ << "]\n";
+    outputStream_ << "]";
 }
 
 

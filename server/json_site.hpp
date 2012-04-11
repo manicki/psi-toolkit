@@ -7,17 +7,25 @@ class JsonSite : public TemplateSite
 
 public:
 
-    std::string jsonOutputAsString;
-
     JsonSite(PsiServer& server);
 
     char * jsonOutput();
     char * actionJson();
-
+    char * actionJsonStupid();
 
 private:
 
-    static std::string PIPE_PARAMETER;
-    static std::string INPUT_PARAMETER;
+    std::ostringstream output_;
+
+    void addKeyValuePairToOutput_(std::string, std::string, bool isLast=false);
+    void addKeyValuePairToOutputAsString_(std::string, std::string, bool isLast=false);
+
+    static const std::vector<std::string> JSON_WRITERS;
+    bool isJavascriptOutput_(std::string pipe);
+
+    static const std::string PIPE_KEY_NAME;
+    static const std::string INPUT_KEY_NAME;
+    static const std::string OUTPUT_KEY_NAME;
+    static const std::string ERROR_KEY_NAME;
 
 };
