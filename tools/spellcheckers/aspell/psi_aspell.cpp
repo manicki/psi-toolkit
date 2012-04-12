@@ -351,6 +351,6 @@ void PSIAspell::init_() {
                      PluginManager::getInstance().createPluginAdapter("aspell"));
 }
 
-AspellPluginInterface * PSIAspell::getAdapter() {
+AspellAdapterInterface * PSIAspell::getAdapter() {
     return aspellAdapter_;
 }

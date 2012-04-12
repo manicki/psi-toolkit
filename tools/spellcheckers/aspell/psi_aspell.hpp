@@ -7,7 +7,7 @@
 #include "language_dependent_annotator_factory.hpp"
 #include "annotator_factory.hpp"
 
-#include "aspell_adapter_interface.hpp"
+#include "plugin/aspell_adapter_interface.hpp"
 #include "plugin_manager.hpp"
 
 class PSIAspell : public Annotator {

@@ -2,6 +2,7 @@
 #define ASPELL_ADAPTER_IMPL_HDR
 
 #include "aspell_adapter_interface.hpp"
+#include <aspell.h>
 
 class AspellAdapterImpl : public AspellAdapterInterface {
 public:

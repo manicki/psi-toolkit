@@ -4,16 +4,17 @@
 #include <string>
 #include "abstract_plugin.hpp"
 #include "logging.hpp"
+#include <dlfcn.h>
 
 template <typename PluginAdapterClass>
 class Plugin : public AbstractPlugin{
 public:
-    Plugin() {
+    Plugin() : libraryHandle_(NULL) {
         DEBUG("Plugin constructor");
         setPluginActive(false);
     }
 
-    void loadPlugin() {
+    virtual void loadPlugin() {
         if (loadLibrary_()) {
             setPluginActive(true);
         }
@@ -26,9 +27,9 @@ public:
         return createSpecificAdapter_();
     }
 
-    virtual destroyAdapter(PluginAdapter * adapter) {
+    virtual void destroyAdapter(PluginAdapter * adapter) {
         PluginAdapterClass * adapterSpecific =
-            dynamic_cast<PluginAdapterClass>(adapter);
+            dynamic_cast<PluginAdapterClass*>(adapter);
         destroySpecificAdapter_(adapterSpecific);
     }
 
@@ -38,7 +39,7 @@ protected:
 
     PluginAdapterClass * createSpecificAdapter_() {
         DEBUG("Create Adapter");
-        createFunctionPointer* creat = (createFunctionPointer*) dlsym(libraryHandle, "create");
+        createFunctionPointer* creat = (createFunctionPointer*) dlsym(libraryHandle_, "create");
 
         if (!creat) {
             ERROR("Cant get symbol create: " << dlerror());
@@ -53,14 +54,14 @@ protected:
     void destroySpecificAdapter_(PluginAdapterClass * adapter) {
         DEBUG("Destroy Adapter");
         destroyFunctionPointer* destroy =
-            (destroyFunctionPointer*) dlsym(libraryHandle, "destroy");
+            (destroyFunctionPointer*) dlsym(libraryHandle_, "destroy");
         destroy(adapter);
     }
 private:
     bool loadLibrary_() {
         libraryHandle_ = dlopen(getLibraryName().c_str(), RTLD_NOW);
         if (!libraryHandle_) {
-            ERROR("Could not load library: " << libraryName_
+            ERROR("Could not load library: " << getLibraryName()
                   << " Reason: " << dlerror());
             return false;
         }
@@ -69,7 +70,7 @@ private:
         return true;
     }
 
-    void * libraryHandle_ = NULL;
+    void * libraryHandle_;
 };
 
 #endif

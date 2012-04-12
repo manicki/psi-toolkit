@@ -1,7 +1,7 @@
 #ifndef PLUGIN_MANAGER_HDR
 #define PLUGIN_MANAGER_HDR
 
-#inlcude <map>
+#include <map>
 #include <boost/shared_ptr.hpp>
 
 #include "abstract_plugin.hpp"
@@ -32,7 +32,7 @@ private:
     PluginManager(const PluginManager &);
     PluginManager& operator=(const PluginManager&);
 
-    void registerPlugin_(const AbstractPlugin* pluginPointer);
+    void registerPlugin_(AbstractPlugin* pluginPointer);
     bool checkIsPluginActiveWithMessage_(const std::string & pluginName);
     bool checkIsPluginActive_(const std::string & pluginName, bool withMessage = false);
     AbstractPlugin& getPlugin_(const std::string & pluginName);

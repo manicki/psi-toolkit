@@ -11,7 +11,7 @@ typedef std::list<std::string> SuggestionsList;
 
 class AspellAdapterInterface : public PluginAdapter {
 public:
-    virtual ~AspellPluginInterface() {
+    virtual ~AspellAdapterInterface() {
     }
 
     virtual bool isWordCorrect(const std::string & word) = 0;

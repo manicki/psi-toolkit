@@ -4,7 +4,6 @@
 #include <boost/lexical_cast.hpp>
 #include <boost/foreach.hpp>
 
-#include "aspell_adapter.hpp"
 #include "logging.hpp"
 
 AspellAdapterImpl::AspellAdapterImpl() :

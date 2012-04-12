@@ -1,18 +1,18 @@
-#include "plugin_manager.hpp"
-
 #include "config.hpp"
+
+#include "plugin_manager.hpp"
 
 #if HAVE_ASPELL
 #include "aspell_plugin.hpp"
 #endif
 
-Plugin_Manager::Plugin_Manager() {
+PluginManager::PluginManager() {
 #if HAVE_ASPELL
-    registerPlugin(new AspellPlugin());
+    registerPlugin_(new AspellPlugin());
 #endif
 }
 
-Plugin_Manager::~Plugin_Manager() {
+PluginManager::~PluginManager() {
 }
 
 PluginManager& PluginManager::getInstance() {
@@ -22,7 +22,7 @@ PluginManager& PluginManager::getInstance() {
 
 PluginAdapter * PluginManager::createPluginAdapter(const std::string & pluginName) {
     if (checkIsPluginActiveWithMessage_(pluginName)) {
-        return getPlugin_(pluginName).createPluginAdapter();
+        return getPlugin_(pluginName).createAdapter();
     } else {
         return NULL;
     }
@@ -42,7 +42,7 @@ PluginManager::UnknownPluginException::UnknownPluginException(
 }
 
 
-void PluginManager::registerPlugin_(const AbstractPlugin* pluginPointer) {
+void PluginManager::registerPlugin_(AbstractPlugin* pluginPointer) {
     pluginPointer->loadPlugin();
 
     if (! pluginPointer->isPluginActive()) {
@@ -54,7 +54,7 @@ void PluginManager::registerPlugin_(const AbstractPlugin* pluginPointer) {
 }
 
 bool PluginManager::checkIsPluginActiveWithMessage_(const std::string & pluginName) {
-    return checkIsPluginActiveWithMessage_(pluginName, true);
+    return checkIsPluginActive_(pluginName, true);
 }
 
 bool PluginManager::checkIsPluginActive_(const std::string & pluginName, bool withMessage) {

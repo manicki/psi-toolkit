@@ -2,7 +2,7 @@
 #define ASPELL_PLUGIN_HDR
 
 #include "plugin.hpp"
-#include "aspell_adapter_interface.hpp"
+#include "plugin/aspell_adapter_interface.hpp"
 
 class AspellPlugin : public Plugin<AspellAdapterInterface> {
 public:

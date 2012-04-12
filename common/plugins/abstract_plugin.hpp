@@ -4,9 +4,12 @@
 #include <string>
 #include "plugin_adapter.hpp"
 
-template <typename AdapterInterfaceClass>
 class AbstractPlugin {
 public:
+    AbstractPlugin() {
+        active_ = false;
+    }
+
     virtual ~AbstractPlugin() {
     }
 
@@ -14,7 +17,8 @@ public:
     virtual std::string getLibraryName() = 0;
 
     virtual PluginAdapter * createAdapter() = 0;
-    virtual destroyAdapter(PluginAdapter * adapter) = 0;
+    virtual void destroyAdapter(PluginAdapter * adapter) = 0;
+    virtual void loadPlugin() = 0;
 
     bool isPluginActive() {
         return active_;
@@ -26,7 +30,7 @@ protected:
     }
 
 private:
-    bool active_ = false;
+    bool active_;
 };
 
 #endif
