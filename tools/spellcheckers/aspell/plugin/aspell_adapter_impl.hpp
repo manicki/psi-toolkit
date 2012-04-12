@@ -1,13 +1,12 @@
-#ifndef ASPELL_ADAPTER_HDR
-#define ASPELL_ADAPTER_HDR
+#ifndef ASPELL_ADAPTER_IMPL_HDR
+#define ASPELL_ADAPTER_IMPL_HDR
 
-#include <aspell.h>
 #include "aspell_adapter_interface.hpp"
 
-class AspellAdapter : public AspellAdapterInterface {
+class AspellAdapterImpl : public AspellAdapterInterface {
 public:
-    AspellAdapter();
-    virtual ~AspellAdapter();
+    AspellAdapterImpl();
+    virtual ~AspellAdapterImpl();
 
     virtual bool isWordCorrect(const std::string & word);
 
@@ -27,6 +26,7 @@ private:
 
     unsigned int limitCandidates_;
     std::string langCode_;
+
 };
 
 #endif

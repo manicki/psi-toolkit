@@ -52,7 +52,7 @@ add_executable(psi-pipe
     psi-pipe.cpp
 )
 
-target_link_libraries(psi-pipe ${Boost_LIBRARIES} framework common maxent)
+target_link_libraries(psi-pipe ${Boost_LIBRARIES} framework common common-plugins maxent)
 
 include_directories("${psi-toolkit_SOURCE_DIR}/maxent")
 

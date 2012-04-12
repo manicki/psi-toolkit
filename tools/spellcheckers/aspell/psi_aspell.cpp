@@ -8,8 +8,6 @@
 #include "config.hpp"
 #include "psi_exception.hpp"
 
-#include "plugin_loader.hpp"
-
 const unsigned int PSIAspell::Factory::DEFAULT_LIMIT = 5;
 const std::list<std::string> PSIAspell::tagsToOperateOn = boost::assign::list_of("token");
 const std::list<std::string> PSIAspell::tagsToPut = boost::assign::list_of("token")("aspell")("corrected");
@@ -327,8 +325,7 @@ std::string PSIAspell::doInfo() {
 // PSIAspell
 
 PSIAspell::PSIAspell(const std::string & langCode) {
-    aspellAdapter_ = PluginLoader::getInstance()->createAdapter();
-
+    init_();
     aspellAdapter_->initAspell(langCode);
     aspellAdapter_->createAspellInstance();
 }
@@ -336,9 +333,8 @@ PSIAspell::PSIAspell(const std::string & langCode) {
 PSIAspell::PSIAspell(const std::string & langCode,
                      const boost::program_options::variables_map& options) {
 
-    aspellAdapter_ = PluginLoader::getInstance()->createAdapter();
+    init_();
 
-    DEBUG("After create...");
     aspellAdapter_->initAspell(langCode);
     aspellAdapter_->passOptionsToAspellConfig(options);
     aspellAdapter_->createAspellInstance();
@@ -346,10 +342,15 @@ PSIAspell::PSIAspell(const std::string & langCode,
 
 PSIAspell::~PSIAspell() {
     if (aspellAdapter_) {
-        PluginLoader::getInstance()->destroyAdapter(aspellAdapter_);
+        PluginManager::getInstance().destroyPluginAdapter("aspell", aspellAdapter_);
     }
 }
 
-AspellAdapterInterface * PSIAspell::getAdapter() {
+void PSIAspell::init_() {
+    aspellAdapter_ = dynamic_cast<AspellAdapterInterface*>(
+                     PluginManager::getInstance().createPluginAdapter("aspell"));
+}
+
+AspellPluginInterface * PSIAspell::getAdapter() {
     return aspellAdapter_;
 }

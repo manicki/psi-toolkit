@@ -1,3 +1,5 @@
+#include "aspell_adapter_impl.hpp"
+
 #include <boost/assign.hpp>
 #include <boost/lexical_cast.hpp>
 #include <boost/foreach.hpp>
@@ -5,10 +7,10 @@
 #include "aspell_adapter.hpp"
 #include "logging.hpp"
 
-AspellAdapter::AspellAdapter() :
+AspellAdapterImpl::AspellAdapterImpl() :
     limitCandidates_(0),
     langCode_("") {
-    DEBUG("Constructor AspellAdapter");
+    DEBUG("Constructor AspellAdapterImpl");
 
     aspellSpeller_ = NULL;
     aspellConfig_ = new_aspell_config();
@@ -16,7 +18,7 @@ AspellAdapter::AspellAdapter() :
 }
 
 
-AspellAdapter::~AspellAdapter() {
+AspellAdapterImpl::~AspellAdapterImpl() {
     if (NULL != aspellSpeller_) {
         delete_aspell_speller(aspellSpeller_);
     }
@@ -26,13 +28,13 @@ AspellAdapter::~AspellAdapter() {
     }
 }
 
-bool AspellAdapter::isWordCorrect(const std::string & word) {
+bool AspellAdapterImpl::isWordCorrect(const std::string & word) {
     int correct = aspell_speller_check(aspellSpeller_, word.c_str(), -1);
 
     return (bool) correct;
 }
 
-void AspellAdapter::getSuggestionsForLastWord(
+void AspellAdapterImpl::getSuggestionsForLastWord(
                        SuggestionsList & suggestionsList,
                        const std::string & word
                        ) {
@@ -59,14 +61,14 @@ void AspellAdapter::getSuggestionsForLastWord(
     return;
 }
 
-void AspellAdapter::initAspell(const std::string & langCode) {
+void AspellAdapterImpl::initAspell(const std::string & langCode) {
     DEBUG("initAspell()");
     langCode_ = langCode;
     aspell_config_replace(aspellConfig_, "lang", langCode.c_str());
     aspell_config_replace(aspellConfig_, "encoding", "utf-8");
 }
 
-void AspellAdapter::passOptionsToAspellConfig(
+void AspellAdapterImpl::passOptionsToAspellConfig(
                 const boost::program_options::variables_map& options) {
 
     DEBUG("passOptionsToAspellConfig");
@@ -103,7 +105,7 @@ void AspellAdapter::passOptionsToAspellConfig(
     }
 }
 
-void AspellAdapter::createAspellInstance() {
+void AspellAdapterImpl::createAspellInstance() {
     DEBUG("createAspellInstance");
     AspellCanHaveError * possibleError = new_aspell_speller(aspellConfig_);
     if (aspell_error_number(possibleError) != 0) {
@@ -117,10 +119,11 @@ void AspellAdapter::createAspellInstance() {
 
 // ==============================================
 
-extern "C" AspellAdapter* create() {
-    return new AspellAdapter;
+extern "C" AspellAdapterImpl* create() {
+    return new AspellAdapterImpl;
 }
 
-extern "C" void destroy(AspellAdapter* Tl) {
+extern "C" void destroy(AspellAdapterImpl* Tl) {
     delete Tl ;
 }
+

@@ -1,10 +1,14 @@
 #ifndef PSI_ASPELL_HDR
 #define PSI_ASPELL_HDR
 
+#include <boost/shared_ptr.hpp>
+
 #include "annotator.hpp"
 #include "language_dependent_annotator_factory.hpp"
 #include "annotator_factory.hpp"
-#include "adapter/aspell_adapter_interface.hpp"
+
+#include "aspell_adapter_interface.hpp"
+#include "plugin_manager.hpp"
 
 class PSIAspell : public Annotator {
 
@@ -72,7 +76,10 @@ private:
 
     virtual std::string doInfo();
 
+    void init_();
+
     AspellAdapterInterface * aspellAdapter_;
 };
+
 
 #endif
