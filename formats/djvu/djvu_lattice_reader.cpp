@@ -55,65 +55,52 @@ DjVuLatticeReader::Worker::Worker(
 { }
 
 
-void DjVuLatticeReader::Worker::handle_ddjvu_messages(ddjvu_context_t *ctx, int wait) {
-    const ddjvu_message_t *msg;
-    if (wait) {
-        ddjvu_message_wait(ctx);
-    }
-    while ((msg = ddjvu_message_peek(ctx))) {
-DEBUG("!" << msg->m_any.tag);
-        switch(msg->m_any.tag) {
-            case DDJVU_ERROR:      DEBUG("ERROR"); throw FileFormatException("DDJVU ERROR"); break;
-            case DDJVU_INFO:       DEBUG("INFO"); break;
-            case DDJVU_NEWSTREAM:  DEBUG("NEWSTREAM"); break;
-            default: break;
-        }
-        ddjvu_message_pop(ctx);
-    }
-}
-
-
 void DjVuLatticeReader::Worker::doRun() {
 
-    // SET_LOGGING_LEVEL("DEBUG");
+    ddjvu_context_t * context = ddjvu_context_create("djvu-reader");
+    ddjvu_document_t * document = ddjvu_document_create(context, NULL, 0);
 
-    ddjvu_context_t * context;
-    if (!(context = ddjvu_context_create("djvu-reader"))) {
-        throw FileFormatException("Cannot create DjVu context");
-    }
+    ddjvu_message_t * message;
 
-    ddjvu_document_t * document;
-    if (!(document = ddjvu_document_create(context, NULL, 0))) {
-        throw FileFormatException("Cannot open DjVu document");
-    }
-
-    std::string line;
-    while (std::getline(inputStream_, line)) {
-        ddjvu_stream_write(document, 0, line.c_str(), line.length());
-    }
-/*
-    while (!ddjvu_document_decoding_done(document)) {
-        handle_ddjvu_messages(context, TRUE);
-    }
-
-    int npages = ddjvu_document_get_pagenum(document);
-    DEBUG("---" << npages << "---");
-
-    miniexp_t expression;
-    for (int i = 0; i < npages; ++i) {
-        while ((expression = ddjvu_document_get_pagetext(document, i, "word")) != miniexp_dummy) {
-            handle_ddjvu_messages(context, TRUE);
-            DEBUG("NAM[" << miniexp_to_name(expression) << "]");
-            DEBUG("STR[" << miniexp_to_str(expression) << "]");
+    message = ddjvu_message_wait(context);
+    if (message->m_any.tag == DDJVU_NEWSTREAM) {
+        int streamid = message->m_newstream.streamid;
+        const unsigned short length = (std::numeric_limits<unsigned short>::max)();
+        char * buffer = new char[length];
+        while (inputStream_.good()) {
+            inputStream_.read(buffer, length);
+            ddjvu_stream_write(document, streamid, buffer, length);
         }
-        DEBUG(miniexp_to_str(expression));
+        ddjvu_stream_close(document, streamid, 0);
+        delete [] buffer;
     }
-*/
-    if (document) {
-        ddjvu_document_release(document);
-    }
-    if (context) {
-        ddjvu_context_release(context);
-    }
+    ddjvu_message_pop(context);
+
+    miniexp_t me;
+    char * text;
+
+    message = ddjvu_message_wait(context);
+    if (message->m_any.tag == DDJVU_DOCINFO) {
+        int numPages = ddjvu_document_get_pagenum(document);
+        for (int i = 0; i < numPages; ++i) {
+            while ((me = ddjvu_document_get_pagetext(document, i, "page")) == miniexp_dummy) {
+                ddjvu_message_wait(context);
+                ddjvu_message_pop(context);
+            }
+            if (me && (text = (char*)(miniexp_to_str(miniexp_nth(5, me))))) {
+                std::stringstream textStream(text);
+                std::string line;
+                while (getline(textStream, line)) {
+                    appendParagraphToLattice_(line, textTags_);
+                    lattice_.appendString("\n");
+                }
+            }
+            ddjvu_miniexp_release(document, me);
+        }
+    };
+    ddjvu_message_pop(context);
+
+    ddjvu_document_release(document);
+    ddjvu_context_release(context);
 
 }

@@ -41,8 +41,6 @@ private:
     private:
         DjVuLatticeReader& processor_;
         LayerTagCollection textTags_;
-
-        void handle_ddjvu_messages(ddjvu_context_t *ctx, int wait);
     };
 
     virtual ReaderWorker<std::istream>* doCreateReaderWorker(
