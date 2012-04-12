@@ -173,8 +173,4 @@ BOOST_AUTO_TEST_CASE( simple_turkish_upper ) {
 
 }
 
-
-
-
-
 BOOST_AUTO_TEST_SUITE_END()

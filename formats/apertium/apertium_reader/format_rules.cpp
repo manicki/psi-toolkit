@@ -91,4 +91,3 @@ std::string ReplacementRule::getRegexp() {
 const std::map<std::string, std::string>* ReplacementRule::sourceToTargetMap() {
     return &sourceToTargetMap_;
 }
-

@@ -187,6 +187,9 @@ message(STATUS "Using gv-writer ${USE_GV_WRITER}")
 option(USE_PDF_READER "Using pdf-reader" OFF)
 message(STATUS "Using pdf-reader ${USE_PDF_READER}")
 
+option(USE_DJVU_READER "Using djvu-reader" OFF)
+message(STATUS "Using djvu-reader ${USE_DJVU_READER}")
+
 option(USE_DOC_READER "Using doc-reader" OFF)
 message(STATUS "Using doc-reader ${USE_DOC_READER}")
 
@@ -260,6 +263,23 @@ else (USE_PDF_READER)
     set(HAVE_POPPLER 0)
 endif (USE_PDF_READER)
 
+# Finds DjVuLibre
+
+if (USE_DJVU_READER)
+    find_package(DjVuLibre)
+    if (DJVULIBRE_FOUND)
+        message(STATUS "Found DjVuLibre")
+        include_directories(${DJVULIBRE_INCLUDE_DIRS})
+        link_directories(${DJVULIBRE_LIBRARIES})
+        set(HAVE_DJVULIBRE 1)
+    else (DJVULIBRE_FOUND)
+        message(WARNING "Could not find DjVuLibre: djvu-reader disabled")
+        set(HAVE_DJVULIBRE 0)
+    endif (DJVULIBRE_FOUND)
+else (USE_DJVU_READER)
+    set(HAVE_DJVULIBRE 0)
+endif (USE_DJVU_READER)
+
 # Sets compiler flags
 set(CMAKE_CXX_FLAGS "-g -Wall -Wundef -Wnon-virtual-dtor -Wextra")
 
@@ -309,8 +329,11 @@ endif(HAVE_GRAPHVIZ)
 
 if(HAVE_POPPLER)
     set(BASE_TARGETS ${BASE_TARGETS} formats-pdf)
-    # set(TESTS_TARGETS ${TESTS_TARGETS} formats-pdf-tests)
 endif(HAVE_POPPLER)
+
+if(HAVE_DJVULIBRE)
+    set(BASE_TARGETS ${BASE_TARGETS} formats-djvu)
+endif(HAVE_DJVULIBRE)
 
 if(USE_DOC_READER)
     set(BASE_TARGETS ${BASE_TARGETS} formats-doc)
@@ -365,6 +388,11 @@ if(HAVE_POPPLER)
     include_directories("${psi-toolkit_SOURCE_DIR}/formats/pdf")
     link_directories("${psi-toolkit_BINARY_DIR}/formats/pdf")
 endif(HAVE_POPPLER)
+
+if(HAVE_DJVULIBRE)
+    include_directories("${psi-toolkit_SOURCE_DIR}/formats/djvu")
+    link_directories("${psi-toolkit_BINARY_DIR}/formats/djvu")
+endif(HAVE_DJVULIBRE)
 
 if(USE_DOC_READER)
     include_directories("${psi-toolkit_SOURCE_DIR}/formats/doc")
