@@ -72,7 +72,8 @@ bool DeleteAction::test(Lattice &lattice,
 //        before ++;
 //        vertex = matchedStartIndex + before;
 //    }
-    bool foundToDelete = foundEdgesToDelete(lattice, vertex, count);
+    //bool foundToDelete = foundEdgesToDelete(lattice, vertex, count);
+    ret = foundEdgesToDelete(lattice, vertex, count);
 
     //@todo: ten warunek to tak ma byc? w ogole ten test musi byc taki zlozony?
     //if (foundToDelete) {
