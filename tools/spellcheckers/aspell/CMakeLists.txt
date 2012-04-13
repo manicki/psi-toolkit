@@ -1,7 +1,6 @@
 add_library(tools-spellcheckers-aspell SHARED
 	psi_aspell.cpp
     aspell_plugin.cpp
-    aspell_plugin_requirements_descriptor.cpp
 )
 
 target_link_libraries(

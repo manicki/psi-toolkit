@@ -6,7 +6,6 @@ endforeach(dir)
 add_library(common-plugins SHARED
     plugin_manager.cpp
     abstract_plugin.cpp
-    plugin_requirements_descriptor.cpp
 )
 
 target_link_libraries(
