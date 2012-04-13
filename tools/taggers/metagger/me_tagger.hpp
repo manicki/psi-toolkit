@@ -7,6 +7,7 @@
 #include "lang_specific_processor_file_fetcher.hpp"
 #include <boost/program_options.hpp>
 #include "regexp.hpp"
+#include <fstream>
 
 #include <string>
 #include <vector>

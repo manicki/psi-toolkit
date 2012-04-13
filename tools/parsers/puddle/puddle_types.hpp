@@ -19,7 +19,10 @@ namespace poleng {
             typedef std::vector<std::string> RuleTokenModifiers;
             typedef std::vector<bool> RuleTokenRequirements;
             typedef std::vector<int> RulePatternIndices;
- #if HAVE_RE2
+
+            typedef RegExp Pattern;
+            typedef boost::shared_ptr<Pattern> PatternPtr;
+#if HAVE_RE2
             typedef std::map<std::string, std::string> NegativePatternStrings;
             typedef std::map<std::string, PatternPtr> NegativePatterns;
 #endif
@@ -38,9 +41,6 @@ namespace poleng {
             typedef std::vector<DeleteCondition> DeleteConditions;
 
             typedef std::map<std::string, std::string> Morphology;
-
-            typedef RegExp Pattern;
-            typedef boost::shared_ptr<Pattern> PatternPtr;
 
             typedef utf8::iterator<std::string::iterator> utf8iterator;
             //@todo: zmienic to na utf8::unchecked::iterator w wersji "produkcyjnej"?

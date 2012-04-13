@@ -8,8 +8,19 @@ Annotator* MeTagger::Factory::doCreateAnnotator(
     std::string modelPathString = "";
     if (options.count("model")) {
         std::string modelFilename = options["model"].as<std::string>();
-        boost::filesystem::path modelPath =
-            fileFetcher.getOneFile(modelFilename);
+        boost::filesystem::path modelPath;
+        try {
+            modelPath = fileFetcher.getOneFile(modelFilename);
+        } catch (FileFetcher::Exception &exception) {
+            if (options.count("train")) {
+                std::ofstream file(modelFilename.c_str(),
+                        std::ios_base::trunc);
+                file.close();
+            } else {
+                modelFilename = DEFAULT_MODEL_FILE;
+            }
+            modelPath = fileFetcher.getOneFile(modelFilename);
+        }
         modelPathString = modelPath.string();
     }
     MeTagger* tagger = new MeTagger(
@@ -193,7 +204,7 @@ void MeTagger::addSampleSentences(Lattice &lattice) {
         TokenEdgesMap tokenEdgesMap = createTokenEdgesMap(lattice,
                 lattice.getFirstVertex(), lattice.getLastVertex()
                     );
-        tagSegment(lattice, tokenEdgesMap);
+        addSampleSegment(lattice, tokenEdgesMap);
     }
     while (segmentIt.hasNext()) {
         Lattice::EdgeDescriptor segment = segmentIt.next();
@@ -434,7 +445,7 @@ MeTagger::Outcome MeTagger::getBestTag(Lattice &lattice,
             } else {
                 openClasses = openClassLabels;
             }
-            if (openClasses.size() > 0) {
+            if (!openClasses.empty()) {
                 for (std::vector<std::string>::iterator openClassIt =
                         openClasses.begin();
                         openClassIt != openClasses.end();
