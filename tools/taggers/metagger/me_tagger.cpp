@@ -445,7 +445,7 @@ MeTagger::Outcome MeTagger::getBestTag(Lattice &lattice,
             } else {
                 openClasses = openClassLabels;
             }
-            if (openClasses.size() > 0) {
+            if (!openClasses.empty()) {
                 for (std::vector<std::string>::iterator openClassIt =
                         openClasses.begin();
                         openClassIt != openClasses.end();
