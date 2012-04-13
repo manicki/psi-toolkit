@@ -1,7 +1,5 @@
 #include "aspell_plugin.hpp"
 
-#include "aspell_plugin_requirements_descriptor.hpp"
-
 std::string AspellPlugin::getLibraryName() {
     return "libpsitoolkit_tools-spellcheckers-aspell-plugin.so";
 }
