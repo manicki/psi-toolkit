@@ -36,6 +36,14 @@ void PluginManager::destroyPluginAdapter(const std::string & pluginName,
     }
 }
 
+bool PluginManager::checkPluginRequirements(const std::string & pluginName,
+                             const boost::program_options::variables_map& options,
+                                            std::ostream & message) {
+    return getPlugin_(pluginName)
+        .checkRequirements(options, message);
+}
+
+
 PluginManager::UnknownPluginException::UnknownPluginException(
     const std::string& pluginName)
     : PsiException(std::string("unknown plugin `") + pluginName + "`") {
@@ -63,7 +71,7 @@ bool PluginManager::checkIsPluginActive_(const std::string & pluginName, bool wi
         return true;
     } else {
         if (withMessage) {
-            // @todo
+            INFO("Plugin: " << pluginName << " is not active.");
         }
 
         return false;

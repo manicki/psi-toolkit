@@ -17,6 +17,10 @@ public:
     PluginAdapter * createPluginAdapter(const std::string & pluginName);
     void destroyPluginAdapter(const std::string & pluginName, PluginAdapter * adapterPointer);
 
+    bool checkPluginRequirements(const std::string & pluginName,
+                                 const boost::program_options::variables_map& options,
+                                 std::ostream & message);
+
     ~PluginManager();
 
     class UnknownPluginException : public PsiException {

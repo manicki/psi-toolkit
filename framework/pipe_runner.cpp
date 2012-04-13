@@ -338,6 +338,17 @@ void PipeRunner::runPipelineNode_(
     Lattice& lattice, std::istream& in, Sink & out) {
 
     PipelineNode& currentPipelineNode = pipelineGraph_[current];
+
+    std::stringstream messageStream;
+    if (!currentPipelineNode.getFactory()->checkRequirements(
+                                           currentPipelineNode.getOptions(),
+                                           messageStream)) {
+
+        INFO("Cant run node, because requirements are not met:\n"
+             << messageStream.str());
+        return;
+    }
+
     currentPipelineNode.createProcessor();
 
     if (current == firstNode) {

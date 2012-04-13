@@ -36,6 +36,10 @@ public:
 
         virtual std::list<std::string> doAllLanguagesHandled() const;
 
+        virtual bool doCheckRequirements(
+                     const boost::program_options::variables_map& options,
+                     std::ostream & message) const;
+
         static const unsigned int DEFAULT_LIMIT;
     };
 
@@ -45,6 +49,7 @@ public:
     ~PSIAspell();
 
     AspellAdapterInterface * getAdapter();
+    bool isActive();
 
     static const std::list<std::string> tagsToOperateOn;
     static const std::list<std::string> tagsToPut;

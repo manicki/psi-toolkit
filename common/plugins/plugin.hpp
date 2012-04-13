@@ -14,6 +14,7 @@ public:
     }
 
     virtual void loadPlugin() {
+        setPluginActive(false);
         if (loadLibrary_()) {
             setPluginActive(true);
         }
@@ -56,7 +57,7 @@ private:
     bool loadLibrary_() {
         libraryHandle_ = dlopen(getLibraryName().c_str(), RTLD_NOW);
         if (!libraryHandle_) {
-            ERROR("Could not load library: " << getLibraryName()
+            DEBUG("Could not load library: " << getLibraryName()
                   << " Reason: " << dlerror());
             return false;
         }

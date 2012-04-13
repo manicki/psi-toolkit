@@ -182,6 +182,15 @@ std::list<std::string> PSIAspell::Factory::doAllLanguagesHandled() const {
         (std::string("zu"));
 }
 
+bool PSIAspell::Factory::doCheckRequirements(
+                     const boost::program_options::variables_map& options,
+                     std::ostream & message) const {
+    return PluginManager::getInstance().checkPluginRequirements("aspell",
+                                                                options,
+                                                                message);
+}
+
+
 LatticeWorker* PSIAspell::doCreateLatticeWorker(Lattice& lattice) {
     return new Worker(*this, lattice);
 }
@@ -194,57 +203,61 @@ PSIAspell::Worker::Worker(Processor& processor, Lattice& lattice):
 }
 
 void PSIAspell::Worker::doRun() {
+    PSIAspell & aspellProcessor = dynamic_cast<PSIAspell&>(processor_);
 
-    LayerTagMask tokenMask_ =
-          lattice_.getLayerTagManager().getMask(
-                   PSIAspell::tagsToOperateOn);
+    if (aspellProcessor.isActive()) {
 
-    Lattice::EdgesSortedByTargetIterator edgeIterator
-        = lattice_.edgesSortedByTarget(tokenMask_);
+        LayerTagMask tokenMask_ =
+            lattice_.getLayerTagManager().getMask(
+                                                  PSIAspell::tagsToOperateOn);
 
-    Lattice::EdgeDescriptor lastTokenEdge;
-    Lattice::EdgeDescriptor lastSeparatingEdge;
-    bool wasLastSeparatingEdge = false;
-    bool wasTokenEdgeInShortDistanceIncorrect = false;
+        Lattice::EdgesSortedByTargetIterator edgeIterator
+            = lattice_.edgesSortedByTarget(tokenMask_);
 
-    while (edgeIterator.hasNext()) {
-        Lattice::EdgeDescriptor currentEdge = edgeIterator.next();
-        std::string category = lattice_.getAnnotationCategory(currentEdge);
+        Lattice::EdgeDescriptor lastTokenEdge;
+        Lattice::EdgeDescriptor lastSeparatingEdge;
+        bool wasLastSeparatingEdge = false;
+        bool wasTokenEdgeInShortDistanceIncorrect = false;
 
-        if ("T" == category) {
-            bool isCurrentTokenIncorrect = processCheckEdgeIsIncorrect_(currentEdge);
+        while (edgeIterator.hasNext()) {
+            Lattice::EdgeDescriptor currentEdge = edgeIterator.next();
+            std::string category = lattice_.getAnnotationCategory(currentEdge);
 
-            if (wasTokenEdgeInShortDistanceIncorrect
-                && isCurrentTokenIncorrect) {
+            if ("T" == category) {
+                bool isCurrentTokenIncorrect = processCheckEdgeIsIncorrect_(currentEdge);
 
-                if (wasLastSeparatingEdge) {
-                    processCheckMultiEdgesAreIncorrect_(lastTokenEdge,
-                                            lastSeparatingEdge,
-                                            currentEdge);
-                } else {
-                    processCheckMultiEdgesAreIncorrect_(lastTokenEdge,
-                                            currentEdge);
+                if (wasTokenEdgeInShortDistanceIncorrect
+                    && isCurrentTokenIncorrect) {
+
+                    if (wasLastSeparatingEdge) {
+                        processCheckMultiEdgesAreIncorrect_(lastTokenEdge,
+                                                            lastSeparatingEdge,
+                                                            currentEdge);
+                    } else {
+                        processCheckMultiEdgesAreIncorrect_(lastTokenEdge,
+                                                            currentEdge);
+                    }
                 }
-            }
 
-            if (isCurrentTokenIncorrect) {
-                wasLastSeparatingEdge = false;
-                lastTokenEdge = currentEdge;
-                wasTokenEdgeInShortDistanceIncorrect = true;
+                if (isCurrentTokenIncorrect) {
+                    wasLastSeparatingEdge = false;
+                    lastTokenEdge = currentEdge;
+                    wasTokenEdgeInShortDistanceIncorrect = true;
+                } else {
+                    wasTokenEdgeInShortDistanceIncorrect = false;
+                }
+
+            } else if ("B" == category) {
+                if (wasLastSeparatingEdge) {
+                    wasTokenEdgeInShortDistanceIncorrect = false;
+                }
+
+                lastSeparatingEdge = currentEdge;
+                wasLastSeparatingEdge = true;
             } else {
+                wasLastSeparatingEdge = false;
                 wasTokenEdgeInShortDistanceIncorrect = false;
             }
-
-        } else if ("B" == category) {
-            if (wasLastSeparatingEdge) {
-                wasTokenEdgeInShortDistanceIncorrect = false;
-            }
-
-            lastSeparatingEdge = currentEdge;
-            wasLastSeparatingEdge = true;
-        } else {
-            wasLastSeparatingEdge = false;
-            wasTokenEdgeInShortDistanceIncorrect = false;
         }
     }
 }
@@ -327,8 +340,11 @@ std::string PSIAspell::doInfo() {
 
 PSIAspell::PSIAspell(const std::string & langCode) {
     init_();
-    aspellAdapter_->initAspell(langCode);
-    aspellAdapter_->createAspellInstance();
+
+    if ( isActive() ) {
+        aspellAdapter_->initAspell(langCode);
+        aspellAdapter_->createAspellInstance();
+    }
 }
 
 PSIAspell::PSIAspell(const std::string & langCode,
@@ -336,9 +352,11 @@ PSIAspell::PSIAspell(const std::string & langCode,
 
     init_();
 
-    aspellAdapter_->initAspell(langCode);
-    aspellAdapter_->passOptionsToAspellConfig(options);
-    aspellAdapter_->createAspellInstance();
+    if ( isActive() ) {
+        aspellAdapter_->initAspell(langCode);
+        aspellAdapter_->passOptionsToAspellConfig(options);
+        aspellAdapter_->createAspellInstance();
+    }
 }
 
 PSIAspell::~PSIAspell() {
@@ -354,4 +372,12 @@ void PSIAspell::init_() {
 
 AspellAdapterInterface * PSIAspell::getAdapter() {
     return aspellAdapter_;
+}
+
+bool PSIAspell::isActive() {
+    if (aspellAdapter_) {
+        return true;
+    } else {
+        return false;
+    }
 }

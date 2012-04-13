@@ -24,6 +24,8 @@ public:
     virtual void passOptionsToAspellConfig(
          const boost::program_options::variables_map& options) = 0;
     virtual void createAspellInstance() = 0;
+
+    virtual bool isDictionaryAvailable(const std::string & langCode) = 0;
 };
 
 #endif

@@ -20,6 +20,7 @@ public:
     virtual void passOptionsToAspellConfig(
          const boost::program_options::variables_map& options);
     virtual void createAspellInstance();
+    virtual bool isDictionaryAvailable(const std::string & langCode);
 
 private:
     AspellConfig * aspellConfig_;

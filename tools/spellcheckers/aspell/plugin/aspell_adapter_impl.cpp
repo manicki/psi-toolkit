@@ -110,6 +110,24 @@ void AspellAdapterImpl::createAspellInstance() {
     }
 }
 
+bool AspellAdapterImpl::isDictionaryAvailable(const std::string & langCode) {
+    AspellConfig * tempAspellConfig = new_aspell_config();
+    aspell_config_replace(tempAspellConfig, "lang", langCode.c_str());
+    AspellCanHaveError * possibleError = new_aspell_speller(tempAspellConfig);
+
+    bool result = true;
+    if (aspell_error_number(possibleError) != 0) {
+        result = false;
+    } else {
+        AspellSpeller * tempSpeller = to_aspell_speller(possibleError);
+        delete_aspell_speller(tempSpeller);
+    }
+
+    delete_aspell_config(tempAspellConfig);
+    
+    return result;
+}
+
 // ==============================================
 
 extern "C" AspellAdapterImpl* create() {
@@ -119,4 +137,3 @@ extern "C" AspellAdapterImpl* create() {
 extern "C" void destroy(AspellAdapterImpl* Tl) {
     delete Tl ;
 }
-

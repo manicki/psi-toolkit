@@ -93,3 +93,13 @@ std::string ProcessorFactory::getFileContent(boost::filesystem::path path) {
 
 ProcessorFactory::~ProcessorFactory() {
 }
+
+bool ProcessorFactory::checkRequirements(const boost::program_options::variables_map& options,
+                                         std::ostream & message) const {
+    return doCheckRequirements(options, message);
+}
+
+bool ProcessorFactory::doCheckRequirements(const boost::program_options::variables_map& /*options*/,
+                                           std::ostream & /*message*/) const {
+    return true;
+}

@@ -1,6 +1,9 @@
 #ifndef ABSTRACT_PLUGIN_HDR
 #define ABSTRACT_PLUGIN_HDR
 
+#include <boost/program_options/variables_map.hpp>
+#include <boost/shared_ptr.hpp>
+
 #include <string>
 #include "plugin_adapter.hpp"
 
@@ -13,6 +16,10 @@ public:
     virtual ~AbstractPlugin() {
     }
 
+    bool checkRequirements(const boost::program_options::variables_map& options,
+                           std::ostream & message);
+
+    
     virtual std::string getName() = 0;
     virtual std::string getLibraryName() = 0;
 
@@ -30,6 +37,11 @@ protected:
     }
 
 private:
+
+    virtual bool doCheckRequirementsWithOptions(
+                             const boost::program_options::variables_map& options,
+                             std::ostream & message) = 0;
+
     bool active_;
 };
 

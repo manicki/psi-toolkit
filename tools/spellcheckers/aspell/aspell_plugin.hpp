@@ -8,8 +8,11 @@ class AspellPlugin : public Plugin<AspellAdapterInterface> {
 public:
     virtual std::string getLibraryName();
     virtual std::string getName();
-    
+
 private:
+    virtual bool doCheckRequirementsWithOptions(
+                             const boost::program_options::variables_map& options,
+                             std::ostream & message);
 };
 
 #endif
