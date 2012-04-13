@@ -9,11 +9,8 @@
 AspellAdapterImpl::AspellAdapterImpl() :
     limitCandidates_(0),
     langCode_("") {
-    DEBUG("Constructor AspellAdapterImpl");
-
     aspellSpeller_ = NULL;
     aspellConfig_ = new_aspell_config();
-    DEBUG("Created");
 }
 
 
@@ -61,7 +58,6 @@ void AspellAdapterImpl::getSuggestionsForLastWord(
 }
 
 void AspellAdapterImpl::initAspell(const std::string & langCode) {
-    DEBUG("initAspell()");
     langCode_ = langCode;
     aspell_config_replace(aspellConfig_, "lang", langCode.c_str());
     aspell_config_replace(aspellConfig_, "encoding", "utf-8");
@@ -70,7 +66,6 @@ void AspellAdapterImpl::initAspell(const std::string & langCode) {
 void AspellAdapterImpl::passOptionsToAspellConfig(
                 const boost::program_options::variables_map& options) {
 
-    DEBUG("passOptionsToAspellConfig");
     if (options.count("limit")) {
         limitCandidates_ = options["limit"].as<unsigned int>();
     } else {
@@ -105,7 +100,6 @@ void AspellAdapterImpl::passOptionsToAspellConfig(
 }
 
 void AspellAdapterImpl::createAspellInstance() {
-    DEBUG("createAspellInstance");
     AspellCanHaveError * possibleError = new_aspell_speller(aspellConfig_);
     if (aspell_error_number(possibleError) != 0) {
         ERROR("ASPELL CREATION ERROR: " << aspell_error_message(possibleError));

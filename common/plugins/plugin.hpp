@@ -10,7 +10,6 @@ template <typename PluginAdapterClass>
 class Plugin : public AbstractPlugin{
 public:
     Plugin() : libraryHandle_(NULL) {
-        DEBUG("Plugin constructor");
         setPluginActive(false);
     }
 
@@ -38,21 +37,17 @@ protected:
     typedef void destroyFunctionPointer(PluginAdapterClass*);
 
     PluginAdapterClass * createSpecificAdapter_() {
-        DEBUG("Create Adapter");
         createFunctionPointer* creat = (createFunctionPointer*) dlsym(libraryHandle_, "create");
 
         if (!creat) {
             ERROR("Cant get symbol create: " << dlerror());
         }
 
-        DEBUG("Got symbol create");
         PluginAdapterClass * result = creat();
-        DEBUG("Got new adapter...");
         return result;
     }
 
     void destroySpecificAdapter_(PluginAdapterClass * adapter) {
-        DEBUG("Destroy Adapter");
         destroyFunctionPointer* destroy =
             (destroyFunctionPointer*) dlsym(libraryHandle_, "destroy");
         destroy(adapter);
@@ -66,7 +61,6 @@ private:
             return false;
         }
 
-        DEBUG("Library loaded...");
         return true;
     }
 
