@@ -12,11 +12,12 @@
 
 namespace psi {
 
-    template <typename ArcT = Arc<Symbol, size_t>, typename PosT = size_t>
+    template <typename ArcT = Arc<Symbol, size_t>, typename PosT = size_t,
+    template <typename> class Allocator = std::allocator>
     class BinDFSA {
       protected:
-        typedef std::vector<PosT> States;
-        typedef std::vector<ArcT> Arcs;
+        typedef std::vector<PosT, Allocator<PosT> > States;
+        typedef std::vector<ArcT, Allocator<ArcT> > Arcs;
 
       public:
         typedef size_t state_type;
@@ -58,38 +59,52 @@ namespace psi {
         size_t addState(bool = false);
         void addArc(size_t, arc_type);
 
+        std::set<size_t> epsClosure(size_t p) const;
+
         size_t size() const;
         void swap(BinDFSA &);
         void print();
 
     };
+    
+    template <typename ArcT, typename PosT, template <typename> class Allocator>
+    const std::set<size_t> BinDFSA<ArcT, PosT, Allocator>::getStartStates() const {
+        std::set<size_t> startStates;
+        startStates.insert(0);
+        return startStates;
+    };
+    
+    template <typename ArcT, typename PosT, template <typename> class Allocator>
+    bool BinDFSA<ArcT, PosT, Allocator>::isStartState(size_t p) const {
+        return p == 0;
+    }
 
-    template <typename ArcT, typename PosT>
-    void BinDFSA<ArcT, PosT>::setStartState(size_t p) {}
+    template <typename ArcT, typename PosT, template <typename> class Allocator>
+    void BinDFSA<ArcT, PosT, Allocator>::setStartState(size_t p) {}
 
-    template <typename ArcT, typename PosT>
-    void BinDFSA<ArcT, PosT>::unsetStartState(size_t p) {}
+    template <typename ArcT, typename PosT, template <typename> class Allocator>
+    void BinDFSA<ArcT, PosT, Allocator>::unsetStartState(size_t p) {}
 
-    template <typename ArcT, typename PosT>
-    void BinDFSA<ArcT, PosT>::setEndState(size_t p) {
+    template <typename ArcT, typename PosT, template <typename> class Allocator>
+    void BinDFSA<ArcT, PosT, Allocator>::setEndState(size_t p) {
         m_states[p] = setLastBit(m_states[p]);
     }
 
-    template <typename ArcT, typename PosT>
-    void BinDFSA<ArcT, PosT>::unsetEndState(size_t p) {
+    template <typename ArcT, typename PosT, template <typename> class Allocator>
+    void BinDFSA<ArcT, PosT, Allocator>::unsetEndState(size_t p) {
         m_states[p] = unsetLastBit(m_states[p]);
     }
 
-    template <typename ArcT, typename PosT>
-    size_t BinDFSA<ArcT, PosT>::addState(bool start) {
+    template <typename ArcT, typename PosT, template <typename> class Allocator>
+    size_t BinDFSA<ArcT, PosT, Allocator>::addState(bool start) {
         size_t p = m_states.size();
         m_states.resize(p+1);
         m_states[p] = m_arcs.size();
         return p;
     }
 
-    template <typename ArcT, typename PosT>
-    void BinDFSA<ArcT, PosT>::addArc(size_t p, ArcT a) {
+    template <typename ArcT, typename PosT, template <typename> class Allocator>
+    void BinDFSA<ArcT, PosT, Allocator>::addArc(size_t p, ArcT a) {
         ArcSorter cmp;
         if (p < m_states.size()) {
             PosT pos = unsetLastBit(m_states[p]);
@@ -100,9 +115,11 @@ namespace psi {
 
             while (pos < end && cmp(m_arcs[pos], a))
                 pos++;
+            if(m_arcs.capacity() == m_arcs.size())
+                m_arcs.reserve(m_arcs.size()*2);
             m_arcs.insert(m_arcs.begin() + pos, a);
 
-            for (size_t q = p+1; q < m_states.size(); q++)
+            for (size_t q = p + 1; q < m_states.size(); q++)
                 if (isEndState(q))
                     m_states[q] = setLastBit(unsetLastBit(m_states[q]) + 1);
                 else
@@ -110,33 +127,33 @@ namespace psi {
         }
     }
 
-    template <typename ArcT, typename PosT>
-    BinDFSA<ArcT, PosT>::BinDFSA() {}
+    template <typename ArcT, typename PosT, template <typename> class Allocator>
+    BinDFSA<ArcT, PosT, Allocator>::BinDFSA() { }
 
-    template <typename ArcT, typename PosT>
-    inline size_t BinDFSA<ArcT, PosT>::delta(size_t p, typename ArcT::symbol_type a) const {
-        if (BinDFSA<ArcT, PosT>::m_states.size() < p)
+    template <typename ArcT, typename PosT, template <typename> class Allocator>
+    inline size_t BinDFSA<ArcT, PosT, Allocator>::delta(size_t p, typename ArcT::symbol_type a) const {
+        if (BinDFSA<ArcT, PosT, Allocator>::m_states.size() < p)
             return size_t(-1);
 
         arc_iterator_type arc = find(p, a);
-        if (arc == BinDFSA<ArcT, PosT>::m_arcs->end())
+        if (arc == BinDFSA<ArcT, PosT, Allocator>::m_arcs->end())
             return size_t(-1);
         else
             return arc->getDest();
     }
 
-    template <typename ArcT, typename PosT>
-    inline typename BinDFSA<ArcT, PosT>::arc_iterator_type
-    BinDFSA<ArcT, PosT>::find(size_t p, typename ArcT::symbol_type a) const {
+    template <typename ArcT, typename PosT, template <typename> class Allocator>
+    inline typename BinDFSA<ArcT, PosT, Allocator>::arc_iterator_type
+    BinDFSA<ArcT, PosT, Allocator>::find(size_t p, typename ArcT::symbol_type a) const {
         ArcRange<arc_iterator_type> r = getArcs(p);
 
         ArcT test(a, -1);
         return std::lower_bound(r.first, r.second, test, ArcSorter());
     }
 
-    template <typename ArcT, typename PosT>
+    template <typename ArcT, typename PosT, template <typename> class Allocator>
     template <typename InputIterator>
-    bool BinDFSA<ArcT, PosT>::in(InputIterator it, InputIterator end) {
+    bool BinDFSA<ArcT, PosT, Allocator>::in(InputIterator it, InputIterator end) {
         size_t current_state = 0;
         while (it != end) {
             size_t next_state = delta(current_state, *it);
@@ -149,29 +166,24 @@ namespace psi {
         return isEndState(current_state);
     }
 
-    template <typename ArcT, typename PosT>
-    bool BinDFSA<ArcT, PosT>::isStartState(size_t state) const {
-        return state == 0;
-    }
-
-    template <typename ArcT, typename PosT>
-    PosT BinDFSA<ArcT, PosT>::setLastBit(PosT pos) const {
+    template <typename ArcT, typename PosT, template <typename> class Allocator>
+    PosT BinDFSA<ArcT, PosT, Allocator>::setLastBit(PosT pos) const {
         return pos | (PosT(1) << (sizeof(PosT)*8-1));
     }
 
-    template <typename ArcT, typename PosT>
-    PosT BinDFSA<ArcT, PosT>::unsetLastBit(PosT pos) const {
+    template <typename ArcT, typename PosT, template <typename> class Allocator>
+    PosT BinDFSA<ArcT, PosT, Allocator>::unsetLastBit(PosT pos) const {
         return pos & ~(PosT(1) << (sizeof(PosT)*8-1));
     }
 
 
-    template <typename ArcT, typename PosT>
-    bool BinDFSA<ArcT, PosT>::isEndState(size_t state) const {
+    template <typename ArcT, typename PosT, template <typename> class Allocator>
+    bool BinDFSA<ArcT, PosT, Allocator>::isEndState(size_t state) const {
         return (m_states[state] & (PosT(1) << (sizeof(PosT)*8-1)));
     }
 
-    template <typename ArcT, typename PosT>
-    const std::set<size_t> BinDFSA<ArcT, PosT>::getEndStates() const {
+    template <typename ArcT, typename PosT, template <typename> class Allocator>
+    const std::set<size_t> BinDFSA<ArcT, PosT, Allocator>::getEndStates() const {
         std::set<size_t> end_states;
 
         for (size_t p = 0; p < m_states.size(); p++)
@@ -181,9 +193,9 @@ namespace psi {
         return end_states;
     }
 
-    template <typename ArcT, typename PosT>
-    const ArcRange<typename BinDFSA<ArcT, PosT>::arc_iterator_type>
-    BinDFSA<ArcT, PosT>::getArcs(size_t p) const {
+    template <typename ArcT, typename PosT, template <typename> class Allocator>
+    const ArcRange<typename BinDFSA<ArcT, PosT, Allocator>::arc_iterator_type>
+    BinDFSA<ArcT, PosT, Allocator>::getArcs(size_t p) const {
         if (p < m_states.size()-1) {
             PosT pos1 = unsetLastBit(m_states[p]);
             PosT pos2 = unsetLastBit(m_states[p+1]);
@@ -217,23 +229,23 @@ namespace psi {
         }
     }
 
-    template <typename ArcT, typename PosT>
-    size_t BinDFSA<ArcT, PosT>::size() const {
+    template <typename ArcT, typename PosT, template <typename> class Allocator>
+    size_t BinDFSA<ArcT, PosT, Allocator>::size() const {
         return m_states.size();
     }
 
-    template <typename ArcT, typename PosT>
-    void BinDFSA<ArcT, PosT>::swap(BinDFSA<ArcT, PosT> &fsa) {
+    template <typename ArcT, typename PosT, template <typename> class Allocator>
+    void BinDFSA<ArcT, PosT, Allocator>::swap(BinDFSA<ArcT, PosT, Allocator> &fsa) {
         m_states.swap(fsa.m_states);
         m_arcs.swap(fsa.m_arcs);
     }
 
-    template <typename ArcT, typename PosT>
-    void BinDFSA<ArcT, PosT>::print() {
+    template <typename ArcT, typename PosT, template <typename> class Allocator>
+    void BinDFSA<ArcT, PosT, Allocator>::print() {
         for (size_t p = 0; p < m_states.size(); p++) {
             ArcRange<arc_iterator_type> r = getArcs(p);
             for (arc_iterator_type it = r.first; it != r.second; it++) {
-                std::cout << p << "\t" << it->getDest() << "\t" << it->getSymbol()
+                std::cout << p << "\t" << it->getDest() << "\t" << (long)it->getSymbol()
                     << std::endl;
             }
             if (isEndState(p)) {
@@ -241,6 +253,33 @@ namespace psi {
             }
         }
     }
+    
+    template <typename ArcT, typename PosT, template <typename> class Allocator>
+    std::set<size_t> BinDFSA<ArcT, PosT, Allocator>::epsClosure(size_t p) const {
+        std::set<size_t> closure;
+        std::vector<size_t> queue;
+
+        closure.insert(p);
+        queue.push_back(p);
+        while (!queue.empty()) {
+            size_t s = queue.back();
+            queue.pop_back();
+
+            ArcRange<arc_iterator_type> arcs = getArcs(s);
+            for (arc_iterator_type ait = arcs.first; ait != arcs.second; ait++) {
+                if (ait->getSymbol() == EPS && !closure.count(ait->getDest())) {
+                    closure.insert(ait->getDest());
+                    queue.push_back(ait->getDest());
+                }
+            }
+        }
+
+        return closure;
+    }
+    
+    typedef BinDFSA<Arc<Symbol, size_t>, size_t, std::allocator> MemBinDFSA;
+    typedef BinDFSA<Arc<Symbol, size_t>, size_t, MmapAllocator>  MapBinDFSA;
+
 }
 
 #endif

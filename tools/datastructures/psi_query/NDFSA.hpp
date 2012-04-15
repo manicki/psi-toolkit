@@ -9,6 +9,7 @@
 #include <boost/foreach.hpp>
 
 #include "FSATypes.hpp"
+#include "MmapAllocator.hpp"
 
 namespace psi {
 

@@ -67,6 +67,13 @@ namespace psi {
         ArcRange(ArcIteratorT begin, ArcIteratorT end)
           : std::pair<ArcIteratorT, ArcIteratorT>(begin, end) {};
     };
+    
+}
+
+template <class OStream, typename SymbolT, typename StateT>
+OStream& operator<<(OStream &o, psi::Arc<SymbolT, StateT> a) {
+  o << a.getDest() << " " << (long)a.getSymbol() << std::endl;
+  return o;
 }
 
 #endif

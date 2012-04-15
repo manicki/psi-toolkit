@@ -24,7 +24,7 @@ namespace psi {
                     state_type temp = ait->getDest();
                     arc_type arc(*ait);
                     arc.setDest(p);
-
+                    //std::cerr << "r: " << temp << std::endl;
                     reversedArcs[temp].insert(arc);
                 }
             }
@@ -39,6 +39,7 @@ namespace psi {
         }
 
         std::set<arc_type, ArcSorter> arcFn(state_type p) const {
+            //std::cerr << "revarcs: " << reversedArcs.size() << " " << p << std::endl;
             typename std::map<state_type, std::set<arc_type, ArcSorter> >
                 ::const_iterator cit = reversedArcs.find(p);
             if (cit != reversedArcs.end())
@@ -230,8 +231,8 @@ namespace psi {
             queue.push_back(s);
         }
 
-        while (!queue.empty()) {
-            WrapperState s = queue.back();
+        while (!queue.empty()) {            
+            WrapperState s = queue.back();            
             queue.pop_back();
 
             if (!mapper.count(s)) {
@@ -248,7 +249,6 @@ namespace psi {
                     mapper[arc.getDest()] = n;
                     queue.push_back(arc.getDest());
                 }
-
                 fsa.addArc(
                     mapper[s], Arc(arc.getSymbol(), mapper[arc.getDest()])
                 );
@@ -268,6 +268,7 @@ namespace psi {
     void reachable(FSA &fsa) {
         FSA temp;
         traverse(Copier<FSA>(fsa), temp);
+        temp.print();
         fsa.swap(temp);
     }
 
