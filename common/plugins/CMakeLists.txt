@@ -1,3 +1,5 @@
+include_directories("${psi-toolkit_SOURCE_DIR}/tools/spellcheckers/aspell")
+
 foreach(dir ${tools_DIRS})
     include_directories("${psi-toolkit_SOURCE_DIR}/tools/${dir}")
     link_directories("${psi-toolkit_BINARY_DIR}/tools/${dir}")
