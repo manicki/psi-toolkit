@@ -86,6 +86,7 @@ std::list<std::string> HelpFormatter::getProcessorNamesForAlias(std::string alia
         processorNames.push_front(processor->getName());
     }
 
+    processorNames.sort();
     return processorNames;
 }
 
