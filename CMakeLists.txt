@@ -530,7 +530,7 @@ FOREACH(variable_name ${all_variables})
     GET_TARGET_PROPERTY(target_location ${library_name} LOCATION)
 
     if(NOT target_location MATCHES "NOTFOUND")
-      if (NOT target_location MATCHES "psitoolkit_perl_simple")
+      if (NOT target_location MATCHES "psitoolkit_perl_simple|_PSIToolkit")
         SET_TARGET_PROPERTIES(${library_name}
           PROPERTIES
           PREFIX ${MY_TARGETLIB_PREFIX}
