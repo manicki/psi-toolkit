@@ -535,9 +535,7 @@ void MeTagger::applyTokenTags(Lattice &lattice, TokenEdgesMap tokenEdgesMap,
             if (allFormsDiscarded) {
                 if (lattice.getEdgeAnnotationItem(token).getCategory() == "T") {
                     std::string lemma = lattice.getEdgeText(token);
-                    std::string partOfSpeech = tag;
-                    if (tag.find(":") > 0)
-                        partOfSpeech = tag.substr(0, tag.find(":"));
+                    std::string partOfSpeech = getPartOfSpeechFromMorphoTag(tag);
 
                     if (!lemmaEdgeExists(lattice, token, lemma)) {
                         addLemmaEdge(lattice, token, lemma);
@@ -613,10 +611,55 @@ std::string MeTagger::getFormMorphoTag(Lattice &lattice,
         if (avIt->first == "head" || avIt->first == "orth")
             continue;
         if (morphoTag != "")
-            morphoTag += ":";
+            morphoTag += ",";
+        morphoTag += avIt->first;
+        morphoTag += "=";
         morphoTag += avIt->second;
     }
     return morphoTag;
+}
+
+std::string MeTagger::getPartOfSpeechFromMorphoTag(std::string tag) {
+    std::string partOfSpeech = tag;
+    if (tag.find(",") > 0)
+        partOfSpeech = tag.substr(0, tag.find(","));
+    return partOfSpeech;
+}
+
+std::list<std::pair<std::string, std::string> >
+    MeTagger::getAttributesFromMorphoTag(std::string tag) {
+    std::list<std::pair<std::string, std::string> > attributes;
+    std::string tempTag = "";
+    if (tag.find(",") > 0) {
+        tempTag = tag.substr(tag.find(",") + 1, std::string::npos);
+    }
+    while (tempTag.find(",") != std::string::npos) {
+        size_t sepPos = tempTag.find(",");
+        std::string attributeString = tempTag.substr(0, sepPos);
+        if (attributeString.find("=") != std::string::npos) {
+            std::string key = attributeString.substr(0,
+                    attributeString.find("="));
+            std::string value = attributeString.substr(attributeString.find(
+                        "=") + 1, std::string::npos);
+            attributes.push_back(std::pair<std::string, std::string>(
+                        key, value));
+        }
+        if (sepPos < tempTag.size())
+            tempTag = tempTag.substr(sepPos + 1, std::string::npos);
+        else
+            tempTag = "";
+    }
+    if (tempTag != "") {
+        if (tempTag.find("=") != std::string::npos) {
+            std::string key = tempTag.substr(0,
+                    tempTag.find("="));
+            std::string value = tempTag.substr(tempTag.find(
+                        "=") + 1, std::string::npos);
+            attributes.push_back(std::pair<std::string, std::string>(
+                        key, value));
+        }
+    }
+    return attributes;
 }
 
 bool MeTagger::lemmaEdgeExists(Lattice &lattice,
@@ -727,13 +770,19 @@ void MeTagger::addFormEdge(Lattice &lattice,
 
                 AnnotationItem annotationItem(partOfSpeech,
                         StringFrag(lattice.getEdgeText(token)) );
-                //@todo: nie mam pomyslu, jak z tagu zgadywac,
-                //      jaki atrybut morfosyntaktyczny mamy ustawic
-                lattice.getAnnotationItemManager().setValue(
-                        annotationItem, "morphology", tag);
+                std::list<std::pair<std::string, std::string> > attributes =
+                    getAttributesFromMorphoTag(tag);
+                for (std::list<std::pair<std::string, std::string> >::iterator
+                        attrIt = attributes.begin();
+                        attrIt != attributes.end();
+                        ++ attrIt) {
+                    lattice.getAnnotationItemManager().setValue(
+                        annotationItem, attrIt->first, attrIt->second);
+                }
                 LayerTagCollection formTag
                     = lattice.getLayerTagManager().
                         createSingletonTagCollection("form");
+                //@todo: tylko takie tagi? skopiowac jakies inne? o tagsecie np? dodac wlasny tag "metagger"?
 
                 lattice.addEdge(
                         lattice.getEdgeSource(token),
