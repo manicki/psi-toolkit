@@ -10,9 +10,18 @@ public:
     virtual std::string getName();
 
 private:
-    virtual bool doCheckRequirementsWithOptions(
-                             const boost::program_options::variables_map& options,
-                             std::ostream & message);
+    virtual bool doCheckRequirementsWithOptionsDefaultOS(
+                             const boost::program_options::variables_map& options
+                             );
+
+    virtual bool doCheckRequirementsWithOptionsUbuntu(
+                             const boost::program_options::variables_map& options
+                             );
+
+    virtual bool areRequirementsDefinedForUbuntu();
+
+    bool checkIfDictionaryAvailable_(const boost::program_options::variables_map& options);
+    std::string getAspellRequiredLibraryName_();
 };
 
 #endif

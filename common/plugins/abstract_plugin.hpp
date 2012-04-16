@@ -6,6 +6,8 @@
 
 #include <string>
 #include "plugin_adapter.hpp"
+#include "psi_exception.hpp"
+#include "plugin_requirements_checker.hpp"
 
 class AbstractPlugin {
 public:
@@ -30,17 +32,50 @@ public:
         return active_;
     }
 
+    class InactivePluginException : public PsiException {
+    public:
+        InactivePluginException(const std::string& pluginName);
+
+        virtual ~InactivePluginException() throw() {}
+    };
+
+
 protected:
     void setPluginActive(bool newState) {
         active_ = newState;
     }
 
+    PluginRequirementsChecker & getCurrentRequirementsChecker();
+
 private:
 
-    virtual bool doCheckRequirementsWithOptions(
+    bool doCheckRequirementsWithOptions(
                              const boost::program_options::variables_map& options,
-                             std::ostream & message) = 0;
+                             std::ostream & message);
 
+    virtual bool doCheckRequirementsWithOptionsDefaultOS(
+                             const boost::program_options::variables_map& options
+                             ) = 0;
+
+    /**
+     * Redefine those methods in derived classes
+     * to define requirements for specific system.
+     */
+
+    virtual bool doCheckRequirementsWithOptionsUbuntu(
+                             const boost::program_options::variables_map& options
+                             );
+    virtual bool areRequirementsDefinedForUbuntu();
+
+    virtual bool doCheckRequirementsWithOptionsArchLinux(
+                             const boost::program_options::variables_map& options
+                             );
+    virtual bool areRequirementsDefinedForArchLinux();
+
+
+    void finishRequirementsChecker_();
+
+    boost::shared_ptr<PluginRequirementsChecker> currentRequirementsChecker;
     bool active_;
 };
 
