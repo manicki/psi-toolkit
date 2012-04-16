@@ -8,12 +8,6 @@ bool AbstractPlugin::checkRequirements(
     if (isPluginActive()) {
         return doCheckRequirementsWithOptions(options, message);
     } else {
-        if (doCheckRequirementsWithOptions(options, message)) {
-            // @todo Something wrong!
-            // Plugin not active but requirements ok?
-            return false;
-        } else {
-            return false;
-        }
+        return false;
     }
 }
