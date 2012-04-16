@@ -128,6 +128,10 @@ private:
     template<typename Source, typename Sink>
     void completeGraph_();
 
+    void checkLangOption_();
+    std::string getJustOneLanguage_();
+    void setOnlyOneLanguage_(const std::string& langCode);
+
     template<typename Source>
     void checkReader_();
 
@@ -146,6 +150,9 @@ private:
         std::istream& in, Sink & out);
 
     void listLanguagesForPipelineNode_(PipelineGraph::vertex_descriptor current);
+    std::string getNodeJustOneLanguage_(PipelineGraph::vertex_descriptor);
+    void setOnlyOneLanguageForNode_(
+        const std::string& langCode, PipelineGraph::vertex_descriptor node);
 
     bool goToNextNode_(PipelineGraph::vertex_descriptor& current);
 
