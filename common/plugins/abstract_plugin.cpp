@@ -27,7 +27,8 @@ bool AbstractPlugin::checkRequirements(
 
 AbstractPlugin::InactivePluginException::InactivePluginException(
     const std::string& pluginName)
-    : PsiException(std::string("plugin is not active, but requirements are met: `") + pluginName + "`") {
+    : PsiException(std::string("plugin is not active, but requirements are met: `")
+                   + pluginName + "`") {
 }
 
 bool AbstractPlugin::doCheckRequirementsWithOptions(
