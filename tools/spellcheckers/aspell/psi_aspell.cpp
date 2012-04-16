@@ -10,7 +10,8 @@
 
 const unsigned int PSIAspell::Factory::DEFAULT_LIMIT = 5;
 const std::list<std::string> PSIAspell::tagsToOperateOn = boost::assign::list_of("token");
-const std::list<std::string> PSIAspell::tagsToPut = boost::assign::list_of("token")("aspell")("corrected");
+const std::list<std::string> PSIAspell::tagsToPut = boost::assign::list_of
+    ("token")("aspell")("corrected");
 
 Annotator* PSIAspell::Factory::doCreateAnnotator(
     const boost::program_options::variables_map& options) {
@@ -181,6 +182,15 @@ std::list<std::string> PSIAspell::Factory::doAllLanguagesHandled() const {
         (std::string("zu"));
 }
 
+bool PSIAspell::Factory::doCheckRequirements(
+                     const boost::program_options::variables_map& options,
+                     std::ostream & message) const {
+    return PluginManager::getInstance().checkPluginRequirements("aspell",
+                                                                options,
+                                                                message);
+}
+
+
 LatticeWorker* PSIAspell::doCreateLatticeWorker(Lattice& lattice) {
     return new Worker(*this, lattice);
 }
@@ -193,57 +203,61 @@ PSIAspell::Worker::Worker(Processor& processor, Lattice& lattice):
 }
 
 void PSIAspell::Worker::doRun() {
+    PSIAspell & aspellProcessor = dynamic_cast<PSIAspell&>(processor_);
 
-    LayerTagMask tokenMask_ =
-          lattice_.getLayerTagManager().getMask(
-                   PSIAspell::tagsToOperateOn);
+    if (aspellProcessor.isActive()) {
 
-    Lattice::EdgesSortedByTargetIterator edgeIterator
-        = lattice_.edgesSortedByTarget(tokenMask_);
+        LayerTagMask tokenMask_ =
+            lattice_.getLayerTagManager().getMask(
+                                                  PSIAspell::tagsToOperateOn);
 
-    Lattice::EdgeDescriptor lastTokenEdge;
-    Lattice::EdgeDescriptor lastSeparatingEdge;
-    bool wasLastSeparatingEdge = false;
-    bool wasTokenEdgeInShortDistanceIncorrect = false;
+        Lattice::EdgesSortedByTargetIterator edgeIterator
+            = lattice_.edgesSortedByTarget(tokenMask_);
 
-    while (edgeIterator.hasNext()) {
-        Lattice::EdgeDescriptor currentEdge = edgeIterator.next();
-        std::string category = lattice_.getAnnotationCategory(currentEdge);
+        Lattice::EdgeDescriptor lastTokenEdge;
+        Lattice::EdgeDescriptor lastSeparatingEdge;
+        bool wasLastSeparatingEdge = false;
+        bool wasTokenEdgeInShortDistanceIncorrect = false;
 
-        if ("T" == category) {
-            bool isCurrentTokenIncorrect = processCheckEdgeIsIncorrect_(currentEdge);
+        while (edgeIterator.hasNext()) {
+            Lattice::EdgeDescriptor currentEdge = edgeIterator.next();
+            std::string category = lattice_.getAnnotationCategory(currentEdge);
 
-            if (wasTokenEdgeInShortDistanceIncorrect
-                && isCurrentTokenIncorrect) {
+            if ("T" == category) {
+                bool isCurrentTokenIncorrect = processCheckEdgeIsIncorrect_(currentEdge);
 
-                if (wasLastSeparatingEdge) {
-                    processCheckMultiEdgesAreIncorrect_(lastTokenEdge,
-                                            lastSeparatingEdge,
-                                            currentEdge);
-                } else {
-                    processCheckMultiEdgesAreIncorrect_(lastTokenEdge,
-                                            currentEdge);
+                if (wasTokenEdgeInShortDistanceIncorrect
+                    && isCurrentTokenIncorrect) {
+
+                    if (wasLastSeparatingEdge) {
+                        processCheckMultiEdgesAreIncorrect_(lastTokenEdge,
+                                                            lastSeparatingEdge,
+                                                            currentEdge);
+                    } else {
+                        processCheckMultiEdgesAreIncorrect_(lastTokenEdge,
+                                                            currentEdge);
+                    }
                 }
-            }
 
-            if (isCurrentTokenIncorrect) {
-                wasLastSeparatingEdge = false;
-                lastTokenEdge = currentEdge;
-                wasTokenEdgeInShortDistanceIncorrect = true;
+                if (isCurrentTokenIncorrect) {
+                    wasLastSeparatingEdge = false;
+                    lastTokenEdge = currentEdge;
+                    wasTokenEdgeInShortDistanceIncorrect = true;
+                } else {
+                    wasTokenEdgeInShortDistanceIncorrect = false;
+                }
+
+            } else if ("B" == category) {
+                if (wasLastSeparatingEdge) {
+                    wasTokenEdgeInShortDistanceIncorrect = false;
+                }
+
+                lastSeparatingEdge = currentEdge;
+                wasLastSeparatingEdge = true;
             } else {
+                wasLastSeparatingEdge = false;
                 wasTokenEdgeInShortDistanceIncorrect = false;
             }
-
-        } else if ("B" == category) {
-            if (wasLastSeparatingEdge) {
-                wasTokenEdgeInShortDistanceIncorrect = false;
-            }
-
-            lastSeparatingEdge = currentEdge;
-            wasLastSeparatingEdge = true;
-        } else {
-            wasLastSeparatingEdge = false;
-            wasTokenEdgeInShortDistanceIncorrect = false;
         }
     }
 }
@@ -307,9 +321,9 @@ bool PSIAspell::Worker::processAspellCheckOnText_(const std::string & textToChec
 SuggestionsList * PSIAspell::Worker::checkWordInAspell_(const std::string & text) {
     PSIAspell & aspellProcessor = dynamic_cast<PSIAspell&>(processor_);
 
-    if (!aspellProcessor.isWordCorrect(text)) {
+    if (!aspellProcessor.getAdapter()->isWordCorrect(text)) {
         SuggestionsList * suggestions = new SuggestionsList();
-        aspellProcessor.getSuggestionsForLastWord(*suggestions, text);
+        aspellProcessor.getAdapter()->getSuggestionsForLastWord(*suggestions, text);
 
         return suggestions;
     } else {
@@ -324,116 +338,46 @@ std::string PSIAspell::doInfo() {
 // ===================================
 // PSIAspell
 
-PSIAspell::PSIAspell(const std::string & langCode) :
-    limitCandidates_(0)
-{
-    initPSIAspell_(langCode);
-    createAspellInstance_();
+PSIAspell::PSIAspell(const std::string & langCode) {
+    init_();
+
+    if ( isActive() ) {
+        aspellAdapter_->initAspell(langCode);
+        aspellAdapter_->createAspellInstance();
+    }
 }
 
 PSIAspell::PSIAspell(const std::string & langCode,
-                     const boost::program_options::variables_map& options) :
-    limitCandidates_(0)
-{
-    initPSIAspell_(langCode);
+                     const boost::program_options::variables_map& options) {
 
-    passOptionsToAspellConfig_(options);
+    init_();
 
-    createAspellInstance_();
-}
-
-void PSIAspell::initPSIAspell_(const std::string & langCode) {
-    langCode_ = langCode;
-    aspellConfig_ = NULL;
-    aspellSpeller_ = NULL;
-    aspellConfig_ = new_aspell_config();
-    aspell_config_replace(aspellConfig_, "lang", langCode.c_str());
-    aspell_config_replace(aspellConfig_, "encoding", "utf-8");
-}
-
-void PSIAspell::passOptionsToAspellConfig_(
-                const boost::program_options::variables_map& options) {
-
-    if (options.count("limit")) {
-        limitCandidates_ = options["limit"].as<unsigned int>();
-    }
-
-    std::list<std::string> stringOptions =
-        boost::assign::list_of
-        (std::string("size"))
-        (std::string("personal"))
-        (std::string("repl"))
-        (std::string("keyboard"))
-        (std::string("sug-mode"))
-        ;
-
-    BOOST_FOREACH (std::string & optionName, stringOptions) {
-        if (options.count(optionName.c_str())) {
-            std::string optionValue = options[optionName.c_str()].as<std::string>();
-            aspell_config_replace(aspellConfig_, optionName.c_str(), optionValue.c_str());
-        }
-    }
-
-    if (options.count("ignore-case")) {
-        aspell_config_replace(aspellConfig_, "ignore-case", "true");
-    }
-
-    if (options.count("ignore")) {
-        int ignoreLength = options["ignore"].as<int>();
-        std::string ignoreLengthString = boost::lexical_cast<std::string>( ignoreLength);
-        aspell_config_replace(aspellConfig_, "ignore", ignoreLengthString.c_str());
-    }
-}
-
-void PSIAspell::createAspellInstance_() {
-    AspellCanHaveError * possibleError = new_aspell_speller(aspellConfig_);
-    if (aspell_error_number(possibleError) != 0) {
-        ERROR("ASPELL CREATION ERROR: " << aspell_error_message(possibleError));
-        throw PsiException(aspell_error_message(possibleError));
-    } else {
-        aspellSpeller_ = to_aspell_speller(possibleError);
+    if ( isActive() ) {
+        aspellAdapter_->initAspell(langCode);
+        aspellAdapter_->passOptionsToAspellConfig(options);
+        aspellAdapter_->createAspellInstance();
     }
 }
 
 PSIAspell::~PSIAspell() {
-    if (NULL != aspellSpeller_) {
-        delete_aspell_speller(aspellSpeller_);
-    }
-
-    if (NULL != aspellConfig_) {
-        delete_aspell_config(aspellConfig_);
+    if (aspellAdapter_) {
+        PluginManager::getInstance().destroyPluginAdapter("aspell", aspellAdapter_);
     }
 }
 
-bool PSIAspell::isWordCorrect(const std::string & word) {
-    int correct = aspell_speller_check(aspellSpeller_, word.c_str(), -1);
-
-    return (bool) correct;
+void PSIAspell::init_() {
+    aspellAdapter_ = dynamic_cast<AspellAdapterInterface*>(
+                     PluginManager::getInstance().createPluginAdapter("aspell"));
 }
 
-void PSIAspell::getSuggestionsForLastWord(
-                       SuggestionsList & suggestionsList,
-                       const std::string & word
-                       ) {
+AspellAdapterInterface * PSIAspell::getAdapter() {
+    return aspellAdapter_;
+}
 
-
-    const AspellWordList * suggestions = aspell_speller_suggest(
-                        aspellSpeller_,
-                        word.c_str(), -1);
-
-    AspellStringEnumeration * elements = aspell_word_list_elements(suggestions);
-
-    const char * currentWordSuggestion;
-    while ( (currentWordSuggestion = aspell_string_enumeration_next(elements)) != NULL ) {
-        if (limitCandidates_ &&
-            (limitCandidates_ <= suggestionsList.size())) {
-            break;
-        }
-
-        suggestionsList.push_back(std::string(currentWordSuggestion));
+bool PSIAspell::isActive() {
+    if (aspellAdapter_) {
+        return true;
+    } else {
+        return false;
     }
-
-    delete_aspell_string_enumeration(elements);
-
-    return;
 }

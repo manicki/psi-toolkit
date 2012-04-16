@@ -79,6 +79,4 @@ void LanguageDependentAnnotatorFactory::addLanguageDependentOptions(
         ;
 }
 
-const std::string LanguageDependentAnnotatorFactory::GUESS_VALUE_FOR_LANG_OPTION =
-    "guess";
-
+const std::string LanguageDependentAnnotatorFactory::GUESS_VALUE_FOR_LANG_OPTION = "guess";

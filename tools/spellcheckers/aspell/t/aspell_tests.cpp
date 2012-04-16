@@ -3,13 +3,13 @@
 #include "psi_aspell.hpp"
 
 void checkIsSuggestionOccurs_(
-                              PSIAspell & aspellAdapter,
+                              PSIAspell & psiAspell,
                               const std::string & word,
                               const std::string & expectedSuggestion) {
 
     SuggestionsList suggestions;
-    BOOST_CHECK(!aspellAdapter.isWordCorrect(word));
-    aspellAdapter.getSuggestionsForLastWord(suggestions, word);
+    BOOST_CHECK(!psiAspell.getAdapter()->isWordCorrect(word));
+    psiAspell.getAdapter()->getSuggestionsForLastWord(suggestions, word);
     bool hasSuggestion = false;
 
     BOOST_FOREACH(std::string suggestion, suggestions) {
@@ -25,28 +25,28 @@ void checkIsSuggestionOccurs_(
 BOOST_AUTO_TEST_SUITE( aspell )
 
 BOOST_AUTO_TEST_CASE( run_aspell_polish_simple ) {
-    PSIAspell aspellAdapter(std::string("pl_PL"));
+    PSIAspell psiAspell(std::string("pl_PL"));
 
-    BOOST_CHECK(aspellAdapter.isWordCorrect("słowo"));
-    BOOST_CHECK(aspellAdapter.isWordCorrect("polska"));
-    BOOST_CHECK(!aspellAdapter.isWordCorrect("slowo"));
+    BOOST_CHECK(psiAspell.getAdapter()->isWordCorrect("słowo"));
+    BOOST_CHECK(psiAspell.getAdapter()->isWordCorrect("polska"));
+    BOOST_CHECK(!psiAspell.getAdapter()->isWordCorrect("slowo"));
 
-    checkIsSuggestionOccurs_(aspellAdapter, "slowo", "słowo");
-    checkIsSuggestionOccurs_(aspellAdapter, "przep iękny", "przepiękny");
-    checkIsSuggestionOccurs_(aspellAdapter, "londyn", "Londyn");
-    checkIsSuggestionOccurs_(aspellAdapter, "niebiegnie", "nie biegnie");
+    checkIsSuggestionOccurs_(psiAspell, "slowo", "słowo");
+    checkIsSuggestionOccurs_(psiAspell, "przep iękny", "przepiękny");
+    checkIsSuggestionOccurs_(psiAspell, "londyn", "Londyn");
+    checkIsSuggestionOccurs_(psiAspell, "niebiegnie", "nie biegnie");
 }
 
 BOOST_AUTO_TEST_CASE( run_aspell_english_simple ) {
-    PSIAspell aspellAdapter(std::string("en_EN"));
+    PSIAspell psiAspell(std::string("en_EN"));
 
-    BOOST_CHECK(aspellAdapter.isWordCorrect("become"));
-    BOOST_CHECK(!aspellAdapter.isWordCorrect("ocurence"));
+    BOOST_CHECK(psiAspell.getAdapter()->isWordCorrect("become"));
+    BOOST_CHECK(!psiAspell.getAdapter()->isWordCorrect("ocurence"));
 
-    checkIsSuggestionOccurs_(aspellAdapter, "ocurence", "occurrence");
-    checkIsSuggestionOccurs_(aspellAdapter, "bec oming", "becoming");
-    checkIsSuggestionOccurs_(aspellAdapter, "london", "London");
-    checkIsSuggestionOccurs_(aspellAdapter, "wassnowing", "was snowing");
+    checkIsSuggestionOccurs_(psiAspell, "ocurence", "occurrence");
+    checkIsSuggestionOccurs_(psiAspell, "bec oming", "becoming");
+    checkIsSuggestionOccurs_(psiAspell, "london", "London");
+    checkIsSuggestionOccurs_(psiAspell, "wassnowing", "was snowing");
 }
 
 BOOST_AUTO_TEST_SUITE_END()

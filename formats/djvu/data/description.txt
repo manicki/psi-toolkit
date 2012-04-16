@@ -1,0 +1,3 @@
+DjVu Reader reads text from DjVu file into the lattice.
+
+To use it, you have to have djvulibre library installed on your system.

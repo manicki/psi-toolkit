@@ -18,6 +18,12 @@ else(HAVE_POPPLER)
   unset(pdf-t CACHE)
 endif(HAVE_POPPLER)
 
+if(HAVE_DJVULIBRE)
+  add_subdirectory(djvu)
+else(HAVE_DJVULIBRE)
+  unset(djvu-t CACHE)
+endif(HAVE_DJVULIBRE)
+
 if(USE_DOC_READER)
   add_subdirectory(doc)
 else(USE_DOC_READER)

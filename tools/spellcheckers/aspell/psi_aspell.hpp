@@ -1,13 +1,14 @@
 #ifndef PSI_ASPELL_HDR
 #define PSI_ASPELL_HDR
 
-#include <aspell.h>
+#include <boost/shared_ptr.hpp>
 
 #include "annotator.hpp"
 #include "language_dependent_annotator_factory.hpp"
 #include "annotator_factory.hpp"
 
-typedef std::list<std::string> SuggestionsList;
+#include "plugin/aspell_adapter_interface.hpp"
+#include "plugin_manager.hpp"
 
 class PSIAspell : public Annotator {
 
@@ -35,6 +36,10 @@ public:
 
         virtual std::list<std::string> doAllLanguagesHandled() const;
 
+        virtual bool doCheckRequirements(
+                     const boost::program_options::variables_map& options,
+                     std::ostream & message) const;
+
         static const unsigned int DEFAULT_LIMIT;
     };
 
@@ -43,11 +48,8 @@ public:
               const boost::program_options::variables_map& options);
     ~PSIAspell();
 
-    bool isWordCorrect(const std::string & word);
-    void getSuggestionsForLastWord(
-                                   SuggestionsList & suggestionsList,
-                                   const std::string & word
-                                   );
+    AspellAdapterInterface * getAdapter();
+    bool isActive();
 
     static const std::list<std::string> tagsToOperateOn;
     static const std::list<std::string> tagsToPut;
@@ -76,18 +78,13 @@ private:
     };
 
     virtual LatticeWorker* doCreateLatticeWorker(Lattice& lattice);
-    void initPSIAspell_(const std::string & langCode);
-    void passOptionsToAspellConfig_(
-         const boost::program_options::variables_map& options);
-    void createAspellInstance_();
 
     virtual std::string doInfo();
 
-    std::string langCode_;
-    unsigned int limitCandidates_;
+    void init_();
 
-    AspellConfig * aspellConfig_;
-    AspellSpeller * aspellSpeller_;
+    AspellAdapterInterface * aspellAdapter_;
 };
+
 
 #endif

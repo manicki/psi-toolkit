@@ -70,6 +70,7 @@ if (USE_ASPELL)
     message("-- Using Aspell...")
     include_directories(${ASPELL_INCLUDE})
     link_directories(${ASPELL_LIB})
+    link_directories("${psi-toolkit_BINARY_DIR}/tools/spellcheckers/aspell/plugin")
     set(HAVE_ASPELL 1)
   else()
     message("-- Not using Aspell (can not find required libraries)...")
@@ -187,6 +188,9 @@ message(STATUS "Using gv-writer ${USE_GV_WRITER}")
 option(USE_PDF_READER "Using pdf-reader" OFF)
 message(STATUS "Using pdf-reader ${USE_PDF_READER}")
 
+option(USE_DJVU_READER "Using djvu-reader" OFF)
+message(STATUS "Using djvu-reader ${USE_DJVU_READER}")
+
 option(USE_DOC_READER "Using doc-reader" OFF)
 message(STATUS "Using doc-reader ${USE_DOC_READER}")
 
@@ -260,6 +264,23 @@ else (USE_PDF_READER)
     set(HAVE_POPPLER 0)
 endif (USE_PDF_READER)
 
+# Finds DjVuLibre
+
+if (USE_DJVU_READER)
+    find_package(DjVuLibre)
+    if (DJVULIBRE_FOUND)
+        message(STATUS "Found DjVuLibre")
+        include_directories(${DJVULIBRE_INCLUDE_DIRS})
+        link_directories(${DJVULIBRE_LIBRARIES})
+        set(HAVE_DJVULIBRE 1)
+    else (DJVULIBRE_FOUND)
+        message(WARNING "Could not find DjVuLibre: djvu-reader disabled")
+        set(HAVE_DJVULIBRE 0)
+    endif (DJVULIBRE_FOUND)
+else (USE_DJVU_READER)
+    set(HAVE_DJVULIBRE 0)
+endif (USE_DJVU_READER)
+
 # Sets compiler flags
 set(CMAKE_CXX_FLAGS "-g -Wall -Wundef -Wnon-virtual-dtor -Wextra")
 
@@ -268,7 +289,7 @@ if (WITH_LOW_MEMORY_COMPILATION)
   set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} --param ggc-min-expand=30 --param ggc-min-heapsize=8192")
 endif (WITH_LOW_MEMORY_COMPILATION)
 
-set(BASE_TARGETS common utf8case sundown framework formats-apertium formats-dot formats-nkjp formats-psi formats-simple formats-json-simple formats-txt formats-utt maxent tools-tokenizers-tp tools-segmenters-srx tools-recognizers-langguesser tools-parsers-gobio tools-taggers-metagger)
+set(BASE_TARGETS common common-plugins utf8case sundown framework formats-apertium formats-dot formats-nkjp formats-psi formats-simple formats-json-simple formats-txt formats-utt maxent tools-tokenizers-tp tools-segmenters-srx tools-recognizers-langguesser tools-parsers-gobio tools-taggers-metagger)
 
 set(TESTS_TARGETS common-tests framework-tests tools-tokenizers-tp-tests tools-segmenters-srx-tests tools-datastructures-psi_query-tests tools-recognizers-langguesser-tests utf8case-tests formats-dot-tests formats-utt-tests formats-psi-tests formats-simple-tests tools-parsers-gobio-tests tools-taggers-metagger-tests formats-apertium-tests)
 
@@ -309,8 +330,11 @@ endif(HAVE_GRAPHVIZ)
 
 if(HAVE_POPPLER)
     set(BASE_TARGETS ${BASE_TARGETS} formats-pdf)
-    # set(TESTS_TARGETS ${TESTS_TARGETS} formats-pdf-tests)
 endif(HAVE_POPPLER)
+
+if(HAVE_DJVULIBRE)
+    set(BASE_TARGETS ${BASE_TARGETS} formats-djvu)
+endif(HAVE_DJVULIBRE)
 
 if(USE_DOC_READER)
     set(BASE_TARGETS ${BASE_TARGETS} formats-doc)
@@ -326,12 +350,13 @@ link_directories("${psi-toolkit_BINARY_DIR}/tools/parsers/gobio/parser")
 
 set(TARGETS ${BASE_TARGETS} psi-pipe)
 
-set(DIRS common formats maxent tools framework utf8 utf8case server bindings)
+set(DIRS common common/plugins formats maxent tools framework utf8 utf8case server bindings)
 foreach(dir ${DIRS})
     include_directories("${psi-toolkit_SOURCE_DIR}/${dir}")
     link_directories("${psi-toolkit_BINARY_DIR}/${dir}")
     add_subdirectory(${dir})
 endforeach(dir)
+
 
 include_directories("${psi-toolkit_SOURCE_DIR}/sundown/src")
 include_directories("${psi-toolkit_SOURCE_DIR}/sundown/html")
@@ -364,6 +389,11 @@ if(HAVE_POPPLER)
     include_directories("${psi-toolkit_SOURCE_DIR}/formats/pdf")
     link_directories("${psi-toolkit_BINARY_DIR}/formats/pdf")
 endif(HAVE_POPPLER)
+
+if(HAVE_DJVULIBRE)
+    include_directories("${psi-toolkit_SOURCE_DIR}/formats/djvu")
+    link_directories("${psi-toolkit_BINARY_DIR}/formats/djvu")
+endif(HAVE_DJVULIBRE)
 
 if(USE_DOC_READER)
     include_directories("${psi-toolkit_SOURCE_DIR}/formats/doc")

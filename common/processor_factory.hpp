@@ -76,6 +76,12 @@ public:
      */
     std::string getDescription();
 
+    /**
+     * Checks if all requirements are met. If not puts a message into `message' stream.
+     */
+    bool checkRequirements(const boost::program_options::variables_map& options,
+                                             std::ostream & message) const;
+
     virtual ~ProcessorFactory();
 
 private:
@@ -103,6 +109,9 @@ private:
     virtual std::list<std::string> doGetAliases();
 
     std::string getFileContent(boost::filesystem::path path);
+
+    virtual bool doCheckRequirements(const boost::program_options::variables_map& /*options*/,
+                                     std::ostream & /*message*/) const;
 
 };
 
