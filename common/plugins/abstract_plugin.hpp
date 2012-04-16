@@ -19,7 +19,6 @@ public:
     bool checkRequirements(const boost::program_options::variables_map& options,
                            std::ostream & message);
 
-    
     virtual std::string getName() = 0;
     virtual std::string getLibraryName() = 0;
 
