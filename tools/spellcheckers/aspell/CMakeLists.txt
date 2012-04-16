@@ -1,3 +1,5 @@
+include_directories("${psi-toolkit_SOURCE_DIR}/tools/spellcheckers/aspell")
+
 add_library(tools-spellcheckers-aspell SHARED
 	psi_aspell.cpp
     aspell_plugin.cpp
