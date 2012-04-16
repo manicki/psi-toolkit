@@ -10,7 +10,7 @@
 const std::string Morfologik::TAG_SEPARATORS = "+,|";
 
 const std::vector<std::string> Morfologik::DICTIONARIES = boost::assign::list_of
-    ("MORFOLOGIK")("MORFEUSZ")("COMBINED");
+    ("morfologik")("morfeusz")("combined");
 
 Morfologik::Morfologik(const boost::program_options::variables_map& options)
     : level_(3), dictionary_("MORFOLOGIK"), annotationManager_(NULL) {
@@ -66,8 +66,10 @@ void Morfologik::setLevel(int lvl) {
 }
 
 void Morfologik::setDictionary(const std::string& dict) {
-    if (std::find(DICTIONARIES.begin(), DICTIONARIES.end(), dict) != DICTIONARIES.end()) {
-        dictionary_ = dict;
+    if (std::find(DICTIONARIES.begin(), DICTIONARIES.end(),
+        boost::algorithm::to_lower_copy(dict)) != DICTIONARIES.end()) {
+
+        dictionary_ = boost::algorithm::to_upper_copy(dict);
     }
     else {
         ERROR("An unknown dictionary " << dict << ", thereby dictionary is still set to "
