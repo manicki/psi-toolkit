@@ -8,20 +8,13 @@ Annotator* MeTagger::Factory::doCreateAnnotator(
     std::string modelPathString = "";
     if (options.count("model")) {
         std::string modelFilename = options["model"].as<std::string>();
-        boost::filesystem::path modelPath;
-        try {
+        if (!options.count("train")) {
+            boost::filesystem::path modelPath;
             modelPath = fileFetcher.getOneFile(modelFilename);
-        } catch (FileFetcher::Exception &exception) {
-            if (options.count("train")) {
-                std::ofstream file(modelFilename.c_str(),
-                        std::ios_base::trunc);
-                file.close();
-            } else {
-                modelFilename = DEFAULT_MODEL_FILE;
-            }
-            modelPath = fileFetcher.getOneFile(modelFilename);
+            modelPathString = modelPath.string();
+        } else {
+            modelPathString = modelFilename;
         }
-        modelPathString = modelPath.string();
     }
     MeTagger* tagger = new MeTagger(
             options.count("train"),
