@@ -18,7 +18,7 @@ class JsonSiteTest < Test::Unit::TestCase
 
     def test_if_json_api_description_exists
         @browser.goto $server_address + 'api.html'
-        assert @browser.div(:id, 'content').text.include? 'API for Json'
+        assert @browser.div(:id, 'content').text.downcase.include? 'api for json'
     end
 
     def test_if_json_page_exists
@@ -48,11 +48,12 @@ class JsonSiteTest < Test::Unit::TestCase
     end
 
     def test_json_request_with_json_simple_writer
-        json_request('tp-tokenizer --lang pl ! json-simple-writer', 'Ala ma kota')
+        json_request('tokenize --lang pl ! json-simple-writer', 'Ala ma kota')
         hash = browser_json_content_as_hash
 
         assert hash['output'].kind_of?(Array)
         assert_equal hash['output'], ['Ala', 'ma', 'kota']
+        assert hash['error'].nil?
     end
 
     private
