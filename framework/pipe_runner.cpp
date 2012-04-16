@@ -259,8 +259,102 @@ void PipeRunner::pipelineSpecification2Graph_(
 
 template<typename Source, typename Sink>
 void PipeRunner::completeGraph_() {
+    checkLangOption_();
     checkReader_<Source>();
     checkWriter_<Sink>();
+}
+
+void PipeRunner::checkLangOption_() {
+    std::string onlyOneLang = getJustOneLanguage_();
+
+    if (!onlyOneLang.empty())
+        setOnlyOneLanguage_(onlyOneLang);
+}
+
+std::string PipeRunner::getJustOneLanguage_() {
+    std::string onlyOneLang;
+
+    PipelineGraph::vertex_descriptor current = firstNode;
+
+    do {
+        std::string nodeOnlyOneLang = getNodeJustOneLanguage_(current);
+
+        if (!nodeOnlyOneLang.empty()) {
+            if (onlyOneLang.empty())
+                onlyOneLang = nodeOnlyOneLang;
+            else if (onlyOneLang != nodeOnlyOneLang)
+                return std::string();
+        }
+
+        if (!goToNextNode_(current))
+            break;
+    } while (1);
+
+    return onlyOneLang;
+}
+
+std::string PipeRunner::getNodeJustOneLanguage_(PipelineGraph::vertex_descriptor node) {
+    PipelineNode& currentPipelineNode = pipelineGraph_[node];
+
+    const AnnotatorFactory* asAnnotatorFactory =
+        dynamic_cast<const AnnotatorFactory*>(
+            currentPipelineNode.getFactory());
+
+    if (asAnnotatorFactory) {
+        if (asAnnotatorFactory->languagesHandling(currentPipelineNode.options_)
+            == AnnotatorFactory::JUST_ONE_LANGUAGE) {
+
+            std::list<std::string> langs
+                = asAnnotatorFactory->languagesHandled(currentPipelineNode.options_);
+
+            if (langs.empty() || langs.size() > 1)
+                throw Exception("unexpected language handling");
+
+            return langs.front();
+        }
+    }
+
+    return std::string();
+}
+
+void PipeRunner::setOnlyOneLanguage_(const std::string& langCode) {
+    INFO("assuming " << langCode << " in the whole pipeline");
+
+    PipelineGraph::vertex_descriptor current = firstNode;
+
+    do {
+        setOnlyOneLanguageForNode_(langCode, current);
+
+        if (!goToNextNode_(current))
+            break;
+    } while (1);
+}
+
+void PipeRunner::setOnlyOneLanguageForNode_(
+    const std::string& langCode,
+    PipelineGraph::vertex_descriptor node) {
+
+    PipelineNode& currentPipelineNode = pipelineGraph_[node];
+
+    const AnnotatorFactory* asAnnotatorFactory =
+        dynamic_cast<const AnnotatorFactory*>(
+            currentPipelineNode.getFactory());
+
+    if (asAnnotatorFactory) {
+        if (asAnnotatorFactory->languagesHandling(currentPipelineNode.options_)
+            == AnnotatorFactory::LANGUAGE_DEPENDENT) {
+
+            if (currentPipelineNode.options_.count("lang") > 0) {
+                // probably abusing Boost Options...
+                boost::program_options::variables_map::iterator it(
+                    currentPipelineNode.options_.find("lang"));
+                boost::program_options::variable_value & vx(it->second);
+                vx.value() = boost::any(langCode);
+            } else {
+                WARN("language dependent without --lang???");
+            }
+        }
+    }
 }
 
 template<typename Source>
