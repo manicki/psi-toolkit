@@ -14,14 +14,13 @@
 
     <div id="content">
 
-        <h1>API for Json</h1>
+        <h1>API for JSON</h1>
         <p>
-            To return an API response in JSON format, send encoded parameters "pipe" and "input".
-            Currently only the GET request is supported. The simplest example:
+            To return an API response in JSON format, send encoded parameters <tt>pipe</tt> and <tt>input</tt>.
+            Currently only the GET request is supported. A simple
+            example (tokenisation of a Polish text):
         </p>
-        <!--<![CDATA[-->
-        <pre>http://mrt.wmi.amu.edu.pl/json.psis?pipe=morfologik&amp;input&#61;Ala+ma+kota</pre>
-        <!--]]>-->
+        <pre><a href="http://mrt.wmi.amu.edu.pl/json.psis?pipe=tokenize+--lang+pl+!+json-simple-writer&amp;input=Ala+ma+kota.">http://mrt.wmi.amu.edu.pl/json.psis?pipe=tokenize+--lang+pl+!+json-simple-writer&amp;input=Ala+ma+kota.</a></pre>
     </div>
 </div>
 
