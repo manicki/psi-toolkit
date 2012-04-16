@@ -107,14 +107,15 @@ set(INSTALL_DATA_DIR "${CMAKE_INSTALL_PREFIX}/${PSITOOLKIT_INSTALL_DATA_DIR}")
 option(IS_INSTALLABLE "Is prepared for install" OFF)
 message(STATUS "Is prepared for install ${IS_INSTALLABLE}")
 
-option(PACKAGE_OS_NAME "Name of the operating system for package generation" "")
+set(PACKAGE_OS_NAME default)
+option(PACKAGE_OS_NAME "Name of the operating system for package generation" default)
 
 if(PACKAGE_OS_NAME STREQUAL ubuntu)
   set(PACKAGE_OS 1)
 elseif(PACKAGE_OS_NAME STREQUAL archlinux)
   set(PACKAGE_OS 2)
 else()
-  set(PACKAGE_OS_NAME 0)
+  set(PACKAGE_OS -1)
 endif()
 
 if(PACKAGE_OS GREATER 0)
