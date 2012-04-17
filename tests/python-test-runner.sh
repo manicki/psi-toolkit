@@ -5,6 +5,8 @@ PRJ_DIR=`pwd`/build
 
 if [[ -e $PRJ_DIR/bindings/python/PSIToolkit.py ]]; then
 
+export PYTHONPATH="$PYTHONPATH:${PRJ_DIR}/bindings/python"
+
 echo 'Start testing Python bindings.'
 echo ''
 
