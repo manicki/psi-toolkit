@@ -10,8 +10,11 @@ export PYTHONPATH="$PYTHONPATH:${PRJ_DIR}/bindings/python"
 echo 'Start testing Python bindings.'
 echo ''
 
+NOSETESTS=nosetests
+which nosetests2 && NOSETESTS=nosetests2
+
 cd $PRJ_DIR
-nosetests --with-xunit $PYTHON_BINDINGS_DIR/Test/test.py
+$NOSETESTS --with-xunit $PYTHON_BINDINGS_DIR/Test/test.py
 
 else
     echo 'Python bindings NOT CREATED. Testing Python bindings ignored!'
