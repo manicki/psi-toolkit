@@ -139,7 +139,7 @@ std::string MeTagger::getModelFile() {
 }
 
 void MeTagger::saveModel(std::string path) {
-    m.save(path);
+    m.save(path, true);
 }
 
 void MeTagger::loadModel(std::string path) {
