@@ -786,7 +786,8 @@ void MeTagger::addFormEdge(Lattice &lattice,
                 LayerTagCollection formTag
                     = lattice.getLayerTagManager().
                         createSingletonTagCollection("form");
-                //@todo: tylko takie tagi? skopiowac jakies inne? o tagsecie np? dodac wlasny tag "metagger"?
+                //@todo: tylko takie tagi? skopiowac jakies inne?
+                //o tagsecie np? dodac wlasny tag "metagger"?
 
                 lattice.addEdge(
                         lattice.getEdgeSource(token),
