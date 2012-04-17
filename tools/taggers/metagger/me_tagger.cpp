@@ -32,7 +32,8 @@ Annotator* MeTagger::Factory::doCreateAnnotator(
                 : DEFAULT_PROPER_NOUN_POS_LABEL,
             options.count("open-class-labels")
                 ? options["open-class-labels"].as<std::vector<std::string> >()
-                : std::vector<std::string>()
+                : std::vector<std::string>(),
+            options.count("save-text-model-files")
             );
     if (!options.count("train")) {
         tagger->loadModel(tagger->getModelFile());
@@ -61,6 +62,7 @@ void MeTagger::Factory::doAddLanguageIndependentOptionsHandled(
          boost::program_options::value<std::vector<std::string> >()
          ->multitoken(), "open class labels")
         ("train", "training mode")
+        ("save-text-model-files", "saves text model files in training model")
         ;
 }
 
@@ -115,13 +117,15 @@ std::string MeTagger::doInfo() {
 MeTagger::MeTagger(bool trainMode_, std::string modelFile_,
         int iterations_, std::string unknownPosLabel_,
         std::string cardinalNumberPosLabel_, std::string properNounPosLabel_,
-        std::vector<std::string> openClassLabels_) :
+        std::vector<std::string> openClassLabels_,
+        bool saveTextFile_) :
     openForEvents(false), posModelLoaded(false),
     trainMode(trainMode_), trainIterations(iterations_), modelFile(modelFile_),
     unknownPosLabel(unknownPosLabel_),
     cardinalNumberPosLabel(cardinalNumberPosLabel_),
     properNounPosLabel(properNounPosLabel_),
     openClassLabels(openClassLabels_),
+    saveTextFile(saveTextFile_),
     rxUpperCaseFirst("^\\p{Lu}"),
     rxUpperCaseAll("^\\p{Lu}+$"),
     rxContainsNumber("\\d"),
@@ -139,7 +143,7 @@ std::string MeTagger::getModelFile() {
 }
 
 void MeTagger::saveModel(std::string path) {
-    m.save(path, true);
+    m.save(path, !saveTextFile);
 }
 
 void MeTagger::loadModel(std::string path) {

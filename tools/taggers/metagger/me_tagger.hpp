@@ -43,7 +43,8 @@ class MeTagger : public Annotator {
                 std::string cardinalNumberPosLabel_ = "card",
                 std::string properNounPosLabel_ = "name",
                 std::vector<std::string> openClassLabels_ =
-                    std::vector<std::string>()
+                    std::vector<std::string>(),
+                bool saveTextFile_ = false
                 );
         void tag(Lattice &lattice);
         void train(Lattice &lattice);
@@ -79,6 +80,7 @@ class MeTagger : public Annotator {
         std::string unknownPosLabel;
         std::string cardinalNumberPosLabel, properNounPosLabel;
         std::vector<std::string> openClassLabels;
+        bool saveTextFile;
 
         RegExp rxUpperCaseFirst;
         RegExp rxUpperCaseAll;
