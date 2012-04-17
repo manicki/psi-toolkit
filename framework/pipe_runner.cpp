@@ -438,7 +438,7 @@ void PipeRunner::runPipelineNode_(
                                            currentPipelineNode.getOptions(),
                                            messageStream)) {
 
-        INFO("Cant run node, because requirements are not met:\n"
+        ERROR("Cant run node, because requirements are not met:\n"
              << messageStream.str());
         return;
     }

@@ -19,3 +19,7 @@
 #cmakedefine WEBSITE_ROOT "@WEBSITE_ROOT@"
 #define ROOT_DIR "../"
 #define LEMMA_CATEGORY_SEPARATOR '+'
+
+#cmakedefine PACKAGE_OS @PACKAGE_OS@
+#define PACKAGE_OS_UBUNTU 1
+#define PACKAGE_OS_ARCHLINUX 2

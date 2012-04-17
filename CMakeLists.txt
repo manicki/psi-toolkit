@@ -107,6 +107,23 @@ set(INSTALL_DATA_DIR "${CMAKE_INSTALL_PREFIX}/${PSITOOLKIT_INSTALL_DATA_DIR}")
 option(IS_INSTALLABLE "Is prepared for install" OFF)
 message(STATUS "Is prepared for install ${IS_INSTALLABLE}")
 
+set(PACKAGE_OS_NAME default)
+option(PACKAGE_OS_NAME "Name of the operating system for package generation" default)
+
+if(PACKAGE_OS_NAME STREQUAL ubuntu)
+  set(PACKAGE_OS 1)
+elseif(PACKAGE_OS_NAME STREQUAL archlinux)
+  set(PACKAGE_OS 2)
+else()
+  set(PACKAGE_OS -1)
+endif()
+
+if(PACKAGE_OS GREATER 0)
+  message("-- Setting package os variable to: ${PACKAGE_OS_NAME} (${PACKAGE_OS})")
+else()
+  message("-- Setting default package os")
+endif()
+
 option(USE_JAVA "Compiling Java components" OFF)
 message(STATUS "Compiling Java components ${USE_JAVA}")
 
@@ -513,7 +530,7 @@ FOREACH(variable_name ${all_variables})
     GET_TARGET_PROPERTY(target_location ${library_name} LOCATION)
 
     if(NOT target_location MATCHES "NOTFOUND")
-      if (NOT target_location MATCHES "psitoolkit_perl_simple")
+      if (NOT target_location MATCHES "psitoolkit_perl_simple|python.*_PSIToolkit")
         SET_TARGET_PROPERTIES(${library_name}
           PROPERTIES
           PREFIX ${MY_TARGETLIB_PREFIX}
