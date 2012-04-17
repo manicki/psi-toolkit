@@ -1,6 +1,43 @@
 #ifndef SFST_HDR
 #define SFST_HDR
 
+
+#ifndef HAVE_CONFIG_H
+#define HAVE_CONFIG_H 0
+#endif
+
+#ifndef HAVE_BACKWARD_HASH_MAP
+#define HAVE_BACKWARD_HASH_MAP 0
+#endif
+
+#ifndef HAVE_HASH_MAP
+#define HAVE_HASH_MAP 0
+#endif
+
+#ifndef HAVE_EXT_HASH_MAP
+#define HAVE_EXT_HASH_MAP 0
+#endif
+
+#ifndef HAVE_BACKWARD_HASH_SET
+#define HAVE_BACKWARD_HASH_SET 0
+#endif
+
+#ifndef HAVE_EXT_HASH_SET
+#define HAVE_EXT_HASH_SET 0
+#endif
+
+#ifndef HAVE_HASH_SET
+#define HAVE_HASH_SET 0
+#endif
+
+#ifndef SGIext
+#define SGIext 0
+#endif
+
+#ifndef SGI__gnu_cxx
+#define SGI__gnu_cxx 0
+#endif
+
 #include <boost/program_options/options_description.hpp>
 #include <boost/program_options/variables_map.hpp>
 #include <boost/filesystem.hpp>

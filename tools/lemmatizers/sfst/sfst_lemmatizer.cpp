@@ -42,7 +42,7 @@ boost::program_options::options_description SfstLemmatizer::optionsHandled() {
     boost::program_options::options_description desc("Allowed options");
 
     desc.add_options()
-        ("level", boost::program_options::value<int>()->default_value(1),
+        ("level", boost::program_options::value<int>()->default_value(3),
             "set word processing level 0-3")
         ("lang", boost::program_options::value<std::string>()->default_value("tr"),
             "set default language")
