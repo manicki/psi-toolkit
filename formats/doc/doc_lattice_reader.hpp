@@ -4,11 +4,19 @@
 
 #include "stream_lattice_reader.hpp"
 #include "lattice_reader_factory.hpp"
+#include "plugin/antiword_adapter_interface.hpp"
+
 
 class DocLatticeReader : public StreamLatticeReader {
 
 public:
+    DocLatticeReader();
+    ~DocLatticeReader();
+
     virtual std::string getFormatName();
+
+    AntiwordAdapterInterface * getAdapter();
+    bool isActive();
 
     class Factory : public LatticeReaderFactory<std::istream> {
     public:
@@ -50,6 +58,9 @@ private:
 
         return new Worker(*this, inputStream, lattice);
     }
+
+    AntiwordAdapterInterface * adapter_;
 };
+
 
 #endif
