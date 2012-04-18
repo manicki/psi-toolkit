@@ -4,7 +4,7 @@
 
 
 std::string AntiwordPlugin::getLibraryName() {
-    return "libpsitoolkit_formats-doc-antiword-plugin.so";
+    return "libpsitoolkit_formats-doc-reader-plugin.so";
 }
 
 
@@ -17,7 +17,7 @@ bool AntiwordPlugin::doCheckRequirementsWithOptionsDefaultOS(
     const boost::program_options::variables_map& /* options */
 ) {
     if (!isPluginActive()) {
-        getCurrentRequirementsChecker().showPackagesNotAvailable(
+        getCurrentRequirementsChecker().showLibrariesNotAvailable(
             boost::assign::list_of("antiword")
         );
         return false;

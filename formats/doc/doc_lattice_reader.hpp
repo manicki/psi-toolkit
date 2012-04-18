@@ -22,6 +22,11 @@ public:
 
         virtual std::string doGetName() const;
         virtual boost::filesystem::path doGetFile() const;
+
+        virtual bool doCheckRequirements(
+            const boost::program_options::variables_map& options,
+            std::ostream & message
+        ) const;
     };
 
 private:

@@ -5,6 +5,8 @@
 
 #include <boost/assign/list_of.hpp>
 
+#include "plugin_manager.hpp"
+
 #include "logging.hpp"
 
 
@@ -15,6 +17,7 @@ std::string DocLatticeReader::getFormatName() {
 std::string DocLatticeReader::doInfo() {
     return "Doc reader";
 }
+
 
 DocLatticeReader::Factory::~Factory() {
 }
@@ -41,6 +44,14 @@ std::string DocLatticeReader::Factory::doGetName() const {
 boost::filesystem::path DocLatticeReader::Factory::doGetFile() const {
     return __FILE__;
 }
+
+bool DocLatticeReader::Factory::doCheckRequirements(
+    const boost::program_options::variables_map& options,
+    std::ostream & message
+) const {
+    return PluginManager::getInstance().checkPluginRequirements("antiword", options, message);
+}
+
 
 DocLatticeReader::Worker::Worker(
     DocLatticeReader& processor,
