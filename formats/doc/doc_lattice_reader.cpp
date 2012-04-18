@@ -100,8 +100,7 @@ void DocLatticeReader::Worker::doRun() {
 
         std::ofstream strIn(tmpFileIn);
         strIn << inputStream_.rdbuf() << std::flush;
-        std::string command("antiword " + tmpFileInName + " 1>" + tmpFileOutName);
-        system(command.c_str());
+        processor_.getAdapter()->convertWordToText(tmpFileInName, tmpFileOutName);
 
         std::ifstream strOut(tmpFileOut);
         std::string line;
