@@ -5,6 +5,7 @@
 
 #include "stream_lattice_reader.hpp"
 #include "lattice_reader_factory.hpp"
+#include "file_recognizer.hpp"
 
 #include "logging.hpp"
 
@@ -16,11 +17,8 @@ public:
 
     std::string getFormatName();
 
-    std::string guessFileMimeType(std::istream&);
-    LatticeReader<std::istream>* getLatticeReaderForMimeType(std::string);
-
-    static std::map<std::string, boost::shared_ptr<LatticeReaderFactory<std::istream> > >
-        mimeTypeToReaderMap_;
+    std::string guessFileType(std::istream&);
+    LatticeReader<std::istream>* getLatticeReader(std::string);
 
     class Factory : public LatticeReaderFactory<std::istream> {
     public:
@@ -61,7 +59,12 @@ private:
     const static int DEFAULT_BLOCK_SIZE;
     int blockSize_;
 
+    std::string getStartingDataBlockWithoutTouchingIStream_(std::istream&);
 
+    static std::map<std::string, boost::shared_ptr<LatticeReaderFactory<std::istream> > >
+        fileTypeToReaderMap_;
+
+    FileRecognizer fileRecognizer_;
 };
 
 #endif

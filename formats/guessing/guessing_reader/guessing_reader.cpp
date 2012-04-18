@@ -22,8 +22,9 @@
 const int GuessingReader::DEFAULT_BLOCK_SIZE = 1024;
 
 std::map<std::string, boost::shared_ptr<LatticeReaderFactory<std::istream> > >
-    GuessingReader::mimeTypeToReaderMap_ = boost::assign::map_list_of
-        ("a", new TxtLatticeReader::Factory());
+    GuessingReader::fileTypeToReaderMap_ = boost::assign::map_list_of
+        //("html", new ApertiumLatticeReader::Factory())
+        ("txt", new TxtLatticeReader::Factory());
 
 std::string GuessingReader::getFormatName() {
     return "Guessing";
@@ -36,10 +37,23 @@ std::string GuessingReader::doInfo() {
 GuessingReader::GuessingReader() : blockSize_(DEFAULT_BLOCK_SIZE) { }
 GuessingReader::GuessingReader(int blockSize) : blockSize_(blockSize) { }
 
-std::string GuessingReader::guessFileMimeType(std::istream& inputStream) {
+std::string GuessingReader::guessFileType(std::istream& input) {
+    std::string data = getStartingDataBlockWithoutTouchingIStream_(input);
+
+    return fileRecognizer_.recognizeFileExtension(data);
+}
+
+std::string GuessingReader::getStartingDataBlockWithoutTouchingIStream_(std::istream& stream) {
     char buffer[blockSize_];
-    inputStream.read(buffer, blockSize_);
-    std::string blockData(buffer);
+    stream.read(buffer, blockSize_);
+
+    DEBUG("buffer: " << buffer);
+
+    //stream.seekg(0, std::istream::end);
+    //int length = stream.tellg();
+    //stream.seekg(0, std::istream::beg);
+
+    //DEBUG("length of data within stream: " << length);
 
     //TODO:: do something with blockData
 /*
@@ -52,16 +66,23 @@ std::string GuessingReader::guessFileMimeType(std::istream& inputStream) {
     }
 */
     for (int i = blockSize_; i > 0; i--) {
-        inputStream.putback(buffer[i - 1]);
+        stream.putback(buffer[i - 1]);
     }
 
-    return std::string("a");
+    //DEBUG("buffer: " << buffer);
+    return std::string(buffer);
 }
 
-LatticeReader<std::istream>* GuessingReader::getLatticeReaderForMimeType(std::string mime) {
+LatticeReader<std::istream>* GuessingReader::getLatticeReader(std::string type) {
     boost::program_options::variables_map options;
 
-    return mimeTypeToReaderMap_[mime]->createLatticeReader(options);
+    std::map<std::string, boost::shared_ptr<LatticeReaderFactory<std::istream> > >
+        ::iterator foundReader = fileTypeToReaderMap_.find(type);
+
+    if (foundReader != fileTypeToReaderMap_.end()) {
+        return foundReader->second->createLatticeReader(options);
+    }
+    return NULL;
 }
 
 GuessingReader::Factory::~Factory() { }
@@ -98,16 +119,16 @@ GuessingReader::Worker::Worker(GuessingReader& processor,
     processor_(processor) { }
 
 void GuessingReader::Worker::doRun() {
-    std::string mime = processor_.guessFileMimeType(inputStream_);
-    DEBUG("guessed mime type: " << mime);
+    std::string filetype = processor_.guessFileType(inputStream_);
+    DEBUG("guessed file type: " << filetype);
 
-    LatticeReader<std::istream>* reader = processor_.getLatticeReaderForMimeType(mime);
+    LatticeReader<std::istream>* reader = processor_.getLatticeReader(filetype);
 
     if (reader != NULL) {
         DEBUG("guessed reader for: " << reader->getFormatName());
         reader->readIntoLattice(inputStream_, lattice_);
     }
     else {
-        ERROR("The unknown reader for the guessed mime type!");
+        ERROR("The unknown reader for the guessed file type!");
     }
 }
