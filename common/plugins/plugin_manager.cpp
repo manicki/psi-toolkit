@@ -6,9 +6,16 @@
 #include "aspell_plugin.hpp"
 #endif
 
+#if USE_DOC_READER
+#include "antiword_plugin.hpp"
+#endif
+
 PluginManager::PluginManager() {
 #if HAVE_ASPELL
     registerPlugin_(new AspellPlugin());
+#endif
+#if USE_DOC_READER
+    registerPlugin_(new AntiwordPlugin());
 #endif
 }
 
