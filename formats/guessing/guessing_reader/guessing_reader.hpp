@@ -16,6 +16,12 @@ public:
 
     std::string getFormatName();
 
+    std::string guessFileMimeType(std::istream&);
+    LatticeReader<std::istream>* getLatticeReaderForMimeType(std::string);
+
+    static std::map<std::string, boost::shared_ptr<LatticeReaderFactory<std::istream> > >
+        mimeTypeToReaderMap_;
+
     class Factory : public LatticeReaderFactory<std::istream> {
     public:
         virtual ~Factory();
@@ -44,7 +50,6 @@ private:
 
     private:
         GuessingReader& processor_;
-        LayerTagCollection fragTags_;
     };
 
     virtual ReaderWorker<std::istream>* doCreateReaderWorker(
@@ -55,6 +60,7 @@ private:
 
     const static int DEFAULT_BLOCK_SIZE;
     int blockSize_;
+
 
 };
 
