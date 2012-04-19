@@ -1,10 +1,7 @@
 #include "djvu_adapter_impl.hpp"
 
 
-void DjVuAdapterImpl::convertWordToText(
-    std::string sourceFileName,
-    std::string targetFileName
-) {
+std::iostream DjVuAdapterImpl::convertDjVuToText(std::istream djvuStream) {
     //TODO
 }
 
