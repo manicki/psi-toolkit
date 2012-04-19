@@ -6,6 +6,8 @@
 #include <locale>
 #include <fstream>
 
+// #include <boost/assign/list_of.hpp>
+
 #include "lattice.hpp"
 #include "plugin_manager.hpp"
 
@@ -92,20 +94,69 @@ boost::filesystem::path GVLatticeWriter::Factory::doGetFile() const {
 
 GVLatticeWriter::Worker::~Worker() { }
 
-GVLatticeWriter::Worker::Worker(GVLatticeWriter& processor,
-                                 std::ostream& outputStream,
-                                 Lattice& lattice):
-    AligningWriterWorker(outputStream, lattice), processor_(processor) {
-}
+GVLatticeWriter::Worker::Worker(
+    GVLatticeWriter& processor,
+    std::ostream& outputStream,
+    Lattice& lattice
+) :
+    AligningWriterWorker(outputStream, lattice),
+    processor_(processor)
+/* (nie działa)
+    ,
+    allowedFormats_(boost::assign::list_of<std::string>
+        ("canon")
+        ("dot")
+        ("eps")
+        ("fig")
+        ("gd")
+        ("gd:cairo")
+        ("gd:gd")
+        ("gd2")
+        ("gd2:cairo")
+        ("gd2:gd")
+        ("gif")
+        ("gif:cairo")
+        ("gif:gd")
+        ("gv")
+        ("jpe")
+        ("jpe:cairo")
+        ("jpe:gd")
+        ("jpeg")
+        ("jpeg:cairo")
+        ("jpeg:gd")
+        ("jpg")
+        ("jpg:cairo")
+        ("jpg:gd")
+        ("pdf")
+        ("plain")
+        ("plain-ext")
+        ("png")
+        ("png:cairo")
+        ("png:gd")
+        ("ps")
+        ("ps:cairo")
+        ("ps:ps")
+        ("ps2")
+        ("svg")
+        ("svg:cairo")
+        ("svg:svg")
+        ("svgz")
+        ("tk")
+        ("vml")
+        ("vmlz")
+        ("wbmp")
+        ("wbmp:cairo")
+        ("wbmp:gd")
+        ("xdot")
+    )
+// */
+{ }
 
 
 void GVLatticeWriter::Worker::doRun() {
 
     if (processor_.isActive()) {
 
-        char * tmpFile;
-
-        GVC_t * gvc = gvContext();
         if (
             processor_.getOutputFormat() != "canon" &&
             processor_.getOutputFormat() != "dot" &&
@@ -159,9 +210,12 @@ void GVLatticeWriter::Worker::doRun() {
                 "png(:cairo,:gd) ps(:cairo,:ps) ps2 svg(:cairo,:svg) svgz tk vml vmlz " +
                 "wbmp(:cairo,:gd) xdot");
         }
+
+        char * tmpFile;
+        tmpFile = tempnam(NULL, "gv_");
+
         std::string arg1("-T" + processor_.getOutputFormat());
         std::string arg2("");
-        tmpFile = tempnam(NULL, "gv_");
         arg2 += "-o";
         arg2 += tmpFile;
         const char * const args[] = {
@@ -169,11 +223,8 @@ void GVLatticeWriter::Worker::doRun() {
             arg1.c_str(),
             arg2.c_str()
         };
-        gvParseArgs(gvc, sizeof(args)/sizeof(char*), (char**)args);
-        Agraph_t * g = agopen((char*)"g", AGDIGRAPH);
-        Agnode_t * n;
-        Agnode_t * m;
-        Agedge_t * e;
+
+        processor_.getAdapter()->init(args);
 
         PsiQuoter quoter;
 
@@ -184,9 +235,9 @@ void GVLatticeWriter::Worker::doRun() {
             = lattice_.edgesSortedByTarget(lattice_.getLayerTagManager().anyTag());
 
         if (processor_.isTree()) {
-            agsafeset(g, (char*)"rankdir", (char*)"TB", (char*)"");
+            processor_.getAdapter()->setRankDir("TB");
         } else {
-            agsafeset(g, (char*)"rankdir", (char*)"LR", (char*)"");
+            processor_.getAdapter()->setRankDir("LR");
         }
 
         while (ei.hasNext()) {
@@ -227,8 +278,11 @@ void GVLatticeWriter::Worker::doRun() {
                         const std::collate<char>& coll
                             = std::use_facet<std::collate<char> >(std::locale());
                         unsigned int color
-                            = coll.hash(tagName.data(), tagName.data() + tagName.length()) & 0xffffff;
-                        if ((color & 0xe0e0e0) == 0xe0e0e0) color &= 0x7f7f7f; // darken if too bright
+                            = coll.hash(tagName.data(), tagName.data() + tagName.length())
+                                & 0xffffff;
+                        if ((color & 0xe0e0e0) == 0xe0e0e0) {
+                            color &= 0x7f7f7f;
+                        } // darken if too bright
                         colorSs << "#" << std::setbase(16) << color;
                     }
                 }
@@ -240,17 +294,21 @@ void GVLatticeWriter::Worker::doRun() {
 
             edgeLabelSs << " " << annotationItem.getCategory();
 
+            int n;
+            int m;
+            int e;
+
             if (processor_.isTree()) {
 
                 ++ordinal;
                 edgeOrdinalMap[edge] = ordinal;
                 edgeIdSs << ordinal;
 
-                n = agnode(g, (char*)(edgeIdSs.str().c_str()));
-                agsafeset(n, (char*)"label", (char*)(edgeLabelSs.str().c_str()), (char*)"");
+                n = processor_.getAdapter()->addNode(edgeIdSs.str());
+                processor_.getAdapter()->setNodeLabel(n, edgeLabelSs.str());
 
                 if (processor_.isColor()) {
-                    agsafeset(n, (char*)"color", (char*)(colorSs.str().c_str()), (char*)"");
+                    processor_.getAdapter()->setNodeLabel(n, colorSs.str());
                 }
 
                 int partitionNumber = 0;
@@ -267,10 +325,10 @@ void GVLatticeWriter::Worker::doRun() {
                         if (moi != edgeOrdinalMap.end()) {
                             std::stringstream edSs;
                             edSs << moi->second;
-                            m = agnode(g, (char*)(edSs.str().c_str()));
-                            e = agedge(g, n, m);
+                            m = processor_.getAdapter()->addNode(edSs.str());
+                            e = processor_.getAdapter()->addEdge(n, m);
                             if (partitions.size() > 1) {
-                                agsafeset(e, (char*)"label", (char*)(partSs.str().c_str()), (char*)"");
+                                processor_.getAdapter()->setEdgeLabel(e, partSs.str());
                             }
                         }
                     }
@@ -284,7 +342,7 @@ void GVLatticeWriter::Worker::doRun() {
                 } else {
                     nSs << lattice_.getVertexRawCharIndex(source);
                 }
-                n = agnode(g, (char*)(nSs.str().c_str()));
+                n = processor_.getAdapter()->addNode(nSs.str());
 
                 std::stringstream mSs;
                 if (lattice_.isLooseVertex(target)) {
@@ -292,25 +350,21 @@ void GVLatticeWriter::Worker::doRun() {
                 } else {
                     mSs << lattice_.getVertexRawCharIndex(target);
                 }
-                m = agnode(g, (char*)(mSs.str().c_str()));
+                m = processor_.getAdapter()->addNode(mSs.str());
 
-                e = agedge(g, n, m);
+                e = processor_.getAdapter()->addEdge(n, m);
 
-                agsafeset(e, (char*)"label", (char*)(edgeLabelSs.str().c_str()), (char*)"");
+                processor_.getAdapter()->setEdgeLabel(e, edgeLabelSs.str());
 
                 if (processor_.isColor()) {
-                    agsafeset(e, (char*)"color", (char*)(colorSs.str().c_str()), (char*)"");
+                    processor_.getAdapter()->setEdgeColor(e, colorSs.str());
                 }
 
             }
 
         }
 
-        gvLayoutJobs(gvc, g);
-        gvRenderJobs(gvc, g);
-        gvFreeLayout(gvc, g);
-        agclose(g);
-        gvFreeContext(gvc);
+        processor_.getAdapter()->finalize();
 
         try {
             std::string line;
@@ -321,12 +375,10 @@ void GVLatticeWriter::Worker::doRun() {
                 contents += "\n";
             }
             alignOutput_(contents);
-            std::remove(tmpFile);
-            free(tmpFile);
-        } catch (...) {
-            std::remove(tmpFile);
-            free(tmpFile);
-        }
+        } catch (...) { }
+
+        std::remove(tmpFile);
+        free(tmpFile);
 
     }
 

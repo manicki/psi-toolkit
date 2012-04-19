@@ -99,6 +99,7 @@ private:
         virtual ~Worker();
     private:
         GVLatticeWriter& processor_;
+        // std::set<std::string> allowedFormats_;
     };
 
     virtual WriterWorker<std::ostream>* doCreateWriterWorker(

@@ -1,28 +1,86 @@
 #include "graphviz_adapter_impl.hpp"
 
-// Fixes warnings "... not defined" from GraphViz include files
 
-#ifndef _BLD_cdt
-#define _BLD_cdt 0
-#endif
-
-#ifndef _DLL_BLD
-#define _DLL_BLD 0
-#endif
-
-#ifndef _dll_import
-#define _dll_import 0
-#endif
-
-#ifndef _PACKAGE_ast
-#define _PACKAGE_ast 0
-#endif
-
-#include <gvc.h>
+GraphvizAdapterImpl::GraphvizAdapterImpl() :
+    nCount_(0),
+    eCount_(0)
+{
+    // init();
+}
 
 
-void GraphvizAdapterImpl::convertDjVuToText(std::istream & djvuStream, std::iostream & textStream) {
-    //TODO
+GraphvizAdapterImpl::GraphvizAdapterImpl(const char * const args[]) :
+    nCount_(0),
+    eCount_(0)
+{
+    // init(args);
+}
+
+
+GraphvizAdapterImpl::~GraphvizAdapterImpl() {
+    // finalize();
+}
+
+
+void GraphvizAdapterImpl::init() {
+    gvc_ = gvContext();
+    g_ = agopen((char*)"g", AGDIGRAPH);
+}
+
+
+void GraphvizAdapterImpl::init(const char * const args[]) {
+    init();
+    gvParseArgs(gvc_, sizeof(args)/sizeof(char*), (char**)args);
+}
+
+
+void GraphvizAdapterImpl::finalize() {
+    gvLayoutJobs(gvc_, g_);
+    gvRenderJobs(gvc_, g_);
+    gvFreeLayout(gvc_, g_);
+    agclose(g_);
+    gvFreeContext(gvc_);
+}
+
+
+void GraphvizAdapterImpl::setRankDir(std::string dir) {
+    agsafeset(g_, (char*)"rankdir", (char*)(dir.c_str()), (char*)"");
+}
+
+
+int GraphvizAdapterImpl::addNode(std::string id) {
+    Agnode_t n = agnode(g_, (char*)(id.c_str()));
+    ++nCount_;
+    nodes_.insert(std::pair<int, Agnode_t>(nCount_, n));
+    return nCount_;
+}
+
+
+void GraphvizAdapterImpl::setNodeLabel(int node, std::string label) {
+    agsafeset(nodes_[node], (char*)"label", (char*)(label.c_str()), (char*)"");
+}
+
+
+void GraphvizAdapterImpl::setNodeColor(int node, std::string color) {
+    agsafeset(nodes_[node], (char*)"color", (char*)(color.c_str()), (char*)"");
+}
+
+
+int GraphvizAdapterImpl::addEdge(int source, int target) {
+    Agedge_t e = agedge(g_, nodes_[source], nodes_[target]);
+    ++eCount_;
+    edges_.insert(std::pair<int, Agnode_t>(eCount_, e));
+    return eCount_;
+}
+
+
+void GraphvizAdapterImpl::setEdgeLabel(int node, std::string label) {
+    agsafeset(edges_[edge], (char*)"label", (char*)(label.c_str()), (char*)"");
+}
+
+
+void GraphvizAdapterImpl::setEdgeColor(int node, std::string color) {
+    agsafeset(edges_[edge], (char*)"color", (char*)(color.c_str()), (char*)"");
 }
 
 
