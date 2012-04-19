@@ -31,7 +31,7 @@ bool DjVuPlugin::doCheckRequirementsWithOptionsUbuntu(
 ) {
     if (!isPluginActive()) {
         getCurrentRequirementsChecker().showPackagesNotAvailable(
-            boost::assign::list_of("libdjvulibre21")("libdjvulibre-dev")
+            boost::assign::list_of("libdjvulibre21")
         );
         return false;
     }

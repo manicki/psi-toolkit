@@ -5,8 +5,6 @@ add_library(formats-djvu SHARED
 
 target_link_libraries(
     formats-djvu
-    ${Boost_LIBRARIES}
-    ${DJVULIBRE_LIBRARIES}
     common
     common-plugins
 )
