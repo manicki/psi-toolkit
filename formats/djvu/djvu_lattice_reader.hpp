@@ -2,8 +2,6 @@
 #define DJVU_LATTICE_READER_HDR
 
 
-#include "libdjvu/ddjvuapi.h"
-
 #include "stream_lattice_reader.hpp"
 #include "lattice_reader_factory.hpp"
 

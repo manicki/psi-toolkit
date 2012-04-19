@@ -4,6 +4,7 @@
 
 #include <boost/assign/list_of.hpp>
 
+#include "libdjvu/ddjvuapi.h"
 #include "libdjvu/miniexp.h"
 
 #include "logging.hpp"
