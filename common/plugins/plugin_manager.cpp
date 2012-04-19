@@ -14,6 +14,10 @@
 #include "djvu_plugin.hpp"
 #endif
 
+#if HAVE_POPPLER
+#include "poppler_plugin.hpp"
+#endif
+
 PluginManager::PluginManager() {
 #if USE_DOC_READER
     registerPlugin_(new AntiwordPlugin());
@@ -23,6 +27,9 @@ PluginManager::PluginManager() {
 #endif
 #if HAVE_DJVULIBRE
     registerPlugin_(new DjVuPlugin());
+#endif
+#if HAVE_POPPLER
+    registerPlugin_(new PopplerPlugin());
 #endif
 }
 

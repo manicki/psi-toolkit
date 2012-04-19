@@ -4,11 +4,18 @@
 
 #include "stream_lattice_reader.hpp"
 #include "lattice_reader_factory.hpp"
+#include "plugin/poppler_adapter_interface.hpp"
 
 class PDFLatticeReader : public StreamLatticeReader {
 
 public:
+    PDFLatticeReader();
+    ~PDFLatticeReader();
+
     virtual std::string getFormatName();
+
+    PopplerAdapterInterface * getAdapter();
+    bool isActive();
 
     class Factory : public LatticeReaderFactory<std::istream> {
     public:
@@ -45,6 +52,8 @@ private:
 
         return new Worker(*this, inputStream, lattice);
     }
+
+    PopplerAdapterInterface * adapter_;
 };
 
 #endif
