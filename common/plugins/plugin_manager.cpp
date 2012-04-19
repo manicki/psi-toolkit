@@ -14,6 +14,10 @@
 #include "djvu_plugin.hpp"
 #endif
 
+#if HAVE_GRAPHVIZ
+#include "graphviz_plugin.hpp"
+#endif
+
 #if HAVE_POPPLER
 #include "poppler_plugin.hpp"
 #endif
@@ -27,6 +31,9 @@ PluginManager::PluginManager() {
 #endif
 #if HAVE_DJVULIBRE
     registerPlugin_(new DjVuPlugin());
+#endif
+#if HAVE_GRAPHVIZ
+    registerPlugin_(new GraphvizPlugin());
 #endif
 #if HAVE_POPPLER
     registerPlugin_(new PopplerPlugin());
