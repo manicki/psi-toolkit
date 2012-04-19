@@ -4,9 +4,6 @@
 
 #include <boost/assign/list_of.hpp>
 
-#include "libdjvu/ddjvuapi.h"
-#include "libdjvu/miniexp.h"
-
 #include "plugin_manager.hpp"
 
 
