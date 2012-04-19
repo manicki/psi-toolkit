@@ -29,12 +29,11 @@
 class GraphvizAdapterImpl : public GraphvizAdapterInterface {
 public:
     GraphvizAdapterImpl();
-    GraphvizAdapterImpl(const char * const args[]);
 
     virtual ~GraphvizAdapterImpl();
 
     virtual void init();
-    virtual void init(const char * const args[]);
+    virtual void init(std::string arg0, std::string arg1, std::string arg2);
 
     virtual void finalize();
 

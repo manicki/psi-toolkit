@@ -13,7 +13,7 @@ public:
     virtual ~GraphvizAdapterInterface() { }
 
     virtual void init() = 0;
-    virtual void init(const char * const args[]) = 0;
+    virtual void init(std::string arg0, std::string arg1, std::string arg2) = 0;
 
     virtual void finalize() = 0;
 

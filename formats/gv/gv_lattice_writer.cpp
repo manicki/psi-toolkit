@@ -214,17 +214,12 @@ void GVLatticeWriter::Worker::doRun() {
         char * tmpFile;
         tmpFile = tempnam(NULL, "gv_");
 
+        std::string arg0("dot");
         std::string arg1("-T" + processor_.getOutputFormat());
-        std::string arg2("");
-        arg2 += "-o";
+        std::string arg2("-o");
         arg2 += tmpFile;
-        const char * const args[] = {
-            "dot",
-            arg1.c_str(),
-            arg2.c_str()
-        };
 
-        processor_.getAdapter()->init(args);
+        processor_.getAdapter()->init(arg0, arg1, arg2);
 
         PsiQuoter quoter;
 

@@ -9,14 +9,6 @@ GraphvizAdapterImpl::GraphvizAdapterImpl() :
 }
 
 
-GraphvizAdapterImpl::GraphvizAdapterImpl(const char * const args[]) :
-    nCount_(0),
-    eCount_(0)
-{
-    // init(args);
-}
-
-
 GraphvizAdapterImpl::~GraphvizAdapterImpl() {
     // finalize();
 }
@@ -28,11 +20,15 @@ void GraphvizAdapterImpl::init() {
 }
 
 
-void GraphvizAdapterImpl::init(const char * const args[]) {
+void GraphvizAdapterImpl::init(std::string arg0, std::string arg1, std::string arg2) {
     init();
+    const char * const args[] = {
+        arg0.c_str(),
+        arg1.c_str(),
+        arg2.c_str()
+    };
     gvParseArgs(gvc_, sizeof(args)/sizeof(char*), (char**)args);
 }
-
 
 void GraphvizAdapterImpl::finalize() {
     gvLayoutJobs(gvc_, g_);
