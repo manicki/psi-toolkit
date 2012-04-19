@@ -11,7 +11,7 @@ class DjVuAdapterInterface : public PluginAdapter {
 public:
     virtual ~DjVuAdapterInterface() { }
 
-    virtual std::iostream convertDjVuToText(std::istream djvuStream) = 0;
+    virtual void convertDjVuToText(std::istream & djvuStream, std::iostream & textStream) = 0;
 };
 
 

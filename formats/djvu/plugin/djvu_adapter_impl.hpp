@@ -10,7 +10,7 @@ public:
 
     virtual ~DjVuAdapterImpl() { }
 
-    virtual std::iostream convertDjVuToText(std::istream djvuStream);
+    virtual void convertDjVuToText(std::istream & djvuStream, std::iostream & textStream);
 };
 
 
