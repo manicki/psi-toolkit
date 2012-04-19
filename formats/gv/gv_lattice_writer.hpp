@@ -30,12 +30,20 @@
 #include "lattice_writer.hpp"
 #include "lattice_writer_factory.hpp"
 #include "aligning_writer_worker.hpp"
+#include "plugin/graphviz_adapter_interface.hpp"
 #include "psi_quoter.hpp"
+
 
 class GVLatticeWriter : public LatticeWriter<std::ostream> {
 
 public:
+    GVLatticeWriter();
+    ~GVLatticeWriter();
+
     virtual std::string getFormatName();
+
+    GraphvizAdapterInterface * getAdapter();
+    bool isActive();
 
     class Factory : public LatticeWriterFactory<std::ostream> {
     private:
@@ -105,6 +113,9 @@ private:
     std::string outputFormat_;
     bool tree_;
 
+    GraphvizAdapterInterface * adapter_;
+
 };
+
 
 #endif
