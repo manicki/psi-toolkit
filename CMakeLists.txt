@@ -183,9 +183,6 @@ if(WITH_PCRE)
     set(HAVE_PCRE 1)
 endif(WITH_PCRE)
 
-option(USE_PUDDLE "Compiling puddle shallow parser" ON)
-message(STATUS "Compiling puddle shallow parser ${USE_PUDDLE}")
-
 option(USE_BONSAI_PARSEGRAPH "Using bonsai ParseGraph with puddle shallow parser" OFF)
 message(STATUS "Using bonsai ParseGraph with puddle shallow parser ${USE_BONSAI_PARSEGRAPH}")
 
@@ -306,9 +303,9 @@ if (WITH_LOW_MEMORY_COMPILATION)
   set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} --param ggc-min-expand=30 --param ggc-min-heapsize=8192")
 endif (WITH_LOW_MEMORY_COMPILATION)
 
-set(BASE_TARGETS common common-plugins utf8case sundown framework formats-apertium formats-dot formats-nkjp formats-psi formats-simple formats-json-simple formats-txt formats-utt maxent tools-tokenizers-tp tools-segmenters-srx tools-recognizers-langguesser tools-parsers-gobio tools-taggers-metagger)
+set(BASE_TARGETS common common-plugins utf8case sundown framework formats-apertium formats-dot formats-nkjp formats-psi formats-simple formats-json-simple formats-txt formats-utt maxent tools-tokenizers-tp tools-segmenters-srx tools-recognizers-langguesser tools-parsers-gobio tools-parsers-puddle tools-taggers-metagger)
 
-set(TESTS_TARGETS common-tests framework-tests tools-tokenizers-tp-tests tools-segmenters-srx-tests tools-datastructures-psi_query-tests tools-recognizers-langguesser-tests utf8case-tests formats-dot-tests formats-utt-tests formats-psi-tests formats-simple-tests tools-parsers-gobio-tests tools-taggers-metagger-tests formats-apertium-tests)
+set(TESTS_TARGETS common-tests framework-tests tools-tokenizers-tp-tests tools-segmenters-srx-tests tools-datastructures-psi_query-tests tools-recognizers-langguesser-tests utf8case-tests formats-dot-tests formats-utt-tests formats-psi-tests formats-simple-tests tools-parsers-gobio-tests tools-parsers-puddle-tests tools-taggers-metagger-tests formats-apertium-tests)
 
 if(HAVE_ASPELL)
     set(TESTS_TARGETS ${TESTS_TARGETS} tools-spellcheckers-aspell-tests)
@@ -331,14 +328,9 @@ if(USE_POSTGRESQL)
         set(BASE_TARGETS ${BASE_TARGETS} lex-db)
 endif(USE_POSTGRESQL)
 
-if(USE_PUDDLE)
-        include_directories("${psi-toolkit_SOURCE_DIR}/tools/parsers/puddle")
-        set(BASE_TARGETS ${BASE_TARGETS} tools-parsers-puddle)
-        set(TESTS_TARGETS ${TESTS_TARGETS} tools-parsers-puddle-tests)
-        if(USE_BONSAI_PARSEGRAPH)
-            include_directories(${BONSAI_PATH})
-        endif(USE_BONSAI_PARSEGRAPH)
-endif(USE_PUDDLE)
+if(USE_BONSAI_PARSEGRAPH)
+    include_directories(${BONSAI_PATH})
+endif(USE_BONSAI_PARSEGRAPH)
 
 if(HAVE_GRAPHVIZ)
     set(BASE_TARGETS ${BASE_TARGETS} formats-gv)
@@ -356,6 +348,8 @@ endif(HAVE_DJVULIBRE)
 if(USE_DOC_READER)
     set(BASE_TARGETS ${BASE_TARGETS} formats-doc)
 endif(USE_DOC_READER)
+
+include_directories("${psi-toolkit_SOURCE_DIR}/tools/parsers/puddle")
 
 include_directories("${psi-toolkit_SOURCE_DIR}/tools/parsers/gobio")
 include_directories("${psi-toolkit_SOURCE_DIR}/tools/parsers/gobio/chart")
@@ -380,17 +374,6 @@ include_directories("${psi-toolkit_SOURCE_DIR}/sundown/html")
 include_directories("${psi-toolkit_SOURCE_DIR}/sundown/cpp")
 link_directories("${psi-toolkit_BINARY_DIR}/sundown")
 add_subdirectory(sundown)
-
-if(USE_PUDDLE)
-    set_target_properties(tools-parsers-puddle PROPERTIES
-    COMPILE_FLAGS "-I${psi-toolkit_SOURCE_DIR}/utf8")
-    if(USE_BONSAI_PARSEGRAPH)
-        set_target_properties(tools-parsers-puddle PROPERTIES
-        COMPILE_FLAGS "-I${psi-toolkit_SOURCE_DIR}/utf8 -I${BONSAI_PATH}")
-        set(_WITH_BONSAI_PARSEGRAPH 1)
-    endif(USE_BONSAI_PARSEGRAPH)
-    set(HAVE_PUDDLE 1)
-endif(USE_PUDDLE)
 
 foreach(dir ${formats_SUBDIRS})
     include_directories("${psi-toolkit_SOURCE_DIR}/formats/${dir}")
@@ -428,6 +411,7 @@ if(USE_PUDDLE)
         COMPILE_FLAGS "-I${psi-toolkit_SOURCE_DIR}/utf8  -I${psi-toolkit_SOURCE_DIR}/tests -I${BONSAI_PATH}")
         set_target_properties(tools-parsers-puddle-tests PROPERTIES
         COMPILE_FLAGS "-I${psi-toolkit_SOURCE_DIR}/utf8  -I${psi-toolkit_SOURCE_DIR}/tests -I${BONSAI_PATH}")
+        set(_WITH_BONSAI_PARSEGRAPH 1)
     endif(USE_BONSAI_PARSEGRAPH)
 endif(USE_PUDDLE)
 

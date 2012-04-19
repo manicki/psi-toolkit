@@ -2,7 +2,6 @@
 #cmakedefine01 HAVE_JAVA
 #cmakedefine01 HAVE_RE2
 #cmakedefine01 HAVE_PCRE
-#cmakedefine01 HAVE_PUDDLE
 #cmakedefine01 HAVE_LOG4CPP
 #cmakedefine01 HAVE_PERL_BINDINGS
 #cmakedefine01 HAVE_CMPH
