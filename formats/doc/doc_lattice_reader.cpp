@@ -5,8 +5,22 @@
 
 #include <boost/assign/list_of.hpp>
 
+#include "plugin_manager.hpp"
+
 #include "logging.hpp"
 
+
+DocLatticeReader::DocLatticeReader() {
+    adapter_ = dynamic_cast<AntiwordAdapterInterface*>(
+        PluginManager::getInstance().createPluginAdapter("antiword")
+    );
+}
+
+DocLatticeReader::~DocLatticeReader() {
+    if (adapter_) {
+        PluginManager::getInstance().destroyPluginAdapter("antiword", adapter_);
+    }
+}
 
 std::string DocLatticeReader::getFormatName() {
     return "Doc";
@@ -15,6 +29,19 @@ std::string DocLatticeReader::getFormatName() {
 std::string DocLatticeReader::doInfo() {
     return "Doc reader";
 }
+
+AntiwordAdapterInterface * DocLatticeReader::getAdapter() {
+    return adapter_;
+}
+
+bool DocLatticeReader::isActive() {
+    if (adapter_) {
+        return true;
+    } else {
+        return false;
+    }
+}
+
 
 DocLatticeReader::Factory::~Factory() {
 }
@@ -42,6 +69,14 @@ boost::filesystem::path DocLatticeReader::Factory::doGetFile() const {
     return __FILE__;
 }
 
+bool DocLatticeReader::Factory::doCheckRequirements(
+    const boost::program_options::variables_map& options,
+    std::ostream & message
+) const {
+    return PluginManager::getInstance().checkPluginRequirements("antiword", options, message);
+}
+
+
 DocLatticeReader::Worker::Worker(
     DocLatticeReader& processor,
     std::istream& inputStream,
@@ -56,26 +91,29 @@ DocLatticeReader::Worker::Worker(
 
 void DocLatticeReader::Worker::doRun() {
 
-    char * tmpFileIn = tempnam(NULL, "psii_");
-    char * tmpFileOut = tempnam(NULL, "psio_");
-    std::string tmpFileInName(tmpFileIn);
-    std::string tmpFileOutName(tmpFileOut);
+    if (processor_.isActive()) {
 
-    std::ofstream strIn(tmpFileIn);
-    strIn << inputStream_.rdbuf() << std::flush;
-    std::string command("antiword " + tmpFileInName + " 1>" + tmpFileOutName);
-    system(command.c_str());
+        char * tmpFileIn = tempnam(NULL, "psii_");
+        char * tmpFileOut = tempnam(NULL, "psio_");
+        std::string tmpFileInName(tmpFileIn);
+        std::string tmpFileOutName(tmpFileOut);
 
-    std::ifstream strOut(tmpFileOut);
-    std::string line;
-    while (std::getline(strOut, line)) {
-        appendParagraphToLattice_(line, textTags_);
-        lattice_.appendString("\n");
+        std::ofstream strIn(tmpFileIn);
+        strIn << inputStream_.rdbuf() << std::flush;
+        processor_.getAdapter()->convertWordToText(tmpFileInName, tmpFileOutName);
+
+        std::ifstream strOut(tmpFileOut);
+        std::string line;
+        while (std::getline(strOut, line)) {
+            appendParagraphToLattice_(line, textTags_);
+            lattice_.appendString("\n");
+        }
+
+        std::remove(tmpFileIn);
+        std::remove(tmpFileOut);
+        free(tmpFileIn);
+        free(tmpFileOut);
+
     }
-
-    std::remove(tmpFileIn);
-    std::remove(tmpFileOut);
-    free(tmpFileIn);
-    free(tmpFileOut);
 
 }

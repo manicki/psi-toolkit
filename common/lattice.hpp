@@ -169,8 +169,6 @@ public:
                   Score aScore = 0,
                   int aRuleId = -1);
 
-        typedef EdgeSequence::Iterator Iterator;
-
         const EdgeSequence& getSequence() const;
 
         const LayerTagCollection& getTagList() const;

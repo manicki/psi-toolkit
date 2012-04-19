@@ -35,14 +35,14 @@ namespace psi {
                     return false;
                 it++;
             }
-            return isEndState(current_state);
+            return this->isEndState(current_state);
         }
 
         state_type delta(state_type p, symbol_type a) const {
             if (NDFSA<StateT, ArcT>::m_states.size() < (size_t)p)
                 return state_type(-1);
 
-            arc_iterator_type arc = find(p, a);
+            arc_iterator_type arc = this->find(p, a);
             if (arc == NDFSA<StateT, ArcT>::m_states[p]->end())
                 return state_type(-1);
             else

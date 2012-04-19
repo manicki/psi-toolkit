@@ -295,6 +295,13 @@ else (USE_DJVU_READER)
     set(HAVE_DJVULIBRE 0)
 endif (USE_DJVU_READER)
 
+# Links Antiword plugin
+
+if (USE_DOC_READER)
+    link_directories("${psi-toolkit_BINARY_DIR}/formats/doc/plugin")
+endif (USE_DOC_READER)
+
+
 # Sets compiler flags
 set(CMAKE_CXX_FLAGS "-g -Wall -Wundef -Wnon-virtual-dtor -Wextra")
 

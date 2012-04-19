@@ -6,6 +6,21 @@ if (SWIG_FOUND)
   include(${SWIG_USE_FILE})
 
   find_package(PythonLibs)
+  find_package(PythonInterp)
+
+  # getting installation path
+  execute_process(
+    COMMAND
+    ${PYTHON_EXECUTABLE} -c "import sys; print('%s.%s' % sys.version_info[0:2])"
+    OUTPUT_VARIABLE PYTHON_VERSION
+    OUTPUT_STRIP_TRAILING_WHITESPACE
+    )
+
+  set(INSTALL_PYTHON_MODULES_PATH "lib/python${PYTHON_VERSION}/dist-packages")
+  if ( "${CMAKE_INSTALL_RPATH}" MATCHES "/local(/|$)")
+    STRING(REGEX REPLACE "((^|/)local/)" "" INSTALL_PYTHON_MODULES_PATH ${INSTALL_PYTHON_MODULES_PATH})
+  endif()
+
   include_directories(${PYTHON_INCLUDE_DIRS})
 
   set(CMAKE_SWIG_FLAGS "")
@@ -40,6 +55,9 @@ if (SWIG_FOUND)
     tools-parsers-puddle
     framework)
 
+  INSTALL(FILES
+    ${CMAKE_SWIG_CURRENT_LANG_BINDINGS_DIRECTORY}/PSIToolkit.py
+    DESTINATION ${INSTALL_PYTHON_MODULES_PATH})
 
 
 endif(SWIG_FOUND)
