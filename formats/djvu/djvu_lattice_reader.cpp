@@ -7,8 +7,20 @@
 #include "libdjvu/ddjvuapi.h"
 #include "libdjvu/miniexp.h"
 
-#include "logging.hpp"
+#include "plugin_manager.hpp"
 
+
+DjVuLatticeReader::DjVuLatticeReader() {
+    adapter_ = dynamic_cast<DjVuAdapterInterface*>(
+        PluginManager::getInstance().createPluginAdapter("djvu")
+    );
+}
+
+DjVuLatticeReader::~DjVuLatticeReader() {
+    if (adapter_) {
+        PluginManager::getInstance().destroyPluginAdapter("djvu", adapter_);
+    }
+}
 
 std::string DjVuLatticeReader::getFormatName() {
     return "DjVu";
@@ -17,6 +29,11 @@ std::string DjVuLatticeReader::getFormatName() {
 std::string DjVuLatticeReader::doInfo() {
     return "DjVu reader";
 }
+
+DjVuAdapterInterface * DjVuLatticeReader::getAdapter() {
+    return adapter_;
+}
+
 
 DjVuLatticeReader::Factory::~Factory() {
 }
@@ -43,6 +60,7 @@ std::string DjVuLatticeReader::Factory::doGetName() const {
 boost::filesystem::path DjVuLatticeReader::Factory::doGetFile() const {
     return __FILE__;
 }
+
 
 DjVuLatticeReader::Worker::Worker(
     DjVuLatticeReader& processor,

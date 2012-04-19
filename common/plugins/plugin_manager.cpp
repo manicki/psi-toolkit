@@ -2,20 +2,27 @@
 
 #include "plugin_manager.hpp"
 
-#if HAVE_ASPELL
-#include "aspell_plugin.hpp"
-#endif
-
 #if USE_DOC_READER
 #include "antiword_plugin.hpp"
 #endif
 
+#if HAVE_ASPELL
+#include "aspell_plugin.hpp"
+#endif
+
+#if HAVE_DJVULIBRE
+#include "djvu_plugin.hpp"
+#endif
+
 PluginManager::PluginManager() {
+#if USE_DOC_READER
+    registerPlugin_(new AntiwordPlugin());
+#endif
 #if HAVE_ASPELL
     registerPlugin_(new AspellPlugin());
 #endif
-#if USE_DOC_READER
-    registerPlugin_(new AntiwordPlugin());
+#if HAVE_DJVULIBRE
+    registerPlugin_(new DjVuPlugin());
 #endif
 }
 
