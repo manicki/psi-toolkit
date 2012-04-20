@@ -1,12 +1,14 @@
 #include "zvalue.h"
-#include <stdio.h>
+
+#include <cstdio>
 #include <iostream>
+
 
 void zobject::freeZObjects(zobjects_holder* holder)
 {
-    if(holder)
+    if (holder)
     {
-    while(holder->getSize() > 0)
+    while (holder->getSize() > 0)
     {
       zvalue z=holder->pop();
 
@@ -17,31 +19,31 @@ void zobject::freeZObjects(zobjects_holder* holder)
 
 zobject::zobject(zobjects_holder* holder, e_type a_type): type(a_type)
 {
-    if(holder)
+    if (holder)
     {
       /*
       char s[64];
 
-      sprintf(s,"zobject(): %p",this);
+      sprintf(s, "zobject(): %p", this);
 
       switch(a_type)
       {
-      case EZOBJECT: strcat(s," EZOBJECT"); break;
-      case EZSYMBOL: strcat(s," EZSYMBOL"); break;
-      case EZPAIR: strcat(s," EZPAIR"); break;
-      case EZHASH: strcat(s," EZHASH"); break;
-      case EZENVIRONMENT: strcat(s," EZENVIRONMENT"); break;
-      case EZVECTOR: strcat(s," EZVECTOR"); break;
-      case EZSYMBOLTABLE: strcat(s," EZSTABLE"); break;
-      case EZSYNTREE: strcat(s," EZSYNTREE"); break;
+      case EZOBJECT: strcat(s, " EZOBJECT"); break;
+      case EZSYMBOL: strcat(s, " EZSYMBOL"); break;
+      case EZPAIR: strcat(s, " EZPAIR"); break;
+      case EZHASH: strcat(s, " EZHASH"); break;
+      case EZENVIRONMENT: strcat(s, " EZENVIRONMENT"); break;
+      case EZVECTOR: strcat(s, " EZVECTOR"); break;
+      case EZSYMBOLTABLE: strcat(s, " EZSTABLE"); break;
+      case EZSYNTREE: strcat(s, " EZSYNTREE"); break;
       }
 
-      Logger::write("LEAK",s);
+      Logger::write("LEAK", s);
       */
 
       holder->push(this);
     }
-    if(!holder) {
+    if (!holder) {
       //std::cerr << "TUT\n";
     }
 }
@@ -78,10 +80,10 @@ char* zvector::_to_string() {
 std::string zvector::_to_parsable_string() {
     std::string result;
     result += "[ ";
-    if(0<occupied) {
+    if (0<occupied) {
         result += zvalue_to_parsable_string(block[0]);
     }
-    for(int i=1; i<occupied; ++i) {
+    for (int i=1; i<occupied; ++i) {
         result += ", ";
         result += zvalue_to_parsable_string(block[i]);
     }
@@ -126,7 +128,7 @@ char* zhash::_to_string() {
 
     char* result = NULL;
 #define ADDCON(zv) 1
-#define GETSTRING(s,zv) s=zvalue_to_string(zv);
+#define GETSTRING(s, zv) s=zvalue_to_string(zv);
     EZHASH_PRINT(result);
 #undef ADDCON
 #undef GETSTRING
@@ -134,20 +136,20 @@ char* zhash::_to_string() {
 }
 
 std::string zhash::_to_parsable_string() {
-    return to_parsable_string_modif(false);
+    return to_parsable_string_modif (false);
 }
 
-std::string zhash::to_parsable_string_modif(bool without_int_keys) {
+std::string zhash::to_parsable_string_modif (bool without_int_keys) {
     std::string result;
     int block_size = 0;
     zvalue* block = getAll(block_size);
-    for(int i=0; i<block_size; ++i) {
+    for (int i=0; i<block_size; ++i) {
         if ( (!NULLP(block[i]) && !DELETEDP(block[i])) ) {
             result += ", ";
-            if(ZPAIRP(block[i])) {
+            if (ZPAIRP(block[i])) {
                 zpair* p = (zpair*)block[i];
                 zvalue pf = p->getFirst();
-                if(! (INTEGERP(pf) && without_int_keys) ) {
+                if (! (INTEGERP(pf) && without_int_keys) ) {
                     result += zvalue_to_parsable_string(pf);
                     result += " => ";
                     result += zvalue_to_parsable_string(p->getSecond());
@@ -163,8 +165,8 @@ std::string zhash::to_parsable_string_modif(bool without_int_keys) {
         }
     }
     result += " }";
-    result.erase(0,2);
-    result.insert(0,"{ ");
+    result.erase(0, 2);
+    result.insert(0, "{ ");
     return result;
 }
 
@@ -224,30 +226,30 @@ std::string zsyntree::_to_parsable_string() {
     std::string result;
     char tmp[100];
     result+="{";
-    result+="  q[nr_in_parent] => "; sprintf(tmp,"%i",number_in_parent_tree); result+=tmp;
-    result+=", q[last_subtree] => "; sprintf(tmp,"%i",last_subtree); result+=tmp;
-    if(is_variant)
+    result+="  q[nr_in_parent] => "; sprintf(tmp, "%i", number_in_parent_tree); result+=tmp;
+    result+=", q[last_subtree] => "; sprintf(tmp, "%i", last_subtree); result+=tmp;
+    if (is_variant)
     result+=", q[variant] => 1";
     result+=", q[category] => q|";
     if (NULL!=category) {
-        if(const char* n=category->get_string()) result+=n;
+        if (const char* n=category->get_string()) result+=n;
     }
     result+="|";
     result+=", q[label] => q|";
     if (NULL!=label) {
-        if(const char* n=label->get_string()) result+=n;
+        if (const char* n=label->get_string()) result+=n;
     }
     result+="|";
-    std::string attr = zhash::to_parsable_string_modif(true);
-    attr.erase(0,1); attr.erase(attr.length()-1,1); //obcinam klamerki
-    if(attr.find("=>")) { //je¿eli s± w ogóle jakie¶ atrybuty
+    std::string attr = zhash::to_parsable_string_modif (true);
+    attr.erase(0, 1); attr.erase(attr.length()-1, 1); //obcinam klamerki
+    if (attr.find("=>")) { //je¿eli s± w ogóle jakie¶ atrybuty
         result+=", "; result+=attr; //atrybuty s± na tym samym poziomie co category i label
     }
     result += ", q|subtrees| => [ ";
-    if(0<=last_subtree) {
+    if (0<=last_subtree) {
         result+= ZSYNTREEC(fetch(INTEGER_TO_ZVALUE(0)))->to_parsable_string();
     }
-    for(int i=1; i<=last_subtree; i++) {
+    for (int i=1; i<=last_subtree; i++) {
         result+=", ";
         result+= ZSYNTREEC(fetch(INTEGER_TO_ZVALUE(i)))->to_parsable_string();
     }
@@ -286,7 +288,7 @@ char* zsyntree::_to_string(bool with_attributes, bool with_subtrees) {
     if (with_attributes) {
 #define ADDCON(zv) ( ZPAIRP(zv) && !INTEGERP( (ZPAIRC(zv))->getFirst() ) )
 #define GETSTRING(s, zv) \
-    if (ZOBJECTP(zv) && ZSYNTREEP(zv)) s=ZSYNTREEC(zv)->_to_string(false,false); \
+    if (ZOBJECTP(zv) && ZSYNTREEP(zv)) s=ZSYNTREEC(zv)->_to_string(false, false); \
     else s=zvalue_to_string(zv);
         EZHASH_PRINT(attributes);
 #undef GETSTRING
@@ -307,24 +309,25 @@ char* zsyntree::_to_string(bool with_attributes, bool with_subtrees) {
         int length_sum = strlen(my_self);
         int i;
         for (i=0; i<=last_subtree; ++i) {
-            char* s = ZSYNTREEC(fetch(INTEGER_TO_ZVALUE(i)))->_to_string(with_attributes, with_subtrees);
+            char* s = ZSYNTREEC(fetch(INTEGER_TO_ZVALUE(i)))
+                ->_to_string(with_attributes, with_subtrees);
             char* ns = new char[strlen(s)*3/2+4]; //pi*oko
             ns[strlen(s)*3/2+3]=0;
-            if (i!=last_subtree) strncpy(ns,"+---",4);
-            else strncpy(ns,"`---",4);
+            if (i!=last_subtree) strncpy(ns, "+---", 4);
+            else strncpy(ns, "`---", 4);
             char* sp = s, *np = ns+4;
-            while('\0'!=*sp) {
+            while ('\0'!=*sp) {
                 *np = *sp;
                 if (10==*sp) {
-                    if (i!=last_subtree) strncpy(++np, "|   ",4);
-                    else strncpy(++np, "    ",4);
+                    if (i!=last_subtree) strncpy(++np, "|   ", 4);
+                    else strncpy(++np, "    ", 4);
                     np+=3;
                 }
                 ++sp; ++np;
             }
             length_sum += np-ns;
             char* fs = new char[np-ns+1];
-            strncpy(fs,ns,np-ns);
+            strncpy(fs, ns, np-ns);
             fs[np-ns] = 0;
             v->add(fs);
             delete ns;
@@ -399,7 +402,7 @@ int env_identity_function(zvalue k, zvalue v)
 int string_hash_function(const char* s)
 {
     int h = 29830;
-    while(*s) h = (h << 1) ^ ((int) *(s++));
+    while (*s) h = (h << 1) ^ ((int) *(s++));
 
     return (h < 0 ? -h : h);
 }
@@ -407,7 +410,7 @@ int string_hash_function(const char* s)
 
 int pchar_hash_function(zvalue z)
 {
-    if(ZWRAPPERP(z))
+    if (ZWRAPPERP(z))
     return string_hash_function(reinterpret_cast<const char*>(z));
 
     return 0;
@@ -433,9 +436,9 @@ void zenvironment::deleteAllKeyValue(zvalue s, zvalue d)
 {
     int i = 0;
     zvalue* p;
-    while((*(p=get_(s,i))) != NULL_ZVALUE)
+    while ((*(p=get_(s, i))) != NULL_ZVALUE)
     {
-    if(((zpair*)*p)->getSecond() == d)
+    if (((zpair*)*p)->getSecond() == d)
     {
         --occupied;
         *p = DELETED_ZVALUE;
@@ -448,7 +451,7 @@ void zenvironment::deleteAllKey(zvalue s)
 {
     int i = 0;
     zvalue* p;
-    while((*(p=get_(s,i))) != NULL_ZVALUE)
+    while ((*(p=get_(s, i))) != NULL_ZVALUE)
     {
     --occupied;
     *p = DELETED_ZVALUE;
@@ -458,7 +461,7 @@ void zenvironment::deleteAllKey(zvalue s)
 
 zsymboltable::zsymboltable(zobjects_holder* holder):
     zhash(holder, 1024, pchar_hash_function, zsymboltable_zsymbol_hash_function,
-      zsymboltable_zsymbol_kv_function),my_holder(holder)
+      zsymboltable_zsymbol_kv_function), my_holder(holder)
 {
     type = EZSYMBOLTABLE;
 }
@@ -466,7 +469,7 @@ zsymboltable::zsymboltable(zobjects_holder* holder):
 
 zsymboltable::~zsymboltable() {
     for (int i=0; i<size; ++i) {
-        if(!NULLP(block[i]) && !DELETEDP(block[i])) {
+        if (!NULLP(block[i]) && !DELETEDP(block[i])) {
         zvalue z = block[i];
             assert(ZSYMBOLP(z));
             ZSYMBOLC(z)->my_zst=NULL_ZVALUE;
@@ -479,7 +482,7 @@ zsymbol* zsymboltable::get_symbol(zobjects_holder* holder, const char* a_s)
     zsymbol* sm = NULL;
 
     zvalue x = get(ZWRAP(const_cast<char*>(a_s)));
-    if(NULLP(x)) {
+    if (NULLP(x)) {
         sm = zsymbol::generate_raw(holder, a_s);
         sm->my_zst=this;
         put(sm);
@@ -495,7 +498,7 @@ zsymbol* zsymboltable::get_symbol(zsymbol* zs)
     zsymbol* sm = NULL;
 
     zvalue x = get(ZWRAP(const_cast<char*>(zs->get_string())));
-    if(NULLP(x)) {
+    if (NULLP(x)) {
         put(zs);
         zs->my_zst=this;
     return zs;
@@ -552,7 +555,7 @@ zvalue zsyntree::getAttr(zsymbol* a_attr)
 
 void zsyntree::inherit(zsymbol* a_attr, zvalue a_val)
 {
-    if(NULLP(a_attr))
+    if (NULLP(a_attr))
     return;
 
     bool was_set = false;
@@ -560,13 +563,13 @@ void zsyntree::inherit(zsymbol* a_attr, zvalue a_val)
 
     zsyntree* zst;
 
-    for( ; start_idx <= stop_idx ; ++start_idx)
+    for ( ; start_idx <= stop_idx ; ++start_idx)
     {
     zst = ZSYNTREEC(fetch(INTEGER_TO_ZVALUE(start_idx)));
 
     assert(zst != NULL);
 
-    if(zst->defined(a_attr))
+    if (zst->defined(a_attr))
     {
         was_set = true;
         setAttr(a_attr, zst->getAttr(a_attr));
@@ -574,7 +577,7 @@ void zsyntree::inherit(zsymbol* a_attr, zvalue a_val)
         // @warning - we don't have access to sm_main_subtree_label here
         // if we wanted to chagne sm_main_subtree_label we would have to
         // modify this condition
-        if(zst->label != NULL &&
+        if (zst->label != NULL &&
            zst->label->get_string() != NULL &&
            (zst->label->get_string())[0] == '#' &&
            (zst->label->get_string())[1] == '\0')
@@ -582,37 +585,37 @@ void zsyntree::inherit(zsymbol* a_attr, zvalue a_val)
     }
     }
 
-    if(!was_set && a_val != DEFAULT_ZVALUE)
+    if (!was_set && a_val != DEFAULT_ZVALUE)
     setAttr(a_attr, a_val);
 }
 
 int zsyntree::sortByOrder(zhash* a_srefs_hash)
 {
-    int i,j,k;
-    zvalue s,t;
-    zvalue v,w,q;
+    int i, j, k;
+    zvalue s, t;
+    zvalue v, w, q;
     zvalue temp;
 
-    for(i = last_subtree-1; i >= 0; --i)
+    for (i = last_subtree-1; i >= 0; --i)
     {
     s = fetch(fetch(INTEGER_TO_ZVALUE(i)));
-    if(!NULLP(s))
+    if (!NULLP(s))
     {
         v = a_srefs_hash->get(s);
-        if(!NULLP(v))
+        if (!NULLP(v))
         {
         k = i;
         q = ZPAIRC(v)->getSecond();
 
-        for(j = last_subtree; j > i; --j)
+        for (j = last_subtree; j > i; --j)
         {
             t = fetch(fetch(INTEGER_TO_ZVALUE(j)));
-            if(!NULLP(t))
+            if (!NULLP(t))
             {
             w = a_srefs_hash->get(t);
-            if(!NULLP(w))
+            if (!NULLP(w))
             {
-                if(ZVALUE_TO_INTEGER(ZPAIRC(w)->getSecond()) <
+                if (ZVALUE_TO_INTEGER(ZPAIRC(w)->getSecond()) <
                    ZVALUE_TO_INTEGER(q))
                 {
                 k = j;
@@ -622,12 +625,12 @@ int zsyntree::sortByOrder(zhash* a_srefs_hash)
             }
         }
 
-        if(k != i)
+        if (k != i)
         {
             temp = fetch(INTEGER_TO_ZVALUE(i));
 
             int z;
-            for(z = i; z < k; ++z)
+            for (z = i; z < k; ++z)
             {
             change(INTEGER_TO_ZVALUE(z), fetch(INTEGER_TO_ZVALUE(z+1)));
 
@@ -649,16 +652,16 @@ zsyntree* zsyntree::find(zsymbol* cat, zsymbol* label, bool from_left)
 {
     int idx;
 
-    if(last_subtree == -1L)
+    if (last_subtree == -1L)
     return NULL;
 
-    if(from_left)
+    if (from_left)
     {
-    if(NULL==cat && NULL==label)
+    if (NULL==cat && NULL==label)
         return ZSYNTREEC(fetch(INTEGER_TO_ZVALUE(0)));
 
     zsyntree* zst = NULL;
-    for(idx = 0; idx <= last_subtree; ++idx)
+    for (idx = 0; idx <= last_subtree; ++idx)
     {
         zst = ZSYNTREEC(fetch(INTEGER_TO_ZVALUE(idx)));
         if (NULL!=cat && cat!=zst->category)
@@ -677,11 +680,11 @@ zsyntree* zsyntree::find(zsymbol* cat, zsymbol* label, bool from_left)
     }
     else
     {
-    if(NULL==cat && NULL==label)
+    if (NULL==cat && NULL==label)
         return ZSYNTREEC(fetch(INTEGER_TO_ZVALUE(last_subtree)));
 
     zsyntree* zst = NULL;
-    for(idx = last_subtree; idx >= 0; --idx)
+    for (idx = last_subtree; idx >= 0; --idx)
     {
         zst = ZSYNTREEC(fetch(INTEGER_TO_ZVALUE(idx)));
         if (NULL!=cat && cat!=zst->category)
@@ -710,10 +713,10 @@ zsyntree* zsyntree::deleteSubtree(zsyntree* a_subtree) {
     deleteAllKeyValue(ttz, a_subtree);
     deleteAllKeyValue(a_subtree, ttz);
 
-    for(int i = a_subtree->number_in_parent_tree+1; i<=last_subtree; ++i)
+    for (int i = a_subtree->number_in_parent_tree+1; i<=last_subtree; ++i)
     {
         zsyntree* zst = ZSYNTREEC(fetch(INTEGER_TO_ZVALUE(i)));
-        change(INTEGER_TO_ZVALUE(i-1),ZOBJECT_TO_ZVALUE(zst));
+        change(INTEGER_TO_ZVALUE(i-1), ZOBJECT_TO_ZVALUE(zst));
         zst->number_in_parent_tree=i-1;
     }
     last_subtree--;
@@ -725,7 +728,7 @@ zsyntree* zsyntree::deleteSubtree(zsyntree* a_subtree) {
 
 void zsyntree::addSubtree(zsyntree* a_subtree, zsymbol* a_label)
 {
-    insertAsNthSubtree(a_subtree,last_subtree+1);
+    insertAsNthSubtree(a_subtree, last_subtree+1);
     a_subtree->label = a_label;
 }
 
@@ -740,10 +743,10 @@ void zsyntree::insertAsNthSubtree(zsyntree* a_subtree, int a_n)
     int i;
 
     // shifting subtrees to the right
-    for(i = ++last_subtree; i > a_n; --i)
+    for (i = ++last_subtree; i > a_n; --i)
     {
         zsyntree* zst = ZSYNTREEC(fetch(INTEGER_TO_ZVALUE(i-1)));
-        change(INTEGER_TO_ZVALUE(i),ZOBJECT_TO_ZVALUE(zst));
+        change(INTEGER_TO_ZVALUE(i), ZOBJECT_TO_ZVALUE(zst));
         zst->number_in_parent_tree=i;
     }
 
@@ -796,7 +799,7 @@ std::string& eic_TK17122003(std::string& s) {
            case '(':
            case ')':
            case '/':
-           case ',': s.insert(i,"/"); i++; break;
+           case ',': s.insert(i, "/"); i++; break;
        }
     }
     return s;
@@ -810,11 +813,11 @@ char* zsyntree::zsyntree_to_itf(char* lexeme, char* equiv) {
 #ifdef USE_LOG4CPLUS
     log4cplus::Logger zsyntree_to_itf_logger = log4cplus::Logger::getInstance("zsyntree_to_itf");
 #else
-#define LOG4CPLUS_INFO(a1,a2)
-#define LOG4CPLUS_WARN(a1,a2)
-#define LOG4CPLUS_DEBUG(a1,a2)
-#define LOG4CPLUS_ERROR(a1,a2)
-#define LOG4CPLUS_FATAL(a1,a2)
+#define LOG4CPLUS_INFO(a1, a2)
+#define LOG4CPLUS_WARN(a1, a2)
+#define LOG4CPLUS_DEBUG(a1, a2)
+#define LOG4CPLUS_ERROR(a1, a2)
+#define LOG4CPLUS_FATAL(a1, a2)
 #endif
 
     zsymboltable* zst = NULL;
@@ -869,7 +872,7 @@ char* zsyntree::zsyntree_to_itf(char* lexeme, char* equiv) {
                 strcat(cat, equiv);
                 strcat(cat, "'");
             }
-            if (!strncmp("'$",cat,2) && last_subtree == 0) {
+            if (!strncmp("'$", cat, 2) && last_subtree == 0) {
                 lex = new char[strlen(cat)+1];
                 strcpy(lex, cat);
                 normal = false;
@@ -936,7 +939,7 @@ char* zsyntree::zsyntree_to_itf(char* lexeme, char* equiv) {
                 if (normal) s+=c;
                 else {
                     c[strlen(c)-1]=0;
-                    s.insert(0,c);
+                    s.insert(0, c);
                 }
                 delete c;
             } while (0);
@@ -1012,13 +1015,13 @@ std::string zvalue_to_parsable_string(zvalue z) {
 
 zsymbol* zf_concat(zsymbolfactory* a_sym_fac, zobjects_holder* holder, zsymbol* a, zsymbol* b)
 {
-    if(NULLP(a)) return b;
-    if(NULLP(b)) return a;
+    if (NULLP(a)) return b;
+    if (NULLP(b)) return a;
 
     const char* as = ZSYMBOLC(a)->get_string();
     const char* bs = ZSYMBOLC(b)->get_string();
     size_t alen = strlen(as);
-    if(alen == 0) return b;
+    if (alen == 0) return b;
     zsymbol* zs = zsymbol::generate_raw(holder, alen+strlen(bs)+1);
     strcpy(zs->get_block(), as);
     strcpy(zs->get_block()+alen, bs);
@@ -1028,19 +1031,19 @@ zsymbol* zf_concat(zsymbolfactory* a_sym_fac, zobjects_holder* holder, zsymbol* 
 zsymbol* zf_concat_with_space(zsymbolfactory* a_sym_fac, zobjects_holder* holder,
         zsymbol* a, zsymbol* b)
 {
-    if(NULLP(a)) return b;
-    if(NULLP(b)) return a;
+    if (NULLP(a)) return b;
+    if (NULLP(b)) return a;
 
     const char* as = ZSYMBOLC(a)->get_string();
     const char* bs = ZSYMBOLC(b)->get_string();
     size_t alen = strlen(as);
     size_t blen = strlen(bs);
-    if(alen == 0) return b;
-    if(blen == 0) return a;
+    if (alen == 0) return b;
+    if (blen == 0) return a;
 
     zsymbol* zs;
     // @todo universal isspace
-    if(as[alen-1] == ' ' || bs[0] == ' ') {
+    if (as[alen-1] == ' ' || bs[0] == ' ') {
         zs = zsymbol::generate_raw(holder, alen+strlen(bs)+1);
         strcpy(zs->get_block(), as);
         strcpy(zs->get_block()+alen, bs);
@@ -1055,14 +1058,14 @@ zsymbol* zf_concat_with_space(zsymbolfactory* a_sym_fac, zobjects_holder* holder
 
 zsymbol* zf_itos(zsymbolfactory* a_sym_fac, zobjects_holder* holder, zvalue i)
 {
-    if(!INTEGERP(i)) return NULL;
+    if (!INTEGERP(i)) return NULL;
 
     char* t = itoa(ZVALUE_TO_INTEGER(i));
     zsymbol* zs = a_sym_fac->get_symbol(holder, t, true);
     return zs;
 }
 
-/** BEGIN: for hashes with elements like: zpair(zpair,something) */
+/** BEGIN: for hashes with elements like: zpair(zpair, something) */
 int pair_key_val_hash_function(zvalue z)
 {
     zpair* zp = (zpair*)((zpair*)z)->getFirst();
@@ -1082,7 +1085,7 @@ int pair_key_identity_function(zvalue k, zvalue v)
     return ( ( ((zpair*)k)->getFirst() == zp->getFirst() ) &&
             ( ((zpair*)k)->getSecond() == zp->getSecond() ) );
 }
-/** END: for hashes with elements like: zpair(zpair,something) */
+/** END: for hashes with elements like: zpair(zpair, something) */
 
 zvector* zf_put_to_vector(zobjects_holder* holder, zvalue first, zvalue second, zvalue third) {
     int elements_count = 3;
@@ -1098,7 +1101,7 @@ zvector* zf_put_to_vector(zobjects_holder* holder, zvalue first, zvalue second, 
         } else if ( ZVECTORP(z) ) {
             zvector* old_vector = ZVECTORC(z);
             int old_vectors_size = old_vector->getSize();
-            for(int c=0; c<old_vectors_size; ++c)
+            for (int c=0; c<old_vectors_size; ++c)
                 new_vector->add(old_vector->elementAt(c));
         } else
             assert(0); //unsupported zvalue, new implementation needed!

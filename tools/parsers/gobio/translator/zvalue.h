@@ -1,12 +1,11 @@
-#ifndef ZVALUE_HDR_HDR
-#define ZVALUE_HDR_HDR
-
-#include <string.h>
-#include <string>
-#include <new>
-#include <stdlib.h>
+#ifndef ZVALUE_HDR
+#define ZVALUE_HDR
 
 #include <cassert>
+#include <cstdlib>
+#include <cstring>
+#include <new>
+#include <string>
 
 typedef void* zvalue;
 
@@ -22,7 +21,8 @@ class zobject;
 #define NULL_ZVALUE ( reinterpret_cast<zvalue>(NULL)   )
 //integer has 01 at the end
 #define DELETED_ZVALUE ( reinterpret_cast<zvalue>(0x0002) )
-#define DEFAULT_ZVALUE ( reinterpret_cast<zvalue>(0x0004) )  //@warning this can become a problem because with 4 byte allignment this is a pointer(!)
+#define DEFAULT_ZVALUE ( reinterpret_cast<zvalue>(0x0004) )
+    //@warning this can become a problem because with 4 byte allignment this is a pointer(!)
 
 #define NULLP(z)    ( (z) == NULL_ZVALUE )
 #define DELETEDP(z) ( (z) == DELETED_ZVALUE )
@@ -37,7 +37,8 @@ class zobject;
 #define ZVALUE_TO_ZOBJECT(z) ( reinterpret_cast<zobject*>(z) )
 #define ZOBJECT_TYPE(z)      ( reinterpret_cast<zobject*>(z)->get_type() )
 
-#define ZOBJECTP(z)      ( !(reinterpret_cast<zint_t>(z) & 1) && !NULLP((z)) && !DELETEDP(z) && !DEFAULTP(z) )
+#define ZOBJECTP(z)      ( !(reinterpret_cast<zint_t>(z) & 1) \
+                            && !NULLP((z)) && !DELETEDP(z) && !DEFAULTP(z) )
 #define ZPAIRP(z)        ( ZOBJECTP(z) && ZOBJECT_TYPE(z) == zobject::EZPAIR )
 #define ZSYMBOLP(z)      ( ZOBJECTP(z) && ZOBJECT_TYPE(z) == zobject::EZSYMBOL )
 #define ZHASHP(z)        ( ZOBJECTP(z) && ZOBJECT_TYPE(z) == zobject::EZHASH )
@@ -65,8 +66,8 @@ class zobject;
  *            </code> but we can not be sure, so here is a tiny workaround.
  */
 #define ZWRAPPERP(Z) ( 1 )
-#define ZUNWRAP(t,z) ( reinterpret_cast<t>(reinterpret_cast<void*>(ZVALUE_TO_ZOBJECT(z))) )
-#define ZWRAP(p)     ( ZOBJECT_TO_ZVALUE(reinterpret_cast<zobject*>(p)) )
+#define ZUNWRAP(t, z) ( reinterpret_cast<t>(reinterpret_cast<void*>(ZVALUE_TO_ZOBJECT(z))) )
+#define ZWRAP(p) ( ZOBJECT_TO_ZVALUE(reinterpret_cast<zobject*>(p)) )
 
 /**
  * We do not want to have VFTs in any zobjects.
@@ -92,7 +93,8 @@ class zobject;
                             break; \
         case EZSYNTREE: return_value=((zsyntree*)zo)->function; \
                         break; \
-        default: assert(EZOBJECT==zo->type); /* implementation error, unknown subclass of zobject or type not set */ \
+        default: assert(EZOBJECT==zo->type); \
+            /* implementation error, unknown subclass of zobject or type not set */ \
     }
 
 /**
@@ -213,8 +215,8 @@ protected:
     zvalue second;
 
     zpair(zobjects_holder* holder, zvalue a_first, zvalue a_second):zobject(holder, EZPAIR)
-        ,first(a_first)
-        ,second(a_second)
+        , first(a_first)
+        , second(a_second)
         {}
 
     ~zpair() { }
@@ -226,11 +228,11 @@ protected:
         char* s_f = zvalue_to_string(first);
         char* s_s = zvalue_to_string(second);
         char* result = new char[4+strlen(s_f)+strlen(s_s)];
-        strcpy(result,"(");
-        strcat(result,s_f); delete s_f;
-        strcat(result,",");
-        strcat(result,s_s); delete s_s;
-        strcat(result,")");
+        strcpy(result, "(");
+        strcat(result, s_f); delete s_f;
+        strcat(result, ",");
+        strcat(result, s_s); delete s_s;
+        strcat(result, ")");
         return result;
     }
 
@@ -410,8 +412,8 @@ protected:
     zvalue* block;
 
     zvector(zobjects_holder* holder, int initialSize):zobject(holder, EZVECTOR)
-        ,size(initialSize)
-        ,occupied(0)
+        , size(initialSize)
+        , occupied(0)
         {
             block = new zvalue[initialSize];
             memset(block, 0, size*sizeof(zvalue));
@@ -435,7 +437,7 @@ protected:
             block = new zvalue [size = newSize];
             memset(block, 0, size*sizeof(zvalue));
 
-            for(int i = 0; i < occupied; ++i)
+            for (int i = 0; i < occupied; ++i)
                 block[i]=oldBlock[i];
 
             delete [] oldBlock;
@@ -450,7 +452,7 @@ protected:
             int stop  = (step>0)?position-1:occupied;
             int sign  = (step>0)?-1:1;
 
-            for(int i=start; i!=stop; i+=sign)
+            for (int i=start; i!=stop; i+=sign)
             block[step+i]=block[i];
 
             if (step>0) {
@@ -579,7 +581,7 @@ typedef int (* f_hash_function)(zvalue);
  * Type of a function that is used by the zhash to
  * decide if the key matches the value.
  */
-typedef int (* f_identity_function)(zvalue,zvalue);
+typedef int (* f_identity_function)(zvalue, zvalue);
 
 /**
  * Hash function based on pointers.
@@ -591,11 +593,11 @@ int standard_zvalue_hash_function(zvalue z);
  */
 int the_same_identity_function(zvalue z, zvalue t);
 
-/** BEGIN: for hashes with elements like: zpair(zpair,something) */
+/** BEGIN: for hashes with elements like: zpair(zpair, something) */
 int pair_key_val_hash_function(zvalue z);
 int pair_key_key_hash_function(zvalue z);
 int pair_key_identity_function(zvalue k, zvalue v);
-/** END: for hashes with elements like: zpair(zpair,something) */
+/** END: for hashes with elements like: zpair(zpair, something) */
 
 class zhash: public zobject
 {
@@ -619,22 +621,22 @@ protected:
     f_hash_function     a_val_hash_function=NULL,
     f_identity_function a_key_val_function=NULL,
     bool                allocate_atomic_mem=false):zobject(holder, EZHASH)
-    ,size(0)
-    ,occupied(0)
-    ,occupied_and_deleted(0)
-    ,block(NULL)
-    ,key_hash_function(a_key_hash_function)
-    ,val_hash_function(a_val_hash_function)
-    ,key_val_function(a_key_val_function)
+    , size(0)
+    , occupied(0)
+    , occupied_and_deleted(0)
+    , block(NULL)
+    , key_hash_function(a_key_hash_function)
+    , val_hash_function(a_val_hash_function)
+    , key_val_function(a_key_val_function)
     {
         (void)allocate_atomic_mem; // to suppress WARNING: unused parameter ‘allocate_atomic_mem’
-        if(key_hash_function == NULL)
+        if (key_hash_function == NULL)
         key_hash_function = standard_zvalue_hash_function;
 
-        if(val_hash_function == NULL)
+        if (val_hash_function == NULL)
         val_hash_function = key_hash_function;
 
-        if(key_val_function == NULL)
+        if (key_val_function == NULL)
         key_val_function = the_same_identity_function;
 
         resize(a_init_size);
@@ -652,10 +654,10 @@ protected:
 
         unsigned int ix = h1 % size;
 
-        while(!NULLP(block[ix]) && !DELETEDP(block[ix]))
+        while (!NULLP(block[ix]) && !DELETEDP(block[ix]))
         (ix += h2) %= size;
 
-        if(NULLP(block[ix]))
+        if (NULLP(block[ix]))
         ++occupied_and_deleted;
 
         block[ix] = val;
@@ -670,9 +672,9 @@ protected:
 
         unsigned int ix = (h1 + i * h2) % size;
 
-        while(!NULLP(block[ix]))
+        while (!NULLP(block[ix]))
         {
-        if(!DELETEDP(block[ix]) &&
+        if (!DELETEDP(block[ix]) &&
            key_val_function(key, block[ix]))
             return &block[ix];
 
@@ -695,8 +697,8 @@ protected:
 
         if (NULL!=old_block) {
             int ix;
-            for(ix = 0; ix < old_size; ++ix) {
-          if(!NULLP(old_block[ix]) && !DELETEDP(old_block[ix]))
+            for (ix = 0; ix < old_size; ++ix) {
+          if (!NULLP(old_block[ix]) && !DELETEDP(old_block[ix]))
                     put_(old_block[ix]);
             }
 
@@ -716,7 +718,7 @@ protected:
      */
     std::string _to_parsable_string();
 
-    std::string to_parsable_string_modif(bool without_int_keys);
+    std::string to_parsable_string_modif (bool without_int_keys);
 
 public:
     static zhash* generate(
@@ -749,7 +751,7 @@ public:
     int i = 0;
     zvalue* zv = get_(key, i);
     zvalue v = NULL_ZVALUE;
-        if(!NULLP(*zv))
+        if (!NULLP(*zv))
     {
         --occupied;
             v = *zv;
@@ -760,9 +762,9 @@ public:
 
     void put(zvalue val)
     {
-        if(occupied++ >= size/2)
+        if (occupied++ >= size/2)
         resize(2*size);
-        else if(occupied_and_deleted >= size-1)
+        else if (occupied_and_deleted >= size-1)
         resize(size);
 
         put_(val);
@@ -819,7 +821,7 @@ public:
         zvalue p = get(s);
 
 
-        if(NULLP(p))
+        if (NULLP(p))
         return NULL_ZVALUE;
 
         return ((zpair*)p)->getSecond();
@@ -827,7 +829,7 @@ public:
 
     zvalue defined(zvalue s) const
     {
-        if(NULLP(get(s)))
+        if (NULLP(get(s)))
         return NULL_ZVALUE;
 
         return INTEGER_TO_ZVALUE(1);
@@ -837,8 +839,8 @@ public:
     {
         zvalue p = get(s);
 
-        if(NULLP(p))
-        put(zpair::generate(my_holder, s,d));
+        if (NULLP(p))
+        put(zpair::generate(my_holder, s, d));
         else
         ((zpair*)p)->setSecond(d);
     }
@@ -846,7 +848,7 @@ public:
 
     void insert(zvalue s, zvalue d)
     {
-        put(zpair::generate(my_holder, s,d));
+        put(zpair::generate(my_holder, s, d));
     }
 
     void deleteAllKeyValue(zvalue s, zvalue d);
@@ -858,7 +860,7 @@ public:
  * A syntactic tree.
  *
  * The following values are kept in it as an zenvironment:
- * - successive subtrees (when key = [0,nb_subtree])
+ * - successive subtrees (when key = [0, nb_subtree])
  * - the same subtrees as above but referred by %Whatever instead of number
  * - attributes (when key is a symbol not starting with '%')
  *
@@ -1004,14 +1006,14 @@ public:
     {
         assert(eT != this);
 
-        if(equiv_tree != NULL)
+        if (equiv_tree != NULL)
         equiv_tree->equiv_tree = NULL;
 
         equiv_tree = eT;
 
-        if(eT != NULL)
+        if (eT != NULL)
         {
-        if(eT->equiv_tree != NULL)
+        if (eT->equiv_tree != NULL)
             eT->setEquivTree(NULL);
 
         assert(eT->equiv_tree == NULL);
@@ -1240,7 +1242,8 @@ inline zsymbol::~zsymbol() {
       case EZSYNTREE:
           delete (zsyntree*)this;
           break;
-      default: assert(EZOBJECT==type); //implementation error, unknown subclass of zobject or type not set
+      default: assert(EZOBJECT==type);
+          //implementation error, unknown subclass of zobject or type not set
       }
       }
 
