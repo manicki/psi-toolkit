@@ -18,6 +18,7 @@ add_library(common SHARED
     cutter_annotator_options.cpp
     escaping.cpp
     file_fetcher.cpp
+    file_recognizer.cpp
     its_data.cpp
     language_dependent_annotator_factory.cpp
     lattice.cpp
@@ -58,6 +59,10 @@ endif(USE_JAVA)
 if(HAVE_LOG4CPP)
   target_link_libraries(common log4cpp)
 endif(HAVE_LOG4CPP)
+
+if(HAVE_LIBMAGIC)
+    target_link_libraries(common ${LibMagic_LIBRARY})
+endif(HAVE_LIBMAGIC)
 
 add_subdirectory(t)
 

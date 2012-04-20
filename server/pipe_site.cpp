@@ -141,10 +141,10 @@ void PipeSite::createFileFromOutput(const std::string& output) {
 std::string PipeSite::generateOutput_(const std::string& rawOutput) {
     std::ostringstream output;
 
-    std::string type = fileRecognizer_.recognizeType(rawOutput);
+    std::string type = fileRecognizer_.recognizeMimeType(rawOutput);
 
     if (type == "image") {
-        if (fileRecognizer_.recognizeExtension(rawOutput) == "svg") {
+        if (fileRecognizer_.recognizeFileExtension(rawOutput) == "svg") {
             output << rawOutput;
         }
         else {

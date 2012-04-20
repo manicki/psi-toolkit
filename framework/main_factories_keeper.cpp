@@ -55,6 +55,10 @@
 #include "psi_aspell.hpp"
 #endif
 
+#if HAVE_LIBMAGIC
+#include "guessing_reader.hpp"
+#endif
+
 MainFactoriesKeeper::MainFactoriesKeeper() {
     keeper_.addTagBasedIzeAliases("token", "token");
     keeper_.addTagBasedAlias("segment", "segment");
@@ -119,6 +123,11 @@ MainFactoriesKeeper::MainFactoriesKeeper() {
 #if HAVE_ASPELL
     keeper_.takeProcessorFactory(new PSIAspell::Factory());
 #endif
+
+#if HAVE_LIBMAGIC
+    keeper_.takeProcessorFactory(new GuessingReader::Factory());
+#endif
+
 }
 
 ProcessorFactory& MainFactoriesKeeper::getProcessorFactory(std::string processorName) {

@@ -11,7 +11,6 @@ add_library(server SHARED
     session_manager.cpp
     server_runner.cpp
     output_saver.cpp
-    file_recognizer.cpp
 )
 
 target_link_libraries(server ${Boost_LIBRARIES} pthread mpfd-parser ${BASE_TARGETS} pcre pcrecpp tools-parsers-puddle test-extractor)
@@ -23,10 +22,6 @@ if(HAVE_PERL_BINDINGS)
     target_link_libraries(server formats-perl-simple)
     find_package(PerlLibs)
 endif(HAVE_PERL_BINDINGS)
-
-if(HAVE_LIBMAGIC)
-    target_link_libraries(server ${LibMagic_LIBRARY})
-endif(HAVE_LIBMAGIC)
 
 set_target_properties(server PROPERTIES LINK_FLAGS "-lpthread")
 
