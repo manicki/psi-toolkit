@@ -22,8 +22,8 @@ StringFrag AnnotationItem::getTextAsStringFrag() const {
 long AnnotationItem::getHash() const {
     std::string str = category_;
     str += text_.str();
-    BOOST_FOREACH(const std::string & av, values_) {
-        str += av;
+    BOOST_FOREACH(const zvalue & av, values_) {
+        str += zvalue_to_string(av);
     }
     const std::collate<char>& coll = std::use_facet<std::collate<char> >(std::locale());
     return coll.hash(str.data(), str.data() + str.length());
@@ -42,7 +42,7 @@ size_t AnnotationItem::resize_(size_t size) {
 bool AnnotationItem::areAttributesTheSame_(const AnnotationItem& other) const {
     size_t smallerSize = values_.size();
     size_t largerSize  = other.values_.size();
-    const std::vector<std::string>* largerVector = &(other.values_);
+    const std::vector<zvalue>* largerVector = &(other.values_);
 
     if (smallerSize > largerSize) {
         smallerSize = other.values_.size();
@@ -54,9 +54,8 @@ bool AnnotationItem::areAttributesTheSame_(const AnnotationItem& other) const {
        if (values_[i] != other.values_[i])
            return false;
 
-
    for (size_t i = smallerSize; i < largerSize; ++i)
-       if (!(*largerVector)[i].empty())
+       if (strcmp(zvalue_to_string((*largerVector)[i]), "") != 0)
            return false;
 
    return true;

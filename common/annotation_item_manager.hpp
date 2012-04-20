@@ -29,6 +29,7 @@ private:
     typedef boost::bimap<std::string, int> StringBimap;
     typedef StringBimap::value_type StringBimapItem;
     StringBimap m_;
+    // zobjects_holder * holder_;
 
 };
 

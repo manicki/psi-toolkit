@@ -1,5 +1,8 @@
 #include "annotation_item_manager.hpp"
 
+#include "zvalue.hpp"
+
+
 void AnnotationItemManager::setValue(
     AnnotationItem & annotationItem,
     std::string attribute,
@@ -10,20 +13,22 @@ void AnnotationItemManager::setValue(
     if (ix >= annotationItem.values_.size()) {
         annotationItem.resize_(ix + 1);
     }
-    annotationItem.values_[ix] = value;
+    annotationItem.values_[ix] = zsymbol::generate_raw(EMPTY_ZOBJECTS_HOLDER, value.c_str());
     annotationItem.attributes_[ix] = true;
 }
+
 
 std::string AnnotationItemManager::getValue(
     AnnotationItem & annotationItem,
     std::string attribute
 ) {
     try {
-        return annotationItem.values_[m_.left.at(attribute)];
+        return zvalue_to_string(annotationItem.values_[m_.left.at(attribute)]);
     } catch (...) {
         return "";
     }
 }
+
 
 std::list< std::pair<std::string, std::string> > AnnotationItemManager::getValues(
     const AnnotationItem & annotationItem
@@ -36,7 +41,7 @@ std::list< std::pair<std::string, std::string> > AnnotationItemManager::getValue
     ) {
         result.push_back(std::pair<std::string, std::string>(
             m_.right.at(i),
-            annotationItem.values_[i]
+            zvalue_to_string(annotationItem.values_[i])
         ));
     }
     return result;

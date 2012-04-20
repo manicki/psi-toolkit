@@ -9,6 +9,7 @@
 #include <boost/foreach.hpp>
 
 #include "string_frag.hpp"
+#include "zvalue.hpp"
 
 class AnnotationItem {
 
@@ -65,7 +66,7 @@ private:
 
     std::string category_;
     StringFrag text_;
-    std::vector<std::string> values_;
+    std::vector<zvalue> values_;
     boost::dynamic_bitset<> attributes_;
 
     size_t resize_(size_t size);
