@@ -119,6 +119,8 @@ class MeTagger : public Annotator {
         std::string getPartOfSpeechFromMorphoTag(std::string tag);
         std::list<std::pair<std::string, std::string> >
             getAttributesFromMorphoTag(std::string tag);
+        bool formMatchesTag(Lattice &lattice, Lattice::EdgeDescriptor form,
+                MeTagger::Outcome tag);
         bool lemmaEdgeExists(Lattice &lattice, Lattice::EdgeDescriptor token,
                 std::string lemma);
         bool lexemeEdgeExists(Lattice &lattice, Lattice::EdgeDescriptor token,

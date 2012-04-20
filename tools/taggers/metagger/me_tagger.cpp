@@ -284,6 +284,8 @@ MeTagger::Context MeTagger::createContext(Lattice &lattice,
         lattice.outEdges(currentVertex, formMask);
     while (formIt.hasNext()) {
         Lattice::EdgeDescriptor form = formIt.next();
+        if (isDiscarded(lattice, form))
+            continue;
         std::string tag = getFormMorphoTag(lattice, form);
         std::string lemma = getFormLemma(lattice, form);
         context.push_back(Feature("curr_has_tag=" + tag));
@@ -348,6 +350,8 @@ MeTagger::Context MeTagger::createContext(Lattice &lattice,
                 lattice.outEdges(prevVertex, formMask);
             while (prevFormIt.hasNext()) {
                 Lattice::EdgeDescriptor prevForm = prevFormIt.next();
+                if (isDiscarded(lattice, prevForm))
+                    continue;
                 std::stringstream prevTag, prevLemma;
                 prevTag << "prev" << i << "_has_tag=" <<
                     getFormMorphoTag(lattice, prevForm);
@@ -377,6 +381,8 @@ MeTagger::Context MeTagger::createContext(Lattice &lattice,
                 lattice.outEdges(nextVertex, formMask);
             while (nextFormIt.hasNext()) {
                 Lattice::EdgeDescriptor nextForm = nextFormIt.next();
+                if (isDiscarded(lattice, nextForm))
+                    continue;
                 std::stringstream nextTag, nextLemma;
                 nextTag << "next" << i << "_has_tag=" <<
                     getFormMorphoTag(lattice, nextForm);
@@ -530,7 +536,10 @@ void MeTagger::applyTokenTags(Lattice &lattice, TokenEdgesMap tokenEdgesMap,
             bool allFormsDiscarded = true;
             while (formIt.hasNext()) {
                 Lattice::EdgeDescriptor form = formIt.next();
-                if (getFormMorphoTag(lattice, form) != tag) {
+                if (isDiscarded(lattice, form))
+                    continue;
+                //if (getFormMorphoTag(lattice, form) != tag) {
+                if (!formMatchesTag(lattice, form, tag)) {
                     lattice.discard(form);
                 } else {
                     allFormsDiscarded = false;
@@ -558,6 +567,47 @@ void MeTagger::applyTokenTags(Lattice &lattice, TokenEdgesMap tokenEdgesMap,
         }
         i ++;
     }
+}
+
+bool MeTagger::formMatchesTag(Lattice &lattice,
+        Lattice::EdgeDescriptor form, MeTagger::Outcome tag) {
+    if (getFormPartOfSpeech(lattice, form) ==
+            getPartOfSpeechFromMorphoTag(tag)) {
+        AnnotationItem ai = lattice.getEdgeAnnotationItem(form);
+        std::list< std::pair<std::string, std::string> > av
+            = lattice.getAnnotationItemManager().getValues(ai);
+        std::list<std::pair<std::string, std::string> > attributes =
+            getAttributesFromMorphoTag(tag);
+        if (!av.empty()) {
+            bool allAttributesMatched = true;
+            for (std::list<std::pair<std::string, std::string> >::iterator
+                    avIt = av.begin();
+                    avIt != av.end();
+                    ++ avIt) {
+                bool attributeMatched = false;
+                for (std::list<std::pair<std::string, std::string> >::iterator
+                        attrIt = attributes.begin();
+                        attrIt != attributes.end();
+                    ++ attrIt) {
+                    if (avIt->first == attrIt->first &&
+                            avIt->second == attrIt->second) {
+                        attributeMatched = true;
+                        break;
+                    }
+                }
+                if (!attributeMatched) {
+                    allAttributesMatched = false;
+                    break;
+                }
+            }
+            return allAttributesMatched;
+        } else {
+            if (attributes.empty()) {
+                return true;
+            }
+        }
+    }
+    return false;
 }
 
 std::string MeTagger::getFormLemma(Lattice &lattice,
