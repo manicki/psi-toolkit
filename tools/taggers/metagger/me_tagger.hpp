@@ -125,11 +125,18 @@ class MeTagger : public Annotator {
                 std::string lemma, std::string partOfSpeech);
         void addLemmaEdge(Lattice &lattice, Lattice::EdgeDescriptor token,
                 std::string lemma);
-        void addLexemeEdge(Lattice &lattice, Lattice::EdgeDescriptor token,
-                std::string lemma, std::string partOfSpeech);
+        Lattice::EdgeDescriptor addLexemeEdge(Lattice &lattice,
+                Lattice::EdgeDescriptor token, std::string lemma,
+                std::string partOfSpeech);
         void addFormEdge(Lattice &lattice, Lattice::EdgeDescriptor token,
-                std::string lemma, std::string partOfSpeech, std::string tag);
+                Lattice::EdgeDescriptor lexeme, std::string tag);
         bool isDiscarded(Lattice &lattice, Lattice::EdgeDescriptor edge);
+        bool hasLexemeEdgeMatchingTag(Lattice &lattice,
+                Lattice::EdgeDescriptor token, std::string tag);
+        Lattice::EdgeDescriptor getLexemeEdgeMatchingTag(Lattice &lattice,
+                Lattice::EdgeDescriptor token, std::string tag);
+        bool lexemeEdgeMatchesTag(Lattice &lattice, Lattice::EdgeDescriptor lexeme,
+                std::string tag);
 };
 
 #endif
