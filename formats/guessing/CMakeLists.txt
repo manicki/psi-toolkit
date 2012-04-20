@@ -10,4 +10,4 @@ foreach(dir ${formats_SUBDIRS})
 endforeach(dir)
 
 install(TARGETS formats-guessing DESTINATION lib/)
-install(DIRECTORY guessing_reader/data/ DESTINATION ${PSITOOLKIT_INSTALL_DATA_DIR}/guessing-reader)
+install(DIRECTORY data/ DESTINATION ${PSITOOLKIT_INSTALL_DATA_DIR}/guessing-reader)
