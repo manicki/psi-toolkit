@@ -208,7 +208,7 @@ message(STATUS "Using djvu-reader ${USE_DJVU_READER}")
 option(USE_DOC_READER "Using doc-reader" OFF)
 message(STATUS "Using doc-reader ${USE_DOC_READER}")
 
-option(USE_ASPELL "Using aspell" OFF)
+option(USE_ASPELL "Using aspell" ON)
 message(STATUS "Using aspell ${USE_ASPELL}")
 
 # Finds SWIG
