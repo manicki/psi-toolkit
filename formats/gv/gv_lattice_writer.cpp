@@ -8,6 +8,7 @@
 
 #include "lattice.hpp"
 #include "plugin_manager.hpp"
+#include "psi_quoter.hpp"
 
 
 GVLatticeWriter::GVLatticeWriter(
