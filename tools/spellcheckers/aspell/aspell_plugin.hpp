@@ -15,10 +15,12 @@ private:
                              );
 
     virtual bool doCheckRequirementsWithOptionsUbuntu(
-                             const boost::program_options::variables_map& options
-                             );
-
+                             const boost::program_options::variables_map& options);
     virtual bool areRequirementsDefinedForUbuntu();
+
+    virtual bool doCheckRequirementsWithOptionsArchLinux(
+                             const boost::program_options::variables_map& options);
+    virtual bool areRequirementsDefinedForArchLinux();
 
     bool checkIfDictionaryAvailable_(const boost::program_options::variables_map& options);
     std::string getAspellRequiredLibraryName_();

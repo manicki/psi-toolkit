@@ -14,9 +14,6 @@ bool AspellPlugin::doCheckRequirementsWithOptionsDefaultOS(
                    ) {
 
     if (! isPluginActive()) {
-        // @todo check libraries!
-        //        message << "Ubuntu packages required:" << std::endl;
-        //        message << "\tapt-get install aspell libaspell-dev libaspell15";
         getCurrentRequirementsChecker().showLibrariesNotAvailable(
                                         boost::assign::list_of
                                         (getAspellRequiredLibraryName_()));
@@ -37,13 +34,9 @@ bool AspellPlugin::doCheckRequirementsWithOptionsDefaultOS(
 }
 
 bool AspellPlugin::doCheckRequirementsWithOptionsUbuntu(
-                   const boost::program_options::variables_map& options
-                   ) {
+                   const boost::program_options::variables_map& options) {
 
     if (! isPluginActive()) {
-        // @todo check libraries!
-        //        message << "Ubuntu packages required:" << std::endl;
-        //        message << "\tapt-get install aspell libaspell-dev libaspell15";
         getCurrentRequirementsChecker().showPackagesNotAvailable(
                                         boost::assign::list_of
                                         ("aspell")
@@ -63,11 +56,39 @@ bool AspellPlugin::doCheckRequirementsWithOptionsUbuntu(
 
         return result;
     }
-    
+
+    return true;
+}
+
+bool AspellPlugin::doCheckRequirementsWithOptionsArchLinux(
+                   const boost::program_options::variables_map& options) {
+
+    if (! isPluginActive()) {
+        getCurrentRequirementsChecker().showPackagesNotAvailable(
+                                        boost::assign::list_of
+                                        ("aspell"));
+        return false;
+    } else {
+        bool result = true;
+        if (!checkIfDictionaryAvailable_(options)) {
+            std::string langCode = options["lang"].as<std::string>();
+            getCurrentRequirementsChecker().showPackagesNotAvailable(
+                                        boost::assign::list_of
+                                        ("aspell-" + langCode));
+            result = false;
+        }
+
+        return result;
+    }
+
     return true;
 }
 
 bool AspellPlugin::areRequirementsDefinedForUbuntu() {
+    return true;
+}
+
+bool AspellPlugin::areRequirementsDefinedForArchLinux() {
     return true;
 }
 
