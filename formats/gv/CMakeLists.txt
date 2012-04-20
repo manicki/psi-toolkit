@@ -5,13 +5,12 @@ add_library(formats-gv SHARED
 
 target_link_libraries(
     formats-gv
-    ${Boost_LIBRARIES}
-    ${GRAPHVIZ_LIBRARIES}
     common
     common-plugins
 )
 
 add_subdirectory(t)
+add_subdirectory(plugin)
 
 install(TARGETS formats-gv DESTINATION lib/)
 install(DIRECTORY data/ DESTINATION ${PSITOOLKIT_INSTALL_DATA_DIR}/gv-writer)

@@ -1,5 +1,5 @@
 add_library(formats-gv-writer-plugin SHARED
-    djvu_adapter_impl.cpp
+    graphviz_adapter_impl.cpp
 )
 
 target_link_libraries(

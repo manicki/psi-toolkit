@@ -54,8 +54,8 @@ private:
     int nCount_;
     int eCount_;
 
-    std::map<int, Agnode_t> nodes_;
-    std::map<int, Agedge_t> edges_;
+    std::map<int, Agnode_t*> nodes_;
+    std::map<int, Agedge_t*> edges_;
 
 };
 
