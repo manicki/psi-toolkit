@@ -30,12 +30,29 @@
 #include "lattice_writer.hpp"
 #include "lattice_writer_factory.hpp"
 #include "aligning_writer_worker.hpp"
+#include "plugin/graphviz_adapter_interface.hpp"
 #include "psi_quoter.hpp"
+
 
 class GVLatticeWriter : public LatticeWriter<std::ostream> {
 
 public:
+    GVLatticeWriter();
+
+    GVLatticeWriter(
+        bool showTags,
+        bool color,
+        std::set<std::string> filter,
+        std::string outputFormat,
+        bool tree
+    );
+
+    ~GVLatticeWriter();
+
     virtual std::string getFormatName();
+
+    GraphvizAdapterInterface * getAdapter();
+    bool isActive();
 
     class Factory : public LatticeWriterFactory<std::ostream> {
     private:
@@ -47,20 +64,6 @@ public:
         virtual std::string doGetName() const;
         virtual boost::filesystem::path doGetFile() const;
     };
-
-    GVLatticeWriter(
-        bool showTags,
-        bool color,
-        std::set<std::string> filter,
-        std::string outputFormat,
-        bool tree
-    ) :
-        showTags_(showTags),
-        color_(color),
-        filter_(filter),
-        outputFormat_(outputFormat),
-        tree_(tree)
-    { }
 
     bool isShowTags() const { return showTags_; }
     bool isColor() const { return color_; }
@@ -78,6 +81,8 @@ public:
     bool isTree() const { return tree_; }
 
 private:
+    void init_();
+
     virtual std::string doInfo();
 
     class Worker : public AligningWriterWorker {
@@ -91,6 +96,7 @@ private:
         virtual ~Worker();
     private:
         GVLatticeWriter& processor_;
+        // std::set<std::string> allowedFormats_;
     };
 
     virtual WriterWorker<std::ostream>* doCreateWriterWorker(
@@ -105,6 +111,9 @@ private:
     std::string outputFormat_;
     bool tree_;
 
+    GraphvizAdapterInterface * adapter_;
+
 };
+
 
 #endif

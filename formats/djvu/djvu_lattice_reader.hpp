@@ -2,16 +2,21 @@
 #define DJVU_LATTICE_READER_HDR
 
 
-#include "libdjvu/ddjvuapi.h"
-
 #include "stream_lattice_reader.hpp"
 #include "lattice_reader_factory.hpp"
+#include "plugin/djvu_adapter_interface.hpp"
 
 
 class DjVuLatticeReader : public StreamLatticeReader {
 
 public:
+    DjVuLatticeReader();
+    ~DjVuLatticeReader();
+
     virtual std::string getFormatName();
+
+    DjVuAdapterInterface * getAdapter();
+    bool isActive();
 
     class Factory : public LatticeReaderFactory<std::istream> {
     public:
@@ -48,6 +53,8 @@ private:
 
         return new Worker(*this, inputStream, lattice);
     }
+
+    DjVuAdapterInterface * adapter_;
 };
 
 
