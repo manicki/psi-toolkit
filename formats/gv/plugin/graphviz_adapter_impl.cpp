@@ -2,11 +2,11 @@
 
 
 GraphvizAdapterImpl::GraphvizAdapterImpl() :
+    gvc_(NULL),
+    g_(NULL),
     nCount_(0),
     eCount_(0)
-{
-    // init();
-}
+{ }
 
 
 GraphvizAdapterImpl::~GraphvizAdapterImpl() {
