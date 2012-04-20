@@ -16,6 +16,7 @@
 #include "lemmatizer_annotator.hpp"
 #include "lang_guesser.hpp"
 #include "gobio.hpp"
+#include "puddle.hpp"
 
 #if HAVE_GRAPHVIZ
 #include "gv_lattice_writer.hpp"
@@ -38,9 +39,6 @@
 #endif
 #if HAVE_JAVA
 #include "morfologik.hpp"
-#endif
-#if HAVE_PUDDLE
-#include "puddle.hpp"
 #endif
 
 #if HAVE_CMPH
@@ -107,9 +105,7 @@ MainFactoriesKeeper::MainFactoriesKeeper() {
 #if HAVE_JAVA
     keeper_.takeProcessorFactory(new LemmatizerAnnotator<Morfologik>::Factory());
 #endif
-#if HAVE_PUDDLE
     keeper_.takeProcessorFactory(new poleng::bonsai::puddle::Puddle::Factory());
-#endif
 
 #if HAVE_CMPH
     keeper_.takeProcessorFactory(new OneEdgeAtATimeAnnotator<BiLexicon>::Factory());

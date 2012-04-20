@@ -1,4 +1,8 @@
 include_directories("${psi-toolkit_SOURCE_DIR}/tools/spellcheckers/aspell")
+include_directories("${psi-toolkit_SOURCE_DIR}/formats/djvu")
+include_directories("${psi-toolkit_SOURCE_DIR}/formats/doc")
+include_directories("${psi-toolkit_SOURCE_DIR}/formats/gv")
+include_directories("${psi-toolkit_SOURCE_DIR}/formats/pdf")
 
 foreach(dir ${tools_DIRS})
     include_directories("${psi-toolkit_SOURCE_DIR}/tools/${dir}")

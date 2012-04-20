@@ -4,11 +4,20 @@
 
 #include <boost/assign/list_of.hpp>
 
-#include <gtk/gtk.h>
-#include <poppler.h>
+#include "plugin_manager.hpp"
 
-#include "logging.hpp"
 
+PDFLatticeReader::PDFLatticeReader() {
+    adapter_ = dynamic_cast<PopplerAdapterInterface*>(
+        PluginManager::getInstance().createPluginAdapter("poppler")
+    );
+}
+
+PDFLatticeReader::~PDFLatticeReader() {
+    if (adapter_) {
+        PluginManager::getInstance().destroyPluginAdapter("poppler", adapter_);
+    }
+}
 
 std::string PDFLatticeReader::getFormatName() {
     return "PDF";
@@ -17,6 +26,19 @@ std::string PDFLatticeReader::getFormatName() {
 std::string PDFLatticeReader::doInfo() {
     return "PDF reader";
 }
+
+PopplerAdapterInterface * PDFLatticeReader::getAdapter() {
+    return adapter_;
+}
+
+bool PDFLatticeReader::isActive() {
+    if (adapter_) {
+        return true;
+    } else {
+        return false;
+    }
+}
+
 
 PDFLatticeReader::Factory::~Factory() {
 }
@@ -56,23 +78,10 @@ PDFLatticeReader::Worker::Worker(
 { }
 
 void PDFLatticeReader::Worker::doRun() {
-    std::string line;
-    std::string documentStr;
-    while (std::getline(inputStream_, line)) {
-        documentStr += line + "\n";
-    }
-    gtk_init(NULL, NULL);
-    PopplerDocument * document = poppler_document_new_from_data(
-        (char*)(documentStr.c_str()),
-        documentStr.length(),
-        NULL,
-        NULL
-    );
-    PopplerPage * page;
-    for (int i = 0; i < poppler_document_get_n_pages(document); ++i) {
-        page = poppler_document_get_page(document, i);
-        char * text = poppler_page_get_text(page);
-        std::stringstream textStream(text);
+    if (processor_.isActive()) {
+        std::stringstream textStream;
+        processor_.getAdapter()->convertPDFToText(inputStream_, textStream);
+        std::string line;
         while (getline(textStream, line)) {
             appendParagraphToLattice_(line, textTags_);
             lattice_.appendString("\n");

@@ -284,6 +284,8 @@ MeTagger::Context MeTagger::createContext(Lattice &lattice,
         lattice.outEdges(currentVertex, formMask);
     while (formIt.hasNext()) {
         Lattice::EdgeDescriptor form = formIt.next();
+        if (isDiscarded(lattice, form))
+            continue;
         std::string tag = getFormMorphoTag(lattice, form);
         std::string lemma = getFormLemma(lattice, form);
         context.push_back(Feature("curr_has_tag=" + tag));
@@ -348,6 +350,8 @@ MeTagger::Context MeTagger::createContext(Lattice &lattice,
                 lattice.outEdges(prevVertex, formMask);
             while (prevFormIt.hasNext()) {
                 Lattice::EdgeDescriptor prevForm = prevFormIt.next();
+                if (isDiscarded(lattice, prevForm))
+                    continue;
                 std::stringstream prevTag, prevLemma;
                 prevTag << "prev" << i << "_has_tag=" <<
                     getFormMorphoTag(lattice, prevForm);
@@ -377,6 +381,8 @@ MeTagger::Context MeTagger::createContext(Lattice &lattice,
                 lattice.outEdges(nextVertex, formMask);
             while (nextFormIt.hasNext()) {
                 Lattice::EdgeDescriptor nextForm = nextFormIt.next();
+                if (isDiscarded(lattice, nextForm))
+                    continue;
                 std::stringstream nextTag, nextLemma;
                 nextTag << "next" << i << "_has_tag=" <<
                     getFormMorphoTag(lattice, nextForm);
@@ -530,7 +536,10 @@ void MeTagger::applyTokenTags(Lattice &lattice, TokenEdgesMap tokenEdgesMap,
             bool allFormsDiscarded = true;
             while (formIt.hasNext()) {
                 Lattice::EdgeDescriptor form = formIt.next();
-                if (getFormMorphoTag(lattice, form) != tag) {
+                if (isDiscarded(lattice, form))
+                    continue;
+                //if (getFormMorphoTag(lattice, form) != tag) {
+                if (!formMatchesTag(lattice, form, tag)) {
                     lattice.discard(form);
                 } else {
                     allFormsDiscarded = false;
@@ -538,21 +547,67 @@ void MeTagger::applyTokenTags(Lattice &lattice, TokenEdgesMap tokenEdgesMap,
             }
             if (allFormsDiscarded) {
                 if (lattice.getEdgeAnnotationItem(token).getCategory() == "T") {
-                    std::string lemma = lattice.getEdgeText(token);
-                    std::string partOfSpeech = getPartOfSpeechFromMorphoTag(tag);
-
-                    if (!lemmaEdgeExists(lattice, token, lemma)) {
-                        addLemmaEdge(lattice, token, lemma);
+                    if (hasLexemeEdgeMatchingTag(lattice, token, tag)) {
+                        Lattice::EdgeDescriptor lexemeEdge =
+                            getLexemeEdgeMatchingTag(lattice, token, tag);
+                        addFormEdge(lattice, token, lexemeEdge, tag);
+                    } else {
+                        std::string lemma = lattice.getEdgeText(token);
+                        if (!lemmaEdgeExists(lattice, token, lemma)) {
+                            addLemmaEdge(lattice, token, lemma);
+                        }
+                        std::string partOfSpeech = getPartOfSpeechFromMorphoTag(tag);
+                        Lattice::EdgeDescriptor lexemeEdge = addLexemeEdge(
+                                lattice, token, lemma, partOfSpeech);
+                        addFormEdge(lattice, token, lexemeEdge, tag);
                     }
-                    if (!lexemeEdgeExists(lattice, token, lemma, partOfSpeech))
-                        addLexemeEdge(lattice, token, lemma, partOfSpeech);
 
-                    addFormEdge(lattice, token, lemma, partOfSpeech, tag);
                 }
             }
         }
         i ++;
     }
+}
+
+bool MeTagger::formMatchesTag(Lattice &lattice,
+        Lattice::EdgeDescriptor form, MeTagger::Outcome tag) {
+    if (getFormPartOfSpeech(lattice, form) ==
+            getPartOfSpeechFromMorphoTag(tag)) {
+        AnnotationItem ai = lattice.getEdgeAnnotationItem(form);
+        std::list< std::pair<std::string, std::string> > av
+            = lattice.getAnnotationItemManager().getValues(ai);
+        std::list<std::pair<std::string, std::string> > attributes =
+            getAttributesFromMorphoTag(tag);
+        if (!av.empty()) {
+            bool allAttributesMatched = true;
+            for (std::list<std::pair<std::string, std::string> >::iterator
+                    avIt = av.begin();
+                    avIt != av.end();
+                    ++ avIt) {
+                bool attributeMatched = false;
+                for (std::list<std::pair<std::string, std::string> >::iterator
+                        attrIt = attributes.begin();
+                        attrIt != attributes.end();
+                    ++ attrIt) {
+                    if (avIt->first == attrIt->first &&
+                            avIt->second == attrIt->second) {
+                        attributeMatched = true;
+                        break;
+                    }
+                }
+                if (!attributeMatched) {
+                    allAttributesMatched = false;
+                    break;
+                }
+            }
+            return allAttributesMatched;
+        } else {
+            if (attributes.empty()) {
+                return true;
+            }
+        }
+    }
+    return false;
 }
 
 std::string MeTagger::getFormLemma(Lattice &lattice,
@@ -666,6 +721,77 @@ std::list<std::pair<std::string, std::string> >
     return attributes;
 }
 
+bool MeTagger::hasLexemeEdgeMatchingTag(Lattice &lattice,
+        Lattice::EdgeDescriptor token, std::string tag) {
+    LayerTagMask lexemeMask = lattice.getLayerTagManager().getMask("lexeme");
+    Lattice::VertexDescriptor vertex =
+        lattice.getEdgeSource(token);
+    Lattice::InOutEdgesIterator lexemeIt =
+        lattice.outEdges(vertex, lexemeMask);
+    while (lexemeIt.hasNext()) {
+        Lattice::EdgeDescriptor lexeme = lexemeIt.next();
+        if (lexemeEdgeMatchesTag(lattice, lexeme, tag))
+            return true;
+    }
+    return false;
+}
+
+Lattice::EdgeDescriptor MeTagger::getLexemeEdgeMatchingTag(Lattice &lattice,
+        Lattice::EdgeDescriptor token, std::string tag) {
+    LayerTagMask lexemeMask = lattice.getLayerTagManager().getMask("lexeme");
+    Lattice::VertexDescriptor vertex =
+        lattice.getEdgeSource(token);
+    Lattice::InOutEdgesIterator lexemeIt =
+        lattice.outEdges(vertex, lexemeMask);
+    while (lexemeIt.hasNext()) {
+        Lattice::EdgeDescriptor lexeme = lexemeIt.next();
+        if (lexemeEdgeMatchesTag(lattice, lexeme, tag))
+            return lexeme;
+    }
+    return Lattice::EdgeDescriptor();
+}
+
+bool MeTagger::lexemeEdgeMatchesTag(Lattice &lattice,
+        Lattice::EdgeDescriptor lexeme, std::string tag) {
+    std::string partOfSpeech = getPartOfSpeechFromMorphoTag(tag);
+    std::list<std::pair<std::string, std::string> > attributes =
+        getAttributesFromMorphoTag(tag);
+    AnnotationItem ai = lattice.getEdgeAnnotationItem(lexeme);
+    if (ai.getCategory() == partOfSpeech) {
+        std::list< std::pair<std::string, std::string> > av
+            = lattice.getAnnotationItemManager().getValues(ai);
+        if (!av.empty()) {
+            bool allAttributesFound = true;
+            for (std::list<std::pair<std::string, std::string> >::iterator
+                    avIt = av.begin();
+                    avIt != av.end();
+                    ++ avIt) {
+                bool found = false;
+                for (std::list<std::pair<std::string, std::string> >::iterator it =
+                        attributes.begin();
+                        it != attributes.end();
+                        ++ it) {
+                    if (it->first == avIt->first
+                            && it->second == avIt->second) {
+                        found = true;
+                        break;
+                    }
+                }
+                if (!found) {
+                    allAttributesFound = false;
+                    break;
+                }
+            }
+            if (allAttributesFound) {
+                return true;
+            }
+        } else {
+            return true;
+        }
+    }
+    return false;
+}
+
 bool MeTagger::lemmaEdgeExists(Lattice &lattice,
         Lattice::EdgeDescriptor token, std::string lemma) {
     LayerTagMask lemmaMask = lattice.getLayerTagManager().getMask("lemma");
@@ -727,7 +853,7 @@ bool MeTagger::lexemeEdgeExists(Lattice &lattice,
     return false;
 }
 
-void MeTagger::addLexemeEdge(Lattice &lattice,
+Lattice::EdgeDescriptor MeTagger::addLexemeEdge(Lattice &lattice,
         Lattice::EdgeDescriptor token, std::string lemma,
         std::string partOfSpeech) {
     LayerTagMask lemmaMask = lattice.getLayerTagManager().getMask("lemma");
@@ -745,7 +871,7 @@ void MeTagger::addLexemeEdge(Lattice &lattice,
                 = lattice.getLayerTagManager().
                     createSingletonTagCollection("lexeme");
 
-            lattice.addEdge(
+            return lattice.addEdge(
                     lattice.getEdgeSource(token),
                     lattice.getEdgeTarget(token),
                     annotationItem,
@@ -754,51 +880,40 @@ void MeTagger::addLexemeEdge(Lattice &lattice,
                     );
         }
     }
+    return Lattice::EdgeDescriptor();
 }
 
 void MeTagger::addFormEdge(Lattice &lattice,
-        Lattice::EdgeDescriptor token, std::string lemma,
-        std::string partOfSpeech, std::string tag) {
-    std::string lexemeText(lemma + LEMMA_CATEGORY_SEPARATOR + partOfSpeech);
-    LayerTagMask lexemeMask = lattice.getLayerTagManager().getMask("lexeme");
-    Lattice::InOutEdgesIterator lexemeIt =
-        lattice.outEdges(lattice.getEdgeSource(token), lexemeMask);
-    while (lexemeIt.hasNext()) {
-        Lattice::EdgeDescriptor lexeme = lexemeIt.next();
-        if (lattice.getEdgeAnnotationItem(lexeme).getCategory()
-                == partOfSpeech) {
-            if (lattice.getEdgeAnnotationItem(lexeme).getText() ==
-                    lexemeText) {
-                Lattice::EdgeSequence::Builder seqBuilder(lattice);
-                seqBuilder.addEdge(lexeme);
+        Lattice::EdgeDescriptor token, Lattice::EdgeDescriptor lexeme,
+        std::string tag) {
+    Lattice::EdgeSequence::Builder seqBuilder(lattice);
+    seqBuilder.addEdge(lexeme);
 
-                AnnotationItem annotationItem(partOfSpeech,
-                        StringFrag(lattice.getEdgeText(token)) );
-                std::list<std::pair<std::string, std::string> > attributes =
-                    getAttributesFromMorphoTag(tag);
-                for (std::list<std::pair<std::string, std::string> >::iterator
-                        attrIt = attributes.begin();
-                        attrIt != attributes.end();
-                        ++ attrIt) {
-                    lattice.getAnnotationItemManager().setValue(
-                        annotationItem, attrIt->first, attrIt->second);
-                }
-                LayerTagCollection formTag
-                    = lattice.getLayerTagManager().
-                        createSingletonTagCollection("form");
-                //@todo: tylko takie tagi? skopiowac jakies inne?
-                //o tagsecie np? dodac wlasny tag "metagger"?
-
-                lattice.addEdge(
-                        lattice.getEdgeSource(token),
-                        lattice.getEdgeTarget(token),
-                        annotationItem,
-                        formTag,
-                        seqBuilder.build()
-                        );
-            }
-        }
+    AnnotationItem annotationItem(
+            lattice.getEdgeAnnotationItem(lexeme).getCategory(),
+            StringFrag(lattice.getEdgeText(token)) );
+    std::list<std::pair<std::string, std::string> > attributes =
+        getAttributesFromMorphoTag(tag);
+    for (std::list<std::pair<std::string, std::string> >::iterator
+            attrIt = attributes.begin();
+            attrIt != attributes.end();
+            ++ attrIt) {
+        lattice.getAnnotationItemManager().setValue(
+                annotationItem, attrIt->first, attrIt->second);
     }
+    LayerTagCollection formTag
+        = lattice.getLayerTagManager().
+        createSingletonTagCollection("form");
+        //@todo: tylko takie tagi? skopiowac jakies inne?
+        //o tagsecie np? dodac wlasny tag "metagger"?
+
+    lattice.addEdge(
+            lattice.getEdgeSource(token),
+            lattice.getEdgeTarget(token),
+            annotationItem,
+            formTag,
+            seqBuilder.build()
+            );
 }
 
 bool MeTagger::isDiscarded(Lattice &lattice, Lattice::EdgeDescriptor edge) {

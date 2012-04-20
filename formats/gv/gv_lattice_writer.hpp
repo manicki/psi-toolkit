@@ -7,35 +7,29 @@
 
 #include <boost/foreach.hpp>
 
-// Fixes warnings "... not defined" from GraphViz include files
-
-#ifndef _BLD_cdt
-#define _BLD_cdt 0
-#endif
-
-#ifndef _DLL_BLD
-#define _DLL_BLD 0
-#endif
-
-#ifndef _dll_import
-#define _dll_import 0
-#endif
-
-#ifndef _PACKAGE_ast
-#define _PACKAGE_ast 0
-#endif
-
-#include <gvc.h>
-
 #include "lattice_writer.hpp"
 #include "lattice_writer_factory.hpp"
 #include "aligning_writer_worker.hpp"
-#include "psi_quoter.hpp"
+#include "plugin/graphviz_adapter_interface.hpp"
+
 
 class GVLatticeWriter : public LatticeWriter<std::ostream> {
 
 public:
+    GVLatticeWriter(
+        bool showTags,
+        bool color,
+        std::set<std::string> filter,
+        std::string outputFormat,
+        bool tree
+    );
+
+    ~GVLatticeWriter();
+
     virtual std::string getFormatName();
+
+    GraphvizAdapterInterface * getAdapter();
+    bool isActive();
 
     class Factory : public LatticeWriterFactory<std::ostream> {
     private:
@@ -47,20 +41,6 @@ public:
         virtual std::string doGetName() const;
         virtual boost::filesystem::path doGetFile() const;
     };
-
-    GVLatticeWriter(
-        bool showTags,
-        bool color,
-        std::set<std::string> filter,
-        std::string outputFormat,
-        bool tree
-    ) :
-        showTags_(showTags),
-        color_(color),
-        filter_(filter),
-        outputFormat_(outputFormat),
-        tree_(tree)
-    { }
 
     bool isShowTags() const { return showTags_; }
     bool isColor() const { return color_; }
@@ -105,6 +85,9 @@ private:
     std::string outputFormat_;
     bool tree_;
 
+    GraphvizAdapterInterface * adapter_;
+
 };
+
 
 #endif
