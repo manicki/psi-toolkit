@@ -384,14 +384,14 @@ int the_same_identity_function(zvalue z, zvalue t)
 
 int env_val_hash_function(zvalue z)
 {
-    PE_ASSERT(ZPAIRP(z));
+    assert(ZPAIRP(z));
     return standard_zvalue_hash_function(((zpair*) z)->getFirst());
 }
 
 
 int env_identity_function(zvalue k, zvalue v)
 {
-    PE_ASSERT(ZPAIRP(v));
+    assert(ZPAIRP(v));
     return k == ((zpair*) v)->getFirst();
 }
 
@@ -415,15 +415,15 @@ int pchar_hash_function(zvalue z)
 
 int zsymboltable_zsymbol_hash_function(zvalue z)
 {
-    PE_ASSERT(ZSYMBOLP(z));
+    assert(ZSYMBOLP(z));
     return string_hash_function(ZSYMBOLC(z)->get_string());
 }
 
 
 int zsymboltable_zsymbol_kv_function(zvalue k, zvalue v)
 {
-    PE_ASSERT(ZWRAPPERP(k));
-    PE_ASSERT(ZSYMBOLP(v));
+    assert(ZWRAPPERP(k));
+    assert(ZSYMBOLP(v));
     return !strcmp(ZUNWRAP(const char*, k),
            ZSYMBOLC(v)->get_string());
 }
@@ -468,7 +468,7 @@ zsymboltable::~zsymboltable() {
     for (int i=0; i<size; ++i) {
         if(!NULLP(block[i]) && !DELETEDP(block[i])) {
         zvalue z = block[i];
-            PE_ASSERT(ZSYMBOLP(z));
+            assert(ZSYMBOLP(z));
             ZSYMBOLC(z)->my_zst=NULL_ZVALUE;
         }
     }
@@ -509,16 +509,16 @@ zsymbol* zsymboltable::get_symbol(zsymbol* zs)
 }
 
 zsymbol* zsymboltable::remove_symbol(zsymbol* zs) {
-    PE_ASSERT(NULL!=zs);
+    assert(NULL!=zs);
     return remove_symbol(zs->get_string());
 }
 
 zsymbol* zsymboltable::remove_symbol(const char* a_s) {
-    PE_ASSERT(NULL!=a_s);
+    assert(NULL!=a_s);
     zvalue zv = remove(ZWRAP(const_cast<char*>(a_s)));
     zsymbol* sm = NULL;
     if (!NULLP(zv)) {
-        PE_ASSERT(ZSYMBOLP(zv));
+        assert(ZSYMBOLP(zv));
         ZSYMBOLC(zv)->my_zst=NULL_ZVALUE;
     }
 
@@ -564,7 +564,7 @@ void zsyntree::inherit(zsymbol* a_attr, zvalue a_val)
     {
     zst = ZSYNTREEC(fetch(INTEGER_TO_ZVALUE(start_idx)));
 
-    PE_ASSERT(zst != NULL);
+    assert(zst != NULL);
 
     if(zst->defined(a_attr))
     {
@@ -701,9 +701,9 @@ zsyntree* zsyntree::find(zsymbol* cat, zsymbol* label, bool from_left)
 }
 
 zsyntree* zsyntree::deleteSubtree(zsyntree* a_subtree) {
-    PE_ASSERT(NULL!=a_subtree);
-    PE_ASSERT(this==a_subtree->parent_tree);
-    PE_ASSERT(ZSYNTREEC(fetch(INTEGER_TO_ZVALUE(a_subtree->number_in_parent_tree)))==a_subtree);
+    assert(NULL!=a_subtree);
+    assert(this==a_subtree->parent_tree);
+    assert(ZSYNTREEC(fetch(INTEGER_TO_ZVALUE(a_subtree->number_in_parent_tree)))==a_subtree);
 
     // @todo u¿yæ getNext zamiast fetch
     zvalue ttz = fetch(a_subtree);
@@ -731,9 +731,9 @@ void zsyntree::addSubtree(zsyntree* a_subtree, zsymbol* a_label)
 
 void zsyntree::insertAsNthSubtree(zsyntree* a_subtree, int a_n)
 {
-    PE_ASSERT(NULL != a_subtree);
-    PE_ASSERT(NULL == a_subtree->parent_tree);
-    PE_ASSERT( -1L == a_subtree->number_in_parent_tree);
+    assert(NULL != a_subtree);
+    assert(NULL == a_subtree->parent_tree);
+    assert( -1L == a_subtree->number_in_parent_tree);
 
     (*a_subtree).setLabel((zsymbol*)NULL_ZVALUE);
 
@@ -761,8 +761,8 @@ void zsyntree::addSubtree(zsyntree* a_subtree)
 
 void zsyntree::insertBeside(zsyntree* a_subtree, bool after)
 {
-    PE_ASSERT(NULL!=parent_tree);
-    PE_ASSERT(0<=number_in_parent_tree);
+    assert(NULL!=parent_tree);
+    assert(0<=number_in_parent_tree);
 
     if (after) parent_tree->insertAsNthSubtree(a_subtree, number_in_parent_tree+1);
     else parent_tree->insertAsNthSubtree(a_subtree, number_in_parent_tree);
@@ -770,11 +770,11 @@ void zsyntree::insertBeside(zsyntree* a_subtree, bool after)
 
 void zsyntree::replaceWith(zsyntree* a_subtree)
 {
-    PE_ASSERT(NULL != a_subtree);
-    PE_ASSERT(this == a_subtree->parent_tree);
+    assert(NULL != a_subtree);
+    assert(this == a_subtree->parent_tree);
 
-    PE_ASSERT(NULL!=parent_tree);
-    PE_ASSERT(0<=number_in_parent_tree);
+    assert(NULL!=parent_tree);
+    assert(0<=number_in_parent_tree);
 
     a_subtree = deleteSubtree(a_subtree);
 
@@ -791,7 +791,7 @@ void zsyntree::replaceWith(zsyntree* a_subtree)
 #include <string>
 
 std::string& eic_TK17122003(std::string& s) {
-    for (int i=0; i<s.length(); ++i) {
+    for (size_t i=0; i<s.length(); ++i) {
        switch (s[i]) {
            case '(':
            case ')':
@@ -848,7 +848,7 @@ char* zsyntree::zsyntree_to_itf(char* lexeme, char* equiv) {
         if (NULL!=zst) {
             if (INTEGERP(z=fetch(zst->get_symbol("Beg")))) {
                 char c[] = "         ";
-                sprintf(c, "%d", ZVALUE_TO_INTEGER(z));
+                sprintf(c, "%d", int(ZVALUE_TO_INTEGER(z)));
                 tbe=c;
                 s+=eic_TK17122003(tbe);
             }
@@ -888,11 +888,11 @@ char* zsyntree::zsyntree_to_itf(char* lexeme, char* equiv) {
             s+=",";
         }
         if (NULL!=zst) {
-            char* attr[] = { "A", "Neg", "S", "C", "L", "R", "P", "Stopieñ",
+            const char* attr[] = { "A", "Neg", "S", "C", "L", "R", "P", "Stopieñ",
                 "O", "Inflection", "Tense", "Person", "Num", "Case", "T",
                 "Gender", "Degree", "EndInflectio", NULL
             };
-            char** attr_itr = attr;
+            const char** attr_itr = attr;
             char* tmp = NULL;
             while (NULL!=*attr_itr) {
                 if (NULL_ZVALUE!=(z=fetch(zst->get_symbol(*attr_itr)))) {
@@ -914,7 +914,7 @@ char* zsyntree::zsyntree_to_itf(char* lexeme, char* equiv) {
         if (normal) {
             if (NULL!=zst) {
                 if (ZSYMBOLP(z=fetch(zst->get_symbol("Equiv")))) {
-                    //PE_ASSERT(NULL==equiv);
+                    //assert(NULL==equiv);
                     eqi = new char[strlen(ZSYMBOLC(z)->get_string())+1];
                     strcpy(eqi, ZSYMBOLC(z)->get_string());
                 }
@@ -949,14 +949,14 @@ char* zsyntree::zsyntree_to_itf(char* lexeme, char* equiv) {
     s+=")";
     char* itf_form = new char[s.length()+1];
     strcpy(itf_form, s.c_str());
-    if (is_variant) LOG4CPLUS_DEBUG(zsyntree_to_itf_logger, "Jestem wariantem.");
+    if (is_variant) { LOG4CPLUS_DEBUG(zsyntree_to_itf_logger, "Jestem wariantem."); }
     LOG4CPLUS_DEBUG(zsyntree_to_itf_logger, s.c_str());
     return itf_form;
 }
 
 // - - - - - -| END: zsyntree |- - - - -
 
-char* zvalue_to_string(zvalue z, bool full_print) {
+char* zvalue_to_string(zvalue z, bool /* full_print */) {
     char* result = NULL;
     if (NULLP(z)) {
         result = new char[sizeof("NULL_ZVALUE")+1];
@@ -995,7 +995,7 @@ std::string zvalue_to_parsable_string(zvalue z) {
         return result;
     }
     if (INTEGERP(z)) {
-        sprintf(tmp,"%i",ZVALUE_TO_INTEGER(z));
+        sprintf(tmp, "%i", int(ZVALUE_TO_INTEGER(z)));
         result += tmp;
         return result;
     }
@@ -1101,7 +1101,7 @@ zvector* zf_put_to_vector(zobjects_holder* holder, zvalue first, zvalue second, 
             for(int c=0; c<old_vectors_size; ++c)
                 new_vector->add(old_vector->elementAt(c));
         } else
-            PE_ASSERT(0); //unsupported zvalue, new implementation needed!
+            assert(0); //unsupported zvalue, new implementation needed!
     }
     return new_vector;
 }

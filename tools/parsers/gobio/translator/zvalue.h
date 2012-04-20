@@ -1,14 +1,12 @@
 #ifndef ZVALUE_HDR_HDR
 #define ZVALUE_HDR_HDR
 
-#include "transferer_config.h" // configuration
-
 #include <string.h>
 #include <string>
 #include <new>
 #include <stdlib.h>
 
-#include "PE-assert.h"
+#include <cassert>
 
 typedef void* zvalue;
 
@@ -94,7 +92,7 @@ class zobject;
                             break; \
         case EZSYNTREE: return_value=((zsyntree*)zo)->function; \
                         break; \
-        default: PE_ASSERT(EZOBJECT==zo->type); /* implementation error, unknown subclass of zobject or type not set */ \
+        default: assert(EZOBJECT==zo->type); /* implementation error, unknown subclass of zobject or type not set */ \
     }
 
 /**
@@ -153,7 +151,7 @@ protected:
      */
     char* _to_string()
         {
-            PE_ASSERT(0); //why there is an instance of this class, maybe the type is wrong...
+            assert(0); //why there is an instance of this class, maybe the type is wrong...
             char* result = new char[1];
             result[0]=0;
             return result;
@@ -164,7 +162,7 @@ protected:
      */
     std::string _to_parsable_string()
         {
-            PE_ASSERT(0); //why there is an instance of this class, maybe the type is wrong...
+            assert(0); //why there is an instance of this class, maybe the type is wrong...
             return std::string("");
         }
 
@@ -295,7 +293,7 @@ protected:
     zvalue my_zst;
     zst_ref(zobjects_holder* holder, e_type a_type):zobject(holder, a_type)
         {
-            PE_ASSERT(EZSYMBOL==a_type); //this class is used ONLY by zsymbol
+            assert(EZSYMBOL==a_type); //this class is used ONLY by zsymbol
             my_zst = NULL_ZVALUE;
         }
     ~zst_ref()
@@ -334,7 +332,7 @@ protected:
             strcpy(block, a_s);
         }
 
-    zsymbol(zobjects_holder* holder, size_t a_size):zst_ref(holder, EZSYMBOL)
+    zsymbol(zobjects_holder* holder, size_t /* a_size */):zst_ref(holder, EZSYMBOL)
         {
             type = EZSYMBOL;
         }
@@ -521,7 +519,7 @@ public:
      */
     zvalue peek(int n=0)
         {
-            PE_ASSERT(0>=n);
+            assert(0>=n);
             return elementAt(occupied-1+n);
         }
 
@@ -536,7 +534,7 @@ public:
      */
     zvalue elementAt(int aPosition) const
         {
-            PE_ASSERT( 0<=aPosition && aPosition<occupied );
+            assert( 0<=aPosition && aPosition<occupied );
             return block[aPosition];
         }
 
@@ -550,14 +548,14 @@ public:
 
     void insert(zvalue val, int position)
         {
-            PE_ASSERT( 0<=position && position<occupied );
+            assert( 0<=position && position<occupied );
             move(1, position);
             block[position] = val;
         }
 
     void change(int position, zvalue val)
         {
-            PE_ASSERT( 0<=position && position<occupied );
+            assert( 0<=position && position<occupied );
             block[position] = val;
         }
 
@@ -629,6 +627,7 @@ protected:
     ,val_hash_function(a_val_hash_function)
     ,key_val_function(a_key_val_function)
     {
+        (void)allocate_atomic_mem; // to suppress WARNING: unused parameter ‘allocate_atomic_mem’
         if(key_hash_function == NULL)
         key_hash_function = standard_zvalue_hash_function;
 
@@ -1003,7 +1002,7 @@ public:
      */
     void setEquivTree(zsyntree* eT)
     {
-        PE_ASSERT(eT != this);
+        assert(eT != this);
 
         if(equiv_tree != NULL)
         equiv_tree->equiv_tree = NULL;
@@ -1015,7 +1014,7 @@ public:
         if(eT->equiv_tree != NULL)
             eT->setEquivTree(NULL);
 
-        PE_ASSERT(eT->equiv_tree == NULL);
+        assert(eT->equiv_tree == NULL);
         eT->equiv_tree = this;
         }
     }
@@ -1162,7 +1161,7 @@ protected:
 public:
     zsymbolfactory(zsymboltable* zst)
     {
-        PE_ASSERT(NULL!=zst);
+        assert(NULL!=zst);
         a_zsymboltable = zst;
     }
 
@@ -1191,7 +1190,7 @@ public:
 
     zobjects_holder* get_holder()
     {
-        PE_ASSERT(a_zsymboltable);
+        assert(a_zsymboltable);
         return a_zsymboltable->get_holder();
     }
 };
@@ -1241,7 +1240,7 @@ inline zsymbol::~zsymbol() {
       case EZSYNTREE:
           delete (zsyntree*)this;
           break;
-      default: PE_ASSERT(EZOBJECT==type); //implementation error, unknown subclass of zobject or type not set
+      default: assert(EZOBJECT==type); //implementation error, unknown subclass of zobject or type not set
       }
       }
 
