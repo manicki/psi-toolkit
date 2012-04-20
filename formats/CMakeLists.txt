@@ -9,31 +9,30 @@ set(formats_SUBDIRS
     utt
 CACHE PATH "Formats subdirectories" FORCE)
 
-foreach(dir ${formats_SUBDIRS})
-    add_subdirectory(${dir})
-endforeach(dir)
-
 if(HAVE_GRAPHVIZ)
-  add_subdirectory(gv)
+    set(formats_SUBDIRS ${formats_SUBDIRS} gv)
 else(HAVE_GRAPHVIZ)
-  unset(gv-t CACHE)
+    unset(gv-t CACHE)
 endif(HAVE_GRAPHVIZ)
 
 if(HAVE_POPPLER)
-  add_subdirectory(pdf)
+    set(formats_SUBDIRS ${formats_SUBDIRS} pdf)
 else(HAVE_POPPLER)
-  unset(pdf-t CACHE)
+    unset(pdf-t CACHE)
 endif(HAVE_POPPLER)
 
 if(HAVE_DJVULIBRE)
-  add_subdirectory(djvu)
+    set(formats_SUBDIRS ${formats_SUBDIRS} djvu)
 else(HAVE_DJVULIBRE)
-  unset(djvu-t CACHE)
+    unset(djvu-t CACHE)
 endif(HAVE_DJVULIBRE)
 
 if(USE_DOC_READER)
-  add_subdirectory(doc)
+    set(formats_SUBDIRS ${formats_SUBDIRS} doc)
 else(USE_DOC_READER)
-  unset(doc-t CACHE)
+    unset(doc-t CACHE)
 endif(USE_DOC_READER)
 
+foreach(dir ${formats_SUBDIRS})
+    add_subdirectory(${dir})
+endforeach(dir)

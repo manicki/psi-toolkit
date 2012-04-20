@@ -5,15 +5,15 @@
 #include "guessing_reader.hpp"
 
 #include "txt_lattice_reader.hpp"
-#include "apertium_lattice_reader.hpp"
+//#include "apertium_lattice_reader.hpp"
 #if HAVE_POPPLER
-#include "pdf_lattice_reader.hpp"
+//#include "pdf_lattice_reader.hpp"
 #endif
 #if HAVE_DJVULIBRE
-#include "djvu_lattice_reader.hpp"
+//#include "djvu_lattice_reader.hpp"
 #endif
 #if USE_DOC_READER
-#include "doc_lattice_reader.hpp"
+//#include "doc_lattice_reader.hpp"
 #endif
 
 const int GuessingReader::DEFAULT_BLOCK_SIZE = 32;
@@ -21,15 +21,15 @@ const int GuessingReader::DEFAULT_BLOCK_SIZE = 32;
 std::map<std::string, boost::shared_ptr<LatticeReaderFactory<std::istream> > >
     GuessingReader::fileTypeToReaderMap_ = boost::assign::map_list_of
         ("txt", PointerToReader(new TxtLatticeReader::Factory()))
-        ("html", PointerToReader(new ApertiumLatticeReader::Factory()))
+//        ("html", PointerToReader(new ApertiumLatticeReader::Factory()))
 #if HAVE_POPPLER
-        ("pdf", PointerToReader(new PDFLatticeReader::Factory()))
+//        ("pdf", PointerToReader(new PDFLatticeReader::Factory()))
 #endif
 #if HAVE_DJVULIBRE
-        ("djvu", PointerToReader(new DjVuLatticeReader::Factory()))
+//        ("djvu", PointerToReader(new DjVuLatticeReader::Factory()))
 #endif
 #if USE_DOC_READER
-        ("doc", PointerToReader(new DocLatticeReader::Factory()))
+//        ("doc", PointerToReader(new DocLatticeReader::Factory()))
 #endif
         ;
 
