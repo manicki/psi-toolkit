@@ -57,6 +57,12 @@ private:
     std::map<int, Agnode_t*> nodes_;
     std::map<int, Agedge_t*> edges_;
 
+    void init_context_();
+    void init_graph_();
+
+    void finalize_context_();
+    void finalize_graph_();
+
 };
 
 
