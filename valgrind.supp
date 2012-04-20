@@ -125,7 +125,10 @@
    ...
    fun:FcConfigParseAndLoad
 }
-
-
-
-
+{
+   aspell
+   Memcheck:Addr4
+   ...
+   fun:aspell_speller_suggest
+   ...
+}
