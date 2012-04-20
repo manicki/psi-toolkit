@@ -415,15 +415,13 @@ set(ALL_TARGETS ${TARGETS} ${TESTS_TARGETS})
 
 set_target_properties(${ALL_TARGETS} PROPERTIES
     COMPILE_FLAGS "-I${psi-toolkit_SOURCE_DIR}/utf8 -I${psi-toolkit_SOURCE_DIR}/utf8case -I${psi-toolkit_SOURCE_DIR}/tests")
-if(USE_PUDDLE)
-    if(USE_BONSAI_PARSEGRAPH)
-        set_target_properties(tools-parsers-puddle PROPERTIES
-        COMPILE_FLAGS "-I${psi-toolkit_SOURCE_DIR}/utf8  -I${psi-toolkit_SOURCE_DIR}/tests -I${BONSAI_PATH}")
-        set_target_properties(tools-parsers-puddle-tests PROPERTIES
-        COMPILE_FLAGS "-I${psi-toolkit_SOURCE_DIR}/utf8  -I${psi-toolkit_SOURCE_DIR}/tests -I${BONSAI_PATH}")
-        set(_WITH_BONSAI_PARSEGRAPH 1)
-    endif(USE_BONSAI_PARSEGRAPH)
-endif(USE_PUDDLE)
+if(USE_BONSAI_PARSEGRAPH)
+    set_target_properties(tools-parsers-puddle PROPERTIES
+    COMPILE_FLAGS "-I${psi-toolkit_SOURCE_DIR}/utf8 -I${psi-toolkit_SOURCE_DIR}/utf8case -I${psi-toolkit_SOURCE_DIR}/tests -I${BONSAI_PATH}")
+    set_target_properties(tools-parsers-puddle-tests PROPERTIES
+    COMPILE_FLAGS "-I${psi-toolkit_SOURCE_DIR}/utf8 -I${psi-toolkit_SOURCE_DIR}/utf8case -I${psi-toolkit_SOURCE_DIR}/tests -I${BONSAI_PATH}")
+    set(_WITH_BONSAI_PARSEGRAPH 1)
+endif(USE_BONSAI_PARSEGRAPH)
 
 add_subdirectory(tests)
 
