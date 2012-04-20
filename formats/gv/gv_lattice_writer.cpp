@@ -6,8 +6,6 @@
 #include <locale>
 #include <fstream>
 
-// #include <boost/assign/list_of.hpp>
-
 #include "lattice.hpp"
 #include "plugin_manager.hpp"
 
@@ -101,55 +99,6 @@ GVLatticeWriter::Worker::Worker(
 ) :
     AligningWriterWorker(outputStream, lattice),
     processor_(processor)
-/* (nie działa)
-    ,
-    allowedFormats_(boost::assign::list_of<std::string>
-        ("canon")
-        ("dot")
-        ("eps")
-        ("fig")
-        ("gd")
-        ("gd:cairo")
-        ("gd:gd")
-        ("gd2")
-        ("gd2:cairo")
-        ("gd2:gd")
-        ("gif")
-        ("gif:cairo")
-        ("gif:gd")
-        ("gv")
-        ("jpe")
-        ("jpe:cairo")
-        ("jpe:gd")
-        ("jpeg")
-        ("jpeg:cairo")
-        ("jpeg:gd")
-        ("jpg")
-        ("jpg:cairo")
-        ("jpg:gd")
-        ("pdf")
-        ("plain")
-        ("plain-ext")
-        ("png")
-        ("png:cairo")
-        ("png:gd")
-        ("ps")
-        ("ps:cairo")
-        ("ps:ps")
-        ("ps2")
-        ("svg")
-        ("svg:cairo")
-        ("svg:svg")
-        ("svgz")
-        ("tk")
-        ("vml")
-        ("vmlz")
-        ("wbmp")
-        ("wbmp:cairo")
-        ("wbmp:gd")
-        ("xdot")
-    )
-// */
 { }
 
 
