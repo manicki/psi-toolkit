@@ -11,15 +11,35 @@
 
 
 GVLatticeWriter::GVLatticeWriter() {
-    adapter_ = dynamic_cast<GraphvizAdapterInterface*>(
-        PluginManager::getInstance().createPluginAdapter("graphviz")
-    );
+    init_();
+}
+
+GVLatticeWriter::GVLatticeWriter(
+    bool showTags,
+    bool color,
+    std::set<std::string> filter,
+    std::string outputFormat,
+    bool tree
+) :
+    showTags_(showTags),
+    color_(color),
+    filter_(filter),
+    outputFormat_(outputFormat),
+    tree_(tree)
+{
+    init_();
 }
 
 GVLatticeWriter::~GVLatticeWriter() {
     if (adapter_) {
         PluginManager::getInstance().destroyPluginAdapter("graphviz", adapter_);
     }
+}
+
+void GVLatticeWriter::init_() {
+    adapter_ = dynamic_cast<GraphvizAdapterInterface*>(
+        PluginManager::getInstance().createPluginAdapter("graphviz")
+    );
 }
 
 std::string GVLatticeWriter::getFormatName() {

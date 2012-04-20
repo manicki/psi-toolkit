@@ -38,6 +38,15 @@ class GVLatticeWriter : public LatticeWriter<std::ostream> {
 
 public:
     GVLatticeWriter();
+
+    GVLatticeWriter(
+        bool showTags,
+        bool color,
+        std::set<std::string> filter,
+        std::string outputFormat,
+        bool tree
+    );
+
     ~GVLatticeWriter();
 
     virtual std::string getFormatName();
@@ -56,20 +65,6 @@ public:
         virtual boost::filesystem::path doGetFile() const;
     };
 
-    GVLatticeWriter(
-        bool showTags,
-        bool color,
-        std::set<std::string> filter,
-        std::string outputFormat,
-        bool tree
-    ) :
-        showTags_(showTags),
-        color_(color),
-        filter_(filter),
-        outputFormat_(outputFormat),
-        tree_(tree)
-    { }
-
     bool isShowTags() const { return showTags_; }
     bool isColor() const { return color_; }
     bool isInFilter(std::string tag) { return filter_.empty() || filter_.count(tag); }
@@ -86,6 +81,8 @@ public:
     bool isTree() const { return tree_; }
 
 private:
+    void init_();
+
     virtual std::string doInfo();
 
     class Worker : public AligningWriterWorker {
