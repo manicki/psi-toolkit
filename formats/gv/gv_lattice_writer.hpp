@@ -37,8 +37,6 @@
 class GVLatticeWriter : public LatticeWriter<std::ostream> {
 
 public:
-    GVLatticeWriter();
-
     GVLatticeWriter(
         bool showTags,
         bool color,
@@ -81,8 +79,6 @@ public:
     bool isTree() const { return tree_; }
 
 private:
-    void init_();
-
     virtual std::string doInfo();
 
     class Worker : public AligningWriterWorker {

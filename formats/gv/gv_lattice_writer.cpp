@@ -10,10 +10,6 @@
 #include "plugin_manager.hpp"
 
 
-GVLatticeWriter::GVLatticeWriter() {
-    init_();
-}
-
 GVLatticeWriter::GVLatticeWriter(
     bool showTags,
     bool color,
@@ -27,19 +23,15 @@ GVLatticeWriter::GVLatticeWriter(
     outputFormat_(outputFormat),
     tree_(tree)
 {
-    init_();
+    adapter_ = dynamic_cast<GraphvizAdapterInterface*>(
+        PluginManager::getInstance().createPluginAdapter("graphviz")
+    );
 }
 
 GVLatticeWriter::~GVLatticeWriter() {
     if (adapter_) {
         PluginManager::getInstance().destroyPluginAdapter("graphviz", adapter_);
     }
-}
-
-void GVLatticeWriter::init_() {
-    adapter_ = dynamic_cast<GraphvizAdapterInterface*>(
-        PluginManager::getInstance().createPluginAdapter("graphviz")
-    );
 }
 
 std::string GVLatticeWriter::getFormatName() {
