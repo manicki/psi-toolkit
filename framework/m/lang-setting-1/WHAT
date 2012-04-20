@@ -1,0 +1,3 @@
+tp-tokenizer ! morfologik ! simple-writer --tag token
+
+

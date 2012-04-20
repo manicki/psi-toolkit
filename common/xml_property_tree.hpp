@@ -10,6 +10,7 @@
 class XmlPropertyTree : public boost::property_tree::ptree {
 
 public:
+    XmlPropertyTree(std::istream& inputStream);
     XmlPropertyTree(const boost::filesystem::path& xmlFilePath);
 
 };

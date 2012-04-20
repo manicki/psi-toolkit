@@ -10,12 +10,26 @@
 #include "lattice_writer.hpp"
 #include "lattice_writer_factory.hpp"
 #include "aligning_writer_worker.hpp"
-#include "psi_quoter.hpp"
+#include "plugin/graphviz_adapter_interface.hpp"
+
 
 class GVLatticeWriter : public LatticeWriter<std::ostream> {
 
 public:
+    GVLatticeWriter(
+        bool showTags,
+        bool color,
+        std::set<std::string> filter,
+        std::string outputFormat,
+        bool tree
+    );
+
+    ~GVLatticeWriter();
+
     virtual std::string getFormatName();
+
+    GraphvizAdapterInterface * getAdapter();
+    bool isActive();
 
     class Factory : public LatticeWriterFactory<std::ostream> {
     private:
@@ -24,27 +38,9 @@ public:
 
         virtual boost::program_options::options_description doOptionsHandled();
 
-        virtual std::string doGetName();
-        virtual boost::filesystem::path doGetFile();
+        virtual std::string doGetName() const;
+        virtual boost::filesystem::path doGetFile() const;
     };
-
-    GVLatticeWriter(
-        bool showTags,
-        bool color,
-        std::set<std::string> filter,
-        std::string outputFormat,
-        std::string outputFile,
-        bool useOutputStream,
-        bool tree
-    ) :
-        showTags_(showTags),
-        color_(color),
-        filter_(filter),
-        outputFormat_(outputFormat),
-        outputFile_(outputFile),
-        useOutputStream_(useOutputStream),
-        tree_(tree)
-    { }
 
     bool isShowTags() const { return showTags_; }
     bool isColor() const { return color_; }
@@ -59,9 +55,6 @@ public:
     }
 
     std::string getOutputFormat() const { return outputFormat_; }
-    std::string getOutputFile() const { return outputFile_; }
-
-    bool isUseOutputStream() const { return useOutputStream_ && (outputFile_.empty()); }
     bool isTree() const { return tree_; }
 
 private:
@@ -90,10 +83,11 @@ private:
     bool color_;
     std::set<std::string> filter_;
     std::string outputFormat_;
-    std::string outputFile_;
-    bool useOutputStream_;
     bool tree_;
 
+    GraphvizAdapterInterface * adapter_;
+
 };
+
 
 #endif

@@ -2,6 +2,7 @@ configure_file("${CMAKE_CURRENT_SOURCE_DIR}/git_info.cpp.in" "${CMAKE_CURRENT_BI
 
 # library framework
 add_library(framework SHARED
+    aliaser.cpp
     factories_keeper.cpp
     main_factories_keeper.cpp
     help_formatter.cpp
@@ -23,10 +24,25 @@ foreach(dir ${formats_SUBDIRS})
     link_directories("${psi-toolkit_BINARY_DIR}/formats/${dir}")
 endforeach(dir)
 
-if(GRAPHVIZ_FOUND)
+if(HAVE_GRAPHVIZ)
     include_directories("${psi-toolkit_SOURCE_DIR}/formats/gv")
     link_directories("${psi-toolkit_BINARY_DIR}/formats/gv")
-endif(GRAPHVIZ_FOUND)
+endif(HAVE_GRAPHVIZ)
+
+if(HAVE_POPPLER)
+    include_directories("${psi-toolkit_SOURCE_DIR}/formats/pdf")
+    link_directories("${psi-toolkit_BINARY_DIR}/formats/pdf")
+endif(HAVE_POPPLER)
+
+if(HAVE_DJVULIBRE)
+    include_directories("${psi-toolkit_SOURCE_DIR}/formats/djvu")
+    link_directories("${psi-toolkit_BINARY_DIR}/formats/djvu")
+endif(HAVE_DJVULIBRE)
+
+if(USE_DOC_READER)
+    include_directories("${psi-toolkit_SOURCE_DIR}/formats/doc")
+    link_directories("${psi-toolkit_BINARY_DIR}/formats/doc")
+endif(USE_DOC_READER)
 
 foreach(dir ${tools_DIRS})
     include_directories("${psi-toolkit_SOURCE_DIR}/tools/${dir}")
@@ -41,7 +57,7 @@ add_executable(psi-pipe
     psi-pipe.cpp
 )
 
-target_link_libraries(psi-pipe ${Boost_LIBRARIES} framework common maxent)
+target_link_libraries(psi-pipe ${Boost_LIBRARIES} framework common common-plugins maxent)
 
 include_directories("${psi-toolkit_SOURCE_DIR}/maxent")
 
@@ -57,30 +73,26 @@ if(USE_POSTGRESQL)
     target_link_libraries(psi-pipe lex-db)
 endif(USE_POSTGRESQL)
 
-if(USE_PUDDLE)
-    include_directories("${psi-toolkit_SOURCE_DIR}/tools/parsers/puddle")
-    if (USE_BONSAI_PARSEGRAPH)
-        include_directories("${BONSAI_PATH}")
-    endif (USE_BONSAI_PARSEGRAPH)
-    link_directories("${psi-toolkit_BINARY_DIR}/tools/parsers/puddle")
-    if (WITH_RE2)
-        target_link_libraries(psi-pipe tools-parsers-puddle re2)
-        if (WITH_PCRE)
-            target_link_libraries(psi-pipe pcrecpp)
-        endif(WITH_PCRE)
-    else(WITH_RE2)
-        if (WITH_PCRE)
-            target_link_libraries(psi-pipe tools-parsers-puddle pcrecpp)
-        endif(WITH_PCRE)
-    endif(WITH_RE2)
+if (USE_BONSAI_PARSEGRAPH)
+    include_directories("${BONSAI_PATH}")
+endif (USE_BONSAI_PARSEGRAPH)
+if (WITH_RE2)
+    target_link_libraries(psi-pipe tools-parsers-puddle re2)
+    if (WITH_PCRE)
+        target_link_libraries(psi-pipe pcrecpp)
+    endif(WITH_PCRE)
+else(WITH_RE2)
+    if (WITH_PCRE)
+        target_link_libraries(psi-pipe tools-parsers-puddle pcrecpp)
+    endif(WITH_PCRE)
+endif(WITH_RE2)
 
-endif(USE_PUDDLE)
 
 if(HAVE_PERL_BINDINGS)
     include_directories("${psi-toolkit_SOURCE_DIR}/bindings/perl/writers")
     link_directories("${psi-toolkit_BINARY_DIR}/bindings/perl/writers")
 
-    target_link_libraries(psi-pipe formats-perl-simple)
+    target_link_libraries(psi-pipe formats-perl-simple formats-simple formats-json-simple)
     target_link_libraries(framework formats-perl-simple)
 
     find_package(SWIG)
@@ -88,6 +100,14 @@ if(HAVE_PERL_BINDINGS)
     find_package(PerlLibs)
 endif(HAVE_PERL_BINDINGS)
 
+add_subdirectory(t)
+
+if (HAVE_ASPELL)
+  target_link_libraries(framework tools-spellcheckers-aspell)
+  target_link_libraries(psi-pipe tools-spellcheckers-aspell)
+endif (HAVE_ASPELL)
+
 install(TARGETS framework DESTINATION lib/)
 install(TARGETS psi-pipe DESTINATION bin/)
 install(FILES DESTINATION "${psi-toolkit_BINARY_DIR}")
+install(DIRECTORY data/ DESTINATION ${PSITOOLKIT_INSTALL_DATA_DIR}/framework)

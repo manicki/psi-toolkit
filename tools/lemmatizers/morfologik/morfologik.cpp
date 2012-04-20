@@ -4,24 +4,29 @@
 
 #include <iostream>
 #include <boost/algorithm/string.hpp>
+#include <boost/algorithm/string/join.hpp>
+#include <boost/assign.hpp>
 
-std::string Morfologik::tagSeparator = "+";
+const std::string Morfologik::TAG_SEPARATORS = "+,|";
+
+const std::vector<std::string> Morfologik::DICTIONARIES = boost::assign::list_of
+    ("morfologik")("morfeusz")("combined");
 
 Morfologik::Morfologik(const boost::program_options::variables_map& options)
-    : annotationManager(NULL), level(3)
-{
-    if (options.count("level") > 0) {
-        setLevel(options["level"].as<int>());
-    }
-    jenv = NULL;
+    : level_(3), dictionary_("MORFOLOGIK"), annotationManager_(NULL) {
 
+    if (options.count("level") > 0) setLevel(options["level"].as<int>());
+    if (options.count("dict") > 0) setDictionary(options["dict"].as<std::string>());
+
+    jenv_ = NULL;
     JavaVirtualMachine *jvm = JavaVirtualMachine::Instance();
-    jenv = jvm->getENV();
+    jenv_ = jvm->getENV();
 
-    initializePolishStemmer();
-    initializeList();
-    initializeWordData();
-    initializeString();
+    initializeDictionary_();
+    initializePolishStemmer_();
+    initializeList_();
+    initializeWordData_();
+    initializeString_();
 }
 
 std::string Morfologik::getName() {
@@ -34,7 +39,6 @@ boost::filesystem::path Morfologik::getFile() {
 
 std::list<std::string> Morfologik::getLayerTags() {
     std::list<std::string> layerTags;
-
     layerTags.push_back("morfologik");
     layerTags.push_back("morfologik-tagset");
 
@@ -45,47 +49,77 @@ std::string Morfologik::getLanguage() const {
     return "pl";
 }
 
+AnnotatorFactory::LanguagesHandling Morfologik::languagesHandling(
+    const boost::program_options::variables_map& /*options*/) {
+    return AnnotatorFactory::JUST_ONE_LANGUAGE;
+}
+
+std::list<std::string> Morfologik::languagesHandled(
+    const boost::program_options::variables_map& /*options*/) {
+    return boost::assign::list_of(std::string("pl"));
+}
+
 void Morfologik::setLevel(int lvl) {
     if (0 <= lvl && lvl <= 3) {
-        level = lvl;
+        level_ = lvl;
     }
 }
 
-void Morfologik::lemmatize(const std::string & word,
-    AnnotationItemManager & manager, LemmatizerOutputIterator & iterator
-) {
-    annotationManager = &manager;
+void Morfologik::setDictionary(const std::string& dict) {
+    if (std::find(DICTIONARIES.begin(), DICTIONARIES.end(),
+        boost::algorithm::to_lower_copy(dict)) != DICTIONARIES.end()) {
 
-    switch (level) {
+        dictionary_ = boost::algorithm::to_upper_copy(dict);
+    }
+    else {
+        ERROR("An unknown dictionary " << dict << ", thereby dictionary is still set to "
+            << dictionary_);
+    }
+}
+
+void Morfologik::lemmatize(const std::string & word, AnnotationItemManager & manager,
+    LemmatizerOutputIterator & iterator) {
+
+    annotationManager_ = &manager;
+
+    switch (level_) {
         case 0:
             break;
         case 1:
-            stemsOnLemmaLevel(word, iterator);
+            stemsOnLemmaLevel_(word, iterator);
             break;
         case 2:
-            stemsOnLexemeLevel(word, iterator);
+            stemsOnLexemeLevel_(word, iterator);
             break;
         default:
-            stemsOnFormLevel(word, iterator);
+            stemsOnFormLevel_(word, iterator);
     }
 }
 
 boost::program_options::options_description Morfologik::optionsHandled() {
     boost::program_options::options_description desc("Allowed options");
 
+    std::string dictionaryDescription = "set dictionary, one of "
+        + boost::algorithm::join(DICTIONARIES, ", ");
+
     desc.add_options()
         ("level", boost::program_options::value<int>()->default_value(3),
-            "set word processing level 0-3");
+            "set word processing level 0-3")
+        ("dict", boost::program_options::value<std::string>()
+            ->default_value(DICTIONARIES[0]), dictionaryDescription.c_str())
+    ;
 
     return desc;
 }
 
-void Morfologik::stemsOnLemmaLevel(
-    const std::string & word, LemmatizerOutputIterator & outputIterator
-) {
+void Morfologik::stemsOnLemmaLevel_(const std::string & word,
+    LemmatizerOutputIterator & outputIterator) {
 
     std::vector<std::string> stems = simpleStem(word);
     std::vector<std::string>::iterator i;
+
+    DEBUG("found stems of word [" << word << "] on lemma level: ["
+        << boost::algorithm::join(stems, ", ") << "]");
 
     // Remove duplicated values
     i = unique(stems.begin(), stems.end());
@@ -97,36 +131,36 @@ void Morfologik::stemsOnLemmaLevel(
     }
 }
 
-void Morfologik::stemsOnLexemeLevel(
-    const std::string & word, LemmatizerOutputIterator & outputIterator
-) {
+void Morfologik::stemsOnLexemeLevel_(const std::string & word,
+    LemmatizerOutputIterator & outputIterator) {
 
-    std::multimap<std::string, std::vector<std::string> > stems =
-        stem(word);
+    std::multimap<std::string, std::vector<std::string> > stems = stem(word);
 
-    std::set<std::string> lemmas = getLemmasFromStems(stems);
+    std::set<std::string> lemmas = getLemmasFromStems_(stems);
     std::set<std::string>::iterator lem;
+
+    DEBUG("found stems of word [" << word << "] on lexeme level: ["
+        << boost::algorithm::join(lemmas, ", ") << "]");
 
     for (lem = lemmas.begin(); lem != lemmas.end(); ++lem) {
         outputIterator.addLemma(*lem);
 
-        std::vector<std::string> lexemeTags =
-            getLexemeTagsFromStems(stems, *lem);
+        std::vector<std::string> lexemeTags = getLexemeTagsFromStems_(stems, *lem);
         std::vector<std::string>::iterator lxt;
 
         for (lxt = lexemeTags.begin(); lxt != lexemeTags.end(); ++lxt) {
-            AnnotationItem lexItem = createLexemeAnnotation(*lem, *lxt);
+            AnnotationItem lexItem = createLexemeAnnotation_(*lem, *lxt);
             outputIterator.addLexeme(lexItem);
         }
     }
 }
 
-std::set<std::string> Morfologik::getLemmasFromStems(
-    std::multimap<std::string, std::vector<std::string> > stems
-) {
-    std::set<std::string> lemmas;
+std::set<std::string> Morfologik::getLemmasFromStems_(
+    std::multimap<std::string, std::vector<std::string> > stems) {
 
     std::multimap<std::string, std::vector<std::string> >::iterator s;
+    std::set<std::string> lemmas;
+
     for (s = stems.begin(); s != stems.end(); ++s) {
         lemmas.insert(lemmas.end(), s->first);
     }
@@ -134,10 +168,9 @@ std::set<std::string> Morfologik::getLemmasFromStems(
     return lemmas;
 }
 
-std::vector<std::string> Morfologik::getLexemeTagsFromStems(
-    std::multimap<std::string, std::vector<std::string> > & stems,
-    const std::string & lemma
-) {
+std::vector<std::string> Morfologik::getLexemeTagsFromStems_(
+    std::multimap<std::string, std::vector<std::string> > & stems, const std::string & lemma) {
+
     std::vector<std::string> tags;
     std::vector<std::string>::iterator t;
 
@@ -153,12 +186,9 @@ std::vector<std::string> Morfologik::getLexemeTagsFromStems(
     return tags;
 }
 
-AnnotationItem Morfologik::createLexemeAnnotation(
-    const std::string & stem, std::string & tag
-) {
+AnnotationItem Morfologik::createLexemeAnnotation_(const std::string& stem, std::string& tag) {
 
-    std::map<std::string, std::string> attributes =
-        tagsParser.getLexemeAttributes(tag);
+    std::map<std::string, std::string> attributes = tagsParser_.getLexemeAttributes(tag);
     std::map<std::string, std::string>::iterator atr;
 
     std::string partOfSpeech = attributes["pos"];
@@ -168,45 +198,43 @@ AnnotationItem Morfologik::createLexemeAnnotation(
     AnnotationItem lexeme(partOfSpeech, StringFrag(wordId));
 
     for (atr = attributes.begin(); atr != attributes.end(); ++atr) {
-        annotationManager->setValue(lexeme, atr->first, atr->second);
+        annotationManager_->setValue(lexeme, atr->first, atr->second);
     }
+
     return lexeme;
 }
 
-void Morfologik::stemsOnFormLevel(
-    const std::string & word, LemmatizerOutputIterator & outputIterator
-){
+void Morfologik::stemsOnFormLevel_(const std::string & word,
+    LemmatizerOutputIterator & outputIterator) {
 
-    std::multimap<std::string, std::vector<std::string> > stems =
-        stem(word);
+    std::multimap<std::string, std::vector<std::string> > stems = stem(word);
 
-    std::set<std::string> lemmas = getLemmasFromStems(stems);
+    std::set<std::string> lemmas = getLemmasFromStems_(stems);
     std::set<std::string>::iterator lem;
 
-    for (lem = lemmas.begin(); lem != lemmas.end(); ++lem) {
+    DEBUG("found stems of word [" << word << "] on form level: ["
+        << boost::algorithm::join(lemmas, ", ") << "]");
 
+    for (lem = lemmas.begin(); lem != lemmas.end(); ++lem) {
         outputIterator.addLemma(*lem);
 
         std::multimap<std::string, std::vector<std::string> >::iterator lex;
 
-        for (lex = stems.equal_range(*lem).first;
-            lex != stems.equal_range(*lem).second;
-            ++lex) {
-
+        for (lex = stems.equal_range(*lem).first; lex != stems.equal_range(*lem).second; ++lex) {
             std::vector<std::string> tags = lex->second;
             std::vector<std::string>::iterator tag = tags.begin();
 
-            AnnotationItem lexItm = createLexemeAnnotation(*lem, *tag);
+            AnnotationItem lexItm = createLexemeAnnotation_(*lem, *tag);
             outputIterator.addLexeme(lexItm);
 
             for (tag = tags.begin(); tag != tags.end(); ++tag) {
 
                 std::vector<std::map<std::string, std::string> > forms =
-                    tagsParser.getFormAttributes(*tag);
+                    tagsParser_.getFormAttributes(*tag);
                 std::vector<std::map<std::string, std::string> >::iterator frm;
 
                 for (frm = forms.begin(); frm != forms.end(); ++frm) {
-                    AnnotationItem frmItm = createFormAnnotation(lexItm, word, *frm);
+                    AnnotationItem frmItm = createFormAnnotation_(lexItm, word, *frm);
                     outputIterator.addForm(frmItm);
                 }
             }
@@ -215,56 +243,49 @@ void Morfologik::stemsOnFormLevel(
     }
 }
 
-AnnotationItem Morfologik::createFormAnnotation(
-    AnnotationItem & lexemeItem,
-    const std::string& word,
-    std::map<std::string, std::string> & attributes
-) {
+AnnotationItem Morfologik::createFormAnnotation_(AnnotationItem & lexemeItem,
+    const std::string& word, std::map<std::string, std::string> & attributes) {
 
     AnnotationItem formItem(lexemeItem, word);
 
     std::map<std::string, std::string>::iterator atr;
     for (atr = attributes.begin(); atr != attributes.end(); ++atr) {
-        annotationManager->setValue(formItem, atr->first, atr->second);
+        annotationManager_->setValue(formItem, atr->first, atr->second);
     }
     return formItem;
 }
 
 std::vector<std::string> Morfologik::simpleStem(const std::string & word) {
+    jstring jword = jenv_->NewStringUTF(word.c_str());
+    jobject objList = (jobject)jenv_->CallObjectMethod
+        (objPolishStemmer_, midPolishStemmerLookup_, jword);
+    jenv_->DeleteLocalRef(jword);
 
-    jstring jword = jenv->NewStringUTF(word.c_str());
-    jobject objList = (jobject)jenv->CallObjectMethod
-        (objPolishStemmer, midPolishStemmerLookup, jword);
-    jenv->DeleteLocalRef(jword);
-
-    int stemsCount = (int)jenv->CallIntMethod(objList, midListGetSize, NULL);
+    int stemsCount = (int)jenv_->CallIntMethod(objList, midListGetSize_, NULL);
     jobject objWordData = NULL;
     const char *pstem = NULL;
     std::vector<std::string> result;
 
     for (int i = 0; i < stemsCount; ++i) {
-        objWordData = (jobject)jenv->CallObjectMethod
-            (objList, midListGetElement, (jint)i);
-
-        pstem = getStemByJNI(objWordData);
+        objWordData = (jobject)jenv_->CallObjectMethod(objList, midListGetElement_, (jint)i);
+        pstem = getStemByJNI_(objWordData);
         result.insert(result.begin(), pstem);
     }
 
-    jenv->DeleteLocalRef(objList);
-    jenv->DeleteLocalRef(objWordData);
+    jenv_->DeleteLocalRef(objList);
+    jenv_->DeleteLocalRef(objWordData);
+
     return result;
 }
 
-std::multimap<std::string, std::vector<std::string> > Morfologik::stem(
-    const std::string & word
-) {
+std::multimap<std::string, std::vector<std::string> > Morfologik::stem(const std::string & word) {
+    jstring jword = jenv_->NewStringUTF(word.c_str());
+    jobject objList = (jobject)jenv_->CallObjectMethod
+        (objPolishStemmer_, midPolishStemmerLookup_, jword);
+    jenv_->DeleteLocalRef(jword);
 
-    jstring jword = jenv->NewStringUTF(word.c_str());
-    jobject objList = (jobject)jenv->CallObjectMethod
-        (objPolishStemmer, midPolishStemmerLookup, jword);
-    jenv->DeleteLocalRef(jword);
-
-    int stemsCount = (int)jenv->CallIntMethod(objList, midListGetSize, NULL);
+    int stemsCount = (int)jenv_->CallIntMethod(objList, midListGetSize_, NULL);
+    DEBUG("Found " << stemsCount << " stems for word " << word);
 
     jobject objWordData = NULL;
     const char *pstem = NULL;
@@ -273,113 +294,138 @@ std::multimap<std::string, std::vector<std::string> > Morfologik::stem(
     std::vector<std::string> tags;
 
     for (int i = 0; i < stemsCount; ++i) {
-        objWordData = (jobject)jenv->CallObjectMethod
-            (objList, midListGetElement, (jint)i);
+        objWordData = (jobject)jenv_->CallObjectMethod(objList, midListGetElement_, (jint)i);
 
-        pstem = getStemByJNI(objWordData);
-        ptags = getTagsByJNI(objWordData);
+        pstem = getStemByJNI_(objWordData);
+        ptags = getTagsByJNI_(objWordData);
 
         tags.clear();
-        boost::split(tags, ptags, boost::is_any_of(tagSeparator));
-        result.insert(std::pair<std::string, std::vector<std::string> >
-            (pstem, tags) );
+        boost::split(tags, ptags, boost::is_any_of(TAG_SEPARATORS));
+        result.insert(std::pair<std::string, std::vector<std::string> > (pstem, tags));
     }
 
-    jenv->DeleteLocalRef(objList);
-    jenv->DeleteLocalRef(objWordData);
+    jenv_->DeleteLocalRef(objList);
+    jenv_->DeleteLocalRef(objWordData);
     return result;
 }
 
-const char* Morfologik::getStemByJNI(jobject objWordData) {
-
+const char* Morfologik::getStemByJNI_(jobject objWordData) {
     const char *pstem = NULL;
 
-    jobject objForString = jenv->CallObjectMethod
-        (objWordData, midWordDataGetStem, NULL);
-    jstring text = (jstring)jenv->CallObjectMethod
-        (objForString, midStringToString, NULL);
-    pstem = jenv->GetStringUTFChars(text, NULL);
+    jobject objForString = jenv_->CallObjectMethod(objWordData, midWordDataGetStem_, NULL);
+    jstring text = (jstring)jenv_->CallObjectMethod(objForString, midStringToString_, NULL);
+    pstem = jenv_->GetStringUTFChars(text, NULL);
 
     if (pstem == NULL) {
-        // OutOfMemoryError already throw
+        ERROR("Out of memory error in JNI");
     }
 
-    //jenv->ReleaseStringUTFChars(text, pstem);
+    //jenv_->ReleaseStringUTFChars(text, pstem);
     return pstem;
 }
 
-const char* Morfologik::getTagsByJNI(jobject objWordData) {
-
+const char* Morfologik::getTagsByJNI_(jobject objWordData) {
     const char *ptags = NULL;
 
-    jobject objForString = jenv->CallObjectMethod(
-        objWordData, midWordDataGetTag, NULL);
-    jstring text = (jstring)jenv->CallObjectMethod
-        (objForString, midStringToString, NULL);
-    ptags = jenv->GetStringUTFChars(text, NULL);
+    jobject objForString = jenv_->CallObjectMethod(objWordData, midWordDataGetTag_, NULL);
+    jstring text = (jstring)jenv_->CallObjectMethod(objForString, midStringToString_, NULL);
+    ptags = jenv_->GetStringUTFChars(text, NULL);
 
     if (ptags == NULL) {
-        // OutOfMemoryError already throw
+        ERROR("Out of memory error in JNI");
     }
 
-    //jenv->ReleaseStringUTFChars(text, ptags);
+    //jenv_->ReleaseStringUTFChars(text, ptags);
     return ptags;
 }
 
-void Morfologik::initializePolishStemmer() {
-    clsPolishStemmer = NULL;
-    objPolishStemmer = NULL;
-    midPolishStemmerConstructor = NULL;
-    midPolishStemmerLookup = NULL;
+void Morfologik::initializeDictionary_() {
+    enmDictionary_ = NULL;
+    fidDictionary_ = NULL;
+    objDictionary_ = NULL;
 
-    clsPolishStemmer = jenv->FindClass("morfologik/stemming/PolishStemmer");
-    if (clsPolishStemmer != NULL) {
-        midPolishStemmerConstructor = jenv->GetMethodID
-            (clsPolishStemmer, "<init>", "()V");
-        midPolishStemmerLookup = jenv->GetMethodID
-            (clsPolishStemmer, "lookup", "(Ljava/lang/CharSequence;)Ljava/util/List;");
+    enmDictionary_ = jenv_->FindClass("morfologik/stemming/PolishStemmer$DICTIONARY");
+
+    if (enmDictionary_ != NULL) {
+        fidDictionary_ = jenv_->GetStaticFieldID(enmDictionary_, dictionary_.c_str(),
+            "Lmorfologik/stemming/PolishStemmer$DICTIONARY;");
+        if (jenv_->ExceptionCheck()) jenv_->ExceptionDescribe();
+
+        objDictionary_ = jenv_->GetStaticObjectField(enmDictionary_, fidDictionary_);
+        if (jenv_->ExceptionCheck()) jenv_->ExceptionDescribe();
+    }
+    else {
+        ERROR("The DICTIONARY enum has been not found");
+    }
+}
+
+void Morfologik::initializePolishStemmer_() {
+    clsPolishStemmer_ = NULL;
+    objPolishStemmer_ = NULL;
+    midPolishStemmerConstructor_ = NULL;
+    midPolishStemmerLookup_ = NULL;
+
+    clsPolishStemmer_ = jenv_->FindClass("morfologik/stemming/PolishStemmer");
+
+    if (clsPolishStemmer_ != NULL) {
+        midPolishStemmerConstructor_ = jenv_->GetMethodID
+            (clsPolishStemmer_, "<init>", "(Lmorfologik/stemming/PolishStemmer$DICTIONARY;)V");
+        midPolishStemmerLookup_ = jenv_->GetMethodID
+            (clsPolishStemmer_, "lookup", "(Ljava/lang/CharSequence;)Ljava/util/List;");
     }
     else {
         ERROR("The PolishStemmer class from morfologik's jar file has been not found");
     }
-    objPolishStemmer = jenv->NewObject
-        (clsPolishStemmer, midPolishStemmerConstructor, NULL);
+
+    objPolishStemmer_ = jenv_->NewObject
+        (clsPolishStemmer_, midPolishStemmerConstructor_, objDictionary_);
+    if (jenv_->ExceptionCheck()) jenv_->ExceptionDescribe();
 }
 
-void Morfologik::initializeList() {
-    clsList = NULL;
-    midListGetSize = NULL;
-    midListGetElement = NULL;
+void Morfologik::initializeList_() {
+    clsList_ = NULL;
+    midListGetSize_ = NULL;
+    midListGetElement_ = NULL;
 
-    clsList = jenv->FindClass("java/util/List");
-    if (clsList != NULL) {
-        midListGetSize = jenv->GetMethodID(clsList, "size", "()I");
-        midListGetElement = jenv->GetMethodID
-            (clsList, "get", "(I)Ljava/lang/Object;");
+    clsList_ = jenv_->FindClass("java/util/List");
+
+    if (clsList_ != NULL) {
+        midListGetSize_ = jenv_->GetMethodID(clsList_, "size", "()I");
+        midListGetElement_ = jenv_->GetMethodID(clsList_, "get", "(I)Ljava/lang/Object;");
+    }
+    else {
+        ERROR("The List class has been not found");
     }
 }
 
-void Morfologik::initializeWordData() {
-    clsWordData = NULL;
-    midWordDataGetStem = NULL;
-    midWordDataGetTag = NULL;
+void Morfologik::initializeWordData_() {
+    clsWordData_ = NULL;
+    midWordDataGetStem_ = NULL;
+    midWordDataGetTag_ = NULL;
 
-    clsWordData = jenv->FindClass("morfologik/stemming/WordData");
-    if (clsWordData != NULL) {
-        midWordDataGetStem = jenv->GetMethodID
-            (clsWordData, "getStem", "()Ljava/lang/CharSequence;");
-        midWordDataGetTag = jenv->GetMethodID
-            (clsWordData, "getTag", "()Ljava/lang/CharSequence;");
+    clsWordData_ = jenv_->FindClass("morfologik/stemming/WordData");
+
+    if (clsWordData_ != NULL) {
+        midWordDataGetStem_ = jenv_->GetMethodID
+            (clsWordData_, "getStem", "()Ljava/lang/CharSequence;");
+        midWordDataGetTag_ = jenv_->GetMethodID
+            (clsWordData_, "getTag", "()Ljava/lang/CharSequence;");
+    }
+    else {
+        ERROR("The WordData class from morfologik's jar file has been not found");
     }
 }
 
-void Morfologik::initializeString() {
-    clsString = NULL;
-    midStringToString = NULL;
+void Morfologik::initializeString_() {
+    clsString_ = NULL;
+    midStringToString_ = NULL;
 
-    clsString = jenv->FindClass("java/lang/String");
-    if (clsString != NULL) {
-        midStringToString = jenv->GetMethodID
-            (clsString, "toString", "()Ljava/lang/String;");
+    clsString_ = jenv_->FindClass("java/lang/String");
+
+    if (clsString_ != NULL) {
+        midStringToString_ = jenv_->GetMethodID(clsString_, "toString", "()Ljava/lang/String;");
+    }
+    else {
+        ERROR("The String class has been not found");
     }
 }

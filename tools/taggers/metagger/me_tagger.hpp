@@ -7,6 +7,7 @@
 #include "lang_specific_processor_file_fetcher.hpp"
 #include <boost/program_options.hpp>
 #include "regexp.hpp"
+#include <fstream>
 
 #include <string>
 #include <vector>
@@ -22,8 +23,8 @@ class MeTagger : public Annotator {
             virtual void doAddLanguageIndependentOptionsHandled(
                 boost::program_options::options_description& optionsDescription);
 
-            virtual std::string doGetName();
-            virtual boost::filesystem::path doGetFile();
+            virtual std::string doGetName() const;
+            virtual boost::filesystem::path doGetFile() const;
 
             virtual std::list<std::list<std::string> > doRequiredLayerTags();
             virtual std::list<std::list<std::string> > doOptionalLayerTags();
@@ -41,7 +42,10 @@ class MeTagger : public Annotator {
                 std::string unknownPosLabel_ = "ign",
                 std::string cardinalNumberPosLabel_ = "card",
                 std::string properNounPosLabel_ = "name",
-                std::vector<std::string> openClassLabels_ = std::vector<std::string>());
+                std::vector<std::string> openClassLabels_ =
+                    std::vector<std::string>(),
+                bool saveTextFile_ = false
+                );
         void tag(Lattice &lattice);
         void train(Lattice &lattice);
         void saveModel(std::string path);
@@ -76,6 +80,7 @@ class MeTagger : public Annotator {
         std::string unknownPosLabel;
         std::string cardinalNumberPosLabel, properNounPosLabel;
         std::vector<std::string> openClassLabels;
+        bool saveTextFile;
 
         RegExp rxUpperCaseFirst;
         RegExp rxUpperCaseAll;
@@ -91,9 +96,19 @@ class MeTagger : public Annotator {
         void addSampleSentences(Lattice &lattice);
         void addSampleSegment(Lattice &lattice, TokenEdgesMap tokenEdgesMap);
 
+        std::vector<Outcome> getTokenTags(Lattice &lattice,
+                TokenEdgesMap tokenEdgesMap);
+        Outcome getBestTag(Lattice &lattice, Lattice::EdgeDescriptor token,
+                Context context);
+        void applyTokenTags(Lattice &lattice, TokenEdgesMap tokenEdgesMap,
+                std::vector<Outcome> tags);
         Context createContext(Lattice &lattice,
                 TokenEdgesMap tokenEdgesMap,
                 int currentIndex, int window);
+        std::string getPrevTag(Lattice &lattice, TokenEdgesMap tokenEdgesMap,
+                int tokenIndex);
+        void addCurrentTag(Lattice &lattice, Lattice::EdgeDescriptor token,
+                Context context);
 
         std::string getFormLemma(Lattice &lattice,
                 Lattice::EdgeDescriptor edge);
@@ -101,17 +116,27 @@ class MeTagger : public Annotator {
                 Lattice::EdgeDescriptor edge);
         std::string getFormMorphoTag(Lattice &lattice,
                 Lattice::EdgeDescriptor edge);
+        std::string getPartOfSpeechFromMorphoTag(std::string tag);
+        std::list<std::pair<std::string, std::string> >
+            getAttributesFromMorphoTag(std::string tag);
         bool lemmaEdgeExists(Lattice &lattice, Lattice::EdgeDescriptor token,
                 std::string lemma);
         bool lexemeEdgeExists(Lattice &lattice, Lattice::EdgeDescriptor token,
                 std::string lemma, std::string partOfSpeech);
         void addLemmaEdge(Lattice &lattice, Lattice::EdgeDescriptor token,
                 std::string lemma);
-        void addLexemeEdge(Lattice &lattice, Lattice::EdgeDescriptor token,
-                std::string lemma, std::string partOfSpeech);
+        Lattice::EdgeDescriptor addLexemeEdge(Lattice &lattice,
+                Lattice::EdgeDescriptor token, std::string lemma,
+                std::string partOfSpeech);
         void addFormEdge(Lattice &lattice, Lattice::EdgeDescriptor token,
-                std::string lemma, std::string partOfSpeech, std::string tag);
+                Lattice::EdgeDescriptor lexeme, std::string tag);
         bool isDiscarded(Lattice &lattice, Lattice::EdgeDescriptor edge);
+        bool hasLexemeEdgeMatchingTag(Lattice &lattice,
+                Lattice::EdgeDescriptor token, std::string tag);
+        Lattice::EdgeDescriptor getLexemeEdgeMatchingTag(Lattice &lattice,
+                Lattice::EdgeDescriptor token, std::string tag);
+        bool lexemeEdgeMatchesTag(Lattice &lattice, Lattice::EdgeDescriptor lexeme,
+                std::string tag);
 };
 
 #endif

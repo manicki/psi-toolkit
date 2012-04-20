@@ -36,4 +36,7 @@ BOOST_AUTO_TEST_CASE( string_frag_find ) {
     StringFrag sf(source, 2, 16);
     BOOST_CHECK_EQUAL(sf.find(' '), ss.find(' '));
     BOOST_CHECK_EQUAL(sf.find(' ', 5), ss.find(' ', 5));
+    StringFrag sf2("Lorem ipsum dolor sit amet, consectetur adipiscing elit.");
+    BOOST_CHECK_EQUAL(sf2.find(' '), source.find(' '));
+    BOOST_CHECK_EQUAL(sf2.find(' ', 5), source.find(' ', 5));
 }

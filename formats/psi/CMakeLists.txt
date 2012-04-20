@@ -6,4 +6,5 @@ add_library(formats-psi SHARED
 add_subdirectory(t)
 
 install(TARGETS formats-psi DESTINATION lib/)
-
+install(DIRECTORY psi_reader/data/ DESTINATION ${PSITOOLKIT_INSTALL_DATA_DIR}/psi-lattice-reader)
+install(DIRECTORY psi_writer/data/ DESTINATION ${PSITOOLKIT_INSTALL_DATA_DIR}/psi-lattice-writer)

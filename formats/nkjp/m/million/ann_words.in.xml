@@ -1,0 +1,683 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<teiCorpus xmlns:xi="http://www.w3.org/2001/XInclude" xmlns:nkjp="http://www.nkjp.pl/ns/1.0" xmlns="http://www.tei-c.org/ns/1.0">
+  <xi:include href="NKJP_1M_header.xml"/>
+  <TEI>
+    <xi:include href="header.xml"/>
+    <text xml:lang="pl">
+      <body>
+        <p xml:id="words_1-p" corresp="ann_morphosyntax.xml#morph_1-p">
+          <s xml:id="words_1.11-s" corresp="ann_morphosyntax.xml#morph_1.11-s">
+            <seg xml:id="words_1.11-s_sad">
+              <fs type="words">
+                <f name="orth">
+                  <string>Za</string>
+                </f>
+                <f name="base">
+                  <string>za</string>
+                </f>
+                <f name="ctag">
+                  <symbol value="Prep"/>
+                </f>
+                <f name="msd">
+                  <symbol value="acc"/>
+                </f>
+              </fs>
+              <ptr target="ann_morphosyntax.xml#morph_1.1-seg"/>
+            </seg>
+            <seg xml:id="words_1.11-s_sa9">
+              <fs type="words">
+                <f name="orth">
+                  <string>swe</string>
+                </f>
+                <f name="base">
+                  <string>swój</string>
+                </f>
+                <f name="ctag">
+                  <symbol value="Adj"/>
+                </f>
+                <f name="msd">
+                  <symbol value="pl:acc:f:pos"/>
+                </f>
+              </fs>
+              <ptr target="ann_morphosyntax.xml#morph_1.2-seg"/>
+            </seg>
+            <seg xml:id="words_1.11-s_sae">
+              <fs type="words">
+                <f name="orth">
+                  <string>publikacje</string>
+                </f>
+                <f name="base">
+                  <string>publikacja</string>
+                </f>
+                <f name="ctag">
+                  <symbol value="Noun"/>
+                </f>
+                <f name="msd">
+                  <symbol value="pl:acc:f"/>
+                </f>
+              </fs>
+              <ptr target="ann_morphosyntax.xml#morph_1.3-seg"/>
+            </seg>
+            <seg xml:id="words_1.11-s_saa">
+              <fs type="words">
+                <f name="orth">
+                  <string>naukowe</string>
+                </f>
+                <f name="base">
+                  <string>naukowy</string>
+                </f>
+                <f name="ctag">
+                  <symbol value="Adj"/>
+                </f>
+                <f name="msd">
+                  <symbol value="pl:acc:f:pos"/>
+                </f>
+              </fs>
+              <ptr target="ann_morphosyntax.xml#morph_1.4-seg"/>
+            </seg>
+            <seg xml:id="words_1.11-s_sa7">
+              <fs type="words">
+                <f name="orth">
+                  <string>został</string>
+                </f>
+                <f name="base">
+                  <string>zostać</string>
+                </f>
+                <f name="ctag">
+                  <symbol value="Verbfin"/>
+                </f>
+                <f name="msd">
+                  <symbol value="sg:ter:past:ind:perf:nrefl:aff:m1"/>
+                </f>
+              </fs>
+              <ptr target="ann_morphosyntax.xml#morph_1.5-seg"/>
+            </seg>
+            <seg xml:id="words_1.11-s_sab">
+              <fs type="words">
+                <f name="orth">
+                  <string>7-krotnie</string>
+                </f>
+                <f name="base">
+                  <string>7-krotnie</string>
+                </f>
+                <f name="ctag">
+                  <symbol value="Adv"/>
+                </f>
+                <f name="msd">
+                  <symbol value="pos"/>
+                </f>
+              </fs>
+              <ptr target="ann_morphosyntax.xml#morph_1.6-seg"/>
+            </seg>
+            <seg xml:id="words_1.11-s_sa8">
+              <fs type="words">
+                <f name="orth">
+                  <string>wyróżniony</string>
+                </f>
+                <f name="base">
+                  <string>wyróżnić</string>
+                </f>
+                <f name="ctag">
+                  <symbol value="Ppas"/>
+                </f>
+                <f name="msd">
+                  <symbol value="sg:nom:m1:perf:nrefl:aff"/>
+                </f>
+              </fs>
+              <ptr target="ann_morphosyntax.xml#morph_1.7-seg"/>
+            </seg>
+            <seg xml:id="words_1.11-s_saf">
+              <fs type="words">
+                <f name="orth">
+                  <string>nagrodą</string>
+                </f>
+                <f name="base">
+                  <string>nagroda</string>
+                </f>
+                <f name="ctag">
+                  <symbol value="Noun"/>
+                </f>
+                <f name="msd">
+                  <symbol value="sg:inst:f"/>
+                </f>
+              </fs>
+              <ptr target="ann_morphosyntax.xml#morph_1.8-seg"/>
+            </seg>
+            <seg xml:id="words_1.11-s_sa10">
+              <fs type="words">
+                <f name="orth">
+                  <string>Rektora</string>
+                </f>
+                <f name="base">
+                  <string>rektor</string>
+                </f>
+                <f name="ctag">
+                  <symbol value="Noun"/>
+                </f>
+                <f name="msd">
+                  <symbol value="sg:gen:m1"/>
+                </f>
+              </fs>
+              <ptr target="ann_morphosyntax.xml#morph_1.9-seg"/>
+            </seg>
+            <seg xml:id="words_1.11-s_sa11">
+              <fs type="words">
+                <f name="orth">
+                  <string>UŁ</string>
+                </f>
+                <f name="base">
+                  <string>UŁ</string>
+                </f>
+                <f name="ctag">
+                  <symbol value="Noun"/>
+                </f>
+                <f name="msd">
+                  <symbol value="sg:gen:m3"/>
+                </f>
+              </fs>
+              <ptr target="ann_morphosyntax.xml#morph_1.10-seg"/>
+            </seg>
+            <seg xml:id="words_1.11-s_sac">
+              <fs type="words">
+                <f name="orth">
+                  <string>.</string>
+                </f>
+                <f name="base">
+                  <string>.</string>
+                </f>
+                <f name="ctag">
+                  <symbol value="Interp"/>
+                </f>
+                <f name="msd">
+                  <symbol value=""/>
+                </f>
+              </fs>
+              <ptr target="ann_morphosyntax.xml#morph_1.11-seg"/>
+            </seg>
+          </s>
+          <s xml:id="words_1.23-s" corresp="ann_morphosyntax.xml#morph_1.23-s">
+            <seg xml:id="words_1.23-s_sa1c">
+              <fs type="words">
+                <f name="orth">
+                  <string>Był</string>
+                </f>
+                <f name="base">
+                  <string>być</string>
+                </f>
+                <f name="ctag">
+                  <symbol value="Verbfin"/>
+                </f>
+                <f name="msd">
+                  <symbol value="sg:ter:past:ind:imperf:nrefl:aff:m1"/>
+                </f>
+              </fs>
+              <ptr target="ann_morphosyntax.xml#morph_1.12-seg"/>
+            </seg>
+            <seg xml:id="words_1.23-s_sa23">
+              <fs type="words">
+                <f name="orth">
+                  <string>doradcą</string>
+                </f>
+                <f name="base">
+                  <string>doradca</string>
+                </f>
+                <f name="ctag">
+                  <symbol value="Noun"/>
+                </f>
+                <f name="msd">
+                  <symbol value="sg:inst:m1"/>
+                </f>
+              </fs>
+              <ptr target="ann_morphosyntax.xml#morph_1.13-seg"/>
+            </seg>
+            <seg xml:id="words_1.23-s_sa18">
+              <fs type="words">
+                <f name="orth">
+                  <string>ds.</string>
+                </f>
+                <f name="base">
+                  <string>do spraw</string>
+                </f>
+                <f name="ctag">
+                  <symbol value="Brev"/>
+                </f>
+                <f name="msd">
+                  <symbol value="pun:PrepNG"/>
+                </f>
+              </fs>
+              <ptr target="ann_morphosyntax.xml#morph_1.14-seg"/>
+              <ptr target="ann_morphosyntax.xml#morph_1.15-seg"/>
+            </seg>
+            <seg xml:id="words_1.23-s_sa24">
+              <fs type="words">
+                <f name="orth">
+                  <string>strategii</string>
+                </f>
+                <f name="base">
+                  <string>strategia</string>
+                </f>
+                <f name="ctag">
+                  <symbol value="Noun"/>
+                </f>
+                <f name="msd">
+                  <symbol value="pl:gen:f"/>
+                </f>
+              </fs>
+              <ptr target="ann_morphosyntax.xml#morph_1.16-seg"/>
+            </seg>
+            <seg xml:id="words_1.23-s_sa1d">
+              <fs type="words">
+                <f name="orth">
+                  <string>marketingowych</string>
+                </f>
+                <f name="base">
+                  <string>marketingowy</string>
+                </f>
+                <f name="ctag">
+                  <symbol value="Adj"/>
+                </f>
+                <f name="msd">
+                  <symbol value="pl:gen:f:pos"/>
+                </f>
+              </fs>
+              <ptr target="ann_morphosyntax.xml#morph_1.17-seg"/>
+            </seg>
+            <seg xml:id="words_1.23-s_sa1e">
+              <fs type="words">
+                <f name="orth">
+                  <string>znanych</string>
+                </f>
+                <f name="base">
+                  <string>znany</string>
+                </f>
+                <f name="ctag">
+                  <symbol value="Adj"/>
+                </f>
+                <f name="msd">
+                  <symbol value="pl:gen:n:pos"/>
+                </f>
+              </fs>
+              <ptr target="ann_morphosyntax.xml#morph_1.18-seg"/>
+            </seg>
+            <seg xml:id="words_1.23-s_sa1f">
+              <fs type="words">
+                <f name="orth">
+                  <string>polskich</string>
+                </f>
+                <f name="base">
+                  <string>polski</string>
+                </f>
+                <f name="ctag">
+                  <symbol value="Adj"/>
+                </f>
+                <f name="msd">
+                  <symbol value="pl:gen:n:pos"/>
+                </f>
+              </fs>
+              <ptr target="ann_morphosyntax.xml#morph_1.19-seg"/>
+            </seg>
+            <seg xml:id="words_1.23-s_sa21">
+              <fs type="words">
+                <f name="orth">
+                  <string>i</string>
+                </f>
+                <f name="base">
+                  <string>i</string>
+                </f>
+                <f name="ctag">
+                  <symbol value="Conj"/>
+                </f>
+                <f name="msd">
+                  <symbol value=""/>
+                </f>
+              </fs>
+              <ptr target="ann_morphosyntax.xml#morph_1.20-seg"/>
+            </seg>
+            <seg xml:id="words_1.23-s_sa20">
+              <fs type="words">
+                <f name="orth">
+                  <string>zagranicznych</string>
+                </f>
+                <f name="base">
+                  <string>zagraniczny</string>
+                </f>
+                <f name="ctag">
+                  <symbol value="Adj"/>
+                </f>
+                <f name="msd">
+                  <symbol value="pl:gen:n:pos"/>
+                </f>
+              </fs>
+              <ptr target="ann_morphosyntax.xml#morph_1.21-seg"/>
+            </seg>
+            <seg xml:id="words_1.23-s_sa25">
+              <fs type="words">
+                <f name="orth">
+                  <string>przedsiębiorstw</string>
+                </f>
+                <f name="base">
+                  <string>przedsiębiorstwo</string>
+                </f>
+                <f name="ctag">
+                  <symbol value="Noun"/>
+                </f>
+                <f name="msd">
+                  <symbol value="pl:gen:n"/>
+                </f>
+              </fs>
+              <ptr target="ann_morphosyntax.xml#morph_1.22-seg"/>
+            </seg>
+            <seg xml:id="words_1.23-s_sa22">
+              <fs type="words">
+                <f name="orth">
+                  <string>.</string>
+                </f>
+                <f name="base">
+                  <string>.</string>
+                </f>
+                <f name="ctag">
+                  <symbol value="Interp"/>
+                </f>
+                <f name="msd">
+                  <symbol value=""/>
+                </f>
+              </fs>
+              <ptr target="ann_morphosyntax.xml#morph_1.23-seg"/>
+            </seg>
+          </s>
+          <s xml:id="words_1.40-s" corresp="ann_morphosyntax.xml#morph_1.40-s">
+            <seg xml:id="words_1.40-s_sa30">
+              <fs type="words">
+                <f name="orth">
+                  <string>Wypromował</string>
+                </f>
+                <f name="base">
+                  <string>wypromować</string>
+                </f>
+                <f name="ctag">
+                  <symbol value="Verbfin"/>
+                </f>
+                <f name="msd">
+                  <symbol value="sg:ter:past:ind:perf:nrefl:aff:m1"/>
+                </f>
+              </fs>
+              <ptr target="ann_morphosyntax.xml#morph_1.24-seg"/>
+            </seg>
+            <seg xml:id="words_1.40-s_sa3f">
+              <fs type="words">
+                <f name="orth">
+                  <string>3</string>
+                </f>
+                <f name="base">
+                  <string>3</string>
+                </f>
+                <f name="ctag">
+                  <symbol value="Num"/>
+                </f>
+                <f name="msd">
+                  <symbol value="pl:acc:m1:rec"/>
+                </f>
+              </fs>
+              <ptr target="ann_morphosyntax.xml#morph_1.25-seg"/>
+            </seg>
+            <seg xml:id="words_1.40-s_sa37">
+              <fs type="words">
+                <f name="orth">
+                  <string>doktorów</string>
+                </f>
+                <f name="base">
+                  <string>doktor</string>
+                </f>
+                <f name="ctag">
+                  <symbol value="Noun"/>
+                </f>
+                <f name="msd">
+                  <symbol value="pl:gen:m1"/>
+                </f>
+              </fs>
+              <ptr target="ann_morphosyntax.xml#morph_1.26-seg"/>
+            </seg>
+            <seg xml:id="words_1.40-s_sa35">
+              <fs type="words">
+                <f name="orth">
+                  <string>na</string>
+                </f>
+                <f name="base">
+                  <string>na</string>
+                </f>
+                <f name="ctag">
+                  <symbol value="Prep"/>
+                </f>
+                <f name="msd">
+                  <symbol value="loc"/>
+                </f>
+              </fs>
+              <ptr target="ann_morphosyntax.xml#morph_1.27-seg"/>
+            </seg>
+            <seg xml:id="words_1.40-s_sa38">
+              <fs type="words">
+                <f name="orth">
+                  <string>Wydziale</string>
+                </f>
+                <f name="base">
+                  <string>wydział</string>
+                </f>
+                <f name="ctag">
+                  <symbol value="Noun"/>
+                </f>
+                <f name="msd">
+                  <symbol value="sg:loc:m3"/>
+                </f>
+              </fs>
+              <ptr target="ann_morphosyntax.xml#morph_1.28-seg"/>
+            </seg>
+            <seg xml:id="words_1.40-s_sa39">
+              <fs type="words">
+                <f name="orth">
+                  <string>Zarządzania</string>
+                </f>
+                <f name="base">
+                  <string>zarządzanie</string>
+                </f>
+                <f name="ctag">
+                  <symbol value="Noun"/>
+                </f>
+                <f name="msd">
+                  <symbol value="sg:gen:n"/>
+                </f>
+              </fs>
+              <ptr target="ann_morphosyntax.xml#morph_1.29-seg"/>
+            </seg>
+            <seg xml:id="words_1.40-s_sa3a">
+              <fs type="words">
+                <f name="orth">
+                  <string>UŁ</string>
+                </f>
+                <f name="base">
+                  <string>UŁ</string>
+                </f>
+                <f name="ctag">
+                  <symbol value="Noun"/>
+                </f>
+                <f name="msd">
+                  <symbol value="sg:gen:m3"/>
+                </f>
+              </fs>
+              <ptr target="ann_morphosyntax.xml#morph_1.30-seg"/>
+            </seg>
+            <seg xml:id="words_1.40-s_sa32">
+              <fs type="words">
+                <f name="orth">
+                  <string>oraz</string>
+                </f>
+                <f name="base">
+                  <string>oraz</string>
+                </f>
+                <f name="ctag">
+                  <symbol value="Conj"/>
+                </f>
+                <f name="msd">
+                  <symbol value=""/>
+                </f>
+              </fs>
+              <ptr target="ann_morphosyntax.xml#morph_1.31-seg"/>
+            </seg>
+            <seg xml:id="words_1.40-s_sa40">
+              <fs type="words">
+                <f name="orth">
+                  <string>88</string>
+                </f>
+                <f name="base">
+                  <string>88</string>
+                </f>
+                <f name="ctag">
+                  <symbol value="Num"/>
+                </f>
+                <f name="msd">
+                  <symbol value="pl:acc:m1:rec"/>
+                </f>
+              </fs>
+              <ptr target="ann_morphosyntax.xml#morph_1.32-seg"/>
+            </seg>
+            <seg xml:id="words_1.40-s_sa3b">
+              <fs type="words">
+                <f name="orth">
+                  <string>magistrów</string>
+                </f>
+                <f name="base">
+                  <string>magister</string>
+                </f>
+                <f name="ctag">
+                  <symbol value="Noun"/>
+                </f>
+                <f name="msd">
+                  <symbol value="pl:gen:m1"/>
+                </f>
+              </fs>
+              <ptr target="ann_morphosyntax.xml#morph_1.33-seg"/>
+            </seg>
+            <seg xml:id="words_1.40-s_sa36">
+              <fs type="words">
+                <f name="orth">
+                  <string>na</string>
+                </f>
+                <f name="base">
+                  <string>na</string>
+                </f>
+                <f name="ctag">
+                  <symbol value="Prep"/>
+                </f>
+                <f name="msd">
+                  <symbol value="loc"/>
+                </f>
+              </fs>
+              <ptr target="ann_morphosyntax.xml#morph_1.34-seg"/>
+            </seg>
+            <seg xml:id="words_1.40-s_sa3c">
+              <fs type="words">
+                <f name="orth">
+                  <string>kierunku</string>
+                </f>
+                <f name="base">
+                  <string>kierunek</string>
+                </f>
+                <f name="ctag">
+                  <symbol value="Noun"/>
+                </f>
+                <f name="msd">
+                  <symbol value="sg:loc:m3"/>
+                </f>
+              </fs>
+              <ptr target="ann_morphosyntax.xml#morph_1.35-seg"/>
+            </seg>
+            <seg xml:id="words_1.40-s_sa3d">
+              <fs type="words">
+                <f name="orth">
+                  <string>zarządzanie</string>
+                </f>
+                <f name="base">
+                  <string>zarządzanie</string>
+                </f>
+                <f name="ctag">
+                  <symbol value="Noun"/>
+                </f>
+                <f name="msd">
+                  <symbol value="sg:nom:n"/>
+                </f>
+              </fs>
+              <ptr target="ann_morphosyntax.xml#morph_1.36-seg"/>
+            </seg>
+            <seg xml:id="words_1.40-s_sa33">
+              <fs type="words">
+                <f name="orth">
+                  <string>oraz</string>
+                </f>
+                <f name="base">
+                  <string>oraz</string>
+                </f>
+                <f name="ctag">
+                  <symbol value="Conj"/>
+                </f>
+                <f name="msd">
+                  <symbol value=""/>
+                </f>
+              </fs>
+              <ptr target="ann_morphosyntax.xml#morph_1.37-seg"/>
+            </seg>
+            <seg xml:id="words_1.40-s_sa3e">
+              <fs type="words">
+                <f name="orth">
+                  <string>stosunki</string>
+                </f>
+                <f name="base">
+                  <string>stosunki</string>
+                </f>
+                <f name="ctag">
+                  <symbol value="Noun"/>
+                </f>
+                <f name="msd">
+                  <symbol value="pl:nom:n"/>
+                </f>
+              </fs>
+              <ptr target="ann_morphosyntax.xml#morph_1.38-seg"/>
+            </seg>
+            <seg xml:id="words_1.40-s_sa31">
+              <fs type="words">
+                <f name="orth">
+                  <string>międzynarodowe</string>
+                </f>
+                <f name="base">
+                  <string>międzynarodowy</string>
+                </f>
+                <f name="ctag">
+                  <symbol value="Adj"/>
+                </f>
+                <f name="msd">
+                  <symbol value="pl:nom:n:pos"/>
+                </f>
+              </fs>
+              <ptr target="ann_morphosyntax.xml#morph_1.39-seg"/>
+            </seg>
+            <seg xml:id="words_1.40-s_sa34">
+              <fs type="words">
+                <f name="orth">
+                  <string>.</string>
+                </f>
+                <f name="base">
+                  <string>.</string>
+                </f>
+                <f name="ctag">
+                  <symbol value="Interp"/>
+                </f>
+                <f name="msd">
+                  <symbol value=""/>
+                </f>
+              </fs>
+              <ptr target="ann_morphosyntax.xml#morph_1.40-seg"/>
+            </seg>
+          </s>
+        </p>
+      </body>
+    </text>
+  </TEI>
+</teiCorpus>

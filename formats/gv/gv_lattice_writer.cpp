@@ -6,15 +6,55 @@
 #include <locale>
 #include <fstream>
 
-#include <gvc.h>
-
 #include "lattice.hpp"
-#include "logging.hpp"
+#include "plugin_manager.hpp"
+#include "psi_quoter.hpp"
 
+
+GVLatticeWriter::GVLatticeWriter(
+    bool showTags,
+    bool color,
+    std::set<std::string> filter,
+    std::string outputFormat,
+    bool tree
+) :
+    showTags_(showTags),
+    color_(color),
+    filter_(filter),
+    outputFormat_(outputFormat),
+    tree_(tree)
+{
+    adapter_ = dynamic_cast<GraphvizAdapterInterface*>(
+        PluginManager::getInstance().createPluginAdapter("graphviz")
+    );
+}
+
+GVLatticeWriter::~GVLatticeWriter() {
+    if (adapter_) {
+        PluginManager::getInstance().destroyPluginAdapter("graphviz", adapter_);
+    }
+}
 
 std::string GVLatticeWriter::getFormatName() {
     return "GraphViz";
 }
+
+std::string GVLatticeWriter::doInfo() {
+    return "GraphViz writer";
+}
+
+GraphvizAdapterInterface * GVLatticeWriter::getAdapter() {
+    return adapter_;
+}
+
+bool GVLatticeWriter::isActive() {
+    if (adapter_) {
+        return true;
+    } else {
+        return false;
+    }
+}
+
 
 LatticeWriter<std::ostream>* GVLatticeWriter::Factory::doCreateLatticeWriter(
     const boost::program_options::variables_map& options) {
@@ -30,8 +70,6 @@ LatticeWriter<std::ostream>* GVLatticeWriter::Factory::doCreateLatticeWriter(
         options.count("color"),
         filter,
         options["format"].as<std::string>(),
-        options["file"].as<std::string>(),
-        options.count("allow-tmp"),
         options.count("tree")
     );
 }
@@ -40,15 +78,11 @@ boost::program_options::options_description GVLatticeWriter::Factory::doOptionsH
     boost::program_options::options_description optionsDescription("Allowed options");
 
     optionsDescription.add_options()
-        ("allow-tmp",
-            "allows to use temporary files")
         ("color",
             "edges with different tags have different colors")
-        ("file", boost::program_options::value<std::string>()->default_value(""),
-            "output file name")
         ("filter", boost::program_options::value< std::vector<std::string> >()->multitoken(),
             "filters edges by specified tags")
-        ("format", boost::program_options::value<std::string>()->default_value("dot"),
+        ("format", boost::program_options::value<std::string>()->default_value("canon"),
             "output format")
         ("show-tags",
             "prints layer tags")
@@ -60,193 +94,235 @@ boost::program_options::options_description GVLatticeWriter::Factory::doOptionsH
 }
 
 
-std::string GVLatticeWriter::Factory::doGetName() {
+std::string GVLatticeWriter::Factory::doGetName() const {
     return "gv-writer";
 }
 
-boost::filesystem::path GVLatticeWriter::Factory::doGetFile() {
+boost::filesystem::path GVLatticeWriter::Factory::doGetFile() const {
     return __FILE__;
 }
 
 
-std::string GVLatticeWriter::doInfo() {
-    return "GraphViz writer";
-}
+GVLatticeWriter::Worker::~Worker() { }
 
-GVLatticeWriter::Worker::Worker(GVLatticeWriter& processor,
-                                 std::ostream& outputStream,
-                                 Lattice& lattice):
-    AligningWriterWorker(outputStream, lattice), processor_(processor) {
-}
+GVLatticeWriter::Worker::Worker(
+    GVLatticeWriter& processor,
+    std::ostream& outputStream,
+    Lattice& lattice
+) :
+    AligningWriterWorker(outputStream, lattice),
+    processor_(processor)
+{ }
+
 
 void GVLatticeWriter::Worker::doRun() {
 
-    DEBUG("starting writer...");
+    if (processor_.isActive()) {
 
-    PsiQuoter quoter;
+        if (
+            processor_.getOutputFormat() != "canon" &&
+            processor_.getOutputFormat() != "dot" &&
+            processor_.getOutputFormat() != "eps" &&
+            processor_.getOutputFormat() != "fig" &&
+            processor_.getOutputFormat() != "gd" &&
+            processor_.getOutputFormat() != "gd:cairo" &&
+            processor_.getOutputFormat() != "gd:gd" &&
+            processor_.getOutputFormat() != "gd2" &&
+            processor_.getOutputFormat() != "gd2:cairo" &&
+            processor_.getOutputFormat() != "gd2:gd" &&
+            processor_.getOutputFormat() != "gif" &&
+            processor_.getOutputFormat() != "gif:cairo" &&
+            processor_.getOutputFormat() != "gif:gd" &&
+            processor_.getOutputFormat() != "gv" &&
+            processor_.getOutputFormat() != "jpe" &&
+            processor_.getOutputFormat() != "jpe:cairo" &&
+            processor_.getOutputFormat() != "jpe:gd" &&
+            processor_.getOutputFormat() != "jpeg" &&
+            processor_.getOutputFormat() != "jpeg:cairo" &&
+            processor_.getOutputFormat() != "jpeg:gd" &&
+            processor_.getOutputFormat() != "jpg" &&
+            processor_.getOutputFormat() != "jpg:cairo" &&
+            processor_.getOutputFormat() != "jpg:gd" &&
+            processor_.getOutputFormat() != "pdf" &&
+            processor_.getOutputFormat() != "plain" &&
+            processor_.getOutputFormat() != "plain-ext" &&
+            processor_.getOutputFormat() != "png" &&
+            processor_.getOutputFormat() != "png:cairo" &&
+            processor_.getOutputFormat() != "png:gd" &&
+            processor_.getOutputFormat() != "ps" &&
+            processor_.getOutputFormat() != "ps:cairo" &&
+            processor_.getOutputFormat() != "ps:ps" &&
+            processor_.getOutputFormat() != "ps2" &&
+            processor_.getOutputFormat() != "svg" &&
+            processor_.getOutputFormat() != "svg:cairo" &&
+            processor_.getOutputFormat() != "svg:svg" &&
+            processor_.getOutputFormat() != "svgz" &&
+            processor_.getOutputFormat() != "tk" &&
+            processor_.getOutputFormat() != "vml" &&
+            processor_.getOutputFormat() != "vmlz" &&
+            processor_.getOutputFormat() != "wbmp" &&
+            processor_.getOutputFormat() != "wbmp:cairo" &&
+            processor_.getOutputFormat() != "wbmp:gd" &&
+            processor_.getOutputFormat() != "xdot"
+        ) {
+            throw PsiException("Format \"" + processor_.getOutputFormat() +
+                "\" not recognized. Use one of the following formats: " +
+                "canon dot eps fig gd(:cairo,:gd) gd2(:cairo,:gd) gif(:cairo,:gd) gv " +
+                "jpe(:cairo,:gd) jpeg(:cairo,:gd) jpg(:cairo,:gd) pdf plain plain-ext " +
+                "png(:cairo,:gd) ps(:cairo,:ps) ps2 svg(:cairo,:svg) svgz tk vml vmlz " +
+                "wbmp(:cairo,:gd) xdot");
+        }
 
-    std::map<Lattice::EdgeDescriptor, int> edgeOrdinalMap;
-    int ordinal = 0;
-
-    char * tmpFile;
-
-    GVC_t * gvc = gvContext();
-    std::string arg1("-T" + processor_.getOutputFormat());
-    std::string arg2("");
-    if (processor_.isUseOutputStream()) {
+        char * tmpFile;
         tmpFile = tempnam(NULL, "gv_");
-        arg2 += "-o";
+
+        std::string arg0("dot");
+        std::string arg1("-T" + processor_.getOutputFormat());
+        std::string arg2("-o");
         arg2 += tmpFile;
-    } else {
-        if (!processor_.getOutputFile().empty()) {
-            arg2 += "-o";
-        }
-        arg2 += processor_.getOutputFile();
-    }
-    const char * const args[] = {
-        "dot",
-        arg1.c_str(),
-        arg2.c_str()
-    };
-    gvParseArgs(gvc, sizeof(args)/sizeof(char*), (char**)args);
-    Agraph_t * g = agopen((char*)"g", AGDIGRAPH);
-    Agnode_t * n;
-    Agnode_t * m;
-    Agedge_t * e;
 
-    Lattice::EdgesSortedByTargetIterator ei
-        = lattice_.edgesSortedByTarget(lattice_.getLayerTagManager().anyTag());
+        processor_.getAdapter()->init(arg0, arg1, arg2);
 
-    if (processor_.isTree()) {
-        agsafeset(g, (char*)"rankdir", (char*)"TB", (char*)"");
-    } else {
-        agsafeset(g, (char*)"rankdir", (char*)"LR", (char*)"");
-    }
+        PsiQuoter quoter;
 
-    while (ei.hasNext()) {
+        std::map<Lattice::EdgeDescriptor, int> edgeOrdinalMap;
+        int ordinal = 0;
 
-        Lattice::EdgeDescriptor edge = ei.next();
-
-        std::list<std::string> tagNames
-            = lattice_.getLayerTagManager().getTagNames(lattice_.getEdgeLayerTags(edge));
-
-        if (!processor_.areSomeInFilter(tagNames)) continue;
-
-        Lattice::VertexDescriptor source = lattice_.getEdgeSource(edge);
-        Lattice::VertexDescriptor target = lattice_.getEdgeTarget(edge);
-
-        std::stringstream edgeIdSs;
-        std::stringstream edgeLabelSs;
-
-        const AnnotationItem& annotationItem = lattice_.getEdgeAnnotationItem(edge);
-        if (lattice_.isLooseVertex(source) || lattice_.isLooseVertex(target)) {
-            edgeLabelSs << quoter.escape(annotationItem.getText());
-        } else {
-            edgeLabelSs << quoter.escape(lattice_.getEdgeText(edge));
-        }
-
-        std::string tagStr("");
-        std::stringstream colorSs;
-        colorSs << std::setbase(16);
-
-        if (processor_.isShowTags() || processor_.isColor()) {
-            BOOST_FOREACH(std::string tagName, tagNames) {
-                if (!processor_.isInFilter(tagName)) continue;
-                if (!tagStr.empty()) {
-                    tagStr += ",";
-                    colorSs << ":";
-                }
-                tagStr += tagName;
-                if (processor_.isColor()) {
-                    const std::collate<char>& coll
-                        = std::use_facet<std::collate<char> >(std::locale());
-                    unsigned int color
-                        = coll.hash(tagName.data(), tagName.data() + tagName.length()) & 0xffffff;
-                    if ((color & 0xe0e0e0) == 0xe0e0e0) color &= 0x7f7f7f; // darken if too bright
-                    colorSs << "#" << std::setbase(16) << color;
-                }
-            }
-        }
-
-        if (processor_.isShowTags()) {
-            edgeLabelSs << " (" << tagStr << ")";
-        }
-
-        edgeLabelSs << " " << annotationItem.getCategory();
+        Lattice::EdgesSortedByTargetIterator ei
+            = lattice_.edgesSortedByTarget(lattice_.getLayerTagManager().anyTag());
 
         if (processor_.isTree()) {
+            processor_.getAdapter()->setRankDir("TB");
+        } else {
+            processor_.getAdapter()->setRankDir("LR");
+        }
 
-            ++ordinal;
-            edgeOrdinalMap[edge] = ordinal;
-            edgeIdSs << ordinal;
+        while (ei.hasNext()) {
 
-            n = agnode(g, (char*)(edgeIdSs.str().c_str()));
-            agsafeset(n, (char*)"label", (char*)(edgeLabelSs.str().c_str()), (char*)"");
+            Lattice::EdgeDescriptor edge = ei.next();
 
-            if (processor_.isColor()) {
-                agsafeset(n, (char*)"color", (char*)(colorSs.str().c_str()), (char*)"");
+            std::list<std::string> tagNames
+                = lattice_.getLayerTagManager().getTagNames(lattice_.getEdgeLayerTags(edge));
+
+            if (!processor_.areSomeInFilter(tagNames)) continue;
+
+            Lattice::VertexDescriptor source = lattice_.getEdgeSource(edge);
+            Lattice::VertexDescriptor target = lattice_.getEdgeTarget(edge);
+
+            std::stringstream edgeIdSs;
+            std::stringstream edgeLabelSs;
+
+            const AnnotationItem& annotationItem = lattice_.getEdgeAnnotationItem(edge);
+            if (lattice_.isLooseVertex(source) || lattice_.isLooseVertex(target)) {
+                edgeLabelSs << quoter.escape(annotationItem.getText());
+            } else {
+                edgeLabelSs << quoter.escape(lattice_.getEdgeText(edge));
             }
 
-            int partitionNumber = 0;
-            std::list<Lattice::Partition> partitions = lattice_.getEdgePartitions(edge);
-            BOOST_FOREACH(Lattice::Partition partition, partitions) {
-                std::stringstream partSs;
-                ++partitionNumber;
-                partSs << partitionNumber;
-                Lattice::Partition::Iterator ei(lattice_, partition);
-                while (ei.hasNext()) {
-                    Lattice::EdgeDescriptor ed = ei.next();
-                    std::map<Lattice::EdgeDescriptor, int>::iterator
-                        moi = edgeOrdinalMap.find(ed);
-                    if (moi != edgeOrdinalMap.end()) {
-                        std::stringstream edSs;
-                        edSs << moi->second;
-                        m = agnode(g, (char*)(edSs.str().c_str()));
-                        e = agedge(g, n, m);
-                        if (partitions.size() > 1) {
-                            agsafeset(e, (char*)"label", (char*)(partSs.str().c_str()), (char*)"");
-                        }
+            std::string tagStr("");
+            std::stringstream colorSs;
+            colorSs << std::setbase(16);
+
+            if (processor_.isShowTags() || processor_.isColor()) {
+                BOOST_FOREACH(std::string tagName, tagNames) {
+                    if (!processor_.isInFilter(tagName)) continue;
+                    if (!tagStr.empty()) {
+                        tagStr += ",";
+                        colorSs << ":";
+                    }
+                    tagStr += tagName;
+                    if (processor_.isColor()) {
+                        const std::collate<char>& coll
+                            = std::use_facet<std::collate<char> >(std::locale());
+                        unsigned int color
+                            = coll.hash(tagName.data(), tagName.data() + tagName.length())
+                                & 0xffffff;
+                        if ((color & 0xe0e0e0) == 0xe0e0e0) {
+                            color &= 0x7f7f7f;
+                        } // darken if too bright
+                        colorSs << "#" << std::setbase(16) << color;
                     }
                 }
             }
 
-        } else {
-
-            std::stringstream nSs;
-            if (lattice_.isLooseVertex(source)) {
-                nSs << "L" << lattice_.getLooseVertexIndex(source);
-            } else {
-                nSs << lattice_.getVertexRawCharIndex(source);
+            if (processor_.isShowTags()) {
+                edgeLabelSs << " (" << tagStr << ")";
             }
-            n = agnode(g, (char*)(nSs.str().c_str()));
 
-            std::stringstream mSs;
-            if (lattice_.isLooseVertex(target)) {
-                mSs << "L" << lattice_.getLooseVertexIndex(target);
+            edgeLabelSs << " " << annotationItem.getCategory();
+
+            int n;
+            int m;
+            int e;
+
+            if (processor_.isTree()) {
+
+                ++ordinal;
+                edgeOrdinalMap[edge] = ordinal;
+                edgeIdSs << ordinal;
+
+                n = processor_.getAdapter()->addNode(edgeIdSs.str());
+                processor_.getAdapter()->setNodeLabel(n, edgeLabelSs.str());
+
+                if (processor_.isColor()) {
+                    processor_.getAdapter()->setNodeLabel(n, colorSs.str());
+                }
+
+                int partitionNumber = 0;
+                std::list<Lattice::Partition> partitions = lattice_.getEdgePartitions(edge);
+                BOOST_FOREACH(Lattice::Partition partition, partitions) {
+                    std::stringstream partSs;
+                    ++partitionNumber;
+                    partSs << partitionNumber;
+                    Lattice::Partition::Iterator ei(lattice_, partition);
+                    while (ei.hasNext()) {
+                        Lattice::EdgeDescriptor ed = ei.next();
+                        std::map<Lattice::EdgeDescriptor, int>::iterator
+                            moi = edgeOrdinalMap.find(ed);
+                        if (moi != edgeOrdinalMap.end()) {
+                            std::stringstream edSs;
+                            edSs << moi->second;
+                            m = processor_.getAdapter()->addNode(edSs.str());
+                            e = processor_.getAdapter()->addEdge(n, m);
+                            if (partitions.size() > 1) {
+                                processor_.getAdapter()->setEdgeLabel(e, partSs.str());
+                            }
+                        }
+                    }
+                }
+
             } else {
-                mSs << lattice_.getVertexRawCharIndex(target);
-            }
-            m = agnode(g, (char*)(mSs.str().c_str()));
 
-            e = agedge(g, n, m);
+                std::stringstream nSs;
+                if (lattice_.isLooseVertex(source)) {
+                    nSs << "L" << lattice_.getLooseVertexIndex(source);
+                } else {
+                    nSs << lattice_.getVertexRawCharIndex(source);
+                }
+                n = processor_.getAdapter()->addNode(nSs.str());
 
-            agsafeset(e, (char*)"label", (char*)(edgeLabelSs.str().c_str()), (char*)"");
+                std::stringstream mSs;
+                if (lattice_.isLooseVertex(target)) {
+                    mSs << "L" << lattice_.getLooseVertexIndex(target);
+                } else {
+                    mSs << lattice_.getVertexRawCharIndex(target);
+                }
+                m = processor_.getAdapter()->addNode(mSs.str());
 
-            if (processor_.isColor()) {
-                agsafeset(e, (char*)"color", (char*)(colorSs.str().c_str()), (char*)"");
+                e = processor_.getAdapter()->addEdge(n, m);
+
+                processor_.getAdapter()->setEdgeLabel(e, edgeLabelSs.str());
+
+                if (processor_.isColor()) {
+                    processor_.getAdapter()->setEdgeColor(e, colorSs.str());
+                }
+
             }
 
         }
 
-    }
+        processor_.getAdapter()->finalize();
 
-    gvLayoutJobs(gvc, g);
-    gvRenderJobs(gvc, g);
-    gvFreeLayout(gvc, g);
-    agclose(g);
-    gvFreeContext(gvc);
-
-    if (processor_.isUseOutputStream()) {
         try {
             std::string line;
             std::string contents;
@@ -256,14 +332,11 @@ void GVLatticeWriter::Worker::doRun() {
                 contents += "\n";
             }
             alignOutput_(contents);
-            std::remove(tmpFile);
-        } catch (...) {
-            std::remove(tmpFile);
-        }
+        } catch (...) { }
+
+        std::remove(tmpFile);
+        free(tmpFile);
+
     }
 
-    DEBUG("WRITING");
-}
-
-GVLatticeWriter::Worker::~Worker() {
 }

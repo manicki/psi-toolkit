@@ -16,6 +16,7 @@ cd ..
 # TAP::Formatter::JUnit
 # TAP::Harness
 ./tests/perl-test-runner.sh
+./tests/python-test-runner.sh
 
 cd $TARGET_DIR
 

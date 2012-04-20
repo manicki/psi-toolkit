@@ -1,1 +1,1 @@
-psi-reader ! gv-writer --format dot --color --show-tags --filter symbol token --allow-tmp
+psi-reader ! gv-writer --show-tags --filter symbol token

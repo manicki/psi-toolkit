@@ -27,6 +27,9 @@ BOOST_AUTO_TEST_CASE( dot_lattice_writer_simple ) {
         false // tree
     ));
 
+    BOOST_CHECK_EQUAL(writer->getFormatName(), "DOT");
+    BOOST_CHECK_EQUAL(writer->info(), "DOT writer");
+
     std::ostringstream osstr;
     writer->writeLattice(lattice, osstr);
 

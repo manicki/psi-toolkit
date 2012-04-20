@@ -5,7 +5,10 @@
 #include <boost/program_options/variables_map.hpp>
 #include <boost/filesystem.hpp>
 
+#include <list>
+
 #include "processor.hpp"
+#include "its_data.hpp"
 
 /*!
   Processor factory is used to create a given processor.
@@ -51,7 +54,12 @@ public:
     /**
      * Name as used in the psi toolkit.
      */
-    std::string getName();
+    std::string getName() const;
+
+    /**
+     * Get processor's aliases (alternative names).
+     */
+    std::list<std::string> getAliases();
 
     /**
      * Returns the path to the given processor source file based on the __FILE__ variable.
@@ -59,9 +67,20 @@ public:
     boost::filesystem::path getFile();
 
     /**
+     * Returns the path to the data directory of a processor.
+     */
+    boost::filesystem::path getDataDirectory() const;
+
+    /**
      * Loads and returns the processor's description from markdown file.
      */
     std::string getDescription();
+
+    /**
+     * Checks if all requirements are met. If not puts a message into `message' stream.
+     */
+    bool checkRequirements(const boost::program_options::variables_map& options,
+                                             std::ostream & message) const;
 
     virtual ~ProcessorFactory();
 
@@ -81,13 +100,18 @@ private:
     virtual double doGetEstimatedTime(
         const boost::program_options::variables_map& options) const;
 
-    virtual boost::filesystem::path doGetFile() = 0;
+    virtual boost::filesystem::path doGetFile() const = 0;
 
-    virtual std::string doGetName() = 0;
+    virtual std::string doGetName() const = 0;
 
     virtual std::string doGetDescription();
 
+    virtual std::list<std::string> doGetAliases();
+
     std::string getFileContent(boost::filesystem::path path);
+
+    virtual bool doCheckRequirements(const boost::program_options::variables_map& /*options*/,
+                                     std::ostream & /*message*/) const;
 
 };
 

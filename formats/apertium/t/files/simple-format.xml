@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<format name="html">
+  <options>
+    <largeblocks size="8192"/>
+    <input encoding="UTF-8"/>
+    <output encoding="UTF-8"/>
+    <tag-name regexp="[a-zA-Z0-9]+"/>
+    <escape-chars regexp='escape-chars'/>
+    <space-chars regexp='space-chars'/>
+    <case-sensitive value="no"/>
+  </options>
+
+  <rules>
+    <format-rule type="begin_end" eos="no" priority="1">
+      <begin regexp='abc'/>
+      <end regexp='cba'/>
+    </format-rule>
+
+    <format-rule type="tag" eos="no" priority="2">
+      <tag regexp='t'/>
+    </format-rule>
+
+    <format-rule type="tags" eos="no" priority="3">
+        <tag regexp='t1'/>
+        <tag regexp='t2'/>
+    </format-rule>
+
+    <replacement-rule regexp='r1'>
+      <replace source="a" target="1" prefer="yes"/>
+      <replace source="A" target="1"/>
+      <replace source="b" target="2" prefer="yes"/>
+      <replace source="B" target="2"/>
+    </replacement-rule>
+
+    <replacement-rule regexp='r2'>
+      <replace source="C" target="3"/>
+      <replace source="c" target="3" prefer="yes"/>
+    </replacement-rule>  
+  </rules>
+
+</format>

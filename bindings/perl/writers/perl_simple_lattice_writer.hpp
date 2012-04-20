@@ -1,6 +1,10 @@
 #ifndef PERL_SIMPLE_LATTICE_WRITER_HDR
 #define PERL_SIMPLE_LATTICE_WRITER_HDR
 
+#include "config.hpp"
+
+#if HAVE_PERL_BINDINGS
+
 #include <boost/filesystem.hpp>
 #include <boost/foreach.hpp>
 #include <string>
@@ -10,25 +14,27 @@
 #include "lattice_writer_factory.hpp"
 #include "writer_worker.hpp"
 #include "psi_quoter.hpp"
-
-#include "perl_lattice_writer_output.hpp"
 #include "perl_simple_lattice_writer_output_iterator.hpp"
 
-class PerlSimpleLatticeWriter : public LatticeWriter<PerlLatticeWriterOutput> {
+#include <EXTERN.h>
+#include <perl.h>
+#include <XSUB.h>
+
+class PerlSimpleLatticeWriter : public LatticeWriter<Sink> {
 
 public:
     virtual std::string getFormatName();
 
-    class Factory : public LatticeWriterFactory<PerlLatticeWriterOutput> {
+    class Factory : public LatticeWriterFactory<Sink> {
     private:
-        virtual LatticeWriter<PerlLatticeWriterOutput>* doCreateLatticeWriter(
+        virtual LatticeWriter<Sink> * doCreateLatticeWriter(
             const boost::program_options::variables_map& options);
 
         virtual boost::program_options::options_description doOptionsHandled();
 
-        virtual std::string doGetName();
+        virtual std::string doGetName() const;
 
-        virtual boost::filesystem::path doGetFile();
+        virtual boost::filesystem::path doGetFile() const;
     };
 
     PerlSimpleLatticeWriter(
@@ -74,10 +80,10 @@ public:
 private:
     virtual std::string doInfo();
 
-    class Worker : public WriterWorker<PerlLatticeWriterOutput> {
+    class Worker : public WriterWorker<Sink> {
     public:
         Worker(PerlSimpleLatticeWriter& processor,
-               PerlLatticeWriterOutput & output,
+               Sink & output,
                Lattice& lattice);
 
         virtual void doRun();
@@ -87,8 +93,8 @@ private:
         PerlSimpleLatticeWriter& processor_;
     };
 
-    virtual WriterWorker<PerlLatticeWriterOutput>* doCreateWriterWorker(
-        PerlLatticeWriterOutput & output, Lattice& lattice) {
+    virtual WriterWorker<Sink> * doCreateWriterWorker(
+        Sink & output, Lattice& lattice) {
 
         return new Worker(*this, output, lattice);
     }
@@ -100,5 +106,7 @@ private:
     std::set<std::string> higherOrderTags_;
     bool withArgs_;
 };
+
+#endif
 
 #endif

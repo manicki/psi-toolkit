@@ -12,6 +12,9 @@ BOOST_AUTO_TEST_CASE( utt_lattice_reader ) {
 
     boost::scoped_ptr<StreamLatticeReader> reader(new UTTLatticeReader());
 
+    BOOST_CHECK_EQUAL(reader->getFormatName(), "UTT");
+    BOOST_CHECK_EQUAL(reader->info(), "UTT reader");
+
   reader->readIntoLattice("../formats/utt/t/files/fr_simple_puddle_input.txt", lattice);
 
   LayerTagMask rawMask = lattice.getLayerTagManager().getMask("symbol");
@@ -112,5 +115,20 @@ BOOST_AUTO_TEST_CASE( utt_lattice_reader ) {
   "Karol Józef Wojtyła est élu pape de l'Église catholique romaine le 16 octobre 1978.");
   BOOST_CHECK(!sei.hasNext());
 }
+
+
+BOOST_AUTO_TEST_CASE( utt_lattice_reader_corrupted ) {
+
+    Lattice lattice("");
+
+    boost::scoped_ptr<StreamLatticeReader> reader(new UTTLatticeReader());
+
+    BOOST_CHECK_THROW(
+        reader->readIntoLattice(ROOT_DIR "formats/utt/t/files/corrupted.txt", lattice),
+        FileFormatException
+    );
+
+}
+
 
 BOOST_AUTO_TEST_SUITE_END()

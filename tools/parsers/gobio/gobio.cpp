@@ -29,11 +29,11 @@ void Gobio::Factory::doAddLanguageIndependentOptionsHandled(
         ;
 }
 
-std::string Gobio::Factory::doGetName() {
+std::string Gobio::Factory::doGetName() const {
     return "gobio";
 }
 
-boost::filesystem::path Gobio::Factory::doGetFile() {
+boost::filesystem::path Gobio::Factory::doGetFile() const {
     return __FILE__;
 }
 

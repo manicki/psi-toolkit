@@ -2,6 +2,8 @@ cmake_minimum_required(VERSION 2.8)
 
 project(psi-toolkit CXX)
 
+SET(MY_TARGETLIB_PREFIX "libpsitoolkit_")
+
 SET(CMAKE_INSTALL_RPATH "${CMAKE_INSTALL_PREFIX}/lib")
 
 # coverage mode
@@ -61,6 +63,25 @@ else()
   set(HAVE_LOG4CPP 0)
 endif(EXISTS ${LOG4CPP_LIB} AND EXISTS ${LOG4CPP_INCLUDE})
 
+if (USE_ASPELL)
+  find_library(ASPELL_LIB NAMES aspell)
+  find_path(ASPELL_INCLUDE aspell.h)
+  if(EXISTS ${ASPELL_LIB} AND EXISTS ${ASPELL_INCLUDE})
+    message("-- Using Aspell...")
+    include_directories(${ASPELL_INCLUDE})
+    link_directories(${ASPELL_LIB})
+    link_directories("${psi-toolkit_BINARY_DIR}/tools/spellcheckers/aspell/plugin")
+    set(HAVE_ASPELL 1)
+  else()
+    message("-- Not using Aspell (can not find required libraries)...")
+    set(HAVE_ASPELL 0)
+  endif(EXISTS ${ASPELL_LIB} AND EXISTS ${ASPELL_INCLUDE})
+else()
+  message("-- Not using Aspell...")
+  set(HAVE_ASPELL 0)
+endif(USE_ASPELL)
+
+
 # CMPH library (for perfect hashing)
 find_library(CMPH_LIB NAMES cmph)
 find_path(CMPH_INCLUDE cmph.h)
@@ -86,12 +107,40 @@ set(INSTALL_DATA_DIR "${CMAKE_INSTALL_PREFIX}/${PSITOOLKIT_INSTALL_DATA_DIR}")
 option(IS_INSTALLABLE "Is prepared for install" OFF)
 message(STATUS "Is prepared for install ${IS_INSTALLABLE}")
 
+set(PACKAGE_OS_NAME default)
+option(PACKAGE_OS_NAME "Name of the operating system for package generation" default)
+
+if(PACKAGE_OS_NAME STREQUAL ubuntu)
+  set(PACKAGE_OS 1)
+elseif(PACKAGE_OS_NAME STREQUAL archlinux)
+  set(PACKAGE_OS 2)
+else()
+  set(PACKAGE_OS -1)
+endif()
+
+if(PACKAGE_OS GREATER 0)
+  message("-- Setting package os variable to: ${PACKAGE_OS_NAME} (${PACKAGE_OS})")
+else()
+  message("-- Setting default package os")
+endif()
+
 option(USE_JAVA "Compiling Java components" OFF)
 message(STATUS "Compiling Java components ${USE_JAVA}")
 
 option(DOWNLOAD_DATA "Downloading data (artifacts)" ON)
 message(STATUS "Downloading data (artifacts) ${DOWNLOAD_DATA}")
 
+# Set psi-server variables
+if(IS_INSTALLABLE)
+    # ./server/website content has to be moved to /var/psi-server/website during installation
+    set(WEBSITE_ROOT "/var/lib/psi-server/website" CACHE STRING "The website root directory")
+else()
+    set(WEBSITE_ROOT "../server/website" CACHE STRING "The website root directory")
+endif(IS_INSTALLABLE)
+
+message(STATUS "The psi-server root directory is set to ${WEBSITE_ROOT}")
+
+# USE_xxx
 if(USE_JAVA)
     enable_language(Java)
 
@@ -134,9 +183,6 @@ if(WITH_PCRE)
     set(HAVE_PCRE 1)
 endif(WITH_PCRE)
 
-option(USE_PUDDLE "Compiling puddle shallow parser" ON)
-message(STATUS "Compiling puddle shallow parser ${USE_PUDDLE}")
-
 option(USE_BONSAI_PARSEGRAPH "Using bonsai ParseGraph with puddle shallow parser" OFF)
 message(STATUS "Using bonsai ParseGraph with puddle shallow parser ${USE_BONSAI_PARSEGRAPH}")
 
@@ -150,6 +196,22 @@ if(USE_STRING_FRAG_VALIDATION)
     set(STRING_FRAG_VALIDATION 1)
 endif(USE_STRING_FRAG_VALIDATION)
 
+option(USE_GV_WRITER "Using gv-writer" ON)
+message(STATUS "Using gv-writer ${USE_GV_WRITER}")
+
+option(USE_PDF_READER "Using pdf-reader" OFF)
+message(STATUS "Using pdf-reader ${USE_PDF_READER}")
+
+option(USE_DJVU_READER "Using djvu-reader" OFF)
+message(STATUS "Using djvu-reader ${USE_DJVU_READER}")
+
+option(USE_DOC_READER "Using doc-reader" OFF)
+message(STATUS "Using doc-reader ${USE_DOC_READER}")
+
+option(USE_ASPELL "Using aspell" OFF)
+message(STATUS "Using aspell ${USE_ASPELL}")
+
+# Finds SWIG
 
 find_package(SWIG)
 if(SWIG_FOUND)
@@ -171,46 +233,93 @@ endif(SWIG_FOUND)
 
 # Finds GraphViz
 
-if (GRAPHVIZ_INCLUDE_DIR AND GRAPHVIZ_GRAPH_LIBRARY AND GRAPHVIZ_CDT_LIBRARY AND GRAPHVIZ_PATHPLAN_LIBRARY)
-    set(GRAPHVIZ_FIND_QUIETLY TRUE)
-endif (GRAPHVIZ_INCLUDE_DIR AND GRAPHVIZ_GRAPH_LIBRARY AND GRAPHVIZ_CDT_LIBRARY AND GRAPHVIZ_PATHPLAN_LIBRARY)
-
-find_path(GRAPHVIZ_INCLUDE_DIR gvc.h graph.h cdt.h PATHS "/usr/include/graphviz")
-
-find_library( GRAPHVIZ_GVC_LIBRARY NAMES gvc )
-find_library( GRAPHVIZ_GRAPH_LIBRARY NAMES graph )
-find_library( GRAPHVIZ_CDT_LIBRARY NAMES cdt )
-find_library( GRAPHVIZ_PATHPLAN_LIBRARY NAMES pathplan )
-
-if (GRAPHVIZ_INCLUDE_DIR AND GRAPHVIZ_GVC_LIBRARY AND GRAPHVIZ_GRAPH_LIBRARY AND GRAPHVIZ_CDT_LIBRARY AND GRAPHVIZ_PATHPLAN_LIBRARY)
-   set(GRAPHVIZ_FOUND TRUE)
-else (GRAPHVIZ_INCLUDE_DIR AND GRAPHVIZ_GVC_LIBRARY AND GRAPHVIZ_GRAPH_LIBRARY AND GRAPHVIZ_CDT_LIBRARY AND GRAPHVIZ_PATHPLAN_LIBRARY)
-   set(GRAPHVIZ_FOUND FALSE)
-endif (GRAPHVIZ_INCLUDE_DIR AND GRAPHVIZ_GVC_LIBRARY AND GRAPHVIZ_GRAPH_LIBRARY AND GRAPHVIZ_CDT_LIBRARY AND GRAPHVIZ_PATHPLAN_LIBRARY)
-
-if (GRAPHVIZ_INCLUDE_DIR_NOTFOUND)
-    message(FATAL_ERROR "Could NOT find Graphivz include dir")
-else (GRAPHVIZ_INCLUDE_DIR_NOTFOUND)
+if (USE_GV_WRITER)
+    find_package(Graphviz)
     if (GRAPHVIZ_FOUND)
-        set(GRAPHVIZ_LIBRARIES ${GRAPHVIZ_GVC_LIBRARY} ${GRAPHVIZ_GRAPH_LIBRARY} ${GRAPHVIZ_CDT_LIBRARY} ${GRAPHVIZ_PATHPLAN_LIBRARY})
-        message(STATUS "Found Graphviz: ${GRAPHVIZ_LIBRARIES} (include dir: ${GRAPHVIZ_INCLUDE_DIR})")
-        include_directories(${GRAPHVIZ_INCLUDE_DIR})
+        message(STATUS "Found GraphViz")
+        include_directories(${GRAPHVIZ_INCLUDE_DIRS})
         link_directories(${GRAPHVIZ_LIBRARIES})
+        link_directories("${psi-toolkit_BINARY_DIR}/formats/gv/plugin")
         set(HAVE_GRAPHVIZ 1)
     else (GRAPHVIZ_FOUND)
-        if (GRAPHVIZ_FIND_REQUIRED)
-            message(FATAL_ERROR "Could NOT find Graphivz")
-        endif (GRAPHVIZ_FIND_REQUIRED)
+        message(WARNING "Could not find GraphViz: gv-writer disabled")
+        set(HAVE_GRAPHVIZ 0)
     endif (GRAPHVIZ_FOUND)
-endif (GRAPHVIZ_INCLUDE_DIR_NOTFOUND)
+else (USE_GV_WRITER)
+    set(HAVE_GRAPHVIZ 0)
+endif (USE_GV_WRITER)
+
+# libmagic
+
+find_package(LibMagic)
+if(LIBMAGIC_FOUND)
+    message(STATUS "Found libmagic")
+    include_directories(${LibMagic_INCLUDE_DIRS})
+    link_directories(${LibMagic_LIBRARY})
+    set(HAVE_LIBMAGIC 1)
+else()
+    message(WARNING "Could not find libmagic library")
+    set(HAVE_LIBMAGIC 0)
+endif(LIBMAGIC_FOUND)
+
+# Finds Poppler
+
+if (USE_PDF_READER)
+    find_package(Poppler)
+    if (POPPLER_FOUND)
+        message(STATUS "Found Poppler")
+        include_directories(${POPPLER_INCLUDE_DIRS})
+        link_directories(${POPPLER_LIBRARIES})
+        link_directories("${psi-toolkit_BINARY_DIR}/formats/pdf/plugin")
+        set(HAVE_POPPLER 1)
+    else (POPPLER_FOUND)
+        message(WARNING "Could not find Poppler: pdf-reader disabled")
+        set(HAVE_POPPLER 0)
+    endif (POPPLER_FOUND)
+else (USE_PDF_READER)
+    set(HAVE_POPPLER 0)
+endif (USE_PDF_READER)
+
+# Finds DjVuLibre
+
+if (USE_DJVU_READER)
+    find_package(DjVuLibre)
+    if (DJVULIBRE_FOUND)
+        message(STATUS "Found DjVuLibre")
+        include_directories(${DJVULIBRE_INCLUDE_DIRS})
+        link_directories(${DJVULIBRE_LIBRARIES})
+        link_directories("${psi-toolkit_BINARY_DIR}/formats/djvu/plugin")
+        set(HAVE_DJVULIBRE 1)
+    else (DJVULIBRE_FOUND)
+        message(WARNING "Could not find DjVuLibre: djvu-reader disabled")
+        set(HAVE_DJVULIBRE 0)
+    endif (DJVULIBRE_FOUND)
+else (USE_DJVU_READER)
+    set(HAVE_DJVULIBRE 0)
+endif (USE_DJVU_READER)
+
+# Links Antiword plugin
+
+if (USE_DOC_READER)
+    link_directories("${psi-toolkit_BINARY_DIR}/formats/doc/plugin")
+endif (USE_DOC_READER)
 
 
 # Sets compiler flags
 set(CMAKE_CXX_FLAGS "-g -Wall -Wundef -Wnon-virtual-dtor -Wextra")
 
-set(BASE_TARGETS common utf8case sundown framework formats-dot formats-psi formats-simple formats-txt formats-utt formats-apertium maxent tools-tokenizers-tp tools-segmenters-srx tools-recognizers-langguesser tools-parsers-gobio tools-taggers-metagger)
+if (WITH_LOW_MEMORY_COMPILATION)
+  message("Setting low memory compilation flags")
+  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} --param ggc-min-expand=30 --param ggc-min-heapsize=8192")
+endif (WITH_LOW_MEMORY_COMPILATION)
 
-set(TESTS_TARGETS common-tests tools-tokenizers-tp-tests tools-segmenters-srx-tests tools-datastructures-psi_query-tests tools-recognizers-langguesser-tests utf8case-tests formats-dot-tests formats-utt-tests formats-psi-tests formats-simple-tests tools-parsers-gobio-tests tools-taggers-metagger-tests)
+set(BASE_TARGETS common common-plugins utf8case sundown framework formats-apertium formats-dot formats-nkjp formats-psi formats-simple formats-json-simple formats-txt formats-utt maxent tools-tokenizers-tp tools-segmenters-srx tools-recognizers-langguesser tools-parsers-gobio tools-parsers-puddle tools-taggers-metagger)
+
+set(TESTS_TARGETS common-tests framework-tests tools-tokenizers-tp-tests tools-segmenters-srx-tests tools-datastructures-psi_query-tests tools-recognizers-langguesser-tests utf8case-tests formats-dot-tests formats-utt-tests formats-psi-tests formats-simple-tests tools-parsers-gobio-tests tools-parsers-puddle-tests tools-taggers-metagger-tests formats-apertium-tests)
+
+if(HAVE_ASPELL)
+    set(TESTS_TARGETS ${TESTS_TARGETS} tools-spellcheckers-aspell-tests)
+endif(HAVE_ASPELL)
 
 if(USE_JAVA)
     set(BASE_TARGETS ${BASE_TARGETS} tools-lemmatizers-morfologik)
@@ -229,19 +338,28 @@ if(USE_POSTGRESQL)
         set(BASE_TARGETS ${BASE_TARGETS} lex-db)
 endif(USE_POSTGRESQL)
 
-if(USE_PUDDLE)
-        include_directories("${psi-toolkit_SOURCE_DIR}/tools/parsers/puddle")
-        set(BASE_TARGETS ${BASE_TARGETS} tools-parsers-puddle)
-        set(TESTS_TARGETS ${TESTS_TARGETS} tools-parsers-puddle-tests)
-        if(USE_BONSAI_PARSEGRAPH)
-            include_directories(${BONSAI_PATH})
-        endif(USE_BONSAI_PARSEGRAPH)
-endif(USE_PUDDLE)
+if(USE_BONSAI_PARSEGRAPH)
+    include_directories(${BONSAI_PATH})
+endif(USE_BONSAI_PARSEGRAPH)
 
-if(GRAPHVIZ_FOUND)
+if(HAVE_GRAPHVIZ)
     set(BASE_TARGETS ${BASE_TARGETS} formats-gv)
     set(TESTS_TARGETS ${TESTS_TARGETS} formats-gv-tests)
-endif(GRAPHVIZ_FOUND)
+endif(HAVE_GRAPHVIZ)
+
+if(HAVE_POPPLER)
+    set(BASE_TARGETS ${BASE_TARGETS} formats-pdf)
+endif(HAVE_POPPLER)
+
+if(HAVE_DJVULIBRE)
+    set(BASE_TARGETS ${BASE_TARGETS} formats-djvu)
+endif(HAVE_DJVULIBRE)
+
+if(USE_DOC_READER)
+    set(BASE_TARGETS ${BASE_TARGETS} formats-doc)
+endif(USE_DOC_READER)
+
+include_directories("${psi-toolkit_SOURCE_DIR}/tools/parsers/puddle")
 
 
 # Flex & Bison
@@ -336,12 +454,13 @@ link_directories("${psi-toolkit_BINARY_DIR}/tools/parsers/gobio/trees")
 
 set(TARGETS ${BASE_TARGETS} psi-pipe)
 
-set(DIRS common formats maxent tools framework utf8 utf8case server bindings)
+set(DIRS common common/plugins formats maxent tools framework utf8 utf8case server bindings)
 foreach(dir ${DIRS})
     include_directories("${psi-toolkit_SOURCE_DIR}/${dir}")
     link_directories("${psi-toolkit_BINARY_DIR}/${dir}")
     add_subdirectory(${dir})
 endforeach(dir)
+
 
 include_directories("${psi-toolkit_SOURCE_DIR}/sundown/src")
 include_directories("${psi-toolkit_SOURCE_DIR}/sundown/html")
@@ -349,26 +468,30 @@ include_directories("${psi-toolkit_SOURCE_DIR}/sundown/cpp")
 link_directories("${psi-toolkit_BINARY_DIR}/sundown")
 add_subdirectory(sundown)
 
-if(USE_PUDDLE)
-    set_target_properties(tools-parsers-puddle PROPERTIES
-    COMPILE_FLAGS "-I${psi-toolkit_SOURCE_DIR}/utf8")
-    if(USE_BONSAI_PARSEGRAPH)
-        set_target_properties(tools-parsers-puddle PROPERTIES
-        COMPILE_FLAGS "-I${psi-toolkit_SOURCE_DIR}/utf8 -I${BONSAI_PATH}")
-        set(_WITH_BONSAI_PARSEGRAPH 1)
-    endif(USE_BONSAI_PARSEGRAPH)
-    set(HAVE_PUDDLE 1)
-endif(USE_PUDDLE)
-
 foreach(dir ${formats_SUBDIRS})
     include_directories("${psi-toolkit_SOURCE_DIR}/formats/${dir}")
     link_directories("${psi-toolkit_BINARY_DIR}/formats/${dir}")
 endforeach(dir)
 
-if(GRAPHVIZ_FOUND)
+if(HAVE_GRAPHVIZ)
     include_directories("${psi-toolkit_SOURCE_DIR}/formats/gv")
     link_directories("${psi-toolkit_BINARY_DIR}/formats/gv")
-endif(GRAPHVIZ_FOUND)
+endif(HAVE_GRAPHVIZ)
+
+if(HAVE_POPPLER)
+    include_directories("${psi-toolkit_SOURCE_DIR}/formats/pdf")
+    link_directories("${psi-toolkit_BINARY_DIR}/formats/pdf")
+endif(HAVE_POPPLER)
+
+if(HAVE_DJVULIBRE)
+    include_directories("${psi-toolkit_SOURCE_DIR}/formats/djvu")
+    link_directories("${psi-toolkit_BINARY_DIR}/formats/djvu")
+endif(HAVE_DJVULIBRE)
+
+if(USE_DOC_READER)
+    include_directories("${psi-toolkit_SOURCE_DIR}/formats/doc")
+    link_directories("${psi-toolkit_BINARY_DIR}/formats/doc")
+endif(USE_DOC_READER)
 
 
 set(ALL_TARGETS ${TARGETS} ${TESTS_TARGETS})
@@ -381,6 +504,7 @@ if(USE_PUDDLE)
         COMPILE_FLAGS "-I${psi-toolkit_SOURCE_DIR}/utf8  -I${psi-toolkit_SOURCE_DIR}/tests -I${BONSAI_PATH}")
         set_target_properties(tools-parsers-puddle-tests PROPERTIES
         COMPILE_FLAGS "-I${psi-toolkit_SOURCE_DIR}/utf8  -I${psi-toolkit_SOURCE_DIR}/tests -I${BONSAI_PATH}")
+        set(_WITH_BONSAI_PARSEGRAPH 1)
     endif(USE_BONSAI_PARSEGRAPH)
 endif(USE_PUDDLE)
 
@@ -459,3 +583,37 @@ endfunction(download_artifact)
 if(DOWNLOAD_DATA)
         download_artifact("tools/lexica/bilexicon/data/plen.bin")
 endif(DOWNLOAD_DATA)
+
+# =====================================
+# Sets prefix for all generated libraries
+
+# Helping macro
+MACRO(LIST_CONTAINS var value)
+  SET(${var})
+  FOREACH (value2 ${ARGN})
+    IF (${value} STREQUAL ${value2})
+      SET(${var} TRUE)
+    ENDIF (${value} STREQUAL ${value2})
+  ENDFOREACH (value2)
+ENDMACRO(LIST_CONTAINS)
+
+GET_CMAKE_PROPERTY(all_variables VARIABLES)
+
+FOREACH(variable_name ${all_variables})
+
+  if(variable_name MATCHES "_LIB_DEPENDS$")
+    STRING(REGEX REPLACE "_LIB_DEPENDS.*" "" library_name ${variable_name})
+
+    GET_TARGET_PROPERTY(target_location ${library_name} LOCATION)
+
+    if(NOT target_location MATCHES "NOTFOUND")
+      if (NOT target_location MATCHES "psitoolkit_perl_simple|python.*_PSIToolkit")
+        SET_TARGET_PROPERTIES(${library_name}
+          PROPERTIES
+          PREFIX ${MY_TARGETLIB_PREFIX}
+          )
+      endif()
+    endif()
+  endif()
+
+endforeach(variable_name)

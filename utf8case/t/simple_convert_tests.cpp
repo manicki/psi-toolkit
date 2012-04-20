@@ -117,5 +117,60 @@ BOOST_AUTO_TEST_CASE( simple_convert_title ) {
 
 }
 
+BOOST_AUTO_TEST_CASE( simple_turkish_lower ) {
+
+    boost::shared_ptr<StringGeneralCaseConverter> standardLowerConverter =
+        StringCaseConverterManager::getInstance().getLowerCaseConverter("pl");
+
+    boost::shared_ptr<StringGeneralCaseConverter> turkishLowerConverter =
+        StringCaseConverterManager::getInstance().getLowerCaseConverter("tr");
+
+    BOOST_CHECK_EQUAL(simpleConvert(*standardLowerConverter, "YAZICI"),
+                      std::string("yazici"));
+
+    BOOST_CHECK_EQUAL(simpleConvert(*turkishLowerConverter, "YAZICI"),
+                      std::string("yazıcı"));
+
+    BOOST_CHECK_EQUAL(simpleConvert(*standardLowerConverter, "I"),
+                      std::string("i"));
+
+    BOOST_CHECK_EQUAL(simpleConvert(*turkishLowerConverter, "I"),
+                      std::string("ı"));
+
+    BOOST_CHECK_EQUAL(simpleConvert(*standardLowerConverter, "İ"),
+                      std::string("i̇"));
+
+    BOOST_CHECK_EQUAL(simpleConvert(*turkishLowerConverter, "İ"),
+                      std::string("i"));
+
+}
+
+BOOST_AUTO_TEST_CASE( simple_turkish_upper ) {
+
+    boost::shared_ptr<StringGeneralCaseConverter> standardUpperConverter =
+        StringCaseConverterManager::getInstance().getUpperCaseConverter("pl");
+
+    boost::shared_ptr<StringGeneralCaseConverter> turkishUpperConverter =
+        StringCaseConverterManager::getInstance().getUpperCaseConverter("tr");
+
+    BOOST_CHECK_EQUAL(simpleConvert(*standardUpperConverter, "yazici"),
+                      std::string("YAZICI"));
+
+    BOOST_CHECK_EQUAL(simpleConvert(*turkishUpperConverter, "yazici"),
+                      std::string("YAZİCİ"));
+
+    BOOST_CHECK_EQUAL(simpleConvert(*standardUpperConverter, "i"),
+                      std::string("I"));
+
+    BOOST_CHECK_EQUAL(simpleConvert(*turkishUpperConverter, "i"),
+                      std::string("İ"));
+
+    BOOST_CHECK_EQUAL(simpleConvert(*standardUpperConverter, "ı"),
+                      std::string("I"));
+
+    BOOST_CHECK_EQUAL(simpleConvert(*turkishUpperConverter, "ı"),
+                      std::string("I"));
+
+}
 
 BOOST_AUTO_TEST_SUITE_END()

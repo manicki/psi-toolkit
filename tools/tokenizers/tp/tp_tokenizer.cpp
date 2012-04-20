@@ -2,6 +2,7 @@
 
 #include <boost/algorithm/string.hpp>
 #include <boost/algorithm/string/replace.hpp>
+#include <boost/assign/list_of.hpp>
 
 #include "tp_token_cutter.hpp"
 
@@ -56,11 +57,18 @@ void TpTokenizer::Factory::doAddLanguageIndependentOptionsHandled(
 
 }
 
-std::string TpTokenizer::Factory::doGetName() {
+std::string TpTokenizer::Factory::doGetName() const {
     return "tp-tokenizer";
 }
 
-boost::filesystem::path TpTokenizer::Factory::doGetFile() {
+std::list<std::string> TpTokenizer::Factory::doGetAliases() {
+    return boost::assign::list_of<std::string>
+        (std::string("tp-tokeniser"))
+        (std::string("tp-tokenise"))
+        (std::string("tp-tokenize"));
+}
+
+boost::filesystem::path TpTokenizer::Factory::doGetFile() const {
     return __FILE__;
 }
 

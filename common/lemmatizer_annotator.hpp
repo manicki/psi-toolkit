@@ -40,11 +40,23 @@ public:
             return L::optionsHandled();
         }
 
-        virtual std::string doGetName() {
+        virtual LanguagesHandling doLanguagesHandling(
+            const boost::program_options::variables_map& options) const {
+
+            return L::languagesHandling(options);
+        }
+
+        virtual std::list<std::string> doLanguagesHandled(
+            const boost::program_options::variables_map& options) const {
+
+            return L::languagesHandled(options);
+        }
+
+        virtual std::string doGetName() const {
             return L::getName();
         }
 
-        virtual boost::filesystem::path doGetFile() {
+        virtual boost::filesystem::path doGetFile() const {
             return L::getFile();
         }
 

@@ -14,13 +14,11 @@
 #include <perl.h>
 #include <XSUB.h>
 
-typedef HV* PerlHashPointer;
-typedef AV* PerlArrayPointer;
-typedef SV* PerlReference;
+typedef AV * Sink;
 
 class PerlLatticeWriterOutput {
 public:
-    PerlLatticeWriterOutput(AV * arrayPointer);
+    PerlLatticeWriterOutput(Sink & arrayPointer);
 
     void push(const std::string & textElement);
     void push(const AnnotationItem & element,
@@ -32,15 +30,15 @@ public:
 
 private:
 
-    PerlReference getCurrentArrayReference_();
+    SV * getCurrentArrayReference_();
     void closeSubArray_(bool flattenOneElement);
 
     bool isCurrentArrayEmpty_();
     long getCurrentArrayLength_();
-    PerlReference tryToFlattenOneElementCurrentArray();
+    SV * tryToFlattenOneElementCurrentArray();
 
-    PerlArrayPointer currentArrayPointer_;
-    std::stack<PerlArrayPointer> arraysStack_;
+    AV * currentArrayPointer_;
+    std::stack<AV *> arraysStack_;
 
     AnnotationItemManager * latticeAnnotationItemManager_;
 };

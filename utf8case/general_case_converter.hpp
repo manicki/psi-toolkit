@@ -5,6 +5,7 @@
 
 #include "range_based_case_converter.hpp"
 #include "special_casing_converter.hpp"
+#include "contextual_case_converter.hpp"
 
 #include "utf8/utf8.h"
 
@@ -14,9 +15,11 @@ class GeneralCaseConverter {
 public:
     GeneralCaseConverter(
         boost::shared_ptr<RangeBasedCaseConverter> rangeBasedCaseConverter,
-        boost::shared_ptr<SpecialCasingConverter> specialCasingConverter)
+        boost::shared_ptr<SpecialCasingConverter> specialCasingConverter,
+        boost::shared_ptr<ContextualCaseConverter> contextualCaseConverter)
         :rangeBasedCaseConverter_(rangeBasedCaseConverter),
-         specialCasingConverter_(specialCasingConverter) {
+         specialCasingConverter_(specialCasingConverter),
+         contextualCaseConverter_(contextualCaseConverter) {
     }
 
     bool willBeTouchedWhenConverted(octet_iterator start, octet_iterator end) const {
@@ -49,16 +52,47 @@ public:
     }
 
     void convert(octet_iterator start, octet_iterator end, output_iterator out) const {
+        uint32_t prev_prev_code_point = SPECIAL_CODE_POINT;
+        uint32_t prev_code_point = SPECIAL_CODE_POINT;
+
         while (start != end) {
             uint32_t code_point = utf8::unchecked::next(start);
 
-            if (const char* special = specialCasingConverter_->convert(code_point)) {
-                while (*special)
-                    *out++ = *special++;
-            } else {
-                uint32_t converted_code_point = rangeBasedCaseConverter_->convert(code_point);
-                utf8::unchecked::append(converted_code_point, out);
-            }
+            if (prev_code_point != SPECIAL_CODE_POINT)
+                convertSingleCodePoint(
+                    prev_prev_code_point,
+                    prev_code_point,
+                    code_point,
+                    out);
+
+            prev_prev_code_point = prev_code_point;
+            prev_code_point = code_point;
+        }
+
+        if (prev_code_point != SPECIAL_CODE_POINT)
+            convertSingleCodePoint(
+                prev_prev_code_point,
+                prev_code_point,
+                SPECIAL_CODE_POINT,
+                out);
+    }
+
+    void convertSingleCodePoint(
+        uint32_t prev_code_point,
+        uint32_t current_code_point,
+        uint32_t next_code_point,
+        output_iterator out) const {
+
+        if (const char* contextual = contextualCaseConverter_->convert(
+                prev_code_point,
+                current_code_point,
+                next_code_point)) {
+            copyCharArrayToOutputIterator_(contextual, out);
+        } else if (const char* special = specialCasingConverter_->convert(current_code_point)) {
+            copyCharArrayToOutputIterator_(special, out);
+        } else {
+            uint32_t converted_code_point = rangeBasedCaseConverter_->convert(current_code_point);
+            utf8::unchecked::append(converted_code_point, out);
         }
     }
 
@@ -89,10 +123,16 @@ public:
 
 
 private:
+    void copyCharArrayToOutputIterator_(const char* charVector, output_iterator out) const {
+        while (*charVector)
+            *out++ = *charVector++;
+    }
 
     boost::shared_ptr<RangeBasedCaseConverter> rangeBasedCaseConverter_;
     boost::shared_ptr<SpecialCasingConverter> specialCasingConverter_;
+    boost::shared_ptr<ContextualCaseConverter> contextualCaseConverter_;
 
+    const static uint32_t SPECIAL_CODE_POINT = 0xFFFFFFFF;
 };
 
 #endif

@@ -47,9 +47,16 @@ boost::filesystem::path ProcessorFactory::getFile() {
     return doGetFile();
 }
 
+boost::filesystem::path ProcessorFactory::getDataDirectory() const {
+    return getItsData(doGetFile());
+}
 
-std::string ProcessorFactory::getName() {
+std::string ProcessorFactory::getName() const {
     return doGetName();
+}
+
+std::list<std::string> ProcessorFactory::getAliases() {
+    return doGetAliases();
 }
 
 std::string ProcessorFactory::getDescription() {
@@ -73,6 +80,10 @@ std::string ProcessorFactory::doGetDescription() {
     return description;
 }
 
+std::list<std::string> ProcessorFactory::doGetAliases() {
+    return std::list<std::string>();
+}
+
 std::string ProcessorFactory::getFileContent(boost::filesystem::path path) {
     std::stringstream content;
     content << std::ifstream( path.string().c_str() ).rdbuf();
@@ -81,4 +92,14 @@ std::string ProcessorFactory::getFileContent(boost::filesystem::path path) {
 }
 
 ProcessorFactory::~ProcessorFactory() {
+}
+
+bool ProcessorFactory::checkRequirements(const boost::program_options::variables_map& options,
+                                         std::ostream & message) const {
+    return doCheckRequirements(options, message);
+}
+
+bool ProcessorFactory::doCheckRequirements(const boost::program_options::variables_map& /*options*/,
+                                           std::ostream & /*message*/) const {
+    return true;
 }

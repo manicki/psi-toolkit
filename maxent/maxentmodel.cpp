@@ -39,7 +39,6 @@
 #include <set>
 #include <map>
 
-//LM#include "hash_map.hpp"
 #include <boost/unordered_map.hpp>
 
 #include <boost/lexical_cast.hpp>
@@ -241,7 +240,6 @@ double MaxentModel::build_params(shared_ptr<ParamsType>& params,
         size_t& n_theta) const {
     boost::timer t;
     assert(m_es);
-    //LM:typedef hash_map <pair<size_t, size_t>, bool, featid_hasher> FeatMap;
     typedef boost::unordered_map <pair<size_t, size_t>, bool, featid_hasher> FeatMap;
 
     FeatMap feat_map;

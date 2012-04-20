@@ -15,6 +15,9 @@ BOOST_AUTO_TEST_CASE( psi_lattice_reader_reflexive ) {
 
     boost::scoped_ptr<StreamLatticeReader> reader(new PsiLatticeReader());
 
+    BOOST_CHECK_EQUAL(reader->getFormatName(), "PSI");
+    BOOST_CHECK_EQUAL(reader->info(), "PSI reader");
+
     reader->readIntoLattice(ROOT_DIR "formats/psi/t/files/pl_sample_nocomments.txt", lattice);
 
     boost::scoped_ptr<LatticeWriter<std::ostream> > writer(new PsiLatticeWriter());
@@ -31,6 +34,20 @@ BOOST_AUTO_TEST_CASE( psi_lattice_reader_reflexive ) {
     }
 
     BOOST_CHECK_EQUAL(osstr.str(), contents);
+
+}
+
+
+BOOST_AUTO_TEST_CASE( psi_lattice_reader_corrupted ) {
+
+    Lattice lattice("");
+
+    boost::scoped_ptr<StreamLatticeReader> reader(new PsiLatticeReader());
+
+    BOOST_CHECK_THROW(
+        reader->readIntoLattice(ROOT_DIR "formats/psi/t/files/corrupted.txt", lattice),
+        FileFormatException
+    );
 
 }
 

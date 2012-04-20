@@ -1,0 +1,3 @@
+Doc Reader reads text from MS Word .doc file into the lattice.
+
+To use it, you have to have antiword installed on your system.
