@@ -45,6 +45,7 @@ add_library(common SHARED
     string_helpers.cpp
     utt_like_quoter.cpp
     xml_property_tree.cpp
+    zvalue.cpp
     ${common-java-files}
 )
 

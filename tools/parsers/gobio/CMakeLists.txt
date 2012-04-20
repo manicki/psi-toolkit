@@ -9,7 +9,6 @@ add_library(tools-parsers-gobio SHARED
     translator/grparser.bis.cpp
     translator/grules.cpp
     translator/prandseq.cpp
-    translator/zvalue.cpp
     transporter/semantics_wrapper.cpp
 )
 
