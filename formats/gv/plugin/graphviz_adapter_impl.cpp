@@ -10,13 +10,14 @@ GraphvizAdapterImpl::GraphvizAdapterImpl() :
 
 
 GraphvizAdapterImpl::~GraphvizAdapterImpl() {
-    // finalize();
+    finalize_graph_();
+    finalize_context_();
 }
 
 
 void GraphvizAdapterImpl::init() {
-    gvc_ = gvContext();
-    g_ = agopen((char*)"g", AGDIGRAPH);
+    init_context_();
+    init_graph_();
 }
 
 
@@ -30,12 +31,39 @@ void GraphvizAdapterImpl::init(std::string arg0, std::string arg1, std::string a
     gvParseArgs(gvc_, sizeof(args)/sizeof(char*), (char**)args);
 }
 
+
 void GraphvizAdapterImpl::finalize() {
     gvLayoutJobs(gvc_, g_);
     gvRenderJobs(gvc_, g_);
     gvFreeLayout(gvc_, g_);
-    agclose(g_);
-    gvFreeContext(gvc_);
+    finalize_graph_();
+    finalize_context_();
+}
+
+
+void GraphvizAdapterImpl::init_context_() {
+    gvc_ = gvContext();
+}
+
+
+void GraphvizAdapterImpl::init_graph_() {
+    g_ = agopen((char*)"g", AGDIGRAPH);
+}
+
+
+void GraphvizAdapterImpl::finalize_context_() {
+    if (gvc_) {
+        gvFreeContext(gvc_);
+        gvc_ = NULL;
+    }
+}
+
+
+void GraphvizAdapterImpl::finalize_graph_() {
+    if (g_) {
+        agclose(g_);
+        g_ = NULL;
+    }
 }
 
 
