@@ -63,6 +63,9 @@ else()
   set(HAVE_LOG4CPP 0)
 endif(EXISTS ${LOG4CPP_LIB} AND EXISTS ${LOG4CPP_INCLUDE})
 
+option(USE_ASPELL "Using aspell" ON)
+message(STATUS "Using aspell ${USE_ASPELL}")
+
 if (USE_ASPELL)
   find_library(ASPELL_LIB NAMES aspell)
   find_path(ASPELL_INCLUDE aspell.h)
@@ -196,21 +199,6 @@ if(USE_STRING_FRAG_VALIDATION)
     set(STRING_FRAG_VALIDATION 1)
 endif(USE_STRING_FRAG_VALIDATION)
 
-option(USE_GV_WRITER "Using gv-writer" ON)
-message(STATUS "Using gv-writer ${USE_GV_WRITER}")
-
-option(USE_PDF_READER "Using pdf-reader" OFF)
-message(STATUS "Using pdf-reader ${USE_PDF_READER}")
-
-option(USE_DJVU_READER "Using djvu-reader" OFF)
-message(STATUS "Using djvu-reader ${USE_DJVU_READER}")
-
-option(USE_DOC_READER "Using doc-reader" OFF)
-message(STATUS "Using doc-reader ${USE_DOC_READER}")
-
-option(USE_ASPELL "Using aspell" ON)
-message(STATUS "Using aspell ${USE_ASPELL}")
-
 # Finds SWIG
 
 find_package(SWIG)
@@ -232,6 +220,9 @@ endif(SWIG_FOUND)
 
 
 # Finds GraphViz
+
+option(USE_GV_WRITER "Using gv-writer" ON)
+message(STATUS "Using gv-writer ${USE_GV_WRITER}")
 
 if (USE_GV_WRITER)
     find_package(Graphviz)
@@ -264,6 +255,9 @@ endif(LIBMAGIC_FOUND)
 
 # Finds Poppler
 
+option(USE_PDF_READER "Using pdf-reader" OFF)
+message(STATUS "Using pdf-reader ${USE_PDF_READER}")
+
 if (USE_PDF_READER)
     find_package(Poppler)
     if (POPPLER_FOUND)
@@ -282,6 +276,9 @@ endif (USE_PDF_READER)
 
 # Finds DjVuLibre
 
+option(USE_DJVU_READER "Using djvu-reader" OFF)
+message(STATUS "Using djvu-reader ${USE_DJVU_READER}")
+
 if (USE_DJVU_READER)
     find_package(DjVuLibre)
     if (DJVULIBRE_FOUND)
@@ -299,6 +296,9 @@ else (USE_DJVU_READER)
 endif (USE_DJVU_READER)
 
 # Links Antiword plugin
+
+option(USE_DOC_READER "Using doc-reader" OFF)
+message(STATUS "Using doc-reader ${USE_DOC_READER}")
 
 if (USE_DOC_READER)
     link_directories("${psi-toolkit_BINARY_DIR}/formats/doc/plugin")
