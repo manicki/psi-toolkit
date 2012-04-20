@@ -1,0 +1,1 @@
+guessing-reader --block-size 16 ! tokenize --lang pl ! simple-writer
