@@ -5,10 +5,7 @@
 #include "guessing_reader.hpp"
 
 #include "txt_lattice_reader.hpp"
-#include "utt_lattice_reader.hpp"
-#include "psi_lattice_reader.hpp"
 #include "apertium_lattice_reader.hpp"
-#include "nkjp_lattice_reader.hpp"
 #if HAVE_POPPLER
 #include "pdf_lattice_reader.hpp"
 #endif
@@ -19,12 +16,22 @@
 #include "doc_lattice_reader.hpp"
 #endif
 
-const int GuessingReader::DEFAULT_BLOCK_SIZE = 1024;
+const int GuessingReader::DEFAULT_BLOCK_SIZE = 32;
 
 std::map<std::string, boost::shared_ptr<LatticeReaderFactory<std::istream> > >
     GuessingReader::fileTypeToReaderMap_ = boost::assign::map_list_of
-        //("html", new ApertiumLatticeReader::Factory())
-        ("txt", new TxtLatticeReader::Factory());
+        ("txt", PointerToReader(new TxtLatticeReader::Factory()))
+        ("html", PointerToReader(new ApertiumLatticeReader::Factory()))
+#if HAVE_POPPLER
+        ("pdf", PointerToReader(new PDFLatticeReader::Factory()))
+#endif
+#if HAVE_DJVULIBRE
+        ("djvu", PointerToReader(new DjVuLatticeReader::Factory()))
+#endif
+#if USE_DOC_READER
+        ("doc", PointerToReader(new DocLatticeReader::Factory()))
+#endif
+        ;
 
 std::string GuessingReader::getFormatName() {
     return "Guessing";
@@ -47,30 +54,19 @@ std::string GuessingReader::getStartingDataBlockWithoutTouchingIStream_(std::ist
     char buffer[blockSize_];
     stream.read(buffer, blockSize_);
 
-    DEBUG("buffer: " << buffer);
+    // it is necessary to remove eofbit flag in the case of when the blockSize_
+    // is greather than the total length of input
+    stream.clear();
+    DEBUG("read bits for input type recognition: " << buffer);
 
-    //stream.seekg(0, std::istream::end);
-    //int length = stream.tellg();
-    //stream.seekg(0, std::istream::beg);
+    int lastReadable = (int)stream.gcount();
+    DEBUG("the number of read bits:  " << lastReadable);
 
-    //DEBUG("length of data within stream: " << length);
-
-    //TODO:: do something with blockData
-/*
-    int lastReadBit = blockSize_;
-    for (int i = 0; i < blockSize_; i++) {
-        if (buffer[i] == std::istream::eofbit) {
-            lastReadBit = i;
-            break;
-        }
-    }
-*/
-    for (int i = blockSize_; i > 0; i--) {
+    for (int i = lastReadable; i > 0; i--) {
         stream.putback(buffer[i - 1]);
     }
 
-    //DEBUG("buffer: " << buffer);
-    return std::string(buffer);
+    return std::string(buffer, lastReadable);
 }
 
 LatticeReader<std::istream>* GuessingReader::getLatticeReader(std::string type) {

@@ -61,6 +61,7 @@ private:
 
     std::string getStartingDataBlockWithoutTouchingIStream_(std::istream&);
 
+    typedef boost::shared_ptr<LatticeReaderFactory<std::istream> > PointerToReader;
     static std::map<std::string, boost::shared_ptr<LatticeReaderFactory<std::istream> > >
         fileTypeToReaderMap_;
 
