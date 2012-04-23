@@ -23,7 +23,19 @@ void PopplerAdapterImpl::convertPDFToText(std::istream & pdfStream, std::iostrea
     PopplerPage * page;
     for (int i = 0; i < poppler_document_get_n_pages(document); ++i) {
         page = poppler_document_get_page(document, i);
+#if POPPLER_CHECK_VERSION(0,16,0)
         char * text = poppler_page_get_text(page);
+#else
+        PopplerRectangle rect;
+        double width;
+        double height;
+        poppler_page_get_size(page, &width, &height);
+        rect.x1 = 0;
+        rect.y1 = 0;
+        rect.x2 = width;
+        rect.y2 = height;
+        char * text = poppler_page_get_text(page, POPPLER_SELECTION_GLYPH, &rect);
+#endif
         textStream << text << std::endl;
     }
 }
