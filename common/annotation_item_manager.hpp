@@ -20,7 +20,7 @@ public:
     void setValue(AnnotationItem & annotationItem, std::string attribute, std::string value);
     void setValue(AnnotationItem & annotationItem, std::string attribute, zvalue value);
 
-    std::string getValue(AnnotationItem & annotationItem, std::string attribute);
+    std::string getValueAsString(AnnotationItem & annotationItem, std::string attribute);
 
     std::string getCategory(AnnotationItem & annotationItem) const {
         return annotationItem.category_;

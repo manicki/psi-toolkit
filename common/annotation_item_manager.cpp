@@ -36,7 +36,7 @@ void AnnotationItemManager::setValue(
 }
 
 
-std::string AnnotationItemManager::getValue(
+std::string AnnotationItemManager::getValueAsString(
     AnnotationItem & annotationItem,
     std::string attribute
 ) {

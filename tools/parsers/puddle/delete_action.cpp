@@ -112,7 +112,7 @@ bool DeleteAction::foundEdgesToDelete(Lattice &lattice,
                 bool satisfied = true;
                 if (cond_it->type == BASE_CONDITION) {
                     std::string tokenBase = lattice.getAnnotationItemManager().
-                        getValue(annotationItem, "base");
+                        getValueAsString(annotationItem, "base");
                     if (cond_it->negation) {
                         if (RegExp::FullMatch(tokenBase, cond_it->pattern)) {
                             satisfied = false;
