@@ -13,7 +13,7 @@ void PopplerAdapterImpl::convertPDFToText(std::istream & pdfStream, std::iostrea
     while (std::getline(pdfStream, line)) {
         documentStr += line + "\n";
     }
-    gtk_init(NULL, NULL);
+    gtk_init_check(NULL, NULL);
     PopplerDocument * document = poppler_document_new_from_data(
         (char*)(documentStr.c_str()),
         documentStr.length(),
