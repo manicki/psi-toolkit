@@ -36,6 +36,18 @@ void AnnotationItemManager::setValue(
 }
 
 
+zvalue AnnotationItemManager::getValue(
+    AnnotationItem & annotationItem,
+    std::string attribute
+) {
+    if (m_.left.find(attribute) == m_.left.end()) {
+        return NULL_ZVALUE;
+    } else {
+        return annotationItem.values_[m_.left.at(attribute)];
+    }
+}
+
+
 std::string AnnotationItemManager::getValueAsString(
     AnnotationItem & annotationItem,
     std::string attribute

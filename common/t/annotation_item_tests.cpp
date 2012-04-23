@@ -5,6 +5,7 @@
 BOOST_AUTO_TEST_CASE( annotation_simple ) {
     AnnotationItemManager annotationItemManager;
     AnnotationItem annotationItem("noun");
+    BOOST_CHECK_EQUAL(annotationItemManager.getValue(annotationItem, "case"), NULL_ZVALUE);
     BOOST_CHECK_EQUAL(annotationItemManager.getValueAsString(annotationItem, "case"), "");
     annotationItemManager.setValue(annotationItem, "case", "nominative");
     BOOST_CHECK_EQUAL(annotationItemManager.getValueAsString(annotationItem, "case"), "nominative");
@@ -12,7 +13,11 @@ BOOST_AUTO_TEST_CASE( annotation_simple ) {
     BOOST_CHECK_EQUAL(annotationItemManager.getValueAsString(annotationItem, "case"), "genitive");
     annotationItemManager.setValue(annotationItem, "number", "plural");
     BOOST_CHECK_EQUAL(annotationItemManager.getValueAsString(annotationItem, "number"), "plural");
-
+    annotationItemManager.setValue(annotationItem, "count", INTEGER_TO_ZVALUE(123));
+    BOOST_CHECK_EQUAL(
+        ZVALUE_TO_INTEGER(annotationItemManager.getValue(annotationItem, "count")),
+        123
+    );
     std::list< std::pair<std::string, std::string> > av
         = annotationItemManager.getValues(annotationItem);
     std::list< std::pair<std::string, std::string> >::iterator avi = av.begin();
