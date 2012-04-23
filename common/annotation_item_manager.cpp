@@ -21,7 +21,7 @@ std::string AnnotationItemManager::getValue(
     if (m_.left.find(attribute) == m_.left.end()) {
         return "";
     } else {
-        return zvalue_to_string(annotationItem.values_[m_.left.at(attribute)]);
+        return annotationItem.values_[m_.left.at(attribute)];
     }
 }
 
