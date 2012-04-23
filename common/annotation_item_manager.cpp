@@ -52,11 +52,7 @@ std::string AnnotationItemManager::getValueAsString(
     AnnotationItem & annotationItem,
     std::string attribute
 ) {
-    if (m_.left.find(attribute) == m_.left.end()) {
-        return "";
-    } else {
-        return zvalue_to_string(annotationItem.values_[m_.left.at(attribute)]);
-    }
+    return zvalue_to_string(getValue(annotationItem, attribute));
 }
 
 
