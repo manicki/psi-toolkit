@@ -7,6 +7,8 @@
 #include <boost/bimap.hpp>
 
 #include "annotation_item.hpp"
+#include "zvalue.hpp"
+
 
 class AnnotationItemManager {
 
@@ -16,6 +18,7 @@ public:
     ~AnnotationItemManager();
 
     void setValue(AnnotationItem & annotationItem, std::string attribute, std::string value);
+    void setValue(AnnotationItem & annotationItem, std::string attribute, zvalue value);
 
     std::string getValue(AnnotationItem & annotationItem, std::string attribute);
 
@@ -36,5 +39,6 @@ private:
     zsymbolfactory * zSymbolFactory_;
 
 };
+
 
 #endif

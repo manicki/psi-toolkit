@@ -1,7 +1,5 @@
 #include "annotation_item_manager.hpp"
 
-#include "zvalue.hpp"
-
 
 AnnotationItemManager::AnnotationItemManager() {
     zObjectsHolder_ = zvector::generate(EMPTY_ZOBJECTS_HOLDER);
@@ -19,12 +17,21 @@ void AnnotationItemManager::setValue(
     std::string attribute,
     std::string value
 ) {
+    setValue(annotationItem, attribute, zSymbolFactory_->get_symbol(value.c_str()));
+}
+
+
+void AnnotationItemManager::setValue(
+    AnnotationItem & annotationItem,
+    std::string attribute,
+    zvalue value
+) {
     m_.insert(StringBimapItem(attribute, m_.size()));
     size_t ix = m_.left.at(attribute);
     if (ix >= annotationItem.values_.size()) {
         annotationItem.resize_(ix + 1);
     }
-    annotationItem.values_[ix] = zSymbolFactory_->get_symbol(value.c_str());
+    annotationItem.values_[ix] = value;
     annotationItem.attributes_[ix] = true;
 }
 
