@@ -12,6 +12,9 @@ class AnnotationItemManager {
 
 public:
 
+    AnnotationItemManager();
+    ~AnnotationItemManager();
+
     void setValue(AnnotationItem & annotationItem, std::string attribute, std::string value);
 
     std::string getValue(AnnotationItem & annotationItem, std::string attribute);
@@ -29,7 +32,8 @@ private:
     typedef boost::bimap<std::string, int> StringBimap;
     typedef StringBimap::value_type StringBimapItem;
     StringBimap m_;
-    // zobjects_holder * holder_;
+    zobjects_holder * zObjectsHolder_;
+    zsymbolfactory * zSymbolFactory_;
 
 };
 

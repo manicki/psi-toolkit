@@ -3,6 +3,17 @@
 #include "zvalue.hpp"
 
 
+AnnotationItemManager::AnnotationItemManager() {
+    zObjectsHolder_ = zvector::generate(EMPTY_ZOBJECTS_HOLDER);
+    zSymbolFactory_ = new zsymbolfactory(zsymboltable::generate(zObjectsHolder_));
+}
+
+
+AnnotationItemManager::~AnnotationItemManager() {
+    delete zSymbolFactory_;
+}
+
+
 void AnnotationItemManager::setValue(
     AnnotationItem & annotationItem,
     std::string attribute,
@@ -13,7 +24,7 @@ void AnnotationItemManager::setValue(
     if (ix >= annotationItem.values_.size()) {
         annotationItem.resize_(ix + 1);
     }
-    annotationItem.values_[ix] = zsymbol::generate_raw(EMPTY_ZOBJECTS_HOLDER, value.c_str());
+    annotationItem.values_[ix] = zSymbolFactory_->get_symbol(value.c_str());
     annotationItem.attributes_[ix] = true;
 }
 
