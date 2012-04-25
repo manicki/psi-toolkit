@@ -1,5 +1,7 @@
 #include "link_parser.hpp"
 
+#include <boost/assign.hpp>
+
 
 Annotator* LinkParser::Factory::doCreateAnnotator(
     const boost::program_options::variables_map& /*options*/) {
@@ -32,9 +34,7 @@ std::list<std::list<std::string> > LinkParser::Factory::doOptionalLayerTags() {
 }
 
 std::list<std::string> LinkParser::Factory::doProvidedLayerTags() {
-    std::list<std::string> layerTags;
-    layerTags.push_back("parse");
-    return layerTags;
+    return boost::assign::list_of("link-grammar")("parse");
 }
 
 LatticeWorker* LinkParser::doCreateLatticeWorker(Lattice& lattice) {
@@ -61,5 +61,19 @@ LinkParser::LinkParser() {
 
 
 void LinkParser::parse(Lattice &lattice) {
-    //TODO
+    LayerTagMask maskSegment = lattice.getLayerTagManager().getMask("segment");
+    Lattice::EdgesSortedBySourceIterator ei(lattice, maskSegment);
+    while (ei.hasNext()) {
+        Lattice::EdgeDescriptor edge = ei.next();
+        AnnotationItem aiLink("parsed by LINK");
+        LayerTagCollection tagParse = lattice.getLayerTagManager().createTagCollectionFromList(
+            boost::assign::list_of("link-grammar")("parse")
+        );
+        lattice.addEdge(
+            lattice.getEdgeSource(edge),
+            lattice.getEdgeTarget(edge),
+            aiLink,
+            tagParse
+        );
+    }
 }
