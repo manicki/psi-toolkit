@@ -12,6 +12,8 @@ public:
 
     virtual ~LinkParserAdapterImpl();
 
+    virtual void setDictionary(std::string filename);
+
     virtual std::string parseSentence(std::string sentenceStr);
 
 private:

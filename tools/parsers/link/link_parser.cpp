@@ -2,20 +2,32 @@
 
 #include <boost/assign.hpp>
 
+#include "lang_specific_processor_file_fetcher.hpp"
 #include "plugin_manager.hpp"
 
 
 Annotator* LinkParser::Factory::doCreateAnnotator(
-    const boost::program_options::variables_map& /*options*/) {
-    return new LinkParser();
+    const boost::program_options::variables_map& options
+) {
+    std::string lang = options["lang"].as<std::string>();
+    LangSpecificProcessorFileFetcher fileFetcher(__FILE__, lang);
+
+    std::string dictPathString;
+    if (options.count("dict")) {
+        std::string dictFilename = options["dict"].as<std::string>();
+        boost::filesystem::path dictPath = fileFetcher.getOneFile(dictFilename);
+        dictPathString = dictPath.string();
+    }
+
+    return new LinkParser(dictPathString);
 }
 
 void LinkParser::Factory::doAddLanguageIndependentOptionsHandled(
     boost::program_options::options_description& optionsDescription) {
     optionsDescription.add_options()
-        ("option",
-        boost::program_options::value<std::string>()->default_value("default_value"),
-        "option_description")
+        ("dict",
+        boost::program_options::value<std::string>()->default_value(DEFAULT_DICT_FILE),
+        "dictionary file")
         ;
 }
 
@@ -39,6 +51,9 @@ std::list<std::string> LinkParser::Factory::doProvidedLayerTags() {
     return boost::assign::list_of("link-grammar")("parse");
 }
 
+const std::string LinkParser::Factory::DEFAULT_DICT_FILE
+    = "%ITSDATA%/%LANG%.dict";
+
 LatticeWorker* LinkParser::doCreateLatticeWorker(Lattice& lattice) {
     return new Worker(*this, lattice);
 }
@@ -57,10 +72,11 @@ std::string LinkParser::doInfo() {
     return "link grammar parser";
 }
 
-LinkParser::LinkParser() {
+LinkParser::LinkParser(std::string dictPath) {
     adapter_ = dynamic_cast<LinkParserAdapterInterface*>(
         PluginManager::getInstance().createPluginAdapter("link-parser")
     );
+    adapter_->setDictionary(dictPath);
 }
 
 LinkParser::~LinkParser() {

@@ -1,9 +1,7 @@
 #include "link_parser_adapter_impl.hpp"
 
 
-LinkParserAdapterImpl::LinkParserAdapterImpl() {
-    dictionary_ = dictionary_create("%ITSDATA%/%LANG%/rules.%LANG%", NULL, NULL, NULL);
-}
+LinkParserAdapterImpl::LinkParserAdapterImpl() : dictionary_(NULL) { }
 
 
 LinkParserAdapterImpl::~LinkParserAdapterImpl() {
@@ -13,9 +11,17 @@ LinkParserAdapterImpl::~LinkParserAdapterImpl() {
 }
 
 
+void LinkParserAdapterImpl::setDictionary(std::string filename) {
+    if (dictionary_) {
+        dictionary_delete(dictionary_);
+    }
+    dictionary_ = dictionary_create(filename.c_str(), NULL, NULL, NULL);
+}
+
+
 std::string LinkParserAdapterImpl::parseSentence(std::string sentenceStr) {
-    // Sentence sentence = sentence_create(sentenceStr.c_str(), dictionary_);
-    // sentence_delete(sentence);
+    Sentence sentence = sentence_create(sentenceStr.c_str(), dictionary_);
+    sentence_delete(sentence);
     return "parsed by LINK";
 }
 
