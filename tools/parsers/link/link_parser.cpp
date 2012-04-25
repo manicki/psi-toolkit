@@ -87,7 +87,8 @@ void LinkParser::parse(Lattice &lattice) {
     Lattice::EdgesSortedBySourceIterator ei(lattice, maskSegment);
     while (ei.hasNext()) {
         Lattice::EdgeDescriptor edge = ei.next();
-        AnnotationItem aiLink("parsed by LINK");
+        std::string parsed(adapter_->parseSentence(lattice.getEdgeText(edge)));
+        AnnotationItem aiLink(parsed);
         LayerTagCollection tagParse = lattice.getLayerTagManager().createTagCollectionFromList(
             boost::assign::list_of("link-grammar")("parse")
         );
