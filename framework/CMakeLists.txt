@@ -39,6 +39,11 @@ if(HAVE_DJVULIBRE)
     link_directories("${psi-toolkit_BINARY_DIR}/formats/djvu")
 endif(HAVE_DJVULIBRE)
 
+# if(HAVE_LINK_GRAMMAR)
+    # include_directories("${psi-toolkit_SOURCE_DIR}/tools/parsers/link")
+    # link_directories("${psi-toolkit_BINARY_DIR}/tools/parsers/link")
+# endif(HAVE_LINK_GRAMMAR)
+
 if(USE_DOC_READER)
     include_directories("${psi-toolkit_SOURCE_DIR}/formats/doc")
     link_directories("${psi-toolkit_BINARY_DIR}/formats/doc")

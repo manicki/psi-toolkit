@@ -9,7 +9,7 @@
 #include "lang_specific_processor_file_fetcher.hpp"
 
 
-class Gobio : public Annotator {
+class LinkParser : public Annotator {
 
 public:
 
@@ -30,7 +30,7 @@ public:
         virtual std::list<std::string> doProvidedLayerTags();
     };
 
-    Gobio();
+    LinkParser();
 
     void parse(Lattice &lattice);
 
@@ -38,10 +38,10 @@ private:
 
     class Worker : public LatticeWorker {
     public:
-        Worker(Gobio& processor, Lattice& lattice);
+        Worker(LinkParser& processor, Lattice& lattice);
     private:
         virtual void doRun();
-        Gobio& processor_;
+        LinkParser& processor_;
     };
 
     virtual LatticeWorker* doCreateLatticeWorker(Lattice& lattice);

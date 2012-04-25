@@ -1,12 +1,12 @@
 #include "link_parser.hpp"
 
 
-Annotator* Gobio::Factory::doCreateAnnotator(
+Annotator* LinkParser::Factory::doCreateAnnotator(
     const boost::program_options::variables_map& /*options*/) {
-    return new Gobio();
+    return new LinkParser();
 }
 
-void Gobio::Factory::doAddLanguageIndependentOptionsHandled(
+void LinkParser::Factory::doAddLanguageIndependentOptionsHandled(
     boost::program_options::options_description& optionsDescription) {
     optionsDescription.add_options()
         ("option",
@@ -15,88 +15,51 @@ void Gobio::Factory::doAddLanguageIndependentOptionsHandled(
         ;
 }
 
-std::string Gobio::Factory::doGetName() const {
-    return "gobio";
+std::string LinkParser::Factory::doGetName() const {
+    return "link-parser";
 }
 
-boost::filesystem::path Gobio::Factory::doGetFile() const {
+boost::filesystem::path LinkParser::Factory::doGetFile() const {
     return __FILE__;
 }
 
-std::list<std::list<std::string> > Gobio::Factory::doRequiredLayerTags() {
+std::list<std::list<std::string> > LinkParser::Factory::doRequiredLayerTags() {
     return std::list<std::list<std::string> >();
 }
 
-std::list<std::list<std::string> > Gobio::Factory::doOptionalLayerTags() {
+std::list<std::list<std::string> > LinkParser::Factory::doOptionalLayerTags() {
     return std::list<std::list<std::string> >();
 }
 
-std::list<std::string> Gobio::Factory::doProvidedLayerTags() {
+std::list<std::string> LinkParser::Factory::doProvidedLayerTags() {
     std::list<std::string> layerTags;
     layerTags.push_back("parse");
     return layerTags;
 }
 
-LatticeWorker* Gobio::doCreateLatticeWorker(Lattice& lattice) {
+LatticeWorker* LinkParser::doCreateLatticeWorker(Lattice& lattice) {
     return new Worker(*this, lattice);
 }
 
-Gobio::Worker::Worker(Gobio& processor, Lattice& lattice) :
+LinkParser::Worker::Worker(LinkParser& processor, Lattice& lattice) :
     LatticeWorker(lattice), processor_(processor)
 {
     //TODO
 }
 
-void Gobio::Worker::doRun() {
+void LinkParser::Worker::doRun() {
     processor_.parse(lattice_);
 }
 
-std::string Gobio::doInfo() {
-    return "gobio parser";
+std::string LinkParser::doInfo() {
+    return "link grammar parser";
 }
 
-Gobio::Gobio() {
+LinkParser::LinkParser() {
     //TODO
 }
 
 
-void Gobio::parse(Lattice &lattice) {
-
-    typedef Lattice::EdgeDescriptor Edge;
-    typedef std::string Category;
-    typedef Lattice::Score Score;
-    typedef std::string Variant;
-    typedef simple_cfg_rule<Category> Rule;
-    typedef simple_cfg_combinator<Category, Rule> Combinator;
-    typedef fifo_agenda<Edge> Agenda;
-    typedef chart<Category, Score, Variant, Rule, simple_marked_edges_index> Chart;
-    typedef agenda_parser<
-        Category,
-        Score,
-        Variant,
-        Rule,
-        Combinator,
-        Agenda,
-        simple_marked_edges_index
-    > Parser;
-
-    Chart a_chart(lattice);
-    Combinator combinator;
-    Agenda agenda;
-    Parser parser(a_chart, combinator, agenda);
-
-    parser.run();
-
-    //DUMMY IMPLEMENTATION (for testing in psi-pipe)
-    /*
-    AnnotationItem aiGobio("parsed by GOBIO");
-    LayerTagCollection
-        tagParse = lattice.getLayerTagManager().createSingletonTagCollection("parse");
-    lattice.addEdge(
-        lattice.getFirstVertex(),
-        lattice.getLastVertex(),
-        aiGobio,
-        tagParse
-    );
-    // */
+void LinkParser::parse(Lattice &lattice) {
+    //TODO
 }

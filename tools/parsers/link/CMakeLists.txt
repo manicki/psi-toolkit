@@ -8,7 +8,7 @@ add_library(tools-parsers-link SHARED
 target_link_libraries(
     tools-parsers-link
     common
-    common-plugin
+    common-plugins
 )
 
 add_subdirectory(plugin)
