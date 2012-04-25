@@ -7,6 +7,7 @@
 #include "annotator.hpp"
 #include "language_dependent_annotator_factory.hpp"
 #include "lang_specific_processor_file_fetcher.hpp"
+#include "plugin/link_parser_adapter_interface.hpp"
 
 
 class LinkParser : public Annotator {
@@ -31,6 +32,10 @@ public:
     };
 
     LinkParser();
+    ~LinkParser();
+
+    LinkParserAdapterInterface * getAdapter();
+    bool isActive();
 
     void parse(Lattice &lattice);
 
@@ -47,6 +52,8 @@ private:
     virtual LatticeWorker* doCreateLatticeWorker(Lattice& lattice);
 
     virtual std::string doInfo();
+
+    LinkParserAdapterInterface * adapter_;
 
 };
 

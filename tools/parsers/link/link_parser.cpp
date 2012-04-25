@@ -2,6 +2,8 @@
 
 #include <boost/assign.hpp>
 
+#include "plugin_manager.hpp"
+
 
 Annotator* LinkParser::Factory::doCreateAnnotator(
     const boost::program_options::variables_map& /*options*/) {
@@ -56,7 +58,27 @@ std::string LinkParser::doInfo() {
 }
 
 LinkParser::LinkParser() {
-    //TODO
+    adapter_ = dynamic_cast<LinkParserAdapterInterface*>(
+        PluginManager::getInstance().createPluginAdapter("link-parser")
+    );
+}
+
+LinkParser::~LinkParser() {
+    if (adapter_) {
+        PluginManager::getInstance().destroyPluginAdapter("link-parser", adapter_);
+    }
+}
+
+LinkParserAdapterInterface * LinkParser::getAdapter() {
+    return adapter_;
+}
+
+bool LinkParser::isActive() {
+    if (adapter_) {
+        return true;
+    } else {
+        return false;
+    }
 }
 
 
