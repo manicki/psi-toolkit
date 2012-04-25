@@ -1,11 +1,11 @@
-#ifndef GRAPHVIZ_PLUGIN_HDR
-#define GRAPHVIZ_PLUGIN_HDR
+#ifndef LINK_PARSER_PLUGIN_HDR
+#define LINK_PARSER_PLUGIN_HDR
 
 #include "plugin.hpp"
-#include "plugin/graphviz_adapter_interface.hpp"
+#include "plugin/link_parser_adapter_interface.hpp"
 
 
-class GraphvizPlugin : public Plugin<GraphvizAdapterInterface> {
+class LinkParserPlugin : public Plugin<LinkParserAdapterInterface> {
 public:
     virtual std::string getLibraryName();
     virtual std::string getName();
