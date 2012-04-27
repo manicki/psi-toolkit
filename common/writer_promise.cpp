@@ -1,7 +1,7 @@
 #include "writer_promise.hpp"
 
 Processor* WriterPromise::doCreateProcessor() {
-    return writerFactory_.createProcessor(options_);
+    return writerFactory_->createProcessor(options_);
 }
 
 std::list<std::list<std::string> > WriterPromise::doRequiredLayerTags() {

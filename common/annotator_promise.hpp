@@ -9,7 +9,7 @@ public:
     }
 
     AnnotatorPromise(
-        AnnotatorFactory& annotatorFactory,
+        AnnotatorFactory* annotatorFactory,
         const boost::program_options::variables_map& options);
 
 private:
@@ -25,11 +25,11 @@ private:
 
     std::list<std::string> doLanguagesHandled() const;
 
-    bool doIsAnnotator() const = 0;
-    bool doIsReader() const = 0;
-    bool doIsWriter() const = 0;
+    virtual bool doIsAnnotator() const;
+    virtual bool doIsReader() const;
+    virtual bool doIsWriter() const;
 
-    AnnotatorFactory& annotatorFactory_;
+    AnnotatorFactory* annotatorFactory_;
     boost::program_options::variables_map options_;
 };
 

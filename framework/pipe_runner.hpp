@@ -8,6 +8,7 @@
 #include "pipeline_specification.hpp"
 
 #include "processor_factory.hpp"
+#include "processor_promise.hpp"
 #include "lattice_reader_factory.hpp"
 #include "lattice_writer_factory.hpp"
 #include "annotator_factory.hpp"
@@ -106,6 +107,14 @@ private:
     };
 
     PipelineNode pipelineElement2Node_(const PipelineElementSpecification& element);
+
+    template<class Source, class Sink>
+    std::list<boost::shared_ptr<ProcessorPromise> > pipelineElement2Promises_(
+        const PipelineElementSpecification& elementSpec);
+
+    template<class Source, class Sink>
+    boost::shared_ptr<ProcessorPromise> createPromise_(
+        ProcessorFactory* factory, const boost::program_options::variables_map& options);
 
     typedef boost::adjacency_list<
         boost::vecS,

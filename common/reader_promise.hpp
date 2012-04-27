@@ -8,7 +8,7 @@ class ReaderPromise: public ProcessorPromise {
 public:
     template<class Source>
     ReaderPromise(
-        LatticeReaderFactory<Source>& readerFactory,
+        LatticeReaderFactory<Source>* readerFactory,
         const boost::program_options::variables_map& options)
         : readerFactory_(readerFactory), options_(options) {
     }
@@ -33,7 +33,7 @@ private:
     bool doIsReader() const = 0;
     bool doIsWriter() const = 0;
 
-    ProcessorFactory& readerFactory_;
+    ProcessorFactory* readerFactory_;
     boost::program_options::variables_map options_;
 };
 

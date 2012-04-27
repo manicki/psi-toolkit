@@ -12,6 +12,10 @@
 #include "main_factories_keeper.hpp"
 #include "console_help_formatter.hpp"
 
+#include "annotator_promise.hpp"
+#include "reader_promise.hpp"
+#include "writer_promise.hpp"
+
 #include "logging.hpp"
 #include "version_information.hpp"
 
@@ -504,6 +508,61 @@ PipeRunner::PipelineNode PipeRunner::pipelineElement2Node_(
         factory,
         parseOptions_(factory.optionsHandled(), element));
 }
+
+template<class Source, class Sink>
+std::list<boost::shared_ptr<ProcessorPromise> > PipeRunner::pipelineElement2Promises_(
+    const PipelineElementSpecification& elementSpec) {
+
+    std::list<boost::shared_ptr<ProcessorPromise> > promises;
+
+    std::list<ProcessorFactory*> factories =
+        MainFactoriesKeeper::getInstance().getProcessorFactoriesForName(
+            elementSpec.processorName);
+
+    BOOST_FOREACH(ProcessorFactory* factory, factories) {
+        boost::program_options::variables_map options
+            = parseOptions_(factory->optionsHandled(), elementSpec);
+
+        promises.push_back(createPromise_<Source,Sink>(factory, options));
+    }
+
+    return promises;
+}
+
+template<class Source, class Sink>
+boost::shared_ptr<ProcessorPromise> PipeRunner::createPromise_(
+    ProcessorFactory* factory, const boost::program_options::variables_map& options) {
+
+    {
+        const AnnotatorFactory* asAnnotatorFactory =
+            dynamic_cast<const AnnotatorFactory*>(factory);
+
+        if (asAnnotatorFactory)
+            return boost::shared_ptr<ProcessorPromise>(
+                new AnnotatorPromise(asAnnotatorFactory, options));
+    }
+
+    {
+        const LatticeReaderFactory<Source>* asReaderFactory =
+            dynamic_cast<const LatticeReaderFactory<Sink>*>(factory);
+
+        if (asReaderFactory)
+            return boost::shared_ptr<ProcessorPromise>(
+                new ReaderPromise(asReaderFactory, options));
+    }
+
+    {
+        const LatticeWriterFactory<Source>* asWriterFactory =
+            dynamic_cast<const LatticeWriterFactory<Source>*>(factory);
+
+        if (asWriterFactory)
+            return boost::shared_ptr<ProcessorPromise>(
+                new WriterPromise(asWriterFactory, options));
+    }
+
+    throw Exception(std::string("unexpected state"));
+}
+
 
 boost::program_options::variables_map PipeRunner::parseOptions_(
     const boost::program_options::options_description& optionsDescription,

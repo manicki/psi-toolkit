@@ -1,7 +1,7 @@
 #include "reader_promise.hpp"
 
 Processor* ReaderPromise::doCreateProcessor() {
-    return readerFactory_.createProcessor(options_);
+    return readerFactory_->createProcessor(options_);
 }
 
 std::list<std::list<std::string> > ReaderPromise::doRequiredLayerTags() {
