@@ -10,6 +10,7 @@ add_library(common SHARED
     annotation_item_manager.cpp
     annotator.cpp
     annotator_factory.cpp
+    annotator_promise.cpp
     ant_like_path_glob.cpp
     bi_lang_specific_processor_file_fetcher.cpp
     bi_language_dependent_annotator_factory.cpp
@@ -36,9 +37,11 @@ add_library(common SHARED
     processor.cpp
     processor_factory.cpp
     processor_file_fetcher.cpp
+    processor_promise.cpp
     psi_exception.cpp
     psi_quoter.cpp
     quoter.cpp
+    reader_promise.cpp
     regexp.cpp
     segment_glob.cpp
     stream_lattice_reader.cpp
@@ -46,6 +49,7 @@ add_library(common SHARED
     string_helpers.cpp
     utt_like_quoter.cpp
     xml_property_tree.cpp
+    writer_promise.cpp
     ${common-java-files}
 )
 
