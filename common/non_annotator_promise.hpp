@@ -1,18 +1,18 @@
-#ifndef READER_PROMISE_HDR
-#define READER_PROMISE_HDR
+#ifndef NON_ANNOTATOR_PROMISE_HDR
+#define NON_ANNOTATOR_PROMISE_HDR
 
 #include "processor_promise.hpp"
-#include "lattice_reader_factory.hpp"
+#include "processor_factory.hpp"
 
-class ReaderPromise: public ProcessorPromise {
+class NonAnnotatorPromise: public ProcessorPromise {
 public:
-    ReaderPromise(
-        ProcessorFactory* readerFactory,
+    NonAnnotatorPromise(
+        ProcessorFactory* factory,
         const boost::program_options::variables_map& options)
-        : readerFactory_(readerFactory), options_(options) {
+        : factory_(factory), options_(options) {
     }
 
-    virtual ~ReaderPromise() {
+    virtual ~NonAnnotatorPromise() {
     }
 
 private:
@@ -28,11 +28,9 @@ private:
 
     std::list<std::string> doLanguagesHandled() const;
 
-    bool doIsAnnotator() const = 0;
-    bool doIsReader() const = 0;
-    bool doIsWriter() const = 0;
+    bool doIsAnnotator() const;
 
-    ProcessorFactory* readerFactory_;
+    ProcessorFactory* factory_;
     boost::program_options::variables_map options_;
 };
 

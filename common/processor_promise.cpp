@@ -27,11 +27,3 @@ std::list<std::string> ProcessorPromise::languagesHandled() const {
 bool ProcessorPromise::isAnnotator() const {
     return doIsAnnotator();
 }
-
-bool ProcessorPromise::isReader() const {
-    return doIsReader();
-}
-
-bool ProcessorPromise::isWriter() const {
-    return doIsWriter();
-}

@@ -33,11 +33,3 @@ std::list<std::string> AnnotatorPromise::doLanguagesHandled() const {
 bool AnnotatorPromise::doIsAnnotator() const {
     return true;
 }
-
-bool AnnotatorPromise::doIsReader() const {
-    return false;
-}
-
-bool AnnotatorPromise::doIsWriter() const {
-    return false;
-}

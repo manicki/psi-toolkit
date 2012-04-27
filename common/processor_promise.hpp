@@ -21,8 +21,6 @@ public:
     std::list<std::string> languagesHandled() const;
 
     bool isAnnotator() const;
-    bool isReader() const;
-    bool isWriter() const;
 
 private:
     virtual Processor* doCreateProcessor() = 0;
@@ -38,9 +36,6 @@ private:
     virtual std::list<std::string> doLanguagesHandled() const = 0;
 
     virtual bool doIsAnnotator() const = 0;
-    virtual bool doIsReader() const = 0;
-    virtual bool doIsWriter() const = 0;
-
 };
 
 #endif

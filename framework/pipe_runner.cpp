@@ -13,8 +13,7 @@
 #include "console_help_formatter.hpp"
 
 #include "annotator_promise.hpp"
-#include "reader_promise.hpp"
-#include "writer_promise.hpp"
+#include "non_annotator_promise.hpp"
 
 #include "logging.hpp"
 #include "version_information.hpp"
@@ -527,7 +526,7 @@ std::list<boost::shared_ptr<ProcessorPromise> > PipeRunner::pipelineElement2Prom
         boost::program_options::variables_map options
             = parseOptions_(factory->optionsHandled(), elementSpec);
 
-        promises.push_back(createPromise_<Source,Sink>(factory, options));
+        promises.push_back(createPromise_(factory, options));
     }
 
     return promises;
@@ -536,13 +535,13 @@ std::list<boost::shared_ptr<ProcessorPromise> > PipeRunner::pipelineElement2Prom
 boost::shared_ptr<ProcessorPromise> PipeRunner::createPromise_(
     ProcessorFactory* factory, const boost::program_options::variables_map& options) {
 
-    const AnnotatorFactory* asAnnotatorFactory =
-        dynamic_cast<const AnnotatorFactory*>(factory);
+    AnnotatorFactory* asAnnotatorFactory =
+        dynamic_cast<AnnotatorFactory*>(factory);
 
-    if (asAnnotatorFactory)
-        return boost::shared_ptr<ProcessorPromise>(
-            new AnnotatorPromise(asAnnotatorFactory, options);
-
+    return
+        asAnnotatorFactory
+        ? boost::shared_ptr<ProcessorPromise>(new AnnotatorPromise(asAnnotatorFactory, options))
+        : boost::shared_ptr<ProcessorPromise>(new NonAnnotatorPromise(factory, options));
 }
 
 

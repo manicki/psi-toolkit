@@ -33,6 +33,7 @@ add_library(common SHARED
     lemmatizer_output_iterator.cpp
     logging.cpp
     morfologik_tags_parser.cpp
+    non_annotator_promise.cpp
     object_cache.cpp
     processor.cpp
     processor_factory.cpp
@@ -41,7 +42,6 @@ add_library(common SHARED
     psi_exception.cpp
     psi_quoter.cpp
     quoter.cpp
-    reader_promise.cpp
     regexp.cpp
     segment_glob.cpp
     stream_lattice_reader.cpp
@@ -49,7 +49,6 @@ add_library(common SHARED
     string_helpers.cpp
     utt_like_quoter.cpp
     xml_property_tree.cpp
-    writer_promise.cpp
     ${common-java-files}
 )
 

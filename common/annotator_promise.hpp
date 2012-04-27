@@ -26,8 +26,6 @@ private:
     std::list<std::string> doLanguagesHandled() const;
 
     virtual bool doIsAnnotator() const;
-    virtual bool doIsReader() const;
-    virtual bool doIsWriter() const;
 
     AnnotatorFactory* annotatorFactory_;
     boost::program_options::variables_map options_;
