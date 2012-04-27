@@ -6,9 +6,8 @@
 
 class WriterPromise: public ProcessorPromise {
 public:
-    template<class Sink>
     WriterPromise(
-        LatticeWriterFactory<Sink>* writerFactory,
+        ProcessorFactory* writerFactory,
         const boost::program_options::variables_map& options)
         :writerFactory_(writerFactory), options_(options) {
     }

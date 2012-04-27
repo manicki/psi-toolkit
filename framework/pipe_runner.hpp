@@ -108,11 +108,9 @@ private:
 
     PipelineNode pipelineElement2Node_(const PipelineElementSpecification& element);
 
-    template<class Source, class Sink>
     std::list<boost::shared_ptr<ProcessorPromise> > pipelineElement2Promises_(
         const PipelineElementSpecification& elementSpec);
 
-    template<class Source, class Sink>
     boost::shared_ptr<ProcessorPromise> createPromise_(
         ProcessorFactory* factory, const boost::program_options::variables_map& options);
 

@@ -6,9 +6,8 @@
 
 class ReaderPromise: public ProcessorPromise {
 public:
-    template<class Source>
     ReaderPromise(
-        LatticeReaderFactory<Source>* readerFactory,
+        ProcessorFactory* readerFactory,
         const boost::program_options::variables_map& options)
         : readerFactory_(readerFactory), options_(options) {
     }

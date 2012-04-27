@@ -237,6 +237,11 @@ void PipeRunner::pipelineSpecification2Graph_(
     PipelineGraph::vertex_descriptor& firstVertex,
     PipelineGraph::vertex_descriptor& lastVertex) {
 
+    std::list<std::list<boost::shared_ptr<ProcessorPromise> > > sequence;
+    BOOST_FOREACH(const PipelineElementSpecification& element, pipelineSpec.elements) {
+        sequence.push_back(pipelineElement2Promises_(element));
+    }
+
     bool isFirst = true;
     PipelineGraph::vertex_descriptor currentVertex;
 
@@ -509,7 +514,6 @@ PipeRunner::PipelineNode PipeRunner::pipelineElement2Node_(
         parseOptions_(factory.optionsHandled(), element));
 }
 
-template<class Source, class Sink>
 std::list<boost::shared_ptr<ProcessorPromise> > PipeRunner::pipelineElement2Promises_(
     const PipelineElementSpecification& elementSpec) {
 
@@ -529,38 +533,16 @@ std::list<boost::shared_ptr<ProcessorPromise> > PipeRunner::pipelineElement2Prom
     return promises;
 }
 
-template<class Source, class Sink>
 boost::shared_ptr<ProcessorPromise> PipeRunner::createPromise_(
     ProcessorFactory* factory, const boost::program_options::variables_map& options) {
 
-    {
-        const AnnotatorFactory* asAnnotatorFactory =
-            dynamic_cast<const AnnotatorFactory*>(factory);
+    const AnnotatorFactory* asAnnotatorFactory =
+        dynamic_cast<const AnnotatorFactory*>(factory);
 
-        if (asAnnotatorFactory)
-            return boost::shared_ptr<ProcessorPromise>(
-                new AnnotatorPromise(asAnnotatorFactory, options));
-    }
+    if (asAnnotatorFactory)
+        return boost::shared_ptr<ProcessorPromise>(
+            new AnnotatorPromise(asAnnotatorFactory, options);
 
-    {
-        const LatticeReaderFactory<Source>* asReaderFactory =
-            dynamic_cast<const LatticeReaderFactory<Sink>*>(factory);
-
-        if (asReaderFactory)
-            return boost::shared_ptr<ProcessorPromise>(
-                new ReaderPromise(asReaderFactory, options));
-    }
-
-    {
-        const LatticeWriterFactory<Source>* asWriterFactory =
-            dynamic_cast<const LatticeWriterFactory<Source>*>(factory);
-
-        if (asWriterFactory)
-            return boost::shared_ptr<ProcessorPromise>(
-                new WriterPromise(asWriterFactory, options));
-    }
-
-    throw Exception(std::string("unexpected state"));
 }
 
 
