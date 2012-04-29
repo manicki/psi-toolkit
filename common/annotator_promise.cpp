@@ -33,3 +33,29 @@ std::list<std::string> AnnotatorPromise::doLanguagesHandled() const {
 bool AnnotatorPromise::doIsAnnotator() const {
     return true;
 }
+
+double AnnotatorPromise::doGetQualityScore() const {
+    return annotatorFactory_->getQualityScore(options_);
+}
+
+double AnnotatorPromise::doGetEstimatedTime() const {
+    return annotatorFactory_->getEstimatedTime(options_);
+}
+
+std::string AnnotatorPromise::doGetName() const {
+    return annotatorFactory_->getName();
+}
+
+boost::shared_ptr<ProcessorPromise> AnnotatorPromise::doCloneWithLanguageSet(
+    const std::string& langCode) const {
+
+    boost::program_options::variables_map newOptions = options_;
+
+    boost::program_options::variables_map::iterator it(
+        newOptions.find("lang"));
+    boost::program_options::variable_value & vx(it->second);
+    vx.value() = boost::any(langCode);
+
+    return boost::shared_ptr<ProcessorPromise>(
+        new AnnotatorPromise(annotatorFactory_, newOptions));
+}

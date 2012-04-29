@@ -1,5 +1,7 @@
 #include "processor_promise.hpp"
 
+#include <assert.h>
+
 Processor* ProcessorPromise::createProcessor() {
     return doCreateProcessor();
 }
@@ -26,4 +28,23 @@ std::list<std::string> ProcessorPromise::languagesHandled() const {
 
 bool ProcessorPromise::isAnnotator() const {
     return doIsAnnotator();
+}
+
+double ProcessorPromise::getQualityScore() const {
+    return doGetQualityScore();
+}
+
+double ProcessorPromise::getEstimatedTime() const {
+    return doGetEstimatedTime();
+}
+
+std::string ProcessorPromise::getName() const {
+    return doGetName();
+}
+
+boost::shared_ptr<ProcessorPromise> ProcessorPromise::cloneWithLanguageSet(
+    const std::string& langCode) const {
+    assert(languagesHandling() == AnnotatorFactory::LANGUAGE_DEPENDENT);
+
+    return doCloneWithLanguageSet(langCode);
 }

@@ -22,6 +22,15 @@ public:
 
     bool isAnnotator() const;
 
+    double getQualityScore() const;
+
+    double getEstimatedTime() const;
+
+    std::string getName() const;
+
+    boost::shared_ptr<ProcessorPromise> cloneWithLanguageSet(
+        const std::string& langCode) const;
+
 private:
     virtual Processor* doCreateProcessor() = 0;
 
@@ -36,6 +45,15 @@ private:
     virtual std::list<std::string> doLanguagesHandled() const = 0;
 
     virtual bool doIsAnnotator() const = 0;
+
+    virtual double doGetQualityScore() const = 0;
+
+    virtual double doGetEstimatedTime() const = 0;
+
+    virtual std::string doGetName() const = 0;
+
+    virtual boost::shared_ptr<ProcessorPromise> doCloneWithLanguageSet(
+        const std::string& langCode) const = 0;
 };
 
 #endif

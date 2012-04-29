@@ -236,7 +236,7 @@ void PipeRunner::pipelineSpecification2Graph_(
     PipelineGraph::vertex_descriptor& firstVertex,
     PipelineGraph::vertex_descriptor& lastVertex) {
 
-    std::list<std::list<boost::shared_ptr<ProcessorPromise> > > sequence;
+    std::list<boost::shared_ptr<std::list<boost::shared_ptr<ProcessorPromise> > > > sequence;
     BOOST_FOREACH(const PipelineElementSpecification& element, pipelineSpec.elements) {
         sequence.push_back(pipelineElement2Promises_(element));
     }
@@ -513,10 +513,12 @@ PipeRunner::PipelineNode PipeRunner::pipelineElement2Node_(
         parseOptions_(factory.optionsHandled(), element));
 }
 
-std::list<boost::shared_ptr<ProcessorPromise> > PipeRunner::pipelineElement2Promises_(
+boost::shared_ptr<std::list<boost::shared_ptr<ProcessorPromise> > >
+PipeRunner::pipelineElement2Promises_(
     const PipelineElementSpecification& elementSpec) {
 
-    std::list<boost::shared_ptr<ProcessorPromise> > promises;
+    boost::shared_ptr<std::list<boost::shared_ptr<ProcessorPromise> > > promises(
+        new std::list<boost::shared_ptr<ProcessorPromise> >());
 
     std::list<ProcessorFactory*> factories =
         MainFactoriesKeeper::getInstance().getProcessorFactoriesForName(
@@ -526,7 +528,7 @@ std::list<boost::shared_ptr<ProcessorPromise> > PipeRunner::pipelineElement2Prom
         boost::program_options::variables_map options
             = parseOptions_(factory->optionsHandled(), elementSpec);
 
-        promises.push_back(createPromise_(factory, options));
+        promises->push_back(createPromise_(factory, options));
     }
 
     return promises;

@@ -27,6 +27,15 @@ private:
 
     virtual bool doIsAnnotator() const;
 
+    virtual double doGetQualityScore() const ;
+
+    virtual double doGetEstimatedTime() const;
+
+    virtual std::string doGetName() const;
+
+    virtual boost::shared_ptr<ProcessorPromise> doCloneWithLanguageSet(
+        const std::string& langCode) const;
+
     AnnotatorFactory* annotatorFactory_;
     boost::program_options::variables_map options_;
 };

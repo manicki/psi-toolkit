@@ -108,7 +108,7 @@ private:
 
     PipelineNode pipelineElement2Node_(const PipelineElementSpecification& element);
 
-    std::list<boost::shared_ptr<ProcessorPromise> > pipelineElement2Promises_(
+    boost::shared_ptr<std::list<boost::shared_ptr<ProcessorPromise> > > pipelineElement2Promises_(
         const PipelineElementSpecification& elementSpec);
 
     boost::shared_ptr<ProcessorPromise> createPromise_(
