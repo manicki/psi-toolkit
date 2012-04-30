@@ -47,7 +47,7 @@ public:
         }
 
         virtual std::list<std::list<std::string> > doRequiredLayerTags() {
-            return std::list<std::list<std::string> >();
+            return T::requiredLayerTags();
         }
 
         virtual std::list<std::list<std::string> > doOptionalLayerTags() {
