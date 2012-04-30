@@ -39,6 +39,10 @@ private:
     ProcessorPromiseAlternative findFulfillers_(
         LayerTagList requiredTags, boost::optional<std::string> langCode);
 
+    bool isViciousCircle_(
+        AnnotatorFactory* factory,
+        LayerTagList requiredTags);
+
     boost::optional<ProcessorPromiseSharedPtr> getDefaultPromise_(
         AnnotatorFactory& factory, boost::optional<std::string> langCode);
 
@@ -59,6 +63,8 @@ private:
         const ProcessorPromiseAlternative& alt, const std::string& langCode);
     boost::optional<ProcessorPromiseSharedPtr> canHandleLanguage_(
         ProcessorPromiseSharedPtr promise, const std::string& langCode);
+
+    std::string processorPromiseAlternative2String_(ProcessorPromiseAlternative alt);
 
     const ProcessorPromiseAlternativeSequence& originalSequence_;
     std::list<std::string> langCodes_;

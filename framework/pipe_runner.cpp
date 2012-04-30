@@ -8,6 +8,7 @@
 #include <boost/program_options/parsers.hpp>
 #include <boost/algorithm/string.hpp>
 #include <boost/foreach.hpp>
+#include <boost/algorithm/string/join.hpp>
 
 #include "main_factories_keeper.hpp"
 #include "console_help_formatter.hpp"
@@ -82,15 +83,32 @@ void PipeRunner::parseIntoFinalPipeline_(
         return;
     }
 
-    finalPipeline_ = pipelineSpecification2FinalPipeline_(pipelineSpecification_);
+    promiseAlternativeSequence_
+        = pipelineSpecification2PromiseAlternativeSequence_(
+            pipelineSpecification_);
+
+    checkReader_<Source>();
+    checkWriter_<Sink>();
+    std::list<std::string> langCodes = getLangCodes_();
+
+    INFO("the following languages are taken into account: "
+         << boost::algorithm::join(langCodes, ", "));
+
+    AutoCompleter autoCompleter(promiseAlternativeSequence_, langCodes);
+
+    boost::optional<ProcessorPromiseSequence> returnedSeq
+        = autoCompleter.complete();
+
+    if (!returnedSeq)
+        throw Exception("cannot be resolved");
+    else
+        finalPipeline_ = *returnedSeq;
 
     if (stopAfterParsingPipeline_()) {
         justInformation_ = true;
 
         return;
     }
-
-    completeFinalPipeline_<Source, Sink>();
 }
 
 void PipeRunner::parseRunnerProgramOptions_(std::vector<std::string> &args) {
@@ -225,13 +243,20 @@ void PipeRunner::showEmptyPipeWarningMessage_() {
     exit(1);
 }
 
-PipeRunner::FinalPipeline PipeRunner::pipelineSpecification2FinalPipeline_(
+ProcessorPromiseAlternativeSequence
+PipeRunner::pipelineSpecification2PromiseAlternativeSequence_(
     PipelineSpecification& pipelineSpec) {
 
-    // std::list<boost::shared_ptr<std::list<boost::shared_ptr<ProcessorPromise> > > > sequence;
-    // BOOST_FOREACH(const PipelineElementSpecification& element, pipelineSpec.elements) {
-    //     sequence.push_back(pipelineElement2Promises_(element));
-    // }
+    ProcessorPromiseAlternativeSequence sequence;
+    BOOST_FOREACH(const PipelineElementSpecification& element, pipelineSpec.elements)
+        sequence.push_back(pipelineElement2Promises_(element));
+
+    return sequence;
+}
+
+
+PipeRunner::FinalPipeline PipeRunner::pipelineSpecification2FinalPipeline_(
+    PipelineSpecification& pipelineSpec) {
 
     FinalPipeline fpipeline;
 
@@ -244,111 +269,91 @@ PipeRunner::FinalPipeline PipeRunner::pipelineSpecification2FinalPipeline_(
 
 template<typename Source, typename Sink>
 void PipeRunner::completeFinalPipeline_() {
-    checkLangOption_();
     checkReader_<Source>();
     checkWriter_<Sink>();
 }
 
-void PipeRunner::checkLangOption_() {
-    std::string onlyOneLang = getJustOneLanguage_();
-
-    if (!onlyOneLang.empty())
-        setOnlyOneLanguage_(onlyOneLang);
-}
-
-std::string PipeRunner::getJustOneLanguage_() {
-    std::string onlyOneLang;
-
-    for (FinalPipeline::iterator current = finalPipeline_.begin();
-         current != finalPipeline_.end();
-         ++current) {
-
-        std::string nodeOnlyOneLang = getNodeJustOneLanguage_(current);
-
-        if (!nodeOnlyOneLang.empty()) {
-            if (onlyOneLang.empty())
-                onlyOneLang = nodeOnlyOneLang;
-            else if (onlyOneLang != nodeOnlyOneLang)
-                return std::string();
-        }
-    }
-
-    return onlyOneLang;
-}
-
-std::string PipeRunner::getNodeJustOneLanguage_(FinalPipeline::iterator current) {
-
-    if ((*current)->languagesHandling() == AnnotatorFactory::JUST_ONE_LANGUAGE) {
-
-        std::list<std::string> langs
-            = (*current)->languagesHandled();
-
-        if (langs.empty() || langs.size() > 1)
-            throw Exception("unexpected language handling");
-
-        return langs.front();
-    }
-
-    return std::string();
-}
-
-void PipeRunner::setOnlyOneLanguage_(const std::string& langCode) {
-    INFO("assuming " << langCode << " in the whole pipeline");
-
-    for (FinalPipeline::iterator current = finalPipeline_.begin();
-         current != finalPipeline_.end();
-         ++current) {
-        setOnlyOneLanguageForNode_(langCode, current);
-    }
-}
-
-void PipeRunner::setOnlyOneLanguageForNode_(
-    const std::string& langCode,
-    FinalPipeline::iterator current) {
-
-    (*current) = (*current)->cloneWithLanguageSet(langCode);
-}
-
 template<typename Source>
 void PipeRunner::checkReader_() {
-    if (!finalPipeline_.front()->isReader<Source>())
+    bool foundReader = false;
+
+    BOOST_FOREACH(ProcessorPromiseSharedPtr promise, *promiseAlternativeSequence_.front()) {
+        if (promise->isReader<Source>())
+            foundReader = true;
+    }
+
+    if (!foundReader)
         prepend_("txt-reader --line-by-line");
 }
 
 template<typename Sink>
 void PipeRunner::checkWriter_() {
-    boost::shared_ptr<ProcessorPromise> lastPromise = finalPipeline_.back();
 
-    std::string continuation = lastPromise->getContinuation();
+    std::string continuation;
+
+    BOOST_FOREACH(ProcessorPromiseSharedPtr promise, *promiseAlternativeSequence_.back()) {
+        continuation = promise->getContinuation();
+    }
 
     if (!continuation.empty())
         append_(continuation);
 
-    if (!finalPipeline_.back()->isWriter<Sink>())
-        ERROR("no writer specified");
+    bool foundWriter = false;
+
+    BOOST_FOREACH(ProcessorPromiseSharedPtr promise, *promiseAlternativeSequence_.back()) {
+        if (promise->isWriter<Sink>())
+            foundWriter = true;
+    }
+
+    if (!foundWriter)
+        ERROR("no writer found");
 }
 
 void PipeRunner::prepend_(const std::string& pipeline) {
     PipelineSpecification prependedSpec;
     parseIntoPipelineSpecification_(splitPipeline_(pipeline), false, prependedSpec);
 
-    FinalPipeline newPipeline
-        = pipelineSpecification2FinalPipeline_(prependedSpec);
+    ProcessorPromiseAlternativeSequence newSequence
+        = pipelineSpecification2PromiseAlternativeSequence_(prependedSpec);
 
-    newPipeline.splice(newPipeline.end(), finalPipeline_);
-    finalPipeline_ = newPipeline;
+    newSequence.splice(newSequence.end(), promiseAlternativeSequence_);
+    promiseAlternativeSequence_ = newSequence;
 }
 
 void PipeRunner::append_(const std::string& pipeline) {
     PipelineSpecification appendedSpec;
     parseIntoPipelineSpecification_(splitPipeline_(pipeline), false, appendedSpec);
 
-    FinalPipeline newPipeline =  pipelineSpecification2FinalPipeline_(appendedSpec);
+    ProcessorPromiseAlternativeSequence newSequence
+        = pipelineSpecification2PromiseAlternativeSequence_(appendedSpec);
 
-    finalPipeline_.splice(
-        finalPipeline_.end(),
-        newPipeline);
+    promiseAlternativeSequence_.splice(
+        promiseAlternativeSequence_.end(),
+        newSequence);
+}
 
+std::list<std::string> PipeRunner::getLangCodes_() {
+    std::list<std::string> langCodes;
+    std::list<std::string> justOneLangCodes;
+
+    BOOST_FOREACH(ProcessorPromiseAlternative alt, promiseAlternativeSequence_) {
+        BOOST_FOREACH(ProcessorPromiseSharedPtr promise, *alt) {
+            if (promise->languagesHandling() == AnnotatorFactory::JUST_ONE_LANGUAGE)
+                justOneLangCodes.push_back(
+                    promise->languagesHandled().front());
+
+            BOOST_FOREACH(std::string langCode, promise->languagesHandled())
+                langCodes.push_back(langCode);
+        }
+    }
+
+    if (!justOneLangCodes.empty())
+        langCodes = justOneLangCodes;
+
+    langCodes.sort();
+    langCodes.unique();
+
+    return langCodes;
 }
 
 template<typename Source, typename Sink>

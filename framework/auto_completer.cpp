@@ -35,6 +35,9 @@ void AutoCompleter::complete_(ProcessorPromiseAlternativeSequence& sequence) {
              iter != sequence.end();
              ++iter) {
 
+            INFO("processing alternative: "
+                 << processorPromiseAlternative2String_(*iter));
+
             if (isMultilingualProcessorPromiseAlternative_(*iter)) {
                 allFulfilled = false;
 
@@ -46,6 +49,8 @@ void AutoCompleter::complete_(ProcessorPromiseAlternativeSequence& sequence) {
                     INFO("  resolving for " << langCode);
                     ProcessorPromiseAlternative langAlt
                         = filtreByLanguage_(*iter, langCode);
+
+                    assert(!isMultilingualProcessorPromiseAlternative_(langAlt));
 
                     if (langAlt->empty())
                         return;
@@ -126,6 +131,8 @@ void AutoCompleter::complete_(ProcessorPromiseAlternativeSequence& sequence) {
                     restartPosition = iter;
                     --restartPosition;
                     allFulfilled = false;
+
+                    break;
                 }
             }
         }
@@ -206,6 +213,7 @@ ProcessorPromiseAlternative AutoCompleter::findFulfillers_(
             dynamic_cast<AnnotatorFactory*>(&factory);
 
         if (asAnnotatorFactory
+            && !isViciousCircle_(asAnnotatorFactory, requiredTags)
             && isSubset_(requiredTags, asAnnotatorFactory->providedLayerTags())) {
 
             boost::optional<ProcessorPromiseSharedPtr> defaultPromise
@@ -217,6 +225,18 @@ ProcessorPromiseAlternative AutoCompleter::findFulfillers_(
     }
 
     return fulfillersAlternative;
+}
+
+bool AutoCompleter::isViciousCircle_(
+    AnnotatorFactory* factory,
+    LayerTagList requiredTags) {
+
+    BOOST_FOREACH(LayerTagList itsRequiredTags, factory->requiredLayerTags()) {
+        if (isSubset_(requiredTags, itsRequiredTags))
+            return true;
+    }
+
+    return false;
 }
 
 boost::optional<ProcessorPromiseSharedPtr> AutoCompleter::getDefaultPromise_(
@@ -233,6 +253,7 @@ boost::optional<ProcessorPromiseSharedPtr> AutoCompleter::getDefaultPromise_(
     case AnnotatorFactory::JUST_ONE_LANGUAGE:
         if (langCode && factory.languagesHandled(defaultOptions).front() != *langCode)
             return boost::optional<ProcessorPromiseSharedPtr>();
+        break;
     case AnnotatorFactory::LANGUAGE_DEPENDENT:
     {
         bool langFound = false;
@@ -346,8 +367,8 @@ ProcessorPromiseAlternative AutoCompleter::filtreByLanguage_(
         boost::optional<ProcessorPromiseSharedPtr> returnedPromise
             = canHandleLanguage_(promise, langCode);
 
-        if (canHandleLanguage_(promise, langCode))
-            returnedSeq->push_back(promise);
+        if (returnedPromise)
+            returnedSeq->push_back(*returnedPromise);
     }
 
     return returnedSeq;
@@ -376,4 +397,21 @@ boost::optional<ProcessorPromiseSharedPtr> AutoCompleter::canHandleLanguage_(
     }
 
     return boost::optional<ProcessorPromiseSharedPtr>();
+}
+
+std::string AutoCompleter::processorPromiseAlternative2String_(ProcessorPromiseAlternative alt) {
+    std::string ret;
+
+    bool first = true;
+
+    BOOST_FOREACH(ProcessorPromiseSharedPtr promise, *alt) {
+        if (first)
+            first = false;
+        else
+            ret += std::string("/");
+
+        ret += promise->getName();
+    }
+
+    return ret;
 }

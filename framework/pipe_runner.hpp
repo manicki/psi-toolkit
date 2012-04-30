@@ -86,6 +86,11 @@ private:
     boost::shared_ptr<ProcessorPromise> createPromise_(
         ProcessorFactory* factory, const boost::program_options::variables_map& options);
 
+    ProcessorPromiseAlternativeSequence promiseAlternativeSequence_;
+
+    ProcessorPromiseAlternativeSequence pipelineSpecification2PromiseAlternativeSequence_(
+        PipelineSpecification& pipelineSpec);
+
     FinalPipeline finalPipeline_;
 
     FinalPipeline pipelineSpecification2FinalPipeline_(
@@ -94,10 +99,6 @@ private:
     template<typename Source, typename Sink>
     void completeFinalPipeline_();
 
-    void checkLangOption_();
-    std::string getJustOneLanguage_();
-    void setOnlyOneLanguage_(const std::string& langCode);
-
     template<typename Source>
     void checkReader_();
 
@@ -105,6 +106,8 @@ private:
     void checkWriter_();
     void prepend_(const std::string& pipeline);
     void append_(const std::string& pipeline);
+
+    std::list<std::string> getLangCodes_();
 
     template<typename Source, typename Sink>
     int run_(Source&, Sink&);
@@ -116,9 +119,6 @@ private:
         std::istream& in, Sink & out);
 
     void listLanguagesForPipelineNode_(FinalPipeline::iterator current);
-    std::string getNodeJustOneLanguage_(FinalPipeline::iterator current);
-    void setOnlyOneLanguageForNode_(
-        const std::string& langCode, FinalPipeline::iterator current);
 
     static std::istream* createInputStreamOrReturnStandardInput(const std::string & path);
     static std::ostream* createOutputStreamOrReturnStandardOutput(const std::string & path);
