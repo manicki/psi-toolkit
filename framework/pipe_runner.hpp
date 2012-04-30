@@ -66,9 +66,13 @@ private:
         PipelineSpecification& pipelineSpec);
     void showEmptyPipeWarningMessage_();
 
+    boost::program_options::variables_map tryOptions_(
+        ProcessorFactory* factory,
+        const std::list<std::string>& processorArgs);
+
     boost::program_options::variables_map parseOptions_(
         const boost::program_options::options_description& optionsDescription,
-        const std::list<std::string>& pipelineElement);
+        const std::list<std::string>& processorArgs);
 
     std::vector<std::string> splitPipeline_(const std::string& pipeline);
 

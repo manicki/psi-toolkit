@@ -438,8 +438,8 @@ PipeRunner::pipelineElement2Promises_(
 
         try {
             options
-                = parseOptions_(
-                    factory->optionsHandled(),
+                = tryOptions_(
+                    factory,
                     elementSpec.processorArgs);
         } catch (boost::program_options::error& optionsError) {
             optionsMatched = false;
@@ -471,6 +471,69 @@ boost::shared_ptr<ProcessorPromise> PipeRunner::createPromise_(
         asAnnotatorFactory
         ? boost::shared_ptr<ProcessorPromise>(new AnnotatorPromise(asAnnotatorFactory, options))
         : boost::shared_ptr<ProcessorPromise>(new NonAnnotatorPromise(factory, options));
+}
+
+boost::program_options::variables_map PipeRunner::tryOptions_(
+    ProcessorFactory* factory,
+    const std::list<std::string>& processorArgs) {
+
+    boost::program_options::variables_map options;
+
+    try {
+        options = parseOptions_(factory->optionsHandled(), processorArgs);
+    } catch(boost::program_options::error& optionsError) {
+
+        AnnotatorFactory* asAnnotatorFactory =
+            dynamic_cast<AnnotatorFactory*>(factory);
+
+        if (asAnnotatorFactory) {
+            std::list<std::string> processorArgsWithoutLang = processorArgs;
+
+            std::list<std::string>::iterator iter = processorArgsWithoutLang.begin();
+            while (iter != processorArgsWithoutLang.end()
+                   && (*iter) != "--lang")
+                ++iter;
+
+            if (iter != processorArgsWithoutLang.end()) {
+                std::list<std::string>::iterator b_iter = iter;
+                ++b_iter;
+                std::string langCode = *b_iter;
+
+                if (b_iter != processorArgsWithoutLang.end()) {
+                    ++b_iter;
+                    processorArgsWithoutLang.erase(iter, b_iter);
+
+                    bool failed = false;
+
+                    boost::program_options::variables_map optionsWithoutLang;
+
+                    try {
+                        optionsWithoutLang
+                            = parseOptions_(factory->optionsHandled(), processorArgsWithoutLang);
+                    } catch (boost::program_options::error& optionsError) {
+                        failed = true;
+                    }
+
+                    if (failed)
+                        throw;
+                    else {
+                        if (asAnnotatorFactory->languagesHandling(optionsWithoutLang)
+                            == AnnotatorFactory::JUST_ONE_LANGUAGE
+                            &&
+                            asAnnotatorFactory->languagesHandled(optionsWithoutLang).front()
+                            == langCode)
+                            return optionsWithoutLang;
+                        else
+                            throw;
+                    }
+                }
+            }
+        }
+
+        throw;
+    }
+
+    return options;
 }
 
 
