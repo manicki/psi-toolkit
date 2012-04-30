@@ -431,11 +431,32 @@ PipeRunner::pipelineElement2Promises_(
             elementSpec.processorName);
 
     BOOST_FOREACH(ProcessorFactory* factory, factories) {
-        boost::program_options::variables_map options
-            = parseOptions_(factory->optionsHandled(), elementSpec);
 
-        promises->push_back(createPromise_(factory, options));
+        boost::program_options::variables_map options;
+
+        bool optionsMatched = true;
+
+        try {
+            options
+                = parseOptions_(
+                    factory->optionsHandled(),
+                    elementSpec.processorArgs);
+        } catch (boost::program_options::error& optionsError) {
+            optionsMatched = false;
+
+            if (factories.size() == 1)
+                throw;
+
+            INFO("skipping " << factory->getName() << " "
+                 << optionsError.what());
+        }
+
+        if (optionsMatched)
+            promises->push_back(createPromise_(factory, options));
     }
+
+    if (promises->empty())
+        throw Exception("none of the alias alternatives matched the options");
 
     return promises;
 }
@@ -455,9 +476,7 @@ boost::shared_ptr<ProcessorPromise> PipeRunner::createPromise_(
 
 boost::program_options::variables_map PipeRunner::parseOptions_(
     const boost::program_options::options_description& optionsDescription,
-    const PipelineElementSpecification& pipelineElement) {
-
-    const std::list<std::string>& processorArgs = pipelineElement.processorArgs;
+    const std::list<std::string>& processorArgs) {
 
     int argc = processorArgs.size() + 1;
     boost::scoped_array<char*> argv(new char* [argc + 1]);

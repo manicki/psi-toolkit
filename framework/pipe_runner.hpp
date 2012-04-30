@@ -68,7 +68,7 @@ private:
 
     boost::program_options::variables_map parseOptions_(
         const boost::program_options::options_description& optionsDescription,
-        const PipelineElementSpecification& pipelineElement);
+        const std::list<std::string>& pipelineElement);
 
     std::vector<std::string> splitPipeline_(const std::string& pipeline);
 
