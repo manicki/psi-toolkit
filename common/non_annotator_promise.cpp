@@ -41,6 +41,8 @@ std::string NonAnnotatorPromise::doGetName() const {
 }
 
 boost::shared_ptr<ProcessorPromise> NonAnnotatorPromise::doCloneWithLanguageSet(
-    const std::string& /*langCode*/) const {
-    assert(0);
+    const std::string& /*langCode*/) {
+
+    return boost::shared_ptr<ProcessorPromise>(
+        new NonAnnotatorPromise(factory_, options_));
 }

@@ -9,7 +9,7 @@ public:
     NonAnnotatorPromise(
         ProcessorFactory* factory,
         const boost::program_options::variables_map& options)
-        : factory_(factory), options_(options) {
+        : ProcessorPromise(factory, options) {
     }
 
     virtual ~NonAnnotatorPromise() {
@@ -37,10 +37,7 @@ private:
     virtual std::string doGetName() const;
 
     virtual boost::shared_ptr<ProcessorPromise> doCloneWithLanguageSet(
-        const std::string& langCode) const;
-
-    ProcessorFactory* factory_;
-    boost::program_options::variables_map options_;
+        const std::string& langCode);
 };
 
 #endif

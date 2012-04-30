@@ -3,31 +3,31 @@
 AnnotatorPromise::AnnotatorPromise(
     AnnotatorFactory* annotatorFactory,
     const boost::program_options::variables_map& options)
-    :annotatorFactory_(annotatorFactory), options_(options) {
+    :ProcessorPromise(annotatorFactory, options) {
 }
 
 Processor* AnnotatorPromise::doCreateProcessor() {
-    return annotatorFactory_->createAnnotator(options_);
+    return dynamic_cast<AnnotatorFactory*>(factory_)->createAnnotator(options_);
 }
 
 std::list<std::list<std::string> > AnnotatorPromise::doRequiredLayerTags() {
-    return annotatorFactory_->requiredLayerTags();
+    return dynamic_cast<AnnotatorFactory*>(factory_)->requiredLayerTags();
 }
 
 std::list<std::list<std::string> > AnnotatorPromise::doOptionalLayerTags() {
-    return annotatorFactory_->optionalLayerTags();
+    return dynamic_cast<AnnotatorFactory*>(factory_)->optionalLayerTags();
 }
 
 std::list<std::string> AnnotatorPromise::doProvidedLayerTags() {
-    return annotatorFactory_->providedLayerTags();
+    return dynamic_cast<AnnotatorFactory*>(factory_)->providedLayerTags();
 }
 
 AnnotatorFactory::LanguagesHandling AnnotatorPromise::doLanguagesHandling() const {
-    return annotatorFactory_->languagesHandling(options_);
+    return dynamic_cast<AnnotatorFactory*>(factory_)->languagesHandling(options_);
 }
 
 std::list<std::string> AnnotatorPromise::doLanguagesHandled() const {
-    return annotatorFactory_->languagesHandled(options_);
+    return dynamic_cast<AnnotatorFactory*>(factory_)->languagesHandled(options_);
 }
 
 bool AnnotatorPromise::doIsAnnotator() const {
@@ -35,19 +35,24 @@ bool AnnotatorPromise::doIsAnnotator() const {
 }
 
 double AnnotatorPromise::doGetQualityScore() const {
-    return annotatorFactory_->getQualityScore(options_);
+    return dynamic_cast<AnnotatorFactory*>(factory_)->getQualityScore(options_);
 }
 
 double AnnotatorPromise::doGetEstimatedTime() const {
-    return annotatorFactory_->getEstimatedTime(options_);
+    return dynamic_cast<AnnotatorFactory*>(factory_)->getEstimatedTime(options_);
 }
 
 std::string AnnotatorPromise::doGetName() const {
-    return annotatorFactory_->getName();
+    return dynamic_cast<AnnotatorFactory*>(factory_)->getName();
 }
 
 boost::shared_ptr<ProcessorPromise> AnnotatorPromise::doCloneWithLanguageSet(
-    const std::string& langCode) const {
+    const std::string& langCode) {
+
+    if (languagesHandling() != AnnotatorFactory::LANGUAGE_DEPENDENT) {
+        return boost::shared_ptr<ProcessorPromise>(
+            new AnnotatorPromise(dynamic_cast<AnnotatorFactory*>(factory_), options_));
+    }
 
     boost::program_options::variables_map newOptions = options_;
 
@@ -57,5 +62,5 @@ boost::shared_ptr<ProcessorPromise> AnnotatorPromise::doCloneWithLanguageSet(
     vx.value() = boost::any(langCode);
 
     return boost::shared_ptr<ProcessorPromise>(
-        new AnnotatorPromise(annotatorFactory_, newOptions));
+        new AnnotatorPromise(dynamic_cast<AnnotatorFactory*>(factory_), newOptions));
 }

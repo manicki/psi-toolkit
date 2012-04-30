@@ -342,7 +342,7 @@ ProcessorPromiseAlternative AutoCompleter::filtreByLanguage_(
     ProcessorPromiseAlternative returnedSeq(
         new std::list<ProcessorPromiseSharedPtr>());
 
-    BOOST_FOREACH(ProcessorPromiseSharedPtr promise, *returnedSeq) {
+    BOOST_FOREACH(ProcessorPromiseSharedPtr promise, *alt) {
         boost::optional<ProcessorPromiseSharedPtr> returnedPromise
             = canHandleLanguage_(promise, langCode);
 

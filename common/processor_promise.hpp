@@ -2,13 +2,21 @@
 #define PROCESSOR_PROMISE_HDR
 
 #include "annotator_factory.hpp"
+#include "lattice_reader_factory.hpp"
+#include "lattice_writer_factory.hpp"
 
 class ProcessorPromise {
 public:
     virtual ~ProcessorPromise() {
     }
 
-    Processor* createProcessor();
+    ProcessorPromise(
+        ProcessorFactory* factory,
+        const boost::program_options::variables_map& options)
+        : factory_(factory), options_(options) {
+    }
+
+    boost::shared_ptr<Processor> createProcessor();
 
     std::list<std::list<std::string> > requiredLayerTags();
 
@@ -22,6 +30,16 @@ public:
 
     bool isAnnotator() const;
 
+    template<class Source>
+    bool isReader() const {
+        return dynamic_cast<const LatticeReaderFactory<Source>* >(factory_) != 0;
+    }
+
+    template<class Sink>
+    bool isWriter() const {
+        return dynamic_cast<const LatticeWriterFactory<Sink>* >(factory_) != 0;
+    }
+
     double getQualityScore() const;
 
     double getEstimatedTime() const;
@@ -29,7 +47,11 @@ public:
     std::string getName() const;
 
     boost::shared_ptr<ProcessorPromise> cloneWithLanguageSet(
-        const std::string& langCode) const;
+        const std::string& langCode);
+
+    bool checkRequirements(std::ostream & message) const;
+
+    std::string getContinuation() const;
 
 private:
     virtual Processor* doCreateProcessor() = 0;
@@ -53,7 +75,12 @@ private:
     virtual std::string doGetName() const = 0;
 
     virtual boost::shared_ptr<ProcessorPromise> doCloneWithLanguageSet(
-        const std::string& langCode) const = 0;
+        const std::string& langCode) = 0;
+
+protected:
+    ProcessorFactory* factory_;
+    boost::program_options::variables_map options_;
+    boost::shared_ptr<Processor> processor_;
 };
 
 #endif

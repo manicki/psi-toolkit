@@ -34,10 +34,7 @@ private:
     virtual std::string doGetName() const;
 
     virtual boost::shared_ptr<ProcessorPromise> doCloneWithLanguageSet(
-        const std::string& langCode) const;
-
-    AnnotatorFactory* annotatorFactory_;
-    boost::program_options::variables_map options_;
+        const std::string& langCode);
 };
 
 #endif

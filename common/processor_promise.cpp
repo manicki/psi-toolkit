@@ -2,8 +2,19 @@
 
 #include <assert.h>
 
-Processor* ProcessorPromise::createProcessor() {
-    return doCreateProcessor();
+bool ProcessorPromise::checkRequirements(std::ostream & message) const {
+    return factory_->checkRequirements(options_, message);
+}
+
+std::string ProcessorPromise::getContinuation() const {
+    return factory_->getContinuation(options_);
+}
+
+boost::shared_ptr<Processor> ProcessorPromise::createProcessor() {
+    if (!processor_)
+        processor_.reset(doCreateProcessor());
+
+    return processor_;
 }
 
 std::list<std::list<std::string> > ProcessorPromise::requiredLayerTags() {
@@ -23,7 +34,7 @@ AnnotatorFactory::LanguagesHandling ProcessorPromise::languagesHandling() const 
 }
 
 std::list<std::string> ProcessorPromise::languagesHandled() const {
-    return languagesHandled();
+    return doLanguagesHandled();
 }
 
 bool ProcessorPromise::isAnnotator() const {
@@ -43,8 +54,7 @@ std::string ProcessorPromise::getName() const {
 }
 
 boost::shared_ptr<ProcessorPromise> ProcessorPromise::cloneWithLanguageSet(
-    const std::string& langCode) const {
-    assert(languagesHandling() == AnnotatorFactory::LANGUAGE_DEPENDENT);
+    const std::string& langCode) {
 
     return doCloneWithLanguageSet(langCode);
 }
