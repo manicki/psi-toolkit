@@ -66,8 +66,6 @@ private:
         PipelineSpecification& pipelineSpec);
     void showEmptyPipeWarningMessage_();
 
-    ProcessorFactory& getFactory_(const PipelineElementSpecification& elementSpec);
-
     boost::program_options::variables_map parseOptions_(
         const boost::program_options::options_description& optionsDescription,
         const PipelineElementSpecification& pipelineElement);
