@@ -8,9 +8,13 @@
 #include <boost/program_options/parsers.hpp>
 #include <boost/algorithm/string.hpp>
 #include <boost/foreach.hpp>
+#include <boost/algorithm/string/join.hpp>
 
 #include "main_factories_keeper.hpp"
 #include "console_help_formatter.hpp"
+
+#include "annotator_promise.hpp"
+#include "non_annotator_promise.hpp"
 
 #include "logging.hpp"
 #include "version_information.hpp"
@@ -18,20 +22,20 @@
 PipeRunner::PipeRunner(const std::string& pipeline)
     : justInformation_(false), runnerOptionsDescription_("PipeRunner options") {
 
-    parseIntoGraph_<std::istream, std::ostream>(splitPipeline_(pipeline), false);
+    parseIntoFinalPipeline_<std::istream, std::ostream>(splitPipeline_(pipeline), false);
 }
 
 PipeRunner::PipeRunner(int argc, char* argv[])
     : justInformation_(false), runnerOptionsDescription_("PipeRunner options") {
 
     std::vector<std::string> args(argv, argv + argc);
-    parseIntoGraph_<std::istream, std::ostream>(args, true);
+    parseIntoFinalPipeline_<std::istream, std::ostream>(args, true);
 }
 
 PipeRunner::PipeRunner(std::vector<std::string> args)
     : justInformation_(false), runnerOptionsDescription_("PipeRunner options") {
 
-    parseIntoGraph_<std::istream, std::ostream>(args, false);
+    parseIntoFinalPipeline_<std::istream, std::ostream>(args, false);
 }
 
 int PipeRunner::run(std::istream& in, std::ostream& out) {
@@ -43,26 +47,9 @@ int PipeRunner::run(std::istream& in, std::ostream& out) {
 
 const std::string PipeRunner::PIPELINE_SEPARATOR = "!";
 
-ProcessorFactory& PipeRunner::getFactory_(const PipelineElementSpecification& elementSpec) {
-    std::list<ProcessorFactory*> factories =
-        MainFactoriesKeeper::getInstance().getProcessorFactoriesForName(
-            elementSpec.processorName);
-
-    size_t numberOfFactoriesFound = factories.size();
-
-    if (numberOfFactoriesFound == 0)
-        throw Exception(std::string("no processor found for `")
-                        + elementSpec.processorName + "`");
-    else if (numberOfFactoriesFound > 1)
-        throw Exception(std::string("too many processors found for `")
-                        + elementSpec.processorName
-                        + "`, processor resolution not implemented yet");
-
-    return *factories.front();
-}
-
 template<typename Source, typename Sink>
-void PipeRunner::parseIntoGraph_(std::vector<std::string> args, bool isTheFirstArgProgramName) {
+void PipeRunner::parseIntoFinalPipeline_(
+    std::vector<std::string> args, bool isTheFirstArgProgramName) {
 
     parseRunnerProgramOptions_(args);
     if (stopAfterExecutingRunnerOptions_()) {
@@ -78,15 +65,32 @@ void PipeRunner::parseIntoGraph_(std::vector<std::string> args, bool isTheFirstA
         return;
     }
 
-    pipelineSpecification2Graph_(pipelineSpecification_, firstNode, lastNode);
+    promiseAlternativeSequence_
+        = pipelineSpecification2PromiseAlternativeSequence_(
+            pipelineSpecification_);
+
+    checkReader_<Source>();
+    checkWriter_<Sink>();
+    std::list<std::string> langCodes = getLangCodes_();
+
+    INFO("the following languages are taken into account: "
+         << boost::algorithm::join(langCodes, ", "));
+
+    AutoCompleter autoCompleter(promiseAlternativeSequence_, langCodes);
+
+    boost::optional<ProcessorPromiseSequence> returnedSeq
+        = autoCompleter.complete();
+
+    if (!returnedSeq)
+        throw Exception("cannot be resolved");
+    else
+        finalPipeline_ = *returnedSeq;
 
     if (stopAfterParsingPipeline_()) {
         justInformation_ = true;
 
         return;
     }
-
-    completeGraph_<Source, Sink>();
 }
 
 void PipeRunner::parseRunnerProgramOptions_(std::vector<std::string> &args) {
@@ -158,27 +162,20 @@ bool PipeRunner::stopAfterParsingPipeline_() {
 }
 
 void PipeRunner::listLanguages_() {
-    PipelineGraph::vertex_descriptor current = firstNode;
-
-    do {
+    for (FinalPipeline::iterator current = finalPipeline_.begin();
+         current != finalPipeline_.end();
+         ++current) {
         listLanguagesForPipelineNode_(current);
-        if (!goToNextNode_(current))
-            break;
-    } while (1);
+    }
 }
 
-void PipeRunner::listLanguagesForPipelineNode_(PipelineGraph::vertex_descriptor current) {
-    PipelineNode& currentPipelineNode = pipelineGraph_[current];
+void PipeRunner::listLanguagesForPipelineNode_(FinalPipeline::iterator current) {
 
-    const AnnotatorFactory* asAnnotatorFactory =
-        dynamic_cast<const AnnotatorFactory*>(
-            currentPipelineNode.getFactory());
-
-    if (asAnnotatorFactory) {
-        std::cout << currentPipelineNode.getFactory()->getName() << ":";
+    if ((*current)->isAnnotator()) {
+        std::cout << (*current)->getName() << ":";
 
         BOOST_FOREACH(const std::string& langCode,
-                      asAnnotatorFactory->languagesHandled(currentPipelineNode.options_))
+                      (*current)->languagesHandled())
             std::cout << " " << langCode;
 
         std::cout << "\n";
@@ -228,247 +225,173 @@ void PipeRunner::showEmptyPipeWarningMessage_() {
     exit(1);
 }
 
-void PipeRunner::pipelineSpecification2Graph_(
-    PipelineSpecification& pipelineSpec,
-    PipelineGraph::vertex_descriptor& firstVertex,
-    PipelineGraph::vertex_descriptor& lastVertex) {
+ProcessorPromiseAlternativeSequence
+PipeRunner::pipelineSpecification2PromiseAlternativeSequence_(
+    PipelineSpecification& pipelineSpec) {
 
-    bool isFirst = true;
-    PipelineGraph::vertex_descriptor currentVertex;
+    ProcessorPromiseAlternativeSequence sequence;
+    BOOST_FOREACH(const PipelineElementSpecification& element, pipelineSpec.elements)
+        sequence.push_back(pipelineElement2Promises_(element));
+
+    return sequence;
+}
+
+
+PipeRunner::FinalPipeline PipeRunner::pipelineSpecification2FinalPipeline_(
+    PipelineSpecification& pipelineSpec) {
+
+    FinalPipeline fpipeline;
 
     BOOST_FOREACH(const PipelineElementSpecification& element, pipelineSpec.elements) {
-        PipelineGraph::vertex_descriptor newVertex =
-            boost::add_vertex(
-                pipelineElement2Node_(element),
-                pipelineGraph_);
-
-        if (isFirst) {
-            isFirst = false;
-            firstVertex = newVertex;
-        }
-        else {
-            std::string emptyString;
-            boost::add_edge(currentVertex, newVertex, emptyString, pipelineGraph_);
-        }
-
-        currentVertex = newVertex;
+        fpipeline.push_back(pipelineElement2Node_(element));
     }
 
-    lastVertex = currentVertex;
+    return fpipeline;
 }
 
 template<typename Source, typename Sink>
-void PipeRunner::completeGraph_() {
-    checkLangOption_();
+void PipeRunner::completeFinalPipeline_() {
     checkReader_<Source>();
     checkWriter_<Sink>();
 }
 
-void PipeRunner::checkLangOption_() {
-    std::string onlyOneLang = getJustOneLanguage_();
-
-    if (!onlyOneLang.empty())
-        setOnlyOneLanguage_(onlyOneLang);
-}
-
-std::string PipeRunner::getJustOneLanguage_() {
-    std::string onlyOneLang;
-
-    PipelineGraph::vertex_descriptor current = firstNode;
-
-    do {
-        std::string nodeOnlyOneLang = getNodeJustOneLanguage_(current);
-
-        if (!nodeOnlyOneLang.empty()) {
-            if (onlyOneLang.empty())
-                onlyOneLang = nodeOnlyOneLang;
-            else if (onlyOneLang != nodeOnlyOneLang)
-                return std::string();
-        }
-
-        if (!goToNextNode_(current))
-            break;
-    } while (1);
-
-    return onlyOneLang;
-}
-
-std::string PipeRunner::getNodeJustOneLanguage_(PipelineGraph::vertex_descriptor node) {
-    PipelineNode& currentPipelineNode = pipelineGraph_[node];
-
-    const AnnotatorFactory* asAnnotatorFactory =
-        dynamic_cast<const AnnotatorFactory*>(
-            currentPipelineNode.getFactory());
-
-    if (asAnnotatorFactory) {
-        if (asAnnotatorFactory->languagesHandling(currentPipelineNode.options_)
-            == AnnotatorFactory::JUST_ONE_LANGUAGE) {
-
-            std::list<std::string> langs
-                = asAnnotatorFactory->languagesHandled(currentPipelineNode.options_);
-
-            if (langs.empty() || langs.size() > 1)
-                throw Exception("unexpected language handling");
-
-            return langs.front();
-        }
-    }
-
-    return std::string();
-}
-
-void PipeRunner::setOnlyOneLanguage_(const std::string& langCode) {
-    INFO("assuming " << langCode << " in the whole pipeline");
-
-    PipelineGraph::vertex_descriptor current = firstNode;
-
-    do {
-        setOnlyOneLanguageForNode_(langCode, current);
-
-        if (!goToNextNode_(current))
-            break;
-    } while (1);
-}
-
-void PipeRunner::setOnlyOneLanguageForNode_(
-    const std::string& langCode,
-    PipelineGraph::vertex_descriptor node) {
-
-    PipelineNode& currentPipelineNode = pipelineGraph_[node];
-
-    const AnnotatorFactory* asAnnotatorFactory =
-        dynamic_cast<const AnnotatorFactory*>(
-            currentPipelineNode.getFactory());
-
-    if (asAnnotatorFactory) {
-        if (asAnnotatorFactory->languagesHandling(currentPipelineNode.options_)
-            == AnnotatorFactory::LANGUAGE_DEPENDENT) {
-
-            if (currentPipelineNode.options_.count("lang") > 0) {
-                // probably abusing Boost Options...
-                boost::program_options::variables_map::iterator it(
-                    currentPipelineNode.options_.find("lang"));
-                boost::program_options::variable_value & vx(it->second);
-                vx.value() = boost::any(langCode);
-            } else {
-                WARN("language dependent without --lang???");
-            }
-        }
-    }
-}
-
 template<typename Source>
 void PipeRunner::checkReader_() {
-    const LatticeReaderFactory<Source>* reader =
-        dynamic_cast<const LatticeReaderFactory<Source>*>(
-            pipelineGraph_[firstNode].getFactory());
+    bool foundReader = false;
 
-    if (!reader)
+    BOOST_FOREACH(ProcessorPromiseSharedPtr promise, *promiseAlternativeSequence_.front()) {
+        if (promise->isReader<Source>())
+            foundReader = true;
+    }
+
+    if (!foundReader)
         prepend_("txt-reader --line-by-line");
 }
 
 template<typename Sink>
 void PipeRunner::checkWriter_() {
-    PipelineNode& lastPipelineNode = pipelineGraph_[lastNode];
 
-    std::string continuation = lastPipelineNode.getContinuation();
+    std::string continuation;
+
+    BOOST_FOREACH(ProcessorPromiseSharedPtr promise, *promiseAlternativeSequence_.back()) {
+        continuation = promise->getContinuation();
+    }
 
     if (!continuation.empty())
         append_(continuation);
 
-    const LatticeWriterFactory<Sink>* writer =
-        dynamic_cast<const LatticeWriterFactory<Sink> *>(
-            pipelineGraph_[lastNode].getFactory());
+    bool foundWriter = false;
 
-    if (!writer)
-        ERROR("no writer specified");
+    BOOST_FOREACH(ProcessorPromiseSharedPtr promise, *promiseAlternativeSequence_.back()) {
+        if (promise->isWriter<Sink>())
+            foundWriter = true;
+    }
 
+    if (!foundWriter)
+        ERROR("no writer found");
 }
 
 void PipeRunner::prepend_(const std::string& pipeline) {
     PipelineSpecification prependedSpec;
     parseIntoPipelineSpecification_(splitPipeline_(pipeline), false, prependedSpec);
 
-    PipelineGraph::vertex_descriptor prevFirst = firstNode;
-    PipelineGraph::vertex_descriptor prepLast;
+    ProcessorPromiseAlternativeSequence newSequence
+        = pipelineSpecification2PromiseAlternativeSequence_(prependedSpec);
 
-    pipelineSpecification2Graph_(prependedSpec, firstNode, prepLast);
-
-    std::string emptyString;
-    boost::add_edge(prepLast, prevFirst, emptyString, pipelineGraph_);
+    newSequence.splice(newSequence.end(), promiseAlternativeSequence_);
+    promiseAlternativeSequence_ = newSequence;
 }
 
 void PipeRunner::append_(const std::string& pipeline) {
     PipelineSpecification appendedSpec;
     parseIntoPipelineSpecification_(splitPipeline_(pipeline), false, appendedSpec);
 
-    PipelineGraph::vertex_descriptor prevLast = lastNode;
-    PipelineGraph::vertex_descriptor appFirst;
+    ProcessorPromiseAlternativeSequence newSequence
+        = pipelineSpecification2PromiseAlternativeSequence_(appendedSpec);
 
-    pipelineSpecification2Graph_(appendedSpec, appFirst, lastNode);
+    promiseAlternativeSequence_.splice(
+        promiseAlternativeSequence_.end(),
+        newSequence);
+}
 
-    std::string emptyString;
-    boost::add_edge(prevLast, appFirst, emptyString, pipelineGraph_);
+std::list<std::string> PipeRunner::getLangCodes_() {
+    std::list<std::string> langCodes;
+    std::list<std::string> justOneLangCodes;
+
+    BOOST_FOREACH(ProcessorPromiseAlternative alt, promiseAlternativeSequence_) {
+        BOOST_FOREACH(ProcessorPromiseSharedPtr promise, *alt) {
+            if (promise->languagesHandling() == AnnotatorFactory::JUST_ONE_LANGUAGE)
+                justOneLangCodes.push_back(
+                    promise->languagesHandled().front());
+
+            BOOST_FOREACH(std::string langCode, promise->languagesHandled())
+                langCodes.push_back(langCode);
+        }
+    }
+
+    if (!justOneLangCodes.empty())
+        langCodes = justOneLangCodes;
+
+    langCodes.sort();
+    langCodes.unique();
+
+    return langCodes;
 }
 
 template<typename Source, typename Sink>
 int PipeRunner::run_(Source& in, Sink& out) {
     Lattice lattice;
 
-    PipelineGraph::vertex_descriptor current = firstNode;
-
-    do {
+    for (FinalPipeline::iterator current = finalPipeline_.begin();
+         current != finalPipeline_.end();
+         ++current)
         runPipelineNode_<Source, Sink>(current, lattice, in, out);
-        if (!goToNextNode_(current))
-            break;
-    } while (1);
 
     return 0;
 }
 
 template<typename Source, typename Sink>
 void PipeRunner::runPipelineNode_(
-    PipelineGraph::vertex_descriptor current,
+    FinalPipeline::iterator current,
     Lattice& lattice, std::istream& in, Sink & out) {
 
-    PipelineNode& currentPipelineNode = pipelineGraph_[current];
-
     std::stringstream messageStream;
-    if (!currentPipelineNode.getFactory()->checkRequirements(
-                                           currentPipelineNode.getOptions(),
-                                           messageStream)) {
+    if (!(*current)->checkRequirements(messageStream)) {
 
-        ERROR("Cant run node, because requirements are not met:\n"
+        ERROR("Cannot run node, because requirements are not met:\n"
              << messageStream.str());
         return;
     }
 
-    currentPipelineNode.createProcessor();
+    boost::shared_ptr<Processor> processor = (*current)->createProcessor();
 
-    if (current == firstNode) {
+    FinalPipeline::iterator lastElementIter = finalPipeline_.end();
+    --lastElementIter;
+
+    if (current == finalPipeline_.begin()) {
         boost::shared_ptr<LatticeReader<Source> > reader =
             boost::dynamic_pointer_cast<LatticeReader<Source> >(
-                currentPipelineNode.getProcessor());
+                processor);
 
         if (!reader)
             throw Exception("first element of the pipeline should be a writer");
 
         reader->readIntoLattice(in, lattice);
     }
-    else if (current == lastNode) {
+    else if (current == lastElementIter) {
         boost::shared_ptr<LatticeWriter<Sink> > writer =
             boost::dynamic_pointer_cast<LatticeWriter<Sink> >(
-                currentPipelineNode.getProcessor());
+                processor);
 
-                if (!writer)
-                    throw Exception("last element of the pipeline should be a writer");
+        if (!writer)
+            throw Exception("last element of the pipeline should be a writer");
 
         writer->writeLattice(lattice, out);
     }
     else {
         boost::shared_ptr<Annotator> annotator =
             boost::dynamic_pointer_cast<Annotator>(
-                currentPipelineNode.getProcessor());
+                processor);
 
         if (!annotator)
             throw Exception("unexpected reader or writer in the middle of the pipeline");
@@ -477,39 +400,148 @@ void PipeRunner::runPipelineNode_(
     }
 }
 
-bool PipeRunner::goToNextNode_(PipelineGraph::vertex_descriptor& current) {
-    std::pair<boost::graph_traits<PipelineGraph>::out_edge_iterator,
-              boost::graph_traits<PipelineGraph>::out_edge_iterator> iterPair
-        = boost::out_edges(current, pipelineGraph_);
-
-    if (iterPair.first == iterPair.second)
-        return false;
-    else {
-        current = boost::target(*iterPair.first, pipelineGraph_);
-
-        ++iterPair.first;
-        if (iterPair.first != iterPair.second)
-            WARN("unexpected fork in pipeline graph");
-    }
-
-    return true;
-}
-
-PipeRunner::PipelineNode PipeRunner::pipelineElement2Node_(
+boost::shared_ptr<ProcessorPromise> PipeRunner::pipelineElement2Node_(
     const PipelineElementSpecification& element) {
 
-    ProcessorFactory& factory = getFactory_(element);
+    boost::shared_ptr<std::list<boost::shared_ptr<ProcessorPromise> > > promises
+        = pipelineElement2Promises_(element);
 
-    return PipelineNode(
-        factory,
-        parseOptions_(factory.optionsHandled(), element));
+    size_t numberOfPromisesFound = promises->size();
+
+    if (numberOfPromisesFound == 0)
+        throw Exception(std::string("no processor found for `")
+                        + element.processorName + "`");
+    else if (numberOfPromisesFound > 1)
+        throw Exception(std::string("too many processors found for `")
+                        + element.processorName
+                        + "`, processor resolution not implemented yet");
+
+    return promises->front();
 }
+
+boost::shared_ptr<std::list<boost::shared_ptr<ProcessorPromise> > >
+PipeRunner::pipelineElement2Promises_(
+    const PipelineElementSpecification& elementSpec) {
+
+    boost::shared_ptr<std::list<boost::shared_ptr<ProcessorPromise> > > promises(
+        new std::list<boost::shared_ptr<ProcessorPromise> >());
+
+    std::list<ProcessorFactory*> factories =
+        MainFactoriesKeeper::getInstance().getProcessorFactoriesForName(
+            elementSpec.processorName);
+
+    BOOST_FOREACH(ProcessorFactory* factory, factories) {
+
+        boost::program_options::variables_map options;
+
+        bool optionsMatched = true;
+
+        try {
+            options
+                = tryOptions_(
+                    factory,
+                    elementSpec.processorArgs);
+        } catch (boost::program_options::error& optionsError) {
+            optionsMatched = false;
+
+            if (factories.size() == 1)
+                throw;
+
+            INFO("skipping " << factory->getName() << " "
+                 << optionsError.what());
+        }
+
+        if (optionsMatched)
+            promises->push_back(createPromise_(factory, options));
+    }
+
+    if (promises->empty())
+        throw Exception("none of the alias alternatives matched the options");
+
+    return promises;
+}
+
+boost::shared_ptr<ProcessorPromise> PipeRunner::createPromise_(
+    ProcessorFactory* factory, const boost::program_options::variables_map& options) {
+
+    AnnotatorFactory* asAnnotatorFactory =
+        dynamic_cast<AnnotatorFactory*>(factory);
+
+    return
+        asAnnotatorFactory
+        ? boost::shared_ptr<ProcessorPromise>(new AnnotatorPromise(asAnnotatorFactory, options))
+        : boost::shared_ptr<ProcessorPromise>(new NonAnnotatorPromise(factory, options));
+}
+
+boost::program_options::variables_map PipeRunner::tryOptions_(
+    ProcessorFactory* factory,
+    const std::list<std::string>& processorArgs) {
+
+    boost::program_options::variables_map options;
+
+    try {
+        options = parseOptions_(factory->optionsHandled(), processorArgs);
+    } catch(boost::program_options::error& optionsError) {
+
+        AnnotatorFactory* asAnnotatorFactory =
+            dynamic_cast<AnnotatorFactory*>(factory);
+
+        if (asAnnotatorFactory) {
+            std::list<std::string> processorArgsWithoutLang = processorArgs;
+
+            std::list<std::string>::iterator iter = processorArgsWithoutLang.begin();
+            while (iter != processorArgsWithoutLang.end()
+                   && (*iter) != "--lang")
+                ++iter;
+
+            if (iter != processorArgsWithoutLang.end()) {
+                std::list<std::string>::iterator b_iter = iter;
+                ++b_iter;
+                std::string langCode = *b_iter;
+
+                if (b_iter != processorArgsWithoutLang.end()) {
+                    ++b_iter;
+                    processorArgsWithoutLang.erase(iter, b_iter);
+
+                    bool failed = false;
+
+                    boost::program_options::variables_map optionsWithoutLang;
+
+                    try {
+                        optionsWithoutLang
+                            = parseOptions_(factory->optionsHandled(), processorArgsWithoutLang);
+                    } catch (boost::program_options::error& optionsError) {
+                        failed = true;
+                    }
+
+                    if (failed)
+                        throw;
+                    else {
+                        if (asAnnotatorFactory->languagesHandling(optionsWithoutLang)
+                            == AnnotatorFactory::JUST_ONE_LANGUAGE) {
+                            if (asAnnotatorFactory->languagesHandled(optionsWithoutLang).front()
+                                == langCode)
+                                return optionsWithoutLang;
+                            else
+                                throw Exception(langCode + " is not handled");
+                        }
+                        else
+                            throw;
+                    }
+                }
+            }
+        }
+
+        throw;
+    }
+
+    return options;
+}
+
 
 boost::program_options::variables_map PipeRunner::parseOptions_(
     const boost::program_options::options_description& optionsDescription,
-    const PipelineElementSpecification& pipelineElement) {
-
-    const std::list<std::string>& processorArgs = pipelineElement.processorArgs;
+    const std::list<std::string>& processorArgs) {
 
     int argc = processorArgs.size() + 1;
     boost::scoped_array<char*> argv(new char* [argc + 1]);

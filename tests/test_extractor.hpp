@@ -41,11 +41,14 @@ private:
     std::string readCommand_(boost::filesystem::path commandFileName);
     std::string stripComments_(const std::string& line);
 
+    bool checkRequirements_(boost::filesystem::path requiresFileName);
+
     std::vector<TestBatch> testBatches_;
 
     const static boost::filesystem::path TEST_BATCH_DIRECTORY_NAME;
     const static boost::filesystem::path TEST_COMMAND_FILE_NAME;
     const static boost::filesystem::path TEST_DESCRIPTION_FILE_NAME;
+    const static boost::filesystem::path TEST_REQUIRES_FILE_NAME;
 };
 
 #endif

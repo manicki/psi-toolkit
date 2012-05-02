@@ -100,3 +100,9 @@ void Gobio::parse(Lattice &lattice) {
     );
     // */
 }
+
+double Gobio::doGetQualityScore(
+    const boost::program_options::variables_map& /*options*/) const {
+
+    return -9999;
+}

@@ -3,6 +3,7 @@ configure_file("${CMAKE_CURRENT_SOURCE_DIR}/git_info.cpp.in" "${CMAKE_CURRENT_BI
 # library framework
 add_library(framework SHARED
     aliaser.cpp
+    auto_completer.cpp
     factories_keeper.cpp
     main_factories_keeper.cpp
     help_formatter.cpp
