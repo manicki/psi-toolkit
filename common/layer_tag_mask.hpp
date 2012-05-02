@@ -34,6 +34,12 @@ private:
         none_(false){
     }
 
+    LayerTagMask(const std::vector<LayerTagCollection> tagAlts) :
+        tagAlts_(tagAlts),
+        any_(false),
+        none_(false){
+    }
+
     /**
      * private constructor! only LayerTagManager can be used to create layer tag masks.
      * Creates mask ANY if val==1 and mask NONE if val==0.

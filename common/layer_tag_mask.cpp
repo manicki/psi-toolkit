@@ -1,5 +1,7 @@
 #include "layer_tag_mask.hpp"
 
+#include <boost/foreach.hpp>
+
 bool LayerTagMask::isNone() {
     return none_ || (!any_ && tagAlts_[0].isEmpty() && (none_ = true));
 }
@@ -26,6 +28,11 @@ bool matches(
     if (mask.any_)
         return true;
 
-    return createIntersection(mask.tagAlts_[0], tags).isNonempty();
+    BOOST_FOREACH(LayerTagCollection tagAlt, mask.tagAlts_) {
+        if (createIntersection(tagAlt, tags).isNonempty())
+            return true;
+    }
+
+    return false;
 }
 

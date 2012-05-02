@@ -6,6 +6,7 @@
 
 #include <boost/bimap.hpp>
 #include <boost/foreach.hpp>
+#include <boost/assign.hpp>
 
 #include "layer_tag_collection.hpp"
 #include "layer_tag_mask.hpp"
@@ -59,6 +60,32 @@ public:
 
     LayerTagMask getMask(std::list<std::string> tagNames) {
         return getMask(createTagCollection(tagNames));
+    }
+
+    LayerTagMask getAlternativeMask(
+        LayerTagCollection tagCollection1,
+        LayerTagCollection tagCollection2) {
+
+        std::vector<LayerTagCollection> alts =
+            boost::assign::list_of
+            (tagCollection1)
+            (tagCollection2);
+
+        return LayerTagMask(alts);
+    }
+
+    LayerTagMask getAlternativeMask(
+        LayerTagCollection tagCollection1,
+        LayerTagCollection tagCollection2,
+        LayerTagCollection tagCollection3) {
+
+        std::vector<LayerTagCollection> alts =
+            boost::assign::list_of
+            (tagCollection1)
+            (tagCollection2)
+            (tagCollection3);
+
+        return LayerTagMask(alts);
     }
 
     LayerTagCollection planeTags();
