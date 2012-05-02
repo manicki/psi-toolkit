@@ -518,11 +518,13 @@ boost::program_options::variables_map PipeRunner::tryOptions_(
                         throw;
                     else {
                         if (asAnnotatorFactory->languagesHandling(optionsWithoutLang)
-                            == AnnotatorFactory::JUST_ONE_LANGUAGE
-                            &&
-                            asAnnotatorFactory->languagesHandled(optionsWithoutLang).front()
-                            == langCode)
-                            return optionsWithoutLang;
+                            == AnnotatorFactory::JUST_ONE_LANGUAGE) {
+                            if (asAnnotatorFactory->languagesHandled(optionsWithoutLang).front()
+                                == langCode)
+                                return optionsWithoutLang;
+                            else
+                                throw Exception(langCode + " is not handled");
+                        }
                         else
                             throw;
                     }
