@@ -43,3 +43,17 @@ LayerTagMask createIntersection(
     assert(!mask2.plane_);
     return LayerTagMask(createIntersection(mask1.tags_, mask2.tags_));
 }
+
+bool matches(
+    LayerTagCollection tags,
+    LayerTagMask mask) {
+
+    if (mask.none_)
+        return false;
+
+    if (mask.any_)
+        return true;
+
+    return createIntersection(mask.tags_, tags).isNonempty();
+}
+

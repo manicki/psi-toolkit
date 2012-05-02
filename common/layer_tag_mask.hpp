@@ -37,6 +37,10 @@ public:
         LayerTagMask mask2
     );
 
+    friend bool matches(
+        LayerTagCollection tags,
+        LayerTagMask mask);
+
     friend class LayerTagManager;
 
 private:
