@@ -35,8 +35,6 @@ public:
         return createTagCollection(tagNames);
     }
 
-    LayerTagCollection createTagCollection(LayerTagMask mask);
-
     /**
      * returns tags sorted alphabetically
      */
@@ -61,9 +59,8 @@ public:
         return getMask(createTagCollection(tagNames));
     }
 
-    LayerTagMask planeTags() {
-        return LayerTagMask(false, false, true);
-    }
+    LayerTagCollection planeTags();
+    LayerTagCollection onlyPlaneTags(LayerTagCollection tags);
 
     bool areInTheSamePlane(LayerTagCollection tags1, LayerTagCollection tags2);
 

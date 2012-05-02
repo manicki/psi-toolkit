@@ -34,27 +34,6 @@ LayerTagCollection LayerTagManager::createTagCollection(std::vector<std::string>
     return result;
 }
 
-LayerTagCollection LayerTagManager::createTagCollection(LayerTagMask mask) {
-    if (mask.isAny()) {
-        LayerTagCollection result = LayerTagCollection(m_.size());
-        for (size_t i = 0; i < m_.size(); ++i) {
-            result.v_.set(i);
-        }
-        return result;
-    }
-    if (mask.isNone()) return LayerTagCollection();
-    if (mask.isPlane()) {
-        LayerTagCollection result = LayerTagCollection(m_.size());
-        for (size_t i = 0; i < m_.size(); ++i) {
-            if (m_.right.at(i).at(0) == '!') {
-                result.v_.set(i);
-            }
-        }
-        return result;
-    }
-    return LayerTagCollection(mask.tags_);
-}
-
 std::list<std::string> LayerTagManager::getTagNames(const LayerTagCollection& tagCollection) {
     std::list<std::string> result;
     for (
@@ -68,18 +47,30 @@ std::list<std::string> LayerTagManager::getTagNames(const LayerTagCollection& ta
     return result;
 }
 
+LayerTagCollection LayerTagManager::planeTags() {
+    LayerTagCollection result = LayerTagCollection(m_.size());
+    for (size_t i = 0; i < m_.size(); ++i) {
+        if (m_.right.at(i).at(0) == '!') {
+            result.v_.set(i);
+        }
+    }
+    return result;
+}
+
+LayerTagCollection LayerTagManager::onlyPlaneTags(LayerTagCollection tags) {
+    return createIntersection(planeTags(), tags);
+}
+
 bool LayerTagManager::areInTheSamePlane(LayerTagCollection tags1, LayerTagCollection tags2) {
-    LayerTagCollection tagsPlane = createTagCollection(planeTags());
-    LayerTagCollection tagsP1 = createIntersection(tags1, tagsPlane);
-    LayerTagCollection tagsP2 = createIntersection(tags2, tagsPlane);
+    LayerTagCollection tagsP1 = onlyPlaneTags(tags1);
+    LayerTagCollection tagsP2 = onlyPlaneTags(tags2);
     return tagsP1 == tagsP2;
 }
 
 bool LayerTagManager::match(LayerTagMask mask, std::string tagName) {
     if (mask.isAny()) return true;
     if (mask.isNone()) return false;
-    if (mask.isPlane()) return tagName.at(0) == '!';
     m_.insert(StringBimapItem(tagName, m_.size()));
-    mask.tags_.resize_(m_.left.at(tagName) + 1);
-    return mask.tags_.v_[m_.left.at(tagName)];
+    mask.tagAlts_[0].resize_(m_.left.at(tagName) + 1);
+    return mask.tagAlts_[0].v_[m_.left.at(tagName)];
 }
