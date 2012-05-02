@@ -56,6 +56,10 @@ public:
         LayerTagCollection tag_list_b
     );
 
+    friend bool isSubset(
+        LayerTagCollection tag_list_a,
+        LayerTagCollection tag_list_b);
+
     friend class LayerTagManager;
 
     friend class LayerTagMask;
