@@ -129,9 +129,8 @@ std::string RuleMatcher::generateSentenceString(Lattice &lattice, int startVerte
         Lattice::EdgeDescriptor edge = edges.front();
 
         LayerTagCollection tags = lattice.getEdgeLayerTags(edge);
-        LayerTagMask mask = lattice.getLayerTagManager().getMask(tags);
-        if (lattice.getLayerTagManager().match(mask, "form") ||
-                lattice.getLayerTagManager().match(mask, "token")) {
+        if (lattice.getLayerTagManager().isThere("form", tags) ||
+            lattice.getLayerTagManager().isThere("token", tags)) {
             ss << "<<t";
         } else {
             ss << "<<g";
@@ -142,7 +141,7 @@ std::string RuleMatcher::generateSentenceString(Lattice &lattice, int startVerte
         ss << "<" << start;
         ss << "<" << end;
         AnnotationItem annotationItem = lattice.getEdgeAnnotationItem(edge);
-        if (lattice.getLayerTagManager().match(mask, "parse")) {
+        if (lattice.getLayerTagManager().isThere("parse", tags)) {
             ss << "<" << lattice.getAnnotationItemManager().
                 getCategory(annotationItem);
             std::string orth = lattice.getEdgeText(edge);

@@ -1,5 +1,9 @@
 #include "layer_tag_manager.hpp"
 
+LayerTagManager::LayerTagManager() {
+    symbolTag_ = createSingletonTagCollection("symbol");
+}
+
 LayerTagCollection LayerTagManager::createSingletonTagCollection(std::string tagName) {
     LayerTagCollection result = LayerTagCollection();
     m_.insert(StringBimapItem(tagName, m_.size()));
@@ -67,10 +71,20 @@ bool LayerTagManager::areInTheSamePlane(LayerTagCollection tags1, LayerTagCollec
     return tagsP1 == tagsP2;
 }
 
-bool LayerTagManager::match(LayerTagMask mask, std::string tagName) {
-    if (mask.isAny()) return true;
-    if (mask.isNone()) return false;
+bool LayerTagManager::isThere(std::string tagName, LayerTagCollection tags) {
     m_.insert(StringBimapItem(tagName, m_.size()));
-    mask.tagAlts_[0].resize_(m_.left.at(tagName) + 1);
-    return mask.tagAlts_[0].v_[m_.left.at(tagName)];
+    tags.resize_(m_.left.at(tagName) + 1);
+    return tags.v_[m_.left.at(tagName)];
+}
+
+bool LayerTagManager::canBeAppliedToImplicitSymbol(const LayerTagMask& tagMask) {
+    if (tagMask.isAny())
+        return true;
+
+    BOOST_FOREACH(LayerTagCollection tagAlt, tagMask.tagAlts_) {
+        if (tagAlt == symbolTag_)
+            return true;
+    }
+
+    return false;
 }

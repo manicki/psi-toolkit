@@ -19,6 +19,8 @@ class LayerTagManager {
 
 public:
 
+    LayerTagManager();
+
     LayerTagCollection createSingletonTagCollection(std::string tagName);
 
     LayerTagCollection createTagCollection(std::list<std::string> tagNames);
@@ -64,10 +66,13 @@ public:
 
     bool areInTheSamePlane(LayerTagCollection tags1, LayerTagCollection tags2);
 
-    bool match(LayerTagMask mask, std::string tagName);
+    bool isThere(std::string tagName, LayerTagCollection tags);
+
+    bool canBeAppliedToImplicitSymbol(const LayerTagMask& tags);
 
 private:
 
+    LayerTagCollection symbolTag_;
     typedef boost::bimap<std::string, size_t> StringBimap;
     typedef StringBimap::value_type StringBimapItem;
     StringBimap m_;

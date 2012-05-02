@@ -344,7 +344,8 @@ Lattice::InOutEdgesIterator Lattice::outEdges(
         VerticesMap::iterator iter = vertices_.find(vertex);
         if (iter == vertices_.end()) {
             return Lattice::InOutEdgesIterator(
-                (layerTagManager_.match(mask, "symbol") && implicitOutEdges_[vertex]) ?
+                (layerTagManager_.canBeAppliedToImplicitSymbol(mask)
+                 && implicitOutEdges_[vertex]) ?
                     vertex : -1
             );
         }
@@ -359,7 +360,8 @@ Lattice::InOutEdgesIterator Lattice::outEdges(
         return Lattice::InOutEdgesIterator(
             graph_[boost_vertex].outEdgesIndex[ix].begin(),
             graph_[boost_vertex].outEdgesIndex[ix].end(),
-            (layerTagManager_.match(mask, "symbol") && implicitOutEdges_[vertex]) ?
+            (layerTagManager_.canBeAppliedToImplicitSymbol(mask)
+             && implicitOutEdges_[vertex]) ?
                 vertex : -1
         );
     }
@@ -391,7 +393,8 @@ Lattice::InOutEdgesIterator Lattice::inEdges(
         VerticesMap::iterator iter = vertices_.find(vertex);
         if (iter == vertices_.end()) {
             return Lattice::InOutEdgesIterator(
-                (layerTagManager_.match(mask, "symbol") && implicitOutEdges_[priorVertex]) ?
+                (layerTagManager_.canBeAppliedToImplicitSymbol(mask)
+                 && implicitOutEdges_[priorVertex]) ?
                     priorVertex : -1
             );
         }
@@ -406,7 +409,8 @@ Lattice::InOutEdgesIterator Lattice::inEdges(
         return Lattice::InOutEdgesIterator(
             graph_[boost_vertex].inEdgesIndex[ix].begin(),
             graph_[boost_vertex].inEdgesIndex[ix].end(),
-            (layerTagManager_.match(mask, "symbol") && implicitOutEdges_[priorVertex]) ?
+            (layerTagManager_.canBeAppliedToImplicitSymbol(mask)
+             && implicitOutEdges_[priorVertex]) ?
                 priorVertex : -1
         );
     }

@@ -33,13 +33,12 @@ namespace poleng {
                 while (edgeIterator.hasNext()) {
                     Lattice::EdgeDescriptor edge = edgeIterator.next();
                     std::string type;
-                    LayerTagMask edgeMask = lattice.getLayerTagManager().getMask(
-                                lattice.getEdgeLayerTags(edge));
-                    if (lattice.getLayerTagManager().match(edgeMask, "form"))
+                    LayerTagCollection edgeTags = lattice.getEdgeLayerTags(edge);
+                    if (lattice.getLayerTagManager().isThere("form", edgeTags))
                         type = "token";
-                    if (lattice.getLayerTagManager().match(edgeMask, "parse"))
+                    if (lattice.getLayerTagManager().isThere("parse", edgeTags))
                         type = "group";
-                    if (lattice.getLayerTagManager().match(edgeMask, "lexeme"))
+                    if (lattice.getLayerTagManager().isThere("lexeme", edgeTags))
                         type = "pos";
 
                     int start = lattice.getEdgeBeginIndex(edge);
@@ -921,9 +920,8 @@ namespace poleng {
             }
 
             bool isDiscarded(Lattice &lattice, Lattice::EdgeDescriptor edge) {
-                LayerTagMask mask = lattice.getLayerTagManager().getMask(
-                        lattice.getEdgeLayerTags(edge));
-                if (lattice.getLayerTagManager().match(mask, "discarded"))
+                LayerTagCollection tags = lattice.getEdgeLayerTags(edge);
+                if (lattice.getLayerTagManager().isThere("discarded", tags))
                     return true;
                 else
                     return false;
@@ -944,9 +942,8 @@ namespace poleng {
             }
 
             bool isTokenEdge(Lattice &lattice, Lattice::EdgeDescriptor edge) {
-                LayerTagMask mask = lattice.getLayerTagManager().getMask(
-                        lattice.getEdgeLayerTags(edge));
-                if (lattice.getLayerTagManager().match(mask, "token"))
+                LayerTagCollection tags = lattice.getEdgeLayerTags(edge);
+                if (lattice.getLayerTagManager().isThere("token", tags))
                     return true;
                 else
                     return false;
