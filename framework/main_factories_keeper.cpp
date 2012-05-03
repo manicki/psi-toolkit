@@ -37,6 +37,7 @@
 #if HAVE_POSTGRESQL
 #include "lex_db_lemmatizer.hpp"
 #endif
+
 #if HAVE_JAVA
 #include "morfologik.hpp"
 #endif
@@ -51,9 +52,19 @@
 #endif
 
 #include "me_tagger.hpp"
+
 #if HAVE_ASPELL
 #include "psi_aspell.hpp"
 #endif
+
+#if HAVE_LIBMAGIC
+#include "guessing_reader.hpp"
+#endif
+
+#if HAVE_LINK_GRAMMAR
+#include "link_parser.hpp"
+#endif
+
 
 MainFactoriesKeeper::MainFactoriesKeeper() {
     keeper_.addTagBasedIzeAliases("token", "token");
@@ -119,6 +130,15 @@ MainFactoriesKeeper::MainFactoriesKeeper() {
 #if HAVE_ASPELL
     keeper_.takeProcessorFactory(new PSIAspell::Factory());
 #endif
+
+#if HAVE_LIBMAGIC
+    keeper_.takeProcessorFactory(new GuessingReader::Factory());
+#endif
+
+#if HAVE_LINK_GRAMMAR
+    keeper_.takeProcessorFactory(new LinkParser::Factory());
+#endif
+
 }
 
 ProcessorFactory& MainFactoriesKeeper::getProcessorFactory(std::string processorName) {

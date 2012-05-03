@@ -52,6 +52,8 @@ private:
 
     virtual std::string doInfo();
 
+    virtual double doGetQualityScore(
+        const boost::program_options::variables_map& options) const;
 };
 
 

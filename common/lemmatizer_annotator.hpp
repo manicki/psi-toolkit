@@ -1,6 +1,8 @@
 #ifndef LEMMATIZER_ANNOTATOR_HDR
 #define LEMMATIZER_ANNOTATOR_HDR
 
+#include <boost/assign/list_of.hpp>
+
 #include "annotator.hpp"
 #include "annotator_factory.hpp"
 #include "lattice_worker.hpp"
@@ -61,7 +63,8 @@ public:
         }
 
         virtual std::list<std::list<std::string> > doRequiredLayerTags() {
-            return std::list<std::list<std::string> >();
+            return boost::assign::list_of(
+                boost::assign::list_of(std::string("token")));
         }
 
         virtual std::list<std::list<std::string> > doOptionalLayerTags() {
@@ -69,9 +72,10 @@ public:
         }
 
         virtual std::list<std::string> doProvidedLayerTags() {
-            std::list<std::string> layerTags;
-            layerTags.push_back("lemma");
-            return layerTags;
+            return boost::assign::list_of
+                (std::string("lemma"))
+                (std::string("lexeme"))
+                (std::string("form"));
         }
     };
 

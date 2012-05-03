@@ -1,3 +1,4 @@
+include_directories("${psi-toolkit_SOURCE_DIR}/tools/parsers/link")
 include_directories("${psi-toolkit_SOURCE_DIR}/tools/spellcheckers/aspell")
 include_directories("${psi-toolkit_SOURCE_DIR}/formats/djvu")
 include_directories("${psi-toolkit_SOURCE_DIR}/formats/doc")

@@ -63,6 +63,9 @@ else()
   set(HAVE_LOG4CPP 0)
 endif(EXISTS ${LOG4CPP_LIB} AND EXISTS ${LOG4CPP_INCLUDE})
 
+option(USE_ASPELL "Using aspell" ON)
+message(STATUS "Using aspell ${USE_ASPELL}")
+
 if (USE_ASPELL)
   find_library(ASPELL_LIB NAMES aspell)
   find_path(ASPELL_INCLUDE aspell.h)
@@ -196,21 +199,6 @@ if(USE_STRING_FRAG_VALIDATION)
     set(STRING_FRAG_VALIDATION 1)
 endif(USE_STRING_FRAG_VALIDATION)
 
-option(USE_GV_WRITER "Using gv-writer" ON)
-message(STATUS "Using gv-writer ${USE_GV_WRITER}")
-
-option(USE_PDF_READER "Using pdf-reader" OFF)
-message(STATUS "Using pdf-reader ${USE_PDF_READER}")
-
-option(USE_DJVU_READER "Using djvu-reader" OFF)
-message(STATUS "Using djvu-reader ${USE_DJVU_READER}")
-
-option(USE_DOC_READER "Using doc-reader" OFF)
-message(STATUS "Using doc-reader ${USE_DOC_READER}")
-
-option(USE_ASPELL "Using aspell" OFF)
-message(STATUS "Using aspell ${USE_ASPELL}")
-
 # Finds SWIG
 
 find_package(SWIG)
@@ -232,6 +220,9 @@ endif(SWIG_FOUND)
 
 
 # Finds GraphViz
+
+option(USE_GV_WRITER "Using gv-writer" ON)
+message(STATUS "Using gv-writer ${USE_GV_WRITER}")
 
 if (USE_GV_WRITER)
     find_package(Graphviz)
@@ -264,6 +255,9 @@ endif(LIBMAGIC_FOUND)
 
 # Finds Poppler
 
+option(USE_PDF_READER "Using pdf-reader" OFF)
+message(STATUS "Using pdf-reader ${USE_PDF_READER}")
+
 if (USE_PDF_READER)
     find_package(Poppler)
     if (POPPLER_FOUND)
@@ -282,6 +276,9 @@ endif (USE_PDF_READER)
 
 # Finds DjVuLibre
 
+option(USE_DJVU_READER "Using djvu-reader" OFF)
+message(STATUS "Using djvu-reader ${USE_DJVU_READER}")
+
 if (USE_DJVU_READER)
     find_package(DjVuLibre)
     if (DJVULIBRE_FOUND)
@@ -298,7 +295,31 @@ else (USE_DJVU_READER)
     set(HAVE_DJVULIBRE 0)
 endif (USE_DJVU_READER)
 
+# Finds Link Grammar
+
+option(USE_LINK_GRAMMAR "Using link-parser" OFF)
+message(STATUS "Using link-parser ${USE_LINK_GRAMMAR}")
+
+if (USE_LINK_GRAMMAR)
+    find_package(LinkGrammar)
+    if (LINK_GRAMMAR_FOUND)
+        message(STATUS "Found LinkGrammar")
+        include_directories(${LINK_GRAMMAR_INCLUDE_DIRS})
+        link_directories(${LINK_GRAMMAR_LIBRARIES})
+        link_directories("${psi-toolkit_BINARY_DIR}/tools/parsers/link/plugin")
+        set(HAVE_LINK_GRAMMAR 1)
+    else (LINK_GRAMMAR_FOUND)
+        message(WARNING "Could not find LinkGrammar: link-parser disabled")
+        set(HAVE_LINK_GRAMMAR 0)
+    endif (LINK_GRAMMAR_FOUND)
+else (USE_LINK_GRAMMAR)
+    set(HAVE_LINK_GRAMMAR 0)
+endif (USE_LINK_GRAMMAR)
+
 # Links Antiword plugin
+
+option(USE_DOC_READER "Using doc-reader" OFF)
+message(STATUS "Using doc-reader ${USE_DOC_READER}")
 
 if (USE_DOC_READER)
     link_directories("${psi-toolkit_BINARY_DIR}/formats/doc/plugin")
@@ -313,7 +334,9 @@ if (WITH_LOW_MEMORY_COMPILATION)
   set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} --param ggc-min-expand=30 --param ggc-min-heapsize=8192")
 endif (WITH_LOW_MEMORY_COMPILATION)
 
-set(BASE_TARGETS common common-plugins utf8case sundown framework formats-apertium formats-dot formats-nkjp formats-psi formats-simple formats-json-simple formats-txt formats-utt maxent tools-tokenizers-tp tools-segmenters-srx tools-recognizers-langguesser tools-parsers-gobio tools-parsers-puddle tools-taggers-metagger)
+set(BASE_TARGETS common common-plugins utf8case sundown framework
+formats-apertium formats-dot formats-guessing formats-nkjp formats-psi formats-simple formats-json-simple formats-txt formats-utt
+maxent tools-tokenizers-tp tools-segmenters-srx tools-recognizers-langguesser tools-parsers-gobio tools-parsers-puddle tools-taggers-metagger)
 
 set(TESTS_TARGETS common-tests framework-tests tools-tokenizers-tp-tests tools-segmenters-srx-tests tools-datastructures-psi_query-tests tools-recognizers-langguesser-tests utf8case-tests formats-dot-tests formats-utt-tests formats-psi-tests formats-simple-tests tools-parsers-gobio-tests tools-parsers-puddle-tests tools-taggers-metagger-tests formats-apertium-tests)
 
@@ -354,6 +377,10 @@ endif(HAVE_POPPLER)
 if(HAVE_DJVULIBRE)
     set(BASE_TARGETS ${BASE_TARGETS} formats-djvu)
 endif(HAVE_DJVULIBRE)
+
+if(HAVE_LINK_GRAMMAR)
+    set(BASE_TARGETS ${BASE_TARGETS} tools-parsers-link)
+endif(HAVE_LINK_GRAMMAR)
 
 if(USE_DOC_READER)
     set(BASE_TARGETS ${BASE_TARGETS} formats-doc)
@@ -404,6 +431,11 @@ if(HAVE_DJVULIBRE)
     include_directories("${psi-toolkit_SOURCE_DIR}/formats/djvu")
     link_directories("${psi-toolkit_BINARY_DIR}/formats/djvu")
 endif(HAVE_DJVULIBRE)
+
+if(HAVE_LINK_GRAMMAR)
+    include_directories("${psi-toolkit_SOURCE_DIR}/tools/parsers/link")
+    link_directories("${psi-toolkit_BINARY_DIR}/tools/parsers/link")
+endif(HAVE_LINK_GRAMMAR)
 
 if(USE_DOC_READER)
     include_directories("${psi-toolkit_SOURCE_DIR}/formats/doc")

@@ -3,15 +3,17 @@
 
 #include "config.hpp"
 #include <boost/shared_ptr.hpp>
-#include <boost/graph/adjacency_list.hpp>
 
 #include "pipeline_specification.hpp"
 
 #include "processor_factory.hpp"
+#include "processor_promise.hpp"
 #include "lattice_reader_factory.hpp"
 #include "lattice_writer_factory.hpp"
 #include "annotator_factory.hpp"
 #include "psi_exception.hpp"
+
+#include "auto_completer.hpp"
 
 #if HAVE_PERL_BINDINGS
 #include <EXTERN.h>
@@ -42,12 +44,14 @@ public:
         virtual ~Exception() throw() {}
     };
 
+    typedef ProcessorPromiseSequence FinalPipeline;
+
 private:
     PipelineSpecification pipelineSpecification_;
     bool justInformation_;
 
     template<typename Source, typename Sink>
-    void parseIntoGraph_(std::vector<std::string> args, bool isTheFirstArgProgramName);
+    void parseIntoFinalPipeline_(std::vector<std::string> args, bool isTheFirstArgProgramName);
 
     boost::program_options::options_description runnerOptionsDescription_;
     void setRunnerOptionsDescription_();
@@ -62,75 +66,40 @@ private:
         PipelineSpecification& pipelineSpec);
     void showEmptyPipeWarningMessage_();
 
-    ProcessorFactory& getFactory_(const PipelineElementSpecification& elementSpec);
+    boost::program_options::variables_map tryOptions_(
+        ProcessorFactory* factory,
+        const std::list<std::string>& processorArgs);
 
     boost::program_options::variables_map parseOptions_(
         const boost::program_options::options_description& optionsDescription,
-        const PipelineElementSpecification& pipelineElement);
+        const std::list<std::string>& processorArgs);
 
     std::vector<std::string> splitPipeline_(const std::string& pipeline);
 
     static const std::string PIPELINE_SEPARATOR;
     static const std::string PIPELINE_STANDARD_INPUT_OR_OUTPUT_FILE_NAME;
 
-    struct PipelineNode {
-        ProcessorFactory* factory_;
-        boost::program_options::variables_map options_;
-        boost::shared_ptr<Processor> processor_;
+    boost::shared_ptr<ProcessorPromise> pipelineElement2Node_(
+        const PipelineElementSpecification& element);
 
-        PipelineNode(ProcessorFactory& factory, boost::program_options::variables_map options)
-            : factory_(&factory), options_(options) {
-        }
+    boost::shared_ptr<std::list<boost::shared_ptr<ProcessorPromise> > > pipelineElement2Promises_(
+        const PipelineElementSpecification& elementSpec);
 
-        void createProcessor() {
-            if (!processor_)
-                processor_.reset(factory_->createProcessor(options_));
-        }
+    boost::shared_ptr<ProcessorPromise> createPromise_(
+        ProcessorFactory* factory, const boost::program_options::variables_map& options);
 
-        boost::shared_ptr<Processor> getProcessor() const {
-            return processor_;
-        }
+    ProcessorPromiseAlternativeSequence promiseAlternativeSequence_;
 
-        const ProcessorFactory* getFactory() const {
-            return factory_;
-        }
+    ProcessorPromiseAlternativeSequence pipelineSpecification2PromiseAlternativeSequence_(
+        PipelineSpecification& pipelineSpec);
 
-        boost::program_options::variables_map getOptions() const {
-            return options_;
-        }
+    FinalPipeline finalPipeline_;
 
-        std::string getContinuation() const {
-            return getFactory()->getContinuation(getOptions());
-        }
-
-    };
-
-    PipelineNode pipelineElement2Node_(const PipelineElementSpecification& element);
-
-    typedef boost::adjacency_list<
-        boost::vecS,
-        boost::listS,
-        boost::bidirectionalS,
-        PipelineNode,
-        std::string
-    > PipelineGraph;
-
-    PipelineGraph pipelineGraph_;
-
-    PipelineGraph::vertex_descriptor firstNode;
-    PipelineGraph::vertex_descriptor lastNode;
-
-    void pipelineSpecification2Graph_(
-        PipelineSpecification& pipelineSpec,
-        PipelineGraph::vertex_descriptor& firstVertex,
-        PipelineGraph::vertex_descriptor& lastVertex);
+    FinalPipeline pipelineSpecification2FinalPipeline_(
+        PipelineSpecification& pipelineSpec);
 
     template<typename Source, typename Sink>
-    void completeGraph_();
-
-    void checkLangOption_();
-    std::string getJustOneLanguage_();
-    void setOnlyOneLanguage_(const std::string& langCode);
+    void completeFinalPipeline_();
 
     template<typename Source>
     void checkReader_();
@@ -140,21 +109,18 @@ private:
     void prepend_(const std::string& pipeline);
     void append_(const std::string& pipeline);
 
+    std::list<std::string> getLangCodes_();
+
     template<typename Source, typename Sink>
     int run_(Source&, Sink&);
 
     template<typename Source, typename Sink>
     void runPipelineNode_(
-        PipelineGraph::vertex_descriptor current,
+        FinalPipeline::iterator current,
         Lattice& lattice,
         std::istream& in, Sink & out);
 
-    void listLanguagesForPipelineNode_(PipelineGraph::vertex_descriptor current);
-    std::string getNodeJustOneLanguage_(PipelineGraph::vertex_descriptor);
-    void setOnlyOneLanguageForNode_(
-        const std::string& langCode, PipelineGraph::vertex_descriptor node);
-
-    bool goToNextNode_(PipelineGraph::vertex_descriptor& current);
+    void listLanguagesForPipelineNode_(FinalPipeline::iterator current);
 
     static std::istream* createInputStreamOrReturnStandardInput(const std::string & path);
     static std::ostream* createOutputStreamOrReturnStandardOutput(const std::string & path);

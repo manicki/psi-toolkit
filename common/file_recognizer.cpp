@@ -5,7 +5,7 @@
 
 const std::string FileRecognizer::UNKNOWN_TYPE = "UKNOWN";
 
-std::map<std::string, std::string> FileRecognizer::magicFileTypeToFileExtension_ =
+std::map<std::string, std::string> FileRecognizer::mimeTypeToFileExtension_ =
     boost::assign::map_list_of
         ("application/octet-stream", "bin") //?
         ("application/pdf", "pdf")
@@ -43,23 +43,23 @@ FileRecognizer::~FileRecognizer() {
 }
 
 #if HAVE_LIBMAGIC
-std::string FileRecognizer::recognizeType(const std::string & data) {
+std::string FileRecognizer::recognizeMimeType(const std::string & data) {
 #else
-std::string FileRecognizer::recognizeType(const std::string & /*data*/) {
+std::string FileRecognizer::recognizeMimeType(const std::string & /*data*/) {
 #endif
     std::string type = UNKNOWN_TYPE;
 
 #if HAVE_LIBMAGIC
     std::string magicFileInfo = magic_buffer(magicCookie_, data.c_str(), data.length());
-    type = getFileType_(magicFileInfo);
+    type = getMimeType_(magicFileInfo);
 
-    INFO("magic filetype: [" << magicFileInfo << "], file type: [" << type << "]");
+    DEBUG("magic filetype: [" << magicFileInfo << "], file type: [" << type << "]");
 #endif
 
     return type;
 }
 
-std::string FileRecognizer::getFileType_(const std::string& magicFileInfo) {
+std::string FileRecognizer::getMimeType_(const std::string& magicFileInfo) {
     size_t sep = magicFileInfo.find_first_of('/');
 
     if (sep != std::string::npos) {
@@ -70,9 +70,9 @@ std::string FileRecognizer::getFileType_(const std::string& magicFileInfo) {
 }
 
 #if HAVE_LIBMAGIC
-std::string FileRecognizer::recognizeExtension(const std::string & data) {
+std::string FileRecognizer::recognizeFileExtension(const std::string & data) {
 #else
-std::string FileRecognizer::recognizeExtension(const std::string & /*data*/) {
+std::string FileRecognizer::recognizeFileExtension(const std::string & /*data*/) {
 #endif
     std::string extension = UNKNOWN_TYPE;
 
@@ -80,7 +80,7 @@ std::string FileRecognizer::recognizeExtension(const std::string & /*data*/) {
     std::string magicFileInfo = magic_buffer(magicCookie_, data.c_str(), data.length());
     extension = getFileExtension_(magicFileInfo);
 
-    INFO("magic filetype: [" << magicFileInfo << "], file extension: [" << extension << "]");
+    DEBUG("magic filetype: [" << magicFileInfo << "], file extension: [" << extension << "]");
 #endif
 
     return extension;
@@ -94,8 +94,8 @@ std::string FileRecognizer::getFileExtension_(const std::string& magicFileInfo) 
         magicFileType = magicFileInfo.substr(0, sep);
     }
 
-    if (magicFileTypeToFileExtension_.find(magicFileType) != magicFileTypeToFileExtension_.end()) {
-        return magicFileTypeToFileExtension_[magicFileType];
+    if (mimeTypeToFileExtension_.find(magicFileType) != mimeTypeToFileExtension_.end()) {
+        return mimeTypeToFileExtension_[magicFileType];
     }
 
     return UNKNOWN_TYPE;

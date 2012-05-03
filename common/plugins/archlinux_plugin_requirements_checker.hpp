@@ -9,6 +9,8 @@ public:
     ArchLinuxPluginRequirementsChecker(std::ostream & message);
     virtual ~ArchLinuxPluginRequirementsChecker();
     virtual std::string getCheckerName();
+
+    virtual void showPackagesNotAvailable(const std::list<std::string> & packagesNames);
 };
 
 #endif

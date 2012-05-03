@@ -11,6 +11,7 @@
 #cmakedefine01 USE_DOC_READER
 #cmakedefine01 HAVE_LIBMAGIC
 #cmakedefine01 HAVE_ASPELL
+#cmakedefine01 HAVE_LINK_GRAMMAR
 #cmakedefine01 _WITH_BONSAI_PARSEGRAPH
 #cmakedefine01 IS_INSTALLABLE
 #cmakedefine01 STRING_FRAG_VALIDATION

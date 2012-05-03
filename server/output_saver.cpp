@@ -32,7 +32,7 @@ OutputSaver::OutputSaver(const std::string& rootPath)
 }
 
 std::string OutputSaver::storeOutput(const std::string& content) {
-    std::string ext = fileRecognizer_.recognizeExtension(content);
+    std::string ext = fileRecognizer_.recognizeFileExtension(content);
 
     if (ext == FileRecognizer::UNKNOWN_TYPE) {
         ext = DEFAULT_FILE_EXTENSION;

@@ -18,10 +18,10 @@ std::string AnnotationItemManager::getValue(
     AnnotationItem & annotationItem,
     std::string attribute
 ) {
-    try {
-        return annotationItem.values_[m_.left.at(attribute)];
-    } catch (...) {
+    if (m_.left.find(attribute) == m_.left.end()) {
         return "";
+    } else {
+        return annotationItem.values_[m_.left.at(attribute)];
     }
 }
 

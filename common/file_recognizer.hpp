@@ -16,8 +16,8 @@ public:
     FileRecognizer();
     ~FileRecognizer();
 
-    std::string recognizeType(const std::string &);
-    std::string recognizeExtension(const std::string &);
+    std::string recognizeMimeType(const std::string &);
+    std::string recognizeFileExtension(const std::string &);
 
     static const std::string UNKNOWN_TYPE;
 private:
@@ -26,10 +26,10 @@ private:
     magic_t magicCookie_;
 #endif
 
-    std::string getFileType_(const std::string& magicFileInfo);
+    std::string getMimeType_(const std::string& magicFileInfo);
     std::string getFileExtension_(const std::string& magicFileInfo);
 
-    static std::map<std::string, std::string> magicFileTypeToFileExtension_;
+    static std::map<std::string, std::string> mimeTypeToFileExtension_;
 };
 
 #endif
