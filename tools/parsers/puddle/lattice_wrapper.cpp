@@ -1050,6 +1050,67 @@ namespace poleng {
                 return result;
             }
 
+            std::string getPartitionString(Lattice &lattice,
+                    Lattice::EdgeSequence partition) {
+                std::stringstream ss;
+                Lattice::EdgeSequence::Iterator it(lattice, partition);
+                while (it.hasNext()) {
+                    Lattice::EdgeDescriptor edge = it.next();
+
+                    LayerTagCollection tags = lattice.getEdgeLayerTags(edge);
+                    LayerTagMask mask = lattice.getLayerTagManager().getMask(tags);
+                    if (lattice.getLayerTagManager().match(mask, "form") ||
+                            lattice.getLayerTagManager().match(mask, "token")) {
+                        ss << "<<t";
+                    } else {
+                        ss << "<<g";
+                    }
+
+                    Lattice::VertexDescriptor start = lattice.getEdgeBeginIndex(edge);
+                    Lattice::VertexDescriptor end = start + lattice.getEdgeLength(edge);
+                    ss << "<" << start;
+                    ss << "<" << end;
+                    AnnotationItem annotationItem = lattice.getEdgeAnnotationItem(edge);
+                    if (lattice.getLayerTagManager().match(mask, "parse")) {
+                        ss << "<" << lattice.getAnnotationItemManager().
+                            getCategory(annotationItem);
+                        std::string orth = lattice.getEdgeText(edge);
+                        if (orth != "") {
+                            ss << "<" << util::escapeSpecialChars(orth);
+                        } else {
+                            ss << "<" << lattice.getAnnotationItemManager().
+                                getCategory(annotationItem);
+                        }
+                    } else {
+                        ss << "<" << "TOKEN";
+                        std::string orth = //lattice.getAnnotationItemManager().
+                            //getCategory(annotationItem);
+                            ////@todo: trzeba poprawic ustawianie orth dla krawedzi 'parse'
+                            lattice.getEdgeText(edge);
+                        ss << "<" << util::escapeSpecialChars(orth);
+                    }
+                    std::string base = lattice::getBase(lattice, edge);
+                        //@todo: ustawianie base nie bedzie dzialalo dla krawedzi 'parse'
+                        std::string morphology = lattice::getMorphologyString(
+                                lattice, edge);
+                        ss << "<";
+                        ss << util::escapeSpecialChars(base);
+                        ss << "<";
+                        ss << util::escapeSpecialChars(morphology);
+                    ss << ">";
+                }
+                return ss.str();
+            }
+
+            void discardPartitionEdges(Lattice &lattice,
+                    Lattice::EdgeSequence partition) {
+                Lattice::EdgeSequence::Iterator it(lattice, partition);
+                while (it.hasNext()) {
+                    Lattice::EdgeDescriptor edge = it.next();
+                    lattice.discard(edge);
+                }
+            }
+
             }
 
         }

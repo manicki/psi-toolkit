@@ -63,7 +63,7 @@ class RuleLoader {
         std::string compileRuleName(std::string matched);
         ActionsPtr compileRuleAction(std::string &matched, int ruleLeftCount,
                 int ruleMatchCount, int ruleRightCount, std::string ruleName,
-                bool &repeat);
+                bool &repeat, bool &autoDelete);
 
         int countTokens(std::string &matched);
         std::string getToken(std::string &matched, std::string &before);

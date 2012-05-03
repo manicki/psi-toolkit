@@ -16,7 +16,8 @@ namespace bonsai {
                 RuleTokenModifiers aRuleTokenModifiers,
                 RuleTokenRequirements aRuleTokenRequirements,
                 RulePatternIndices aRulePatternIndices,
-                bool aRepeat, std::string aLeft, std::string aMatch, std::string aRight,
+                bool aRepeat, bool aAutoDelete,
+                std::string aLeft, std::string aMatch, std::string aRight,
                 NegativePatternStrings aNegativePatterns ) {
 #else
        Rule::Rule( std::string aName, std::string aCompiledPattern, int aLeftCount,
@@ -25,13 +26,14 @@ namespace bonsai {
                RuleTokenModifiers aRuleTokenModifiers,
                RuleTokenRequirements aRuleTokenRequirements,
                RulePatternIndices aRulePatternIndices,
-               bool aRepeat, std::string aLeft, std::string aMatch, std::string aRight) {
+               bool aRepeat, bool aAutoDelete,
+               std::string aLeft, std::string aMatch, std::string aRight) {
 #endif
 
            init(aName, aCompiledPattern, aLeftCount, aMatchCount, aRightCount,
                    aActions, aRuleTokenPatterns, aRuleTokenModifiers,
                    aRuleTokenRequirements, aRulePatternIndices, aRepeat,
-                   aLeft, aMatch, aRight);
+                   aAutoDelete, aLeft, aMatch, aRight);
 
 #if HAVE_RE2
            for (NegativePatternStrings::iterator negPatIt =
@@ -68,6 +70,15 @@ bool Rule::test(std::string &, Lattice &lattice, int matchedStartIndex,
     if (! requiredTokensMatched(match, ruleTokenSizes) )
         return false;
 
+    int leftBound;
+    int rightBound;
+    int matchWidth = leftCount + matchCount - 1;
+    if (! util::getRuleBoundaries(ruleTokenSizes, leftCount, matchWidth,
+                leftBound, rightBound))
+        return false;
+    rulePartitions = generateRulePartitions(lattice, leftBound, rightBound,
+            matchedStartIndex);
+
     for (Actions::iterator actionIt = actions->begin();
             actionIt != actions->end(); ++ actionIt) {
         if ( (*actionIt)->test(lattice, matchedStartIndex, ruleTokenSizes,
@@ -89,19 +100,50 @@ bool Rule::test(std::string &, Lattice &lattice, int matchedStartIndex,
         }
     }
 
-    int leftBound;
-    int rightBound;
-    int matchWidth = leftCount + matchCount - 1;
-    if (! util::getRuleBoundaries(ruleTokenSizes, leftCount, matchWidth,
-                leftBound, rightBound))
-        return false;
+    return true;
+}
+
+std::list<Lattice::EdgeSequence> Rule::generateRulePartitions(Lattice &lattice,
+        int leftBound, int rightBound, int matchedStartIndex) {
     Lattice::VertexDescriptor startVertex = lattice::getVertex(
             lattice, leftBound, matchedStartIndex);
     Lattice::VertexDescriptor endVertex = lattice::getVertex(
             lattice, rightBound, matchedStartIndex);
-    rulePartitions = lattice::getEdgesRange(lattice,
-            startVertex, endVertex);
+    if (! this->autoDelete) {
+        std::list<Lattice::EdgeSequence> rulePartitions = lattice::getEdgesRange(lattice,
+                startVertex, endVertex);
+        return rulePartitions;
+    } else {
+        std::list<Lattice::EdgeSequence> allPartitions = lattice::getEdgesRange(lattice,
+                startVertex, endVertex);
+        std::list<Lattice::EdgeSequence> rulePartitions;
+        for (std::list<Lattice::EdgeSequence>::iterator partIt =
+                allPartitions.begin();
+                partIt != allPartitions.end();
+                ++ partIt) {
+            if (partitionMatchesPattern(lattice, *partIt)) {
+                rulePartitions.push_back(*partIt);
+            } else {
+                lattice::discardPartitionEdges(lattice, *partIt);
+            }
+        }
+        return rulePartitions;
+    }
+}
 
+bool Rule::partitionMatchesPattern(Lattice &lattice,
+        Lattice::EdgeSequence partition) {
+    std::string partitionString = lattice::getPartitionString(lattice,
+            partition);
+    int i = leftCount;
+    while (i < (leftCount + matchCount)) {
+        std::string tokenPatternString = ruleTokenPatterns[i];
+        RegExp tokenPattern(tokenPatternString);
+        if (!RegExp::PartialMatch(partitionString, tokenPattern)) {
+            return false;
+        }
+        i ++;
+    }
     return true;
 }
 
@@ -247,6 +289,10 @@ bool Rule::getRepeat() const {
     return repeat;
 }
 
+bool Rule::getAutoDelete() const {
+    return autoDelete;
+}
+
 void Rule::setMatch(std::string aMatch) {
     match_ = aMatch;
 }
@@ -349,7 +395,8 @@ void Rule::init(std::string aName, std::string aCompiledPattern, int aLeftCount,
         RuleTokenModifiers aRuleTokenModifiers,
         RuleTokenRequirements aRuleTokenRequirements,
         RulePatternIndices aRulePatternIndices,
-        bool aRepeat, std::string aLeft, std::string aMatch,
+        bool aRepeat, bool aAutoDelete,
+        std::string aLeft, std::string aMatch,
         std::string aRight) {
            ruleTokenPatterns = aRuleTokenPatterns;
            ruleTokenModifiers = aRuleTokenModifiers;
@@ -366,6 +413,7 @@ void Rule::init(std::string aName, std::string aCompiledPattern, int aLeftCount,
            rightCount = aRightCount;
 
            repeat = aRepeat;
+           autoDelete = aAutoDelete;
 
            left_ = aLeft;
            match_ = aMatch;
