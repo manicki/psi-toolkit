@@ -19,7 +19,7 @@ AttachAction::AttachAction(std::string aGroup, int aStart, int aEnd, int aHead,
 
 bool AttachAction::apply(Lattice &lattice, int matchedStartIndex,
         RuleTokenSizes &ruleTokenSizes,
-        std::list<Lattice::EdgeSequence>&) {
+        std::list<Lattice::EdgeSequence> &rulePartitions) {
     int realStart;
     int realEnd;
     int realHead;
@@ -47,17 +47,14 @@ bool AttachAction::apply(Lattice &lattice, int matchedStartIndex,
     if (startEdges.empty() || headEdges.empty() || endEdges.empty()) {
         return false;
     }
-    std::list<Lattice::EdgeSequence> groupPartitions =
-        lattice::getEdgesRange(
-                lattice, startVertex, endVertex
-                );
+    rulePartitions =  lattice::getEdgesRange(lattice, startVertex, endVertex);
     lattice::addParseEdges(
             lattice,
             startEdges,
             endEdges,
             this->group,
             headEdges,
-            groupPartitions,
+            rulePartitions,
             realHead
             );
     return true;

@@ -616,7 +616,7 @@ namespace poleng {
 
             void removeParseEdges(Lattice &lattice,
                     Lattice::VertexDescriptor start,
-                    Lattice::VertexDescriptor end ) {
+                    Lattice::VertexDescriptor end) {
                 LayerTagMask mask = lattice.getLayerTagManager().getMask(
                                 lattice.getLayerTagManager().
                                     createSingletonTagCollection("parse")
@@ -927,20 +927,6 @@ namespace poleng {
                     return true;
                 else
                     return false;
-//
-//                AnnotationItem ai = lattice.getEdgeAnnotationItem(edge);
-//                std::list< std::pair<std::string, std::string> > av
-//                    = lattice.getAnnotationItemManager().getValues(ai);
-//                for (std::list< std::pair<std::string, std::string> >::iterator avit =
-//                        av.begin(); avit != av.end(); ++ avit) {
-//                    if (avit->first == "discard") {
-//                        if (avit->second == "1")
-//                            return true;
-//                        else
-//                            return false;
-//                    }
-//                }
-//                return false;
             }
 
             bool isTokenEdge(Lattice &lattice, Lattice::EdgeDescriptor edge) {
@@ -1111,8 +1097,8 @@ namespace poleng {
                 }
             }
 
-            }
 
+            }
         }
     }
 }

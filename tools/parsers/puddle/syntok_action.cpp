@@ -23,7 +23,7 @@ SyntokAction::SyntokAction(int aStart, int aEnd, std::vector<int> aTokenIndices,
 //wywal syntoki z grafu, przeliczyc reszte grafu
 bool SyntokAction::apply(Lattice &lattice, int matchedStartIndex,
         RuleTokenSizes &ruleTokenSizes,
-        std::list<Lattice::EdgeSequence>&) {
+        std::list<Lattice::EdgeSequence> &rulePartitions) {
     int realStart;
     int realEnd;
     util::getSyntokActionParams(ruleTokenSizes, start, end, realStart, realEnd);
@@ -40,13 +40,9 @@ bool SyntokAction::apply(Lattice &lattice, int matchedStartIndex,
         return false;
     }
 
-    std::list<Lattice::EdgeSequence> edgeSequences =
-        lattice::getEdgesRange(
-                lattice, startVertex, endVertex
-                );
     std::vector<std::string> baseForms = generateBaseForms(lattice,
-            edgeSequences);
-    std::string concatenatedOrth = generateOrth(lattice, edgeSequences);
+            rulePartitions);
+    std::string concatenatedOrth = generateOrth(lattice, rulePartitions);
     std::string syntokCategory = concatenatedOrth;
     LayerTagCollection tags = lattice.getLayerTagManager().createSingletonTagCollection("form");
     if (syntok) {
@@ -62,7 +58,7 @@ bool SyntokAction::apply(Lattice &lattice, int matchedStartIndex,
             concatenatedOrth,
             baseForms,
             morphology,
-            edgeSequences,
+            rulePartitions,
             tags);
     return true;
 }
