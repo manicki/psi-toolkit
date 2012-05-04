@@ -82,21 +82,25 @@ BOOST_AUTO_TEST_CASE( autodelete_pl ) {
     Lattice::EdgeSequence::Builder al_lemma_builder(lattice);
     al_lemma_builder.addEdge(lattice.firstOutEdge(lattice.getVertexForRawCharIndex(0), tokenMask));
     AnnotationItem ai_al_lemma("word", StringFrag("Al"));
-    Lattice::EdgeDescriptor al_lemma_edge = lattice.addEdge(pre_ala, post_ala, ai_al_lemma, lemma_tag, al_lemma_builder.build());
+    Lattice::EdgeDescriptor al_lemma_edge = lattice.addEdge(
+            pre_ala, post_ala, ai_al_lemma, lemma_tag, al_lemma_builder.build());
     Lattice::EdgeSequence::Builder ala_lemma_builder(lattice);
     ala_lemma_builder.addEdge(lattice.firstOutEdge(lattice.getVertexForRawCharIndex(0), tokenMask));
     AnnotationItem ai_ala_lemma("word", StringFrag("Ala"));
-    Lattice::EdgeDescriptor ala_lemma_edge = lattice.addEdge(pre_ala, post_ala, ai_ala_lemma, lemma_tag, ala_lemma_builder.build());
+    Lattice::EdgeDescriptor ala_lemma_edge = lattice.addEdge(
+            pre_ala, post_ala, ai_ala_lemma, lemma_tag, ala_lemma_builder.build());
     Lattice::EdgeSequence::Builder al_lexeme_builder(lattice);
     al_lexeme_builder.addEdge(al_lemma_edge);
     AnnotationItem ai_al_lexeme("subst", StringFrag("Al+subst"));
     lattice.getAnnotationItemManager().setValue(ai_al_lexeme, "gender", "m1");
-    Lattice::EdgeDescriptor al_lexeme_edge = lattice.addEdge(pre_ala, post_ala, ai_al_lexeme, lexeme_tag, al_lexeme_builder.build());
+    Lattice::EdgeDescriptor al_lexeme_edge = lattice.addEdge(
+            pre_ala, post_ala, ai_al_lexeme, lexeme_tag, al_lexeme_builder.build());
     Lattice::EdgeSequence::Builder ala_lexeme_builder(lattice);
     ala_lexeme_builder.addEdge(ala_lemma_edge);
     AnnotationItem ai_ala_lexeme("subst", StringFrag("Ala+subst"));
     lattice.getAnnotationItemManager().setValue(ai_ala_lexeme, "gender", "f");
-    Lattice::EdgeDescriptor ala_lexeme_edge = lattice.addEdge(pre_ala, post_ala, ai_ala_lexeme, lexeme_tag, ala_lexeme_builder.build());
+    Lattice::EdgeDescriptor ala_lexeme_edge = lattice.addEdge(
+            pre_ala, post_ala, ai_ala_lexeme, lexeme_tag, ala_lexeme_builder.build());
     Lattice::EdgeSequence::Builder al_form_gen_builder(lattice);
     al_form_gen_builder.addEdge(al_lexeme_edge);
     AnnotationItem ai_al_form_gen("subst", StringFrag("Ala"));
@@ -120,22 +124,27 @@ BOOST_AUTO_TEST_CASE( autodelete_pl ) {
     lattice.addEdge(pre_ala, post_ala, ai_ala_form, form_tag, ala_form_builder.build());
 
     Lattice::EdgeSequence::Builder miec_lemma_builder(lattice);
-    miec_lemma_builder.addEdge(lattice.firstOutEdge(lattice.getVertexForRawCharIndex(4), tokenMask));
+    miec_lemma_builder.addEdge(lattice.firstOutEdge(
+                lattice.getVertexForRawCharIndex(4), tokenMask));
     AnnotationItem ai_miec_lemma("word", StringFrag("mieć"));
-    Lattice::EdgeDescriptor miec_lemma_edge = lattice.addEdge(pre_ma, post_ma, ai_miec_lemma, lemma_tag, miec_lemma_builder.build());
+    Lattice::EdgeDescriptor miec_lemma_edge = lattice.addEdge(
+            pre_ma, post_ma, ai_miec_lemma, lemma_tag, miec_lemma_builder.build());
     Lattice::EdgeSequence::Builder moj_lemma_builder(lattice);
     moj_lemma_builder.addEdge(lattice.firstOutEdge(lattice.getVertexForRawCharIndex(4), tokenMask));
     AnnotationItem ai_moj_lemma("word", StringFrag("mój"));
-    Lattice::EdgeDescriptor moj_lemma_edge = lattice.addEdge(pre_ma, post_ma, ai_moj_lemma, lemma_tag, moj_lemma_builder.build());
+    Lattice::EdgeDescriptor moj_lemma_edge = lattice.addEdge(
+            pre_ma, post_ma, ai_moj_lemma, lemma_tag, moj_lemma_builder.build());
     Lattice::EdgeSequence::Builder miec_lexeme_builder(lattice);
     miec_lexeme_builder.addEdge(miec_lemma_edge);
     AnnotationItem ai_miec_lexeme("verb", StringFrag("mieć+verb"));
     lattice.getAnnotationItemManager().setValue(ai_miec_lexeme, "aspect", "imperf");
-    Lattice::EdgeDescriptor miec_lexeme_edge = lattice.addEdge(pre_ma, post_ma, ai_miec_lexeme, lexeme_tag, miec_lexeme_builder.build());
+    Lattice::EdgeDescriptor miec_lexeme_edge = lattice.addEdge(
+            pre_ma, post_ma, ai_miec_lexeme, lexeme_tag, miec_lexeme_builder.build());
     Lattice::EdgeSequence::Builder moj_lexeme_builder(lattice);
     moj_lexeme_builder.addEdge(moj_lemma_edge);
     AnnotationItem ai_moj_lexeme("adj", StringFrag("mój+adj"));
-    Lattice::EdgeDescriptor moj_lexeme_edge = lattice.addEdge(pre_ma, post_ma, ai_moj_lexeme, lexeme_tag, moj_lexeme_builder.build());
+    Lattice::EdgeDescriptor moj_lexeme_edge = lattice.addEdge(
+            pre_ma, post_ma, ai_moj_lexeme, lexeme_tag, moj_lexeme_builder.build());
     Lattice::EdgeSequence::Builder miec_form_builder(lattice);
     miec_form_builder.addEdge(miec_lexeme_edge);
     AnnotationItem ai_miec_form("verb", StringFrag("ma"));
@@ -165,22 +174,26 @@ BOOST_AUTO_TEST_CASE( autodelete_pl ) {
     kot_lemma_builder.addEdge(lattice.firstOutEdge(
                 lattice.getVertexForRawCharIndex(7), tokenMask));
     AnnotationItem ai_kot_lemma("word", StringFrag("kot"));
-    Lattice::EdgeDescriptor kot_lemma_edge = lattice.addEdge(pre_kota, post_kota, ai_kot_lemma, lemma_tag, kot_lemma_builder.build());
+    Lattice::EdgeDescriptor kot_lemma_edge = lattice.addEdge(
+            pre_kota, post_kota, ai_kot_lemma, lemma_tag, kot_lemma_builder.build());
     Lattice::EdgeSequence::Builder kota_lemma_builder(lattice);
     kota_lemma_builder.addEdge(lattice.firstOutEdge(
                 lattice.getVertexForRawCharIndex(7), tokenMask));
     AnnotationItem ai_kota_lemma("word", StringFrag("kota"));
-    Lattice::EdgeDescriptor kota_lemma_edge = lattice.addEdge(pre_kota, post_kota, ai_kota_lemma, lemma_tag, kota_lemma_builder.build());
+    Lattice::EdgeDescriptor kota_lemma_edge = lattice.addEdge(
+            pre_kota, post_kota, ai_kota_lemma, lemma_tag, kota_lemma_builder.build());
     Lattice::EdgeSequence::Builder kot_lexeme_builder(lattice);
     kot_lexeme_builder.addEdge(kot_lemma_edge);
     AnnotationItem ai_kot_lexeme("subst", StringFrag("kot+subst"));
     lattice.getAnnotationItemManager().setValue(ai_kot_lexeme, "gender", "m2");
-    Lattice::EdgeDescriptor kot_lexeme_edge = lattice.addEdge(pre_kota, post_kota, ai_kot_lexeme, lexeme_tag, kot_lexeme_builder.build());
+    Lattice::EdgeDescriptor kot_lexeme_edge = lattice.addEdge(
+            pre_kota, post_kota, ai_kot_lexeme, lexeme_tag, kot_lexeme_builder.build());
     Lattice::EdgeSequence::Builder kota_lexeme_builder(lattice);
     kota_lexeme_builder.addEdge(kota_lemma_edge);
     AnnotationItem ai_kota_lexeme("subst", StringFrag("kota+subst"));
     lattice.getAnnotationItemManager().setValue(ai_kota_lexeme, "gender", "f");
-    Lattice::EdgeDescriptor kota_lexeme_edge = lattice.addEdge(pre_kota, post_kota, ai_kota_lexeme, lexeme_tag, kota_lexeme_builder.build());
+    Lattice::EdgeDescriptor kota_lexeme_edge = lattice.addEdge(
+            pre_kota, post_kota, ai_kota_lexeme, lexeme_tag, kota_lexeme_builder.build());
     Lattice::EdgeSequence::Builder kot_form_acc_builder(lattice);
     kot_form_acc_builder.addEdge(kot_lexeme_edge);
     AnnotationItem ai_kot_form_acc("subst", StringFrag("kota"));
