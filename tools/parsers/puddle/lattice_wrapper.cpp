@@ -15,18 +15,10 @@ namespace poleng {
                 std::multimap<std::pair<int, int>, TransitionInfo*> edgesMap;
                 std::map<int, int> depthsMap;
 
-                LayerTagMask mask = lattice.getLayerTagManager().getMask(
-                        createUnion(
-                            createUnion(
-                                lattice.getLayerTagManager().
-                                createSingletonTagCollection("form"),
-                                lattice.getLayerTagManager().
-                                createSingletonTagCollection("parse")
-                                ),
-                            lattice.getLayerTagManager().
-                            createSingletonTagCollection("lexeme") // former pos edge
-                            )
-                        );
+                LayerTagMask mask = lattice.getLayerTagManager().getAlternativeMask(
+                    lattice.getLayerTagManager().createSingletonTagCollection("form"),
+                    lattice.getLayerTagManager().createSingletonTagCollection("parse"),
+                    lattice.getLayerTagManager().createSingletonTagCollection("lexeme"));
 
                 Lattice::EdgesSortedBySourceIterator edgeIterator =
                     lattice.edgesSortedBySource(mask);
