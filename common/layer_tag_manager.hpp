@@ -88,6 +88,13 @@ public:
         return LayerTagMask(alts);
     }
 
+    LayerTagMask getAlternativeMask(
+        std::vector<LayerTagCollection> tagCollections) {
+
+        return LayerTagMask(tagCollections);
+    }
+
+
     LayerTagCollection planeTags();
     LayerTagCollection onlyPlaneTags(LayerTagCollection tags);
 
