@@ -69,7 +69,7 @@ bool matches(
         return true;
 
     BOOST_FOREACH(LayerTagCollection tagAlt, mask.tagAlts_) {
-        if (createIntersection(tagAlt, tags).isNonempty())
+        if (isSubset(tagAlt, tags))
             return true;
     }
 

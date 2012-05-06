@@ -122,12 +122,6 @@ BOOST_AUTO_TEST_CASE( chart_mask ) {
 
     BOOST_CHECK_EQUAL(count_out_edges(ch), 16);
     BOOST_CHECK_EQUAL(count_in_edges(ch), 16);
-
-    ch.setTagMask(lattice.getLayerTagManager().getMask(std::list<std::string>()));
-
-    BOOST_CHECK_EQUAL(count_out_edges(ch), 0);
-    BOOST_CHECK_EQUAL(count_in_edges(ch), 0);
-
 }
 
 
