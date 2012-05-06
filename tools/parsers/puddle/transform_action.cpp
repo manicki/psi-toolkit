@@ -84,10 +84,8 @@ bool TransformAction::test(Lattice &lattice, int matchedStartIndex,
             lattice, vertex);
     if (! edges.empty()) {
         LayerTagCollection tags = lattice.getEdgeLayerTags(edges.front());
-        if (! lattice.getLayerTagManager().match(
-                    lattice.getLayerTagManager().getMask(tags),
-                    "parse"))
-        return false;
+        if (! lattice.getLayerTagManager().isThere("parse", tags))
+            return false;
     }
     return true;
 }

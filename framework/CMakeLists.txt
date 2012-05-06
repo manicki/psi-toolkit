@@ -3,6 +3,7 @@ configure_file("${CMAKE_CURRENT_SOURCE_DIR}/git_info.cpp.in" "${CMAKE_CURRENT_BI
 # library framework
 add_library(framework SHARED
     aliaser.cpp
+    auto_completer.cpp
     factories_keeper.cpp
     main_factories_keeper.cpp
     help_formatter.cpp
@@ -38,6 +39,11 @@ if(HAVE_DJVULIBRE)
     include_directories("${psi-toolkit_SOURCE_DIR}/formats/djvu")
     link_directories("${psi-toolkit_BINARY_DIR}/formats/djvu")
 endif(HAVE_DJVULIBRE)
+
+# if(HAVE_LINK_GRAMMAR)
+    # include_directories("${psi-toolkit_SOURCE_DIR}/tools/parsers/link")
+    # link_directories("${psi-toolkit_BINARY_DIR}/tools/parsers/link")
+# endif(HAVE_LINK_GRAMMAR)
 
 if(USE_DOC_READER)
     include_directories("${psi-toolkit_SOURCE_DIR}/formats/doc")

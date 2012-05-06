@@ -618,8 +618,7 @@ std::string MeTagger::getFormLemma(Lattice &lattice,
         Lattice::EdgeDescriptor parentEdge = firstPartition.firstEdge(lattice);
 
         LayerTagCollection tags = lattice.getEdgeLayerTags(parentEdge);
-        LayerTagMask mask = lattice.getLayerTagManager().getMask(tags);
-        if (lattice.getLayerTagManager().match(mask, "lexeme")) {
+        if (lattice.getLayerTagManager().isThere("lexeme", tags)) {
             std::string lemma_pos =
                 lattice.getEdgeAnnotationItem(parentEdge).getText();
             if (lemma_pos.find(LEMMA_CATEGORY_SEPARATOR)
@@ -642,8 +641,7 @@ std::string MeTagger::getFormPartOfSpeech(Lattice &lattice,
         Lattice::EdgeDescriptor parentEdge = firstPartition.firstEdge(lattice);
 
         LayerTagCollection tags = lattice.getEdgeLayerTags(parentEdge);
-        LayerTagMask mask = lattice.getLayerTagManager().getMask(tags);
-        if (lattice.getLayerTagManager().match(mask, "lexeme")) {
+        if (lattice.getLayerTagManager().isThere("lexeme", tags)) {
             std::string lemma_pos =
                 lattice.getEdgeAnnotationItem(parentEdge).getText();
             if (lemma_pos.find(LEMMA_CATEGORY_SEPARATOR)
@@ -841,8 +839,7 @@ bool MeTagger::lexemeEdgeExists(Lattice &lattice,
                     firstPartition.firstEdge(lattice);
 
                 LayerTagCollection tags = lattice.getEdgeLayerTags(parentEdge);
-                LayerTagMask mask = lattice.getLayerTagManager().getMask(tags);
-                if (lattice.getLayerTagManager().match(mask, "lemma")) {
+                if (lattice.getLayerTagManager().isThere("lemma", tags)) {
                     if (lattice.getEdgeAnnotationItem(parentEdge).getText()
                             == lemma)
                         return true;
@@ -917,9 +914,8 @@ void MeTagger::addFormEdge(Lattice &lattice,
 }
 
 bool MeTagger::isDiscarded(Lattice &lattice, Lattice::EdgeDescriptor edge) {
-    LayerTagMask mask = lattice.getLayerTagManager().getMask(
-            lattice.getEdgeLayerTags(edge));
-    if (lattice.getLayerTagManager().match(mask, "discarded"))
+    LayerTagCollection tags = lattice.getEdgeLayerTags(edge);
+    if (lattice.getLayerTagManager().isThere("discarded", tags))
         return true;
     else
         return false;

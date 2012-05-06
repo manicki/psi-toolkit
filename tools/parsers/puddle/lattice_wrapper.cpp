@@ -15,31 +15,22 @@ namespace poleng {
                 std::multimap<std::pair<int, int>, TransitionInfo*> edgesMap;
                 std::map<int, int> depthsMap;
 
-                LayerTagMask mask = lattice.getLayerTagManager().getMask(
-                        createUnion(
-                            createUnion(
-                                lattice.getLayerTagManager().
-                                createSingletonTagCollection("form"),
-                                lattice.getLayerTagManager().
-                                createSingletonTagCollection("parse")
-                                ),
-                            lattice.getLayerTagManager().
-                            createSingletonTagCollection("lexeme") // former pos edge
-                            )
-                        );
+                LayerTagMask mask = lattice.getLayerTagManager().getAlternativeMask(
+                    lattice.getLayerTagManager().createSingletonTagCollection("form"),
+                    lattice.getLayerTagManager().createSingletonTagCollection("parse"),
+                    lattice.getLayerTagManager().createSingletonTagCollection("lexeme"));
 
                 Lattice::EdgesSortedBySourceIterator edgeIterator =
                     lattice.edgesSortedBySource(mask);
                 while (edgeIterator.hasNext()) {
                     Lattice::EdgeDescriptor edge = edgeIterator.next();
                     std::string type;
-                    LayerTagMask edgeMask = lattice.getLayerTagManager().getMask(
-                                lattice.getEdgeLayerTags(edge));
-                    if (lattice.getLayerTagManager().match(edgeMask, "form"))
+                    LayerTagCollection edgeTags = lattice.getEdgeLayerTags(edge);
+                    if (lattice.getLayerTagManager().isThere("form", edgeTags))
                         type = "token";
-                    if (lattice.getLayerTagManager().match(edgeMask, "parse"))
+                    if (lattice.getLayerTagManager().isThere("parse", edgeTags))
                         type = "group";
-                    if (lattice.getLayerTagManager().match(edgeMask, "lexeme"))
+                    if (lattice.getLayerTagManager().isThere("lexeme", edgeTags))
                         type = "pos";
 
                     int start = lattice.getEdgeBeginIndex(edge);
@@ -198,11 +189,10 @@ namespace poleng {
              */
             Lattice::VertexDescriptor getVertex(Lattice &lattice,
                     int edgeIndex, int offset) {
-                std::list<std::string> tags;
-                tags.push_back("form");
-                tags.push_back("parse");
-                tags.push_back("token");
-                LayerTagMask mask = lattice.getLayerTagManager().getMask(tags);
+                LayerTagMask mask = lattice.getLayerTagManager().getAlternativeMask(
+                    lattice.getLayerTagManager().createSingletonTagCollection("form"),
+                    lattice.getLayerTagManager().createSingletonTagCollection("parse"),
+                    lattice.getLayerTagManager().createSingletonTagCollection("token"));
                 return getVertex(lattice, edgeIndex, mask, offset);
             }
 
@@ -257,11 +247,10 @@ namespace poleng {
 
             std::list<Lattice::EdgeDescriptor> getTopEdges(
                     Lattice &lattice, Lattice::VertexDescriptor start) {
-                std::list<std::string> tags;
-                tags.push_back("form");
-                tags.push_back("parse");
-                tags.push_back("token");
-                LayerTagMask mask = lattice.getLayerTagManager().getMask(tags);
+                LayerTagMask mask = lattice.getLayerTagManager().getAlternativeMask(
+                    lattice.getLayerTagManager().createSingletonTagCollection("form"),
+                    lattice.getLayerTagManager().createSingletonTagCollection("parse"),
+                    lattice.getLayerTagManager().createSingletonTagCollection("token"));
                 return getTopEdges(lattice, start, mask);
             }
 
@@ -350,11 +339,10 @@ namespace poleng {
             std::list<Lattice::EdgeSequence> getEdgesRange(Lattice &lattice,
                     Lattice::VertexDescriptor start,
                     Lattice::VertexDescriptor end) {
-                std::list<std::string> tags;
-                tags.push_back("form");
-                tags.push_back("parse");
-                tags.push_back("token");
-                LayerTagMask mask = lattice.getLayerTagManager().getMask(tags);
+                LayerTagMask mask = lattice.getLayerTagManager().getAlternativeMask(
+                    lattice.getLayerTagManager().createSingletonTagCollection("form"),
+                    lattice.getLayerTagManager().createSingletonTagCollection("parse"),
+                    lattice.getLayerTagManager().createSingletonTagCollection("token"));
                 return getEdgesRange(lattice, start, end, mask);
             }
 
@@ -921,9 +909,8 @@ namespace poleng {
             }
 
             bool isDiscarded(Lattice &lattice, Lattice::EdgeDescriptor edge) {
-                LayerTagMask mask = lattice.getLayerTagManager().getMask(
-                        lattice.getEdgeLayerTags(edge));
-                if (lattice.getLayerTagManager().match(mask, "discarded"))
+                LayerTagCollection tags = lattice.getEdgeLayerTags(edge);
+                if (lattice.getLayerTagManager().isThere("discarded", tags))
                     return true;
                 else
                     return false;
@@ -944,9 +931,8 @@ namespace poleng {
             }
 
             bool isTokenEdge(Lattice &lattice, Lattice::EdgeDescriptor edge) {
-                LayerTagMask mask = lattice.getLayerTagManager().getMask(
-                        lattice.getEdgeLayerTags(edge));
-                if (lattice.getLayerTagManager().match(mask, "token"))
+                LayerTagCollection tags = lattice.getEdgeLayerTags(edge);
+                if (lattice.getLayerTagManager().isThere("token", tags))
                     return true;
                 else
                     return false;

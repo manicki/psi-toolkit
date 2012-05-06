@@ -59,7 +59,7 @@ Lattice::VertexDescriptor Lattice::addLooseVertex() {
     ++nLooseVertices_;
     Graph::vertex_descriptor vertex = boost::add_vertex(VertexEntry(-nLooseVertices_), graph_);
     vertices_[-nLooseVertices_] = vertex;
-    BOOST_FOREACH(TagCollectionsBimapItem unused, indexedTagCollections_) {
+    BOOST_FOREACH(TagMasksBimapItem unused, indexedTagMasks_) {
         graph_[vertex].outEdgesIndex.push_back(
             std::list<EdgeDescriptorWrapperToFoolBoost146OrGnu461>()
         );
@@ -242,7 +242,7 @@ Lattice::EdgeDescriptor Lattice::addEdge(
         } else {
             boost_from = boost::add_vertex(VertexEntry(from), graph_);
             vertices_[from] = boost_from;
-            BOOST_FOREACH(TagCollectionsBimapItem unused, indexedTagCollections_) {
+            BOOST_FOREACH(TagMasksBimapItem unused, indexedTagMasks_) {
                 graph_[boost_from].outEdgesIndex.push_back(
                     std::list<EdgeDescriptorWrapperToFoolBoost146OrGnu461>()
                 );
@@ -257,7 +257,7 @@ Lattice::EdgeDescriptor Lattice::addEdge(
         } else {
             boost_to = boost::add_vertex(VertexEntry(to), graph_);
             vertices_[to] = boost_to;
-            BOOST_FOREACH(TagCollectionsBimapItem unused, indexedTagCollections_) {
+            BOOST_FOREACH(TagMasksBimapItem unused, indexedTagMasks_) {
                 graph_[boost_to].outEdgesIndex.push_back(
                     std::list<EdgeDescriptorWrapperToFoolBoost146OrGnu461>()
                 );
@@ -275,8 +275,8 @@ Lattice::EdgeDescriptor Lattice::addEdge(
         );
 
         if (result.second) {
-            for (size_t i = 0; i < indexedTagCollections_.size(); ++i) {
-                if (createIntersection(tags, indexedTagCollections_.right.at(i)).isNonempty()) {
+            for (size_t i = 0; i < indexedTagMasks_.size(); ++i) {
+                if (matches(tags, indexedTagMasks_.right.at(i))) {
                     graph_[boost_from].outEdgesIndex[i].push_back(result.first);
                     graph_[boost_to].inEdgesIndex[i].push_back(result.first);
                 }
@@ -334,7 +334,7 @@ Lattice::InOutEdgesIterator Lattice::outEdges(
                 -1
             );
         }
-        int ix = addTagCollectionIndex_(layerTagManager_.createTagCollection(mask));
+        int ix = addTagMaskIndex_(mask);
         return Lattice::InOutEdgesIterator(
             graph_[boost_vertex].outEdgesIndex[ix].begin(),
             graph_[boost_vertex].outEdgesIndex[ix].end(),
@@ -344,7 +344,8 @@ Lattice::InOutEdgesIterator Lattice::outEdges(
         VerticesMap::iterator iter = vertices_.find(vertex);
         if (iter == vertices_.end()) {
             return Lattice::InOutEdgesIterator(
-                (layerTagManager_.match(mask, "symbol") && implicitOutEdges_[vertex]) ?
+                (layerTagManager_.canBeAppliedToImplicitSymbol(mask)
+                 && implicitOutEdges_[vertex]) ?
                     vertex : -1
             );
         }
@@ -355,11 +356,12 @@ Lattice::InOutEdgesIterator Lattice::outEdges(
                 implicitOutEdges_[vertex] ? vertex : -1
             );
         }
-        int ix = addTagCollectionIndex_(layerTagManager_.createTagCollection(mask));
+        int ix = addTagMaskIndex_(mask);
         return Lattice::InOutEdgesIterator(
             graph_[boost_vertex].outEdgesIndex[ix].begin(),
             graph_[boost_vertex].outEdgesIndex[ix].end(),
-            (layerTagManager_.match(mask, "symbol") && implicitOutEdges_[vertex]) ?
+            (layerTagManager_.canBeAppliedToImplicitSymbol(mask)
+             && implicitOutEdges_[vertex]) ?
                 vertex : -1
         );
     }
@@ -377,7 +379,7 @@ Lattice::InOutEdgesIterator Lattice::inEdges(
                 -1
             );
         }
-        int ix = addTagCollectionIndex_(layerTagManager_.createTagCollection(mask));
+        int ix = addTagMaskIndex_(mask);
         return Lattice::InOutEdgesIterator(
             graph_[boost_vertex].inEdgesIndex[ix].begin(),
             graph_[boost_vertex].inEdgesIndex[ix].end(),
@@ -391,7 +393,8 @@ Lattice::InOutEdgesIterator Lattice::inEdges(
         VerticesMap::iterator iter = vertices_.find(vertex);
         if (iter == vertices_.end()) {
             return Lattice::InOutEdgesIterator(
-                (layerTagManager_.match(mask, "symbol") && implicitOutEdges_[priorVertex]) ?
+                (layerTagManager_.canBeAppliedToImplicitSymbol(mask)
+                 && implicitOutEdges_[priorVertex]) ?
                     priorVertex : -1
             );
         }
@@ -402,11 +405,12 @@ Lattice::InOutEdgesIterator Lattice::inEdges(
                 implicitOutEdges_[priorVertex] ? priorVertex : -1
             );
         }
-        int ix = addTagCollectionIndex_(layerTagManager_.createTagCollection(mask));
+        int ix = addTagMaskIndex_(mask);
         return Lattice::InOutEdgesIterator(
             graph_[boost_vertex].inEdgesIndex[ix].begin(),
             graph_[boost_vertex].inEdgesIndex[ix].end(),
-            (layerTagManager_.match(mask, "symbol") && implicitOutEdges_[priorVertex]) ?
+            (layerTagManager_.canBeAppliedToImplicitSymbol(mask)
+             && implicitOutEdges_[priorVertex]) ?
                 priorVertex : -1
         );
     }
@@ -731,18 +735,18 @@ int Lattice::countAllVertices() {
 }
 
 
-int Lattice::addTagCollectionIndex_(LayerTagCollection tags) {
-    TagCollectionsBimapLeftIterator li = indexedTagCollections_.left.find(tags);
-    if (li != indexedTagCollections_.left.end()) {
+int Lattice::addTagMaskIndex_(LayerTagMask tagMask) {
+    TagMasksBimapLeftIterator li = indexedTagMasks_.left.find(tagMask);
+    if (li != indexedTagMasks_.left.end()) {
         return li->second;
     } else {
-        int ix = indexedTagCollections_.size();
+        int ix = indexedTagMasks_.size();
         BOOST_FOREACH(VerticesMap::value_type iv, vertices_) {
             graph_[iv.second].outEdgesIndex.push_back(
                 std::list<EdgeDescriptorWrapperToFoolBoost146OrGnu461>()
             );
             BOOST_FOREACH(Graph::edge_descriptor edge, boost::out_edges(iv.second, graph_)) {
-                if (createIntersection(graph_[edge].tagList, tags).isNonempty()) {
+                if (matches(graph_[edge].tagList, tagMask)) {
                     graph_[iv.second].outEdgesIndex[ix].push_back(edge);
                 }
             }
@@ -750,12 +754,12 @@ int Lattice::addTagCollectionIndex_(LayerTagCollection tags) {
                 std::list<EdgeDescriptorWrapperToFoolBoost146OrGnu461>()
             );
             BOOST_FOREACH(Graph::edge_descriptor edge, boost::in_edges(iv.second, graph_)) {
-                if (createIntersection(graph_[edge].tagList, tags).isNonempty()) {
+                if (matches(graph_[edge].tagList, tagMask)) {
                     graph_[iv.second].inEdgesIndex[ix].push_back(edge);
                 }
             }
         }
-        indexedTagCollections_.insert(TagCollectionsBimapItem(tags, ix));
+        indexedTagMasks_.insert(TagMasksBimapItem(tagMask, ix));
         return ix;
     }
 }

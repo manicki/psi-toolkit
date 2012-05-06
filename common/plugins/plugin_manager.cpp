@@ -18,6 +18,10 @@
 #include "graphviz_plugin.hpp"
 #endif
 
+#if HAVE_LINK_GRAMMAR
+#include "link_parser_plugin.hpp"
+#endif
+
 #if HAVE_POPPLER
 #include "poppler_plugin.hpp"
 #endif
@@ -34,6 +38,9 @@ PluginManager::PluginManager() {
 #endif
 #if HAVE_GRAPHVIZ
     registerPlugin_(new GraphvizPlugin());
+#endif
+#if HAVE_LINK_GRAMMAR
+    registerPlugin_(new LinkParserPlugin());
 #endif
 #if HAVE_POPPLER
     registerPlugin_(new PopplerPlugin());

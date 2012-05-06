@@ -1,3 +1,5 @@
+#include <boost/assign/list_of.hpp>
+
 #include "puddle.hpp"
 
 namespace poleng {
@@ -69,7 +71,8 @@ namespace puddle {
     }
 
     std::list<std::list<std::string> > Puddle::Factory::doRequiredLayerTags() {
-        return std::list<std::list<std::string> >();
+        return boost::assign::list_of(
+            boost::assign::list_of(std::string("form")));
     }
 
     std::list<std::list<std::string> > Puddle::Factory::doOptionalLayerTags() {

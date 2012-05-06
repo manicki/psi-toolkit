@@ -12,6 +12,7 @@ set(tools_DIRS
     tokenizers/tp
     lemmatizers/morfologik
     parsers/gobio
+    parsers/link
     parsers/puddle
     segmenters/srx
     recognizers/langguesser

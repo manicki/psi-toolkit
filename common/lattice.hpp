@@ -524,12 +524,12 @@ private:
 
     int nLooseVertices_;
 
-    typedef boost::bimap<LayerTagCollection, int> TagCollectionsBimap;
-    typedef TagCollectionsBimap::value_type TagCollectionsBimapItem;
-    typedef TagCollectionsBimap::left_map::const_iterator TagCollectionsBimapLeftIterator;
-    TagCollectionsBimap indexedTagCollections_;
+    typedef boost::bimap<LayerTagMask, int> TagMasksBimap;
+    typedef TagMasksBimap::value_type TagMasksBimapItem;
+    typedef TagMasksBimap::left_map::const_iterator TagMasksBimapLeftIterator;
+    TagMasksBimap indexedTagMasks_;
 
-    int addTagCollectionIndex_(LayerTagCollection tags);
+    int addTagMaskIndex_(LayerTagMask tagMask);
 
     void resizeImplicitEdgesStructures_();
 

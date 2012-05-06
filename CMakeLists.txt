@@ -295,6 +295,27 @@ else (USE_DJVU_READER)
     set(HAVE_DJVULIBRE 0)
 endif (USE_DJVU_READER)
 
+# Finds Link Grammar
+
+option(USE_LINK_GRAMMAR "Using link-parser" OFF)
+message(STATUS "Using link-parser ${USE_LINK_GRAMMAR}")
+
+if (USE_LINK_GRAMMAR)
+    find_package(LinkGrammar)
+    if (LINK_GRAMMAR_FOUND)
+        message(STATUS "Found LinkGrammar")
+        include_directories(${LINK_GRAMMAR_INCLUDE_DIRS})
+        link_directories(${LINK_GRAMMAR_LIBRARIES})
+        link_directories("${psi-toolkit_BINARY_DIR}/tools/parsers/link/plugin")
+        set(HAVE_LINK_GRAMMAR 1)
+    else (LINK_GRAMMAR_FOUND)
+        message(WARNING "Could not find LinkGrammar: link-parser disabled")
+        set(HAVE_LINK_GRAMMAR 0)
+    endif (LINK_GRAMMAR_FOUND)
+else (USE_LINK_GRAMMAR)
+    set(HAVE_LINK_GRAMMAR 0)
+endif (USE_LINK_GRAMMAR)
+
 # Links Antiword plugin
 
 option(USE_DOC_READER "Using doc-reader" OFF)
@@ -357,6 +378,10 @@ if(HAVE_DJVULIBRE)
     set(BASE_TARGETS ${BASE_TARGETS} formats-djvu)
 endif(HAVE_DJVULIBRE)
 
+if(HAVE_LINK_GRAMMAR)
+    set(BASE_TARGETS ${BASE_TARGETS} tools-parsers-link)
+endif(HAVE_LINK_GRAMMAR)
+
 if(USE_DOC_READER)
     set(BASE_TARGETS ${BASE_TARGETS} formats-doc)
 endif(USE_DOC_READER)
@@ -406,6 +431,11 @@ if(HAVE_DJVULIBRE)
     include_directories("${psi-toolkit_SOURCE_DIR}/formats/djvu")
     link_directories("${psi-toolkit_BINARY_DIR}/formats/djvu")
 endif(HAVE_DJVULIBRE)
+
+if(HAVE_LINK_GRAMMAR)
+    include_directories("${psi-toolkit_SOURCE_DIR}/tools/parsers/link")
+    link_directories("${psi-toolkit_BINARY_DIR}/tools/parsers/link")
+endif(HAVE_LINK_GRAMMAR)
 
 if(USE_DOC_READER)
     include_directories("${psi-toolkit_SOURCE_DIR}/formats/doc")
