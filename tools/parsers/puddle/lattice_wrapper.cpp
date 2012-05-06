@@ -189,11 +189,10 @@ namespace poleng {
              */
             Lattice::VertexDescriptor getVertex(Lattice &lattice,
                     int edgeIndex, int offset) {
-                std::list<std::string> tags;
-                tags.push_back("form");
-                tags.push_back("parse");
-                tags.push_back("token");
-                LayerTagMask mask = lattice.getLayerTagManager().getMask(tags);
+                LayerTagMask mask = lattice.getLayerTagManager().getAlternativeMask(
+                    lattice.getLayerTagManager().createSingletonTagCollection("form"),
+                    lattice.getLayerTagManager().createSingletonTagCollection("parse"),
+                    lattice.getLayerTagManager().createSingletonTagCollection("token"));
                 return getVertex(lattice, edgeIndex, mask, offset);
             }
 
@@ -248,11 +247,10 @@ namespace poleng {
 
             std::list<Lattice::EdgeDescriptor> getTopEdges(
                     Lattice &lattice, Lattice::VertexDescriptor start) {
-                std::list<std::string> tags;
-                tags.push_back("form");
-                tags.push_back("parse");
-                tags.push_back("token");
-                LayerTagMask mask = lattice.getLayerTagManager().getMask(tags);
+                LayerTagMask mask = lattice.getLayerTagManager().getAlternativeMask(
+                    lattice.getLayerTagManager().createSingletonTagCollection("form"),
+                    lattice.getLayerTagManager().createSingletonTagCollection("parse"),
+                    lattice.getLayerTagManager().createSingletonTagCollection("token"));
                 return getTopEdges(lattice, start, mask);
             }
 
@@ -341,11 +339,10 @@ namespace poleng {
             std::list<Lattice::EdgeSequence> getEdgesRange(Lattice &lattice,
                     Lattice::VertexDescriptor start,
                     Lattice::VertexDescriptor end) {
-                std::list<std::string> tags;
-                tags.push_back("form");
-                tags.push_back("parse");
-                tags.push_back("token");
-                LayerTagMask mask = lattice.getLayerTagManager().getMask(tags);
+                LayerTagMask mask = lattice.getLayerTagManager().getAlternativeMask(
+                    lattice.getLayerTagManager().createSingletonTagCollection("form"),
+                    lattice.getLayerTagManager().createSingletonTagCollection("parse"),
+                    lattice.getLayerTagManager().createSingletonTagCollection("token"));
                 return getEdgesRange(lattice, start, end, mask);
             }
 
