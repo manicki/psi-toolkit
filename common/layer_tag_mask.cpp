@@ -3,11 +3,31 @@
 #include <boost/foreach.hpp>
 
 bool LayerTagMask::isNone() {
-    return none_ || (!any_ && tagAlts_[0].isEmpty() && (none_ = true));
+    if (none_)
+        return true;
+
+    if (any_)
+        return false;
+
+    BOOST_FOREACH(LayerTagCollection tagAlt, tagAlts_) {
+        if (!tagAlt.isEmpty())
+            return false;
+    }
+
+    none_ = true;
+    return true;
 }
 
 bool LayerTagMask::isSome() {
-    return any_ || tagAlts_[0].isNonempty();
+    if (any_)
+        return true;
+
+    BOOST_FOREACH(LayerTagCollection tagAlt, tagAlts_) {
+        if (!tagAlt.isEmpty())
+            return true;
+    }
+
+    return false;
 }
 
 bool LayerTagMask::isAny() const {
@@ -15,7 +35,27 @@ bool LayerTagMask::isAny() const {
 }
 
 bool LayerTagMask::operator<(LayerTagMask other) const {
-    return tagAlts_[0] < other.tagAlts_[0];
+    if (none_ && other.any_)
+        return true;
+
+    if (other.none_ && any_)
+        return false;
+
+    if (tagAlts_.size() < other.tagAlts_.size())
+        return true;
+
+    if (tagAlts_.size() > other.tagAlts_.size())
+        return false;
+
+    for (size_t i = 0; i < tagAlts_.size(); ++i) {
+        if (tagAlts_[i] < other.tagAlts_[i])
+            return true;
+
+        if (other.tagAlts_[i] < tagAlts_[i])
+            return false;
+    }
+
+    return false;
 }
 
 bool matches(
@@ -35,4 +75,3 @@ bool matches(
 
     return false;
 }
-
