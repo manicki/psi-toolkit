@@ -16,7 +16,7 @@ JoinAction::JoinAction(std::string aGroup, int aStart, int aEnd, int aHead,
 
 bool JoinAction::apply(Lattice &lattice, int matchedStartIndex,
         RuleTokenSizes &ruleTokenSizes,
-        std::list<Lattice::EdgeSequence>&) {
+        std::list<Lattice::EdgeSequence> &rulePartitions) {
     int realStart;
     int realEnd;
     int realHead;
@@ -34,9 +34,11 @@ bool JoinAction::apply(Lattice &lattice, int matchedStartIndex,
             lattice, realHead, matchedStartIndex);
     Lattice::VertexDescriptor endVertex = lattice::getVertex(
             lattice, realEnd, matchedStartIndex);
-    lattice::removeParseEdges(lattice, startVertex, endVertex); //@todo: nie jestem przekonany,
+    lattice::removeParseEdges(lattice, startVertex, endVertex);
+    //@todo: nie jestem przekonany,
     //czy to jest dobre miejsce. addParseEdges moze sie wowczas nie powiesc.
-    //z drugiej strony, jak krawedzie nie sa usuniete tylko discarded, to moze sie nic nie stac.
+    //z drugiej strony, jak krawedzie nie sa usuniete tylko discarded,
+    //to moze sie nic nie stac.
     //co tylko z groupPartitions? nie powinno byc generowane po usunieciu?
     std::list<Lattice::EdgeDescriptor> startEdges = lattice::getTopEdges(
             lattice, startVertex);
@@ -47,19 +49,17 @@ bool JoinAction::apply(Lattice &lattice, int matchedStartIndex,
     if (startEdges.empty() || headEdges.empty() || endEdges.empty()) {
         return false;
     }
-    std::list<Lattice::EdgeSequence> groupPartitions =
-        lattice::getEdgesRange(
-                lattice, startVertex, endVertex
-                );
+    rulePartitions =  lattice::getEdgesRange(lattice, startVertex, endVertex);
     lattice::addParseEdges(
             lattice,
             startEdges,
             endEdges,
             this->group,
             headEdges,
-            groupPartitions,
+            rulePartitions,
             realHead
             );
+    std::cerr << "PO JOIN ADD: " << rulePartitions.size() << std::endl;
     return true;
 }
 

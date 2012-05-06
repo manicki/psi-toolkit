@@ -31,8 +31,8 @@ class Rule {
                 RuleTokenModifiers aRuleTokenModifiers,
                 RuleTokenRequirements aRuleTokenRequirements,
                 RulePatternIndices aRulePatternIndices, bool aRepeat,
-                std::string aLeft, std::string aMatch, std::string aRight,
-                NegativePatternStrings aNegativePatterns);
+                bool aAutoDelete, std::string aLeft, std::string aMatch,
+                std::string aRight, NegativePatternStrings aNegativePatterns);
 #else
         Rule(std::string aName, std::string aCompiledPattern, int aLeftCount,
                 int aMatchCount, int aRightCount, ActionsPtr aActions,
@@ -40,7 +40,8 @@ class Rule {
                 RuleTokenModifiers aRuleTokenModifiers,
                 RuleTokenRequirements aRuleTokenRequirements,
                 RulePatternIndices aRulePatternIndices, bool aRepeat,
-                std::string aLeft, std::string aMatch, std::string aRight);
+                bool aAutoDelete, std::string aLeft, std::string aMatch,
+                std::string aRight);
 #endif
 
         int matchPattern(std::string &sentenceString,
@@ -58,6 +59,7 @@ class Rule {
         int getMatchCount() const;
         int getRightCount() const;
         bool getRepeat() const;
+        bool getAutoDelete() const;
 
         void setPattern(std::string aCompiledPattern);
         void setLeftCount(int aCount);
@@ -87,8 +89,8 @@ class Rule {
                 RuleTokenModifiers aRuleTokenModifiers,
                 RuleTokenRequirements aRuleTokenRequirements,
                 RulePatternIndices aRulePatternIndices,
-                bool aRepeat, std::string aLeft, std::string aMatch,
-                std::string aRight);
+                bool aRepeat, bool aAutoDelete,
+                std::string aLeft, std::string aMatch, std::string aRight);
 
         std::string name;
         PatternPtr pattern;
@@ -101,6 +103,11 @@ class Rule {
         int leftCount, matchCount, rightCount;
         std::string beforeMatch;
         int countTokensMatched(std::string matched);
+        std::list<Lattice::EdgeSequence> generateRulePartitions(
+                Lattice &lattice, int leftBound, int rightBound,
+                int matchedStartIndex);
+        bool partitionMatchesPattern(Lattice &lattice,
+                Lattice::EdgeSequence partition);
 
         RuleTokenPatterns ruleTokenPatterns;
         RuleTokenModifiers ruleTokenModifiers;
@@ -108,6 +115,7 @@ class Rule {
         RulePatternIndices rulePatternIndices;
 
         bool repeat;
+        bool autoDelete;
 
         int getPatternStart(std::string &pattern);
         int getPatternEnd(std::string &pattern);
