@@ -35,6 +35,14 @@ public:
         return createTagCollection(tagNames);
     }
 
+    static std::string getLanguageTag(std::string langCode) {
+        return std::string("!") + langCode;
+    }
+
+    LayerTagCollection createLanguageTag(std::string langCode) {
+        return createSingletonTagCollection(getLanguageTag(langCode));
+    }
+
     LayerTagCollection createTagCollection(LayerTagMask mask);
 
     /**

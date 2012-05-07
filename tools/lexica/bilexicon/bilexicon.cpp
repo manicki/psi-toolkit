@@ -259,7 +259,7 @@ bool BiLexicon::isEmptyLine_(const std::string& s) {
 
 void BiLexicon::createTags_(const std::string& trg_lang) {
     tags_ = providedLayerTags();
-    tags_.push_back(std::string("!") + trg_lang);
+    tags_.push_back(LayerTagManager::getLanguageTag(trg_lang));
 }
 
 const std::string BiLexicon::DEFAULT_BINARY_LEXICON_SPEC
