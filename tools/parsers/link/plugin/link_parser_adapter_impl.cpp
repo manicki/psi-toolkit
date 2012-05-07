@@ -1,12 +1,17 @@
 #include "link_parser_adapter_impl.hpp"
 
+#include <cstring>
 
-LinkParserAdapterImpl::LinkParserAdapterImpl() : dictionary_(NULL) { }
+
+LinkParserAdapterImpl::LinkParserAdapterImpl() : dictionary_(NULL), sentence_(NULL) { }
 
 
 LinkParserAdapterImpl::~LinkParserAdapterImpl() {
     if (dictionary_) {
         dictionary_delete(dictionary_);
+    }
+    if (sentence_) {
+        sentence_delete(sentence_);
     }
 }
 
@@ -19,33 +24,57 @@ void LinkParserAdapterImpl::setDictionary(std::string filename) {
 }
 
 
-std::string LinkParserAdapterImpl::parseSentence(std::string sentenceStr) {
-    std::string result;
+std::vector<EdgeDescription> LinkParserAdapterImpl::parseSentence(std::string sentenceStr) {
+    std::vector<EdgeDescription> result;
     Parse_Options parseOptions = parse_options_create();
-    Sentence sentence = sentence_create(sentenceStr.c_str(), dictionary_);
-    if (sentence_parse(sentence, parseOptions)) {
-        Linkage linkage = linkage_create(0, sentence, parseOptions);
-        CNode_s * ctree = linkage_constituent_tree(linkage);
-        if (ctree) {
-            if (linkage_constituent_node_get_label(ctree)) {
-                result = linkage_constituent_node_get_label(ctree);
-            } else {
-                result = "NO LABEL!";
-            }
+    if (sentence_) {
+        sentence_delete(sentence_);
+    }
+    sentence_ = sentence_create(sentenceStr.c_str(), dictionary_);
+    if (sentence_parse(sentence_, parseOptions)) {
+
+        size_t pos = 0;
+        int wordNo = 0;
+        while (pos != std::string::npos && wordNo < sentence_length(sentence_)) {
+            const char * word = sentence_get_word(sentence_, wordNo);
+            pos = sentenceStr.find(word, pos);
+            starts_[wordNo] = pos;
+            ends_[wordNo] = pos + strlen(word);
+            ++wordNo;
         }
-/*
-        char * ctreePrint = linkage_print_constituent_tree(linkage, 1);
-        if (ctreePrint) {
-            result = ctreePrint;
-        } else {
-            result = "PARSING FAILED";
-        }
-        delete ctreePrint;
-*/
+
+        Linkage linkage = linkage_create(0, sentence_, parseOptions);
+        CNode * ctree = linkage_constituent_tree(linkage);
+        result = extractEdgeDescriptions(ctree);
         linkage_free_constituent_tree(ctree);
         linkage_delete(linkage);
+
     }
-    sentence_delete(sentence);
+    return result;
+}
+
+
+std::vector<EdgeDescription> LinkParserAdapterImpl::extractEdgeDescriptions(CNode * ctree) {
+    std::vector<EdgeDescription> result;
+    if (ctree) {
+        int start = starts_[linkage_constituent_node_get_start(ctree)];
+        int end = ends_[linkage_constituent_node_get_end(ctree)];
+        const char * label = linkage_constituent_node_get_label(ctree);
+        CNode * next = linkage_constituent_node_get_next(ctree);
+        CNode * child = linkage_constituent_node_get_child(ctree);
+        std::vector<EdgeDescription> nextDesc = extractEdgeDescriptions(next);
+        std::vector<EdgeDescription> childDesc = extractEdgeDescriptions(child);
+        int count = result.size() + nextDesc.size() + childDesc.size();
+        std::vector<int> children;
+        children.push_back(-1);
+        if (label) {
+            result.push_back(EdgeDescription(count, start, end, label, children));
+        } else {
+            result.push_back(EdgeDescription(count, start, end, "NOLABEL", children));
+        }
+        result.insert(result.end(), nextDesc.begin(), nextDesc.end());
+        result.insert(result.end(), childDesc.begin(), childDesc.end());
+    }
     return result;
 }
 

@@ -1,7 +1,11 @@
 #include "link_parser.hpp"
 
-#include <boost/assign.hpp>
+#include <vector>
 
+#include <boost/assign.hpp>
+#include <boost/foreach.hpp>
+
+#include "edge_description.hpp"
 #include "lang_specific_processor_file_fetcher.hpp"
 #include "plugin_manager.hpp"
 
@@ -103,15 +107,16 @@ void LinkParser::parse(Lattice &lattice) {
     Lattice::EdgesSortedBySourceIterator ei(lattice, maskSegment);
     while (ei.hasNext()) {
         Lattice::EdgeDescriptor edge = ei.next();
-        std::string parsed(adapter_->parseSentence(lattice.getEdgeText(edge)));
-        if (!parsed.empty()) {
-            AnnotationItem aiLink(parsed);
+        std::vector<EdgeDescription> parsingResult
+            = adapter_->parseSentence(lattice.getEdgeText(edge));
+        BOOST_FOREACH (EdgeDescription edgeDescription, parsingResult) {
+            AnnotationItem aiLink(edgeDescription.label);
             LayerTagCollection tagParse = lattice.getLayerTagManager().createTagCollectionFromList(
                 boost::assign::list_of("link-grammar")("parse")
             );
             lattice.addEdge(
-                lattice.getEdgeSource(edge),
-                lattice.getEdgeTarget(edge),
+                edgeDescription.start,
+                edgeDescription.end,
                 aiLink,
                 tagParse
             );

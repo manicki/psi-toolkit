@@ -3,6 +3,8 @@
 
 #include "link_parser_adapter_interface.hpp"
 
+#include <map>
+
 #include <link-includes.h>
 
 
@@ -14,10 +16,16 @@ public:
 
     virtual void setDictionary(std::string filename);
 
-    virtual std::string parseSentence(std::string sentenceStr);
+    virtual std::vector<EdgeDescription> parseSentence(std::string sentenceStr);
 
 private:
     Dictionary dictionary_;
+    Sentence sentence_;
+
+    std::map<int, int> starts_;
+    std::map<int, int> ends_;
+
+    std::vector<EdgeDescription> extractEdgeDescriptions(CNode * ctree);
 
 };
 
