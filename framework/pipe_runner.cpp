@@ -72,6 +72,7 @@ void PipeRunner::parseIntoFinalPipeline_(
     checkReader_<Source>();
     checkWriter_<Sink>();
     std::list<std::string> langCodes = getLangCodes_();
+    checkLangGuesser_(langCodes);
 
     INFO("the following languages are taken into account: "
          << boost::algorithm::join(langCodes, ", "));
@@ -302,6 +303,19 @@ void PipeRunner::prepend_(const std::string& pipeline) {
     promiseAlternativeSequence_ = newSequence;
 }
 
+void PipeRunner::insertAfterReader_(const std::string& pipeline) {
+    PipelineSpecification insertedSpec;
+    parseIntoPipelineSpecification_(splitPipeline_(pipeline), false, insertedSpec);
+
+    ProcessorPromiseAlternativeSequence newSequence
+        = pipelineSpecification2PromiseAlternativeSequence_(insertedSpec);
+
+    ProcessorPromiseAlternativeSequence::iterator iter = promiseAlternativeSequence_.begin();
+    ++iter;
+
+    promiseAlternativeSequence_.splice(iter, newSequence);
+}
+
 void PipeRunner::append_(const std::string& pipeline) {
     PipelineSpecification appendedSpec;
     parseIntoPipelineSpecification_(splitPipeline_(pipeline), false, appendedSpec);
@@ -336,6 +350,34 @@ std::list<std::string> PipeRunner::getLangCodes_() {
     langCodes.unique();
 
     return langCodes;
+}
+
+void PipeRunner::checkLangGuesser_(const std::list<std::string>& langCodes) {
+    if (!isLangGuesserAlreadyThere_()) {
+        if (langCodes.size() == 1)
+            forceLanguage_(langCodes.front());
+        else if (langCodes.size() > 1)
+            addLangGuesser_();
+    }
+}
+
+bool PipeRunner::isLangGuesserAlreadyThere_() {
+    BOOST_FOREACH(ProcessorPromiseAlternative alt, promiseAlternativeSequence_) {
+        BOOST_FOREACH(ProcessorPromiseSharedPtr promise, *alt) {
+            if (promise->languagesHandling() == AnnotatorFactory::LANGUAGE_GUESSER)
+                return true;
+        }
+    }
+
+    return false;
+}
+
+void PipeRunner::forceLanguage_(const std::string& langCode) {
+    insertAfterReader_(std::string("lang-guesser --force --only-langs ") + langCode);
+}
+
+void PipeRunner::addLangGuesser_() {
+    insertAfterReader_(std::string("lang-guesser"));
 }
 
 template<typename Source, typename Sink>

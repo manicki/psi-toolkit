@@ -34,7 +34,8 @@
 34 0016 06    dość         form,morfologik,morfologik-tagset dość qub[33]
 35 0022 01    _            token                 _           B
 36 0000 29    ma_mam...rze frag,txt-reader       ma_mama_ma_się_dość_dobrze FRAG[]
-37 0023 06    dobrze       token                 dobrze      T
-38 0023 06    dobrze       lemma,morfologik,morfologik-tagset dobrze word[37]
-39 0023 06    dobrze       lexeme,morfologik,morfologik-tagset dobrze+adv adv[38]
-40 0023 06    dobrze       form,morfologik,morfologik-tagset dobrze adv,degree=pos[39]
+37 0000 29    ma_mam...rze !pl,lang-guesser,text ma_mama_ma_się_dość_dobrze TEXT[36]
+38 0023 06    dobrze       token                 dobrze      T
+39 0023 06    dobrze       lemma,morfologik,morfologik-tagset dobrze word[38]
+40 0023 06    dobrze       lexeme,morfologik,morfologik-tagset dobrze+adv adv[39]
+41 0023 06    dobrze       form,morfologik,morfologik-tagset dobrze adv,degree=pos[40]

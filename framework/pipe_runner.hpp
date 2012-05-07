@@ -107,9 +107,15 @@ private:
     template<typename Sink>
     void checkWriter_();
     void prepend_(const std::string& pipeline);
+    void insertAfterReader_(const std::string& pipeline);
     void append_(const std::string& pipeline);
 
     std::list<std::string> getLangCodes_();
+
+    void checkLangGuesser_(const std::list<std::string>& langCodes);
+    bool isLangGuesserAlreadyThere_();
+    void forceLanguage_(const std::string& langCode);
+    void addLangGuesser_();
 
     template<typename Source, typename Sink>
     int run_(Source&, Sink&);

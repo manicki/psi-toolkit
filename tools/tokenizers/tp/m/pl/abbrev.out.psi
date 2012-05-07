@@ -8,4 +8,5 @@
 08 0023 01    _            token                 _           B
 09 0024 04    koty         token                 koty        T
 10 0000 29    Prof._...ty. frag,txt-reader       Prof._Kowalski_lubi_np._koty. FRAG[]
-11 0028 01    .            token                 .           I
+11 0000 29    Prof._...ty. !pl,lang-guesser,text Prof._Kowalski_lubi_np._koty. TEXT[10]
+12 0028 01    .            token                 .           I
