@@ -20,9 +20,16 @@ void LinkParserAdapterImpl::setDictionary(std::string filename) {
 
 
 std::string LinkParserAdapterImpl::parseSentence(std::string sentenceStr) {
+    std::string result;
+    Parse_Options parseOptions = parse_options_create();
     Sentence sentence = sentence_create(sentenceStr.c_str(), dictionary_);
+    if (sentence_parse(sentence, parseOptions)) {
+        Linkage linkage = linkage_create(0, sentence, parseOptions);
+        result = linkage_print_diagram(linkage);
+        linkage_delete(linkage);
+    }
     sentence_delete(sentence);
-    return "parsed by LINK";
+    return result;
 }
 
 

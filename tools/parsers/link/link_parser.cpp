@@ -104,15 +104,17 @@ void LinkParser::parse(Lattice &lattice) {
     while (ei.hasNext()) {
         Lattice::EdgeDescriptor edge = ei.next();
         std::string parsed(adapter_->parseSentence(lattice.getEdgeText(edge)));
-        AnnotationItem aiLink(parsed);
-        LayerTagCollection tagParse = lattice.getLayerTagManager().createTagCollectionFromList(
-            boost::assign::list_of("link-grammar")("parse")
-        );
-        lattice.addEdge(
-            lattice.getEdgeSource(edge),
-            lattice.getEdgeTarget(edge),
-            aiLink,
-            tagParse
-        );
+        if (!parsed.empty()) {
+            AnnotationItem aiLink(parsed);
+            LayerTagCollection tagParse = lattice.getLayerTagManager().createTagCollectionFromList(
+                boost::assign::list_of("link-grammar")("parse")
+            );
+            lattice.addEdge(
+                lattice.getEdgeSource(edge),
+                lattice.getEdgeTarget(edge),
+                aiLink,
+                tagParse
+            );
+        }
     }
 }
