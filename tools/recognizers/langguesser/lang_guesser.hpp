@@ -87,11 +87,11 @@ private:
         virtual void doRun();
 
         void markLanguage_(const std::string& language, Lattice::EdgeDescriptor edge);
+        LayerTagCollection getTagForLanguage_(const std::string& language);
+
         bool guessLanguage_();
 
         LangGuesser& processor_;
-
-        LayerTagCollection tags_;
     };
 
     virtual LatticeWorker* doCreateLatticeWorker(Lattice& lattice);

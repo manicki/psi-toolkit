@@ -244,9 +244,7 @@ std::list<std::string> LangGuesser::Factory::doLanguagesHandled(
 
 LangGuesser::Worker::Worker(LangGuesser& processor, Lattice& lattice):
     LatticeWorker(lattice),
-    processor_(processor),
-    tags_(lattice_.getLayerTagManager().createTagCollectionFromList(
-              boost::assign::list_of("text")("lang-guesser"))) {
+    processor_(processor) {
     }
 
 void LangGuesser::Worker::doRun() {
@@ -279,7 +277,6 @@ void LangGuesser::Worker::markLanguage_(
     const std::string& language, Lattice::EdgeDescriptor edge) {
 
     AnnotationItem item("TEXT", lattice_.getEdgeAnnotationItem(edge).getText());
-    lattice_.getAnnotationItemManager().setValue(item, "lang", language);
 
     Lattice::EdgeSequence::Builder edgeSequenceBuilder(lattice_);
     edgeSequenceBuilder.addEdge(edge);
@@ -288,6 +285,14 @@ void LangGuesser::Worker::markLanguage_(
         lattice_.getEdgeSource(edge),
         lattice_.getEdgeTarget(edge),
         item,
-        tags_,
+        getTagForLanguage_(language),
         edgeSequenceBuilder.build());
+}
+
+LayerTagCollection LangGuesser::Worker::getTagForLanguage_(const std::string& language) {
+    return lattice_.getLayerTagManager().createTagCollectionFromList(
+        boost::assign::list_of
+        (LayerTagManager::getLanguageTag(language))
+        ("text")
+        ("lang-guesser"));
 }
