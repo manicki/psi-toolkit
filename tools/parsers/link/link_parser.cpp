@@ -1,7 +1,11 @@
 #include "link_parser.hpp"
 
-#include <boost/assign.hpp>
+#include <vector>
 
+#include <boost/assign.hpp>
+#include <boost/foreach.hpp>
+
+#include "edge_description.hpp"
 #include "lang_specific_processor_file_fetcher.hpp"
 #include "plugin_manager.hpp"
 
@@ -52,7 +56,7 @@ std::list<std::string> LinkParser::Factory::doProvidedLayerTags() {
 }
 
 const std::string LinkParser::Factory::DEFAULT_DICT_FILE
-    = "%ITSDATA%/%LANG%.dict";
+    = "%ITSDATA%/%LANG%/4.0.dict";
 
 LatticeWorker* LinkParser::doCreateLatticeWorker(Lattice& lattice) {
     return new Worker(*this, lattice);
@@ -103,16 +107,36 @@ void LinkParser::parse(Lattice &lattice) {
     Lattice::EdgesSortedBySourceIterator ei(lattice, maskSegment);
     while (ei.hasNext()) {
         Lattice::EdgeDescriptor edge = ei.next();
-        std::string parsed(adapter_->parseSentence(lattice.getEdgeText(edge)));
-        AnnotationItem aiLink(parsed);
-        LayerTagCollection tagParse = lattice.getLayerTagManager().createTagCollectionFromList(
-            boost::assign::list_of("link-grammar")("parse")
-        );
-        lattice.addEdge(
-            lattice.getEdgeSource(edge),
-            lattice.getEdgeTarget(edge),
-            aiLink,
-            tagParse
-        );
+        std::vector<EdgeDescription> parsingResult
+            = adapter_->parseSentence(lattice.getEdgeText(edge));
+        std::vector<Lattice::EdgeDescriptor> addedEdges;
+        BOOST_FOREACH(EdgeDescription edgeDescription, parsingResult) {
+            AnnotationItem aiLink(
+                edgeDescription.label,
+                StringFrag(
+                    lattice.getAllText(),
+                    edgeDescription.start,
+                    edgeDescription.end-edgeDescription.start
+                )
+            );
+            LayerTagCollection tagParse = lattice.getLayerTagManager().createTagCollectionFromList(
+                boost::assign::list_of("link-grammar")("parse")
+            );
+            Lattice::EdgeSequence::Builder builder(lattice);
+            BOOST_FOREACH(int childNo, edgeDescription.children) {
+                builder.addEdge(addedEdges.at(childNo));
+            }
+            if (edgeDescription.start == edgeDescription.end) {
+                edgeDescription.start = lattice.addLooseVertex();
+                edgeDescription.end = lattice.addLooseVertex();
+            }
+            addedEdges.push_back(lattice.addEdge(
+                edgeDescription.start,
+                edgeDescription.end,
+                aiLink,
+                tagParse,
+                builder.build()
+            ));
+        }
     }
 }
