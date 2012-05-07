@@ -143,7 +143,7 @@ SrxSegmenter::SrxSegmenter(
     size_t hardLimit,
     size_t softLimit,
     bool cascade):
-    hardLimit_(hardLimit), softLimit_(softLimit) {
+    langCode_(lang), hardLimit_(hardLimit), softLimit_(softLimit) {
 
     SrxRulesReader ruleReader(rules, lang, cascade);
     RuleProcessor ruleProc(*this);
@@ -275,10 +275,9 @@ private:
     }
 
     virtual std::list<std::string> doLayerTags() {
-        std::list<std::string>  tags;
-        tags.push_back(std::string("segment"));
-
-        return tags;
+        return boost::assign::list_of
+            (std::string("segment"))
+            (LayerTagManager::getLanguageTag(dynamic_cast<SrxSegmenter&>(segmenter_).langCode_));
     }
 
     template <typename StringType>
@@ -392,9 +391,12 @@ void SrxSegmenter::Worker::doRun() {
     DEBUG("starting srx segmenter...");
 
     LayerTagMask symbolMask = lattice_.getLayerTagManager().getMask("symbol");
-    LayerTagMask textMask = lattice_.getLayerTagManager().getMask("frag");
-
     SrxSentenceCutter sentenceCutter(dynamic_cast<SrxSegmenter&>(processor_));
+
+    LayerTagMask textMask = lattice_.getLayerTagManager().getMask(
+        lattice_.getLayerTagManager()
+        .createSingletonTagCollectionWithLangCode(
+            "text", dynamic_cast<SrxSegmenter&>(processor_).langCode_));
 
     lattice_.runCutter(sentenceCutter, symbolMask, textMask);
 }
