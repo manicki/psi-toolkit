@@ -25,7 +25,24 @@ std::string LinkParserAdapterImpl::parseSentence(std::string sentenceStr) {
     Sentence sentence = sentence_create(sentenceStr.c_str(), dictionary_);
     if (sentence_parse(sentence, parseOptions)) {
         Linkage linkage = linkage_create(0, sentence, parseOptions);
-        result = linkage_print_diagram(linkage);
+        CNode_s * ctree = linkage_constituent_tree(linkage);
+        if (ctree) {
+            if (linkage_constituent_node_get_label(ctree)) {
+                result = linkage_constituent_node_get_label(ctree);
+            } else {
+                result = "NO LABEL!";
+            }
+        }
+/*
+        char * ctreePrint = linkage_print_constituent_tree(linkage, 1);
+        if (ctreePrint) {
+            result = ctreePrint;
+        } else {
+            result = "PARSING FAILED";
+        }
+        delete ctreePrint;
+*/
+        linkage_free_constituent_tree(ctree);
         linkage_delete(linkage);
     }
     sentence_delete(sentence);
