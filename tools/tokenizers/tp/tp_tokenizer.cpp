@@ -32,7 +32,7 @@ Annotator* TpTokenizer::Factory::doCreateAnnotator(
     size_t hardLimit = options["token-length-hard-limit"].as<size_t>();
     size_t softLimit = options["token-length-soft-limit"].as<size_t>();
 
-    return new TpTokenizer(rules, mapping, hardLimit, softLimit);
+    return new TpTokenizer(lang, rules, mapping, hardLimit, softLimit);
 }
 
 void TpTokenizer::Factory::doAddLanguageIndependentOptionsHandled(
@@ -154,11 +154,12 @@ const size_t TpTokenizer::Factory::DEFAULT_HARD_LIMIT = 1000;
 const size_t TpTokenizer::Factory::DEFAULT_SOFT_LIMIT = 950;
 
 TpTokenizer::TpTokenizer(
+    const std::string& langCode,
     boost::filesystem::path rules,
     const std::map<std::string, boost::filesystem::path>& mapping,
     size_t hardLimit,
     size_t softLimit)
-    :hardLimit_(hardLimit), softLimit_(softLimit) {
+    :langCode_(langCode), hardLimit_(hardLimit), softLimit_(softLimit) {
 
     ruleSet_.reset(new TPBasicTokenizerRuleSet());
 
@@ -187,12 +188,16 @@ TpTokenizer::Worker::Worker(Processor& processor, Lattice& lattice):
 void TpTokenizer::Worker::doRun() {
     DEBUG("starting tp tokenizer...");
 
-    LayerTagMask symbolMask = lattice_.getLayerTagManager().getMask("symbol");
-    LayerTagMask textMask = lattice_.getLayerTagManager().getMask("frag");
-
     TpTokenizer& tpProcessor = dynamic_cast<TpTokenizer&>(processor_);
 
+    LayerTagMask symbolMask = lattice_.getLayerTagManager().getMask("symbol");
+
+    LayerTagMask textMask = lattice_.getLayerTagManager().getMask(
+        lattice_.getLayerTagManager()
+        .createSingletonTagCollectionWithLangCode("text", tpProcessor.langCode_));
+
     TpTokenCutter tokenCutter(
+        tpProcessor.langCode_,
         *tpProcessor.ruleSet_.get(),
         tpProcessor.hardLimit_,
         tpProcessor.softLimit_);

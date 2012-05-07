@@ -46,6 +46,14 @@ public:
         return createSingletonTagCollection(getLanguageTag(langCode));
     }
 
+    LayerTagCollection createSingletonTagCollectionWithLangCode(
+        std::string tagName,
+        std::string langCode) {
+        return createUnion(
+            createSingletonTagCollection(tagName),
+            createLanguageTag(langCode));
+    }
+
     LayerTagCollection createTagCollection(LayerTagMask mask);
 
     /**

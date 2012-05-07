@@ -1,14 +1,14 @@
-01 0000 07    dużego       token                 dużego      T
+01 0000 07    dużego       !pl,token             dużego      T
 02 0000 07    dużego       lemma,morfologik,morfologik-tagset duży word[1]
 03 0000 07    dużego       lexeme,morfologik,morfologik-tagset duży+adj adj[2]
 04 0000 07    dużego       form,morfologik,morfologik-tagset dużego adj,case=acc,degree=pos,gender=m1,negation=aff,number=sg[3]
 05 0000 07    dużego       form,morfologik,morfologik-tagset dużego adj,case=acc,degree=pos,gender=m2,negation=aff,number=sg[3]
 06 0000 07    dużego       form,morfologik,morfologik-tagset dużego adj,case=gen,degree=pos,gender=m,negation=aff,number=sg[3]
 07 0000 07    dużego       form,morfologik,morfologik-tagset dużego adj,case=gen,degree=pos,gender=n,negation=aff,number=sg[3]
-08 0007 01    _            token                 _           B
+08 0007 01    _            !pl,token             _           B
 09 0000 17    dużego...era frag,txt-reader       dużego_komputera FRAG[]
 10 0000 17    dużego...era !pl,lang-guesser,text dużego_komputera TEXT[9]
-11 0008 09    komputera    token                 komputera   T
+11 0008 09    komputera    !pl,token             komputera   T
 12 0008 09    komputera    lemma,morfologik,morfologik-tagset komputer word[11]
 13 0008 09    komputera    lexeme,morfologik,morfologik-tagset komputer+subst subst,gender=m3[12]
 14 0008 09    komputera    form,morfologik,morfologik-tagset komputera subst,case=gen,gender=m3,number=sg[13]

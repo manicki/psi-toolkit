@@ -1,8 +1,8 @@
-01 0000 03    Ala          token                 Ala         T
-02 0003 01    _            token                 _           B
-03 0004 02    ma           token                 ma          T
-04 0006 01    _            token                 _           B
-05 0007 04    kota         token                 kota        T
+01 0000 03    Ala          !pl,token             Ala         T
+02 0003 01    _            !pl,token             _           B
+03 0004 02    ma           !pl,token             ma          T
+04 0006 01    _            !pl,token             _           B
+05 0007 04    kota         !pl,token             kota        T
 06 0000 12    Ala_ma_kota. frag,txt-reader       Ala_ma_kota. FRAG[]
 07 0000 12    Ala_ma_kota. !pl,lang-guesser,text Ala_ma_kota. TEXT[6]
-08 0011 01    .            token                 .           I
+08 0011 01    .            !pl,token             .           I
