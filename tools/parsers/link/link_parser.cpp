@@ -56,7 +56,7 @@ std::list<std::string> LinkParser::Factory::doProvidedLayerTags() {
 }
 
 const std::string LinkParser::Factory::DEFAULT_DICT_FILE
-    = "%ITSDATA%/%LANG%.dict";
+    = "%ITSDATA%/%LANG%/4.0.dict";
 
 LatticeWorker* LinkParser::doCreateLatticeWorker(Lattice& lattice) {
     return new Worker(*this, lattice);
@@ -125,6 +125,10 @@ void LinkParser::parse(Lattice &lattice) {
             Lattice::EdgeSequence::Builder builder(lattice);
             BOOST_FOREACH(int childNo, edgeDescription.children) {
                 builder.addEdge(addedEdges.at(childNo));
+            }
+            if (edgeDescription.start == edgeDescription.end) {
+                edgeDescription.start = lattice.addLooseVertex();
+                edgeDescription.end = lattice.addLooseVertex();
             }
             addedEdges.push_back(lattice.addEdge(
                 edgeDescription.start,
