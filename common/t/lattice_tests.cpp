@@ -6,6 +6,7 @@
 #include "by_spaces_cutter.hpp"
 #include "fake_lemmatizer.hpp"
 #include "lemmatizer_annotator.hpp"
+#include "layer_tag_collection.hpp"
 
 BOOST_AUTO_TEST_SUITE( lattice )
 
@@ -480,7 +481,14 @@ BOOST_AUTO_TEST_CASE( edges_tags_combining ) {
     LayerTagMask rawMask = lattice.getLayerTagManager().getMask(raw_tag);
     LayerTagMask tokenMask = lattice.getLayerTagManager().getMask(token_tag);
     LayerTagMask lemmaMask = lattice.getLayerTagManager().getMask(lemma_tag);
-    LayerTagMask tokenOrLemmaMask = createUnion(tokenMask, lemmaMask);
+
+    std::list<std::string> tokenOrLemmaMaskAsStrings
+        = boost::assign::list_of
+        (std::string("token"))
+        (std::string("lemma"));
+
+    LayerTagMask tokenOrLemmaMask =
+        lattice.getLayerTagManager().getMask(tokenOrLemmaMaskAsStrings);
 
     Lattice::VertexDescriptor pre_ananas = lattice.getFirstVertex();
     Lattice::VertexDescriptor post_ananas = lattice.getVertexForRawCharIndex(6);

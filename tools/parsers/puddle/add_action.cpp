@@ -75,7 +75,8 @@ bool AddAction::checkInterpretationsToAdd(Lattice &lattice,
     bool allBaseForms = (base == "[^<>]+");
     std::list<Lattice::EdgeSequence> edgeSequences = lattice::getEdgesRange(
             lattice, startVertex, endVertex);
-    for (std::list<Lattice::EdgeSequence>::iterator sequenceIt = edgeSequences.begin();
+    for (std::list<Lattice::EdgeSequence>::iterator
+            sequenceIt = edgeSequences.begin();
             sequenceIt != edgeSequences.end(); ++ sequenceIt) {
         Lattice::EdgeSequence::Iterator edgeIt(lattice, *sequenceIt);
         while (edgeIt.hasNext()) {
@@ -115,7 +116,8 @@ void AddAction::addEdges(Lattice &lattice, Lattice::VertexDescriptor startVertex
     bool allBaseForms = (base == "[^<>]+");
     std::list<Lattice::EdgeSequence> edgeSequences = lattice::getEdgesRange(
             lattice, startVertex, endVertex);
-    for (std::list<Lattice::EdgeSequence>::iterator sequenceIt = edgeSequences.begin();
+    for (std::list<Lattice::EdgeSequence>::iterator
+            sequenceIt = edgeSequences.begin();
             sequenceIt != edgeSequences.end(); ++ sequenceIt) {
         Lattice::EdgeSequence::Iterator edgeIt(lattice, *sequenceIt);
         while (edgeIt.hasNext()) {

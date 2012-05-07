@@ -1,45 +1,77 @@
 #include "layer_tag_mask.hpp"
 
+#include <boost/foreach.hpp>
+
 bool LayerTagMask::isNone() {
-    return none_ || (!any_ && !plane_ && tags_.isEmpty() && (none_ = true));
+    if (none_)
+        return true;
+
+    if (any_)
+        return false;
+
+    BOOST_FOREACH(LayerTagCollection tagAlt, tagAlts_) {
+        if (!tagAlt.isEmpty())
+            return false;
+    }
+
+    none_ = true;
+    return true;
 }
 
 bool LayerTagMask::isSome() {
-    return any_ || tags_.isNonempty();
+    if (any_)
+        return true;
+
+    BOOST_FOREACH(LayerTagCollection tagAlt, tagAlts_) {
+        if (!tagAlt.isEmpty())
+            return true;
+    }
+
+    return false;
 }
 
 bool LayerTagMask::isAny() const {
     return any_;
 }
 
-bool LayerTagMask::isPlane() const {
-    return plane_;
-}
-
 bool LayerTagMask::operator<(LayerTagMask other) const {
-    return tags_ < other.tags_;
+    if (none_ && other.any_)
+        return true;
+
+    if (other.none_ && any_)
+        return false;
+
+    if (tagAlts_.size() < other.tagAlts_.size())
+        return true;
+
+    if (tagAlts_.size() > other.tagAlts_.size())
+        return false;
+
+    for (size_t i = 0; i < tagAlts_.size(); ++i) {
+        if (tagAlts_[i] < other.tagAlts_[i])
+            return true;
+
+        if (other.tagAlts_[i] < tagAlts_[i])
+            return false;
+    }
+
+    return false;
 }
 
-LayerTagMask createUnion(
-    LayerTagMask mask1,
-    LayerTagMask mask2
-) {
-    if (mask1.any_ || mask2.any_) return LayerTagMask(true);
-    if (mask1.none_) return mask2;
-    if (mask2.none_) return mask1;
-    assert(!mask1.plane_);
-    assert(!mask2.plane_);
-    return LayerTagMask(createUnion(mask1.tags_, mask2.tags_));
-}
+bool matches(
+    LayerTagCollection tags,
+    LayerTagMask mask) {
 
-LayerTagMask createIntersection(
-    LayerTagMask mask1,
-    LayerTagMask mask2
-) {
-    if (mask1.none_ || mask2.none_) return LayerTagMask(false);
-    if (mask1.any_) return mask2;
-    if (mask2.any_) return mask1;
-    assert(!mask1.plane_);
-    assert(!mask2.plane_);
-    return LayerTagMask(createIntersection(mask1.tags_, mask2.tags_));
+    if (mask.none_)
+        return false;
+
+    if (mask.any_)
+        return true;
+
+    BOOST_FOREACH(LayerTagCollection tagAlt, mask.tagAlts_) {
+        if (isSubset(tagAlt, tags))
+            return true;
+    }
+
+    return false;
 }

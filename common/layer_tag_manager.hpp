@@ -6,6 +6,7 @@
 
 #include <boost/bimap.hpp>
 #include <boost/foreach.hpp>
+#include <boost/assign.hpp>
 
 #include "layer_tag_collection.hpp"
 #include "layer_tag_mask.hpp"
@@ -18,6 +19,8 @@
 class LayerTagManager {
 
 public:
+
+    LayerTagManager();
 
     LayerTagCollection createSingletonTagCollection(std::string tagName);
 
@@ -69,16 +72,51 @@ public:
         return getMask(createTagCollection(tagNames));
     }
 
-    LayerTagMask planeTags() {
-        return LayerTagMask(false, false, true);
+    LayerTagMask getAlternativeMask(
+        LayerTagCollection tagCollection1,
+        LayerTagCollection tagCollection2) {
+
+        std::vector<LayerTagCollection> alts =
+            boost::assign::list_of
+            (tagCollection1)
+            (tagCollection2);
+
+        return LayerTagMask(alts);
     }
+
+    LayerTagMask getAlternativeMask(
+        LayerTagCollection tagCollection1,
+        LayerTagCollection tagCollection2,
+        LayerTagCollection tagCollection3) {
+
+        std::vector<LayerTagCollection> alts =
+            boost::assign::list_of
+            (tagCollection1)
+            (tagCollection2)
+            (tagCollection3);
+
+        return LayerTagMask(alts);
+    }
+
+    LayerTagMask getAlternativeMask(
+        std::vector<LayerTagCollection> tagCollections) {
+
+        return LayerTagMask(tagCollections);
+    }
+
+
+    LayerTagCollection planeTags();
+    LayerTagCollection onlyPlaneTags(LayerTagCollection tags);
 
     bool areInTheSamePlane(LayerTagCollection tags1, LayerTagCollection tags2);
 
-    bool match(LayerTagMask mask, std::string tagName);
+    bool isThere(std::string tagName, LayerTagCollection tags);
+
+    bool canBeAppliedToImplicitSymbol(const LayerTagMask& tags);
 
 private:
 
+    LayerTagCollection symbolTag_;
     typedef boost::bimap<std::string, size_t> StringBimap;
     typedef StringBimap::value_type StringBimapItem;
     StringBimap m_;

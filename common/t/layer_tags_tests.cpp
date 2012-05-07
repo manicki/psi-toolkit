@@ -1,5 +1,7 @@
 #include "tests.hpp"
 
+#include <boost/assign.hpp>
+
 #include "layer_tag_collection.hpp"
 #include "layer_tag_manager.hpp"
 
@@ -81,51 +83,18 @@ BOOST_AUTO_TEST_CASE( tags_masks ) {
     LayerTagMask maskFoo = layer_tag_manager.getMask(tagFoo);
     LayerTagMask maskFooList = layer_tag_manager.getMask(listFoo);
     LayerTagMask maskBar = layer_tag_manager.getMask(tagBar);
-    LayerTagMask maskFooBar = createUnion(maskFoo, maskBar);
-    LayerTagMask maskNone = createIntersection(maskFoo, maskBar);
+    std::list<std::string> maskFooBarAsStrings =
+        boost::assign::list_of
+        (std::string("foo"))
+        (std::string("bar"));
+    LayerTagMask maskFooBar = layer_tag_manager.getMask(maskFooBarAsStrings);
     LayerTagMask maskAny = layer_tag_manager.anyTag();
-    LayerTagMask maskPlane = layer_tag_manager.planeTags();
 
     BOOST_CHECK(maskFoo.isSome());
     BOOST_CHECK(maskBar.isSome());
-    BOOST_CHECK(layer_tag_manager.match(maskFoo, "foo"));
-    BOOST_CHECK(!layer_tag_manager.match(maskFoo, "bar"));
-    BOOST_CHECK(!layer_tag_manager.match(maskFoo, "boo"));
-    BOOST_CHECK(!layer_tag_manager.match(maskFoo, "!foo"));
-
-    BOOST_CHECK(layer_tag_manager.match(maskFooList, "foo"));
-    BOOST_CHECK(!layer_tag_manager.match(maskFooList, "bar"));
-    BOOST_CHECK(!layer_tag_manager.match(maskFooList, "boo"));
-    BOOST_CHECK(!layer_tag_manager.match(maskFooList, "!foo"));
-
-    BOOST_CHECK(!layer_tag_manager.match(maskBar, "foo"));
-    BOOST_CHECK(layer_tag_manager.match(maskBar, "bar"));
-    BOOST_CHECK(!layer_tag_manager.match(maskBar, "boo"));
-    BOOST_CHECK(!layer_tag_manager.match(maskBar, "!foo"));
-
-    BOOST_CHECK(layer_tag_manager.match(maskFooBar, "foo"));
-    BOOST_CHECK(layer_tag_manager.match(maskFooBar, "bar"));
-    BOOST_CHECK(!layer_tag_manager.match(maskFooBar, "boo"));
-    BOOST_CHECK(!layer_tag_manager.match(maskFooBar, "!foo"));
-
-    BOOST_CHECK(maskNone.isNone());
-    BOOST_CHECK(!layer_tag_manager.match(maskNone, "foo"));
-    BOOST_CHECK(!layer_tag_manager.match(maskNone, "bar"));
-    BOOST_CHECK(!layer_tag_manager.match(maskNone, "boo"));
-    BOOST_CHECK(!layer_tag_manager.match(maskNone, "!foo"));
-
-    BOOST_CHECK(maskAny.isAny());
-    BOOST_CHECK(maskAny.isSome());
-    BOOST_CHECK(layer_tag_manager.match(maskAny, "foo"));
-    BOOST_CHECK(layer_tag_manager.match(maskAny, "bar"));
-    BOOST_CHECK(layer_tag_manager.match(maskAny, "boo"));
-    BOOST_CHECK(layer_tag_manager.match(maskAny, "!foo"));
-
-    BOOST_CHECK(maskPlane.isPlane());
-    BOOST_CHECK(!layer_tag_manager.match(maskPlane, "foo"));
-    BOOST_CHECK(!layer_tag_manager.match(maskPlane, "bar"));
-    BOOST_CHECK(!layer_tag_manager.match(maskPlane, "boo"));
-    BOOST_CHECK(layer_tag_manager.match(maskPlane, "!foo"));
+    BOOST_CHECK(matches(tagFoo, maskFoo));
+    BOOST_CHECK(matches(tagFoo, maskAny));
+    BOOST_CHECK(!matches(tagBar, maskFoo));
 }
 
 BOOST_AUTO_TEST_CASE( planes ) {

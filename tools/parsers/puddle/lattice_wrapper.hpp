@@ -114,6 +114,10 @@ namespace poleng {
                             Lattice::EdgeDescriptor edge);
                     Morphology getMorphology(Lattice &lattice,
                             Lattice::EdgeDescriptor edge);
+                    std::string getPartitionString(Lattice &lattice,
+                            Lattice::EdgeSequence partition);
+                    void discardPartitionEdges(Lattice &lattice,
+                            Lattice::EdgeSequence partition);
 
             class EdgeNonTop {
                 private:

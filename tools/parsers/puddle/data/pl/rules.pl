@@ -1465,6 +1465,7 @@ Eval:  group(VP, 2);
 Rule "VP2: General verbal phrase"
 Match: [pos~"adv" && base!~"może"]* ([pos~"verb"]|[pos~"winien"]|[pos~"pred"]) [pos~"adv"]* [base~"się"]? (([pos~"adv"]*|[type=PP]?) ([pos~"verb"]|[pos~"winien"]|[pos~"pred"]) [pos~"adv"]* [base~"się"]?)*;
 Eval:  group(VP, 2);
+autodelete;
 
 ##### Glue rules 2 ######
 

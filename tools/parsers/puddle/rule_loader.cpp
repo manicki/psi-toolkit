@@ -873,7 +873,8 @@ std::string RuleLoader::generateTokenPatternsString(TokenPatterns tokenPatterns)
 }
 
 ActionsPtr RuleLoader::compileRuleAction(std::string &matched, int ruleLeftSize,
-        int ruleMatchSize, int, std::string ruleName, bool &repeat) {
+        int ruleMatchSize, int, std::string ruleName, bool &repeat,
+        bool &autoDelete) {
     Pattern regEval("^Eval\\s*:\\s*");
     // group(NP, 1);
     Pattern regGroup("group\\s*\\(\\s*([^\\s,]+)\\s*,\\s*(\\d+)\\s*\\)\\s*");
@@ -894,6 +895,7 @@ ActionsPtr RuleLoader::compileRuleAction(std::string &matched, int ruleLeftSize,
     Pattern regTransform("transform\\s*\\(\\s*(\\d+)\\s*,\\s*([^\\s,]+)\\s*\\)\\s*");
     //repeat
     Pattern regRepeat("repeat");
+    Pattern regAutoDelete("autodelete");
     Pattern regWhite("\\s+");
     std::string actionSeparator = ";";
 
@@ -926,6 +928,8 @@ ActionsPtr RuleLoader::compileRuleAction(std::string &matched, int ruleLeftSize,
         std::string slot1, slot2; //@todo: typy!
         if (RegExp::FullMatch(actionString, regRepeat)) {
             repeat = true;
+        } else if (RegExp::FullMatch(actionString, regAutoDelete)) {
+            autoDelete = true;
         } else if (RegExp::FullMatch(actionString, regGroup, &groupType, &groupHead)) {
             GroupActionPtr action = GroupActionPtr( new GroupAction(
                         groupType, ruleLeftSize, ruleMatchWidth,
@@ -1137,9 +1141,10 @@ RulePtr RuleLoader::compileRule(std::string ruleString) {
 
 ActionPtr RuleLoader::compileAction(std::string actionString, RulePtr rule) {
     bool repeat = rule->getRepeat();
+    bool autoDelete = rule->getAutoDelete();
     ActionsPtr actions = compileRuleAction( actionString, rule->getLeftCount(),
             rule->getMatchCount(), rule->getRightCount(), rule->getName(),
-            repeat );
+            repeat, autoDelete );
     return actions->front();
 }
 
@@ -1521,22 +1526,24 @@ RulePtr RuleLoader::parseRuleString(std::string &ruleString) {
         throw PuddleRuleSyntaxException("Rule '" + ruleName + "' is to complex.");
     }
     bool repeat = false;
+    bool autoDelete = false;
     ActionsPtr actions = this->compileRuleAction(chars,
             ruleLeftSize, ruleMatchSize, ruleRightSize, ruleName,
-            repeat);
+            repeat, autoDelete);
 #if HAVE_RE2
     RulePtr rule = RulePtr( new Rule(ruleName, rulePattern,
                 ruleLeftSize, ruleMatchSize, ruleRightSize,
                 actions, ruleTokenPatterns, ruleTokenModifiers,
                 ruleTokenRequirements, rulePatternIndices, repeat,
-                rulePatternLeft, rulePatternMatch, rulePatternRight,
-                negativePatterns) );
+                autoDelete, rulePatternLeft, rulePatternMatch,
+                rulePatternRight, negativePatterns) );
 #else
     RulePtr rule = RulePtr( new Rule(ruleName, rulePattern,
                 ruleLeftSize, ruleMatchSize, ruleRightSize,
                 actions, ruleTokenPatterns, ruleTokenModifiers,
                 ruleTokenRequirements, rulePatternIndices, repeat,
-                rulePatternLeft, rulePatternMatch, rulePatternRight) );
+                autoDelete, rulePatternLeft, rulePatternMatch,
+                rulePatternRight) );
 #endif
     return rule;
 }

@@ -56,3 +56,12 @@ LayerTagCollection createIntersection(
     result.v_ &= tag_list_b.v_;
     return result;
 }
+
+bool isSubset(
+    LayerTagCollection tag_list_a,
+    LayerTagCollection tag_list_b) {
+
+    tag_list_a.resize_(tag_list_b);
+
+    return tag_list_a.v_.is_subset_of(tag_list_b.v_);
+}

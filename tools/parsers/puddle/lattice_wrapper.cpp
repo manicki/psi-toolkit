@@ -15,31 +15,22 @@ namespace poleng {
                 std::multimap<std::pair<int, int>, TransitionInfo*> edgesMap;
                 std::map<int, int> depthsMap;
 
-                LayerTagMask mask = lattice.getLayerTagManager().getMask(
-                        createUnion(
-                            createUnion(
-                                lattice.getLayerTagManager().
-                                createSingletonTagCollection("form"),
-                                lattice.getLayerTagManager().
-                                createSingletonTagCollection("parse")
-                                ),
-                            lattice.getLayerTagManager().
-                            createSingletonTagCollection("lexeme") // former pos edge
-                            )
-                        );
+                LayerTagMask mask = lattice.getLayerTagManager().getAlternativeMask(
+                    lattice.getLayerTagManager().createSingletonTagCollection("form"),
+                    lattice.getLayerTagManager().createSingletonTagCollection("parse"),
+                    lattice.getLayerTagManager().createSingletonTagCollection("lexeme"));
 
                 Lattice::EdgesSortedBySourceIterator edgeIterator =
                     lattice.edgesSortedBySource(mask);
                 while (edgeIterator.hasNext()) {
                     Lattice::EdgeDescriptor edge = edgeIterator.next();
                     std::string type;
-                    LayerTagMask edgeMask = lattice.getLayerTagManager().getMask(
-                                lattice.getEdgeLayerTags(edge));
-                    if (lattice.getLayerTagManager().match(edgeMask, "form"))
+                    LayerTagCollection edgeTags = lattice.getEdgeLayerTags(edge);
+                    if (lattice.getLayerTagManager().isThere("form", edgeTags))
                         type = "token";
-                    if (lattice.getLayerTagManager().match(edgeMask, "parse"))
+                    if (lattice.getLayerTagManager().isThere("parse", edgeTags))
                         type = "group";
-                    if (lattice.getLayerTagManager().match(edgeMask, "lexeme"))
+                    if (lattice.getLayerTagManager().isThere("lexeme", edgeTags))
                         type = "pos";
 
                     int start = lattice.getEdgeBeginIndex(edge);
@@ -198,11 +189,10 @@ namespace poleng {
              */
             Lattice::VertexDescriptor getVertex(Lattice &lattice,
                     int edgeIndex, int offset) {
-                std::list<std::string> tags;
-                tags.push_back("form");
-                tags.push_back("parse");
-                tags.push_back("token");
-                LayerTagMask mask = lattice.getLayerTagManager().getMask(tags);
+                LayerTagMask mask = lattice.getLayerTagManager().getAlternativeMask(
+                    lattice.getLayerTagManager().createSingletonTagCollection("form"),
+                    lattice.getLayerTagManager().createSingletonTagCollection("parse"),
+                    lattice.getLayerTagManager().createSingletonTagCollection("token"));
                 return getVertex(lattice, edgeIndex, mask, offset);
             }
 
@@ -257,11 +247,10 @@ namespace poleng {
 
             std::list<Lattice::EdgeDescriptor> getTopEdges(
                     Lattice &lattice, Lattice::VertexDescriptor start) {
-                std::list<std::string> tags;
-                tags.push_back("form");
-                tags.push_back("parse");
-                tags.push_back("token");
-                LayerTagMask mask = lattice.getLayerTagManager().getMask(tags);
+                LayerTagMask mask = lattice.getLayerTagManager().getAlternativeMask(
+                    lattice.getLayerTagManager().createSingletonTagCollection("form"),
+                    lattice.getLayerTagManager().createSingletonTagCollection("parse"),
+                    lattice.getLayerTagManager().createSingletonTagCollection("token"));
                 return getTopEdges(lattice, start, mask);
             }
 
@@ -350,11 +339,10 @@ namespace poleng {
             std::list<Lattice::EdgeSequence> getEdgesRange(Lattice &lattice,
                     Lattice::VertexDescriptor start,
                     Lattice::VertexDescriptor end) {
-                std::list<std::string> tags;
-                tags.push_back("form");
-                tags.push_back("parse");
-                tags.push_back("token");
-                LayerTagMask mask = lattice.getLayerTagManager().getMask(tags);
+                LayerTagMask mask = lattice.getLayerTagManager().getAlternativeMask(
+                    lattice.getLayerTagManager().createSingletonTagCollection("form"),
+                    lattice.getLayerTagManager().createSingletonTagCollection("parse"),
+                    lattice.getLayerTagManager().createSingletonTagCollection("token"));
                 return getEdgesRange(lattice, start, end, mask);
             }
 
@@ -616,7 +604,7 @@ namespace poleng {
 
             void removeParseEdges(Lattice &lattice,
                     Lattice::VertexDescriptor start,
-                    Lattice::VertexDescriptor end ) {
+                    Lattice::VertexDescriptor end) {
                 LayerTagMask mask = lattice.getLayerTagManager().getMask(
                                 lattice.getLayerTagManager().
                                     createSingletonTagCollection("parse")
@@ -921,32 +909,16 @@ namespace poleng {
             }
 
             bool isDiscarded(Lattice &lattice, Lattice::EdgeDescriptor edge) {
-                LayerTagMask mask = lattice.getLayerTagManager().getMask(
-                        lattice.getEdgeLayerTags(edge));
-                if (lattice.getLayerTagManager().match(mask, "discarded"))
+                LayerTagCollection tags = lattice.getEdgeLayerTags(edge);
+                if (lattice.getLayerTagManager().isThere("discarded", tags))
                     return true;
                 else
                     return false;
-//
-//                AnnotationItem ai = lattice.getEdgeAnnotationItem(edge);
-//                std::list< std::pair<std::string, std::string> > av
-//                    = lattice.getAnnotationItemManager().getValues(ai);
-//                for (std::list< std::pair<std::string, std::string> >::iterator avit =
-//                        av.begin(); avit != av.end(); ++ avit) {
-//                    if (avit->first == "discard") {
-//                        if (avit->second == "1")
-//                            return true;
-//                        else
-//                            return false;
-//                    }
-//                }
-//                return false;
             }
 
             bool isTokenEdge(Lattice &lattice, Lattice::EdgeDescriptor edge) {
-                LayerTagMask mask = lattice.getLayerTagManager().getMask(
-                        lattice.getEdgeLayerTags(edge));
-                if (lattice.getLayerTagManager().match(mask, "token"))
+                LayerTagCollection tags = lattice.getEdgeLayerTags(edge);
+                if (lattice.getLayerTagManager().isThere("token", tags))
                     return true;
                 else
                     return false;
@@ -1050,8 +1022,68 @@ namespace poleng {
                 return result;
             }
 
+            std::string getPartitionString(Lattice &lattice,
+                    Lattice::EdgeSequence partition) {
+                std::stringstream ss;
+                Lattice::EdgeSequence::Iterator it(lattice, partition);
+                while (it.hasNext()) {
+                    Lattice::EdgeDescriptor edge = it.next();
+
+                    LayerTagCollection tags = lattice.getEdgeLayerTags(edge);
+                    if (lattice.getLayerTagManager().isThere("form", tags) ||
+                        lattice.getLayerTagManager().isThere("token", tags)) {
+                        ss << "<<t";
+                    } else {
+                        ss << "<<g";
+                    }
+
+                    Lattice::VertexDescriptor start = lattice.getEdgeBeginIndex(edge);
+                    Lattice::VertexDescriptor end = start + lattice.getEdgeLength(edge);
+                    ss << "<" << start;
+                    ss << "<" << end;
+                    AnnotationItem annotationItem = lattice.getEdgeAnnotationItem(edge);
+                    if (lattice.getLayerTagManager().isThere("parse", tags)) {
+                        ss << "<" << lattice.getAnnotationItemManager().
+                            getCategory(annotationItem);
+                        std::string orth = lattice.getEdgeText(edge);
+                        if (orth != "") {
+                            ss << "<" << util::escapeSpecialChars(orth);
+                        } else {
+                            ss << "<" << lattice.getAnnotationItemManager().
+                                getCategory(annotationItem);
+                        }
+                    } else {
+                        ss << "<" << "TOKEN";
+                        std::string orth = //lattice.getAnnotationItemManager().
+                            //getCategory(annotationItem);
+                            ////@todo: trzeba poprawic ustawianie orth dla krawedzi 'parse'
+                            lattice.getEdgeText(edge);
+                        ss << "<" << util::escapeSpecialChars(orth);
+                    }
+                    std::string base = lattice::getBase(lattice, edge);
+                        //@todo: ustawianie base nie bedzie dzialalo dla krawedzi 'parse'
+                        std::string morphology = lattice::getMorphologyString(
+                                lattice, edge);
+                        ss << "<";
+                        ss << util::escapeSpecialChars(base);
+                        ss << "<";
+                        ss << util::escapeSpecialChars(morphology);
+                    ss << ">";
+                }
+                return ss.str();
             }
 
+            void discardPartitionEdges(Lattice &lattice,
+                    Lattice::EdgeSequence partition) {
+                Lattice::EdgeSequence::Iterator it(lattice, partition);
+                while (it.hasNext()) {
+                    Lattice::EdgeDescriptor edge = it.next();
+                    lattice.discard(edge);
+                }
+            }
+
+
+            }
         }
     }
 }
