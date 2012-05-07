@@ -2,29 +2,29 @@
 #define EDGE_DESCRIPTION_HDR
 
 
+#include <list>
 #include <string>
-#include <vector>
 
 
 struct EdgeDescription {
-    int id;
     int start;
     int end;
     std::string label;
-    std::vector<int> children;
+    std::list<int> children;
+    std::list<int> rsiblings;
 
     EdgeDescription(
-        int a_id,
         int a_start,
         int a_end,
         std::string a_label,
-        std::vector<int> a_children
+        std::list<int> a_children,
+        std::list<int> a_rsiblings
     ) :
-        id(a_id),
         start(a_start),
         end(a_end),
         label(a_label),
-        children(a_children)
+        children(a_children),
+        rsiblings(a_rsiblings)
     { }
 };
 

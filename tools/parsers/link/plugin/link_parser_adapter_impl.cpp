@@ -62,18 +62,24 @@ std::vector<EdgeDescription> LinkParserAdapterImpl::extractEdgeDescriptions(CNod
         const char * label = linkage_constituent_node_get_label(ctree);
         CNode * next = linkage_constituent_node_get_next(ctree);
         CNode * child = linkage_constituent_node_get_child(ctree);
-        std::vector<EdgeDescription> nextDesc = extractEdgeDescriptions(next);
-        std::vector<EdgeDescription> childDesc = extractEdgeDescriptions(child);
-        int count = result.size() + nextDesc.size() + childDesc.size();
-        std::vector<int> children;
-        children.push_back(-1);
-        if (label) {
-            result.push_back(EdgeDescription(count, start, end, label, children));
-        } else {
-            result.push_back(EdgeDescription(count, start, end, "NOLABEL", children));
+        std::vector<EdgeDescription> nextDescs = extractEdgeDescriptions(next);
+        std::vector<EdgeDescription> childDescs = extractEdgeDescriptions(child);
+        result.insert(result.end(), nextDescs.begin(), nextDescs.end());
+        result.insert(result.end(), childDescs.begin(), childDescs.end());
+        std::list<int> rsiblings;
+        if (!nextDescs.empty()) {
+            rsiblings = nextDescs.back().rsiblings;
         }
-        result.insert(result.end(), nextDesc.begin(), nextDesc.end());
-        result.insert(result.end(), childDesc.begin(), childDesc.end());
+        rsiblings.push_front(result.size());
+        std::list<int> children;
+        if (!childDescs.empty()) {
+            children = childDescs.back().rsiblings;
+        }
+        if (label) {
+            result.push_back(EdgeDescription(start, end, label, children, rsiblings));
+        } else {
+            result.push_back(EdgeDescription(start, end, "NOLABEL", children, rsiblings));
+        }
     }
     return result;
 }
