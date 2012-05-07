@@ -35,11 +35,15 @@ std::vector<EdgeDescription> LinkParserAdapterImpl::parseSentence(std::string se
 
         size_t pos = 0;
         int wordNo = 0;
-        while (pos != std::string::npos && wordNo < sentence_length(sentence_)) {
+        while (wordNo < sentence_length(sentence_)) {
             const char * word = sentence_get_word(sentence_, wordNo);
             pos = sentenceStr.find(word, pos);
+            if (pos == std::string::npos) {
+                pos = 0;
+            }
             starts_[wordNo] = pos;
-            ends_[wordNo] = pos + strlen(word);
+            pos += strlen(word);
+            ends_[wordNo] = pos;
             ++wordNo;
         }
 
@@ -57,8 +61,8 @@ std::vector<EdgeDescription> LinkParserAdapterImpl::parseSentence(std::string se
 std::vector<EdgeDescription> LinkParserAdapterImpl::extractEdgeDescriptions(CNode * ctree) {
     std::vector<EdgeDescription> result;
     if (ctree) {
-        int start = starts_[linkage_constituent_node_get_start(ctree)];
-        int end = ends_[linkage_constituent_node_get_end(ctree)];
+        int start = starts_[linkage_constituent_node_get_start(ctree) + 1];
+        int end = ends_[linkage_constituent_node_get_end(ctree) + 1];
         const char * label = linkage_constituent_node_get_label(ctree);
         CNode * next = linkage_constituent_node_get_next(ctree);
         CNode * child = linkage_constituent_node_get_child(ctree);
