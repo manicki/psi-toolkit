@@ -39,19 +39,19 @@ LangGuesser::LangGuesser(const boost::program_options::variables_map& options) {
     else {
         initLanguages();
     }
+
+    forceMode_ = options.count("force") ? true : false;
 }
 
 void LangGuesser::initLanguages() {
-
     std::map<std::string, std::string>::iterator it;
+
     for (it = LANGUAGES.begin(); it != LANGUAGES.end(); ++it) {
         addLanguage(it->first, it->second);
-
     }
 }
 
 void LangGuesser::initLanguages(std::vector<std::string> selectedLangs) {
-
     std::map<std::string, std::string>::iterator definedLang;
 
     for (unsigned int i = 0; i < selectedLangs.size(); i++) {
@@ -76,7 +76,25 @@ void LangGuesser::addLanguage(std::string lang, std::string letters) {
 }
 
 std::string LangGuesser::guessLanguage(std::string text) {
+    std::string guessedLanguage = (text.length() < MIN_TEXT_LENGTH_FOR_BIGRAM_METHOD) ?
+        guessLanguageByLetters(text) : guessLanguageByBigramModel(text);
 
+    if ((guessedLanguage == "unknown") && forceMode_) {
+        if (languages_.size() == 1) {
+            guessedLanguage = languages_.front().name;
+        }
+        else {
+            if (text.length() < MIN_TEXT_LENGTH_FOR_BIGRAM_METHOD) {
+                guessedLanguage = guessLanguageByBigramModel(text);
+                if (guessedLanguage == "unknown") guessedLanguage = languages_.front().name;
+            }
+        }
+    }
+
+    return guessedLanguage;
+}
+
+std::string LangGuesser::guessLanguageByBigramModel(std::string text) {
     if (text.length() == 0) {
         return UNKNOWN_LANGUAGE;
     }
@@ -223,7 +241,8 @@ boost::program_options::options_description LangGuesser::Factory::doOptionsHandl
 
     optionsDescription.add_options()
         ("only-langs", boost::program_options::value<std::vector<std::string> >()->multitoken(),
-            "Guesses language only from the given list of languages");
+            "Guesses language only from the given list of languages")
+        ("force", "All frags must be marked as text in some language");
 
     return optionsDescription;
 }
@@ -252,22 +271,17 @@ void LangGuesser::Worker::doRun() {
 }
 
 bool LangGuesser::Worker::guessLanguage_() {
-
     LayerTagMask textMask = lattice_.getLayerTagManager().getMask("frag");
     Lattice::EdgesSortedBySourceIterator edgeIter(lattice_, textMask);
 
     while (edgeIter.hasNext()) {
         Lattice::EdgeDescriptor edge = edgeIter.next();
-
         std::string text = lattice_.getEdgeAnnotationItem(edge).getText();
 
-        std::string guessedLanguage = (text.length() < MIN_TEXT_LENGTH_FOR_BIGRAM_METHOD) ?
-            processor_.guessLanguageByLetters(text) : processor_.guessLanguage(text);
-
+        std::string guessedLanguage = processor_.guessLanguage(text);
         INFO("Guessed language for text [" << text << "] is " << guessedLanguage);
 
-        if (guessedLanguage != "unknown")
-            markLanguage_(guessedLanguage, edge);
+        if (guessedLanguage != "unknown") markLanguage_(guessedLanguage, edge);
     }
 
     return false;

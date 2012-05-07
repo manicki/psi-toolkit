@@ -35,6 +35,7 @@ public:
     LangGuesser(const boost::program_options::variables_map& options);
 
     std::string guessLanguage(std::string text);
+    std::string guessLanguageByBigramModel(std::string text);
     std::string guessLanguageByLetters(std::string text);
 
     class Factory : public AnnotatorFactory {
@@ -72,6 +73,7 @@ private:
     };
 
     std::list<Language> languages_;
+    bool forceMode_;
 
     void initLanguages();
     void initLanguages(std::vector<std::string> selectedLangs);
