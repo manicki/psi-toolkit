@@ -57,7 +57,7 @@ private:
     static std::multimap<std::string, std::string> LEXEME_TAGS;
     static std::vector<std::string> TAGS_ALLOWED_AS_POS;
 
-    void removeLexemeAttributes_(std::map<std::string, std::string>&);
+    void removeLexemeAttributes_(std::map<std::string, std::string>&, int&);
     std::string getPartOfSpeechTag_(std::map<std::string, std::string>);
 
     std::vector<std::map<std::string, std::string> >
