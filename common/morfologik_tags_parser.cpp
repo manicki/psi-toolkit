@@ -23,10 +23,6 @@ std::map<std::string, std::string> MorfologikTagsParser::PREDEFINED_TAGS =
         ("adjp", "pos")
         ("adv", "pos")
         ("num", "pos")
-        ("pact", "pos")
-        ("pant", "pos")
-        ("pcon", "pos")
-        ("ppas", "pos")
         ("ppron12", "pos")
         ("ppron3", "pos")
         ("pred", "pos")
@@ -90,6 +86,10 @@ std::map<std::string, std::string> MorfologikTagsParser::PREDEFINED_TAGS =
         ("bedzie", "tense")
         ("praet", "tense")
         ("refl", "tense")
+        ("pact", "tense")
+        ("pant", "tense")
+        ("pcon", "tense")
+        ("ppas", "tense")
         ("impt", "mode")
         ("pot", "mode")
         ("indecl", "uninflected")
@@ -105,62 +105,76 @@ std::map<std::string, std::string> MorfologikTagsParser::PREDEFINED_TAGS =
         ("rec", "unknown");
 
 std::vector<std::string> MorfologikTagsParser::TAGS_ALLOWED_AS_POS =
-    boost::assign::list_of("pos")("depreciativity")("tense")("mode");
+    boost::assign::list_of
+        ("pos")
+        ("depreciativity")
+        ("tense")
+        ("mode");
+
+std::map<std::string, std::string> MorfologikTagsParser::POS_GENERALIZATIONS =
+    boost::assign::map_list_of
+        ("pact", "verb")
+        ("pant", "verb")
+        ("pcon", "verb")
+        ("ppas", "verb")
+        ;
 
 std::vector<std::map<std::string, std::string> > MorfologikTagsParser::getFormAttributes(
     std::string & tag) {
 
-    int complexAttributeCounter = 0;
+    int complexAttrCounter = 0;
     std::vector<std::map<std::string, std::string> > allDescriptions;
     std::map<std::string, std::string> rawDescription;
 
-    rawDescription = parseSimple(tag, complexAttributeCounter);
-    removeLexemeAttributes_(rawDescription);
+    rawDescription = parseSimple(tag, complexAttrCounter);
 
-    if (complexAttributeCounter == 0) {
+    removeLexemeAttributes_(rawDescription, complexAttrCounter);
+    DEBUG("the number of complex attributes for [" << tag << "]: " << complexAttrCounter);
+
+    if (complexAttrCounter == 0) {
         allDescriptions.insert(allDescriptions.begin(), rawDescription);
         return allDescriptions;
     }
 
-    allDescriptions = expandDescriptions_(rawDescription, complexAttributeCounter);
-    return allDescriptions;
+    return expandDescriptions_(rawDescription, complexAttrCounter);
 }
 
-void MorfologikTagsParser::removeLexemeAttributes_(
-    std::map<std::string, std::string>& description) {
+void MorfologikTagsParser::removeLexemeAttributes_(std::map<std::string, std::string>& description,
+    int& complexAttributesCounter) {
 
     std::string pos = description["pos"];
 
     std::multimap<std::string, std::string>::iterator it;
     for (it = LEXEME_TAGS.equal_range(pos).first; it != LEXEME_TAGS.equal_range(pos).second; ++it) {
+        if (description[it->second].find(INNER_SEPARATOR) != std::string::npos)
+            complexAttributesCounter--;
         description.erase(it->second);
     }
     description.erase("pos");
 }
 
 std::vector<std::map<std::string, std::string> > MorfologikTagsParser::parse(std::string& tag) {
-    int complexAttributeCounter = 0;
+    int complexAttrCounter = 0;
     std::vector<std::map<std::string, std::string> > allDescriptions;
     std::map<std::string, std::string> rawDescription;
 
-    rawDescription = parseSimple(tag, complexAttributeCounter);
+    rawDescription = parseSimple(tag, complexAttrCounter);
 
-    if (complexAttributeCounter == 0) {
+    if (complexAttrCounter == 0) {
         allDescriptions.insert(allDescriptions.begin(), rawDescription);
         return allDescriptions;
     }
 
-    allDescriptions = expandDescriptions_(rawDescription, complexAttributeCounter);
-    return allDescriptions;
+    return expandDescriptions_(rawDescription, complexAttrCounter);
 }
 
 std::vector<std::map<std::string, std::string> > MorfologikTagsParser::expandDescriptions_(
-    std::map<std::string, std::string> description, int& complexAttributeCounter) {
+    std::map<std::string, std::string> description, int& complexAttrCounter) {
 
     std::vector<std::map<std::string, std::string> > allDescriptions;
     allDescriptions.insert(allDescriptions.begin(), description);
 
-    while (complexAttributeCounter > 0) {
+    while (complexAttrCounter > 0) {
         std::vector<std::map<std::string, std::string> > tempDescriptions;
         for (unsigned int i = 0; i < allDescriptions.size(); ++i)
         {
@@ -169,7 +183,7 @@ std::vector<std::map<std::string, std::string> > MorfologikTagsParser::expandDes
             tempDescriptions.insert(tempDescriptions.end(), expanded.begin(), expanded.end());
         }
         allDescriptions = tempDescriptions;
-        complexAttributeCounter--;
+        complexAttrCounter--;
     }
 
     return allDescriptions;
@@ -261,34 +275,41 @@ std::map<std::string, std::string> MorfologikTagsParser::getLexemeAttributes(std
 
 std::string MorfologikTagsParser::getPartOfSpeechTag_(
     std::map<std::string, std::string> attributes) {
+    std::string selectedPos = "";
 
     BOOST_FOREACH(std::string pos, TAGS_ALLOWED_AS_POS) {
-        if (!attributes[pos.c_str()].empty()) return attributes[pos];
+        if (!attributes[pos.c_str()].empty()) {
+            selectedPos = attributes[pos];
+            break;
+        }
+    }
+    if (POS_GENERALIZATIONS.find(selectedPos) != POS_GENERALIZATIONS.end()) {
+        selectedPos = POS_GENERALIZATIONS[selectedPos];
     }
 
-    return "";
+    return selectedPos;
 }
 
 std::string MorfologikTagsParser::getAttributeToSeek_(std::string& attribute,
-    int& complexAttributeCounter) {
+    int& complexAttrCounter) {
 
     size_t INNER_SEPARATORPosition = attribute.find(INNER_SEPARATOR);
     if (INNER_SEPARATORPosition != std::string::npos) {
-        ++complexAttributeCounter;
+        ++complexAttrCounter;
         return attribute.substr(0, int(INNER_SEPARATORPosition));
     }
-    else {
-        return attribute;
-    }
+
+    return attribute;
 }
 
 int MorfologikTagsParser::getLengthOfFirstComplexAttribute_(
     std::map<std::string, std::string> tag) {
 
     std::map<std::string, std::string>::iterator it;
-    for (it = tag.begin(); it != tag.end() ; ++it) {
 
+    for (it = tag.begin(); it != tag.end() ; ++it) {
         size_t INNER_SEPARATORPosition = it->second.find(INNER_SEPARATOR);
+
         if (INNER_SEPARATORPosition != std::string::npos) {
             return std::count(it->second.begin(), it->second.end(), '.') + 1;
         }

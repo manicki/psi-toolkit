@@ -4,6 +4,7 @@
 #include <boost/program_options/options_description.hpp>
 #include <boost/program_options/variables_map.hpp>
 #include <boost/filesystem.hpp>
+#include <boost/regex.hpp>
 
 #include "java_virtual_machine.hpp"
 #include "morfologik_tags_parser.hpp"
@@ -80,6 +81,10 @@ private:
     int level_;
     std::string dictionary_;
     MorfologikTagsParser tagsParser_;
+
+    static std::map<boost::regex, std::string> BREAK_FORMS_RULES;
+    std::string breakForms_(std::string);
+    bool keepOriginal_;
 
     AnnotationItemManager * annotationManager_;
 
