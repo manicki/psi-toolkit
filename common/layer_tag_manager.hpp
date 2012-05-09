@@ -96,6 +96,15 @@ public:
     }
 
     LayerTagMask getMaskWithLangCode(
+        const std::string& tagName, const std::string& langCode) {
+
+        return getMask(
+            createUnion(
+                createSingletonTagCollection(tagName),
+                createLanguageTag(langCode)));
+    }
+
+    LayerTagMask getMaskWithLangCode(
         std::list<std::string> tagNames,
         const std::string& langCode) {
 

@@ -37,7 +37,7 @@ class MeTagger : public Annotator {
             static const std::string DEFAULT_PROPER_NOUN_POS_LABEL;
         };
 
-        MeTagger(bool trainMode_, std::string modelFile_,
+        MeTagger(const std::string& langCode, bool trainMode_, std::string modelFile_,
                 int iterations_ = 50,
                 std::string unknownPosLabel_ = "ign",
                 std::string cardinalNumberPosLabel_ = "card",
@@ -64,6 +64,8 @@ class MeTagger : public Annotator {
         };
         virtual LatticeWorker* doCreateLatticeWorker(Lattice& lattice);
         virtual std::string doInfo();
+
+        std::string langCode_;
 
         typedef std::string Outcome;
         typedef std::string Feature;

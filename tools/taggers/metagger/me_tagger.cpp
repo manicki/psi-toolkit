@@ -4,6 +4,7 @@
 Annotator* MeTagger::Factory::doCreateAnnotator(
         const boost::program_options::variables_map& options) {
     std::string lang = options["lang"].as<std::string>();
+
     LangSpecificProcessorFileFetcher fileFetcher(__FILE__, lang);
     std::string modelPathString = "";
     if (options.count("model")) {
@@ -17,6 +18,7 @@ Annotator* MeTagger::Factory::doCreateAnnotator(
         }
     }
     MeTagger* tagger = new MeTagger(
+            lang,
             options.count("train"),
             modelPathString != "" ? modelPathString : DEFAULT_MODEL_FILE,
             options.count("iterations") ? options["iterations"].as<int>()
@@ -114,11 +116,12 @@ std::string MeTagger::doInfo() {
     return "maximum entropy pos tagger";
 }
 
-MeTagger::MeTagger(bool trainMode_, std::string modelFile_,
+MeTagger::MeTagger(const std::string& langCode, bool trainMode_, std::string modelFile_,
         int iterations_, std::string unknownPosLabel_,
         std::string cardinalNumberPosLabel_, std::string properNounPosLabel_,
         std::vector<std::string> openClassLabels_,
         bool saveTextFile_) :
+    langCode_(langCode),
     openForEvents(false), posModelLoaded(false),
     trainMode(trainMode_), trainIterations(iterations_), modelFile(modelFile_),
     unknownPosLabel(unknownPosLabel_),
@@ -156,7 +159,8 @@ void MeTagger::tag(Lattice &lattice) {
         std::cerr << "no model loaded. metagger will do nothing" << std::endl;
         return;
     }
-    LayerTagMask segmentMask = lattice.getLayerTagManager().getMask("segment");
+    LayerTagMask segmentMask = lattice.getLayerTagManager().getMaskWithLangCode(
+        "segment", langCode_);
     Lattice::EdgesSortedBySourceIterator segmentIt =
         lattice.edgesSortedBySource(segmentMask);
     if (!segmentIt.hasNext()) {
@@ -194,7 +198,8 @@ void MeTagger::addSampleSentences(Lattice &lattice) {
         m.begin_add_event();
         openForEvents = true;
     }
-    LayerTagMask segmentMask = lattice.getLayerTagManager().getMask("segment");
+    LayerTagMask segmentMask = lattice.getLayerTagManager().getMaskWithLangCode(
+        "segment", langCode_);
     Lattice::EdgesSortedBySourceIterator segmentIt =
         lattice.edgesSortedBySource(segmentMask);
     if (!segmentIt.hasNext()) {
@@ -233,7 +238,8 @@ MeTagger::TokenEdgesMap MeTagger::createTokenEdgesMap(
         Lattice &lattice, Lattice::VertexDescriptor start,
         Lattice::VertexDescriptor end) {
     TokenEdgesMap tokenEdgesMap;
-    LayerTagMask tokenMask = lattice.getLayerTagManager().getMask("token");
+    LayerTagMask tokenMask = lattice.getLayerTagManager().getMaskWithLangCode(
+        "token", langCode_);
     int tokenCount = 0;
     Lattice::VertexDescriptor vertex = start;
     while (vertex < end) {
@@ -263,7 +269,8 @@ MeTagger::Context MeTagger::createContext(Lattice &lattice,
         int currentIndex, int window) {
     Context context;
 
-    LayerTagMask formMask = lattice.getLayerTagManager().getMask("form");
+    LayerTagMask formMask = lattice.getLayerTagManager().getMaskWithLangCode(
+        "form", langCode_);
 
     std::string currentOrth = "";
 
@@ -428,7 +435,8 @@ std::vector<MeTagger::Outcome> MeTagger::getTokenTags(Lattice &lattice,
 
 MeTagger::Outcome MeTagger::getBestTag(Lattice &lattice,
         Lattice::EdgeDescriptor token, MeTagger::Context context) {
-    LayerTagMask formMask = lattice.getLayerTagManager().getMask("form");
+    LayerTagMask formMask = lattice.getLayerTagManager().getMaskWithLangCode(
+        "form", langCode_);
     Outcome bestTag = "empty";
     double bestProb = 0;
 
@@ -480,7 +488,8 @@ MeTagger::Outcome MeTagger::getBestTag(Lattice &lattice,
 
 std::string MeTagger::getPrevTag(Lattice &lattice, TokenEdgesMap tokenEdgesMap,
         int tokenIndex) {
-    LayerTagMask formMask = lattice.getLayerTagManager().getMask("form");
+    LayerTagMask formMask = lattice.getLayerTagManager().getMaskWithLangCode(
+        "form", langCode_);
     std::string prevTag = "";
     if (tokenIndex > 0) {
         int prevIndex = tokenIndex - 1;
@@ -505,7 +514,8 @@ std::string MeTagger::getPrevTag(Lattice &lattice, TokenEdgesMap tokenEdgesMap,
 
 void MeTagger::addCurrentTag(Lattice &lattice, Lattice::EdgeDescriptor token,
         MeTagger::Context context) {
-    LayerTagMask formMask = lattice.getLayerTagManager().getMask("form");
+    LayerTagMask formMask = lattice.getLayerTagManager().getMaskWithLangCode(
+        "form", langCode_);
     Lattice::VertexDescriptor currentVertex =
         lattice.getEdgeSource(token);
     Lattice::InOutEdgesIterator formIt =
@@ -522,7 +532,8 @@ void MeTagger::addCurrentTag(Lattice &lattice, Lattice::EdgeDescriptor token,
 
 void MeTagger::applyTokenTags(Lattice &lattice, TokenEdgesMap tokenEdgesMap,
         std::vector<MeTagger::Outcome> tags) {
-    LayerTagMask formMask = lattice.getLayerTagManager().getMask("form");
+    LayerTagMask formMask = lattice.getLayerTagManager().getMaskWithLangCode(
+        "form", langCode_);
     size_t i = 0;
     while (i < tags.size()) {
         Outcome tag = tags[i];
@@ -721,7 +732,8 @@ std::list<std::pair<std::string, std::string> >
 
 bool MeTagger::hasLexemeEdgeMatchingTag(Lattice &lattice,
         Lattice::EdgeDescriptor token, std::string tag) {
-    LayerTagMask lexemeMask = lattice.getLayerTagManager().getMask("lexeme");
+    LayerTagMask lexemeMask = lattice.getLayerTagManager().getMaskWithLangCode(
+        "lexeme", langCode_);
     Lattice::VertexDescriptor vertex =
         lattice.getEdgeSource(token);
     Lattice::InOutEdgesIterator lexemeIt =
@@ -736,7 +748,8 @@ bool MeTagger::hasLexemeEdgeMatchingTag(Lattice &lattice,
 
 Lattice::EdgeDescriptor MeTagger::getLexemeEdgeMatchingTag(Lattice &lattice,
         Lattice::EdgeDescriptor token, std::string tag) {
-    LayerTagMask lexemeMask = lattice.getLayerTagManager().getMask("lexeme");
+    LayerTagMask lexemeMask = lattice.getLayerTagManager().getMaskWithLangCode(
+        "lexeme", langCode_);
     Lattice::VertexDescriptor vertex =
         lattice.getEdgeSource(token);
     Lattice::InOutEdgesIterator lexemeIt =
@@ -792,7 +805,8 @@ bool MeTagger::lexemeEdgeMatchesTag(Lattice &lattice,
 
 bool MeTagger::lemmaEdgeExists(Lattice &lattice,
         Lattice::EdgeDescriptor token, std::string lemma) {
-    LayerTagMask lemmaMask = lattice.getLayerTagManager().getMask("lemma");
+    LayerTagMask lemmaMask = lattice.getLayerTagManager().getMaskWithLangCode(
+        "lemma", langCode_);
     Lattice::InOutEdgesIterator lemmaIt =
         lattice.outEdges(lattice.getEdgeSource(token), lemmaMask);
     while (lemmaIt.hasNext()) {
@@ -824,7 +838,8 @@ void MeTagger::addLemmaEdge(Lattice &lattice,
 bool MeTagger::lexemeEdgeExists(Lattice &lattice,
         Lattice::EdgeDescriptor token, std::string lemma,
         std::string partOfSpeech) {
-    LayerTagMask lexemeMask = lattice.getLayerTagManager().getMask("lexeme");
+    LayerTagMask lexemeMask = lattice.getLayerTagManager().getMaskWithLangCode(
+        "lexeme", langCode_);
     Lattice::InOutEdgesIterator lexemeIt =
         lattice.outEdges(lattice.getEdgeSource(token), lexemeMask);
     while (lexemeIt.hasNext()) {
@@ -853,7 +868,8 @@ bool MeTagger::lexemeEdgeExists(Lattice &lattice,
 Lattice::EdgeDescriptor MeTagger::addLexemeEdge(Lattice &lattice,
         Lattice::EdgeDescriptor token, std::string lemma,
         std::string partOfSpeech) {
-    LayerTagMask lemmaMask = lattice.getLayerTagManager().getMask("lemma");
+    LayerTagMask lemmaMask = lattice.getLayerTagManager().getMaskWithLangCode(
+        "lemma", langCode_);
     Lattice::InOutEdgesIterator lemmaIt =
         lattice.outEdges(lattice.getEdgeSource(token), lemmaMask);
     while (lemmaIt.hasNext()) {
