@@ -81,8 +81,9 @@ private:
 
     virtual std::string doInfo();
 
-    void init_();
+    void init_(const std::string& langCode);
 
+    std::string langCode_;
     AspellAdapterInterface * aspellAdapter_;
 };
 

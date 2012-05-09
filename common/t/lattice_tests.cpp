@@ -66,7 +66,8 @@ BOOST_AUTO_TEST_CASE( lattice_simple ) {
     LayerTagCollection
         raw_tag = lattice.getLayerTagManager().createSingletonTagCollection("symbol");
     LayerTagCollection
-        token_tag = lattice.getLayerTagManager().createSingletonTagCollection("token");
+        token_tag = lattice.getLayerTagManager().createSingletonTagCollectionWithLangCode(
+            "token", "pl");
 
     LayerTagMask rawMask = lattice.getLayerTagManager().getMask(raw_tag);
     LayerTagMask tokenMask = lattice.getLayerTagManager().getMask(token_tag);
@@ -226,7 +227,8 @@ BOOST_AUTO_TEST_CASE( cutter ) {
     Lattice lattice;
     initAndTokenize_(lattice, "szybki zielony rower");
 
-    LayerTagMask tokenMask = lattice.getLayerTagManager().getMask("token");
+    LayerTagMask tokenMask = lattice.getLayerTagManager().getMaskWithLangCode(
+        "token", "pl");
     Lattice::EdgesSortedBySourceIterator tokenIter = lattice.edgesSortedBySource(tokenMask);
 
     {
@@ -333,7 +335,8 @@ BOOST_AUTO_TEST_CASE( variant_edges ) {
     LayerTagCollection raw_tag
         = lattice.getLayerTagManager().createSingletonTagCollection("symbol");
     LayerTagCollection token_tag
-        = lattice.getLayerTagManager().createSingletonTagCollection("token");
+        = lattice.getLayerTagManager().createSingletonTagCollectionWithLangCode(
+            "token", "pl");
     LayerTagCollection lemma_tag
         = lattice.getLayerTagManager().createSingletonTagCollection("lemma");
     LayerTagMask rawMask = lattice.getLayerTagManager().getMask(raw_tag);
@@ -426,7 +429,8 @@ BOOST_AUTO_TEST_CASE( edges_layer_tags ) {
     LayerTagCollection raw_tag
         = lattice.getLayerTagManager().createSingletonTagCollection("symbol");
     LayerTagCollection token_tag
-        = lattice.getLayerTagManager().createSingletonTagCollection("token");
+        = lattice.getLayerTagManager().createSingletonTagCollectionWithLangCode(
+            "token", "pl");
     LayerTagMask rawMask = lattice.getLayerTagManager().getMask(raw_tag);
     LayerTagMask tokenMask = lattice.getLayerTagManager().getMask(token_tag);
 
@@ -461,8 +465,10 @@ BOOST_AUTO_TEST_CASE( edges_layer_tags ) {
     BOOST_CHECK(tokenIter.hasNext());
     edge = tokenIter.next();
     tagNames = lattice.getLayerTagManager().getTagNames(lattice.getEdgeLayerTags(edge));
-    BOOST_CHECK_EQUAL(tagNames.size(), (size_t) 1);
+    BOOST_CHECK_EQUAL(tagNames.size(), (size_t) 2);
     tni = tagNames.begin();
+    BOOST_CHECK_EQUAL(*tni, LayerTagManager::getLanguageTag("pl"));
+    ++tni;
     BOOST_CHECK_EQUAL(*tni, "token");
     ++tni;
     BOOST_CHECK(tni == tagNames.end());
@@ -529,7 +535,8 @@ BOOST_AUTO_TEST_CASE( edges_scores_combining ) {
     LayerTagCollection raw_tag
         = lattice.getLayerTagManager().createSingletonTagCollection("symbol");
     LayerTagCollection token_tag
-        = lattice.getLayerTagManager().createSingletonTagCollection("token");
+        = lattice.getLayerTagManager().createSingletonTagCollectionWithLangCode(
+            "token", "pl");
     LayerTagMask rawMask = lattice.getLayerTagManager().getMask(raw_tag);
     LayerTagMask tokenMask = lattice.getLayerTagManager().getMask(token_tag);
 
@@ -569,6 +576,7 @@ BOOST_AUTO_TEST_CASE( loose_vertices ) {
     lattice.addSymbols(lattice.getFirstVertex(), lattice.getLastVertex());
     LayerTagCollection token_tag
         = lattice.getLayerTagManager().createSingletonTagCollection("token");
+
     LayerTagMask tokenMask = lattice.getLayerTagManager().getMask(token_tag);
 
     Lattice::VertexDescriptor vertexPre = lattice.getVertexForRawCharIndex(1);
@@ -846,7 +854,7 @@ void initAndTokenize_(Lattice& lattice, const std::string& paragraph, bool addSy
         lattice.appendStringWithSymbols(paragraph);
 
     LayerTagCollection textTags(
-        lattice.getLayerTagManager().createSingletonTagCollection("text"));
+        lattice.getLayerTagManager().createSingletonTagCollectionWithLangCode("text", "pl"));
     AnnotationItem item("TEXT", paragraph);
     try {
         lattice.addEdge(lattice.getFirstVertex(), lattice.getLastVertex(), item, textTags);
@@ -855,7 +863,8 @@ void initAndTokenize_(Lattice& lattice, const std::string& paragraph, bool addSy
     BySpacesCutter cutter;
 
     LayerTagMask symbolMask = lattice.getLayerTagManager().getMask("symbol");
-    LayerTagMask textMask = lattice.getLayerTagManager().getMask("text");
+    LayerTagMask textMask = lattice.getLayerTagManager().getMaskWithLangCode(
+        "text", "pl");
 
     lattice.runCutter(cutter, symbolMask, textMask);
 }

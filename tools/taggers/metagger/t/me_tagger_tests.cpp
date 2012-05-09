@@ -8,18 +8,25 @@ BOOST_AUTO_TEST_CASE( training_test ) {
     Lattice lattice("Ala ma kota. Koty są czarne.");
     lattice.addSymbols(lattice.getFirstVertex(), lattice.getLastVertex());
 
+    std::string langCode = "pl";
+
     LayerTagCollection symbolTag
         = lattice.getLayerTagManager().createSingletonTagCollection("symbol");
     LayerTagCollection tokenTag
-        = lattice.getLayerTagManager().createSingletonTagCollection("token");
+        = lattice.getLayerTagManager().createSingletonTagCollectionWithLangCode(
+            "token", langCode);
     LayerTagCollection lemmaTag
-        = lattice.getLayerTagManager().createSingletonTagCollection("lemma");
+        = lattice.getLayerTagManager().createSingletonTagCollectionWithLangCode(
+            "lemma", langCode);
     LayerTagCollection lexemeTag
-        = lattice.getLayerTagManager().createSingletonTagCollection("lexeme");
+        = lattice.getLayerTagManager().createSingletonTagCollectionWithLangCode(
+            "lexeme", langCode);
     LayerTagCollection formTag
-        = lattice.getLayerTagManager().createSingletonTagCollection("form");
+        = lattice.getLayerTagManager().createSingletonTagCollectionWithLangCode(
+            "form", langCode);
     LayerTagCollection segmentTag
-        = lattice.getLayerTagManager().createSingletonTagCollection("segment");
+        = lattice.getLayerTagManager().createSingletonTagCollectionWithLangCode(
+            "segment", langCode);
     LayerTagMask symbolMask = lattice.getLayerTagManager().getMask(symbolTag);
     LayerTagMask tokenMask = lattice.getLayerTagManager().getMask(tokenTag);
     LayerTagMask lemmaMask = lattice.getLayerTagManager().getMask(lemmaTag);
@@ -314,6 +321,7 @@ BOOST_AUTO_TEST_CASE( training_test ) {
 
     std::string modelFile = ROOT_DIR "tools/taggers/metagger/t/files/pl.blm";
     boost::scoped_ptr<MeTagger> trainer(new MeTagger(
+            langCode,
             true,
             modelFile
             ) );
@@ -326,15 +334,20 @@ BOOST_AUTO_TEST_CASE( training_test ) {
     symbolTag
         = test_lattice.getLayerTagManager().createSingletonTagCollection("symbol");
     tokenTag
-        = test_lattice.getLayerTagManager().createSingletonTagCollection("token");
+        = test_lattice.getLayerTagManager().createSingletonTagCollectionWithLangCode(
+            "token", langCode);
     lemmaTag
-        = test_lattice.getLayerTagManager().createSingletonTagCollection("lemma");
+        = test_lattice.getLayerTagManager().createSingletonTagCollectionWithLangCode(
+            "lemma", langCode);
     lexemeTag
-        = test_lattice.getLayerTagManager().createSingletonTagCollection("lexeme");
+        = test_lattice.getLayerTagManager().createSingletonTagCollectionWithLangCode(
+            "lexeme", langCode);
     formTag
-        = test_lattice.getLayerTagManager().createSingletonTagCollection("form");
+        = test_lattice.getLayerTagManager().createSingletonTagCollectionWithLangCode(
+            "form", langCode);
     segmentTag
-        = test_lattice.getLayerTagManager().createSingletonTagCollection("segment");
+        = test_lattice.getLayerTagManager().createSingletonTagCollectionWithLangCode(
+            "segment", langCode);
     symbolMask = test_lattice.getLayerTagManager().getMask(symbolTag);
     tokenMask = test_lattice.getLayerTagManager().getMask(tokenTag);
     lemmaMask = test_lattice.getLayerTagManager().getMask(lemmaTag);
@@ -531,6 +544,7 @@ BOOST_AUTO_TEST_CASE( training_test ) {
             test_psaFormBuilder.build());
 
     boost::scoped_ptr<MeTagger> tagger(new MeTagger(
+            langCode,
             true,
             modelFile
             ));
@@ -616,7 +630,6 @@ BOOST_AUTO_TEST_CASE( training_test ) {
     ++avi;
     BOOST_CHECK(avi == av.end());
     BOOST_CHECK(!discardedIt.hasNext());
-
 }
 
 BOOST_AUTO_TEST_SUITE_END()

@@ -12,6 +12,8 @@
 
 BiLexicon::BiLexicon(const boost::program_options::variables_map& options) {
     std::string lang = options["lang"].as<std::string>();
+    langCode_ = lang;
+
     std::string trg_lang = options["trg-lang"].as<std::string>();
 
     createTags_(trg_lang);
@@ -132,7 +134,7 @@ std::list<std::list<std::string> > BiLexicon::requiredLayerTags() {
 
 std::list<std::string> BiLexicon::tagsToOperateOn() {
     return boost::assign::list_of
-        (std::string("lexeme"));
+        (std::string("lexeme"))(LayerTagManager::getLanguageTag(langCode_));
 }
 
 void BiLexicon::processEdge(Lattice& lattice, Lattice::EdgeDescriptor edge) {

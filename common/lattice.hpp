@@ -124,6 +124,8 @@ public:
 
         EdgeDescriptor lastEdge(Lattice & lattice) const;
 
+        LayerTagCollection gatherPlaneTags(Lattice& lattice) const;
+
         bool empty() const;
 
         size_t size(Lattice & lattice) const;

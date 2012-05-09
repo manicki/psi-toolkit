@@ -69,7 +69,7 @@ public:
         Worker(Processor& processor, Lattice& lattice)
             :LatticeWorker(lattice),
              processor_(processor),
-             tokenMask_(lattice.getLayerTagManager().getMask(T::tagsToOperateOn())) {
+             tokenMask_(getTagsToOperateOn_()) {
         }
 
     private:
@@ -84,6 +84,13 @@ public:
 
                 engine.processEdge(lattice_, edge);
             }
+        }
+
+        LayerTagMask getTagsToOperateOn_() {
+            T& engine = dynamic_cast<OneEdgeAtATimeAnnotator&>(processor_).engine_;
+
+            return lattice_.getLayerTagManager().getMask(
+                engine.tagsToOperateOn());
         }
     };
 

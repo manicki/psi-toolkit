@@ -112,6 +112,9 @@ Lattice::EdgeDescriptor Lattice::addEdge(
     Score score,
     int ruleId)
 {
+    // inheriting plane tags
+    if (getLayerTagManager().onlyPlaneTags(tags).isEmpty())
+        tags = createUnion(tags, sequence.gatherPlaneTags(*this));
 
     if (from == to) {
         throw LoopEdgeException("Cannot add a loop edge");
@@ -309,10 +312,14 @@ Lattice::EdgeDescriptor Lattice::addPartitionToEdge(
     Score score,
     int ruleId) {
     // FIXME - ineffective! addEdge must be refactored
+
+    LayerTagCollection edgePlaneTags =
+        getLayerTagManager().onlyPlaneTags(getEdgeLayerTags(edge));
+
     return addEdge(getEdgeSource(edge),
                    getEdgeTarget(edge),
                    getEdgeAnnotationItem(edge),
-                   tags,
+                   createUnion(tags, edgePlaneTags),
                    sequence,
                    score,
                    ruleId);
@@ -852,6 +859,32 @@ Lattice::EdgeDescriptor Lattice::EdgeSequence::lastEdge(Lattice & lattice) const
     } else {
         return links.back();
     }
+}
+
+LayerTagCollection Lattice::EdgeSequence::gatherPlaneTags(Lattice& lattice) const {
+    std::vector<EdgeDescriptor>::const_iterator iter = links.begin();
+
+    if (iter != links.end()) {
+
+        LayerTagCollection tags = lattice.getLayerTagManager().onlyPlaneTags(
+            lattice.getEdgeLayerTags((*iter)));
+
+        ++iter;
+
+        while (iter != links.end()) {
+            LayerTagCollection linkPlaneTags =
+                lattice.getLayerTagManager().onlyPlaneTags(
+                    lattice.getEdgeLayerTags(*iter));
+
+            tags = createUnion(tags, linkPlaneTags);
+
+            ++iter;
+        }
+
+        return tags;
+    }
+
+    return lattice.getLayerTagManager().createEmptyTagCollection();
 }
 
 bool Lattice::EdgeSequence::empty() const {

@@ -9,6 +9,7 @@
 class TpTokenCutter : public Cutter {
 public:
     TpTokenCutter(
+        const std::string& langCode,
         TPBasicTokenizerRuleSet& ruleSet,
         size_t hardLimit,
         size_t softLimit);
@@ -28,6 +29,7 @@ private:
     template <typename StringType>
     AnnotationItem defaultToken(const StringType& text, size_t& positionInText);
 
+    std::string langCode_;
     TPBasicTokenizerRuleSet& ruleSet_;
     size_t hardLimit_;
     size_t softLimit_;

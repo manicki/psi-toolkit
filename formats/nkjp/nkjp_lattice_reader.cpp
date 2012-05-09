@@ -423,9 +423,9 @@ void NKJPLatticeReader::Worker::doRun() {
 
 
 LayerTagCollection NKJPLatticeReader::Worker::getTags_(std::string mainTag) {
-    return lattice_.getLayerTagManager().createTagCollectionFromList(
-        boost::assign::list_of("nkjp-reader")(mainTag.c_str())
-    );
+    return lattice_.getLayerTagManager().createTagCollectionFromListWithLangCode(
+        boost::assign::list_of("nkjp-reader")(mainTag.c_str()),
+        "pl");
 }
 
 
