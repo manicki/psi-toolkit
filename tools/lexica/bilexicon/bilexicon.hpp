@@ -28,7 +28,7 @@ public:
     static boost::program_options::options_description optionsHandled();
     static std::list<std::string> providedLayerTags();
     static std::list<std::list<std::string> > requiredLayerTags();
-    static std::list<std::string> tagsToOperateOn();
+    std::list<std::string> tagsToOperateOn();
 
     void processEdge(Lattice& lattice, Lattice::EdgeDescriptor edge);
 
@@ -53,6 +53,7 @@ private:
 
     void createTags_(const std::string& trg_lang);
 
+    std::string langCode_;
     boost::shared_ptr<KeyValueStore> store_;
     UTTLikeQuoter quoter_;
     std::list<std::string> tags_;
