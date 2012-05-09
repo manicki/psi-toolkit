@@ -54,6 +54,17 @@ public:
             createLanguageTag(langCode));
     }
 
+    LayerTagCollection createTagCollectionFromListWithLangCode(
+        std::list<std::string> tagNames,
+        const std::string& langCode) {
+
+        return
+            createUnion(
+                createTagCollection(tagNames),
+                createLanguageTag(langCode));
+    }
+
+
     LayerTagCollection createTagCollection(LayerTagMask mask);
 
     /**
@@ -78,6 +89,15 @@ public:
 
     LayerTagMask getMask(std::list<std::string> tagNames) {
         return getMask(createTagCollection(tagNames));
+    }
+
+    LayerTagMask getMaskWithLangCode(
+        std::list<std::string> tagNames,
+        const std::string& langCode) {
+
+        return getMask(
+            createUnion(createTagCollection(tagNames),
+                        createLanguageTag(langCode)));
     }
 
     LayerTagMask getAlternativeMask(

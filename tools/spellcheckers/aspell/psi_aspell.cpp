@@ -197,8 +197,8 @@ LatticeWorker* PSIAspell::doCreateLatticeWorker(Lattice& lattice) {
 
 PSIAspell::Worker::Worker(Processor& processor, Lattice& lattice):
     LatticeWorker(lattice), processor_(processor),
-    textTags_(lattice_.getLayerTagManager().createTagCollectionFromList(
-                                            PSIAspell::tagsToPut))
+    textTags_(lattice_.getLayerTagManager().createTagCollectionFromListWithLangCode(
+                  PSIAspell::tagsToPut, dynamic_cast<PSIAspell&>(processor_).langCode_))
 {
 }
 
@@ -208,8 +208,8 @@ void PSIAspell::Worker::doRun() {
     if (aspellProcessor.isActive()) {
 
         LayerTagMask tokenMask_ =
-            lattice_.getLayerTagManager().getMask(
-                                                  PSIAspell::tagsToOperateOn);
+            lattice_.getLayerTagManager().getMaskWithLangCode(
+                PSIAspell::tagsToOperateOn, aspellProcessor.langCode_);
 
         Lattice::EdgesSortedByTargetIterator edgeIterator
             = lattice_.edgesSortedByTarget(tokenMask_);
@@ -339,7 +339,7 @@ std::string PSIAspell::doInfo() {
 // PSIAspell
 
 PSIAspell::PSIAspell(const std::string & langCode) {
-    init_();
+    init_(langCode);
 
     if ( isActive() ) {
         aspellAdapter_->initAspell(langCode);
@@ -350,7 +350,7 @@ PSIAspell::PSIAspell(const std::string & langCode) {
 PSIAspell::PSIAspell(const std::string & langCode,
                      const boost::program_options::variables_map& options) {
 
-    init_();
+    init_(langCode);
 
     if ( isActive() ) {
         aspellAdapter_->initAspell(langCode);
@@ -365,7 +365,9 @@ PSIAspell::~PSIAspell() {
     }
 }
 
-void PSIAspell::init_() {
+void PSIAspell::init_(const std::string& langCode) {
+    langCode_ = langCode;
+
     aspellAdapter_ = dynamic_cast<AspellAdapterInterface*>(
                      PluginManager::getInstance().createPluginAdapter("aspell"));
 }
