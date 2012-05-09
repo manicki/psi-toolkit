@@ -23,10 +23,6 @@ std::map<std::string, std::string> MorfologikTagsParser::PREDEFINED_TAGS =
         ("adjp", "pos")
         ("adv", "pos")
         ("num", "pos")
-        ("pact", "pos")
-        ("pant", "pos")
-        ("pcon", "pos")
-        ("ppas", "pos")
         ("ppron12", "pos")
         ("ppron3", "pos")
         ("pred", "pos")
@@ -90,6 +86,10 @@ std::map<std::string, std::string> MorfologikTagsParser::PREDEFINED_TAGS =
         ("bedzie", "tense")
         ("praet", "tense")
         ("refl", "tense")
+        ("pact", "tense")
+        ("pant", "tense")
+        ("pcon", "tense")
+        ("ppas", "tense")
         ("impt", "mode")
         ("pot", "mode")
         ("indecl", "uninflected")
@@ -110,6 +110,14 @@ std::vector<std::string> MorfologikTagsParser::TAGS_ALLOWED_AS_POS =
         ("depreciativity")
         ("tense")
         ("mode");
+
+std::map<std::string, std::string> MorfologikTagsParser::POS_GENERALIZATIONS =
+    boost::assign::map_list_of
+        ("pact", "verb")
+        ("pant", "verb")
+        ("pcon", "verb")
+        ("ppas", "verb")
+        ;
 
 std::vector<std::map<std::string, std::string> > MorfologikTagsParser::getFormAttributes(
     std::string & tag) {
@@ -267,12 +275,19 @@ std::map<std::string, std::string> MorfologikTagsParser::getLexemeAttributes(std
 
 std::string MorfologikTagsParser::getPartOfSpeechTag_(
     std::map<std::string, std::string> attributes) {
+    std::string selectedPos = "";
 
     BOOST_FOREACH(std::string pos, TAGS_ALLOWED_AS_POS) {
-        if (!attributes[pos.c_str()].empty()) return attributes[pos];
+        if (!attributes[pos.c_str()].empty()) {
+            selectedPos = attributes[pos];
+            break;
+        }
+    }
+    if (POS_GENERALIZATIONS.find(selectedPos) != POS_GENERALIZATIONS.end()) {
+        selectedPos = POS_GENERALIZATIONS[selectedPos];
     }
 
-    return "";
+    return selectedPos;
 }
 
 std::string MorfologikTagsParser::getAttributeToSeek_(std::string& attribute,
