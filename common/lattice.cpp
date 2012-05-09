@@ -312,10 +312,14 @@ Lattice::EdgeDescriptor Lattice::addPartitionToEdge(
     Score score,
     int ruleId) {
     // FIXME - ineffective! addEdge must be refactored
+
+    LayerTagCollection edgePlaneTags =
+        getLayerTagManager().onlyPlaneTags(getEdgeLayerTags(edge));
+
     return addEdge(getEdgeSource(edge),
                    getEdgeTarget(edge),
                    getEdgeAnnotationItem(edge),
-                   tags,
+                   createUnion(tags, edgePlaneTags),
                    sequence,
                    score,
                    ruleId);
