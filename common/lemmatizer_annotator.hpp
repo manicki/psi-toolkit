@@ -20,6 +20,7 @@ private:
     boost::shared_ptr<GeneralCaseConverter<std::string::const_iterator,
                                            std::back_insert_iterator<std::string> > >
        lowerCaseConverter_;
+    std::string langCode_;
 
 
 public:
@@ -28,6 +29,7 @@ public:
         :lemmatizer_(options) {
         lowerCaseConverter_ = StringCaseConverterManager::getInstance().
             getLowerCaseConverter(lemmatizer_.getLanguage());
+        langCode_ = lemmatizer_.getLanguage();
     }
 
     class Factory : public AnnotatorFactory {
@@ -101,7 +103,9 @@ public:
 
         public:
             WorkerOutputIterator(
-                LayerTagCollection layerTags, Lattice& lattice, Lattice::EdgeDescriptor tokenEdge)
+                LayerTagCollection layerTags,
+                Lattice& lattice,
+                Lattice::EdgeDescriptor tokenEdge)
                 :lattice_(lattice),
                  correctionTag_(
                      createUnion(
@@ -237,7 +241,10 @@ public:
         Worker(Processor& processor, Lattice& lattice)
             :LatticeWorker(lattice),
              processor_(processor),
-             tokenMask_(lattice.getLayerTagManager().getMask("token")) {
+             tokenMask_(
+                 lattice.getLayerTagManager().getMaskWithLangCode(
+                     "token",
+                     dynamic_cast<LemmatizerAnnotator&>(processor_).lemmatizer_.getLanguage())) {
         }
 
    private:
