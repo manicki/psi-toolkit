@@ -22,6 +22,10 @@ public:
 
     LayerTagManager();
 
+    LayerTagCollection createEmptyTagCollection() {
+        return LayerTagCollection();
+    }
+
     LayerTagCollection createSingletonTagCollection(std::string tagName);
 
     LayerTagCollection createTagCollection(std::list<std::string> tagNames);
