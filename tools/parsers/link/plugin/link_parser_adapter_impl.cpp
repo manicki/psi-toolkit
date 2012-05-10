@@ -10,8 +10,8 @@ LinkParserAdapterImpl::LinkParserAdapterImpl() : dictionary_(NULL), sentence_(NU
 
 
 LinkParserAdapterImpl::~LinkParserAdapterImpl() {
-    freeDictionary();
     freeSentence();
+    freeDictionary();
 }
 
 
