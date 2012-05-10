@@ -122,6 +122,17 @@ bool LinkParser::isActive() {
 }
 
 
+AnnotatorFactory::LanguagesHandling LinkParser::languagesHandling(
+    const boost::program_options::variables_map& /*options*/) {
+    return AnnotatorFactory::LANGUAGE_DEPENDENT;
+}
+
+std::list<std::string> LinkParser::languagesHandled(
+    const boost::program_options::variables_map& /*options*/) {
+    return boost::assign::list_of(std::string("en"))(std::string("lt"));
+}
+
+
 void LinkParser::parse(Lattice &lattice) {
     LayerTagMask maskSegment = lattice.getLayerTagManager().getMaskWithLangCode(
         "segment",

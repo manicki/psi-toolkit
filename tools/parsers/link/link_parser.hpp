@@ -5,6 +5,7 @@
 #include <boost/program_options.hpp>
 
 #include "annotator.hpp"
+#include "annotator_factory.hpp"
 #include "language_dependent_annotator_factory.hpp"
 #include "lang_specific_processor_file_fetcher.hpp"
 #include "plugin/link_parser_adapter_interface.hpp"
@@ -45,6 +46,12 @@ public:
 
     LinkParserAdapterInterface * getAdapter();
     bool isActive();
+
+    static AnnotatorFactory::LanguagesHandling languagesHandling(
+        const boost::program_options::variables_map& options);
+
+    static std::list<std::string> languagesHandled(
+        const boost::program_options::variables_map& options);
 
     void parse(Lattice &lattice);
 
