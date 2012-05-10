@@ -89,7 +89,7 @@ int LinkParserAdapterImpl::extractEdgeDescriptions(CNode * ctree) {
         int end = ends_[linkage_constituent_node_get_end(ctree) + 1];
         const char * label = linkage_constituent_node_get_label(ctree);
         if (!label) {
-            label = "NOLABEL";
+            label = "∅";
         }
         edgeDescriptions_.insert(std::pair<int, EdgeDescription>(
             id,
