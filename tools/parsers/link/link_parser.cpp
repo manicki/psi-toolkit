@@ -47,7 +47,9 @@ boost::filesystem::path LinkParser::Factory::doGetFile() const {
 }
 
 std::list<std::list<std::string> > LinkParser::Factory::doRequiredLayerTags() {
-    return std::list<std::list<std::string> >();
+    return boost::assign::list_of(
+        boost::assign::list_of(std::string("segment"))
+    );
 }
 
 std::list<std::list<std::string> > LinkParser::Factory::doOptionalLayerTags() {
