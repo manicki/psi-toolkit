@@ -22,7 +22,7 @@ Annotator* LinkParser::Factory::doCreateAnnotator(
         if (!dictFilename.empty()) {
             boost::filesystem::path dictPath = fileFetcher.getOneFile(dictFilename);
             dictPathString = dictPath.string();
-            return new LinkParser(dictPathString, "", "", "");
+            return new LinkParser(lang, dictPathString, "", "", "");
         }
     }
 
@@ -86,11 +86,12 @@ LinkParser::LinkParser(std::string language) : langCode_(language) {
 }
 
 LinkParser::LinkParser(
+    std::string language,
     std::string dictionaryName,
     std::string postProcessFileName,
     std::string constituentKnowledgeName,
     std::string affixName
-) {
+) : langCode_(language) {
     adapter_ = dynamic_cast<LinkParserAdapterInterface*>(
         PluginManager::getInstance().createPluginAdapter("link-parser")
     );

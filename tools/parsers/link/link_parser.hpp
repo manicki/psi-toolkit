@@ -34,6 +34,7 @@ public:
     LinkParser(std::string language);
 
     LinkParser(
+        std::string language,
         std::string dictionaryName,
         std::string postProcessFileName,
         std::string constituentKnowledgeName,
