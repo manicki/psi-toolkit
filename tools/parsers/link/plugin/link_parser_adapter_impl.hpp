@@ -23,7 +23,7 @@ public:
         std::string affixName
     );
 
-    virtual std::vector<EdgeDescription> parseSentence(std::string sentenceStr);
+    virtual std::map<int, EdgeDescription> parseSentence(std::string sentenceStr);
 
 private:
     Dictionary dictionary_;
@@ -32,7 +32,13 @@ private:
     std::map<int, int> starts_;
     std::map<int, int> ends_;
 
-    std::vector<EdgeDescription> extractEdgeDescriptions(CNode * ctree);
+    std::map<int, EdgeDescription> edgeDescriptions_;
+
+    int number_;
+
+    int getNextNumber_();
+
+    int extractEdgeDescriptions(CNode * ctree);
 
     void freeDictionary();
     void freeSentence();

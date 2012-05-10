@@ -4,7 +4,7 @@
 #include <cstring>
 
 
-LinkParserAdapterImpl::LinkParserAdapterImpl() : dictionary_(NULL), sentence_(NULL) {
+LinkParserAdapterImpl::LinkParserAdapterImpl() : dictionary_(NULL), sentence_(NULL), number_(0) {
     setlocale(LC_ALL, "");
 }
 
@@ -37,8 +37,7 @@ void LinkParserAdapterImpl::setDictionary(
 }
 
 
-std::vector<EdgeDescription> LinkParserAdapterImpl::parseSentence(std::string sentenceStr) {
-    std::vector<EdgeDescription> result;
+std::map<int, EdgeDescription> LinkParserAdapterImpl::parseSentence(std::string sentenceStr) {
     Parse_Options parseOptions = parse_options_create();
     freeSentence();
     sentence_ = sentence_create(sentenceStr.c_str(), dictionary_);
@@ -60,43 +59,44 @@ std::vector<EdgeDescription> LinkParserAdapterImpl::parseSentence(std::string se
 
         Linkage linkage = linkage_create(0, sentence_, parseOptions);
         CNode * ctree = linkage_constituent_tree(linkage);
-        result = extractEdgeDescriptions(ctree);
+        extractEdgeDescriptions(ctree);
         linkage_free_constituent_tree(ctree);
         linkage_delete(linkage);
 
     }
-    return result;
+    return edgeDescriptions_;
 }
 
 
-std::vector<EdgeDescription> LinkParserAdapterImpl::extractEdgeDescriptions(CNode * ctree) {
-    std::vector<EdgeDescription> result;
+int LinkParserAdapterImpl::getNextNumber_() {
+    return number_++;
+}
+
+
+int LinkParserAdapterImpl::extractEdgeDescriptions(CNode * ctree) {
+    int id = -1;
     if (ctree) {
+        std::list<int> children;
+        for (
+            CNode * subtree = linkage_constituent_node_get_child(ctree);
+            subtree != NULL;
+            subtree = linkage_constituent_node_get_next(subtree)
+        ) {
+            children.push_back(extractEdgeDescriptions(subtree));
+        }
+        id = getNextNumber_();
         int start = starts_[linkage_constituent_node_get_start(ctree) + 1];
         int end = ends_[linkage_constituent_node_get_end(ctree) + 1];
         const char * label = linkage_constituent_node_get_label(ctree);
-        CNode * next = linkage_constituent_node_get_next(ctree);
-        CNode * child = linkage_constituent_node_get_child(ctree);
-        std::vector<EdgeDescription> nextDescs = extractEdgeDescriptions(next);
-        std::vector<EdgeDescription> childDescs = extractEdgeDescriptions(child);
-        result.insert(result.end(), nextDescs.begin(), nextDescs.end());
-        result.insert(result.end(), childDescs.begin(), childDescs.end());
-        std::list<int> rsiblings;
-        if (!nextDescs.empty()) {
-            rsiblings = nextDescs.back().rsiblings;
+        if (!label) {
+            label = "NOLABEL";
         }
-        rsiblings.push_front(result.size());
-        std::list<int> children;
-        if (!childDescs.empty()) {
-            children = childDescs.back().rsiblings;
-        }
-        if (label) {
-            result.push_back(EdgeDescription(start, end, label, children, rsiblings));
-        } else {
-            result.push_back(EdgeDescription(start, end, "NOLABEL", children, rsiblings));
-        }
+        edgeDescriptions_.insert(std::pair<int, EdgeDescription>(
+            id,
+            EdgeDescription(id, start, end, label, children)
+        ));
     }
-    return result;
+    return id;
 }
 
 

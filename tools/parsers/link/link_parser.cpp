@@ -124,10 +124,12 @@ void LinkParser::parse(Lattice &lattice) {
     Lattice::EdgesSortedBySourceIterator ei(lattice, maskSegment);
     while (ei.hasNext()) {
         Lattice::EdgeDescriptor edge = ei.next();
-        std::vector<EdgeDescription> parsingResult
+        std::map<int, EdgeDescription> parsingResult
             = adapter_->parseSentence(lattice.getEdgeText(edge));
-        std::vector<Lattice::EdgeDescriptor> addedEdges;
-        BOOST_FOREACH(EdgeDescription edgeDescription, parsingResult) {
+        std::map<int, Lattice::EdgeDescriptor> addedEdges;
+        typedef std::pair<int, EdgeDescription> ParsingResultElement;
+        BOOST_FOREACH(ParsingResultElement parsingResultElement, parsingResult) {
+            EdgeDescription edgeDescription = parsingResultElement.second;
             AnnotationItem aiLink(
                 edgeDescription.label,
                 StringFrag(
@@ -141,19 +143,19 @@ void LinkParser::parse(Lattice &lattice) {
             );
             Lattice::EdgeSequence::Builder builder(lattice);
             BOOST_FOREACH(int childNo, edgeDescription.children) {
-                builder.addEdge(addedEdges.at(childNo));
+                builder.addEdge(addedEdges[childNo]);
             }
             if (edgeDescription.start == edgeDescription.end) {
                 edgeDescription.start = lattice.addLooseVertex();
                 edgeDescription.end = lattice.addLooseVertex();
             }
-            addedEdges.push_back(lattice.addEdge(
+            addedEdges[parsingResultElement.first] = lattice.addEdge(
                 edgeDescription.start,
                 edgeDescription.end,
                 aiLink,
                 tagParse,
                 builder.build()
-            ));
+            );
         }
     }
 }

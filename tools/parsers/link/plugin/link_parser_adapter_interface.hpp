@@ -3,8 +3,8 @@
 
 #include "plugin_adapter.hpp"
 
+#include <map>
 #include <string>
-#include <vector>
 
 #include "edge_description.hpp"
 
@@ -22,7 +22,7 @@ public:
         std::string affixName
     ) = 0;
 
-    virtual std::vector<EdgeDescription> parseSentence(std::string sentenceStr) = 0;
+    virtual std::map<int, EdgeDescription> parseSentence(std::string sentenceStr) = 0;
 };
 
 
