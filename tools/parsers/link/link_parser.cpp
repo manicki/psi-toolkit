@@ -21,9 +21,10 @@ Annotator* LinkParser::Factory::doCreateAnnotator(
         std::string dictFilename = options["dict"].as<std::string>();
         boost::filesystem::path dictPath = fileFetcher.getOneFile(dictFilename);
         dictPathString = dictPath.string();
+        return new LinkParser(dictPathString, "", "", "");
     }
 
-    return new LinkParser(dictPathString);
+    return new LinkParser(lang);
 }
 
 void LinkParser::Factory::doAddLanguageIndependentOptionsHandled(
@@ -76,11 +77,28 @@ std::string LinkParser::doInfo() {
     return "link grammar parser";
 }
 
-LinkParser::LinkParser(std::string dictPath) {
+LinkParser::LinkParser(std::string language) {
     adapter_ = dynamic_cast<LinkParserAdapterInterface*>(
         PluginManager::getInstance().createPluginAdapter("link-parser")
     );
-    adapter_->setDictionary(dictPath);
+    adapter_->setDictionary(language);
+}
+
+LinkParser::LinkParser(
+    std::string dictionaryName,
+    std::string postProcessFileName,
+    std::string constituentKnowledgeName,
+    std::string affixName
+) {
+    adapter_ = dynamic_cast<LinkParserAdapterInterface*>(
+        PluginManager::getInstance().createPluginAdapter("link-parser")
+    );
+    adapter_->setDictionary(
+        dictionaryName,
+        postProcessFileName,
+        constituentKnowledgeName,
+        affixName
+    );
 }
 
 LinkParser::~LinkParser() {

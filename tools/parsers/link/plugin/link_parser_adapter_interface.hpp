@@ -13,7 +13,14 @@ class LinkParserAdapterInterface : public PluginAdapter {
 public:
     virtual ~LinkParserAdapterInterface() { }
 
-    virtual void setDictionary(std::string filename) = 0;
+    virtual void setDictionary(std::string language) = 0;
+
+    virtual void setDictionary(
+        std::string dictionaryName,
+        std::string postProcessFileName,
+        std::string constituentKnowledgeName,
+        std::string affixName
+    ) = 0;
 
     virtual std::vector<EdgeDescription> parseSentence(std::string sentenceStr) = 0;
 };

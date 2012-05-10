@@ -1,35 +1,46 @@
 #include "link_parser_adapter_impl.hpp"
 
+#include <clocale>
 #include <cstring>
 
 
-LinkParserAdapterImpl::LinkParserAdapterImpl() : dictionary_(NULL), sentence_(NULL) { }
-
-
-LinkParserAdapterImpl::~LinkParserAdapterImpl() {
-    if (dictionary_) {
-        dictionary_delete(dictionary_);
-    }
-    if (sentence_) {
-        sentence_delete(sentence_);
-    }
+LinkParserAdapterImpl::LinkParserAdapterImpl() : dictionary_(NULL), sentence_(NULL) {
+    setlocale(LC_ALL, "");
 }
 
 
-void LinkParserAdapterImpl::setDictionary(std::string filename) {
-    if (dictionary_) {
-        dictionary_delete(dictionary_);
-    }
-    dictionary_ = dictionary_create(filename.c_str(), NULL, NULL, NULL);
+LinkParserAdapterImpl::~LinkParserAdapterImpl() {
+    freeDictionary();
+    freeSentence();
+}
+
+
+void LinkParserAdapterImpl::setDictionary(std::string language) {
+    freeDictionary();
+    dictionary_ = dictionary_create_lang(language.c_str());
+}
+
+
+void LinkParserAdapterImpl::setDictionary(
+    std::string dictionaryName,
+    std::string postProcessFileName,
+    std::string constituentKnowledgeName,
+    std::string affixName
+) {
+    freeDictionary();
+    dictionary_ = dictionary_create(
+        dictionaryName.c_str(),
+        postProcessFileName.empty() ? NULL : postProcessFileName.c_str(),
+        constituentKnowledgeName.empty() ? NULL : constituentKnowledgeName.c_str(),
+        affixName.empty() ? NULL : affixName.c_str()
+    );
 }
 
 
 std::vector<EdgeDescription> LinkParserAdapterImpl::parseSentence(std::string sentenceStr) {
     std::vector<EdgeDescription> result;
     Parse_Options parseOptions = parse_options_create();
-    if (sentence_) {
-        sentence_delete(sentence_);
-    }
+    freeSentence();
     sentence_ = sentence_create(sentenceStr.c_str(), dictionary_);
     if (sentence_parse(sentence_, parseOptions)) {
 
@@ -86,6 +97,22 @@ std::vector<EdgeDescription> LinkParserAdapterImpl::extractEdgeDescriptions(CNod
         }
     }
     return result;
+}
+
+
+void LinkParserAdapterImpl::freeDictionary() {
+    if (dictionary_) {
+        dictionary_delete(dictionary_);
+        dictionary_ = NULL;
+    }
+}
+
+
+void LinkParserAdapterImpl::freeSentence() {
+    if (sentence_) {
+        sentence_delete(sentence_);
+        sentence_ = NULL;
+    }
 }
 
 

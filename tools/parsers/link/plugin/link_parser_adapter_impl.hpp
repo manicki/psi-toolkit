@@ -14,7 +14,14 @@ public:
 
     virtual ~LinkParserAdapterImpl();
 
-    virtual void setDictionary(std::string filename);
+    virtual void setDictionary(std::string language);
+
+    virtual void setDictionary(
+        std::string dictionaryName,
+        std::string postProcessFileName,
+        std::string constituentKnowledgeName,
+        std::string affixName
+    );
 
     virtual std::vector<EdgeDescription> parseSentence(std::string sentenceStr);
 
@@ -26,6 +33,9 @@ private:
     std::map<int, int> ends_;
 
     std::vector<EdgeDescription> extractEdgeDescriptions(CNode * ctree);
+
+    void freeDictionary();
+    void freeSentence();
 
 };
 
