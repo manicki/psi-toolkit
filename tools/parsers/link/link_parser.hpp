@@ -29,8 +29,6 @@ public:
         virtual std::list<std::list<std::string> > doOptionalLayerTags();
 
         virtual std::list<std::string> doProvidedLayerTags();
-
-        static const std::string DEFAULT_DICT_FILE;
     };
 
     LinkParser(std::string language);

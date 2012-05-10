@@ -19,9 +19,11 @@ Annotator* LinkParser::Factory::doCreateAnnotator(
     std::string dictPathString;
     if (options.count("dict")) {
         std::string dictFilename = options["dict"].as<std::string>();
-        boost::filesystem::path dictPath = fileFetcher.getOneFile(dictFilename);
-        dictPathString = dictPath.string();
-        return new LinkParser(dictPathString, "", "", "");
+        if (!dictFilename.empty()) {
+            boost::filesystem::path dictPath = fileFetcher.getOneFile(dictFilename);
+            dictPathString = dictPath.string();
+            return new LinkParser(dictPathString, "", "", "");
+        }
     }
 
     return new LinkParser(lang);
@@ -31,7 +33,7 @@ void LinkParser::Factory::doAddLanguageIndependentOptionsHandled(
     boost::program_options::options_description& optionsDescription) {
     optionsDescription.add_options()
         ("dict",
-        boost::program_options::value<std::string>()->default_value(DEFAULT_DICT_FILE),
+        boost::program_options::value<std::string>()->default_value(""),
         "dictionary file")
         ;
 }
@@ -55,9 +57,6 @@ std::list<std::list<std::string> > LinkParser::Factory::doOptionalLayerTags() {
 std::list<std::string> LinkParser::Factory::doProvidedLayerTags() {
     return boost::assign::list_of("link-grammar")("parse");
 }
-
-const std::string LinkParser::Factory::DEFAULT_DICT_FILE
-    = "%ITSDATA%/%LANG%/4.0.dict";
 
 LatticeWorker* LinkParser::doCreateLatticeWorker(Lattice& lattice) {
     return new Worker(*this, lattice);
