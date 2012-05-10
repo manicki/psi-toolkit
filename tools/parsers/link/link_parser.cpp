@@ -47,7 +47,9 @@ boost::filesystem::path LinkParser::Factory::doGetFile() const {
 }
 
 std::list<std::list<std::string> > LinkParser::Factory::doRequiredLayerTags() {
-    return std::list<std::list<std::string> >();
+    return boost::assign::list_of(
+        boost::assign::list_of(std::string("segment"))
+    );
 }
 
 std::list<std::list<std::string> > LinkParser::Factory::doOptionalLayerTags() {
@@ -76,7 +78,7 @@ std::string LinkParser::doInfo() {
     return "link grammar parser";
 }
 
-LinkParser::LinkParser(std::string language) {
+LinkParser::LinkParser(std::string language) : langCode_(language) {
     adapter_ = dynamic_cast<LinkParserAdapterInterface*>(
         PluginManager::getInstance().createPluginAdapter("link-parser")
     );
@@ -120,7 +122,10 @@ bool LinkParser::isActive() {
 
 
 void LinkParser::parse(Lattice &lattice) {
-    LayerTagMask maskSegment = lattice.getLayerTagManager().getMask("segment");
+    LayerTagMask maskSegment = lattice.getLayerTagManager().getMaskWithLangCode(
+        "segment",
+        langCode_
+    );
     Lattice::EdgesSortedBySourceIterator ei(lattice, maskSegment);
     while (ei.hasNext()) {
         Lattice::EdgeDescriptor edge = ei.next();
@@ -138,9 +143,11 @@ void LinkParser::parse(Lattice &lattice) {
                     edgeDescription.end-edgeDescription.start
                 )
             );
-            LayerTagCollection tagParse = lattice.getLayerTagManager().createTagCollectionFromList(
-                boost::assign::list_of("link-grammar")("parse")
-            );
+            LayerTagCollection tagParse
+                = lattice.getLayerTagManager().createTagCollectionFromListWithLangCode(
+                    boost::assign::list_of("link-grammar")("parse"),
+                    langCode_
+                );
             Lattice::EdgeSequence::Builder builder(lattice);
             BOOST_FOREACH(int childNo, edgeDescription.children) {
                 builder.addEdge(addedEdges[childNo]);
