@@ -44,3 +44,21 @@ bool LinkParserPlugin::doCheckRequirementsWithOptionsUbuntu(
 bool LinkParserPlugin::areRequirementsDefinedForUbuntu() {
     return true;
 }
+
+
+bool LinkParserPlugin::doCheckRequirementsWithOptionsArchLinux(
+    const boost::program_options::variables_map& /*options*/) {
+
+    if (!isPluginActive()) {
+        getCurrentRequirementsChecker().showPackagesNotAvailable(
+            boost::assign::list_of
+                ("link-grammar"));
+        return false;
+    }
+
+    return true;
+}
+
+bool LinkParserPlugin::areRequirementsDefinedForArchLinux() {
+    return true;
+}

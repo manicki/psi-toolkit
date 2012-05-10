@@ -297,7 +297,7 @@ endif (USE_DJVU_READER)
 
 # Finds Link Grammar
 
-option(USE_LINK_GRAMMAR "Using link-parser" OFF)
+option(USE_LINK_GRAMMAR "Using link-parser" ON)
 message(STATUS "Using link-parser ${USE_LINK_GRAMMAR}")
 
 if (USE_LINK_GRAMMAR)
