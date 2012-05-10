@@ -72,7 +72,7 @@ std::list<std::list<std::string> > SrxSegmenter::Factory::doOptionalLayerTags() 
 
 std::list<std::string> SrxSegmenter::Factory::doProvidedLayerTags() {
     std::list<std::string> layerTags;
-    layerTags.push_back("sentence");
+    layerTags.push_back("segment");
     return layerTags;
 }
 
