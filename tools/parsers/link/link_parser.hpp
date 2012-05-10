@@ -63,6 +63,8 @@ private:
 
     LinkParserAdapterInterface * adapter_;
 
+    std::string langCode_;
+
 };
 
 
