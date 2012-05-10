@@ -14,6 +14,6 @@
 14 0006 30    has_a_...dog link-grammar,parse    has_a_little_cat_and_a_big_dog VP[3-13]
 15 0000 37    Alice_...og. frag,txt-reader       Alice_has_a_little_cat_and_a_big_dog. FRAG[]
 16 0000 37    Alice_...og. !en,lang-guesser,text Alice_has_a_little_cat_and_a_big_dog. TEXT[15]
-17 0000 37    Alice_has_a_little_cat_and_a_big_dog. segment Alice_has_a_little_cat_and_a_big_dog. sen
+17 0000 37    Alice_has_a_little_cat_and_a_big_dog. !en,segment Alice_has_a_little_cat_and_a_big_dog. sen
 18 0036 01    .            link-grammar,parse    .           .[]
 19 0000 37    Alice_...og. link-grammar,parse    Alice_has_a_little_cat_and_a_big_dog. S[2-14-18]
