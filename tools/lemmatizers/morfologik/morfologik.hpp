@@ -11,6 +11,7 @@
 #include "annotation_item_manager.hpp"
 #include "lemmatizer_output_iterator.hpp"
 #include "annotator_factory.hpp"
+#include "regexp.hpp"
 
 #include <map>
 #include <list>
@@ -82,7 +83,7 @@ private:
     std::string dictionary_;
     MorfologikTagsParser tagsParser_;
 
-    static std::map<boost::regex, std::string> BREAK_FORMS_RULES;
+    static std::list<std::pair<RegExp, std::string> > BREAK_FORMS_RULES;
     std::string breakForms_(std::string);
     bool keepOriginal_;
 
