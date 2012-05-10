@@ -29,11 +29,17 @@ public:
         virtual std::list<std::list<std::string> > doOptionalLayerTags();
 
         virtual std::list<std::string> doProvidedLayerTags();
-
-        static const std::string DEFAULT_DICT_FILE;
     };
 
-    LinkParser(std::string dictPath);
+    LinkParser(std::string language);
+
+    LinkParser(
+        std::string dictionaryName,
+        std::string postProcessFileName,
+        std::string constituentKnowledgeName,
+        std::string affixName
+    );
+
     ~LinkParser();
 
     LinkParserAdapterInterface * getAdapter();
