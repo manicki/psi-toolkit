@@ -16,25 +16,76 @@ Annotator* LinkParser::Factory::doCreateAnnotator(
     std::string lang = options["lang"].as<std::string>();
     LangSpecificProcessorFileFetcher fileFetcher(__FILE__, lang);
 
-    std::string dictPathString;
-    if (options.count("dict")) {
-        std::string dictFilename = options["dict"].as<std::string>();
-        if (!dictFilename.empty()) {
-            boost::filesystem::path dictPath = fileFetcher.getOneFile(dictFilename);
-            dictPathString = dictPath.string();
-            return new LinkParser(lang, dictPathString, "", "", "");
-        }
+    if (
+        !options.count("dict") &&
+        !options.count("knowledge") &&
+        !options.count("constituent-knowledge") &&
+        !options.count("affix")
+    ) {
+        return new LinkParser(lang);
     }
 
-    return new LinkParser(lang);
+    std::string dictPathString;
+    if (options.count("dict")) {
+        std::string dictFilename
+            = options["dict"].as<std::string>();
+        boost::filesystem::path dictPath
+            = fileFetcher.getOneFile(dictFilename).string();
+        dictPathString = dictPath.string();
+    }
+
+    std::string knowledgePathString;
+    if (options.count("knowledge")) {
+        std::string knowledgeFilename
+            = options["knowledge"].as<std::string>();
+        boost::filesystem::path knowledgePath
+            = fileFetcher.getOneFile(knowledgeFilename).string();
+        knowledgePathString = knowledgePath.string();
+    }
+
+    std::string constituentKnowledgePathString;
+    if (options.count("constituent-knowledge")) {
+        std::string constituentKnowledgeFilename
+            = options["constituent-knowledge"].as<std::string>();
+        boost::filesystem::path constituentKnowledgePath
+            = fileFetcher.getOneFile(constituentKnowledgeFilename).string();
+        constituentKnowledgePathString = constituentKnowledgePath.string();
+    }
+
+    std::string affixPathString;
+    if (options.count("affix")) {
+        std::string affixFilename
+            = options["affix"].as<std::string>();
+        boost::filesystem::path affixPath
+            = fileFetcher.getOneFile(affixFilename).string();
+        affixPathString = affixPath.string();
+    }
+
+    return new LinkParser(
+        lang,
+        dictPathString,
+        knowledgePathString,
+        constituentKnowledgePathString,
+        affixPathString
+    );
+
 }
 
 void LinkParser::Factory::doAddLanguageIndependentOptionsHandled(
     boost::program_options::options_description& optionsDescription) {
     optionsDescription.add_options()
         ("dict",
-        boost::program_options::value<std::string>()->default_value(""),
-        "dictionary file")
+        boost::program_options::value<std::string>(),
+        "dictionary file name")
+        ("knowledge",
+        boost::program_options::value<std::string>(),
+        "post process file name")
+        ("constituent-knowledge",
+        boost::program_options::value<std::string>(),
+        "constituent knowledge file name")
+        ("affix",
+        boost::program_options::value<std::string>(),
+        "affix file name")
         ;
 }
 
