@@ -1,0 +1,1 @@
+<S genders=""><NP genders="m1,f">Ala</NP> <VP genders="">ma</VP> <NP genders="m2,f">kota</NP></S>.
