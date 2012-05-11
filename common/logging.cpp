@@ -51,9 +51,13 @@ void PSILogger::setLoggingPriority(const std::string & priorityName) {
             log4cpp::Priority::getPriorityValue(priorityName);
         logger_category.setPriority(newPriority);
 
-    } catch (std::invalid_argument e) {
+    } catch (std::invalid_argument &) {
         ERROR("Unknown priority name: " << priorityName);
     }
+}
+
+log4cpp::Priority::Value PSILogger::getLoggingPriority() {
+    return logger_category.getPriority();
 }
 
 void PSILogger::setNewLoggerAppender_(log4cpp::Appender * appender) {
