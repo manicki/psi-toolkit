@@ -93,6 +93,15 @@ std::string LinkParser::Factory::doGetName() const {
     return "link-parser";
 }
 
+std::list<std::string> LinkParser::Factory::doGetAliases() {
+    return boost::assign::list_of<std::string>
+        (std::string("link-grammar"))
+        (std::string("link-grammar-parse"))
+        (std::string("link-grammar-parser"))
+        (std::string("link-parse"))
+    ;
+}
+
 boost::filesystem::path LinkParser::Factory::doGetFile() const {
     return __FILE__;
 }

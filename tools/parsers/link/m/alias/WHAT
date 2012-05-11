@@ -1,0 +1,1 @@
+txt-reader ! srx-segmenter --lang en ! link-grammar --lang en ! psi-writer
