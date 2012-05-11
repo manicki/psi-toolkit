@@ -4,6 +4,7 @@
 #include <cstring>
 
 #include "exceptions.hpp"
+#include "logging.hpp"
 
 
 LinkParserAdapterImpl::LinkParserAdapterImpl() : dictionary_(NULL), sentence_(NULL), number_(0) {
@@ -52,7 +53,8 @@ void LinkParserAdapterImpl::setDictionary(
 
 std::map<int, EdgeDescription> LinkParserAdapterImpl::parseSentence(std::string sentenceStr) {
     Parse_Options parseOptions = parse_options_create();
-    parse_options_set_verbosity(parseOptions, 0);
+    int verbosity = psi_logger.getLoggingPriority() / 100 - 4;
+    parse_options_set_verbosity(parseOptions, verbosity);
     freeSentence();
     sentence_ = sentence_create(sentenceStr.c_str(), dictionary_);
     if (!sentence_) {
