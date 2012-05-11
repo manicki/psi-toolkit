@@ -18,7 +18,7 @@ namespace poleng {
                 public:
                     RuleMatcher();
 //                    ~RuleMatcher();
-                    void applyRules(Lattice &lattice);
+                    void applyRules(Lattice &lattice, std::string langCode);
 
                     void setRules(RulesPtr aRules);
 
@@ -39,7 +39,7 @@ namespace poleng {
 
                     TagsetPtr tagset;
                     std::string generateSentenceString(Lattice &lattice,
-                            int startVertex = 0);
+                            std::string langCode, int startVertex = 0);
             };
 
             typedef boost::shared_ptr<RuleMatcher> RuleMatcherPtr;

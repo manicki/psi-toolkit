@@ -14,8 +14,8 @@ AddAction::AddAction(std::vector<Morphology> aInterpretations, std::string aBase
     init (aInterpretations, aBase, aTokenIndex);
 }
 
-bool AddAction::apply(Lattice &lattice, int matchedStartIndex,
-        RuleTokenSizes &ruleTokenSizes,
+bool AddAction::apply(Lattice &lattice, std::string langCode,
+        int matchedStartIndex, RuleTokenSizes &ruleTokenSizes,
         std::list<Lattice::EdgeSequence>&) {
     int count = ruleTokenSizes[tokenIndex - 1];
     if (count == 0) {
@@ -25,17 +25,17 @@ bool AddAction::apply(Lattice &lattice, int matchedStartIndex,
     int before = util::getAddActionParams(ruleTokenSizes, tokenIndex);
 
     Lattice::VertexDescriptor startVertex = lattice::getVertex(lattice,
-            before, matchedStartIndex);
+            langCode, before, matchedStartIndex);
     Lattice::VertexDescriptor endVertex = lattice::getVertex(lattice,
-            before + count - 1, matchedStartIndex);
+            langCode, before + count - 1, matchedStartIndex);
 
-    addEdges(lattice, startVertex, endVertex);
+    addEdges(lattice, langCode, startVertex, endVertex);
 
     return true;
 }
 
-bool AddAction::test(Lattice &lattice, int matchedStartIndex,
-        RuleTokenSizes &ruleTokenSizes,
+bool AddAction::test(Lattice &lattice, std::string langCode,
+        int matchedStartIndex, RuleTokenSizes &ruleTokenSizes,
         std::list<Lattice::EdgeSequence>&) {
 
     int count = ruleTokenSizes[tokenIndex - 1];
@@ -49,10 +49,10 @@ bool AddAction::test(Lattice &lattice, int matchedStartIndex,
     bool ret = true; //@todo: moze by tak zmienic ret w akcjach na cos w stylu to_apply
 
     Lattice::VertexDescriptor startVertex = lattice::getVertex(lattice,
-            before, matchedStartIndex);
+            langCode, before, matchedStartIndex);
     Lattice::VertexDescriptor endVertex = lattice::getVertex(lattice,
-            before + count - 1, matchedStartIndex);
-    ret = checkInterpretationsToAdd(lattice, startVertex, endVertex);
+            langCode, before + count - 1, matchedStartIndex);
+    ret = checkInterpretationsToAdd(lattice, langCode, startVertex, endVertex);
 
     return ret;
 }
@@ -68,13 +68,13 @@ void AddAction::init(std::vector<Morphology> aInterpretations, std::string aBase
     //check whether the interpretation(s) (with the given or all base forms
     //of the token) which is/are to be added is/are not already in token's
     //morphological features
-bool AddAction::checkInterpretationsToAdd(Lattice &lattice,
+bool AddAction::checkInterpretationsToAdd(Lattice &lattice, std::string langCode,
         Lattice::VertexDescriptor startVertex,
         Lattice::VertexDescriptor endVertex) {
     bool ret = true;
     bool allBaseForms = (base == "[^<>]+");
     std::list<Lattice::EdgeSequence> edgeSequences = lattice::getEdgesRange(
-            lattice, startVertex, endVertex);
+            lattice, langCode, startVertex, endVertex);
     for (std::list<Lattice::EdgeSequence>::iterator
             sequenceIt = edgeSequences.begin();
             sequenceIt != edgeSequences.end(); ++ sequenceIt) {
@@ -111,11 +111,12 @@ bool AddAction::checkInterpretationsToAdd(Lattice &lattice,
     return ret;
 }
 
-void AddAction::addEdges(Lattice &lattice, Lattice::VertexDescriptor startVertex,
+void AddAction::addEdges(Lattice &lattice, std::string langCode,
+        Lattice::VertexDescriptor startVertex,
         Lattice::VertexDescriptor endVertex) {
     bool allBaseForms = (base == "[^<>]+");
     std::list<Lattice::EdgeSequence> edgeSequences = lattice::getEdgesRange(
-            lattice, startVertex, endVertex);
+            lattice, langCode, startVertex, endVertex);
     for (std::list<Lattice::EdgeSequence>::iterator
             sequenceIt = edgeSequences.begin();
             sequenceIt != edgeSequences.end(); ++ sequenceIt) {
@@ -128,13 +129,13 @@ void AddAction::addEdges(Lattice &lattice, Lattice::VertexDescriptor startVertex
             if (! allBaseForms) {
                 std::vector<std::string> baseForms;
                 baseForms.push_back(base);
-                lattice::addNewVariantEdges(lattice, ed,
+                lattice::addNewVariantEdges(lattice, langCode, ed,
                         baseForms, interpretations);
             } else {
                 std::vector<std::string> baseForms;
                 std::string baseForm = lattice::getBase(lattice, ed);
                 baseForms.push_back(baseForm);
-                lattice::addNewVariantEdges(lattice, ed,
+                lattice::addNewVariantEdges(lattice, langCode, ed,
                         baseForms, interpretations);
             }
         }

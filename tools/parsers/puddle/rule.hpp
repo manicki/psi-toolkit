@@ -46,11 +46,11 @@ class Rule {
 
         int matchPattern(std::string &sentenceString,
                 int &afterIndex, std::vector<StringPiece> &match);
-        bool test(std::string &sentenceString, Lattice &lattice,
+        bool test(std::string &sentenceString, Lattice &lattice, std::string langCode,
                 int matchedStartIndex, std::vector<StringPiece> &match,
                 RuleTokenSizes &ruleTokenSizes,
                 std::list<Lattice::EdgeSequence> &rulePartitions);
-        bool apply(std::string &sentenceString, Lattice &lattice,
+        bool apply(std::string &sentenceString, Lattice &lattice, std::string langCode,
                 int matchedStartIndex, RuleTokenSizes &ruleTokenSizes,
                 std::list<Lattice::EdgeSequence> &rulePartitions);
 
@@ -104,8 +104,8 @@ class Rule {
         std::string beforeMatch;
         int countTokensMatched(std::string matched);
         std::list<Lattice::EdgeSequence> generateRulePartitions(
-                Lattice &lattice, int leftBound, int rightBound,
-                int matchedStartIndex);
+                Lattice &lattice, std::string langCode, int leftBound,
+                int rightBound, int matchedStartIndex);
         bool partitionMatchesPattern(Lattice &lattice,
                 Lattice::EdgeSequence partition);
 

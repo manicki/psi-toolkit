@@ -18,8 +18,8 @@ GroupAction::GroupAction(std::string aGroup, unsigned int aStart,
     init(aGroup, aStart, aEnd, aHead, aRuleName);
 }
 
-bool GroupAction::apply(Lattice &lattice, int matchedStartIndex,
-        RuleTokenSizes &ruleTokenSizes,
+bool GroupAction::apply(Lattice &lattice, std::string langCode,
+        int matchedStartIndex, RuleTokenSizes &ruleTokenSizes,
         std::list<Lattice::EdgeSequence> &rulePartitions) {
 
     int realStart;
@@ -34,27 +34,27 @@ bool GroupAction::apply(Lattice &lattice, int matchedStartIndex,
     }
 
     Lattice::VertexDescriptor startVertex = lattice::getVertex(
-            lattice, realStart, matchedStartIndex);
+            lattice, langCode, realStart, matchedStartIndex);
     //Lattice::VertexDescriptor startVertex = matchedStartIndex + realStart;
     ////@todo: rozwiazanie tymczasowe. nie uwzglednia to chyba lewego kontekstu
     //Lattice::VertexDescriptor headVertex = lattice::getVertex(
     //        lattice, matchedStartIndex + realHead);
     Lattice::VertexDescriptor headVertex = lattice::getVertex(
-            lattice, realHead, matchedStartIndex);
+            lattice, langCode, realHead, matchedStartIndex);
     //Lattice::VertexDescriptor headVertex = matchedStartIndex + realHead;
     ////@todo: rozwiazanie tymczasowe. nie uwzglednia to chyba lewego kontekstu
     //Lattice::VertexDescriptor endVertex = lattice::getVertex(
     //        lattice, matchedStartIndex + realEnd);
     Lattice::VertexDescriptor endVertex = lattice::getVertex(
-            lattice, realEnd, matchedStartIndex);
+            lattice, langCode, realEnd, matchedStartIndex);
     //Lattice::VertexDescriptor endVertex = matchedStartIndex + realEnd;
     ////@todo: rozwiazanie tymczasowe. nie uwzglednia to chyba lewego kontekstu
     std::list<Lattice::EdgeDescriptor> startEdges = lattice::getTopEdges(
-            lattice, startVertex);
+            lattice, langCode, startVertex);
     std::list<Lattice::EdgeDescriptor> headEdges = lattice::getTopEdges(
-            lattice, headVertex);
+            lattice, langCode, headVertex);
     std::list<Lattice::EdgeDescriptor> endEdges = lattice::getTopEdges(
-            lattice, endVertex);
+            lattice, langCode, endVertex);
     if (startEdges.empty() || headEdges.empty() || endEdges.empty()) {
         return false;
     }
@@ -65,6 +65,7 @@ bool GroupAction::apply(Lattice &lattice, int matchedStartIndex,
     //int headEdgeIndex = realHead - realStart
     lattice::addParseEdges(
             lattice,
+            langCode,
             startEdges,
             endEdges,
             this->group,
@@ -76,7 +77,7 @@ bool GroupAction::apply(Lattice &lattice, int matchedStartIndex,
     return true;
 }
 
-bool GroupAction::test(Lattice &lattice, int,
+bool GroupAction::test(Lattice &lattice, std::string, int,
         RuleTokenSizes &ruleTokenSizes,
         std::list<Lattice::EdgeSequence>&) {
     if ( ( (size_t) lattice.getLastVertex() ) < head) {

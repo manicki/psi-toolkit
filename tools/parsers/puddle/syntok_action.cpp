@@ -21,21 +21,21 @@ SyntokAction::SyntokAction(int aStart, int aEnd, std::vector<int> aTokenIndices,
 //NOWOSC: wczesniej bylo, ze albo dawaj krawedz group albo nic. teraz musi byc krawedz,
 //jak graf to jedyna struktura. ewentualnei mozna dac na koniec opcje,
 //wywal syntoki z grafu, przeliczyc reszte grafu
-bool SyntokAction::apply(Lattice &lattice, int matchedStartIndex,
-        RuleTokenSizes &ruleTokenSizes,
+bool SyntokAction::apply(Lattice &lattice, std::string langCode,
+        int matchedStartIndex, RuleTokenSizes &ruleTokenSizes,
         std::list<Lattice::EdgeSequence> &rulePartitions) {
     int realStart;
     int realEnd;
     util::getSyntokActionParams(ruleTokenSizes, start, end, realStart, realEnd);
 
     Lattice::VertexDescriptor startVertex = lattice::getVertex(
-            lattice, realStart, matchedStartIndex);
+            lattice, langCode, realStart, matchedStartIndex);
     Lattice::VertexDescriptor endVertex = lattice::getVertex(
-            lattice, realEnd, matchedStartIndex);
+            lattice, langCode, realEnd, matchedStartIndex);
     std::list<Lattice::EdgeDescriptor> startEdges = lattice::getTopEdges(
-            lattice, startVertex);
+            lattice, langCode, startVertex);
     std::list<Lattice::EdgeDescriptor> endEdges = lattice::getTopEdges(
-            lattice, endVertex);
+            lattice, langCode, endVertex);
     if (startEdges.empty() || endEdges.empty()) {
         return false;
     }
@@ -52,6 +52,7 @@ bool SyntokAction::apply(Lattice &lattice, int matchedStartIndex,
     }
     lattice::addSyntokEdges(
             lattice,
+            langCode,
             startEdges,
             endEdges,
             syntokCategory,
@@ -63,7 +64,7 @@ bool SyntokAction::apply(Lattice &lattice, int matchedStartIndex,
     return true;
 }
 
-bool SyntokAction::test(Lattice &, int,
+bool SyntokAction::test(Lattice &, std::string, int,
         RuleTokenSizes &ruleTokenSizes,
         std::list<Lattice::EdgeSequence>&) {
     for (std::vector<int>::iterator sizeIt = ruleTokenSizes.begin();

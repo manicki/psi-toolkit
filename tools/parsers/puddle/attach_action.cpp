@@ -17,8 +17,8 @@ AttachAction::AttachAction(std::string aGroup, int aStart, int aEnd, int aHead,
     init(aGroup, aStart, aEnd, aHead, aRuleName);
 }
 
-bool AttachAction::apply(Lattice &lattice, int matchedStartIndex,
-        RuleTokenSizes &ruleTokenSizes,
+bool AttachAction::apply(Lattice &lattice, std::string langCode,
+        int matchedStartIndex, RuleTokenSizes &ruleTokenSizes,
         std::list<Lattice::EdgeSequence> &rulePartitions) {
     int realStart;
     int realEnd;
@@ -32,24 +32,25 @@ bool AttachAction::apply(Lattice &lattice, int matchedStartIndex,
     }
 
     Lattice::VertexDescriptor startVertex = lattice::getVertex(
-            lattice, realStart, matchedStartIndex);
+            lattice, langCode, realStart, matchedStartIndex);
     Lattice::VertexDescriptor headVertex = lattice::getVertex(
-            lattice, realHead, matchedStartIndex);
+            lattice, langCode, realHead, matchedStartIndex);
     Lattice::VertexDescriptor endVertex = lattice::getVertex(
-            lattice, realEnd, matchedStartIndex);
-    lattice::removeParseEdges(lattice, headVertex, headVertex + 1);
+            lattice, langCode, realEnd, matchedStartIndex);
+    lattice::removeParseEdges(lattice, langCode, headVertex, headVertex + 1);
     std::list<Lattice::EdgeDescriptor> startEdges = lattice::getTopEdges(
-            lattice, startVertex);
+            lattice, langCode, startVertex);
     std::list<Lattice::EdgeDescriptor> headEdges = lattice::getTopEdges(
-            lattice, headVertex);
+            lattice, langCode, headVertex);
     std::list<Lattice::EdgeDescriptor> endEdges = lattice::getTopEdges(
-            lattice, endVertex);
+            lattice, langCode, endVertex);
     if (startEdges.empty() || headEdges.empty() || endEdges.empty()) {
         return false;
     }
-    rulePartitions =  lattice::getEdgesRange(lattice, startVertex, endVertex);
+    rulePartitions =  lattice::getEdgesRange(lattice, langCode, startVertex, endVertex);
     lattice::addParseEdges(
             lattice,
+            langCode,
             startEdges,
             endEdges,
             this->group,
@@ -60,7 +61,7 @@ bool AttachAction::apply(Lattice &lattice, int matchedStartIndex,
     return true;
 }
 
-bool AttachAction::test(Lattice &lattice, int,
+bool AttachAction::test(Lattice &lattice, std::string, int,
         RuleTokenSizes &ruleTokenSizes,
         std::list<Lattice::EdgeSequence>&) {
     if ( ( (size_t)lattice.getLastVertex() ) < head) {

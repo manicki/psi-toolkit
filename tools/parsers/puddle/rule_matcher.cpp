@@ -16,10 +16,10 @@ void RuleMatcher::setRules(RulesPtr aRules) {
     rules = aRules;
 }
 
-void RuleMatcher::applyRules(Lattice &lattice) {
+void RuleMatcher::applyRules(Lattice &lattice, std::string langCode) {
     for (Rules::iterator ruleIt = rules->begin(); ruleIt != rules->end();
             ++ ruleIt) {
-        std::string sentenceString = generateSentenceString(lattice);
+        std::string sentenceString = generateSentenceString(lattice, langCode);
         int matchedStartIndex;
         int afterIndex = 0;
         std::vector<StringPiece> match;
@@ -30,16 +30,16 @@ void RuleMatcher::applyRules(Lattice &lattice) {
             RuleTokenSizes ruleTokenSizes;
             std::list<Lattice::EdgeSequence> rulePartitions;
             std::string oldSentenceString = sentenceString;
-            if ( (*ruleIt)->test(sentenceString, lattice, matchedStartIndex,
+            if ( (*ruleIt)->test(sentenceString, lattice, langCode, matchedStartIndex,
                         match, ruleTokenSizes, rulePartitions) ) {
-                if ((*ruleIt)->apply(sentenceString, lattice, matchedStartIndex,
+                if ((*ruleIt)->apply(sentenceString, lattice, langCode, matchedStartIndex,
                             ruleTokenSizes, rulePartitions) ) {
-                    sentenceString = generateSentenceString(lattice,
+                    sentenceString = generateSentenceString(lattice, langCode,
                             matchedStartIndex);
                     structureChanged = true;
                 }
             }
-            tmpSentenceString = generateSentenceString(lattice,
+            tmpSentenceString = generateSentenceString(lattice, langCode,
                     afterIndex);
             if ((*ruleIt)->getRepeat()) {
                 if (oldSentenceString != sentenceString)
@@ -111,7 +111,8 @@ void RuleMatcher::addPosEdges(Lattice &lattice) {
     }
 }
 
-std::string RuleMatcher::generateSentenceString(Lattice &lattice, int startVertex) {
+std::string RuleMatcher::generateSentenceString(Lattice &lattice,
+        std::string langCode, int startVertex) {
     std::stringstream ss;
     if (startVertex == 0)
         ss << "<<s<0<0<sb<>";
@@ -119,7 +120,7 @@ std::string RuleMatcher::generateSentenceString(Lattice &lattice, int startVerte
     Lattice::VertexDescriptor vertex = lattice.getVertexForRawCharIndex(startVertex);
     while (vertex < lattice.getLastVertex() ) {
         std::list<Lattice::EdgeDescriptor> edges = lattice::getTopEdges(
-                lattice, vertex);
+                lattice, langCode, vertex);
 
         if (edges.empty()) {
             vertex ++;

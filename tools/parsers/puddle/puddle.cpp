@@ -46,7 +46,7 @@ namespace puddle {
         } else {
             throw PuddleNoRulesException("No rules loaded");
         }
-        Puddle *puddle = new Puddle(tagset, rules);
+        Puddle *puddle = new Puddle(tagset, rules, lang);
 
         return puddle;
     }
@@ -107,14 +107,10 @@ namespace puddle {
         return "puddle shallow parser";
     }
 
-
-Puddle::Puddle() {
-    initProperties();
-}
-
-Puddle::Puddle(TagsetPtr tagset_, RulesPtr rules_) {
+Puddle::Puddle(TagsetPtr tagset_, RulesPtr rules_, std::string langCode_) {
     initProperties();
 
+    this->langCode = langCode_;
     this->tagset = tagset_;
 #if _WITH_BONSAI_PARSEGRAPH
     describe = tagset_->containsDesc();
@@ -144,9 +140,9 @@ void Puddle::setRules(bonsai::puddle::RulesPtr rules_) {
 }
 
 bool Puddle::parse(Lattice &lattice) {
-    ruleMatcher->applyRules(lattice);
+    ruleMatcher->applyRules(lattice, langCode);
 #if _WITH_BONSAI_PARSEGRAPH
-    ParseGraphPtr outputGraph = lattice::convertToBonsaiGraph(lattice);
+    ParseGraphPtr outputGraph = lattice::convertToBonsaiGraph(lattice, langCode);
     std::cerr << outputGraph->write_graphviz() << std::endl;
 #endif
     return true;

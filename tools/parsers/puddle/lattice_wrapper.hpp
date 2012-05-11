@@ -21,24 +21,29 @@ namespace poleng {
             namespace lattice {
 
 #if _WITH_BONSAI_PARSEGRAPH
-                    ParseGraphPtr convertToBonsaiGraph(Lattice &lattice);
+                    ParseGraphPtr convertToBonsaiGraph(Lattice &lattice,
+                            std::string langCode);
 #endif
                     Lattice::VertexDescriptor getVertex(Lattice &lattice,
                             int edgeIndex, LayerTagMask mask, int offset = 0);
                     Lattice::VertexDescriptor getVertex(Lattice &lattice,
-                            int edgeIndex, int offset = 0);
+                            std::string langCode, int edgeIndex,
+                            int offset = 0);
                     std::list<Lattice::EdgeDescriptor> getTopEdges(Lattice &lattice,
                             Lattice::VertexDescriptor start, LayerTagMask mask);
                     std::list<Lattice::EdgeDescriptor> getTopEdges(Lattice &lattice,
+                            std::string langCode,
                             Lattice::VertexDescriptor start);
                     std::list<Lattice::EdgeSequence> getEdgesRange(Lattice &lattice,
                             Lattice::VertexDescriptor start,
                             Lattice::VertexDescriptor end,
                             LayerTagMask mask);
                     std::list<Lattice::EdgeSequence> getEdgesRange(Lattice &lattice,
+                            std::string langCode,
                             Lattice::VertexDescriptor start,
                             Lattice::VertexDescriptor end);
                     void addParseEdges(Lattice &lattice,
+                            std::string langCode,
                             std::list<Lattice::EdgeDescriptor> startEdges,
                             std::list<Lattice::EdgeDescriptor> endEdges,
                             std::string &parseCategory,
@@ -47,6 +52,7 @@ namespace poleng {
                             int headEdgeIndex,
                             Lattice::Score score = 0.0);
                     void addSyntokEdges(Lattice &lattice,
+                            std::string langCode,
                             std::list<Lattice::EdgeDescriptor> startEdges,
                             std::list<Lattice::EdgeDescriptor> endEdges,
                             std::string &syntokCategory,
@@ -57,13 +63,16 @@ namespace poleng {
                             LayerTagCollection tags,
                             Lattice::Score score = 0.0);
                     void addNewVariantEdges(Lattice &lattice,
+                            std::string langCode,
                             Lattice::EdgeDescriptor edge,
                             std::vector<std::string> baseForms,
                             std::vector<Morphology> morphology);
                     void removeParseEdges(Lattice &lattice,
+                            std::string langCode,
                             Lattice::VertexDescriptor start,
                             Lattice::VertexDescriptor end);
                     void deleteEdges(Lattice &lattice,
+                            std::string langCode,
                             Lattice::VertexDescriptor vertex, int count,
                             DeleteConditions conditions);
                     std::string getBase(Lattice &lattice,
@@ -76,10 +85,10 @@ namespace poleng {
                             Lattice &lattice, Lattice::EdgeDescriptor edge);
                     Lattice::EdgeDescriptor getLemmaEdge(
                             Lattice &lattice, Lattice::EdgeDescriptor edge);
-                    bool matchLemmaEdge(Lattice &lattice,
+                    bool matchLemmaEdge(Lattice &lattice, std::string langCode,
                             Lattice::VertexDescriptor vertex,
                             std::string lemma);
-                    bool matchLexemeEdge(Lattice &lattice,
+                    bool matchLexemeEdge(Lattice &lattice, std::string langCode,
                             Lattice::VertexDescriptor vertex,
                             std::string partOfSpeech, std::string lexeme);
                     bool matchEdge(Lattice &lattice,
@@ -87,9 +96,11 @@ namespace poleng {
                             LayerTagMask mask,
                             std::string category, std::string text);
                     Lattice::EdgeDescriptor getLemmaEdge(Lattice &lattice,
+                            std::string langCode,
                             Lattice::VertexDescriptor vertex,
                             std::string lemma);
                     Lattice::EdgeDescriptor getLexemeEdge(Lattice &lattice,
+                            std::string langCode,
                             Lattice::VertexDescriptor vertex,
                             std::string partOfSpeech, std::string lexeme);
                     Lattice::EdgeDescriptor getEdge(Lattice &lattice,

@@ -46,22 +46,23 @@ namespace bonsai {
 #endif
        }
 
-bool Rule::apply(std::string &, Lattice &lattice, int matchedStartIndex,
-        RuleTokenSizes &ruleTokenSizes,
+bool Rule::apply(std::string &, Lattice &lattice, std::string langCode,
+        int matchedStartIndex, RuleTokenSizes &ruleTokenSizes,
         std::list<Lattice::EdgeSequence> &rulePartitions) {
     bool ret = false;
     for (Actions::iterator actionIt = actions->begin();
             actionIt != actions->end(); ++ actionIt) {
-        if ( (*actionIt)->apply(lattice, matchedStartIndex, ruleTokenSizes,
-                    rulePartitions) ) {
+        if ( (*actionIt)->apply(lattice, langCode, matchedStartIndex,
+                    ruleTokenSizes, rulePartitions) ) {
             ret = true;
         }
     }
     return ret;
 }
 
-bool Rule::test(std::string &, Lattice &lattice, int matchedStartIndex,
-        std::vector<StringPiece> &match, RuleTokenSizes &ruleTokenSizes,
+bool Rule::test(std::string &, Lattice &lattice, std::string langCode,
+        int matchedStartIndex, std::vector<StringPiece> &match,
+        RuleTokenSizes &ruleTokenSizes,
         std::list<Lattice::EdgeSequence> &rulePartitions) {
 
     ruleTokenSizes.clear();
@@ -76,13 +77,13 @@ bool Rule::test(std::string &, Lattice &lattice, int matchedStartIndex,
     if (! util::getRuleBoundaries(ruleTokenSizes, leftCount, matchWidth,
                 leftBound, rightBound))
         return false;
-    rulePartitions = generateRulePartitions(lattice, leftBound, rightBound,
-            matchedStartIndex);
+    rulePartitions = generateRulePartitions(lattice, langCode, leftBound,
+            rightBound, matchedStartIndex);
 
     for (Actions::iterator actionIt = actions->begin();
             actionIt != actions->end(); ++ actionIt) {
-        if ( (*actionIt)->test(lattice, matchedStartIndex, ruleTokenSizes,
-                    rulePartitions)
+        if ( (*actionIt)->test(lattice, langCode, matchedStartIndex,
+                    ruleTokenSizes, rulePartitions)
                 == false) {
             int limit;
             int lastIndex = leftCount + matchCount - 1;
@@ -104,18 +105,19 @@ bool Rule::test(std::string &, Lattice &lattice, int matchedStartIndex,
 }
 
 std::list<Lattice::EdgeSequence> Rule::generateRulePartitions(Lattice &lattice,
-        int leftBound, int rightBound, int matchedStartIndex) {
+        std::string langCode, int leftBound, int rightBound,
+        int matchedStartIndex) {
     Lattice::VertexDescriptor startVertex = lattice::getVertex(
-            lattice, leftBound, matchedStartIndex);
+            lattice, langCode, leftBound, matchedStartIndex);
     Lattice::VertexDescriptor endVertex = lattice::getVertex(
-            lattice, rightBound, matchedStartIndex);
+            lattice, langCode, rightBound, matchedStartIndex);
     if (! this->autoDelete) {
         std::list<Lattice::EdgeSequence> rulePartitions = lattice::getEdgesRange(lattice,
-                startVertex, endVertex);
+                langCode, startVertex, endVertex);
         return rulePartitions;
     } else {
         std::list<Lattice::EdgeSequence> allPartitions = lattice::getEdgesRange(lattice,
-                startVertex, endVertex);
+                langCode, startVertex, endVertex);
         std::list<Lattice::EdgeSequence> rulePartitions;
         for (std::list<Lattice::EdgeSequence>::iterator partIt =
                 allPartitions.begin();
