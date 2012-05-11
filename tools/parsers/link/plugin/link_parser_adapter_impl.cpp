@@ -3,6 +3,8 @@
 #include <clocale>
 #include <cstring>
 
+#include "exceptions.hpp"
+
 
 LinkParserAdapterImpl::LinkParserAdapterImpl() : dictionary_(NULL), sentence_(NULL), number_(0) {
     setlocale(LC_ALL, "");
@@ -18,6 +20,9 @@ LinkParserAdapterImpl::~LinkParserAdapterImpl() {
 void LinkParserAdapterImpl::setDictionary(std::string language) {
     freeDictionary();
     dictionary_ = dictionary_create_lang(language.c_str());
+    if (!dictionary_) {
+        throw ParserException("Could not create dictionary for language: " + language);
+    }
 }
 
 
@@ -34,6 +39,14 @@ void LinkParserAdapterImpl::setDictionary(
         constituentKnowledgeName.empty() ? NULL : constituentKnowledgeName.c_str(),
         affixName.empty() ? NULL : affixName.c_str()
     );
+    if (!dictionary_) {
+        throw ParserException(
+            "Could not create dictionary from files: " + dictionaryName +
+            ", " + postProcessFileName +
+            ", " + constituentKnowledgeName +
+            ", " + affixName
+        );
+    }
 }
 
 
@@ -41,6 +54,9 @@ std::map<int, EdgeDescription> LinkParserAdapterImpl::parseSentence(std::string 
     Parse_Options parseOptions = parse_options_create();
     freeSentence();
     sentence_ = sentence_create(sentenceStr.c_str(), dictionary_);
+    if (!sentence_) {
+        throw ParserException("Could not process sentence: " + sentenceStr);
+    }
     if (sentence_parse(sentence_, parseOptions)) {
 
         size_t pos = 0;
