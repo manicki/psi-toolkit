@@ -55,6 +55,9 @@ std::map<int, EdgeDescription> LinkParserAdapterImpl::parseSentence(std::string 
     Parse_Options parseOptions = parse_options_create();
     int verbosity = psi_logger.getLoggingPriority() / 100 - 4;
     parse_options_set_verbosity(parseOptions, verbosity);
+    starts_.clear();
+    ends_.clear();
+    edgeDescriptions_.clear();
     freeSentence();
     sentence_ = sentence_create(sentenceStr.c_str(), dictionary_);
     if (!sentence_) {
