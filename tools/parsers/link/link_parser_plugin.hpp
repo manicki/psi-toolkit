@@ -20,6 +20,12 @@ private:
     );
 
     virtual bool areRequirementsDefinedForUbuntu();
+
+    virtual bool doCheckRequirementsWithOptionsArchLinux(
+        const boost::program_options::variables_map& options
+    );
+
+    virtual bool areRequirementsDefinedForArchLinux();
 };
 
 

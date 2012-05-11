@@ -5,6 +5,7 @@
 #include <boost/program_options.hpp>
 
 #include "annotator.hpp"
+#include "annotator_factory.hpp"
 #include "language_dependent_annotator_factory.hpp"
 #include "lang_specific_processor_file_fetcher.hpp"
 #include "plugin/link_parser_adapter_interface.hpp"
@@ -29,15 +30,28 @@ public:
         virtual std::list<std::list<std::string> > doOptionalLayerTags();
 
         virtual std::list<std::string> doProvidedLayerTags();
-
-        static const std::string DEFAULT_DICT_FILE;
     };
 
-    LinkParser(std::string dictPath);
+    LinkParser(std::string language);
+
+    LinkParser(
+        std::string language,
+        std::string dictionaryName,
+        std::string postProcessFileName,
+        std::string constituentKnowledgeName,
+        std::string affixName
+    );
+
     ~LinkParser();
 
     LinkParserAdapterInterface * getAdapter();
     bool isActive();
+
+    static AnnotatorFactory::LanguagesHandling languagesHandling(
+        const boost::program_options::variables_map& options);
+
+    static std::list<std::string> languagesHandled(
+        const boost::program_options::variables_map& options);
 
     void parse(Lattice &lattice);
 
@@ -56,6 +70,8 @@ private:
     virtual std::string doInfo();
 
     LinkParserAdapterInterface * adapter_;
+
+    std::string langCode_;
 
 };
 

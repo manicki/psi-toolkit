@@ -12,9 +12,9 @@ const std::string Morfologik::TAG_SEPARATORS = "+,|";
 const std::vector<std::string> Morfologik::DICTIONARIES = boost::assign::list_of
     ("morfologik")("morfeusz")("combined");
 
-std::map<boost::regex, std::string> Morfologik::BREAK_FORMS_RULES = boost::assign::map_list_of
-    (boost::regex(":m:"), std::string(":m1.m2.m3:"))
-    (boost::regex(":m$"), std::string(":m1.m2.m3"))
+std::list<std::pair<RegExp, std::string> > Morfologik::BREAK_FORMS_RULES = boost::assign::list_of
+    (std::pair<RegExp, std::string>(RegExp(":m:"), std::string(":m1.m2.m3:")))
+    (std::pair<RegExp, std::string>(RegExp(":m$"), std::string(":m1.m2.m3")))
     ;
 
 Morfologik::Morfologik(const boost::program_options::variables_map& options)
@@ -320,11 +320,10 @@ std::multimap<std::string, std::vector<std::string> > Morfologik::stem(const std
 }
 
 std::string Morfologik::breakForms_(std::string tags) {
-    std::map<boost::regex, std::string>::iterator it;
+    std::list<std::pair<RegExp, std::string> >::iterator it;
 
     for (it = BREAK_FORMS_RULES.begin(); it != BREAK_FORMS_RULES.end(); ++it) {
-        tags = boost::regex_replace(tags, it->first, it->second,
-            boost::match_default | boost::format_all);
+        RegExp::GlobalReplace(&tags, it->first, it->second);
     }
 
     return tags;

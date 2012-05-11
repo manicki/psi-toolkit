@@ -19,18 +19,21 @@ Annotator* LinkParser::Factory::doCreateAnnotator(
     std::string dictPathString;
     if (options.count("dict")) {
         std::string dictFilename = options["dict"].as<std::string>();
-        boost::filesystem::path dictPath = fileFetcher.getOneFile(dictFilename);
-        dictPathString = dictPath.string();
+        if (!dictFilename.empty()) {
+            boost::filesystem::path dictPath = fileFetcher.getOneFile(dictFilename);
+            dictPathString = dictPath.string();
+            return new LinkParser(lang, dictPathString, "", "", "");
+        }
     }
 
-    return new LinkParser(dictPathString);
+    return new LinkParser(lang);
 }
 
 void LinkParser::Factory::doAddLanguageIndependentOptionsHandled(
     boost::program_options::options_description& optionsDescription) {
     optionsDescription.add_options()
         ("dict",
-        boost::program_options::value<std::string>()->default_value(DEFAULT_DICT_FILE),
+        boost::program_options::value<std::string>()->default_value(""),
         "dictionary file")
         ;
 }
@@ -44,7 +47,9 @@ boost::filesystem::path LinkParser::Factory::doGetFile() const {
 }
 
 std::list<std::list<std::string> > LinkParser::Factory::doRequiredLayerTags() {
-    return std::list<std::list<std::string> >();
+    return boost::assign::list_of(
+        boost::assign::list_of(std::string("segment"))
+    );
 }
 
 std::list<std::list<std::string> > LinkParser::Factory::doOptionalLayerTags() {
@@ -54,9 +59,6 @@ std::list<std::list<std::string> > LinkParser::Factory::doOptionalLayerTags() {
 std::list<std::string> LinkParser::Factory::doProvidedLayerTags() {
     return boost::assign::list_of("link-grammar")("parse");
 }
-
-const std::string LinkParser::Factory::DEFAULT_DICT_FILE
-    = "%ITSDATA%/%LANG%/4.0.dict";
 
 LatticeWorker* LinkParser::doCreateLatticeWorker(Lattice& lattice) {
     return new Worker(*this, lattice);
@@ -76,11 +78,29 @@ std::string LinkParser::doInfo() {
     return "link grammar parser";
 }
 
-LinkParser::LinkParser(std::string dictPath) {
+LinkParser::LinkParser(std::string language) : langCode_(language) {
     adapter_ = dynamic_cast<LinkParserAdapterInterface*>(
         PluginManager::getInstance().createPluginAdapter("link-parser")
     );
-    adapter_->setDictionary(dictPath);
+    adapter_->setDictionary(language);
+}
+
+LinkParser::LinkParser(
+    std::string language,
+    std::string dictionaryName,
+    std::string postProcessFileName,
+    std::string constituentKnowledgeName,
+    std::string affixName
+) : langCode_(language) {
+    adapter_ = dynamic_cast<LinkParserAdapterInterface*>(
+        PluginManager::getInstance().createPluginAdapter("link-parser")
+    );
+    adapter_->setDictionary(
+        dictionaryName,
+        postProcessFileName,
+        constituentKnowledgeName,
+        affixName
+    );
 }
 
 LinkParser::~LinkParser() {
@@ -102,15 +122,31 @@ bool LinkParser::isActive() {
 }
 
 
+AnnotatorFactory::LanguagesHandling LinkParser::languagesHandling(
+    const boost::program_options::variables_map& /*options*/) {
+    return AnnotatorFactory::LANGUAGE_DEPENDENT;
+}
+
+std::list<std::string> LinkParser::languagesHandled(
+    const boost::program_options::variables_map& /*options*/) {
+    return boost::assign::list_of(std::string("en"))(std::string("lt"));
+}
+
+
 void LinkParser::parse(Lattice &lattice) {
-    LayerTagMask maskSegment = lattice.getLayerTagManager().getMask("segment");
+    LayerTagMask maskSegment = lattice.getLayerTagManager().getMaskWithLangCode(
+        "segment",
+        langCode_
+    );
     Lattice::EdgesSortedBySourceIterator ei(lattice, maskSegment);
     while (ei.hasNext()) {
         Lattice::EdgeDescriptor edge = ei.next();
-        std::vector<EdgeDescription> parsingResult
+        std::map<int, EdgeDescription> parsingResult
             = adapter_->parseSentence(lattice.getEdgeText(edge));
-        std::vector<Lattice::EdgeDescriptor> addedEdges;
-        BOOST_FOREACH(EdgeDescription edgeDescription, parsingResult) {
+        std::map<int, Lattice::EdgeDescriptor> addedEdges;
+        typedef std::pair<int, EdgeDescription> ParsingResultElement;
+        BOOST_FOREACH(ParsingResultElement parsingResultElement, parsingResult) {
+            EdgeDescription edgeDescription = parsingResultElement.second;
             AnnotationItem aiLink(
                 edgeDescription.label,
                 StringFrag(
@@ -119,24 +155,26 @@ void LinkParser::parse(Lattice &lattice) {
                     edgeDescription.end-edgeDescription.start
                 )
             );
-            LayerTagCollection tagParse = lattice.getLayerTagManager().createTagCollectionFromList(
-                boost::assign::list_of("link-grammar")("parse")
-            );
+            LayerTagCollection tagParse
+                = lattice.getLayerTagManager().createTagCollectionFromListWithLangCode(
+                    boost::assign::list_of("link-grammar")("parse"),
+                    langCode_
+                );
             Lattice::EdgeSequence::Builder builder(lattice);
             BOOST_FOREACH(int childNo, edgeDescription.children) {
-                builder.addEdge(addedEdges.at(childNo));
+                builder.addEdge(addedEdges[childNo]);
             }
             if (edgeDescription.start == edgeDescription.end) {
                 edgeDescription.start = lattice.addLooseVertex();
                 edgeDescription.end = lattice.addLooseVertex();
             }
-            addedEdges.push_back(lattice.addEdge(
+            addedEdges[parsingResultElement.first] = lattice.addEdge(
                 edgeDescription.start,
                 edgeDescription.end,
                 aiLink,
                 tagParse,
                 builder.build()
-            ));
+            );
         }
     }
 }
