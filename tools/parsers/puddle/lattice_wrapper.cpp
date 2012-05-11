@@ -375,9 +375,12 @@ namespace poleng {
                 Lattice::VertexDescriptor endVertex =
                     lattice.getEdgeBeginIndex(endEdges.front()) +
                     lattice.getEdgeLength(endEdges.front());
+                std::list<std::string> tagNames;
+                tagNames.push_back("parse");
+                tagNames.push_back("puddle");
                 LayerTagCollection tags =
-                    lattice.getLayerTagManager().createSingletonTagCollectionWithLangCode(
-                            "parse", langCode);
+                    lattice.getLayerTagManager().createTagCollectionFromListWithLangCode(
+                            tagNames, langCode);
                 for (std::list<Lattice::EdgeDescriptor>::iterator edgeIt =
                         headEdges.begin(); edgeIt != headEdges.end(); ++ edgeIt) {
                     AnnotationItem annotationItem(parseCategory);
@@ -441,7 +444,6 @@ namespace poleng {
                     std::vector<std::string> baseForms,
                     std::vector<Morphology> morphology,
                     std::list<Lattice::EdgeSequence> edgeSequences,
-                    LayerTagCollection tags,
                     Lattice::Score) {
 
                 Lattice::VertexDescriptor startVertex =
@@ -498,6 +500,11 @@ namespace poleng {
                                     partOfSpeech, lexeme);
 
                         if (syntokCategory != concatenatedOrth) { //adding parse edge 'SYNTOK'
+                            std::list<std::string> tagNames;
+                            tagNames.push_back("parse");
+                            tagNames.push_back("puddle");
+                            LayerTagCollection tags = lattice.getLayerTagManager().
+                                createTagCollectionFromListWithLangCode(tagNames, langCode);
                             AnnotationItem annotationItem(syntokCategory);
                             for (Morphology::iterator attribIt = morphIt->begin();
                                     attribIt != morphIt->end(); ++ attribIt) {
@@ -525,6 +532,11 @@ namespace poleng {
                             }
 
                         } else { //adding a 'form' edge
+                            std::list<std::string> tagNames;
+                            tagNames.push_back("form");
+                            tagNames.push_back("puddle");
+                            LayerTagCollection tags = lattice.getLayerTagManager().
+                                createTagCollectionFromListWithLangCode(tagNames, langCode);
                             Lattice::EdgeSequence::Builder formBuilder(lattice);
                             formBuilder.addEdge(lexemeEdge);
                             AnnotationItem annotationItem(partOfSpeech, StringFrag(*baseIt));
@@ -556,7 +568,19 @@ namespace poleng {
                     startVertex + lattice.getEdgeLength(edge);
                 AnnotationItem annotationItem =
                     lattice.getEdgeAnnotationItem(edge);
-                LayerTagCollection tags = lattice.getEdgeLayerTags(edge);
+                std::list<std::string> tagNames = lattice.getLayerTagManager().getTagNames(
+                        lattice.getEdgeLayerTags(edge));
+                std::list<std::string>::iterator tagIt = tagNames.begin();
+                while (tagIt != tagNames.end()) {
+                    if (*tagIt == "morfologik" || *tagIt == "morfologik-tagset") {
+                        tagIt = tagNames.erase(tagIt);
+                        continue;
+                    }
+                    ++ tagIt;
+                }
+                tagNames.push_back("puddle");
+                LayerTagCollection tags = lattice.getLayerTagManager().
+                    createTagCollectionFromList(tagNames);
 
                 for (std::vector<std::string>::iterator baseIt =
                         baseForms.begin();
@@ -570,8 +594,11 @@ namespace poleng {
                         Lattice::EdgeSequence::Builder lemmaBuilder(lattice);
                         lemmaBuilder.addEdge(lattice.firstOutEdge(startVertex, tokenMask));
                         AnnotationItem aiLemma("word", *baseIt);
+                        std::list<std::string> tagsLemmaNames;
+                        tagsLemmaNames.push_back("lemma");
+                        tagsLemmaNames.push_back("puddle");
                         LayerTagCollection tagsLemma = lattice.getLayerTagManager().
-                            createSingletonTagCollectionWithLangCode("lemma", langCode);
+                            createTagCollectionFromListWithLangCode(tagsLemmaNames, langCode);
                         lemmaEdge = lattice.addEdge(
                                 startVertex, endVertex, aiLemma, tagsLemma, lemmaBuilder.build()
                                 );
@@ -594,8 +621,11 @@ namespace poleng {
                             Lattice::EdgeSequence::Builder lexemeBuilder(lattice);
                             lexemeBuilder.addEdge(lemmaEdge);
                             AnnotationItem aiLexeme(partOfSpeech, StringFrag(lexeme));
+                            std::list<std::string> tagsLexemeNames;
+                            tagsLexemeNames.push_back("lexeme");
+                            tagsLexemeNames.push_back("puddle");
                             LayerTagCollection tagsLexeme = lattice.getLayerTagManager().
-                                createSingletonTagCollectionWithLangCode("lexeme", langCode);
+                                createTagCollectionFromListWithLangCode(tagsLexemeNames, langCode);
                             lexemeEdge = lattice.addEdge(
                                     startVertex, endVertex, aiLexeme, tagsLexeme,
                                     lexemeBuilder.build() );

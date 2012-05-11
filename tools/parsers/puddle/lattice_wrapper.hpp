@@ -60,7 +60,6 @@ namespace poleng {
                             std::vector<std::string> baseForms,
                             std::vector<Morphology> morphology,
                             std::list<Lattice::EdgeSequence> edgeSequences,
-                            LayerTagCollection tags,
                             Lattice::Score score = 0.0);
                     void addNewVariantEdges(Lattice &lattice,
                             std::string langCode,

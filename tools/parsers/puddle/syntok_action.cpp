@@ -44,12 +44,6 @@ bool SyntokAction::apply(Lattice &lattice, std::string langCode,
             rulePartitions);
     std::string concatenatedOrth = generateOrth(lattice, rulePartitions);
     std::string syntokCategory = concatenatedOrth;
-    LayerTagCollection tags = lattice.getLayerTagManager().createSingletonTagCollection("form");
-    if (syntok) {
-        syntokCategory = "SYNTOK";
-        tags =
-            lattice.getLayerTagManager().createSingletonTagCollection("parse");
-    }
     lattice::addSyntokEdges(
             lattice,
             langCode,
@@ -59,8 +53,7 @@ bool SyntokAction::apply(Lattice &lattice, std::string langCode,
             concatenatedOrth,
             baseForms,
             morphology,
-            rulePartitions,
-            tags);
+            rulePartitions);
     return true;
 }
 
