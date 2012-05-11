@@ -589,7 +589,8 @@ namespace poleng {
                     Lattice::EdgeDescriptor lemmaEdge;
                     if (! matchLemmaEdge(lattice, langCode, startVertex, *baseIt)) {
                         LayerTagCollection token_tag
-                            = lattice.getLayerTagManager().createSingletonTagCollectionWithLangCode("token", langCode);
+                            = lattice.getLayerTagManager().
+                                createSingletonTagCollectionWithLangCode("token", langCode);
                         LayerTagMask tokenMask = lattice.getLayerTagManager().getMask(token_tag);
                         Lattice::EdgeSequence::Builder lemmaBuilder(lattice);
                         lemmaBuilder.addEdge(lattice.firstOutEdge(startVertex, tokenMask));
