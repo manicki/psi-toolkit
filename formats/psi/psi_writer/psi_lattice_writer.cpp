@@ -58,6 +58,8 @@ void PsiLatticeWriter::Worker::doRun() {
 
     int alignments[] = { 2, 7, 13, 26, 48, 60 };
 
+    std::string latticeTextCovered;
+
     while (ei.hasNext()) {
         Lattice::EdgeDescriptor edge = ei.next();
 
@@ -117,15 +119,23 @@ void PsiLatticeWriter::Worker::doRun() {
 
         std::list<Lattice::Partition> partitions = lattice_.getEdgePartitions(edge);
         bool writeWholeText = false;
-        BOOST_FOREACH(Lattice::Partition partition, partitions) {
-            Lattice::Partition::Iterator ei(lattice_, partition);
-            while (ei.hasNext()) {
-                if (
-                    lattice_.getEdgeLayerTags(ei.next())
-                        == lattice_.getLayerTagManager().createSingletonTagCollection("symbol")
-                ) {
-                    writeWholeText = true;
-                    break;
+        if (
+            !lattice_.isLooseVertex(source) &&
+            !lattice_.isLooseVertex(target) &&
+            latticeTextCovered.length() < lattice_.getVertexRawCharIndex(target)
+        ) {
+            writeWholeText = true;
+        } else {
+            BOOST_FOREACH(Lattice::Partition partition, partitions) {
+                Lattice::Partition::Iterator ei(lattice_, partition);
+                while (ei.hasNext()) {
+                    if (
+                        lattice_.getEdgeLayerTags(ei.next())
+                            == lattice_.getLayerTagManager().createSingletonTagCollection("symbol")
+                    ) {
+                        writeWholeText = true;
+                        break;
+                    }
                 }
             }
         }
@@ -133,6 +143,7 @@ void PsiLatticeWriter::Worker::doRun() {
         // edge text:
 
         int edgeTextLength = utf8::distance(edgeText.begin(), edgeText.end());
+        std::string edgeTextPrinted;
         if (edgeTextLength == 0) {
             alignOutput_("∅", alignments[3]);
         } else if (edgeTextLength > alignments[3] - alignments[2] && !writeWholeText) {
@@ -145,11 +156,18 @@ void PsiLatticeWriter::Worker::doRun() {
             for (int i = 0; i < 3; ++i)
                 utf8::unchecked::prior(eIter);
 
-            alignOutput_(edgeText.substr(eIter - edgeText.begin()),
-                         alignments[3]);
+            edgeTextPrinted = edgeText.substr(eIter - edgeText.begin());
         } else {
-            alignOutput_(edgeText, alignments[3]);
+            edgeTextPrinted = edgeText;
         }
+        if (!lattice_.isLooseVertex(source) && !lattice_.isLooseVertex(target)) {
+            try {
+                latticeTextCovered +=
+                    edgeTextPrinted.substr(latticeTextCovered.length()
+                        - lattice_.getVertexRawCharIndex(source));
+            } catch (std::out_of_range) { }
+        }
+        alignOutput_(edgeTextPrinted, alignments[3]);
         alignOutput_(" ");
 
         // tags:
