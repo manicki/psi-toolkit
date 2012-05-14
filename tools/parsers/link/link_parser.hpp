@@ -33,10 +33,10 @@ public:
         virtual std::list<std::string> doProvidedLayerTags();
     };
 
-    LinkParser(std::string language);
+    LinkParser(std::string langCode);
 
     LinkParser(
-        std::string language,
+        std::string langCode,
         std::string dictionaryName,
         std::string postProcessFileName,
         std::string constituentKnowledgeName,
@@ -69,6 +69,8 @@ private:
     virtual LatticeWorker* doCreateLatticeWorker(Lattice& lattice);
 
     virtual std::string doInfo();
+
+    void init_(const std::string & langCode);
 
     LinkParserAdapterInterface * adapter_;
 
