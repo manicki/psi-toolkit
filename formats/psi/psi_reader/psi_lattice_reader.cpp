@@ -96,6 +96,20 @@ void PsiLatticeReader::Worker::doRun() {
                                 - item.beginning
                         ));
                     } else {
+                        if (
+                            (int)(lattice_.getVertexRawCharIndex(lattice_.getLastVertex())) <
+                                item.beginning
+                        ) {
+                            throw FileFormatException(
+                                "PSI reader: lattice text cannot be reconstructed "
+                                "due to insufficient edge data"
+                            );
+                            // lattice_.appendStringWithSymbols(std::string(
+                                // item.beginning
+                                    // - lattice_.getVertexRawCharIndex(lattice_.getLastVertex()),
+                                // ' '
+                            // ));
+                        }
                         lattice_.appendStringWithSymbols(form.substr(
                             lattice_.getVertexRawCharIndex(lattice_.getLastVertex())
                                 - item.beginning
