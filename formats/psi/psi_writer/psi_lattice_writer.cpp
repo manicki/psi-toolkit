@@ -61,9 +61,59 @@ void PsiLatticeWriter::Worker::doRun() {
     std::string latticeTextCovered;
 
     while (ei.hasNext()) {
+
         Lattice::EdgeDescriptor edge = ei.next();
+        Lattice::VertexDescriptor source = lattice_.getEdgeSource(edge);
+        Lattice::VertexDescriptor target = lattice_.getEdgeTarget(edge);
 
         if (lattice_.isEdgeHidden(edge)) continue;
+
+        if (!lattice_.isLooseVertex(source) && !lattice_.isLooseVertex(target)) {
+            size_t i = latticeTextCovered.length();
+            while (i < lattice_.getVertexRawCharIndex(source)) {
+
+                Lattice::EdgeDescriptor rawEdge = lattice_.firstOutEdge(
+                    lattice_.getVertexForRawCharIndex(i),
+                    lattice_.getLayerTagManager().getMask("symbol")
+                );
+
+                ++ordinal;
+                edgeOrdinalMap[rawEdge] = ordinal;
+                std::stringstream ordinalSs;
+                ordinalSs << std::right << std::setfill('0') << std::setw(2);
+                ordinalSs << ordinal;
+                alignOutput_(ordinalSs.str(), alignments[0]);
+                alignOutput_(" ");
+
+                std::stringstream beginningSs;
+                beginningSs << std::right << std::setfill('0') << std::setw(4);
+                beginningSs << i;
+                alignOutput_(beginningSs.str(), alignments[1]);
+                alignOutput_(" ");
+
+                std::stringstream lengthSs;
+                lengthSs << std::right << std::setfill('0') << std::setw(2);
+                lengthSs << lattice_.getEdgeLength(rawEdge);
+                alignOutput_(lengthSs.str(), alignments[2]);
+                alignOutput_(" ");
+
+                alignOutput_(quoter.escape(lattice_.getEdgeText(rawEdge)), alignments[3]);
+                alignOutput_(" ");
+
+                alignOutput_("symbol", alignments[4]);
+                alignOutput_(" ");
+
+                const AnnotationItem& annotationItem = lattice_.getEdgeAnnotationItem(rawEdge);
+                alignOutput_(quoter.escape(annotationItem.getText()), alignments[5]);
+                alignOutput_(" ");
+
+                alignOutput_(quoter.escape(annotationItem.getCategory()), alignments[6]);
+                alignOutputNewline_();
+
+                i = lattice_.getEdgeEndIndex(rawEdge);
+
+            }
+        }
 
         ++ordinal;
 
@@ -80,7 +130,6 @@ void PsiLatticeWriter::Worker::doRun() {
         // beginning:
 
         std::stringstream beginningSs;
-        Lattice::VertexDescriptor source = lattice_.getEdgeSource(edge);
         if (lattice_.isLooseVertex(source)) {
             beginningSs << "@" << lattice_.getLooseVertexIndex(source);
         } else {
@@ -93,7 +142,6 @@ void PsiLatticeWriter::Worker::doRun() {
         // length:
 
         std::stringstream lengthSs;
-        Lattice::VertexDescriptor target = lattice_.getEdgeTarget(edge);
         if (lattice_.isLooseVertex(target)) {
             lengthSs << "*@" << lattice_.getLooseVertexIndex(target);
         } else if (lattice_.isLooseVertex(source)) {
