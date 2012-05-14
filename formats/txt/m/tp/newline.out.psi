@@ -6,7 +6,7 @@
 06 0011 01    _            !pl,token             _           B
 07 0012 01    i            !pl,token             i           T
 08 0013 01    _            !pl,token             _           B
-09 0000 17    ala_ma...psa frag,txt-reader       ala_ma_kota_i_psa FRAG[]
+09 0000 17    ala_ma_kota_i_psa frag,txt-reader  ala_ma_kota_i_psa FRAG[]
 10 0000 17    ala_ma...psa !pl,lang-guesser,text ala_ma_kota_i_psa TEXT[9]
 11 0014 03    psa          !pl,token             psa         T
 12 0018 03    ala          !pl,token             ala         T

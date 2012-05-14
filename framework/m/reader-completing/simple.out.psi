@@ -5,6 +5,6 @@
 05 0015 02    ma           !pl,token             ma          T
 06 0017 01    _            !pl,token             _           B
 07 0018 04    kota         !pl,token             kota        T
-08 0000 23    Prof._...ta. frag,txt-reader       Prof._Kowalski_ma_kota. FRAG[]
+08 0000 23    Prof._Kowalski_ma_kota. frag,txt-reader Prof._Kowalski_ma_kota. FRAG[]
 09 0000 23    Prof._...ta. !pl,lang-guesser,text Prof._Kowalski_ma_kota. TEXT[8]
 10 0022 01    .            !pl,token             .           I

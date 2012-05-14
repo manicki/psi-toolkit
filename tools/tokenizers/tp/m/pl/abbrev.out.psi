@@ -7,6 +7,6 @@
 07 0020 03    np.          !pl,token             np.         T
 08 0023 01    _            !pl,token             _           B
 09 0024 04    koty         !pl,token             koty        T
-10 0000 29    Prof._...ty. frag,txt-reader       Prof._Kowalski_lubi_np._koty. FRAG[]
+10 0000 29    Prof._Kowalski_lubi_np._koty. frag,txt-reader Prof._Kowalski_lubi_np._koty. FRAG[]
 11 0000 29    Prof._...ty. !pl,lang-guesser,text Prof._Kowalski_lubi_np._koty. TEXT[10]
 12 0028 01    .            !pl,token             .           I

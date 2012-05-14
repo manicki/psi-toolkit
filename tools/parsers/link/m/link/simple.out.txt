@@ -6,7 +6,7 @@
 06 0015 03    cat          !en,link-grammar,parse cat        cat
 07 0009 09    a_big_cat    !en,link-grammar,parse a_big_cat  NP[4-5-6]
 08 0005 13    has_a_big_cat !en,link-grammar,parse has_a_big_cat VP[3-7]
-09 0000 19    Mary_h...at. frag,txt-reader       Mary_has_a_big_cat. FRAG[]
+09 0000 19    Mary_has_a_big_cat. frag,txt-reader Mary_has_a_big_cat. FRAG[]
 10 0000 19    Mary_h...at. !en,lang-guesser,text Mary_has_a_big_cat. TEXT[9]
 11 0000 19    Mary_has_a_big_cat. !en,segment    Mary_has_a_big_cat. sen
 12 0018 01    .            !en,link-grammar,parse .          .

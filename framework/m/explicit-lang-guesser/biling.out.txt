@@ -13,8 +13,8 @@
 13 0033 03    jak          !pl,token             jak         T
 14 0036 01    _            !pl,token             _           B
 15 0037 07    zdrowie      !pl,token             zdrowie     T
-16 0000 45    Litwo,...ie. frag,txt-reader       Litwo,_ojczyzno_moja,_ty_jesteś_jak_zdrowie. FRAG[]
+16 0000 45    Litwo,_ojczyzno_moja,_ty_jesteś_jak_zdrowie. frag,txt-reader Litwo,_ojczyzno_moja,_ty_jesteś_jak_zdrowie. FRAG[]
 17 0000 45    Litwo,...ie. !pl,lang-guesser,text Litwo,_ojczyzno_moja,_ty_jesteś_jak_zdrowie. TEXT[16]
 18 0044 01    .            !pl,token             .           I
-19 0046 46    Я_помн...ье. frag,txt-reader       Я_помню_чудное_мгновенье. FRAG[]
-20 0046 46    Я_помн...ье. !ru,lang-guesser,text Я_помню_чудное_мгновенье. TEXT[19]
+19 0046 46    Я_помню_чудное_мгновенье. frag,txt-reader Я_помню_чудное_мгновенье. FRAG[]
+20 0046 46    Я_помню_чудное_мгновенье. !ru,lang-guesser,text Я_помню_чудное_мгновенье. TEXT[19]
