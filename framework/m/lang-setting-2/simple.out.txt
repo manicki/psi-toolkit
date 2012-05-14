@@ -4,7 +4,7 @@
 04 0012 01    _            !pl,token             _           B
 05 0013 11    Kowalskiego  !pl,token             Kowalskiego T
 06 0024 01    .            !pl,token             .           I
-07 0000 25    Widzę_prof._Kowalskiego. !pl,segment Widzę_prof._Kowalskiego. sen
+07 0000 25    Widzę_...go. !pl,segment           Widzę_prof._Kowalskiego. sen
 08 0025 01    _            !pl,token             _           B
 09 0026 01    A            !pl,token             A           T
 10 0027 01    _            !pl,token             _           B
@@ -16,4 +16,4 @@
 16 0000 45    Widzę_prof._Kowalskiego._A_teraz_dr._Nowaka. frag,txt-reader Widzę_prof._Kowalskiego._A_teraz_dr._Nowaka. FRAG[]
 17 0000 45    Widzę_...ka. !pl,lang-guesser,text Widzę_prof._Kowalskiego._A_teraz_dr._Nowaka. TEXT[16]
 18 0044 01    .            !pl,token             .           I
-19 0025 20    _A_teraz_dr._Nowaka. !pl,segment   _A_teraz_dr._Nowaka. sen
+19 0025 20    _A_ter...ka. !pl,segment           _A_teraz_dr._Nowaka. sen

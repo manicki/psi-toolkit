@@ -125,19 +125,6 @@ void PsiLatticeWriter::Worker::doRun() {
             latticeTextCovered.length() < lattice_.getVertexRawCharIndex(target)
         ) {
             writeWholeText = true;
-        } else {
-            BOOST_FOREACH(Lattice::Partition partition, partitions) {
-                Lattice::Partition::Iterator ei(lattice_, partition);
-                while (ei.hasNext()) {
-                    if (
-                        lattice_.getEdgeLayerTags(ei.next())
-                            == lattice_.getLayerTagManager().createSingletonTagCollection("symbol")
-                    ) {
-                        writeWholeText = true;
-                        break;
-                    }
-                }
-            }
         }
 
         // edge text:

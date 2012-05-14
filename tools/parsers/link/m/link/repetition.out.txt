@@ -18,6 +18,6 @@
 18 0002 34    said_that_I_would_get_him_the_file !en,link-grammar,parse said_that_I_would_get_him_the_file VP[3-17]
 19 0000 37    I_said_that_I_would_get_him_the_file. frag,txt-reader I_said_that_I_would_get_him_the_file. FRAG[]
 20 0000 37    I_said...le. !en,lang-guesser,text I_said_that_I_would_get_him_the_file. TEXT[19]
-21 0000 37    I_said_that_I_would_get_him_the_file. !en,segment I_said_that_I_would_get_him_the_file. sen
+21 0000 37    I_said...le. !en,segment           I_said_that_I_would_get_him_the_file. sen
 22 0036 01    .            !en,link-grammar,parse .          .
 23 0000 37    I_said...le. !en,link-grammar,parse I_said_that_I_would_get_him_the_file. S[2-18-22]
