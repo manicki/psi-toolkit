@@ -230,8 +230,17 @@ void LinkParser::parse(Lattice &lattice) {
                     langCode_
                 );
             Lattice::EdgeSequence::Builder builder(lattice);
-            BOOST_FOREACH(int childNo, edgeDescription.children) {
-                builder.addEdge(addedEdges[childNo]);
+            if (edgeDescription.children.empty()) {
+                for (int i = edgeDescription.start; i < edgeDescription.end; i++) {
+                    builder.addEdge(lattice.firstOutEdge(
+                        lattice.getVertexForRawCharIndex(i),
+                        lattice.getLayerTagManager().getMask("symbol")
+                    ));
+                }
+            } else {
+                BOOST_FOREACH(int childNo, edgeDescription.children) {
+                    builder.addEdge(addedEdges[childNo]);
+                }
             }
             if (edgeDescription.start == edgeDescription.end) {
                 edgeDescription.start = lattice.addLooseVertex();
