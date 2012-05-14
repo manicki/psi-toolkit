@@ -131,42 +131,51 @@ LinkParser::Worker::Worker(LinkParser& processor, Lattice& lattice) :
 }
 
 void LinkParser::Worker::doRun() {
-    processor_.parse(lattice_);
+    if (processor_.isActive()) {
+        processor_.parse(lattice_);
+    }
 }
 
 std::string LinkParser::doInfo() {
     return "link grammar parser";
 }
 
-LinkParser::LinkParser(std::string language) : langCode_(language) {
-    adapter_ = dynamic_cast<LinkParserAdapterInterface*>(
-        PluginManager::getInstance().createPluginAdapter("link-parser")
-    );
-    adapter_->setDictionary(language);
+LinkParser::LinkParser(std::string langCode) {
+    init_(langCode);
+    if (isActive()) {
+        adapter_->setDictionary(langCode);
+    }
 }
 
 LinkParser::LinkParser(
-    std::string language,
+    std::string langCode,
     std::string dictionaryName,
     std::string postProcessFileName,
     std::string constituentKnowledgeName,
     std::string affixName
-) : langCode_(language) {
-    adapter_ = dynamic_cast<LinkParserAdapterInterface*>(
-        PluginManager::getInstance().createPluginAdapter("link-parser")
-    );
-    adapter_->setDictionary(
-        dictionaryName,
-        postProcessFileName,
-        constituentKnowledgeName,
-        affixName
-    );
+) {
+    init_(langCode);
+    if (isActive()) {
+        adapter_->setDictionary(
+            dictionaryName,
+            postProcessFileName,
+            constituentKnowledgeName,
+            affixName
+        );
+    }
 }
 
 LinkParser::~LinkParser() {
     if (adapter_) {
         PluginManager::getInstance().destroyPluginAdapter("link-parser", adapter_);
     }
+}
+
+void LinkParser::init_(const std::string & langCode) {
+    langCode_ = langCode;
+    adapter_ = dynamic_cast<LinkParserAdapterInterface*>(
+        PluginManager::getInstance().createPluginAdapter("link-parser")
+    );
 }
 
 LinkParserAdapterInterface * LinkParser::getAdapter() {
