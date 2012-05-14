@@ -255,7 +255,7 @@ endif(LIBMAGIC_FOUND)
 
 # Finds Poppler
 
-option(USE_PDF_READER "Using pdf-reader" OFF)
+option(USE_PDF_READER "Using pdf-reader" ON)
 message(STATUS "Using pdf-reader ${USE_PDF_READER}")
 
 if (USE_PDF_READER)
