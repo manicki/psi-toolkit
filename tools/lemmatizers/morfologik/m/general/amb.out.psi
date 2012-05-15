@@ -36,7 +36,7 @@
 36 0019 11    komputerowi  !pl,form,morfologik,morfologik-tagset komputerowi adj,gender=m1,case=nom,number=pl,degree=pos,negation=aff[35]
 37 0019 11    komputerowi  !pl,form,morfologik,morfologik-tagset komputerowi adj,gender=m1,case=voc,number=pl,degree=pos,negation=aff[35]
 38 0030 01    _            !pl,token             _           B
-39 0000 34    mam_po...dam frag,txt-reader       mam_powieść_albo_komputerowi_dam FRAG[]
+39 0000 34    mam_powieść_albo_komputerowi_dam frag,txt-reader mam_powieść_albo_komputerowi_dam FRAG[]
 40 0000 34    mam_po...dam !pl,lang-guesser,text mam_powieść_albo_komputerowi_dam TEXT[39]
 41 0031 03    dam          !pl,token             dam         T
 42 0031 03    dam          !pl,lemma,morfologik,morfologik-tagset dama word[41]

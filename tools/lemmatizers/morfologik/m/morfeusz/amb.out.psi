@@ -33,7 +33,7 @@
 33 0016 06    dość         !pl,lexeme,morfologik,morfologik-tagset dość+qub qub[30]
 34 0016 06    dość         !pl,form,morfologik,morfologik-tagset dość qub[33]
 35 0022 01    _            !pl,token             _           B
-36 0000 29    ma_mam...rze frag,txt-reader       ma_mama_ma_się_dość_dobrze FRAG[]
+36 0000 29    ma_mama_ma_się_dość_dobrze frag,txt-reader ma_mama_ma_się_dość_dobrze FRAG[]
 37 0000 29    ma_mam...rze !pl,lang-guesser,text ma_mama_ma_się_dość_dobrze TEXT[36]
 38 0023 06    dobrze       !pl,token             dobrze      T
 39 0023 06    dobrze       !pl,lemma,morfologik,morfologik-tagset dobrze word[38]
