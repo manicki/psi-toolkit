@@ -4,7 +4,6 @@
 GraphvizAdapterImpl::GraphvizAdapterImpl() :
     gvc_(NULL),
     g_(NULL),
-    nCount_(0),
     eCount_(0)
 { }
 
@@ -72,30 +71,28 @@ void GraphvizAdapterImpl::setRankDir(std::string dir) {
 }
 
 
-int GraphvizAdapterImpl::addNode(std::string id) {
+void GraphvizAdapterImpl::addNode(std::string id) {
     Agnode_t * n = agnode(g_, (char*)(id.c_str()));
-    ++nCount_;
-    nodes_.insert(std::pair<int, Agnode_t*>(nCount_, n));
-    return nCount_;
+    nodes_.insert(std::pair<std::string, Agnode_t*>(id, n));
 }
 
 
-void GraphvizAdapterImpl::setNodeLabel(int node, std::string label) {
+void GraphvizAdapterImpl::setNodeLabel(std::string node, std::string label) {
     agsafeset(nodes_[node], (char*)"label", (char*)(label.c_str()), (char*)"");
 }
 
 
-void GraphvizAdapterImpl::setNodeColor(int node, std::string color) {
+void GraphvizAdapterImpl::setNodeColor(std::string node, std::string color) {
     agsafeset(nodes_[node], (char*)"color", (char*)(color.c_str()), (char*)"");
 }
 
 
-void GraphvizAdapterImpl::setNodeStyle(int node, std::string style) {
+void GraphvizAdapterImpl::setNodeStyle(std::string node, std::string style) {
     agsafeset(nodes_[node], (char*)"style", (char*)(style.c_str()), (char*)"");
 }
 
 
-int GraphvizAdapterImpl::addEdge(int source, int target) {
+int GraphvizAdapterImpl::addEdge(std::string source, std::string target) {
     Agedge_t * e = agedge(g_, nodes_[source], nodes_[target]);
     ++eCount_;
     edges_.insert(std::pair<int, Agedge_t*>(eCount_, e));

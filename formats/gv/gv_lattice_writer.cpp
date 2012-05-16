@@ -259,8 +259,6 @@ void GVLatticeWriter::Worker::doRun() {
 
             edgeLabelSs << " " << annotationItem.getCategory();
 
-            int n;
-            int m;
             int e;
 
             if (processor_.isTree()) {
@@ -269,11 +267,11 @@ void GVLatticeWriter::Worker::doRun() {
                 edgeOrdinalMap[edge] = ordinal;
                 edgeIdSs << ordinal;
 
-                n = processor_.getAdapter()->addNode(edgeIdSs.str());
-                processor_.getAdapter()->setNodeLabel(n, edgeLabelSs.str());
+                processor_.getAdapter()->addNode(edgeIdSs.str());
+                processor_.getAdapter()->setNodeLabel(edgeIdSs.str(), edgeLabelSs.str());
 
                 if (processor_.isColor()) {
-                    processor_.getAdapter()->setNodeColor(n, colorSs.str());
+                    processor_.getAdapter()->setNodeColor(edgeIdSs.str(), colorSs.str());
                 }
 
                 int partitionNumber = 0;
@@ -290,8 +288,8 @@ void GVLatticeWriter::Worker::doRun() {
                         if (moi != edgeOrdinalMap.end()) {
                             std::stringstream edSs;
                             edSs << moi->second;
-                            m = processor_.getAdapter()->addNode(edSs.str());
-                            e = processor_.getAdapter()->addEdge(n, m);
+                            processor_.getAdapter()->addNode(edSs.str());
+                            e = processor_.getAdapter()->addEdge(edgeIdSs.str(), edSs.str());
                             if (partitions.size() > 1) {
                                 processor_.getAdapter()->setEdgeLabel(e, partSs.str());
                             }
@@ -305,26 +303,28 @@ void GVLatticeWriter::Worker::doRun() {
                 if (lattice_.isLooseVertex(source)) {
                     nSs << "L" << lattice_.getLooseVertexIndex(source);
                 } else {
-                    nSs << lattice_.getVertexRawCharIndex(source);
+                    int n = lattice_.getVertexRawCharIndex(source);
+                    nSs << n;
+                    if (processor_.isAlign()) {
+                        vertexNodes.insert(n);
+                        startVertexNodes.insert(n);
+                    }
                 }
-                n = processor_.getAdapter()->addNode(nSs.str());
-                if (processor_.isAlign()) {
-                    vertexNodes.insert(n);
-                    startVertexNodes.insert(n);
-                }
+                processor_.getAdapter()->addNode(nSs.str());
 
                 std::stringstream mSs;
                 if (lattice_.isLooseVertex(target)) {
                     mSs << "L" << lattice_.getLooseVertexIndex(target);
                 } else {
-                    mSs << lattice_.getVertexRawCharIndex(target);
+                    int m = lattice_.getVertexRawCharIndex(target);
+                    mSs << m;
+                    if (processor_.isAlign()) {
+                        vertexNodes.insert(m);
+                    }
                 }
-                m = processor_.getAdapter()->addNode(mSs.str());
-                if (processor_.isAlign()) {
-                    vertexNodes.insert(m);
-                }
+                processor_.getAdapter()->addNode(mSs.str());
 
-                e = processor_.getAdapter()->addEdge(n, m);
+                e = processor_.getAdapter()->addEdge(nSs.str(), mSs.str());
 
                 processor_.getAdapter()->setEdgeLabel(e, edgeLabelSs.str());
 
@@ -337,20 +337,27 @@ void GVLatticeWriter::Worker::doRun() {
         }
 
         if (processor_.isAlign()) {
+DEBUG("vvvvvvv");
             std::set<int>::iterator vni = vertexNodes.begin();
             int prev = *vni;
             int next;
             int invisibleEdge;
             ++vni;
             while (vni != vertexNodes.end()) {
+DEBUG(*vni);
                 next = *vni;
                 if (!startVertexNodes.count(prev)) {
-                    invisibleEdge = processor_.getAdapter()->addEdge(prev, next);
+                    std::stringstream prevSs;
+                    std::stringstream nextSs;
+                    prevSs << prev;
+                    nextSs << next;
+                    invisibleEdge = processor_.getAdapter()->addEdge(prevSs.str(), nextSs.str());
                     processor_.getAdapter()->setEdgeStyle(invisibleEdge, "invis");
                 }
                 prev = *vni;
                 ++vni;
             }
+DEBUG("^^^^^^^");
         }
 
         processor_.getAdapter()->finalize();

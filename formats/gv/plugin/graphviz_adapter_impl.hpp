@@ -39,24 +39,23 @@ public:
 
     virtual void setRankDir(std::string dir);
 
-    virtual int addNode(std::string id);
-    virtual void setNodeLabel(int node, std::string label);
-    virtual void setNodeColor(int node, std::string color);
-    virtual void setNodeStyle(int node, std::string style);
+    virtual void addNode(std::string id);
+    virtual void setNodeLabel(std::string node, std::string label);
+    virtual void setNodeColor(std::string node, std::string color);
+    virtual void setNodeStyle(std::string node, std::string style);
 
-    virtual int addEdge(int source, int target);
-    virtual void setEdgeLabel(int node, std::string label);
-    virtual void setEdgeColor(int node, std::string color);
-    virtual void setEdgeStyle(int node, std::string style);
+    virtual int addEdge(std::string source, std::string target);
+    virtual void setEdgeLabel(int edge, std::string label);
+    virtual void setEdgeColor(int edge, std::string color);
+    virtual void setEdgeStyle(int edge, std::string style);
 
 private:
     GVC_t * gvc_;
     Agraph_t * g_;
 
-    int nCount_;
     int eCount_;
 
-    std::map<int, Agnode_t*> nodes_;
+    std::map<std::string, Agnode_t*> nodes_;
     std::map<int, Agedge_t*> edges_;
 
     void init_context_();
