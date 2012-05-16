@@ -191,6 +191,7 @@ void GVLatticeWriter::Worker::doRun() {
         PsiQuoter quoter;
 
         std::set<int> vertexNodes;
+        std::set<int> startVertexNodes;
 
         std::map<Lattice::EdgeDescriptor, int> edgeOrdinalMap;
         int ordinal = 0;
@@ -309,6 +310,7 @@ void GVLatticeWriter::Worker::doRun() {
                 n = processor_.getAdapter()->addNode(nSs.str());
                 if (processor_.isAlign()) {
                     vertexNodes.insert(n);
+                    startVertexNodes.insert(n);
                 }
 
                 std::stringstream mSs;
@@ -342,8 +344,10 @@ void GVLatticeWriter::Worker::doRun() {
             ++vni;
             while (vni != vertexNodes.end()) {
                 next = *vni;
-                invisibleEdge = processor_.getAdapter()->addEdge(prev, next);
-                processor_.getAdapter()->setEdgeStyle(invisibleEdge, "invis");
+                if (!startVertexNodes.count(prev)) {
+                    invisibleEdge = processor_.getAdapter()->addEdge(prev, next);
+                    processor_.getAdapter()->setEdgeStyle(invisibleEdge, "invis");
+                }
                 prev = *vni;
                 ++vni;
             }
