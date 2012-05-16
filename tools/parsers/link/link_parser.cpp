@@ -210,11 +210,23 @@ void LinkParser::parse(Lattice &lattice) {
     Lattice::EdgesSortedBySourceIterator ei(lattice, maskSegment);
     while (ei.hasNext()) {
         Lattice::EdgeDescriptor edge = ei.next();
+        LayerTagCollection tagParse
+            = lattice.getLayerTagManager().createTagCollectionFromListWithLangCode(
+                boost::assign::list_of("link-grammar")("parse"),
+                langCode_
+            );
+        LayerTagCollection tagToken
+            = lattice.getLayerTagManager().createTagCollectionFromListWithLangCode(
+                boost::assign::list_of("link-grammar")("token"),
+                langCode_
+            );
+        LayerTagCollection tagParseToken = createUnion(tagParse, tagToken);
         std::map<int, EdgeDescription> parsingResult
             = adapter_->parseSentence(lattice.getEdgeText(edge));
         std::map<int, Lattice::EdgeDescriptor> addedEdges;
         typedef std::pair<int, EdgeDescription> ParsingResultElement;
         BOOST_FOREACH(ParsingResultElement parsingResultElement, parsingResult) {
+            bool isToken;
             EdgeDescription edgeDescription = parsingResultElement.second;
             AnnotationItem aiLink(
                 edgeDescription.label,
@@ -224,13 +236,9 @@ void LinkParser::parse(Lattice &lattice) {
                     edgeDescription.end-edgeDescription.start
                 )
             );
-            LayerTagCollection tagParse
-                = lattice.getLayerTagManager().createTagCollectionFromListWithLangCode(
-                    boost::assign::list_of("link-grammar")("parse"),
-                    langCode_
-                );
             Lattice::EdgeSequence::Builder builder(lattice);
             if (edgeDescription.children.empty()) {
+                isToken = true;
                 for (int i = edgeDescription.start; i < edgeDescription.end; i++) {
                     builder.addEdge(lattice.firstOutEdge(
                         lattice.getVertexForRawCharIndex(i),
@@ -238,6 +246,7 @@ void LinkParser::parse(Lattice &lattice) {
                     ));
                 }
             } else {
+                isToken = false;
                 BOOST_FOREACH(int childNo, edgeDescription.children) {
                     builder.addEdge(addedEdges[childNo]);
                 }
@@ -250,7 +259,7 @@ void LinkParser::parse(Lattice &lattice) {
                 edgeDescription.start,
                 edgeDescription.end,
                 aiLink,
-                tagParse,
+                isToken ? tagParseToken : tagParse,
                 builder.build()
             );
         }
