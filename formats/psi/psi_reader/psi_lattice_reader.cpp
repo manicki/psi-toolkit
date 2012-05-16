@@ -100,15 +100,22 @@ void PsiLatticeReader::Worker::doRun() {
                             (int)(lattice_.getVertexRawCharIndex(lattice_.getLastVertex())) <
                                 item.beginning
                         ) {
-                            throw FileFormatException(
-                                "PSI reader: lattice text cannot be reconstructed "
-                                "due to insufficient edge data"
+                            // throw FileFormatException(
+                                // "PSI reader: lattice text cannot be reconstructed "
+                                // "due to insufficient edge data"
+                            // );
+                            WARN(
+                                "Some lattice text cannot be reconstructed: " <<
+                                "the placeholder will be put instead ('" <<
+                                std::string(1, PLACEHOLDER) << "' at " <<
+                                (int)(lattice_.getVertexRawCharIndex(lattice_.getLastVertex())) <<
+                                ")."
                             );
-                            // lattice_.appendStringWithSymbols(std::string(
-                                // item.beginning
-                                    // - lattice_.getVertexRawCharIndex(lattice_.getLastVertex()),
-                                // ' '
-                            // ));
+                            lattice_.appendStringWithSymbols(std::string(
+                                item.beginning
+                                    - lattice_.getVertexRawCharIndex(lattice_.getLastVertex()),
+                                PLACEHOLDER
+                            ));
                         }
                         lattice_.appendStringWithSymbols(form.substr(
                             lattice_.getVertexRawCharIndex(lattice_.getLastVertex())

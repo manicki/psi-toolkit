@@ -366,6 +366,7 @@ private:
 
     private:
         PsiLatticeReader& processor_;
+        static const char PLACEHOLDER = '?';
     };
 
     virtual ReaderWorker<std::istream>* doCreateReaderWorker(
