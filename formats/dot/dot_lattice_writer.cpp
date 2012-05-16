@@ -24,7 +24,8 @@ LatticeWriter<std::ostream>* DotLatticeWriter::Factory::doCreateLatticeWriter(
         options.count("show-tags"),
         options.count("color"),
         filter,
-        options.count("tree")
+        options.count("tree"),
+        options.count("align")
     );
 }
 
@@ -32,6 +33,8 @@ boost::program_options::options_description DotLatticeWriter::Factory::doOptions
     boost::program_options::options_description optionsDescription("Allowed options");
 
     optionsDescription.add_options()
+        ("align",
+            "forces aligning nodes left to right")
         ("color",
             "edges with different tags have different colors")
         ("filter", boost::program_options::value< std::vector<std::string> >()->multitoken(),
@@ -71,6 +74,9 @@ void DotLatticeWriter::Worker::doRun() {
 
     PsiQuoter quoter;
 
+    std::string lastVertexNode;
+    std::set<std::string> vertexNodes;
+
     std::map<Lattice::EdgeDescriptor, int> edgeOrdinalMap;
     int ordinal = 0;
 
@@ -97,6 +103,7 @@ void DotLatticeWriter::Worker::doRun() {
         if (!processor_.areSomeInFilter(tagNames)) continue;
 
         std::stringstream edgeSs;
+        std::stringstream invisEdgeSs;
 
         Lattice::VertexDescriptor source = lattice_.getEdgeSource(edge);
         Lattice::VertexDescriptor target = lattice_.getEdgeTarget(edge);
@@ -182,12 +189,22 @@ void DotLatticeWriter::Worker::doRun() {
             } else {
                 nSs << lattice_.getVertexRawCharIndex(source);
             }
+            if (processor_.isAlign()) {
+                if (!lastVertexNode.empty() && !vertexNodes.count(nSs.str())) {
+                    invisEdgeSs << lastVertexNode << " -> " << nSs.str() << " [style=\"invis\"]";
+                    vertexNodes.insert(nSs.str());
+                }
+            }
 
             std::stringstream mSs;
             if (lattice_.isLooseVertex(target)) {
                 mSs << "L" << lattice_.getLooseVertexIndex(target);
             } else {
                 mSs << lattice_.getVertexRawCharIndex(target);
+            }
+            if (processor_.isAlign()) {
+                vertexNodes.insert(mSs.str());
+                lastVertexNode = mSs.str();
             }
 
             edgeSs << nSs.str() << " -> " << mSs.str();
@@ -197,6 +214,11 @@ void DotLatticeWriter::Worker::doRun() {
             }
             edgeSs << "]";
 
+        }
+
+        if (processor_.isAlign() && !invisEdgeSs.str().empty()) {
+            alignOutput_(invisEdgeSs.str());
+            alignOutputNewline_();
         }
 
         alignOutput_(edgeSs.str());
