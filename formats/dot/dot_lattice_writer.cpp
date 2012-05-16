@@ -186,10 +186,11 @@ void DotLatticeWriter::Worker::doRun() {
             if (lattice_.isLooseVertex(source)) {
                 nSs << "L" << lattice_.getLooseVertexIndex(source);
             } else {
-                nSs << lattice_.getVertexRawCharIndex(source);
+                int n = lattice_.getVertexRawCharIndex(source);
+                nSs << n;
                 if (processor_.isAlign()) {
-                    vertexNodes.insert(lattice_.getVertexRawCharIndex(source));
-                    startVertexNodes.insert(lattice_.getVertexRawCharIndex(source));
+                    vertexNodes.insert(n);
+                    startVertexNodes.insert(n);
                 }
             }
 
@@ -197,9 +198,10 @@ void DotLatticeWriter::Worker::doRun() {
             if (lattice_.isLooseVertex(target)) {
                 mSs << "L" << lattice_.getLooseVertexIndex(target);
             } else {
-                mSs << lattice_.getVertexRawCharIndex(target);
+                int m = lattice_.getVertexRawCharIndex(target);
+                mSs << m;
                 if (processor_.isAlign()) {
-                    vertexNodes.insert(lattice_.getVertexRawCharIndex(target));
+                    vertexNodes.insert(m);
                 }
             }
 
