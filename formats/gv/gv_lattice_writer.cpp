@@ -337,14 +337,12 @@ void GVLatticeWriter::Worker::doRun() {
         }
 
         if (processor_.isAlign()) {
-DEBUG("vvvvvvv");
             std::set<int>::iterator vni = vertexNodes.begin();
             int prev = *vni;
             int next;
             int invisibleEdge;
             ++vni;
             while (vni != vertexNodes.end()) {
-DEBUG(*vni);
                 next = *vni;
                 if (!startVertexNodes.count(prev)) {
                     std::stringstream prevSs;
@@ -357,7 +355,6 @@ DEBUG(*vni);
                 prev = *vni;
                 ++vni;
             }
-DEBUG("^^^^^^^");
         }
 
         processor_.getAdapter()->finalize();
