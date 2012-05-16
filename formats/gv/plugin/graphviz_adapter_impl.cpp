@@ -90,6 +90,11 @@ void GraphvizAdapterImpl::setNodeColor(int node, std::string color) {
 }
 
 
+void GraphvizAdapterImpl::setNodeStyle(int node, std::string style) {
+    agsafeset(nodes_[node], (char*)"style", (char*)(style.c_str()), (char*)"");
+}
+
+
 int GraphvizAdapterImpl::addEdge(int source, int target) {
     Agedge_t * e = agedge(g_, nodes_[source], nodes_[target]);
     ++eCount_;
@@ -105,6 +110,11 @@ void GraphvizAdapterImpl::setEdgeLabel(int edge, std::string label) {
 
 void GraphvizAdapterImpl::setEdgeColor(int edge, std::string color) {
     agsafeset(edges_[edge], (char*)"color", (char*)(color.c_str()), (char*)"");
+}
+
+
+void GraphvizAdapterImpl::setEdgeStyle(int edge, std::string style) {
+    agsafeset(edges_[edge], (char*)"style", (char*)(style.c_str()), (char*)"");
 }
 
 

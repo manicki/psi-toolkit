@@ -42,10 +42,12 @@ public:
     virtual int addNode(std::string id);
     virtual void setNodeLabel(int node, std::string label);
     virtual void setNodeColor(int node, std::string color);
+    virtual void setNodeStyle(int node, std::string style);
 
     virtual int addEdge(int source, int target);
     virtual void setEdgeLabel(int node, std::string label);
     virtual void setEdgeColor(int node, std::string color);
+    virtual void setEdgeStyle(int node, std::string style);
 
 private:
     GVC_t * gvc_;
