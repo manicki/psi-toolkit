@@ -107,7 +107,7 @@ void PsiLatticeWriter::Worker::doRun() {
                 alignOutput_(quoter.escape(annotationItem.getText()), alignments[5]);
                 alignOutput_(" ");
 
-                alignOutput_(quoter.escape(annotationItem.getCategory()), alignments[6]);
+                alignOutput_(quoter.escape(annotationItem.getCategory()));
                 alignOutputNewline_();
 
                 i = lattice_.getEdgeEndIndex(rawEdge);
