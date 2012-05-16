@@ -118,7 +118,13 @@ void PsiLatticeWriter::Worker::doRun() {
 
                 } catch (NoEdgeException) {
 
-                    latticeTextCovered += lattice_.getAllText()[i];
+                    char uncoveredSymbol = lattice_.getAllText()[i];
+                    WARN(
+                        "Lattice contains some text ('" << std::string(1, uncoveredSymbol) <<
+                        "' at " << i << ") not covered by any edge. " <<
+                        "It may be nonreproducible from generated PSI output."
+                    );
+                    latticeTextCovered += uncoveredSymbol;
                     i++;
 
                 }
