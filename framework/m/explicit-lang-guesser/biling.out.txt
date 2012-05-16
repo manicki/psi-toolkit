@@ -17,4 +17,4 @@
 17 0000 45    Litwo,...ie. !pl,lang-guesser,text Litwo,_ojczyzno_moja,_ty_jesteś_jak_zdrowie. TEXT[16]
 18 0044 01    .            !pl,token             .           I
 19 0046 46    Я_помню_чудное_мгновенье. frag,txt-reader Я_помню_чудное_мгновенье. FRAG[]
-20 0046 46    Я_помню_чудное_мгновенье. !ru,lang-guesser,text Я_помню_чудное_мгновенье. TEXT[19]
+20 0046 46    Я_помн...ье. !ru,lang-guesser,text Я_помню_чудное_мгновенье. TEXT[19]
