@@ -190,6 +190,8 @@ void GVLatticeWriter::Worker::doRun() {
 
         PsiQuoter quoter;
 
+        std::set<int> vertexNodes;
+
         std::map<Lattice::EdgeDescriptor, int> edgeOrdinalMap;
         int ordinal = 0;
 
@@ -305,6 +307,9 @@ void GVLatticeWriter::Worker::doRun() {
                     nSs << lattice_.getVertexRawCharIndex(source);
                 }
                 n = processor_.getAdapter()->addNode(nSs.str());
+                if (processor_.isAlign()) {
+                    vertexNodes.insert(n);
+                }
 
                 std::stringstream mSs;
                 if (lattice_.isLooseVertex(target)) {
@@ -313,6 +318,9 @@ void GVLatticeWriter::Worker::doRun() {
                     mSs << lattice_.getVertexRawCharIndex(target);
                 }
                 m = processor_.getAdapter()->addNode(mSs.str());
+                if (processor_.isAlign()) {
+                    vertexNodes.insert(m);
+                }
 
                 e = processor_.getAdapter()->addEdge(n, m);
 
@@ -324,6 +332,21 @@ void GVLatticeWriter::Worker::doRun() {
 
             }
 
+        }
+
+        if (processor_.isAlign()) {
+            std::set<int>::iterator vni = vertexNodes.begin();
+            int prev = *vni;
+            int next;
+            int invisibleEdge;
+            ++vni;
+            while (vni != vertexNodes.end()) {
+                next = *vni;
+                invisibleEdge = processor_.getAdapter()->addEdge(prev, next);
+                processor_.getAdapter()->setEdgeStyle(invisibleEdge, "invis");
+                prev = *vni;
+                ++vni;
+            }
         }
 
         processor_.getAdapter()->finalize();
