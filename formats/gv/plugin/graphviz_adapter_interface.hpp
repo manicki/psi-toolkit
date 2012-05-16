@@ -19,15 +19,15 @@ public:
 
     virtual void setRankDir(std::string dir) = 0;
 
-    virtual void addNode(std::string id) = 0;
-    virtual void setNodeLabel(std::string node, std::string label) = 0;
-    virtual void setNodeColor(std::string node, std::string color) = 0;
-    virtual void setNodeStyle(std::string node, std::string style) = 0;
+    virtual int addNode(std::string id) = 0;
+    virtual void setNodeLabel(int node, std::string label) = 0;
+    virtual void setNodeColor(int node, std::string color) = 0;
+    virtual void setNodeStyle(int node, std::string style) = 0;
 
-    virtual int addEdge(std::string source, std::string target) = 0;
-    virtual void setEdgeLabel(int edge, std::string label) = 0;
-    virtual void setEdgeColor(int edge, std::string color) = 0;
-    virtual void setEdgeStyle(int edge, std::string style) = 0;
+    virtual int addEdge(int source, int target) = 0;
+    virtual void setEdgeLabel(int node, std::string label) = 0;
+    virtual void setEdgeColor(int node, std::string color) = 0;
+    virtual void setEdgeStyle(int node, std::string style) = 0;
 
 };
 
