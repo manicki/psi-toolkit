@@ -265,7 +265,7 @@ void GVLatticeWriter::Worker::doRun() {
                 processor_.getAdapter()->setNodeLabel(n, edgeLabelSs.str());
 
                 if (processor_.isColor()) {
-                    processor_.getAdapter()->setNodeLabel(n, colorSs.str());
+                    processor_.getAdapter()->setNodeColor(n, colorSs.str());
                 }
 
                 int partitionNumber = 0;
