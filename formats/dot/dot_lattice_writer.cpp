@@ -74,8 +74,8 @@ void DotLatticeWriter::Worker::doRun() {
 
     PsiQuoter quoter;
 
-    std::string lastVertexNode;
-    std::set<std::string> vertexNodes;
+    std::set<int> vertexNodes;
+    std::set<int> startVertexNodes;
 
     std::map<Lattice::EdgeDescriptor, int> edgeOrdinalMap;
     int ordinal = 0;
@@ -103,7 +103,6 @@ void DotLatticeWriter::Worker::doRun() {
         if (!processor_.areSomeInFilter(tagNames)) continue;
 
         std::stringstream edgeSs;
-        std::stringstream invisEdgeSs;
 
         Lattice::VertexDescriptor source = lattice_.getEdgeSource(edge);
         Lattice::VertexDescriptor target = lattice_.getEdgeTarget(edge);
@@ -188,11 +187,9 @@ void DotLatticeWriter::Worker::doRun() {
                 nSs << "L" << lattice_.getLooseVertexIndex(source);
             } else {
                 nSs << lattice_.getVertexRawCharIndex(source);
-            }
-            if (processor_.isAlign()) {
-                if (!lastVertexNode.empty() && !vertexNodes.count(nSs.str())) {
-                    invisEdgeSs << lastVertexNode << " -> " << nSs.str() << " [style=\"invis\"]";
-                    vertexNodes.insert(nSs.str());
+                if (processor_.isAlign()) {
+                    vertexNodes.insert(lattice_.getVertexRawCharIndex(source));
+                    startVertexNodes.insert(lattice_.getVertexRawCharIndex(source));
                 }
             }
 
@@ -201,10 +198,9 @@ void DotLatticeWriter::Worker::doRun() {
                 mSs << "L" << lattice_.getLooseVertexIndex(target);
             } else {
                 mSs << lattice_.getVertexRawCharIndex(target);
-            }
-            if (processor_.isAlign()) {
-                vertexNodes.insert(mSs.str());
-                lastVertexNode = mSs.str();
+                if (processor_.isAlign()) {
+                    vertexNodes.insert(lattice_.getVertexRawCharIndex(target));
+                }
             }
 
             edgeSs << nSs.str() << " -> " << mSs.str();
@@ -216,14 +212,27 @@ void DotLatticeWriter::Worker::doRun() {
 
         }
 
-        if (processor_.isAlign() && !invisEdgeSs.str().empty()) {
-            alignOutput_(invisEdgeSs.str());
-            alignOutputNewline_();
-        }
-
         alignOutput_(edgeSs.str());
         alignOutputNewline_();
 
+    }
+
+    if (processor_.isAlign()) {
+        std::set<int>::iterator vni = vertexNodes.begin();
+        int prev = *vni;
+        int next;
+        ++vni;
+        while (vni != vertexNodes.end()) {
+            next = *vni;
+            if (!startVertexNodes.count(prev)) {
+                std::stringstream invisibleEdgeSs;
+                invisibleEdgeSs << prev << " -> " << next << " [style=invis]";
+                alignOutput_(invisibleEdgeSs.str());
+                alignOutputNewline_();
+            }
+            prev = *vni;
+            ++vni;
+        }
     }
 
     alignOutput_("}");
