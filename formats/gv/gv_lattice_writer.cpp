@@ -16,13 +16,15 @@ GVLatticeWriter::GVLatticeWriter(
     bool color,
     std::set<std::string> filter,
     std::string outputFormat,
-    bool tree
+    bool tree,
+    bool align
 ) :
     showTags_(showTags),
     color_(color),
     filter_(filter),
     outputFormat_(outputFormat),
-    tree_(tree)
+    tree_(tree),
+    align_(align)
 {
     adapter_ = dynamic_cast<GraphvizAdapterInterface*>(
         PluginManager::getInstance().createPluginAdapter("graphviz")
@@ -70,7 +72,8 @@ LatticeWriter<std::ostream>* GVLatticeWriter::Factory::doCreateLatticeWriter(
         options.count("color"),
         filter,
         options["format"].as<std::string>(),
-        options.count("tree")
+        options.count("tree"),
+        options.count("align")
     );
 }
 
@@ -78,6 +81,8 @@ boost::program_options::options_description GVLatticeWriter::Factory::doOptionsH
     boost::program_options::options_description optionsDescription("Allowed options");
 
     optionsDescription.add_options()
+        ("align",
+            "forces aligning nodes left to right")
         ("color",
             "edges with different tags have different colors")
         ("filter", boost::program_options::value< std::vector<std::string> >()->multitoken(),
