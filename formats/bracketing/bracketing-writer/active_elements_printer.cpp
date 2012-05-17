@@ -15,7 +15,10 @@ ActiveElementsPrinter ActiveElementsPrinter::Manager::getPrinter(std::string pat
 
 
 std::string ActiveElementsPrinter::print(
-    std::list<std::string> tags
+    std::list<std::string> tags,
+    std::string category,
+    std::string text,
+    double score
 ) {
     std::stringstream result;
     size_t i = 0;
@@ -32,6 +35,24 @@ std::string ActiveElementsPrinter::print(
                         tagSs << tag;
                     }
                     result << tagSs.str();
+                    i += 2;
+                }
+                break;
+            case 'c' :
+                {
+                    result << category;
+                    i += 2;
+                }
+                break;
+            case 't' :
+                {
+                    result << text;
+                    i += 2;
+                }
+                break;
+            case 's' :
+                {
+                    result << score;
                     i += 2;
                 }
                 break;

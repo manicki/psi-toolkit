@@ -33,7 +33,10 @@ public:
     { }
 
     std::string print(
-        std::list<std::string> tags
+        std::list<std::string> tags,
+        std::string category,
+        std::string text,
+        double score
     );
 
 private:
