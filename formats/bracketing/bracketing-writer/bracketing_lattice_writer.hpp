@@ -29,6 +29,7 @@ public:
         std::string openingBracket,
         std::string closingBracket,
         std::string tagSeparator,
+        std::vector<std::string> showOnlyTags,
         std::vector<std::string> filter,
         std::string avPairsSeparator,
         std::string avSeprator,
@@ -37,6 +38,7 @@ public:
         openingBracket_(openingBracket),
         closingBracket_(closingBracket),
         tagSeparator_(tagSeparator),
+        showOnlyTags_(showOnlyTags),
         filter_(filter),
         avPairsSeparator_(avPairsSeparator),
         avSeprator_(avSeprator),
@@ -74,6 +76,7 @@ private:
     std::string openingBracket_;
     std::string closingBracket_;
     std::string tagSeparator_;
+    std::vector<std::string> showOnlyTags_;
     std::vector<std::string> filter_;
     std::string avPairsSeparator_;
     std::string avSeprator_;

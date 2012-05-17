@@ -9,12 +9,17 @@ std::string BracketingLatticeWriter::getFormatName() {
 LatticeWriter<std::ostream>* BracketingLatticeWriter::Factory::doCreateLatticeWriter(
     const boost::program_options::variables_map& options
 ) {
+    std::vector<std::string> showOnlyTags;
     std::vector<std::string> filter;
     std::vector<std::string> filterAttributes;
 
     if (options.count("show-only-tags")) {
-        filter = options["show-only-tags"].as< std::vector<std::string> >();
+        showOnlyTags = options["show-only-tags"].as< std::vector<std::string> >();
     } else if (options.count("filter")) {
+        showOnlyTags = options["filter"].as< std::vector<std::string> >();
+    }
+
+    if (options.count("filter")) {
         filter = options["filter"].as< std::vector<std::string> >();
     }
 
@@ -26,6 +31,7 @@ LatticeWriter<std::ostream>* BracketingLatticeWriter::Factory::doCreateLatticeWr
         options["opening-bracket"].as<std::string>(),
         options["closing-bracket"].as<std::string>(),
         options["tag-separator"].as<std::string>(),
+        showOnlyTags,
         filter,
         options["av-pairs-separator"].as<std::string>(),
         options["av-separator"].as<std::string>(),
@@ -52,7 +58,7 @@ boost::program_options::options_description BracketingLatticeWriter::Factory::do
             "limits the tag names that will appear in `%T` substitions")
         ("filter",
             boost::program_options::value< std::vector<std::string> >()->multitoken(),
-            "limits the tag names that will appear in `%T` substitions")
+            "filters the edges by tags")
         ("av-pairs-separator",
             boost::program_options::value<std::string>()->default_value(","),
             "separates the attribute-value pairs")
