@@ -2,6 +2,7 @@
 #define ANNOTATION_ITEM_MANAGER_HDR
 
 #include <list>
+#include <map>
 #include <string>
 
 #include <boost/bimap.hpp>
@@ -21,6 +22,10 @@ public:
     }
 
     std::list< std::pair<std::string, std::string> > getValues(
+        const AnnotationItem & annotationItem
+    );
+
+    std::map<std::string, std::string> getAVMap(
         const AnnotationItem & annotationItem
     );
 
