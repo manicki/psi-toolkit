@@ -1,9 +1,9 @@
 #ifndef GV_LATTICE_WRITER_HDR
 #define GV_LATTICE_WRITER_HDR
 
+#include <list>
 #include <set>
 #include <string>
-#include <list>
 
 #include <boost/foreach.hpp>
 

@@ -1,10 +1,12 @@
 #include "gv_lattice_writer.hpp"
 
 #include <cstdio>
+#include <fstream>
 #include <iomanip>
 #include <iostream>
 #include <locale>
-#include <fstream>
+#include <map>
+#include <vector>
 
 #include "lattice.hpp"
 #include "plugin_manager.hpp"
@@ -190,8 +192,8 @@ void GVLatticeWriter::Worker::doRun() {
 
         PsiQuoter quoter;
 
-        std::set<int> vertexNodes;
-        std::set<int> startVertexNodes;
+        std::map<int, int> vertexNodes;
+        std::set<int> startVertices;
 
         std::map<Lattice::EdgeDescriptor, int> edgeOrdinalMap;
         int ordinal = 0;
@@ -302,26 +304,32 @@ void GVLatticeWriter::Worker::doRun() {
             } else {
 
                 std::stringstream nSs;
+                int nIx;
                 if (lattice_.isLooseVertex(source)) {
-                    nSs << "L" << lattice_.getLooseVertexIndex(source);
+                    nIx = lattice_.getLooseVertexIndex(source);
+                    nSs << "L" << nIx;
                 } else {
-                    nSs << lattice_.getVertexRawCharIndex(source);
+                    nIx = lattice_.getVertexRawCharIndex(source);
+                    nSs << nIx;
                 }
                 n = processor_.getAdapter()->addNode(nSs.str());
-                if (processor_.isAlign()) {
-                    vertexNodes.insert(n);
-                    startVertexNodes.insert(n);
+                if (processor_.isAlign() && !lattice_.isLooseVertex(source)) {
+                    vertexNodes.insert(std::pair<int, int>(nIx, n));
+                    startVertices.insert(nIx);
                 }
 
                 std::stringstream mSs;
+                int mIx;
                 if (lattice_.isLooseVertex(target)) {
-                    mSs << "L" << lattice_.getLooseVertexIndex(target);
+                    mIx = lattice_.getLooseVertexIndex(target);
+                    mSs << "L" << mIx;
                 } else {
-                    mSs << lattice_.getVertexRawCharIndex(target);
+                    mIx = lattice_.getVertexRawCharIndex(target);
+                    mSs << mIx;
                 }
                 m = processor_.getAdapter()->addNode(mSs.str());
-                if (processor_.isAlign()) {
-                    vertexNodes.insert(m);
+                if (processor_.isAlign() && !lattice_.isLooseVertex(target)) {
+                    vertexNodes.insert(std::pair<int, int>(mIx, m));
                 }
 
                 e = processor_.getAdapter()->addEdge(n, m);
@@ -337,18 +345,18 @@ void GVLatticeWriter::Worker::doRun() {
         }
 
         if (processor_.isAlign()) {
-            std::set<int>::iterator vni = vertexNodes.begin();
-            int prev = *vni;
-            int next;
+            std::map<int, int>::iterator vni = vertexNodes.begin();
+            int prevKey = vni->first;
+            int prevVal = vni->second;
             int invisibleEdge;
             ++vni;
             while (vni != vertexNodes.end()) {
-                next = *vni;
-                if (!startVertexNodes.count(prev)) {
-                    invisibleEdge = processor_.getAdapter()->addEdge(prev, next);
+                if (!startVertices.count(prevKey)) {
+                    invisibleEdge = processor_.getAdapter()->addEdge(prevVal, vni->second);
                     processor_.getAdapter()->setEdgeStyle(invisibleEdge, "invis");
                 }
-                prev = *vni;
+                prevKey = vni->first;
+                prevVal = vni->second;
                 ++vni;
             }
         }
