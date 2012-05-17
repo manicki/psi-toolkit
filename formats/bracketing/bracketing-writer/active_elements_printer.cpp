@@ -53,6 +53,25 @@ std::string ActiveElementsPrinter::print(
                     i += 2;
                 }
                 break;
+            case 'a' :
+                {
+                    if (i+2 < pattern_.length()) {
+                        size_t from = i+3;
+                        size_t to = pattern_.find(close_(pattern_[i+2]), from);
+                        if (to != std::string::npos) {
+                            std::string attr = pattern_.substr(from, to-from);
+                            result << avMap[attr];
+                            i = to + 1;
+                        } else {
+                            result << "%a";
+                            i += 2;
+                        }
+                    } else {
+                        result << "%a";
+                        i += 2;
+                    }
+                }
+                break;
             case 'A' :
                 {
                     std::stringstream avSs;
@@ -86,4 +105,19 @@ std::string ActiveElementsPrinter::print(
         }
     }
     return result.str();
+}
+
+
+char ActiveElementsPrinter::close_(char c) {
+    switch (c) {
+    case '(' : return ')';
+    case ')' : return '(';
+    case '[' : return ']';
+    case ']' : return '[';
+    case '{' : return '}';
+    case '}' : return '{';
+    case '<' : return '>';
+    case '>' : return '<';
+    default : return c;
+    }
 }

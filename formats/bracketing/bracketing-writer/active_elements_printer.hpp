@@ -58,6 +58,8 @@ private:
     std::string avPairsSeparator_;
     std::string avSeparator_;
 
+    char close_(char c);
+
 };
 
 
