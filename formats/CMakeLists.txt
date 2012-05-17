@@ -1,11 +1,12 @@
 set(formats_SUBDIRS
-    apertium apertium/apertium_reader 
-    dot 
-    guessing guessing/guessing_reader 
-    nkjp 
-    psi psi/psi_reader psi/psi_writer 
-    simple json-simple 
-    txt 
+    apertium apertium/apertium_reader
+    bracketing bracketing/bracketing-writer
+    dot
+    guessing guessing/guessing_reader
+    nkjp
+    psi psi/psi_reader psi/psi_writer
+    simple json-simple
+    txt
     utt
 CACHE PATH "Formats subdirectories" FORCE)
 
