@@ -1,16 +1,13 @@
 #ifndef BRACKETING_LATTICE_WRITER_HDR
 #define BRACKETING_LATTICE_WRITER_HDR
 
-#include <map>
+#include <vector>
 
-#include <boost/foreach.hpp>
-
-#include "lattice_iter_writer.hpp"
+#include "aligning_writer_worker.hpp"
+#include "bracketing_lattice_writer_stream_output_iterator.hpp"
 #include "lattice_writer.hpp"
 #include "lattice_writer_factory.hpp"
-#include "aligning_writer_worker.hpp"
-#include "psi_quoter.hpp"
-#include "bracketing_lattice_writer_stream_output_iterator.hpp"
+
 
 class BracketingLatticeWriter : public LatticeWriter<std::ostream> {
 
@@ -29,39 +26,28 @@ public:
     };
 
     BracketingLatticeWriter(
-        bool linear,
-        bool noAlts,
-        bool withBlank,
-        std::string basicTag,
-        std::string basicTagSeparator,
-        std::string altSeparator,
-        std::map<std::string, std::string> tagsSeparators
+        std::string openingBracket,
+        std::string closingBracket,
+        std::string tagSeparator,
+        std::vector<std::string> filter,
+        std::string avPairsSeparator,
+        std::string avSeprator,
+        std::vector<std::string> filterAttributes
     ) :
-        linear_(linear),
-        noAlts_(noAlts),
-        withBlank_(withBlank),
-        basicTag_(basicTag),
-        basicTagSeparator_(basicTagSeparator),
-        altSeparator_(altSeparator),
-        tagsSeparators_(tagsSeparators)
+        openingBracket_(openingBracket),
+        closingBracket_(closingBracket),
+        tagSeparator_(tagSeparator),
+        filter_(filter),
+        avPairsSeparator_(avPairsSeparator),
+        avSeprator_(avSeprator),
+        filterAttributes_(filterAttributes)
     { }
 
-    bool isLinear() const { return linear_; }
-    bool isNoAlts() const { return noAlts_; }
-    bool isWithBlank() const { return withBlank_; }
-    std::string getBasicTag() const { return basicTag_; }
-    std::string getBasicTagSeparator() const { return basicTagSeparator_; }
-    std::string getAltSeparator() const { return altSeparator_; }
-    std::map<std::string, std::string> getTagsSeparatorsMap() const { return tagsSeparators_; }
-
-    bool isHandledTag(std::string tagName) {
-        return tagsSeparators_.find(tagName) != tagsSeparators_.end();
-    }
-
-    std::string getTagSeparator(std::string tagName) {
-        return tagsSeparators_[tagName];
-    }
-
+    std::string getOpeningBracket() const { return openingBracket_; }
+    std::string getClosingBracket() const { return closingBracket_; }
+    std::string getTagSeparator() const { return tagSeparator_; }
+    std::string getAVPairsSeparator() const { return avPairsSeparator_; }
+    std::string getAVSeprator() const { return avSeprator_; }
 
 private:
     virtual std::string doInfo();
@@ -85,14 +71,15 @@ private:
         return new Worker(*this, outputStream, lattice);
     }
 
-    bool linear_;
-    bool noAlts_;
-    bool withBlank_;
-    std::string basicTag_;
-    std::string basicTagSeparator_;
-    std::string altSeparator_;
-    std::map<std::string, std::string> tagsSeparators_;
+    std::string openingBracket_;
+    std::string closingBracket_;
+    std::string tagSeparator_;
+    std::vector<std::string> filter_;
+    std::string avPairsSeparator_;
+    std::string avSeprator_;
+    std::vector<std::string> filterAttributes_;
 
 };
+
 
 #endif
