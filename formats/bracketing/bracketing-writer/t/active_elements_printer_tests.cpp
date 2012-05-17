@@ -9,12 +9,19 @@ BOOST_AUTO_TEST_SUITE( active_elements_printer )
 
 
 BOOST_AUTO_TEST_CASE( active_elements_printer_simple ) {
-    ActiveElementsPrinter::Manager aepManager(",");
-    ActiveElementsPrinter aep = aepManager.getPrinter("<%c tags=\"%T\" score=\"%s\">%t</%c> % %");
+    ActiveElementsPrinter::Manager aepManager(",", ",", "=");
+    ActiveElementsPrinter aep1 = aepManager.getPrinter("<%c tags=\"%T\" score=\"%s\">%t</%c> % %");
+    ActiveElementsPrinter aep2 = aepManager.getPrinter("<%c attr=\"%A\">%t</%c> %\n");
     std::list<std::string> tags = boost::assign::list_of("symbol")("token")("segment");
+    std::map<std::string, std::string> avMap
+        = boost::assign::map_list_of("case", "Nominative")("number", "singular");
     BOOST_CHECK_EQUAL(
-        aep.print(tags, "Noun-Phrase", "Żółta jaźń", -1.5),
+        aep1.print(tags, "Noun-Phrase", "Żółta jaźń", avMap, -1.5),
         "<Noun-Phrase tags=\"symbol,token,segment\" score=\"-1.5\">Żółta jaźń</Noun-Phrase> % %"
+    );
+    BOOST_CHECK_EQUAL(
+        aep2.print(tags, "Noun-Phrase", "Żółta jaźń", avMap, -1.5),
+        "<Noun-Phrase attr=\"case=Nominative,number=singular\">Żółta jaźń</Noun-Phrase> %\n"
     );
 }
 

@@ -9,7 +9,9 @@
 ActiveElementsPrinter ActiveElementsPrinter::Manager::getPrinter(std::string pattern) {
     return ActiveElementsPrinter(
         pattern,
-        tagSeparator_
+        tagSeparator_,
+        avPairsSeparator_,
+        avSeparator_
     );
 }
 
@@ -18,6 +20,7 @@ std::string ActiveElementsPrinter::print(
     std::list<std::string> tags,
     std::string category,
     std::string text,
+    std::map<std::string, std::string> avMap,
     double score
 ) {
     std::stringstream result;
@@ -47,6 +50,20 @@ std::string ActiveElementsPrinter::print(
             case 't' :
                 {
                     result << text;
+                    i += 2;
+                }
+                break;
+            case 'A' :
+                {
+                    std::stringstream avSs;
+                    typedef std::pair<std::string, std::string> StrStrPair;
+                    BOOST_FOREACH(StrStrPair avPair, avMap) {
+                        if (!avSs.str().empty()) {
+                            avSs << avPairsSeparator_;
+                        }
+                        avSs << avPair.first << avSeparator_ << avPair.second;
+                    }
+                    result << avSs.str();
                     i += 2;
                 }
                 break;

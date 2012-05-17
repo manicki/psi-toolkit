@@ -32,7 +32,7 @@ public:
         std::vector<std::string> showOnlyTags,
         std::vector<std::string> filter,
         std::string avPairsSeparator,
-        std::string avSeprator,
+        std::string avSeparator,
         std::vector<std::string> filterAttributes
     ) :
         openingBracket_(openingBracket),
@@ -41,7 +41,7 @@ public:
         showOnlyTags_(showOnlyTags),
         filter_(filter),
         avPairsSeparator_(avPairsSeparator),
-        avSeprator_(avSeprator),
+        avSeparator_(avSeparator),
         filterAttributes_(filterAttributes)
     { }
 
@@ -49,7 +49,7 @@ public:
     std::string getClosingBracket() const { return closingBracket_; }
     std::string getTagSeparator() const { return tagSeparator_; }
     std::string getAVPairsSeparator() const { return avPairsSeparator_; }
-    std::string getAVSeprator() const { return avSeprator_; }
+    std::string getAVSeparator() const { return avSeparator_; }
 
 private:
     virtual std::string doInfo();
@@ -79,7 +79,7 @@ private:
     std::vector<std::string> showOnlyTags_;
     std::vector<std::string> filter_;
     std::string avPairsSeparator_;
-    std::string avSeprator_;
+    std::string avSeparator_;
     std::vector<std::string> filterAttributes_;
 
 };
