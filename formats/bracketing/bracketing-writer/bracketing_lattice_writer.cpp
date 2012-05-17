@@ -1,6 +1,9 @@
 #include "bracketing_lattice_writer.hpp"
 
 
+#include "active_elements_printer.hpp"
+
+
 std::string BracketingLatticeWriter::getFormatName() {
     return "bracketing";
 }
@@ -97,8 +100,56 @@ BracketingLatticeWriter::Worker::Worker(BracketingLatticeWriter& processor,
 
 
 void BracketingLatticeWriter::Worker::doRun() {
-    alignOutput_("bracketing-writer: TODO");
+
+    ActiveElementsPrinter::Manager aepManager(
+        processor_.getTagSeparator(),
+        processor_.getAVPairsSeparator(),
+        processor_.getAVSeparator()
+    );
+
+    ActiveElementsPrinter aepOpen = aepManager.getPrinter(processor_.getOpeningBracket());
+    ActiveElementsPrinter aepClose = aepManager.getPrinter(processor_.getClosingBracket());
+
+    Lattice::VertexIterator vi(lattice_);
+
+    while (vi.hasNext()) {
+
+        Lattice::VertexDescriptor vertex = vi.next();
+
+        Lattice::InOutEdgesIterator iei = lattice_.allInEdges(vertex);
+        while (iei.hasNext()) {
+            Lattice::EdgeDescriptor edge = iei.next();
+            alignOutput_(aepClose.print(
+                lattice_.getLayerTagManager().getTagNames(lattice_.getEdgeLayerTags(edge)),
+                lattice_.getAnnotationCategory(edge),
+                lattice_.getEdgeText(edge),
+                lattice_.getAnnotationItemManager().getAVMap(lattice_.getEdgeAnnotationItem(edge)),
+                lattice_.getEdgeScore(edge)
+            ));
+        }
+
+        Lattice::InOutEdgesIterator oei = lattice_.allOutEdges(vertex);
+        while (oei.hasNext()) {
+            Lattice::EdgeDescriptor edge = oei.next();
+            alignOutput_(aepOpen.print(
+                lattice_.getLayerTagManager().getTagNames(lattice_.getEdgeLayerTags(edge)),
+                lattice_.getAnnotationCategory(edge),
+                lattice_.getEdgeText(edge),
+                lattice_.getAnnotationItemManager().getAVMap(lattice_.getEdgeAnnotationItem(edge)),
+                lattice_.getEdgeScore(edge)
+            ));
+        }
+
+        try {
+            alignOutput_(lattice_.getEdgeText(
+                lattice_.firstOutEdge(vertex, lattice_.getLayerTagManager().getMask("symbol"))
+            ));
+        } catch (NoEdgeException) { }
+
+    }
+
     alignOutputNewline_();
+
 }
 
 
