@@ -48,6 +48,6 @@ attribute-value pairs with commas. An alternative separator can be
 given with `--av-pairs-separator` option. The attribute and its value
 are separated with `=`, an alternative separator can be given with
 `--av-separator`. The attribute to be shown can be chosen with the
-`--filter-attributes` option.
+`--show-attributes` option.
 
 

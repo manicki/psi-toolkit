@@ -1,7 +1,7 @@
 #ifndef BRACKETING_LATTICE_WRITER_HDR
 #define BRACKETING_LATTICE_WRITER_HDR
 
-#include <vector>
+#include <set>
 
 #include "aligning_writer_worker.hpp"
 #include "bracketing_lattice_writer_stream_output_iterator.hpp"
@@ -33,16 +33,16 @@ public:
         std::vector<std::string> filter,
         std::string avPairsSeparator,
         std::string avSeparator,
-        std::vector<std::string> filterAttributes
+        std::vector<std::string> showAttributes
     ) :
         openingBracket_(openingBracket),
         closingBracket_(closingBracket),
         tagSeparator_(tagSeparator),
-        showOnlyTags_(showOnlyTags),
-        filter_(filter),
+        showOnlyTags_(showOnlyTags.begin(), showOnlyTags.end()),
+        filter_(filter.begin(), filter.end()),
         avPairsSeparator_(avPairsSeparator),
         avSeparator_(avSeparator),
-        filterAttributes_(filterAttributes)
+        showAttributes_(showAttributes.begin(), showAttributes.end())
     { }
 
     std::string getOpeningBracket() const { return openingBracket_; }
@@ -50,6 +50,9 @@ public:
     std::string getTagSeparator() const { return tagSeparator_; }
     std::string getAVPairsSeparator() const { return avPairsSeparator_; }
     std::string getAVSeparator() const { return avSeparator_; }
+
+    std::set<std::string> intersectFilter(std::set<std::string> tags);
+    bool matchFilter(std::set<std::string> tags);
 
 private:
     virtual std::string doInfo();
@@ -76,11 +79,11 @@ private:
     std::string openingBracket_;
     std::string closingBracket_;
     std::string tagSeparator_;
-    std::vector<std::string> showOnlyTags_;
-    std::vector<std::string> filter_;
+    std::set<std::string> showOnlyTags_;
+    std::set<std::string> filter_;
     std::string avPairsSeparator_;
     std::string avSeparator_;
-    std::vector<std::string> filterAttributes_;
+    std::set<std::string> showAttributes_;
 
 };
 
