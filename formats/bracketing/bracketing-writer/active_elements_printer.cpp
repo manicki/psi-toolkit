@@ -17,7 +17,7 @@ ActiveElementsPrinter ActiveElementsPrinter::Manager::getPrinter(std::string pat
 
 
 std::string ActiveElementsPrinter::print(
-    std::list<std::string> tags,
+    std::set<std::string> tags,
     std::string category,
     std::string text,
     std::map<std::string, std::string> avMap,

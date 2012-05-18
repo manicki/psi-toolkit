@@ -88,26 +88,22 @@ boost::filesystem::path BracketingLatticeWriter::Factory::doGetFile() const {
     return __FILE__;
 }
 
-/*
-std::set<std::string> BracketingLatticeWriter::intersectFilter(
+
+std::set<std::string> BracketingLatticeWriter::intersectOnlyTags(
     std::set<std::string> tags
 ) {
+    if (showOnlyTags_.empty()) {
+        return tags;
+    }
     std::set<std::string> result;
     set_intersection(
-        filter_.begin(), filter_.end(),
+        showOnlyTags_.begin(), showOnlyTags_.end(),
         tags.begin(), tags.end(),
         std::inserter(result, result.begin())
     );
     return result;
 }
 
-
-bool BracketingLatticeWriter::matchFilter(
-    std::set<std::string> tags
-) {
-    return filter_.empty() || !intersectFilter(tags).empty();
-}
-*/
 
 std::string BracketingLatticeWriter::doInfo() {
     return "Bracketing writer";
@@ -148,7 +144,7 @@ void BracketingLatticeWriter::Worker::doRun() {
             std::set<std::string> tags(tagsList.begin(), tagsList.end());
             AnnotationItem annotationItem = lattice_.getEdgeAnnotationItem(edge);
             alignOutput_(aepClose.print(
-                tagsList,
+                processor_.intersectOnlyTags(tags),
                 annotationItem.getCategory(),
                 annotationItem.getText(),
                 lattice_.getAnnotationItemManager().getAVMap(annotationItem),
@@ -164,7 +160,7 @@ void BracketingLatticeWriter::Worker::doRun() {
             std::set<std::string> tags(tagsList.begin(), tagsList.end());
             AnnotationItem annotationItem = lattice_.getEdgeAnnotationItem(edge);
             alignOutput_(aepOpen.print(
-                tagsList,
+                processor_.intersectOnlyTags(tags),
                 annotationItem.getCategory(),
                 annotationItem.getText(),
                 lattice_.getAnnotationItemManager().getAVMap(annotationItem),

@@ -2,8 +2,8 @@
 #define ACTIVE_ELEMENTS_PRINTER_HDR
 
 
-#include <list>
 #include <map>
+#include <set>
 #include <string>
 
 
@@ -44,7 +44,7 @@ public:
     { }
 
     std::string print(
-        std::list<std::string> tags,
+        std::set<std::string> tags,
         std::string category,
         std::string text,
         std::map<std::string, std::string> avMap,

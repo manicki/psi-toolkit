@@ -52,8 +52,7 @@ public:
     std::string getAVPairsSeparator() const { return avPairsSeparator_; }
     std::string getAVSeparator() const { return avSeparator_; }
 
-    // std::set<std::string> intersectFilter(std::set<std::string> tags);
-    // bool matchFilter(std::set<std::string> tags);
+    std::set<std::string> intersectOnlyTags(std::set<std::string> tags);
 
 private:
     virtual std::string doInfo();
