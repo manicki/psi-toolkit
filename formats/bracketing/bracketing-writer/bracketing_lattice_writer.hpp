@@ -39,7 +39,7 @@ public:
         closingBracket_(closingBracket),
         tagSeparator_(tagSeparator),
         showOnlyTags_(showOnlyTags.begin(), showOnlyTags.end()),
-        filter_(filter.begin(), filter.end()),
+        filter_(filter),
         avPairsSeparator_(avPairsSeparator),
         avSeparator_(avSeparator),
         showAttributes_(showAttributes.begin(), showAttributes.end())
@@ -48,11 +48,12 @@ public:
     std::string getOpeningBracket() const { return openingBracket_; }
     std::string getClosingBracket() const { return closingBracket_; }
     std::string getTagSeparator() const { return tagSeparator_; }
+    std::vector<std::string> getFilter() const { return filter_; }
     std::string getAVPairsSeparator() const { return avPairsSeparator_; }
     std::string getAVSeparator() const { return avSeparator_; }
 
-    std::set<std::string> intersectFilter(std::set<std::string> tags);
-    bool matchFilter(std::set<std::string> tags);
+    // std::set<std::string> intersectFilter(std::set<std::string> tags);
+    // bool matchFilter(std::set<std::string> tags);
 
 private:
     virtual std::string doInfo();
@@ -80,7 +81,7 @@ private:
     std::string closingBracket_;
     std::string tagSeparator_;
     std::set<std::string> showOnlyTags_;
-    std::set<std::string> filter_;
+    std::vector<std::string> filter_;
     std::string avPairsSeparator_;
     std::string avSeparator_;
     std::set<std::string> showAttributes_;

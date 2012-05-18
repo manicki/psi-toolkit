@@ -88,7 +88,7 @@ boost::filesystem::path BracketingLatticeWriter::Factory::doGetFile() const {
     return __FILE__;
 }
 
-
+/*
 std::set<std::string> BracketingLatticeWriter::intersectFilter(
     std::set<std::string> tags
 ) {
@@ -107,7 +107,7 @@ bool BracketingLatticeWriter::matchFilter(
 ) {
     return filter_.empty() || !intersectFilter(tags).empty();
 }
-
+*/
 
 std::string BracketingLatticeWriter::doInfo() {
     return "Bracketing writer";
@@ -132,46 +132,44 @@ void BracketingLatticeWriter::Worker::doRun() {
     ActiveElementsPrinter aepOpen = aepManager.getPrinter(processor_.getOpeningBracket());
     ActiveElementsPrinter aepClose = aepManager.getPrinter(processor_.getClosingBracket());
 
+    LayerTagMask mask = lattice_.getLayerTagManager().getMask(processor_.getFilter());
+
     Lattice::VertexIterator vi(lattice_);
 
     while (vi.hasNext()) {
 
         Lattice::VertexDescriptor vertex = vi.next();
 
-        Lattice::InOutEdgesIterator iei = lattice_.allInEdges(vertex);
+        Lattice::InOutEdgesIterator iei = lattice_.inEdges(vertex, mask);
         while (iei.hasNext()) {
             Lattice::EdgeDescriptor edge = iei.next();
             std::list<std::string> tagsList
                 = lattice_.getLayerTagManager().getTagNames(lattice_.getEdgeLayerTags(edge));
             std::set<std::string> tags(tagsList.begin(), tagsList.end());
             AnnotationItem annotationItem = lattice_.getEdgeAnnotationItem(edge);
-            if (processor_.matchFilter(tags)) {
-                alignOutput_(aepClose.print(
-                    tagsList,
-                    annotationItem.getCategory(),
-                    annotationItem.getText(),
-                    lattice_.getAnnotationItemManager().getAVMap(annotationItem),
-                    lattice_.getEdgeScore(edge)
-                ));
-            }
+            alignOutput_(aepClose.print(
+                tagsList,
+                annotationItem.getCategory(),
+                annotationItem.getText(),
+                lattice_.getAnnotationItemManager().getAVMap(annotationItem),
+                lattice_.getEdgeScore(edge)
+            ));
         }
 
-        Lattice::InOutEdgesIterator oei = lattice_.allOutEdges(vertex);
+        Lattice::InOutEdgesIterator oei = lattice_.outEdges(vertex, mask);
         while (oei.hasNext()) {
             Lattice::EdgeDescriptor edge = oei.next();
             std::list<std::string> tagsList
                 = lattice_.getLayerTagManager().getTagNames(lattice_.getEdgeLayerTags(edge));
             std::set<std::string> tags(tagsList.begin(), tagsList.end());
             AnnotationItem annotationItem = lattice_.getEdgeAnnotationItem(edge);
-            if (processor_.matchFilter(tags)) {
-                alignOutput_(aepOpen.print(
-                    tagsList,
-                    annotationItem.getCategory(),
-                    annotationItem.getText(),
-                    lattice_.getAnnotationItemManager().getAVMap(annotationItem),
-                    lattice_.getEdgeScore(edge)
-                ));
-            }
+            alignOutput_(aepOpen.print(
+                tagsList,
+                annotationItem.getCategory(),
+                annotationItem.getText(),
+                lattice_.getAnnotationItemManager().getAVMap(annotationItem),
+                lattice_.getEdgeScore(edge)
+            ));
         }
 
         try {
