@@ -105,6 +105,23 @@ std::set<std::string> BracketingLatticeWriter::intersectOnlyTags(
 }
 
 
+std::map<std::string, std::string> BracketingLatticeWriter::filterAttributes(
+    std::map<std::string, std::string> avMap
+) {
+    if (showAttributes_.empty()) {
+        return avMap;
+    }
+    std::map<std::string, std::string> result;
+    typedef std::pair<std::string, std::string> StrStrPair;
+    BOOST_FOREACH(StrStrPair avPair, avMap) {
+        if (showAttributes_.count(avPair.first)) {
+            result.insert(avPair);
+        }
+    }
+    return result;
+}
+
+
 std::string BracketingLatticeWriter::doInfo() {
     return "Bracketing writer";
 }
@@ -147,7 +164,9 @@ void BracketingLatticeWriter::Worker::doRun() {
                 processor_.intersectOnlyTags(tags),
                 annotationItem.getCategory(),
                 annotationItem.getText(),
-                lattice_.getAnnotationItemManager().getAVMap(annotationItem),
+                processor_.filterAttributes(
+                    lattice_.getAnnotationItemManager().getAVMap(annotationItem)
+                ),
                 lattice_.getEdgeScore(edge)
             ));
         }
@@ -163,7 +182,9 @@ void BracketingLatticeWriter::Worker::doRun() {
                 processor_.intersectOnlyTags(tags),
                 annotationItem.getCategory(),
                 annotationItem.getText(),
-                lattice_.getAnnotationItemManager().getAVMap(annotationItem),
+                processor_.filterAttributes(
+                    lattice_.getAnnotationItemManager().getAVMap(annotationItem)
+                ),
                 lattice_.getEdgeScore(edge)
             ));
         }
