@@ -147,6 +147,9 @@ void BracketingLatticeWriter::Worker::doRun() {
 
     LayerTagMask mask = lattice_.getLayerTagManager().getMask(processor_.getFilter());
 
+    std::stack<Lattice::EdgeDescriptor> edgeStack;
+    std::set<Lattice::EdgeDescriptor> edgeSet;
+
     Lattice::VertexIterator vi(lattice_);
 
     while (vi.hasNext()) {
@@ -155,25 +158,38 @@ void BracketingLatticeWriter::Worker::doRun() {
 
         Lattice::InOutEdgesIterator iei = lattice_.inEdges(vertex, mask);
         while (iei.hasNext()) {
-            Lattice::EdgeDescriptor edge = iei.next();
-            std::list<std::string> tagsList
-                = lattice_.getLayerTagManager().getTagNames(lattice_.getEdgeLayerTags(edge));
-            std::set<std::string> tags(tagsList.begin(), tagsList.end());
-            AnnotationItem annotationItem = lattice_.getEdgeAnnotationItem(edge);
-            alignOutput_(aepClose.print(
-                processor_.intersectOnlyTags(tags),
-                annotationItem.getCategory(),
-                annotationItem.getText(),
-                processor_.filterAttributes(
-                    lattice_.getAnnotationItemManager().getAVMap(annotationItem)
-                ),
-                lattice_.getEdgeScore(edge)
-            ));
+            edgeSet.insert(iei.next());
+        }
+        while (!edgeStack.empty()) {
+            Lattice::EdgeDescriptor edge = edgeStack.top();
+            if (edgeSet.count(edge)) {
+                edgeStack.pop();
+                std::list<std::string> tagsList
+                    = lattice_.getLayerTagManager().getTagNames(lattice_.getEdgeLayerTags(edge));
+                std::set<std::string> tags(tagsList.begin(), tagsList.end());
+                AnnotationItem annotationItem = lattice_.getEdgeAnnotationItem(edge);
+                alignOutput_(aepClose.print(
+                    processor_.intersectOnlyTags(tags),
+                    annotationItem.getCategory(),
+                    annotationItem.getText(),
+                    processor_.filterAttributes(
+                        lattice_.getAnnotationItemManager().getAVMap(annotationItem)
+                    ),
+                    lattice_.getEdgeScore(edge)
+                ));
+            } else {
+                break;
+            }
         }
 
         Lattice::InOutEdgesIterator oei = lattice_.outEdges(vertex, mask);
+        PriorityStack priorityStack;
         while (oei.hasNext()) {
             Lattice::EdgeDescriptor edge = oei.next();
+            priorityStack.push(edge, lattice_.getEdgeLength(edge));
+        }
+        while (!priorityStack.empty()) {
+            Lattice::EdgeDescriptor edge = priorityStack.pop();
             std::list<std::string> tagsList
                 = lattice_.getLayerTagManager().getTagNames(lattice_.getEdgeLayerTags(edge));
             std::set<std::string> tags(tagsList.begin(), tagsList.end());
@@ -187,6 +203,7 @@ void BracketingLatticeWriter::Worker::doRun() {
                 ),
                 lattice_.getEdgeScore(edge)
             ));
+            edgeStack.push(edge);
         }
 
         try {
@@ -203,4 +220,33 @@ void BracketingLatticeWriter::Worker::doRun() {
 
 
 BracketingLatticeWriter::Worker::~Worker() {
+}
+
+
+void BracketingLatticeWriter::PriorityStack::push(
+    Lattice::EdgeDescriptor element,
+    size_t priority
+) {
+    if (priority > stacks_.size()) {
+        stacks_.resize(priority + 1);
+    }
+    if (priority > maxPriority_) {
+        maxPriority_ = priority;
+    }
+    stacks_[priority].push(element);
+}
+
+
+Lattice::EdgeDescriptor BracketingLatticeWriter::PriorityStack::pop() {
+    Lattice::EdgeDescriptor result = stacks_[maxPriority_].top();
+    stacks_[maxPriority_].pop();
+    while (maxPriority_ > 0 && stacks_[maxPriority_].empty()) {
+        maxPriority_--;
+    }
+    return result;
+}
+
+
+bool BracketingLatticeWriter::PriorityStack::empty() {
+    return maxPriority_ == 0;
 }
