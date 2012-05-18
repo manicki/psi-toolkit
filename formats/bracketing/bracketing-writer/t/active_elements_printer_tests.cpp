@@ -19,9 +19,14 @@ BOOST_AUTO_TEST_CASE( active_elements_printer_simple ) {
     std::set<std::string> tags = boost::assign::list_of("symbol")("token")("segment");
     std::map<std::string, std::string> avMap
         = boost::assign::map_list_of("case", "Nominative")("number", "singular");
+    EdgeData edgeData(tags, "Noun-Phrase", "Żółta jaźń", avMap, -1.5);
+    BOOST_CHECK_EQUAL(
+        aep1.print(edgeData),
+        "<Noun-Phrase tags=\"segment,symbol,token\" score=\"-1.5\">Żółta jaźń</Noun-Phrase> % %"
+    );
     BOOST_CHECK_EQUAL(
         aep1.print(tags, "Noun-Phrase", "Żółta jaźń", avMap, -1.5),
-        "<Noun-Phrase tags=\"symbol,token,segment\" score=\"-1.5\">Żółta jaźń</Noun-Phrase> % %"
+        "<Noun-Phrase tags=\"segment,symbol,token\" score=\"-1.5\">Żółta jaźń</Noun-Phrase> % %"
     );
     BOOST_CHECK_EQUAL(
         aep2.print(tags, "Noun-Phrase", "Żółta jaźń", avMap, -1.5),

@@ -17,6 +17,19 @@ ActiveElementsPrinter ActiveElementsPrinter::Manager::getPrinter(std::string pat
 
 
 std::string ActiveElementsPrinter::print(
+    EdgeData edgeData
+) {
+    return print(
+        edgeData.tags,
+        edgeData.category,
+        edgeData.text,
+        edgeData.avMap,
+        edgeData.score
+    );
+}
+
+
+std::string ActiveElementsPrinter::print(
     std::set<std::string> tags,
     std::string category,
     std::string text,
