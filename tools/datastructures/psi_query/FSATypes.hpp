@@ -43,7 +43,8 @@ namespace psi {
         WeightT m_w;
 
       public:
-        ArcWeighted(SymbolT a, StateT q, WeightT w) : Arc<SymbolT, StateT>(a, q), m_w(w) {}
+        ArcWeighted() {}
+        ArcWeighted(SymbolT a, StateT q, WeightT w = 0) : Arc<SymbolT, StateT>(a, q), m_w(w) {}
 
         inline WeightT getWeight() const { return m_w; }
 

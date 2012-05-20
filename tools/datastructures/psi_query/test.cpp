@@ -3,18 +3,22 @@
 
 #include <vector>
 #include <boost/foreach.hpp>
+#include <fstream>
 
 #include "NDFSA.hpp"
 #include "DFSA.hpp"
 #include "BinDFSA.hpp"
 
 #include "Algorithms.hpp"
+#include "HashFSA.hpp"
 
 int main(int argc, char** argv) {
 
     std::vector<std::string> strings;
     strings.push_back("agentka");
     strings.push_back("agencja");
+    strings.push_back("agentowski");
+    strings.push_back("ajencja");
 
     psi::NDFSA<> ndfsa;
     BOOST_FOREACH( std::string s, strings ) {
@@ -53,7 +57,9 @@ int main(int argc, char** argv) {
 
     std::cerr << "Mapping" << std::endl;
 
-    psi::MapBinDFSA bdfsa1;
+    typedef psi::BinDFSA<> WeightedFSA;
+    WeightedFSA bdfsa1;
+
     psi::MemBinDFSA bdfsa2;
     unify(bdfsa1, dfsa);
     unify(bdfsa1, dfsa);
@@ -84,6 +90,29 @@ int main(int argc, char** argv) {
     //intersect(test, bdfsa);
 
     bdfsa1.print();
+    
+    std::cout << std::endl;    
+    
+    psi::HashFSA<WeightedFSA> test(bdfsa1);
+    test.print();
+
+    std::cerr << test.hash("agecja") << " " << test.size() << std::endl;
+    std::cerr << test.unhash(2) << std::endl;
+
+    {
+        std::ofstream of("test.fsa");
+        bdfsa1.save(of);
+    }
+    
+    WeightedFSA bdfsaLoad;
+    {
+        std::ifstream inf("test.fsa");
+        bdfsaLoad.load(inf);
+    }
+
+    psi::HashFSA<WeightedFSA> test2(bdfsaLoad);
+    std::cerr << test2.hash("agecja") << " " << test2.size() << std::endl;
+    std::cerr << test2.unhash(2) << std::endl;
 
     return 0;
 }
