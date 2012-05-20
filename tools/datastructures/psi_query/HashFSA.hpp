@@ -4,6 +4,8 @@
 #include <vector>
 #include <iterator>
 #include <iostream>
+#include <cassert>
+#include <algorithm>
 
 #include "FSATypes.hpp"
 
@@ -18,66 +20,69 @@ The automaton should be acyclic and minimal. Otherwise behaviour is
 undefined and can (will!) lead to errors.
 
 ## Synopsis
-
+    
     #include <iostream>
     #include <string>
-  
+    #include <fstream>
+    
     #include "Algorithms.hpp"
     #include "HashFSA.hpp"
-    #include "DFSA.hpp"
-    #include "BinFSA.hpp"
+    #include "NDFSA.hpp"
+    #include "BinDFSA.hpp"
     
-    using namespace std:
+    using namespace std;
     using namespace psi;
     
     int main(int argc, char** argv) {
       
-      // Create the main empty deterministic finite state automaton
-      // `DFSA` allows for fast insert and deletion
-      DFSA<> dfsa;
+      // Create the main empty finite state automaton
+      // `NDFSA` allows for fast insert and deletion
+      NDFSA<> fsa;
     
       // Create a deterministic finite state automaton from a string
-      DFSA<> tdfsa1("this is a test");
+      NDFSA<> tfsa1("this is a test");
       
       // Compute the union of `dfsa` and `tdfsa1`;
-      unify(dfsa, tdfsa1);
+      unify(fsa, tfsa1);
       
-      DFSA<> tdfsa2("this is the second test");
-      unify(dfsa, tdfsa2);
+      NDFSA<> tfsa2("this is the second test");
+      unify(fsa, tfsa2);
       
-      DFSA<> tdfsa3("the next test");
-      unify(dfsa, tdfsa3);
+      NDFSA<> tfsa3("the next test");
+      unify(fsa, tfsa3);
       
-      DFSA<> tdfsa4("and another test");
-      unify(dfsa, tdfsa4);
+      NDFSA<> tfsa4("and another test");
+      unify(fsa, tfsa4);
       
       // Minimize `dfsa` (required for hashing)
-      minimize(dfsa);
+      minimize(fsa);
       
       // Create an empty DFSA for easy binarization 
-      BinDFSA<> bfsa;
+      BinDFSA<> binfsa;
       
       // Copy `dsfa` to `bsfa`
-      unify(bfsa, dfsa);
+      unify(binfsa, fsa);
       
       // Wrap `bfsa` into a `HashFSA`
-      HashFSA hasher(bfsa);
+      HashFSA<BinDFSA<> > hasher(binfsa);
       
       // Retrieve index of input string (corresponds to lexicographical order of
       // input strings)
-      size_t index = hfsa.hash("this is the second test");
+      size_t index = hasher.hash("this is the second test");
       
-      if(index != hfsa.size())
+      if(index != hasher.size())
         std::cout << "Found index: " << index << std::endl;  
       else
         std::cout << "Not found" << std::endl;
       
       // Retrieve string at hash position 3
-      std::cout << hfsa.unhash(3) << std::endl;
+      std::cout << hasher.unhash(3) << std::endl;
       
       // Save binary finite state automaton
       ofstream of("hash.fsa");
-      bfsa.save(of);
+      binfsa.save(of);
+    
+      return 0;
     }
  
 *******************************************************************************/
@@ -315,7 +320,8 @@ or std::cout
     
     while(begin != end) {
       ArcRange<ArcIt> r = m_fsa.getArcs(current_state);
-      ArcIt arcIt = find(current_state, *begin);
+      typename FSA::arc_type::symbol_type a = *begin;
+      ArcIt arcIt = find(current_state, a);
       if(arcIt != r.second) {
         index += arcIt->getWeight();
         current_state = arcIt->getDest();
