@@ -243,8 +243,6 @@ void BracketingLatticeWriter::Worker::doRun() {
         alignOutput_(latticeText.substr(i, symbolLength(latticeText, i)));
     }
 
-    // alignOutputNewline_();
-
     for (size_t i = 0; i < latticeSize; i++) {
         delete [] edgeStore[i];
     }
