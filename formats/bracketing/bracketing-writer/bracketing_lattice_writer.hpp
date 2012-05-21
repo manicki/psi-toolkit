@@ -6,6 +6,7 @@
 
 #include "active_elements_printer.hpp"
 #include "aligning_writer_worker.hpp"
+#include "edge_data.hpp"
 #include "lattice_writer.hpp"
 #include "lattice_writer_factory.hpp"
 
