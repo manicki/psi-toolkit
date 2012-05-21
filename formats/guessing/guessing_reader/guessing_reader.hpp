@@ -1,6 +1,8 @@
 #ifndef GUESSING_READER_HDR
 #define GUESSING_READER_HDR
 
+#include <boost/scoped_array.hpp>
+
 #include <string>
 
 #include "stream_lattice_reader.hpp"
@@ -59,12 +61,11 @@ private:
     const static int DEFAULT_BLOCK_SIZE;
     int blockSize_;
 
-    std::string getStartingDataBlockWithoutTouchingIStream_(std::istream&);
-
     typedef boost::shared_ptr<LatticeReaderFactory<std::istream> > PointerToReader;
-    static std::map<std::string, boost::shared_ptr<LatticeReaderFactory<std::istream> > >
-        fileTypeToReaderMap_;
+    static std::map<std::string, PointerToReader> fileTypeToReaderMap_;
+    static std::map<std::string, std::string> fileTypeToReaderOptionsMap_;
 
+    std::string getStartingDataBlockWithoutTouchingIStream_(std::istream&);
     FileRecognizer fileRecognizer_;
 };
 

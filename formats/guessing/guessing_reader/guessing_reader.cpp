@@ -1,36 +1,42 @@
 #include <boost/algorithm/string/trim.hpp>
 #include <boost/algorithm/string.hpp>
 #include <boost/assign.hpp>
+#include <boost/program_options/parsers.hpp>
 
 #include "guessing_reader.hpp"
 
 #include "txt_lattice_reader.hpp"
 //#include "apertium_lattice_reader.hpp"
 #if HAVE_POPPLER
-//#include "pdf_lattice_reader.hpp"
+#include "pdf_lattice_reader.hpp"
 #endif
 #if HAVE_DJVULIBRE
-//#include "djvu_lattice_reader.hpp"
+#include "djvu_lattice_reader.hpp"
 #endif
 #if USE_DOC_READER
-//#include "doc_lattice_reader.hpp"
+#include "doc_lattice_reader.hpp"
 #endif
 
 const int GuessingReader::DEFAULT_BLOCK_SIZE = 32;
 
-std::map<std::string, boost::shared_ptr<LatticeReaderFactory<std::istream> > >
-    GuessingReader::fileTypeToReaderMap_ = boost::assign::map_list_of
+std::map<std::string, GuessingReader::PointerToReader> GuessingReader::fileTypeToReaderMap_ =
+    boost::assign::map_list_of
         ("txt", PointerToReader(new TxtLatticeReader::Factory()))
-//        ("html", PointerToReader(new ApertiumLatticeReader::Factory()))
+        //("html", PointerToReader(new ApertiumLatticeReader::Factory()))
 #if HAVE_POPPLER
-//        ("pdf", PointerToReader(new PDFLatticeReader::Factory()))
+        ("pdf", PointerToReader(new PDFLatticeReader::Factory()))
 #endif
 #if HAVE_DJVULIBRE
-//        ("djvu", PointerToReader(new DjVuLatticeReader::Factory()))
+        ("djvu", PointerToReader(new DjVuLatticeReader::Factory()))
 #endif
 #if USE_DOC_READER
-//        ("doc", PointerToReader(new DocLatticeReader::Factory()))
+        ("doc", PointerToReader(new DocLatticeReader::Factory()))
 #endif
+        ;
+
+std::map<std::string, std::string> GuessingReader::fileTypeToReaderOptionsMap_ =
+    boost::assign::map_list_of
+        ("html", "--format html")
         ;
 
 std::string GuessingReader::getFormatName() {
@@ -57,10 +63,9 @@ std::string GuessingReader::getStartingDataBlockWithoutTouchingIStream_(std::ist
     // it is necessary to remove eofbit flag in the case of when the blockSize_
     // is greather than the total length of input
     stream.clear();
-    DEBUG("read bits for input type recognition: " << buffer);
 
     int lastReadable = (int)stream.gcount();
-    DEBUG("the number of read bits:  " << lastReadable);
+    DEBUG("read bits for input type recognition (" << lastReadable << " bits): " << buffer);
 
     for (int i = lastReadable; i > 0; i--) {
         stream.putback(buffer[i - 1]);
@@ -72,12 +77,39 @@ std::string GuessingReader::getStartingDataBlockWithoutTouchingIStream_(std::ist
 LatticeReader<std::istream>* GuessingReader::getLatticeReader(std::string type) {
     boost::program_options::variables_map options;
 
-    std::map<std::string, boost::shared_ptr<LatticeReaderFactory<std::istream> > >
-        ::iterator foundReader = fileTypeToReaderMap_.find(type);
+    std::map<std::string, PointerToReader>::iterator foundReader
+        = fileTypeToReaderMap_.find(type);
+    std::map<std::string, std::string>::iterator foundOptions
+        = fileTypeToReaderOptionsMap_.find(type);
 
     if (foundReader != fileTypeToReaderMap_.end()) {
+        DEBUG("guessed reader for: " << type);
+
+        if (foundOptions != fileTypeToReaderOptionsMap_.end()) {
+            DEBUG("with options: " << foundOptions->second);
+
+            std::vector<std::string> optionsArgv;
+            boost::split(optionsArgv, foundOptions->second, boost::is_any_of(" "));
+
+            int argc;
+            boost::scoped_array<char*> argv(new char* [optionsArgv.size() + 2]);
+
+            for (argc = 1; argc < (int)optionsArgv.size(); argc++) {
+                argv[argc] = const_cast<char *>(optionsArgv[argc].c_str());
+            }
+            argv[++argc] = 0;
+
+            boost::program_options::store(
+                boost::program_options::parse_command_line(
+                    argc, argv.get(), foundReader->second->optionsHandled()),
+                options);
+
+            boost::program_options::notify(options);
+        }
+
         return foundReader->second->createLatticeReader(options);
     }
+
     return NULL;
 }
 
@@ -116,12 +148,9 @@ GuessingReader::Worker::Worker(GuessingReader& processor,
 
 void GuessingReader::Worker::doRun() {
     std::string filetype = processor_.guessFileType(inputStream_);
-    DEBUG("guessed file type: " << filetype);
-
     LatticeReader<std::istream>* reader = processor_.getLatticeReader(filetype);
 
     if (reader != NULL) {
-        DEBUG("guessed reader for: " << reader->getFormatName());
         reader->readIntoLattice(inputStream_, lattice_);
     }
     else {
