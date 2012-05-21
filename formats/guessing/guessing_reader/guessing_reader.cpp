@@ -6,7 +6,7 @@
 #include "guessing_reader.hpp"
 
 #include "txt_lattice_reader.hpp"
-//#include "apertium_lattice_reader.hpp"
+#include "apertium_lattice_reader.hpp"
 #if HAVE_POPPLER
 #include "pdf_lattice_reader.hpp"
 #endif
@@ -22,7 +22,7 @@ const int GuessingReader::DEFAULT_BLOCK_SIZE = 32;
 std::map<std::string, GuessingReader::PointerToReader> GuessingReader::fileTypeToReaderMap_ =
     boost::assign::map_list_of
         ("txt", PointerToReader(new TxtLatticeReader::Factory()))
-        //("html", PointerToReader(new ApertiumLatticeReader::Factory()))
+        ("html", PointerToReader(new ApertiumLatticeReader::Factory()))
 #if HAVE_POPPLER
         ("pdf", PointerToReader(new PDFLatticeReader::Factory()))
 #endif
@@ -99,8 +99,9 @@ LatticeReader<std::istream>* GuessingReader::getLatticeReader(std::string type) 
             int argc;
             boost::scoped_array<char*> argv(new char* [optionsArgv.size() + 2]);
 
-            for (argc = 1; argc < (int)optionsArgv.size(); argc++) {
-                argv[argc] = const_cast<char *>(optionsArgv[argc].c_str());
+            for (argc = 0; argc < (int)optionsArgv.size(); argc++) {
+                DEBUG("argc: " << argc << " ; " << optionsArgv.size());
+                argv[argc + 1] = const_cast<char *>(optionsArgv[argc].c_str());
             }
             argv[++argc] = 0;
 
