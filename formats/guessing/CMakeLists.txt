@@ -1,4 +1,5 @@
 add_library(formats-guessing SHARED
+    guessing_reader/format_recognizer.cpp
     guessing_reader/guessing_reader.cpp
 )
 

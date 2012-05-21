@@ -18,6 +18,7 @@ std::map<std::string, std::string> FileRecognizer::mimeTypeToFileExtension_ =
         ("image/png", "png")
         ("image/svg+xml", "svg")
         ("image/tiff", "tiff")
+        ("image/vnd.djvu", "djvu")
         ("model/vrml", "wrl")
         ("text/html", "html")
         ("text/plain", "txt")

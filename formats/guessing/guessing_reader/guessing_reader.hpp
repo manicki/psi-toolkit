@@ -8,6 +8,7 @@
 #include "stream_lattice_reader.hpp"
 #include "lattice_reader_factory.hpp"
 #include "file_recognizer.hpp"
+#include "format_recognizer.hpp"
 
 #include "logging.hpp"
 
@@ -67,6 +68,7 @@ private:
 
     std::string getStartingDataBlockWithoutTouchingIStream_(std::istream&);
     FileRecognizer fileRecognizer_;
+    FormatRecognizer formatRecognizer_;
 };
 
 #endif

@@ -53,7 +53,12 @@ GuessingReader::GuessingReader(int blockSize) : blockSize_(blockSize) { }
 std::string GuessingReader::guessFileType(std::istream& input) {
     std::string data = getStartingDataBlockWithoutTouchingIStream_(input);
 
-    return fileRecognizer_.recognizeFileExtension(data);
+    std::string filetype = fileRecognizer_.recognizeFileExtension(data);
+    if (formatRecognizer_.isHandledFiletype(filetype)) {
+        filetype = formatRecognizer_.recognize(data, filetype);
+    }
+
+    return filetype;
 }
 
 std::string GuessingReader::getStartingDataBlockWithoutTouchingIStream_(std::istream& stream) {
