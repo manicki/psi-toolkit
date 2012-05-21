@@ -1,5 +1,6 @@
 add_library(formats-bracketing SHARED
     active_elements_printer.cpp
+    bracket_printer.cpp
     bracketing_lattice_writer.cpp
 )
 
