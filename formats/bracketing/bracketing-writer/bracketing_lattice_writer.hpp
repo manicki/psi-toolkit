@@ -35,16 +35,7 @@ public:
         std::string avPairsSeparator,
         std::string avSeparator,
         std::vector<std::string> showAttributes
-    ) :
-        openingBracket_(openingBracket),
-        closingBracket_(closingBracket),
-        tagSeparator_(tagSeparator),
-        showOnlyTags_(showOnlyTags.begin(), showOnlyTags.end()),
-        filter_(filter),
-        avPairsSeparator_(avPairsSeparator),
-        avSeparator_(avSeparator),
-        showAttributes_(showAttributes.begin(), showAttributes.end())
-    { }
+    );
 
     std::string getOpeningBracket() const { return openingBracket_; }
     std::string getClosingBracket() const { return closingBracket_; }
@@ -55,6 +46,12 @@ public:
 
     std::set<std::string> intersectOnlyTags(std::set<std::string> tags);
     std::map<std::string, std::string> filterAttributes(std::map<std::string, std::string> avMap);
+
+    bool isActive_T() const { return active_T_; }
+    bool isActive_c() const { return active_c_; }
+    bool isActive_t() const { return active_t_; }
+    bool isActive_A() const { return active_A_; }
+    bool isActive_s() const { return active_s_; }
 
 private:
     virtual std::string doInfo();
@@ -72,6 +69,8 @@ private:
         BracketingLatticeWriter& processor_;
 
         EdgeData getEdgeData_(Lattice::EdgeDescriptor edge);
+
+        void collapse_(std::set<EdgeData> & edgeDataSet);
     };
 
     virtual WriterWorker<std::ostream>* doCreateWriterWorker(
@@ -88,6 +87,14 @@ private:
     std::string avPairsSeparator_;
     std::string avSeparator_;
     std::set<std::string> showAttributes_;
+
+    bool active_T_;
+    bool active_c_;
+    bool active_t_;
+    bool active_A_;
+    bool active_s_;
+
+    void setActiveElements_(std::string pattern);
 
 };
 
