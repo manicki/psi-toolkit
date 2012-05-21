@@ -75,7 +75,8 @@ public:
     { }
 
     std::string print(
-        EdgeData edgeData
+        EdgeData edgeData,
+        std::string starText = ""
     );
 
     std::string print(
@@ -83,7 +84,8 @@ public:
         std::string category,
         std::string text,
         std::map<std::string, std::string> avMap,
-        double score
+        double score,
+        std::string starText = ""
     );
 
 private:
