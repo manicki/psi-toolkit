@@ -4,6 +4,7 @@
 #include <set>
 #include <stack>
 
+#include "active_elements_printer.hpp"
 #include "aligning_writer_worker.hpp"
 #include "bracketing_lattice_writer_stream_output_iterator.hpp"
 #include "lattice_writer.hpp"
@@ -70,6 +71,8 @@ private:
         virtual ~Worker();
     private:
         BracketingLatticeWriter& processor_;
+
+        EdgeData getEdgeData_(Lattice::EdgeDescriptor edge);
     };
 
     virtual WriterWorker<std::ostream>* doCreateWriterWorker(
@@ -86,19 +89,6 @@ private:
     std::string avPairsSeparator_;
     std::string avSeparator_;
     std::set<std::string> showAttributes_;
-
-    class PriorityStack {
-    public:
-        PriorityStack() : maxPriority_(0) { }
-
-        void push(Lattice::EdgeDescriptor element, size_t priority);
-        Lattice::EdgeDescriptor pop();
-        bool empty();
-
-    private:
-        std::vector< std::stack<Lattice::EdgeDescriptor> > stacks_;
-        size_t maxPriority_;
-    };
 
 };
 

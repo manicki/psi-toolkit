@@ -27,6 +27,14 @@ struct EdgeData {
         avMap(a_avMap),
         score(a_score)
     { }
+
+    bool operator<(EdgeData other) const {
+        return category < other.category ||
+            text < other.text ||
+            score < other.score ||
+            tags < other.tags ||
+            avMap < other.avMap;
+    }
 };
 
 
