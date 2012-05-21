@@ -1,1 +1,1 @@
-puddle --lang pl ! bracketing-writer --filter parse --opening-bracket <%c_genders="%*[,][%a[gender]]%"> --closing-bracket </%c>
+puddle --lang pl ! bracketing-writer --filter parse --opening-bracket <%c_genders="%*(,)(%a[gender])"> --closing-bracket </%c>
