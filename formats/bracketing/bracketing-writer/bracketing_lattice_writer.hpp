@@ -6,7 +6,6 @@
 
 #include "active_elements_printer.hpp"
 #include "aligning_writer_worker.hpp"
-#include "bracketing_lattice_writer_stream_output_iterator.hpp"
 #include "lattice_writer.hpp"
 #include "lattice_writer_factory.hpp"
 
