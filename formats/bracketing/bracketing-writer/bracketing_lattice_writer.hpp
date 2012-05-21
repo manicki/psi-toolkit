@@ -4,8 +4,8 @@
 #include <set>
 #include <stack>
 
-#include "active_elements_printer.hpp"
 #include "aligning_writer_worker.hpp"
+#include "bracket_printer.hpp"
 #include "edge_data.hpp"
 #include "lattice_writer.hpp"
 #include "lattice_writer_factory.hpp"
@@ -70,8 +70,6 @@ private:
         BracketingLatticeWriter& processor_;
 
         EdgeData getEdgeData_(Lattice::EdgeDescriptor edge);
-
-        void collapse_(std::set<EdgeData> & edgeDataSet);
     };
 
     virtual WriterWorker<std::ostream>* doCreateWriterWorker(

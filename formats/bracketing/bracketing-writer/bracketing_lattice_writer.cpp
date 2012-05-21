@@ -195,14 +195,16 @@ BracketingLatticeWriter::Worker::Worker(BracketingLatticeWriter& processor,
 
 void BracketingLatticeWriter::Worker::doRun() {
 
-    ActiveElementsPrinter::Manager aepManager(
+    std::vector<std::string> patterns;
+    patterns.push_back(processor_.getOpeningBracket());
+    patterns.push_back(processor_.getClosingBracket());
+
+    BracketPrinter bracketPrinter(
+        patterns,
         processor_.getTagSeparator(),
         processor_.getAVPairsSeparator(),
         processor_.getAVSeparator()
     );
-
-    ActiveElementsPrinter aepOpen = aepManager.getPrinter(processor_.getOpeningBracket());
-    ActiveElementsPrinter aepClose = aepManager.getPrinter(processor_.getClosingBracket());
 
     std::string latticeText = lattice_.getAllText();
     size_t latticeSize = latticeText.length() + 1;
@@ -229,14 +231,16 @@ void BracketingLatticeWriter::Worker::doRun() {
             j = ((j + latticeSize) - 1) % latticeSize
         ) {
             if (i < j) {
-                collapse_(edgeStore[i][j]);
-                BOOST_FOREACH(EdgeData edgeData, edgeStore[i][j]) {
-                    alignOutput_(aepOpen.print(edgeData));
+                std::set< std::vector<std::string> > printed
+                    = bracketPrinter.print(edgeStore[i][j]);
+                BOOST_FOREACH(std::vector<std::string> p, printed) {
+                    alignOutput_(p[0]);
                 }
             } else {
-                collapse_(edgeStore[j][i]);
-                BOOST_FOREACH(EdgeData edgeData, edgeStore[j][i]) {
-                    alignOutput_(aepClose.print(edgeData));
+                std::set< std::vector<std::string> > printed
+                    = bracketPrinter.print(edgeStore[j][i]);
+                BOOST_FOREACH(std::vector<std::string> p, printed) {
+                    alignOutput_(p[1]);
                 }
             }
         }
@@ -274,9 +278,4 @@ EdgeData BracketingLatticeWriter::Worker::getEdgeData_(Lattice::EdgeDescriptor e
         processor_.filterAttributes(avMap),
         processor_.isActive_s() ? lattice_.getEdgeScore(edge) : 0.0
     );
-}
-
-
-void BracketingLatticeWriter::Worker::collapse_(std::set<EdgeData> & /*edgeDataSet*/) {
-    //TODO
 }
