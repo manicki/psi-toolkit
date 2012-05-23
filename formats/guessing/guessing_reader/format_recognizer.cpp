@@ -19,6 +19,14 @@ std::string FormatRecognizer::recognize(const std::string& data, const std::stri
             return "djvu";
         }
     }
+    if (filetype == "txt") {
+        if (looksAsPsiFormat(data)) {
+
+        }
+        if (looksAsUTTFormat(data)) {
+
+        }
+    }
 
     return filetype;
 }
@@ -26,4 +34,12 @@ std::string FormatRecognizer::recognize(const std::string& data, const std::stri
 bool FormatRecognizer::hasDjvuFormatBeginning(const std::string& data) {
     std::string djvuBeginning = "AT&TFORM";
     return ((data.compare(0, djvuBeginning.size(), djvuBeginning) == 0) ? true : false);
+}
+
+bool FormatRecognizer::looksAsPsiFormat(const std::string&) {
+    return false;
+}
+
+bool FormatRecognizer::looksAsUTTFormat(const std::string&) {
+    return false;
 }

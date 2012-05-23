@@ -19,7 +19,8 @@ private:
     static const std::vector<std::string> HANDLED_FILETYPES;
 
     bool hasDjvuFormatBeginning(const std::string&);
-
+    bool looksAsPsiFormat(const std::string&);
+    bool looksAsUTTFormat(const std::string&);
 };
 
 #endif
