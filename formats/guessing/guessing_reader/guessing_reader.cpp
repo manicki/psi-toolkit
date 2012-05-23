@@ -7,6 +7,8 @@
 
 #include "txt_lattice_reader.hpp"
 #include "apertium_lattice_reader.hpp"
+#include "psi_lattice_reader.hpp"
+#include "utt_lattice_reader.hpp"
 #if HAVE_POPPLER
 #include "pdf_lattice_reader.hpp"
 #endif
@@ -23,6 +25,8 @@ std::map<std::string, GuessingReader::PointerToReader> GuessingReader::fileTypeT
     boost::assign::map_list_of
         ("txt", PointerToReader(new TxtLatticeReader::Factory()))
         ("html", PointerToReader(new ApertiumLatticeReader::Factory()))
+        ("psi", PointerToReader(new PsiLatticeReader::Factory()))
+        ("utt", PointerToReader(new UTTLatticeReader::Factory()))
 #if HAVE_POPPLER
         ("pdf", PointerToReader(new PDFLatticeReader::Factory()))
 #endif

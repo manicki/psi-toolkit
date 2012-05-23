@@ -1,0 +1,8 @@
+01 0000 03    Ala          token                             word,type=word
+02 0000 03    Ala          !translation                      word,type=word[1]
+03 0003 01    _            token                             blank
+04 0004 02    ma           token                             word,type=word
+05 0004 02    ma           !translation                      word,type=word[4]
+06 0006 01    _            token                             blank
+07 0007 07    słonia       token                             word,type=word
+08 0007 07    słonia       !translation                      word,type=word[7]
