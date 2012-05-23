@@ -12,7 +12,7 @@
 
 namespace psi {
 
-    template <typename ArcT = Arc<Symbol, size_t>, typename PosT = size_t,
+    template <typename ArcT = ArcWeighted<Symbol, State, Weight>, typename PosT = size_t,
     template <typename> class Allocator = std::allocator>
     class BinDFSA {
       protected:
@@ -31,12 +31,12 @@ namespace psi {
 
         PosT setLastBit(PosT) const;
         PosT unsetLastBit(PosT) const;
-
+        
         arc_iterator_type find(size_t, symbol_type) const;
 
       public:
         BinDFSA();
-
+        
         size_t delta(size_t, symbol_type) const;
 
         template <typename InputIterator>
@@ -64,6 +64,12 @@ namespace psi {
         size_t size() const;
         void swap(BinDFSA &);
         void print();
+        
+        template <class IStream>
+        void load(IStream& istream);
+        
+        template <class OStream>
+        void save(OStream& ostream);
 
     };
     
@@ -115,6 +121,8 @@ namespace psi {
 
             while (pos < end && cmp(m_arcs[pos], a))
                 pos++;
+                
+            // Bugfix for the allocator, flawed insertion on reallocation
             if(m_arcs.capacity() == m_arcs.size())
                 m_arcs.reserve(m_arcs.size()*2);
             m_arcs.insert(m_arcs.begin() + pos, a);
@@ -275,6 +283,32 @@ namespace psi {
         }
 
         return closure;
+    }
+    
+    template <typename ArcT, typename PosT, template <typename> class Allocator>
+    template <class IStream>
+    void BinDFSA<ArcT, PosT, Allocator>::load(IStream& istream) {
+      size_t statesNum;
+      istream.read((char*)&statesNum, sizeof(size_t));
+      m_states.resize(statesNum);
+      istream.read((char*)&m_states[0], statesNum * sizeof(PosT));
+
+      size_t arcsNum;
+      istream.read((char*)&arcsNum, sizeof(size_t));
+      m_arcs.resize(arcsNum);
+      istream.read((char*)&m_arcs[0], arcsNum * sizeof(ArcT));
+    }
+    
+    template <typename ArcT, typename PosT, template <typename> class Allocator>
+    template <class OStream>
+    void BinDFSA<ArcT, PosT, Allocator>::save(OStream& istream) {
+      size_t statesNum = m_states.size();
+      istream.write((char*)&statesNum, sizeof(size_t));
+      istream.write((char*)&m_states[0], statesNum * sizeof(PosT));
+
+      size_t arcsNum = m_arcs.size();
+      istream.write((char*)&arcsNum, sizeof(size_t));
+      istream.write((char*)&m_arcs[0], arcsNum * sizeof(ArcT));
     }
     
     typedef BinDFSA<Arc<Symbol, size_t>, size_t, std::allocator> MemBinDFSA;

@@ -33,17 +33,17 @@ BOOST_AUTO_TEST_CASE(NDFSA_test)
     psi::State q2 = a.ndfsa.addState();
     psi::State q3 = a.ndfsa.addState();
 
-    a.ndfsa.addArc(q0, psi::Arc<>('a', q0));
-    a.ndfsa.addArc(q0, psi::Arc<>('b', q0));
-    a.ndfsa.addArc(q0, psi::Arc<>('b', q1));
+    a.ndfsa.addArc(q0, psi::ArcWeighted<>('a', q0));
+    a.ndfsa.addArc(q0, psi::ArcWeighted<>('b', q0));
+    a.ndfsa.addArc(q0, psi::ArcWeighted<>('b', q1));
 
-    a.ndfsa.addArc(q1, psi::Arc<>('a', q2));
-    a.ndfsa.addArc(q1, psi::Arc<>('b', q2));
+    a.ndfsa.addArc(q1, psi::ArcWeighted<>('a', q2));
+    a.ndfsa.addArc(q1, psi::ArcWeighted<>('b', q2));
 
-    a.ndfsa.addArc(q2, psi::Arc<>('b', q3));
+    a.ndfsa.addArc(q2, psi::ArcWeighted<>('b', q3));
 
-    a.ndfsa.addArc(q3, psi::Arc<>('a', q3));
-    a.ndfsa.addArc(q3, psi::Arc<>('b', q3));
+    a.ndfsa.addArc(q3, psi::ArcWeighted<>('a', q3));
+    a.ndfsa.addArc(q3, psi::ArcWeighted<>('b', q3));
 
 
     a.ndfsa.setStartState(q0);
@@ -85,9 +85,9 @@ BOOST_AUTO_TEST_CASE(NDFSA_test)
     psi::State g0 = b.ndfsa.addState();
     psi::State g1 = b.ndfsa.addState();
 
-    b.ndfsa.addArc(g0, psi::Arc<>('a', g0));
-    b.ndfsa.addArc(g0, psi::Arc<>('b', g0));
-    b.ndfsa.addArc(g0, psi::Arc<>('c', g1));
+    b.ndfsa.addArc(g0, psi::ArcWeighted<>('a', g0));
+    b.ndfsa.addArc(g0, psi::ArcWeighted<>('b', g0));
+    b.ndfsa.addArc(g0, psi::ArcWeighted<>('c', g1));
 
     b.ndfsa.setStartState(g0);
     b.ndfsa.setEndState(g1);
@@ -126,9 +126,9 @@ BOOST_AUTO_TEST_CASE(NDFSA_test)
     Tescik c(12, 7);
     psi::State d0 = c.ndfsa.addState();
 
-    c.ndfsa.addArc(d0, psi::Arc<>('a', d0));
-    c.ndfsa.addArc(d0, psi::Arc<>('b', d0));
-    c.ndfsa.addArc(d0, psi::Arc<>('c', d0));
+    c.ndfsa.addArc(d0, psi::ArcWeighted<>('a', d0));
+    c.ndfsa.addArc(d0, psi::ArcWeighted<>('b', d0));
+    c.ndfsa.addArc(d0, psi::ArcWeighted<>('c', d0));
 
     c.ndfsa.setStartState(d0);
     c.ndfsa.setEndState(d0);
@@ -174,13 +174,13 @@ BOOST_AUTO_TEST_CASE(NDFSA_test)
     psi::State e1 = d.ndfsa.addState();
     psi::State e2 = d.ndfsa.addState();
 
-    d.ndfsa.addArc(e0, psi::Arc<>('a', e1));
-    d.ndfsa.addArc(e0, psi::Arc<>('b', e0));
+    d.ndfsa.addArc(e0, psi::ArcWeighted<>('a', e1));
+    d.ndfsa.addArc(e0, psi::ArcWeighted<>('b', e0));
 
-    d.ndfsa.addArc(e1, psi::Arc<>('b', e1));
-    d.ndfsa.addArc(e1, psi::Arc<>('a', e2));
+    d.ndfsa.addArc(e1, psi::ArcWeighted<>('b', e1));
+    d.ndfsa.addArc(e1, psi::ArcWeighted<>('a', e2));
 
-    d.ndfsa.addArc(e2, psi::Arc<>('b', e0));
+    d.ndfsa.addArc(e2, psi::ArcWeighted<>('b', e0));
 
     d.ndfsa.setStartState(e0);
     d.ndfsa.setEndState(e2);

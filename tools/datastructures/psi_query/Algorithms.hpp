@@ -8,7 +8,91 @@
 
 #include "FSATypes.hpp"
 
+/*******************************************************************************
+# Algorithms
+
+Algorithms for manipulation of all finite state automaton types included in the
+library. Processing takes is "in-place", the first argument is destroyed and
+replaced by the resulting automaton. Therefore applying a function to a finite
+state automaton invalidates all previously used iterators and member objects.
+
+## Synopsis
+
+Creating an automaton that accepts the following regular expression: `(a|b|c)+aabb(cc)?`
+
+    NDFSA<> fsa;
+
+    NDFSA<> tfsa1("a");
+    NDFSA<> tfsa2("b");
+    NDFSA<> tfsa3("c");
+    
+    unify(fsa, tfsa1);
+    unify(fsa, tfsa2);
+    unify(fsa, tfsa3);
+    
+    kleene_plus(fsa);
+  
+    NDFSA<> tfsa4("aabb");
+    
+    concatenate(fsa, tfsa4);
+    
+    NDFSA<> tfsa5("cc");
+    kleene_option(tfsa5);
+    
+    concatenate(fsa, tfsa5);
+    
+    minimize(fsa);
+    
+    std::cout << fsa.in("aabcccaaaabbcc") << std::endl; // prints 1
+    std::cout << fsa.in("aabcccaaaabb") << std::endl; // prints 1    
+    std::cout << fsa.in("aabcccaaaabcc") << std::endl; // prints 0
+
+
+*******************************************************************************/
+
 namespace psi {
+
+    template <typename Wrapper, typename FSA>
+    void traverse(Wrapper &wrapper, FSA &fsa) {
+        typedef typename Wrapper::state_type WrapperState;
+        typedef typename Wrapper::arc_type WrapperArc;
+
+        typedef typename FSA::state_type State;
+        typedef typename FSA::arc_type Arc;
+
+        std::map<WrapperState, State> mapper;
+        std::vector<WrapperState> queue;
+
+        BOOST_FOREACH( WrapperState s, wrapper.startFn() ) {
+            State n = fsa.addState(true);
+            mapper[s] = n;
+            queue.push_back(s);
+        }
+
+        while (!queue.empty()) {            
+            WrapperState s = queue.back();            
+            queue.pop_back();
+
+            if (!mapper.count(s)) {
+                State n = fsa.addState();
+                mapper[s] = n;
+            }
+
+            if (wrapper.finalFn(s))
+                fsa.setEndState(mapper[s]);
+
+            BOOST_FOREACH( WrapperArc arc, wrapper.arcFn(s) ) {
+                if (!mapper.count(arc.getDest())) {
+                    State n = fsa.addState();
+                    mapper[arc.getDest()] = n;
+                    queue.push_back(arc.getDest());
+                }
+                fsa.addArc(
+                    mapper[s], Arc(arc.getSymbol(), mapper[arc.getDest()])
+                );
+            }
+        }
+    }
 
     template <typename FSA>
     class Reverser {
@@ -213,49 +297,15 @@ namespace psi {
         const FSA &m_fsa;
     };
 
+/*******************************************************************************
+## Reverse
 
-    template <typename Wrapper, typename FSA>
-    void traverse(Wrapper &wrapper, FSA &fsa) {
-        typedef typename Wrapper::state_type WrapperState;
-        typedef typename Wrapper::arc_type WrapperArc;
+    template <typename FSA>
+    void reverse(FSA &fsa);
 
-        typedef typename FSA::state_type State;
-        typedef typename FSA::arc_type Arc;
+Reverses the given automaton.
 
-        std::map<WrapperState, State> mapper;
-        std::vector<WrapperState> queue;
-
-        BOOST_FOREACH( WrapperState s, wrapper.startFn() ) {
-            State n = fsa.addState(true);
-            mapper[s] = n;
-            queue.push_back(s);
-        }
-
-        while (!queue.empty()) {            
-            WrapperState s = queue.back();            
-            queue.pop_back();
-
-            if (!mapper.count(s)) {
-                State n = fsa.addState();
-                mapper[s] = n;
-            }
-
-            if (wrapper.finalFn(s))
-                fsa.setEndState(mapper[s]);
-
-            BOOST_FOREACH( WrapperArc arc, wrapper.arcFn(s) ) {
-                if (!mapper.count(arc.getDest())) {
-                    State n = fsa.addState();
-                    mapper[arc.getDest()] = n;
-                    queue.push_back(arc.getDest());
-                }
-                fsa.addArc(
-                    mapper[s], Arc(arc.getSymbol(), mapper[arc.getDest()])
-                );
-            }
-        }
-    }
-
+*******************************************************************************/
     template <typename FSA>
     void reverse(FSA &fsa) {
         FSA temp;
@@ -264,14 +314,29 @@ namespace psi {
         fsa.swap(temp);
     }
 
+/*******************************************************************************
+## Reachable
+
+    template <typename FSA>
+    void reachable(FSA &fsa)
+    
+Keeps only reachable states.
+
+*******************************************************************************/
     template <typename FSA>
     void reachable(FSA &fsa) {
         FSA temp;
         traverse(Copier<FSA>(fsa), temp);
-        temp.print();
         fsa.swap(temp);
     }
 
+/*******************************************************************************
+## Prune
+
+    template <typename FSA>
+    void prune(FSA &fsa)
+
+*******************************************************************************/
     template <typename FSA>
     void prune(FSA &fsa) {
         reverse(fsa);
@@ -279,6 +344,15 @@ namespace psi {
         reverse(fsa);
     }
 
+/*******************************************************************************
+## epsRemove
+
+    template <typename FSA>
+    void epsRemove(FSA &fsa)
+    
+Removes epsilon transitions from a non-deterministic automaton.
+
+*******************************************************************************/
     template <typename FSA>
     void epsRemove(FSA &fsa) {
         FSA temp;
@@ -287,6 +361,13 @@ namespace psi {
         fsa.swap(temp);
     }
 
+/*******************************************************************************
+## Determinize
+
+Determinizes a non-deterministic automaton. Requires removal of epsilon
+transitions first if present.
+
+*******************************************************************************/
     template <typename FSA>
     void determinize(FSA &fsa) {
         FSA temp;
@@ -294,7 +375,17 @@ namespace psi {
         traverse(dtr, temp);
         fsa.swap(temp);
     }
+    
+/*******************************************************************************
+## Minimize
 
+    template <typename FSA>
+    void minimize(FSA &fsa)
+    
+Minimizes a non-deterministic automaton. Epsilon transtion removal and
+determinization are automatically performed.
+
+*******************************************************************************/
     template <typename FSA>
     void minimize(FSA &fsa) {
         epsRemove(fsa);
@@ -304,12 +395,32 @@ namespace psi {
         determinize(fsa);
     }
 
+/*******************************************************************************
+## Unify
+
+    template <typename FSA1, typename FSA2>
+    void unify(FSA1 &dst, FSA2 &src) 
+
+Creates the union of two finite state automata. The result is saved in the first
+argument. This results in an automation with epsilon transtions. 
+
+*******************************************************************************/
     template <typename FSA1, typename FSA2>
     void unify(FSA1 &dst, FSA2 &src) {
         Copier<FSA2> copier(src);
         traverse(copier, dst);
     }
 
+/*******************************************************************************
+## Intersect
+
+    template <typename FSA1, typename FSA2>
+    void intersect(FSA1 &dst, FSA2 &src)
+    
+Creates the intersection of two finite state automata. The result is saved in
+the first argument.
+
+*******************************************************************************/
     template <typename FSA1, typename FSA2>
     void intersect(FSA1 &dst, FSA2 &src) {
         FSA1 temp;
@@ -318,6 +429,16 @@ namespace psi {
         dst.swap(temp);
     }
 
+/*******************************************************************************
+## Concatenate
+
+    template <typename FSA1, typename FSA2>
+    void concatenate(FSA1 &dst, FSA2 &src)
+    
+Creates the concatenation of two finite state automata. The result is saved in
+the first argument. This results in an automaton with epsilon transtions.
+
+*******************************************************************************/
     template <typename FSA1, typename FSA2>
     void concatenate(FSA1 &dst, FSA2 &src) {
         std::set<typename FSA1::state_type> first_start  = dst.getStartStates();
@@ -339,6 +460,17 @@ namespace psi {
         }
     }
 
+/*******************************************************************************
+## Kleene Option
+
+    template <typename FSA>
+    void kleene_option(FSA &fsa)
+
+Creates an optional finite state automaton. Tt accepts the language of the
+argument automaton and the empty word. This results in an automaton with
+epsilon transtions.
+
+*******************************************************************************/
     template <typename FSA>
     void kleene_option(FSA &fsa) {
         const std::set<typename FSA::state_type> start  = fsa.getStartStates();
@@ -361,6 +493,17 @@ namespace psi {
         }
     }
 
+/*******************************************************************************
+## Kleene plus
+
+    template <typename FSA>
+    void kleene_plus(FSA &fsa)
+    
+Creates the non-empty Kleene closure of the passed automaton. The result will
+accept the language of the input automaton repeated one to infinite times. This
+results in an automaton with epsilon transtions.
+
+*******************************************************************************/
     template <typename FSA>
     void kleene_plus(FSA &fsa) {
         const std::set<typename FSA::state_type> &start  = fsa.getStartStates();
@@ -371,6 +514,16 @@ namespace psi {
                 fsa.addArc(p, typename FSA::arc_type(EPS, q));
     }
 
+/*******************************************************************************
+## Kleene star
+
+    template <typename FSA>
+    void kleene_star(FSA &fsa)
+
+Similar as above, but accepts also the empty string. This results in an
+automaton with epsilon transtions.
+
+*******************************************************************************/
     template <typename FSA>
     void kleene_star(FSA &fsa) {
         kleene_option(fsa);
