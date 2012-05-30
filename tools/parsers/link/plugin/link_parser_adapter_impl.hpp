@@ -38,7 +38,7 @@ private:
 
     int getNextNumber_();
 
-    int extractEdgeDescriptions(CNode * ctree);
+    int extractEdgeDescriptions(CNode * ctree, Linkage linkage);
 
     void freeDictionary();
     void freeSentence();

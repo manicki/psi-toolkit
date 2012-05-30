@@ -80,7 +80,7 @@ std::map<int, EdgeDescription> LinkParserAdapterImpl::parseSentence(std::string 
 
         Linkage linkage = linkage_create(0, sentence_, parseOptions);
         CNode * ctree = linkage_constituent_tree(linkage);
-        extractEdgeDescriptions(ctree);
+        extractEdgeDescriptions(ctree, linkage);
         linkage_free_constituent_tree(ctree);
         linkage_delete(linkage);
 
@@ -94,7 +94,7 @@ int LinkParserAdapterImpl::getNextNumber_() {
 }
 
 
-int LinkParserAdapterImpl::extractEdgeDescriptions(CNode * ctree) {
+int LinkParserAdapterImpl::extractEdgeDescriptions(CNode * ctree, Linkage linkage) {
     int id = -1;
     if (ctree) {
         std::list<int> children;
@@ -103,18 +103,24 @@ int LinkParserAdapterImpl::extractEdgeDescriptions(CNode * ctree) {
             subtree != NULL;
             subtree = linkage_constituent_node_get_next(subtree)
         ) {
-            children.push_back(extractEdgeDescriptions(subtree));
+            children.push_back(extractEdgeDescriptions(subtree, linkage));
         }
         id = getNextNumber_();
-        int start = starts_[linkage_constituent_node_get_start(ctree) + 1];
-        int end = ends_[linkage_constituent_node_get_end(ctree) + 1];
-        const char * label = linkage_constituent_node_get_label(ctree);
-        if (!label) {
+        int start = linkage_constituent_node_get_start(ctree) + 1;
+        int end = linkage_constituent_node_get_end(ctree) + 1;
+        std::string label;
+        const char * grammarCategory = linkage_constituent_node_get_label(ctree);
+        const char * wordPOS = linkage_get_word(linkage, start);
+        if (children.empty() && start == end && wordPOS) {
+            label = wordPOS;
+        } else if (grammarCategory) {
+            label = grammarCategory;
+        } else {
             label = "∅";
         }
         edgeDescriptions_.insert(std::pair<int, EdgeDescription>(
             id,
-            EdgeDescription(id, start, end, label, children)
+            EdgeDescription(id, starts_[start], ends_[end], label, children)
         ));
     }
     return id;

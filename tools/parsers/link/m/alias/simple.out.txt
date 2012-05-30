@@ -1,13 +1,13 @@
-01 0000 04    Mary         !en,link-grammar,parse,token Mary Mary
+01 0000 04    Mary         !en,link-grammar,parse,token Mary Mary.b
 02 0000 04    Mary         !en,link-grammar,parse Mary       NP[1]
 03 0004 01    _            symbol                _           '_
-04 0005 03    has          !en,link-grammar,parse,token has  has
+04 0005 03    has          !en,link-grammar,parse,token has  has.v
 05 0008 01    _            symbol                _           '_
 06 0009 01    a            !en,link-grammar,parse,token a    a
 07 0010 01    _            symbol                _           '_
-08 0011 03    big          !en,link-grammar,parse,token big  big
+08 0011 03    big          !en,link-grammar,parse,token big  big.a
 09 0014 01    _            symbol                _           '_
-10 0015 03    cat          !en,link-grammar,parse,token cat  cat
+10 0015 03    cat          !en,link-grammar,parse,token cat  cat.n
 11 0009 09    a_big_cat    !en,link-grammar,parse a_big_cat  NP[6-8-10]
 12 0005 13    has_a_big_cat !en,link-grammar,parse has_a_big_cat VP[4-11]
 13 0000 19    Mary_has_a_big_cat. frag,txt-reader Mary_has_a_big_cat. FRAG[]
