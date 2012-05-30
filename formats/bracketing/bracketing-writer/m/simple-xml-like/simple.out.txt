@@ -1,1 +1,1 @@
-<parse_cats="S"><parse_cats="VP"><lexeme_cats="kupić+verb">Kupiłem</lexeme></parse> <lexeme_cats="bardzo+adv">bardzo</lexeme> <parse_cats="NP"><parse_cats="AP"><lexeme_cats="drogi+adj">drogi</lexeme></parse> <lexeme_cats="samochód+subst">samochód</lexeme></parse></parse>.
+<parse_cats="S"><parse_cats="VP"><lexeme_cats="verb">Kupiłem</lexeme></parse> <lexeme_cats="adv">bardzo</lexeme> <parse_cats="NP"><parse_cats="AP"><lexeme_cats="adj">drogi</lexeme></parse> <lexeme_cats="adj;subst">samochód</lexeme></parse></parse>.
