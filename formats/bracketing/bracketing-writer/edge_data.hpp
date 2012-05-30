@@ -14,6 +14,14 @@ struct EdgeData {
     std::map<std::string, std::string> avMap;
     double score;
 
+    EdgeData() :
+        tags(std::set<std::string>()),
+        category(""),
+        text(""),
+        avMap(std::map<std::string, std::string>()),
+        score(0.0)
+    { }
+
     EdgeData(
         std::set<std::string> a_tags,
         std::string a_category,

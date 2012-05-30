@@ -13,6 +13,10 @@ std::set< std::vector<std::string> > BracketPrinter::print(
     std::set< std::vector<std::string> > result;
     BOOST_FOREACH(EdgeData edgeData, edgeDataSet) {
         std::vector<std::string> resultElement;
+        EdgeData thisEdgeData;
+        std::set<EdgeData> edgeDataSubset;
+        std::string separator;
+        std::string subpattern;
         BOOST_FOREACH(std::string pattern, patterns_) {
             std::stringstream resSs;
             size_t i = 0;
@@ -29,18 +33,21 @@ std::set< std::vector<std::string> > BracketPrinter::print(
                                 tagSs << tag;
                             }
                             resSs << tagSs.str();
+                            thisEdgeData.tags = edgeData.tags;
                             i += 2;
                         }
                         break;
                     case 'c' :
                         {
                             resSs << edgeData.category;
+                            thisEdgeData.category = edgeData.category;
                             i += 2;
                         }
                         break;
                     case 't' :
                         {
                             resSs << edgeData.text;
+                            thisEdgeData.text = edgeData.text;
                             i += 2;
                         }
                         break;
@@ -52,6 +59,7 @@ std::set< std::vector<std::string> > BracketPrinter::print(
                                 if (to != std::string::npos) {
                                     std::string attr = pattern.substr(from, to-from);
                                     resSs << edgeData.avMap[attr];
+                                    thisEdgeData.avMap[attr] = edgeData.avMap[attr];
                                     i = to + 1;
                                 } else {
                                     resSs << "%a";
@@ -74,12 +82,14 @@ std::set< std::vector<std::string> > BracketPrinter::print(
                                 avSs << avPair.first << avSeparator_ << avPair.second;
                             }
                             resSs << avSs.str();
+                            thisEdgeData.avMap = edgeData.avMap;
                             i += 2;
                         }
                         break;
                     case 's' :
                         {
                             resSs << edgeData.score;
+                            thisEdgeData.score = edgeData.score;
                             i += 2;
                         }
                         break;
@@ -92,26 +102,9 @@ std::set< std::vector<std::string> > BracketPrinter::print(
                                     size_t from2 = to+2;
                                     size_t to2 = pattern.find(close_(pattern[i+2]), from2);
                                     if (to2 != std::string::npos) {
-                                        std::string separator = pattern.substr(from, to-from);
-                                        std::string subpattern = pattern.substr(from2, to2-from2);
-                                        std::vector<std::string> subpatterns
-                                            = boost::assign::list_of(subpattern);
-                                        BracketPrinter subprinter(
-                                            subpatterns,
-                                            tagSeparator_,
-                                            avPairsSeparator_,
-                                            avSeparator_
-                                        );
-                                        std::set< std::vector<std::string> > joinProduct
-                                            = subprinter.print(edgeDataSet);
-                                        std::stringstream joinSs;
-                                        BOOST_FOREACH(std::vector<std::string> vs, joinProduct) {
-                                            if (!joinSs.str().empty()) {
-                                                joinSs << separator;
-                                            }
-                                            joinSs << vs[0];
-                                        }
-                                        resSs << joinSs.str();
+                                        separator = pattern.substr(from, to-from);
+                                        subpattern = pattern.substr(from2, to2-from2);
+                                        resSs << "%*****";
                                         i = to2 + 1;
                                     } else {
                                         resSs << "%*";
@@ -140,6 +133,59 @@ std::set< std::vector<std::string> > BracketPrinter::print(
                 }
             }
             resultElement.push_back(resSs.str());
+        }
+        if (!subpattern.empty()) {
+            BOOST_FOREACH(EdgeData edgeData2, edgeDataSet) {
+                if (!thisEdgeData.category.empty() && edgeData2.category != thisEdgeData.category) {
+                    continue;
+                }
+                if (!thisEdgeData.text.empty() && edgeData2.text != thisEdgeData.text) {
+                    continue;
+                }
+                if (!thisEdgeData.tags.empty() && edgeData2.tags != thisEdgeData.tags) {
+                    continue;
+                }
+                if (thisEdgeData.score != 0.0 && edgeData2.score != thisEdgeData.score) {
+                    continue;
+                }
+                if (!thisEdgeData.avMap.empty()) {
+                    bool shallWeContinue = false;
+                    typedef std::pair<std::string, std::string> StrStrPair;
+                    BOOST_FOREACH(StrStrPair avPair, thisEdgeData.avMap) {
+                        if (edgeData2.avMap[avPair.first] != thisEdgeData.avMap[avPair.first]) {
+                            shallWeContinue = true;
+                            break;
+                        }
+                    }
+                    if (shallWeContinue) {
+                        continue;
+                    }
+                }
+                edgeDataSubset.insert(edgeData2);
+            }
+            std::vector<std::string> subpatterns
+                = boost::assign::list_of(subpattern);
+            BracketPrinter subprinter(
+                subpatterns,
+                tagSeparator_,
+                avPairsSeparator_,
+                avSeparator_
+            );
+            std::set< std::vector<std::string> > joinProduct
+                = subprinter.print(edgeDataSubset);
+            std::stringstream joinSs;
+            BOOST_FOREACH(std::vector<std::string> vs, joinProduct) {
+                if (!joinSs.str().empty()) {
+                    joinSs << separator;
+                }
+                joinSs << vs[0];
+            }
+            BOOST_FOREACH(std::string & s, resultElement) {
+                size_t found = s.find("%*****");
+                if (found != std::string::npos) {
+                    s.replace(found, 6, joinSs.str());
+                }
+            }
         }
         result.insert(resultElement);
     }
