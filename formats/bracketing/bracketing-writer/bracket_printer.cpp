@@ -3,6 +3,7 @@
 
 #include <sstream>
 
+#include <boost/assign/list_of.hpp>
 #include <boost/foreach.hpp>
 
 
@@ -93,7 +94,24 @@ std::set< std::vector<std::string> > BracketPrinter::print(
                                     if (to2 != std::string::npos) {
                                         std::string separator = pattern.substr(from, to-from);
                                         std::string subpattern = pattern.substr(from2, to2-from2);
-                                        resSs << "TODO"; // TODO
+                                        std::vector<std::string> subpatterns
+                                            = boost::assign::list_of(subpattern);
+                                        BracketPrinter subprinter(
+                                            subpatterns,
+                                            tagSeparator_,
+                                            avPairsSeparator_,
+                                            avSeparator_
+                                        );
+                                        std::set< std::vector<std::string> > joinProduct
+                                            = subprinter.print(edgeDataSet);
+                                        std::stringstream joinSs;
+                                        BOOST_FOREACH(std::vector<std::string> vs, joinProduct) {
+                                            if (!joinSs.str().empty()) {
+                                                joinSs << separator;
+                                            }
+                                            joinSs << vs[0];
+                                        }
+                                        resSs << joinSs.str();
                                         i = to2 + 1;
                                     } else {
                                         resSs << "%*";
