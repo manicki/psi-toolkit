@@ -106,22 +106,14 @@ BracketingLatticeWriter::BracketingLatticeWriter(
     filter_(filter),
     avPairsSeparator_(avPairsSeparator),
     avSeparator_(avSeparator),
-    showAttributes_(showAttributes.begin(), showAttributes.end()),
-    active_T_(false),
-    active_c_(false),
-    active_t_(false),
-    active_A_(false),
-    active_s_(false)
-{
-    setActiveElements_(openingBracket);
-    setActiveElements_(closingBracket);
-}
+    showAttributes_(showAttributes.begin(), showAttributes.end())
+{ }
 
 
 std::set<std::string> BracketingLatticeWriter::intersectOnlyTags(
     std::set<std::string> tags
 ) {
-    if (!active_T_ || showOnlyTags_.empty()) {
+    if (showOnlyTags_.empty()) {
         return tags;
     }
     std::set<std::string> result;
@@ -137,7 +129,7 @@ std::set<std::string> BracketingLatticeWriter::intersectOnlyTags(
 std::map<std::string, std::string> BracketingLatticeWriter::filterAttributes(
     std::map<std::string, std::string> avMap
 ) {
-    if (!active_A_ || showAttributes_.empty()) {
+    if (showAttributes_.empty()) {
         return avMap;
     }
     std::map<std::string, std::string> result;
@@ -153,36 +145,6 @@ std::map<std::string, std::string> BracketingLatticeWriter::filterAttributes(
 
 std::string BracketingLatticeWriter::doInfo() {
     return "Bracketing writer";
-}
-
-
-void BracketingLatticeWriter::setActiveElements_(std::string pattern) {
-    for (size_t i = 0; i < pattern.length(); i++) {
-        if (pattern[i] == '%' && i+1 < pattern.length()) {
-            switch (pattern[i+1]) {
-            case 'T' :
-                active_T_ = true;
-                break;
-            case 'c' :
-                active_c_ = true;
-                break;
-            case 't' :
-                active_t_ = true;
-                break;
-            case 'a' :
-                active_A_ = true;
-                break;
-            case 'A' :
-                active_A_ = true;
-                break;
-            case 's' :
-                active_s_ = true;
-                break;
-            default :
-                break;
-            }
-        }
-    }
 }
 
 
@@ -262,20 +224,16 @@ BracketingLatticeWriter::Worker::~Worker() {
 EdgeData BracketingLatticeWriter::Worker::getEdgeData_(Lattice::EdgeDescriptor edge) {
     AnnotationItem annotationItem = lattice_.getEdgeAnnotationItem(edge);
     std::set<std::string> tags;
-    if (processor_.isActive_T()) {
-        std::list<std::string> tagsList
-            = lattice_.getLayerTagManager().getTagNames(lattice_.getEdgeLayerTags(edge));
-        tags.insert(tagsList.begin(), tagsList.end());
-    }
+    std::list<std::string> tagsList
+        = lattice_.getLayerTagManager().getTagNames(lattice_.getEdgeLayerTags(edge));
+    tags.insert(tagsList.begin(), tagsList.end());
     std::map<std::string, std::string> avMap;
-    if (processor_.isActive_A()) {
-        avMap = lattice_.getAnnotationItemManager().getAVMap(annotationItem);
-    }
+    avMap = lattice_.getAnnotationItemManager().getAVMap(annotationItem);
     return EdgeData(
         processor_.intersectOnlyTags(tags),
-        processor_.isActive_c() ? annotationItem.getCategory() : "",
-        processor_.isActive_t() ? annotationItem.getText() : "",
+        annotationItem.getCategory(),
+        annotationItem.getText(),
         processor_.filterAttributes(avMap),
-        processor_.isActive_s() ? lattice_.getEdgeScore(edge) : 0.0
+        lattice_.getEdgeScore(edge)
     );
 }

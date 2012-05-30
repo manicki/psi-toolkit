@@ -48,12 +48,6 @@ public:
     std::set<std::string> intersectOnlyTags(std::set<std::string> tags);
     std::map<std::string, std::string> filterAttributes(std::map<std::string, std::string> avMap);
 
-    bool isActive_T() const { return active_T_; }
-    bool isActive_c() const { return active_c_; }
-    bool isActive_t() const { return active_t_; }
-    bool isActive_A() const { return active_A_; }
-    bool isActive_s() const { return active_s_; }
-
 private:
     virtual std::string doInfo();
 
@@ -86,14 +80,6 @@ private:
     std::string avPairsSeparator_;
     std::string avSeparator_;
     std::set<std::string> showAttributes_;
-
-    bool active_T_;
-    bool active_c_;
-    bool active_t_;
-    bool active_A_;
-    bool active_s_;
-
-    void setActiveElements_(std::string pattern);
 
 };
 
