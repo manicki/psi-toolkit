@@ -1,0 +1,1 @@
+morfologik ! bracketing-writer --filter form --opening-bracket %c(%*[,][%a{number}(%*<:><%a{case}>)])| --closing-bracket |

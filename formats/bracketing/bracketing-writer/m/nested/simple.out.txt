@@ -1,1 +1,1 @@
-subst(pl(gen),sg(dat:gen:loc)) verb() myśli
+subst(pl(gen),sg(dat:gen:loc))|verb(sg())|myśli||
