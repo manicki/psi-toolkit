@@ -523,7 +523,7 @@ boost::program_options::variables_map PipeRunner::tryOptions_(
 
     try {
         options = parseOptions_(factory->optionsHandled(), processorArgs);
-    } catch(boost::program_options::error& optionsError) {
+    } catch (boost::program_options::error& optionsError) {
 
         AnnotatorFactory* asAnnotatorFactory =
             dynamic_cast<AnnotatorFactory*>(factory);

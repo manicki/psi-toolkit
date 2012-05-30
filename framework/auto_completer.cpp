@@ -114,7 +114,8 @@ void AutoCompleter::complete_(ProcessorPromiseAlternativeSequence& sequence) {
 
                     boost::optional<std::string> langCode;
 
-                    if (theOnlyOneProcessor->languagesHandling() == AnnotatorFactory::JUST_ONE_LANGUAGE) {
+                    if (theOnlyOneProcessor->languagesHandling() ==
+                            AnnotatorFactory::JUST_ONE_LANGUAGE) {
                         assert(theOnlyOneProcessor->languagesHandled().size() == 1);
                         langCode = theOnlyOneProcessor->languagesHandled().front();
                     }
@@ -137,7 +138,7 @@ void AutoCompleter::complete_(ProcessorPromiseAlternativeSequence& sequence) {
             }
         }
 
-    } while(!allFulfilled);
+    } while (!allFulfilled);
 
     trySolution_(toPromiseSequence_(sequence));
 }
