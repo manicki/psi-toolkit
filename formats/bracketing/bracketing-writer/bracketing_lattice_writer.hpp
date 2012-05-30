@@ -41,10 +41,10 @@ public:
     std::string getOpeningBracket() const { return openingBracket_; }
     std::string getClosingBracket() const { return closingBracket_; }
     std::string getTagSeparator() const { return tagSeparator_; }
-    std::vector<std::string> getFilter() const { return filter_; }
     std::string getAVPairsSeparator() const { return avPairsSeparator_; }
     std::string getAVSeparator() const { return avSeparator_; }
 
+    bool areSomeInFilter(std::list<std::string> & tags);
     std::set<std::string> intersectOnlyTags(std::set<std::string> tags);
     std::map<std::string, std::string> filterAttributes(std::map<std::string, std::string> avMap);
 
@@ -76,7 +76,7 @@ private:
     std::string closingBracket_;
     std::string tagSeparator_;
     std::set<std::string> showOnlyTags_;
-    std::vector<std::string> filter_;
+    std::set<std::string> filter_;
     std::string avPairsSeparator_;
     std::string avSeparator_;
     std::set<std::string> showAttributes_;

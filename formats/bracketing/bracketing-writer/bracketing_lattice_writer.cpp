@@ -103,11 +103,20 @@ BracketingLatticeWriter::BracketingLatticeWriter(
     closingBracket_(closingBracket),
     tagSeparator_(tagSeparator),
     showOnlyTags_(showOnlyTags.begin(), showOnlyTags.end()),
-    filter_(filter),
+    filter_(filter.begin(), filter.end()),
     avPairsSeparator_(avPairsSeparator),
     avSeparator_(avSeparator),
     showAttributes_(showAttributes.begin(), showAttributes.end())
 { }
+
+
+bool BracketingLatticeWriter::areSomeInFilter(std::list<std::string> & tags) {
+    if (filter_.empty()) return true;
+    BOOST_FOREACH(std::string tag, tags) {
+        if (filter_.count(tag)) return true;
+    }
+    return false;
+}
 
 
 std::set<std::string> BracketingLatticeWriter::intersectOnlyTags(
@@ -181,11 +190,13 @@ void BracketingLatticeWriter::Worker::doRun() {
         printedBrackets[i] = new std::string [latticeSize];
     }
 
-    LayerTagMask mask = lattice_.getLayerTagManager().getMask(processor_.getFilter());
-
-    Lattice::EdgesSortedBySourceIterator ei = lattice_.edgesSortedBySource(mask);
+    Lattice::EdgesSortedBySourceIterator ei
+        = lattice_.edgesSortedBySource(lattice_.getLayerTagManager().anyTag());
     while (ei.hasNext()) {
         Lattice::EdgeDescriptor edge = ei.next();
+        std::list<std::string> tagNames
+            = lattice_.getLayerTagManager().getTagNames(lattice_.getEdgeLayerTags(edge));
+        if (!processor_.areSomeInFilter(tagNames)) continue;
         int begin = lattice_.getEdgeBeginIndex(edge);
         int end = lattice_.getEdgeEndIndex(edge);
         edgeStore[begin][end].insert(getEdgeData_(edge));
