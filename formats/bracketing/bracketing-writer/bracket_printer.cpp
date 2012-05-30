@@ -23,7 +23,7 @@ std::set< std::vector<std::string> > BracketPrinter::print(
             while (i < pattern.length()) {
                 if (pattern[i] == '%' && i+1 < pattern.length()) {
                     switch (pattern[i+1]) {
-                    case 'T' :
+                    case 'T':
                         {
                             std::stringstream tagSs;
                             BOOST_FOREACH(std::string tag, edgeData.tags) {
@@ -37,21 +37,21 @@ std::set< std::vector<std::string> > BracketPrinter::print(
                             i += 2;
                         }
                         break;
-                    case 'c' :
+                    case 'c':
                         {
                             resSs << edgeData.category;
                             thisEdgeData.category = edgeData.category;
                             i += 2;
                         }
                         break;
-                    case 't' :
+                    case 't':
                         {
                             resSs << edgeData.text;
                             thisEdgeData.text = edgeData.text;
                             i += 2;
                         }
                         break;
-                    case 'a' :
+                    case 'a':
                         {
                             if (i+2 < pattern.length()) {
                                 size_t from = i+3;
@@ -71,7 +71,7 @@ std::set< std::vector<std::string> > BracketPrinter::print(
                             }
                         }
                         break;
-                    case 'A' :
+                    case 'A':
                         {
                             std::stringstream avSs;
                             typedef std::pair<std::string, std::string> StrStrPair;
@@ -86,14 +86,14 @@ std::set< std::vector<std::string> > BracketPrinter::print(
                             i += 2;
                         }
                         break;
-                    case 's' :
+                    case 's':
                         {
                             resSs << edgeData.score;
                             thisEdgeData.score = edgeData.score;
                             i += 2;
                         }
                         break;
-                    case '*' :
+                    case '*':
                         {
                             if (i+2 < pattern.length()) {
                                 size_t from = i+3;
@@ -120,7 +120,7 @@ std::set< std::vector<std::string> > BracketPrinter::print(
                             }
                         }
                         break;
-                    default :
+                    default:
                         {
                             resSs << '%';
                             i++;
@@ -195,14 +195,14 @@ std::set< std::vector<std::string> > BracketPrinter::print(
 
 char BracketPrinter::close_(char c) {
     switch (c) {
-    case '(' : return ')';
-    case ')' : return '(';
-    case '[' : return ']';
-    case ']' : return '[';
-    case '{' : return '}';
-    case '}' : return '{';
-    case '<' : return '>';
-    case '>' : return '<';
-    default : return c;
+    case '(': return ')';
+    case ')': return '(';
+    case '[': return ']';
+    case ']': return '[';
+    case '{': return '}';
+    case '}': return '{';
+    case '<': return '>';
+    case '>': return '<';
+    default: return c;
     }
 }

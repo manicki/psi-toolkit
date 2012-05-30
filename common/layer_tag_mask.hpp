@@ -34,7 +34,7 @@ private:
         none_(false){
     }
 
-    LayerTagMask(const std::vector<LayerTagCollection> tagAlts) :
+    LayerTagMask(const std::vector<LayerTagCollection> & tagAlts) :
         tagAlts_(tagAlts),
         any_(false),
         none_(false){
