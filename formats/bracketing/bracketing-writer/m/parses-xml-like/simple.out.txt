@@ -1,1 +1,1 @@
-<S_genders=""><NP_genders="m1,f">Ala</NP> <VP_genders="">ma</VP> <NP_genders="m2,f">kota</NP></S>.
+<S_genders=""><NP_genders="f,m1">Ala</NP> <VP_genders="">ma</VP> <NP_genders="f,m2">kota</NP></S>.
