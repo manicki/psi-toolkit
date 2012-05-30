@@ -176,6 +176,11 @@ void BracketingLatticeWriter::Worker::doRun() {
         edgeStore[i] = new std::set<EdgeData> [latticeSize];
     }
 
+    std::string * * printedBrackets = new std::string * [latticeSize];
+    for (size_t i = 0; i < latticeSize; i++) {
+        printedBrackets[i] = new std::string [latticeSize];
+    }
+
     LayerTagMask mask = lattice_.getLayerTagManager().getMask(processor_.getFilter());
 
     Lattice::EdgesSortedBySourceIterator ei = lattice_.edgesSortedBySource(mask);
@@ -187,27 +192,33 @@ void BracketingLatticeWriter::Worker::doRun() {
     }
 
     for (size_t i = 0; i < latticeSize; i += symbolLength(latticeText, i)) {
+        for (size_t j = 0; j < latticeSize; j += symbolLength(latticeText, j)) {
+            if (i < j) {
+                std::set< std::vector<std::string> > printed
+                    = bracketPrinter.print(edgeStore[i][j]);
+                BOOST_FOREACH(std::vector<std::string> p, printed) {
+                    printedBrackets[i][j] = printedBrackets[i][j] + p[0];
+                    printedBrackets[j][i] = p[1] + printedBrackets[j][i];
+                }
+            }
+        }
+    }
+
+    for (size_t i = 0; i < latticeSize; i += symbolLength(latticeText, i)) {
         for (
             size_t j = ((i + latticeSize) - 1) % latticeSize;
             j != i;
             j = ((j + latticeSize) - 1) % latticeSize
         ) {
-            if (i < j) {
-                std::set< std::vector<std::string> > printed
-                    = bracketPrinter.print(edgeStore[i][j]);
-                BOOST_FOREACH(std::vector<std::string> p, printed) {
-                    alignOutput_(p[0]);
-                }
-            } else {
-                std::set< std::vector<std::string> > printed
-                    = bracketPrinter.print(edgeStore[j][i]);
-                BOOST_FOREACH(std::vector<std::string> p, printed) {
-                    alignOutput_(p[1]);
-                }
-            }
+            alignOutput_(printedBrackets[i][j]);
         }
         alignOutput_(latticeText.substr(i, symbolLength(latticeText, i)));
     }
+
+    for (size_t i = 0; i < latticeSize; i++) {
+        delete [] printedBrackets[i];
+    }
+    delete [] printedBrackets;
 
     for (size_t i = 0; i < latticeSize; i++) {
         delete [] edgeStore[i];
