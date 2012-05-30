@@ -95,6 +95,10 @@ public:
         return getMask(createTagCollection(tagNames));
     }
 
+    LayerTagMask getMask(std::vector<std::string> tagNames) {
+        return getMask(createTagCollection(tagNames));
+    }
+
     LayerTagMask getMaskWithLangCode(
         const std::string& tagName, const std::string& langCode) {
 
