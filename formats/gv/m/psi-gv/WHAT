@@ -1,1 +1,1 @@
-psi-reader ! gv-writer
+psi-reader ! gv-writer --format canon
