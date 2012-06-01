@@ -1,7 +1,7 @@
 GraphViz Writer presents the lattice as a directed graph, using GraphViz library.
 
-Available formats: canon dot eps fig gd(:cairo,:gd) gd2(:cairo,:gd) gif(:cairo,:gd) gv jpe(:cairo,:gd) jpeg(:cairo,:gd) jpg(:cairo,:gd) pdf plain plain-ext png(:cairo,:gd) ps(:cairo,:ps) ps2 svg(:cairo,:svg) svgz tk vml vmlz wbmp(:cairo,:gd) xdot
+Available formats: `canon`, `dot`, `eps`, `fig`, `gd`(`:cairo`,`:gd`), `gd2`(`:cairo`,`:gd`), `gif`(`:cairo`,`:gd`), `gv`, `jpe`(`:cairo`,`:gd`), `jpeg`(`:cairo`,`:gd`), `jpg`(`:cairo`,`:gd`), `pdf`, `plain`, `plain-ext`, `png`(`:cairo`,`:gd`), `ps`(`:cairo`,`:ps`), `ps2`, `svg`(`:cairo`,`:svg`), `svgz`, `tk`, `vml`, `vmlz`, `wbmp`(`:cairo`,`:gd`), `xdot`
 
-Detailed description of available formats can be find on http://www.graphviz.org/content/output-formats
+Detailed description of available formats can be find on <http://www.graphviz.org/content/output-formats>
 
 If gv-writer is not available, you can use dot-writer instead.

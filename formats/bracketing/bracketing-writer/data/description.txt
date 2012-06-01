@@ -12,7 +12,7 @@ following expressions have a special meaning when given in
   * `%c` - edge category,
   * `%t` - edge text,
   * `%A` - all edge attributes,
-  * `%a[...] - the value of the given attribute,
+  * `%a[...]` - the value of the given attribute,
   * `%s` - score,
   * `%*[...][...]`, `%*(...)(...)%`, `%*<...><...>` or
     `%*{...}{...}` - join operators (see below).
