@@ -344,7 +344,7 @@ void GVLatticeWriter::Worker::doRun() {
 
         }
 
-        if (processor_.isAlign()) {
+        if (processor_.isAlign() && !processor_.isTree()) {
             std::map<int, int>::iterator vni = vertexNodes.begin();
             int prevKey = vni->first;
             int prevVal = vni->second;
