@@ -75,7 +75,7 @@ LatticeWriter<std::ostream>* GVLatticeWriter::Factory::doCreateLatticeWriter(
         filter,
         options["format"].as<std::string>(),
         options.count("tree"),
-        options.count("align")
+        !options.count("no-align")
     );
 }
 
@@ -83,14 +83,14 @@ boost::program_options::options_description GVLatticeWriter::Factory::doOptionsH
     boost::program_options::options_description optionsDescription("Allowed options");
 
     optionsDescription.add_options()
-        ("align",
-            "forces aligning nodes left to right")
         ("color",
             "edges with different tags have different colors")
         ("filter", boost::program_options::value< std::vector<std::string> >()->multitoken(),
             "filters edges by specified tags")
         ("format", boost::program_options::value<std::string>()->default_value("svg"),
             "output format")
+        ("no-align",
+            "allows nodes to be not aligned left to right")
         ("show-tags",
             "prints layer tags")
         ("tree",
