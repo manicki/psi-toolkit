@@ -57,6 +57,14 @@ public:
         virtual std::list<std::string> doProvidedLayerTags();
     };
 
+    class Exception : public PsiException  {
+    public:
+        Exception(const std::string& msg): PsiException(msg) {
+        }
+
+        virtual ~Exception() throw() {}
+    };
+
 private:
 
     static const unsigned int MIN_TEXT_LENGTH_FOR_BIGRAM_METHOD = 24;
@@ -74,6 +82,7 @@ private:
 
     std::list<Language> languages_;
     bool forceMode_;
+    std::string forcedLanguage_;
 
     void initLanguages();
     void initLanguages(std::vector<std::string> selectedLangs);
