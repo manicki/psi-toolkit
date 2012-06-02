@@ -1,6 +1,7 @@
 #cmakedefine01 HAVE_POSTGRESQL
 #cmakedefine01 HAVE_JAVA
 #cmakedefine01 HAVE_RE2
+#cmakedefine01 HAVE_SFST
 #cmakedefine01 HAVE_PCRE
 #cmakedefine01 HAVE_LOG4CPP
 #cmakedefine01 HAVE_PERL_BINDINGS

@@ -43,6 +43,10 @@
 #include "morfologik.hpp"
 #endif
 
+#if HAVE_SFST
+#include "sfst_lemmatizer.hpp"
+#endif
+
 #if HAVE_CMPH
 #include "one_edge_at_a_time_annotator.hpp"
 #include "bilexicon.hpp"
@@ -118,6 +122,11 @@ MainFactoriesKeeper::MainFactoriesKeeper() {
 #if HAVE_JAVA
     keeper_.takeProcessorFactory(new LemmatizerAnnotator<Morfologik>::Factory());
 #endif
+
+#if HAVE_SFST
+    keeper_.takeProcessorFactory(new LemmatizerAnnotator<SfstLemmatizer>::Factory());
+#endif
+
     keeper_.takeProcessorFactory(new poleng::bonsai::puddle::Puddle::Factory());
 
 #if HAVE_CMPH
