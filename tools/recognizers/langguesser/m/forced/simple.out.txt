@@ -1,0 +1,2 @@
+01 0000 17    Hornjoserbšćina frag,txt-reader    Hornjoserbšćina FRAG[]
+02 0000 17    Hornjo...ina !hsb,lang-guesser,text Hornjoserbšćina TEXT[1]

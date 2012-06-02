@@ -33,14 +33,20 @@ LangGuesser::LangGuesser() {
 }
 
 LangGuesser::LangGuesser(const boost::program_options::variables_map& options) {
-    if (options.count("only-langs")) {
-        initLanguages(options["only-langs"].as<std::vector<std::string> >());
-    }
-    else {
-        initLanguages();
-    }
-
     forceMode_ = options.count("force") ? true : false;
+
+    if (options.count("only-langs")) {
+        std::vector<std::string> langsWanted =
+            options["only-langs"].as<std::vector<std::string> >();
+
+        if (forceMode_ && langsWanted.size() == 1) {
+            forcedLanguage_ = langsWanted[0];
+            initLanguages();
+        } else
+            initLanguages(langsWanted);
+    }
+    else
+        initLanguages();
 }
 
 void LangGuesser::initLanguages() {
@@ -57,9 +63,13 @@ void LangGuesser::initLanguages(std::vector<std::string> selectedLangs) {
     for (unsigned int i = 0; i < selectedLangs.size(); i++) {
         definedLang = LANGUAGES.find(selectedLangs[i]);
 
-        if (definedLang != LANGUAGES.end()) {
+        if (definedLang != LANGUAGES.end())
             addLanguage(definedLang->first, definedLang->second);
-        }
+        else
+            throw Exception(
+                std::string("lang-guesser cannot recognize language '")
+                + selectedLangs[i]
+                + "'");
     }
 
     if (languages_.empty()) {
@@ -76,6 +86,9 @@ void LangGuesser::addLanguage(std::string lang, std::string letters) {
 }
 
 std::string LangGuesser::guessLanguage(std::string text) {
+    if (!forcedLanguage_.empty())
+        return forcedLanguage_;
+
     std::string guessedLanguage = (text.length() < MIN_TEXT_LENGTH_FOR_BIGRAM_METHOD) ?
         guessLanguageByLetters(text) : guessLanguageByBigramModel(text);
 
