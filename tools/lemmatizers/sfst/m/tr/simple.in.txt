@@ -1,0 +1,1 @@
+Bilgisayar belirli komutlara göre veri işleyen ve depolayan bir makinedir.
