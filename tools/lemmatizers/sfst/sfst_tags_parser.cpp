@@ -12,77 +12,77 @@ std::string SfstTagsParser::innerSeparator = ".";
 
 std::multimap<std::string, std::string> SfstTagsParser::lexemeTags =
     boost::assign::map_list_of
-        ("subst", "gender")
-        ("verb", "aspect");
+    ("subst", "gender")
+    ("verb", "aspect");
 
 std::map<std::string, std::string> SfstTagsParser::predefinedTags =
     boost::assign::map_list_of
-        ("adj", "pos")
-        ("adjp", "pos")
-        ("adv", "pos")
-        ("conj", "pos")
-        ("ign", "pos")
-        ("indecl", "pos")
-        ("num", "pos")
-        ("pact", "pos")
-        ("pant", "pos")
-        ("pcon", "pos")
-        ("ppas", "pos")
-        ("ppron12", "pos")
-        ("ppron3", "pos")
-        ("pred", "pos")
-        ("prep", "pos")
-        ("siebie", "pos")
-        ("subst", "pos")
-        ("verb", "pos")
-        ("sg", "number")
-        ("pl", "number")
-        ("nom", "case")
-        ("gen", "case")
-        ("acc", "case")
-        ("dat", "case")
-        ("inst", "case")
-        ("loc", "case")
-        ("voc", "case")
-        ("pos", "degree")
-        ("comp", "degree")
-        ("sup", "degree")
-        ("m", "gender")
-        ("m1", "gender")
-        ("m2", "gender")
-        ("m3", "gender")
-        ("m4", "gender")
-        ("n", "gender")
-        ("f", "gender")
-        ("pri", "person")
-        ("sec", "person")
-        ("ter", "person")
-        ("depr", "depreciativity")
-        ("aff", "negation")
-        ("neg", "negation")
-        ("perf", "aspect")
-        ("imperf", "aspect")
-        ("?perf", "aspect")
-        ("nakc", "accentability")
-        ("akc", "accentability")
-        ("praep", "post-prepositionality")
-        ("npraep", "post-prepositionality")
-        ("ger", "tense")
-        ("imps", "tense")
-        ("inf", "tense")
-        ("fin", "tense")
-        ("bedzie", "tense")
-        ("praet", "tense")
-        ("refl", "tense")
-        ("impt", "mode")
-        ("pot", "mode")
-        ("indecl", "uninflected")
-        ("qub", "uninflected")
-        ("irreg", "irregularity");
+    ("adj", "pos")
+    ("adjp", "pos")
+    ("adv", "pos")
+    ("conj", "pos")
+    ("ign", "pos")
+    ("indecl", "pos")
+    ("num", "pos")
+    ("pact", "pos")
+    ("pant", "pos")
+    ("pcon", "pos")
+    ("ppas", "pos")
+    ("ppron12", "pos")
+    ("ppron3", "pos")
+    ("pred", "pos")
+    ("prep", "pos")
+    ("siebie", "pos")
+    ("subst", "pos")
+    ("verb", "pos")
+    ("sg", "number")
+    ("pl", "number")
+    ("nom", "case")
+    ("gen", "case")
+    ("acc", "case")
+    ("dat", "case")
+    ("inst", "case")
+    ("loc", "case")
+    ("voc", "case")
+    ("pos", "degree")
+    ("comp", "degree")
+    ("sup", "degree")
+    ("m", "gender")
+    ("m1", "gender")
+    ("m2", "gender")
+    ("m3", "gender")
+    ("m4", "gender")
+    ("n", "gender")
+    ("f", "gender")
+    ("pri", "person")
+    ("sec", "person")
+    ("ter", "person")
+    ("depr", "depreciativity")
+    ("aff", "negation")
+    ("neg", "negation")
+    ("perf", "aspect")
+    ("imperf", "aspect")
+    ("?perf", "aspect")
+    ("nakc", "accentability")
+    ("akc", "accentability")
+    ("praep", "post-prepositionality")
+    ("npraep", "post-prepositionality")
+    ("ger", "tense")
+    ("imps", "tense")
+    ("inf", "tense")
+    ("fin", "tense")
+    ("bedzie", "tense")
+    ("praet", "tense")
+    ("refl", "tense")
+    ("impt", "mode")
+    ("pot", "mode")
+    ("indecl", "uninflected")
+    ("qub", "uninflected")
+    ("irreg", "irregularity");
 
 std::vector<std::map<std::string, std::string> > SfstTagsParser::getFormAttributes(
     std::string & tag
-) {
+    ) {
 
     int complexAttributeCounter = 0;
     std::vector<std::map<std::string, std::string> > allDescriptions;
@@ -102,7 +102,7 @@ std::vector<std::map<std::string, std::string> > SfstTagsParser::getFormAttribut
 
 void SfstTagsParser::removeLexemeAttributes(
     std::map<std::string, std::string> & description
-) {
+    ) {
     std::string pos = description["pos"];
 
     std::multimap<std::string, std::string>::iterator it;
@@ -114,7 +114,7 @@ void SfstTagsParser::removeLexemeAttributes(
 
 std::vector<std::map<std::string, std::string> > SfstTagsParser::parse(
     std::string & tag
-) {
+    ) {
 
     int complexAttributeCounter = 0;
     std::vector<std::map<std::string, std::string> > allDescriptions;
@@ -135,7 +135,7 @@ std::vector<std::map<std::string, std::string> >
 SfstTagsParser::expandDescriptions(
     std::map<std::string, std::string> description,
     int & complexAttributeCounter
-) {
+    ) {
 
     std::vector<std::map<std::string, std::string> > allDescriptions;
     allDescriptions.insert(allDescriptions.begin(), description);
@@ -158,7 +158,7 @@ SfstTagsParser::expandDescriptions(
 std::vector<std::map<std::string, std::string> >
 SfstTagsParser::expandSingleDescription(
     std::map<std::string, std::string> description
-) {
+    ) {
 
     int lengthOfCurrentComplexAttribute = getLengthOfFirstComplexAttribute(
         description);
@@ -179,18 +179,18 @@ SfstTagsParser::expandSingleDescription(
 
             std::vector<std::string> subAttrContainer;
             boost::split(subAttrContainer, it->second,
-                boost::is_any_of(innerSeparator));
+                         boost::is_any_of(innerSeparator));
 
             for (int i = 0; i < lengthOfCurrentComplexAttribute; ++i) {
                 result[i].insert( std::pair<std::string, std::string>
-                    (it->first, subAttrContainer[i]) );
+                                  (it->first, subAttrContainer[i]) );
             }
             firstComplexAttribute = false;
         }
         else {
             for (int i = 0; i < lengthOfCurrentComplexAttribute; ++i) {
                 result[i].insert( std::pair<std::string, std::string>
-                    (it->first, it->second) );
+                                  (it->first, it->second) );
             }
         }
     }
@@ -199,7 +199,7 @@ SfstTagsParser::expandSingleDescription(
 
 std::map<std::string, std::string> SfstTagsParser::parseSimple(
     std::string & tag, int & counter
-) {
+    ) {
 
     std::map<std::string, std::string> descriptions;
     std::map<std::string, std::string>::iterator foundAttribute;
@@ -213,7 +213,7 @@ std::map<std::string, std::string> SfstTagsParser::parseSimple(
 
         if (foundAttribute != predefinedTags.end()) {
             descriptions.insert(std::pair<std::string, std::string>
-                (foundAttribute->second, attributes[i]));
+                                (foundAttribute->second, attributes[i]));
         }
         else {
             std::string message = "Attribute ";
@@ -227,7 +227,7 @@ std::map<std::string, std::string> SfstTagsParser::parseSimple(
 
 std::map<std::string, std::string> SfstTagsParser::getLexemeAttributes(
     std::string & tag
-) {
+    ) {
     std::map<std::string, std::string> attributes;
     int hasCmplAttr = 0;
     std::map<std::string, std::string> allAttributes =
@@ -240,8 +240,8 @@ std::map<std::string, std::string> SfstTagsParser::getLexemeAttributes(
     // Add other attributes
     std::multimap<std::string, std::string>::iterator it;
     for (it = lexemeTags.equal_range(pos).first;
-        it != lexemeTags.equal_range(pos).second;
-        ++it) {
+         it != lexemeTags.equal_range(pos).second;
+         ++it) {
 
         std::string attr = allAttributes[it->second];
         std::replace(attr.begin(), attr.end(), '.', '-');
@@ -253,7 +253,7 @@ std::map<std::string, std::string> SfstTagsParser::getLexemeAttributes(
 
 std::string SfstTagsParser::getAttributeToSeek(
     std::string & attribute, int & complexAttributeCounter
-) {
+    ) {
 
     size_t innerSeparatorPosition = attribute.find(innerSeparator);
     if (innerSeparatorPosition != std::string::npos) {
@@ -267,7 +267,7 @@ std::string SfstTagsParser::getAttributeToSeek(
 
 int SfstTagsParser::getLengthOfFirstComplexAttribute(
     std::map<std::string, std::string> tag
-) {
+    ) {
 
     std::map<std::string, std::string>::iterator it;
     for (it = tag.begin(); it != tag.end() ; ++it) {

@@ -57,7 +57,7 @@
 #include <set>
 
 class SfstLemmatizer {
-	public:
+public:
 
     SfstLemmatizer(const boost::program_options::variables_map& options);
 
@@ -71,17 +71,17 @@ class SfstLemmatizer {
 
     std::string getLanguage() const;
 
-	static AnnotatorFactory::LanguagesHandling languagesHandling(
+    static AnnotatorFactory::LanguagesHandling languagesHandling(
         const boost::program_options::variables_map& options);
 
     static std::list<std::string> languagesHandled(
         const boost::program_options::variables_map& options);
 
-	void lemmatize(
+    void lemmatize(
         const std::string & word,
         AnnotationItemManager & manager,
         LemmatizerOutputIterator & iterator
-    );
+        );
 
     /**
      * Sets the word processing level, default 0.
@@ -122,62 +122,62 @@ class SfstLemmatizer {
      */
     std::vector<std::string> simpleStem(const std::string & word);
 
-    private:
-		AnnotationItemManager * annotationManager;
-		int level;
-		std::string language;
-		std::string automaton;
-		bool rawRoots;
+private:
+    AnnotationItemManager * annotationManager;
+    int level;
+    std::string language;
+    std::string automaton;
+    bool rawRoots;
 
-		void stemsOnLemmaLevel(const std::string &, LemmatizerOutputIterator &);
-		void stemsOnLexemeLevel(const std::string &, LemmatizerOutputIterator &);
-		void stemsOnFormLevel(const std::string &, LemmatizerOutputIterator &);
+    void stemsOnLemmaLevel(const std::string &, LemmatizerOutputIterator &);
+    void stemsOnLexemeLevel(const std::string &, LemmatizerOutputIterator &);
+    void stemsOnFormLevel(const std::string &, LemmatizerOutputIterator &);
 
-		//Ugly taken from morfo...
-		AnnotationItem createLexemeAnnotation(
-			const std::string & stem, const std::string & tag
-		);
+    //Ugly taken from morfo...
+    AnnotationItem createLexemeAnnotation(
+        const std::string & stem, const std::string & tag
+        );
 
-		AnnotationItem createFormAnnotation(
-			AnnotationItem & lexemeItem,
-			const std::string & word,
-			std::vector<std::string> &
-		);
+    AnnotationItem createFormAnnotation(
+        AnnotationItem & lexemeItem,
+        const std::string & word,
+        std::vector<std::string> &
+        );
 
 
-		std::set<std::string> getLemmasFromStems(
-			std::multimap<std::string, std::vector<std::string> > stems
-		);
-		std::set<std::string> getLexemeTagsFromStems(
-			std::multimap<std::string, std::vector<std::string> > & stems,
-			const std::string & lemma
-		);
-		std::vector<std::vector<std::string> > getFormTagsFromLexem(
-			std::multimap<std::string, std::vector<std::string> > & stems,
-			const std::string & lemma,
-			const std::string & lexem
-		);
-		static std::string tagSeparator;
-		//End of takens..
-		SFST::Transducer * transducer;
-		//scoped ptr... (Inteligenty wskaźnik..)
+    std::set<std::string> getLemmasFromStems(
+        std::multimap<std::string, std::vector<std::string> > stems
+        );
+    std::set<std::string> getLexemeTagsFromStems(
+        std::multimap<std::string, std::vector<std::string> > & stems,
+        const std::string & lemma
+        );
+    std::vector<std::vector<std::string> > getFormTagsFromLexem(
+        std::multimap<std::string, std::vector<std::string> > & stems,
+        const std::string & lemma,
+        const std::string & lexem
+        );
+    static std::string tagSeparator;
+    //End of takens..
+    SFST::Transducer * transducer;
+    //scoped ptr... (Inteligenty wskaźnik..)
 
-		/***
-		 * Outpusts raw word analysis from sfst transducer.
-		 * @param word
-		 * A word that will be analysed.
-		 * @return
-		 * String vector containing output of transducer.
-		 */
-		std::vector<std::string> wordToRaw(std::string);
+    /***
+     * Outpusts raw word analysis from sfst transducer.
+     * @param word
+     * A word that will be analysed.
+     * @return
+     * String vector containing output of transducer.
+     */
+    std::vector<std::string> wordToRaw(std::string);
 
-		void cookRaw(std::string &);
-		void cookTurkishVerb(std::string &);
+    void cookRaw(std::string &);
+    void cookTurkishVerb(std::string &);
 
-		std::string getCookedStem(std::string);
-		std::vector<std::string> getCookedTags(std::string);
+    std::string getCookedStem(std::string);
+    std::vector<std::string> getCookedTags(std::string);
 
-		void initializeTransducer();
+    void initializeTransducer();
 
     const static std::string DEFAULT_AUTOMATON_FILE_SPEC;
 };

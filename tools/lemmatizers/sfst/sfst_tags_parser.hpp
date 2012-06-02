@@ -28,7 +28,7 @@ public:
      */
     std::vector<std::map<std::string, std::string> > getFormAttributes(
         std::string & tag
-    );
+        );
 
     /**
      * Complex parses Morfologik tags.
@@ -50,7 +50,7 @@ public:
      */
     std::map<std::string, std::string> parseSimple(
         std::string & tag, int & counter
-    );
+        );
 
 private:
 
@@ -63,13 +63,13 @@ private:
     void removeLexemeAttributes(std::map<std::string, std::string> &);
 
     std::vector<std::map<std::string, std::string> >
-        expandDescriptions (std::map<std::string, std::string>, int &);
+    expandDescriptions (std::map<std::string, std::string>, int &);
     std::vector<std::map<std::string, std::string> >
-        expandSingleDescription (std::map<std::string, std::string>);
+    expandSingleDescription (std::map<std::string, std::string>);
 
     std::string getAttributeToSeek (std::string & tags, int &);
     int getLengthOfFirstComplexAttribute (std::map<std::string,
-                                          std::string> tag);
+                                                   std::string> tag);
 };
 
 #endif
