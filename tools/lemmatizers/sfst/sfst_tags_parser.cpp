@@ -81,8 +81,7 @@ std::map<std::string, std::string> SfstTagsParser::predefinedTags =
     ("irreg", "irregularity");
 
 std::vector<std::map<std::string, std::string> > SfstTagsParser::getFormAttributes(
-    std::string & tag
-    ) {
+    std::string & tag) {
 
     int complexAttributeCounter = 0;
     std::vector<std::map<std::string, std::string> > allDescriptions;
@@ -101,8 +100,8 @@ std::vector<std::map<std::string, std::string> > SfstTagsParser::getFormAttribut
 }
 
 void SfstTagsParser::removeLexemeAttributes(
-    std::map<std::string, std::string> & description
-    ) {
+    std::map<std::string, std::string> & description) {
+
     std::string pos = description["pos"];
 
     std::multimap<std::string, std::string>::iterator it;
@@ -113,8 +112,7 @@ void SfstTagsParser::removeLexemeAttributes(
 }
 
 std::vector<std::map<std::string, std::string> > SfstTagsParser::parse(
-    std::string & tag
-    ) {
+    std::string & tag) {
 
     int complexAttributeCounter = 0;
     std::vector<std::map<std::string, std::string> > allDescriptions;
@@ -134,8 +132,7 @@ std::vector<std::map<std::string, std::string> > SfstTagsParser::parse(
 std::vector<std::map<std::string, std::string> >
 SfstTagsParser::expandDescriptions(
     std::map<std::string, std::string> description,
-    int & complexAttributeCounter
-    ) {
+    int & complexAttributeCounter) {
 
     std::vector<std::map<std::string, std::string> > allDescriptions;
     allDescriptions.insert(allDescriptions.begin(), description);
@@ -157,8 +154,7 @@ SfstTagsParser::expandDescriptions(
 
 std::vector<std::map<std::string, std::string> >
 SfstTagsParser::expandSingleDescription(
-    std::map<std::string, std::string> description
-    ) {
+    std::map<std::string, std::string> description) {
 
     int lengthOfCurrentComplexAttribute = getLengthOfFirstComplexAttribute(
         description);
@@ -198,8 +194,7 @@ SfstTagsParser::expandSingleDescription(
 }
 
 std::map<std::string, std::string> SfstTagsParser::parseSimple(
-    std::string & tag, int & counter
-    ) {
+    std::string & tag, int & counter) {
 
     std::map<std::string, std::string> descriptions;
     std::map<std::string, std::string>::iterator foundAttribute;
@@ -226,8 +221,8 @@ std::map<std::string, std::string> SfstTagsParser::parseSimple(
 }
 
 std::map<std::string, std::string> SfstTagsParser::getLexemeAttributes(
-    std::string & tag
-    ) {
+    std::string & tag) {
+
     std::map<std::string, std::string> attributes;
     int hasCmplAttr = 0;
     std::map<std::string, std::string> allAttributes =
@@ -252,8 +247,7 @@ std::map<std::string, std::string> SfstTagsParser::getLexemeAttributes(
 }
 
 std::string SfstTagsParser::getAttributeToSeek(
-    std::string & attribute, int & complexAttributeCounter
-    ) {
+    std::string & attribute, int & complexAttributeCounter) {
 
     size_t innerSeparatorPosition = attribute.find(innerSeparator);
     if (innerSeparatorPosition != std::string::npos) {
@@ -266,8 +260,7 @@ std::string SfstTagsParser::getAttributeToSeek(
 }
 
 int SfstTagsParser::getLengthOfFirstComplexAttribute(
-    std::map<std::string, std::string> tag
-    ) {
+    std::map<std::string, std::string> tag) {
 
     std::map<std::string, std::string>::iterator it;
     for (it = tag.begin(); it != tag.end() ; ++it) {

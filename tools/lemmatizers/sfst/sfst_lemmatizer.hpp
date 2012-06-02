@@ -80,8 +80,7 @@ public:
     void lemmatize(
         const std::string & word,
         AnnotationItemManager & manager,
-        LemmatizerOutputIterator & iterator
-        );
+        LemmatizerOutputIterator & iterator);
 
     /**
      * Sets the word processing level, default 0.
@@ -135,28 +134,26 @@ private:
 
     //Ugly taken from morfo...
     AnnotationItem createLexemeAnnotation(
-        const std::string & stem, const std::string & tag
-        );
+        const std::string & stem, const std::string & tag);
 
     AnnotationItem createFormAnnotation(
         AnnotationItem & lexemeItem,
         const std::string & word,
-        std::vector<std::string> &
-        );
+        std::vector<std::string> &);
 
 
     std::set<std::string> getLemmasFromStems(
-        std::multimap<std::string, std::vector<std::string> > stems
-        );
+        std::multimap<std::string, std::vector<std::string> > stems);
+
     std::set<std::string> getLexemeTagsFromStems(
         std::multimap<std::string, std::vector<std::string> > & stems,
-        const std::string & lemma
-        );
+        const std::string & lemma);
+
     std::vector<std::vector<std::string> > getFormTagsFromLexem(
         std::multimap<std::string, std::vector<std::string> > & stems,
         const std::string & lemma,
-        const std::string & lexem
-        );
+        const std::string & lexem);
+
     static std::string tagSeparator;
     //End of takens..
     SFST::Transducer * transducer;
