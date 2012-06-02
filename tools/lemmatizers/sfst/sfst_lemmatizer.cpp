@@ -330,7 +330,7 @@ void SfstLemmatizer::initializeTransducer() {
         ERROR("Proper lang file (" + language + ") has not been found.");
     }
     else {
-        transducer = new SFST::Transducer(file);
+        transducer.reset(new SFST::Transducer(file));
         fclose(file);
     }
 

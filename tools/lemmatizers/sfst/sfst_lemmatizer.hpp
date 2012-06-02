@@ -155,9 +155,8 @@ private:
         const std::string & lexem);
 
     static std::string tagSeparator;
-    //End of takens..
-    SFST::Transducer * transducer;
-    //scoped ptr... (Inteligenty wskaźnik..)
+
+    boost::scoped_ptr<SFST::Transducer> transducer;
 
     /***
      * Outpusts raw word analysis from sfst transducer.
