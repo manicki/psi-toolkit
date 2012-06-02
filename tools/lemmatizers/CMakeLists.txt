@@ -8,3 +8,6 @@ else()
   unset(morfologik-t CACHE)
 endif(USE_JAVA)
 
+if(HAVE_SFST)
+  add_subdirectory(sfst)
+endif(HAVE_SFST)

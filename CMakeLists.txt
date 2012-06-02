@@ -99,6 +99,26 @@ else()
   set(HAVE_CMPH 0)
 endif(EXISTS ${CMPH_LIB} AND EXISTS ${CMPH_INCLUDE})
 
+# SFST library (for TRmorph)
+option(USE_SFST "Using SFST" OFF)
+message(STATUS "Using SFST ${USE_SFST}")
+
+if (USE_SFST)
+   find_path(SFST_LIB libsfst.so /usr/lib/sfst)
+   find_path(SFST_LIB libsfst.so /usr/lib)
+   find_path(SFST_INCLUDE fst.h /usr/include/sfst)
+
+   if(EXISTS ${SFST_LIB} AND EXISTS ${SFST_INCLUDE})
+      message("-- Using SFST...")
+      include_directories(${SFST_INCLUDE})
+      link_directories(${SFST_LIB})
+      set(HAVE_SFST 1)
+   else()
+      message("-- Not using SFST...")
+      set(HAVE_SFST 0)
+   endif(EXISTS ${SFST_LIB} AND EXISTS ${SFST_INCLUDE})
+endif (USE_SFST)
+
 # Finds and includes external libraries
 set(Boost_USE_STATIC_LIBS OFF)
 set(Boost_USE_STATIC_RUNTIME OFF)
@@ -349,6 +369,13 @@ if(USE_JAVA)
     set(TESTS_TARGETS ${TESTS_TARGETS} tools-lemmatizers-morfologik-tests)
 endif(USE_JAVA)
 
+if(HAVE_SFST)
+	#add_subdirectory(sfst)
+    #set(BASE_TARGETS ${BASE_TARGETS} sfst)
+    set(BASE_TARGETS ${BASE_TARGETS} tools-lemmatizers-sfst)
+    set(TESTS_TARGETS ${TESTS_TARGETS} tools-lemmatizers-sfst-tests)
+endif(HAVE_SFST)
+
 if(HAVE_CMPH)
     set(BASE_TARGETS ${BASE_TARGETS} tools-datastructures-lexica)
     set(TESTS_TARGETS ${TESTS_TARGETS} tools-datastructures-lexica-tests)
@@ -527,8 +554,93 @@ function(download_artifact FILE)
 
 endfunction(download_artifact)
 
+function(download_and_unpack URL FILE CHECKSUM DESTINATION)
+
+  message(STATUS "Checking ${URL}...")
+
+  set(_downloaded_file "${psi-toolkit_SOURCE_DIR}/${DESTINATION}")
+
+  set(_skip_download 0)
+
+  if (EXISTS "${_downloaded_file}")
+     if ("${CMAKE_VERSION}" VERSION_LESS "2.8.7")
+         execute_process(COMMAND "md5sum" "-b" ${_downloaded_file}
+        OUTPUT_VARIABLE _file_md5_line
+        ERROR_QUIET
+        OUTPUT_STRIP_TRAILING_WHITESPACE)
+         string(REGEX MATCH "^[0-9a-f]+" _file_md5 "${_file_md5_line}")
+     else()
+        file(MD5 "${_downloaded_file}" _file_md5)
+     endif ()
+
+     message(STATUS "File ${_downloaded_file} already there with MD5 ${_file_md5}")
+     message(STATUS "Excpected MD5 is ${CHECKSUM}...")
+
+     if ("${CHECKSUM}" STREQUAL "${_file_md5}")
+        message(STATUS "MD5 is the same, skipping download")
+        set(_skip_download 1)
+     endif ()
+  endif ()
+
+  if (NOT "${_skip_download}")
+    message(STATUS "Downloading ${URL}...")
+
+    set(_tmp_archive_file "${psi-toolkit_BINARY_DIR}/pack.tmp.tar.gz")
+
+    message(STATUS "${_tmp_archive_file}")
+
+    file(DOWNLOAD
+          "${URL}"
+          "${_tmp_archive_file}"
+          STATUS status)
+
+    list(GET status 0 _status )
+    list(GET status 1 _status_message )
+
+    if (NOT ${_status} EQUAL 0)
+       file(REMOVE "${_tmp_archive_file}")
+       message(FATAL_ERROR
+             "Cannot download ${_url}:${_status_message}. Try running cmake with -DDOWNLOAD_DATA=OFF")
+    endif()
+
+    message(STATUS "unpacking into ${_downloaded_file}")
+
+    execute_process(COMMAND "tar" "zxfO" ${_tmp_archive_file} ${FILE}
+                    OUTPUT_FILE "${_downloaded_file}")
+
+
+    if ("${CMAKE_VERSION}" VERSION_LESS "2.8.7")
+        execute_process(COMMAND "md5sum" "-b" ${_downloaded_file}
+        OUTPUT_VARIABLE _file_md5_line
+        ERROR_QUIET
+        OUTPUT_STRIP_TRAILING_WHITESPACE)
+         string(REGEX MATCH "^[0-9a-f]+" _file_md5 "${_file_md5_line}")
+    else()
+       file(MD5 "${_downloaded_file}" _file_md5)
+    endif ()
+
+    if (NOT "${CHECKSUM}" STREQUAL "${_file_md5}")
+       message(FATAL_ERROR
+             "Wrong MD5 checksum for ${URL}")
+    endif()
+
+    file(REMOVE "${_tmp_archive_file}")
+
+  endif()
+
+endfunction(download_and_unpack)
+
 if(DOWNLOAD_DATA)
-        download_artifact("tools/lexica/bilexicon/data/plen.bin")
+    download_artifact("tools/lexica/bilexicon/data/plen.bin")
+
+    if (HAVE_SFST)
+       download_and_unpack(
+           "http://www.let.rug.nl/coltekin/trmorph/trmorph-0.2.1.tar.gz"
+           "trmorph-0.2.1/trmorph-0.2.1.a"
+           "0d8a94791fce28f862e2890406e81727"
+           "tools/lemmatizers/sfst/data/tr.a")
+    endif()
+
 endif(DOWNLOAD_DATA)
 
 # =====================================
