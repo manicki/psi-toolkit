@@ -1,2 +1,2 @@
-01 0000 17    Hornjoserbšćina frag,txt-reader    Hornjoserbšćina FRAG[]
-02 0000 17    Hornjo...ina !hsb,lang-guesser,text Hornjoserbšćina TEXT[1]
+01 0000 44    Hornjoserbšćina_je_zapadosłowjanska_rěč frag,txt-reader Hornjoserbšćina_je_zapadosłowjanska_rěč FRAG[]
+02 0000 44    Hornjo...rěč !hsb,lang-guesser,text Hornjoserbšćina_je_zapadosłowjanska_rěč TEXT[1]
