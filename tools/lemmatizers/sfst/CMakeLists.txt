@@ -1,3 +1,8 @@
+
+# don't want to see warnings about deprecated hash_maps/sets used
+# in SFST
+add_definitions(-Wno-deprecated -DSGI__gnu_cxx)
+
 add_library(tools-lemmatizers-sfst SHARED
 	sfst_lemmatizer.cpp
 )

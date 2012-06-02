@@ -1,3 +1,9 @@
+# don't want to see warnings about deprecated hash_maps/sets used
+# in SFST
+if (HAVE_SFST)
+   add_definitions(-Wno-deprecated -DSGI__gnu_cxx)
+endif (HAVE_SFST)
+
 configure_file("${CMAKE_CURRENT_SOURCE_DIR}/git_info.cpp.in" "${CMAKE_CURRENT_BINARY_DIR}/git_info.cpp" @ONLY)
 
 # library framework
