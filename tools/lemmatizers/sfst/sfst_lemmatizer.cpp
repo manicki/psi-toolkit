@@ -3,24 +3,30 @@
 #include <iostream>
 #include <boost/algorithm/string.hpp>
 #include <boost/assign.hpp>
+#include "language_dependent_annotator_factory.hpp"
+#include "lang_specific_processor_file_fetcher.hpp"
 
 std::string SfstLemmatizer::tagSeparator = ":";
 
 SfstLemmatizer::SfstLemmatizer(const boost::program_options::variables_map& options)
     : annotationManager(NULL), level(3)
 {
+    std::string lang = options["lang"].as<std::string>();
+    setLanguage(lang);
+
+    LangSpecificProcessorFileFetcher fileFetcher(__FILE__, lang);
+
     if (options.count("level") > 0) {
         setLevel(options["level"].as<int>());
     }
 
-    if (options.count("lang") > 0) {
-        setLanguage(options["lang"].as<std::string>());
-    }
-    
-    if (options.count("automaton") > 0) {
-        setAutomaton(options["automaton"].as<std::string>());
-    }
-    
+    std::string automatonFileSpec = options["automaton"].as<std::string>();
+
+    boost::filesystem::path automaton
+        = fileFetcher.getOneFile(automatonFileSpec);
+
+    setAutomaton(automaton.string());
+
     setRawRoots(options.count("raw-roots") > 0);
 
     initializeTransducer();
@@ -41,13 +47,14 @@ std::list<std::string> SfstLemmatizer::getLayerTags() {
 boost::program_options::options_description SfstLemmatizer::optionsHandled() {
     boost::program_options::options_description desc("Allowed options");
 
+    LanguageDependentAnnotatorFactory::addLanguageDependentOptions(desc);
+
     desc.add_options()
         ("level", boost::program_options::value<int>()->default_value(3),
-            "set word processing level 0-3")
-        ("lang", boost::program_options::value<std::string>()->default_value("tr"),
-            "set default language")
-        ("automaton", boost::program_options::value<std::string>(),
-            "set file name");
+         "set word processing level 0-3")
+        ("automaton", boost::program_options::value<std::string>()->default_value(
+            DEFAULT_AUTOMATON_FILE_SPEC),
+         "set file name");
 
     return desc;
 }
@@ -61,12 +68,17 @@ std::string SfstLemmatizer::getLanguage() const {
 }
 
 AnnotatorFactory::LanguagesHandling SfstLemmatizer::languagesHandling(
-    const boost::program_options::variables_map& /*options*/) {
-    return AnnotatorFactory::JUST_ONE_LANGUAGE;
+    const boost::program_options::variables_map& options) {
+    return LanguageDependentAnnotatorFactory::checkLangOption(options);
 }
 
 std::list<std::string> SfstLemmatizer::languagesHandled(
-    const boost::program_options::variables_map& /*options*/) {
+    const boost::program_options::variables_map& options) {
+
+    if (LanguageDependentAnnotatorFactory::checkLangOption(options)
+        == AnnotatorFactory::JUST_ONE_LANGUAGE)
+        return boost::assign::list_of(options["lang"].as<std::string>());
+
     return boost::assign::list_of(std::string("tr"));
 }
 
@@ -95,7 +107,7 @@ void SfstLemmatizer::stemsOnLemmaLevel(
 ) {
 
     std::vector<std::string> stems = simpleStem(word);
-    
+
 
     for (std::vector<std::string>::iterator i = stems.begin(); i != stems.end(); ++i) {
         std::string stem = *(i);
@@ -145,7 +157,7 @@ std::set<std::string> SfstLemmatizer::getLexemeTagsFromStems(
     const std::string & lemma
 ) {
     std::set<std::string> tags;
-    
+
     std::multimap<std::string, std::vector<std::string> >::iterator s;
     for (s = stems.begin(); s != stems.end(); ++s) {
         if (s->first == lemma) {
@@ -164,7 +176,7 @@ std::vector<std::vector<std::string> > SfstLemmatizer::getFormTagsFromLexem(
     const std::string & lexem
 ) {
     std::vector<std::vector<std::string> > tags;
-    
+
     std::vector<std::string>::iterator t;
 
     std::multimap<std::string, std::vector<std::string> >::iterator s;
@@ -172,14 +184,14 @@ std::vector<std::vector<std::string> > SfstLemmatizer::getFormTagsFromLexem(
     for (s = stems.begin(); s != stems.end(); ++s) {
 		if (s->first == lemma){
 			if (*(s->second).begin() == lexem) {
-				
+
 				std::vector<std::string> tag;
-				
+
 				t = (s->second).begin();
 				for (t++; t != (s->second).end(); ++t) {
 					tag.insert(tag.begin(), *t);
 				}
-				
+
 				tags.insert(tags.begin(), tag);
 			}
 		}
@@ -191,11 +203,11 @@ std::vector<std::vector<std::string> > SfstLemmatizer::getFormTagsFromLexem(
 AnnotationItem SfstLemmatizer::createLexemeAnnotation(
     const std::string & stem, const std::string & tag
 ) {
-		
+
     std::string wordId = stem + LEMMA_CATEGORY_SEPARATOR + tag;
-    
+
     AnnotationItem lexeme(tag, StringFrag(wordId));
-	
+
 	//annotationManager->setValue(lexeme, tag, "pos");
     return lexeme;
 }
@@ -203,7 +215,7 @@ AnnotationItem SfstLemmatizer::createLexemeAnnotation(
 void SfstLemmatizer::stemsOnFormLevel(
     const std::string & word, LemmatizerOutputIterator & outputIterator
 ){
-	
+
 	std::multimap<std::string, std::vector<std::string> > stems =
 	stem(word);
 
@@ -218,18 +230,18 @@ void SfstLemmatizer::stemsOnFormLevel(
         std::set<std::string>::iterator lxt;
 
         for (lxt = lexemeTags.begin(); lxt != lexemeTags.end(); ++lxt) {
-            
+
             AnnotationItem lexItem = createLexemeAnnotation(*lem, *lxt);
 			outputIterator.addLexeme(lexItem);
-            
+
             std::vector<std::vector<std::string> > formTags = getFormTagsFromLexem(stems, *lem, *lxt);
-                        
+
 			std::vector<std::vector<std::string> >::iterator frms;
-            
-            
-            
-            for (frms = formTags.begin(); frms != formTags.end(); ++frms) {							
-								
+
+
+
+            for (frms = formTags.begin(); frms != formTags.end(); ++frms) {
+
 				AnnotationItem frmItm = createFormAnnotation(lexItem, /*word*/*lem, *frms);
 				outputIterator.addForm(frmItm);
 			}
@@ -260,22 +272,22 @@ void SfstLemmatizer::setAutomaton(std::string automa) {
 }
 
 std::vector<std::string> SfstLemmatizer::wordToRaw(std::string word) {
-	
+
 	std::vector<std::string> result;
-	
+
 	char *buffer;
 	size_t buffer_size;
 	FILE* memory_file = open_memstream(&buffer, &buffer_size);
-	
-	
-	
+
+
+
 	if (!transducer->analyze_string((char*)word.c_str(), memory_file, true)) {
             return result;
-        } else {            
+        } else {
 		fclose (memory_file); //fflush for further read/write
-					
+
 		boost::split(result, buffer, boost::is_any_of("\n") );
-	}  
+	}
 	return result;
 }
 
@@ -287,18 +299,18 @@ void SfstLemmatizer::cookRaw(std::string & word) {
 }
 
 std::string SfstLemmatizer::getCookedStem(std::string word){
-	
+
 	std::vector<std::string> tags;
 	std::string stem;
 
 	boost::split(tags, word, boost::is_any_of(tagSeparator));
 
 	stem = *(tags.begin());
-	
+
 	if (!(rawRoots) && (language == "tr") && (*(++tags.begin()) == "v")) {
 		cookTurkishVerb(stem);
 	}
-	
+
 	return stem;
 };
 
@@ -309,11 +321,11 @@ void SfstLemmatizer::cookTurkishVerb(std::string & word){
 std::vector<std::string> SfstLemmatizer::getCookedTags(std::string word){
 	std::vector<std::string> tags;
 	std::string stem;
-	
+
 	boost::split(tags, word, boost::is_any_of(tagSeparator));
-	
+
 	tags.erase(tags.begin());
-	
+
 	return tags;
 };
 
@@ -322,15 +334,15 @@ void SfstLemmatizer::initializeTransducer() {
 
 	//std::string file_name = "data/"+language+"/sfst-"+language+".a";
 	std::string file_name = automaton;
-	
+
     if ((file = fopen(file_name.c_str(),"rb")) == NULL) {
-        ERROR("Proper lang file (" + language + ") has not been found.");        
+        ERROR("Proper lang file (" + language + ") has not been found.");
 	}
     else {
 		transducer = new SFST::Transducer(file);
         fclose(file);
     }
-	
+
 }
 
 AnnotationItem SfstLemmatizer::createFormAnnotation(
@@ -353,37 +365,40 @@ std::vector<std::string> SfstLemmatizer::simpleStem(const std::string & word) {
     std::vector<std::string> result;
 
 	std::vector<std::string> raw = wordToRaw(word);
-	
+
 	for(vector<std::string>::iterator i = raw.begin(); i != raw.end(); ++i) {
 		cookRaw(*(i));
 		if (*(i) != "") {
 				result.push_back(getCookedStem(*(i)));
-		} 
+		}
 	}
-    
-        
+
+
     boost::sort(result);
     boost::erase_range(result, boost::unique<boost::return_found_end>(result));
-    
+
     return result;
 }
 
 std::multimap<std::string, std::vector<std::string> > SfstLemmatizer::stem(
     const std::string & word
 ) {
-	
+
     std::multimap<std::string, std::vector<std::string> > result;
     std::vector<std::string> tags;
-    
+
 	std::vector<std::string> raw = wordToRaw(word);
-	
+
 	for(vector<std::string>::iterator i = raw.begin(); i != raw.end(); ++i) {
 		cookRaw(*(i));
 		if (*(i) != "") {
 				result.insert(std::pair<std::string, std::vector<std::string> >
 					(getCookedStem(*(i)), getCookedTags(*(i))) );
-		} 
+		}
 	}
-    
+
     return result;
 }
+
+const std::string SfstLemmatizer::DEFAULT_AUTOMATON_FILE_SPEC
+= "%ITSDATA%/%LANG%.a";

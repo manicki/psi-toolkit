@@ -63,12 +63,12 @@ class SfstLemmatizer {
 
 
     static boost::program_options::options_description optionsHandled();
-    
+
     static std::string getName();
     static boost::filesystem::path getFile();
-    
+
     std::list<std::string> getLayerTags();
-    
+
     std::string getLanguage() const;
 
 	static AnnotatorFactory::LanguagesHandling languagesHandling(
@@ -76,13 +76,13 @@ class SfstLemmatizer {
 
     static std::list<std::string> languagesHandled(
         const boost::program_options::variables_map& options);
-    
+
 	void lemmatize(
         const std::string & word,
         AnnotationItemManager & manager,
         LemmatizerOutputIterator & iterator
     );
-    
+
     /**
      * Sets the word processing level, default 0.
      * @param level
@@ -95,11 +95,11 @@ class SfstLemmatizer {
      * Sets language and reloads dict
      * @param lang
      * lang name
-     */    
+     */
     void setLanguage(std::string);
     void setAutomaton(std::string);
     void setRawRoots(bool raw);
-    
+
     /**
      * Stems word using sfstLemmatizer tool storing lexical information.
      * @param word
@@ -111,7 +111,7 @@ class SfstLemmatizer {
      */
     std::multimap<std::string, std::vector<std::string> > stem(
         const std::string & word);
-    
+
     /**
      * Stems word using sfstLemmatizer tool.
      * @param word
@@ -121,14 +121,14 @@ class SfstLemmatizer {
      * @see stem()
      */
     std::vector<std::string> simpleStem(const std::string & word);
-    
+
     private:
 		AnnotationItemManager * annotationManager;
 		int level;
 		std::string language;
 		std::string automaton;
 		bool rawRoots;
-		
+
 		void stemsOnLemmaLevel(const std::string &, LemmatizerOutputIterator &);
 		void stemsOnLexemeLevel(const std::string &, LemmatizerOutputIterator &);
 		void stemsOnFormLevel(const std::string &, LemmatizerOutputIterator &);
@@ -137,14 +137,14 @@ class SfstLemmatizer {
 		AnnotationItem createLexemeAnnotation(
 			const std::string & stem, const std::string & tag
 		);
-		
+
 		AnnotationItem createFormAnnotation(
 			AnnotationItem & lexemeItem,
 			const std::string & word,
 			std::vector<std::string> &
 		);
 
-		
+
 		std::set<std::string> getLemmasFromStems(
 			std::multimap<std::string, std::vector<std::string> > stems
 		);
@@ -161,24 +161,25 @@ class SfstLemmatizer {
 		//End of takens..
 		SFST::Transducer * transducer;
 		//scoped ptr... (Inteligenty wskaźnik..)
-		
+
 		/***
 		 * Outpusts raw word analysis from sfst transducer.
 		 * @param word
 		 * A word that will be analysed.
 		 * @return
 		 * String vector containing output of transducer.
-		 */ 
+		 */
 		std::vector<std::string> wordToRaw(std::string);
-		
+
 		void cookRaw(std::string &);
 		void cookTurkishVerb(std::string &);
-		
+
 		std::string getCookedStem(std::string);
 		std::vector<std::string> getCookedTags(std::string);
-		
+
 		void initializeTransducer();
-		
+
+    const static std::string DEFAULT_AUTOMATON_FILE_SPEC;
 };
 
 #endif
