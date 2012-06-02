@@ -16,6 +16,7 @@
 
 #include <boost/assign.hpp>
 #include <boost/assign/list_of.hpp>
+#include <boost/foreach.hpp>
 
 #define LOWER_LETTER(i) ( ((i) > 90 || (i) < 65) ? (i) : ((i) + 32) )
 
@@ -60,15 +61,15 @@ void LangGuesser::initLanguages() {
 void LangGuesser::initLanguages(std::vector<std::string> selectedLangs) {
     std::map<std::string, std::string>::iterator definedLang;
 
-    for (unsigned int i = 0; i < selectedLangs.size(); i++) {
-        definedLang = LANGUAGES.find(selectedLangs[i]);
+    BOOST_FOREACH(const std::string& selectedLang, selectedLangs) {
+        definedLang = LANGUAGES.find(selectedLang);
 
         if (definedLang != LANGUAGES.end())
             addLanguage(definedLang->first, definedLang->second);
         else
             throw Exception(
                 std::string("lang-guesser cannot recognize language '")
-                + selectedLangs[i]
+                + selectedLang
                 + "'");
     }
 
