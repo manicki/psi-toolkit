@@ -65,6 +65,14 @@ std::list<std::string> Morfologik::languagesHandled(
     return boost::assign::list_of(std::string("pl"));
 }
 
+bool Morfologik::checkRequirements(
+    const boost::program_options::variables_map& /*options*/,
+    std::ostream & /*message*/) {
+
+    return true;
+}
+
+
 void Morfologik::setLevel(int lvl) {
     if (0 <= lvl && lvl <= 3) {
         level_ = lvl;

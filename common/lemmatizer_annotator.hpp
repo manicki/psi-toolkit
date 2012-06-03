@@ -79,6 +79,13 @@ public:
                 (std::string("lexeme"))
                 (std::string("form"));
         }
+
+        virtual bool doCheckRequirements(
+            const boost::program_options::variables_map& options,
+            std::ostream & message) const {
+
+            return L::checkRequirements(options, message);
+        }
     };
 
     class Worker : public LatticeWorker {

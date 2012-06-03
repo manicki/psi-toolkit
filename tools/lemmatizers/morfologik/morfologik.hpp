@@ -34,6 +34,10 @@ public:
     static std::list<std::string> languagesHandled(
         const boost::program_options::variables_map& options);
 
+    static bool checkRequirements(
+        const boost::program_options::variables_map& options,
+        std::ostream & message);
+
     void lemmatize(const std::string & word, AnnotationItemManager & manager,
         LemmatizerOutputIterator & iterator);
 

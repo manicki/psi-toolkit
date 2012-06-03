@@ -46,7 +46,8 @@
 #include <boost/algorithm/string.hpp>
 #include <boost/range/algorithm.hpp>
 
-#include "fst.h"
+#include "plugin/sfst_adapter_interface.hpp"
+#include "plugin_manager.hpp"
 #include "sfst_tags_parser.hpp"
 #include "annotation_item_manager.hpp"
 #include "lemmatizer_output_iterator.hpp"
@@ -60,7 +61,7 @@ class SfstLemmatizer {
 public:
 
     SfstLemmatizer(const boost::program_options::variables_map& options);
-
+    ~SfstLemmatizer();
 
     static boost::program_options::options_description optionsHandled();
 
@@ -76,6 +77,10 @@ public:
 
     static std::list<std::string> languagesHandled(
         const boost::program_options::variables_map& options);
+
+    static bool checkRequirements(
+        const boost::program_options::variables_map& options,
+        std::ostream & message);
 
     void lemmatize(
         const std::string & word,
@@ -121,6 +126,8 @@ public:
      */
     std::vector<std::string> simpleStem(const std::string & word);
 
+    bool isActive();
+
 private:
     AnnotationItemManager * annotationManager;
     int level;
@@ -156,7 +163,7 @@ private:
 
     static std::string tagSeparator;
 
-    boost::scoped_ptr<SFST::Transducer> transducer;
+    SfstAdapterInterface* sfstAdapter_;
 
     /***
      * Outpusts raw word analysis from sfst transducer.

@@ -10,6 +10,10 @@
 #include "aspell_plugin.hpp"
 #endif
 
+#if HAVE_SFST
+#include "sfst_plugin.hpp"
+#endif
+
 #if HAVE_DJVULIBRE
 #include "djvu_plugin.hpp"
 #endif
@@ -32,6 +36,9 @@ PluginManager::PluginManager() {
 #endif
 #if HAVE_ASPELL
     registerPlugin_(new AspellPlugin());
+#endif
+#if HAVE_SFST
+    registerPlugin_(new SfstPlugin());
 #endif
 #if HAVE_DJVULIBRE
     registerPlugin_(new DjVuPlugin());

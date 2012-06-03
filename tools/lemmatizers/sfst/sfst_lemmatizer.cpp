@@ -1,6 +1,7 @@
 #include "sfst_lemmatizer.hpp"
 
 #include <iostream>
+#include <vector>
 #include <boost/algorithm/string.hpp>
 #include <boost/assign.hpp>
 #include "language_dependent_annotator_factory.hpp"
@@ -29,8 +30,19 @@ SfstLemmatizer::SfstLemmatizer(const boost::program_options::variables_map& opti
 
     setRawRoots(options.count("raw-roots") > 0);
 
-    initializeTransducer();
+    sfstAdapter_ = dynamic_cast<SfstAdapterInterface*>(
+        PluginManager::getInstance().createPluginAdapter("sfst"));
+    if (isActive())
+        initializeTransducer();
 }
+
+SfstLemmatizer::~SfstLemmatizer() {
+    if (sfstAdapter_) {
+        PluginManager::getInstance().destroyPluginAdapter("sfst", sfstAdapter_);
+    }
+}
+
+
 boost::filesystem::path SfstLemmatizer::getFile() {
     return __FILE__;
 }
@@ -80,6 +92,17 @@ std::list<std::string> SfstLemmatizer::languagesHandled(
         return boost::assign::list_of(options["lang"].as<std::string>());
 
     return boost::assign::list_of(std::string("tr"));
+}
+
+bool SfstLemmatizer::checkRequirements(
+    const boost::program_options::variables_map& options,
+    std::ostream & message) {
+
+    return PluginManager::getInstance().checkPluginRequirements(
+        "sfst",
+        options,
+        message);
+
 }
 
 void SfstLemmatizer::lemmatize(
@@ -271,9 +294,7 @@ std::vector<std::string> SfstLemmatizer::wordToRaw(std::string word) {
     size_t buffer_size;
     FILE* memory_file = open_memstream(&buffer, &buffer_size);
 
-
-
-    if (!transducer->analyze_string((char*)word.c_str(), memory_file, true)) {
+    if (!isActive() || !sfstAdapter_->analyzeString(word, memory_file)) {
         return result;
     } else {
         fclose (memory_file); //fflush for further read/write
@@ -326,11 +347,13 @@ void SfstLemmatizer::initializeTransducer() {
 
     std::string file_name = automaton;
 
+    INFO("Initializing SFST transducer from `" << file_name << "`");
+
     if ((file = fopen(file_name.c_str(),"rb")) == NULL) {
         ERROR("Proper lang file (" + language + ") has not been found.");
     }
     else {
-        transducer.reset(new SFST::Transducer(file));
+        sfstAdapter_->initSfst(file);
         fclose(file);
     }
 
@@ -356,7 +379,7 @@ std::vector<std::string> SfstLemmatizer::simpleStem(const std::string & word) {
 
     std::vector<std::string> raw = wordToRaw(word);
 
-    for(vector<std::string>::iterator i = raw.begin(); i != raw.end(); ++i) {
+    for(std::vector<std::string>::iterator i = raw.begin(); i != raw.end(); ++i) {
         cookRaw(*(i));
         if (*(i) != "") {
             result.push_back(getCookedStem(*(i)));
@@ -378,7 +401,7 @@ std::multimap<std::string, std::vector<std::string> > SfstLemmatizer::stem(
 
     std::vector<std::string> raw = wordToRaw(word);
 
-    for(vector<std::string>::iterator i = raw.begin(); i != raw.end(); ++i) {
+    for(std::vector<std::string>::iterator i = raw.begin(); i != raw.end(); ++i) {
         cookRaw(*(i));
         if (*(i) != "") {
             result.insert(std::pair<std::string, std::vector<std::string> >
@@ -387,6 +410,13 @@ std::multimap<std::string, std::vector<std::string> > SfstLemmatizer::stem(
     }
 
     return result;
+}
+
+bool SfstLemmatizer::isActive() {
+    if (sfstAdapter_)
+        return true;
+    else
+        return false;
 }
 
 const std::string SfstLemmatizer::DEFAULT_AUTOMATON_FILE_SPEC
