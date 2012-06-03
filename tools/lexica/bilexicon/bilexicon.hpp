@@ -2,8 +2,7 @@
 #define BILEXICON_HDR_HDR
 
 #include "lattice.hpp"
-#include "key_value_store.hpp"
-#include "utt_like_quoter.hpp"
+#include "lexicon_base.hpp"
 #include "annotator_factory.hpp"
 
 #include <boost/filesystem.hpp>
@@ -48,14 +47,10 @@ private:
     void addEntry_(Lattice& lattice, Lattice::EdgeDescriptor edge, const std::string& record);
     AnnotationItem parseRecord_(const std::string& record);
 
-    void removeComment_(std::string& s);
-    bool isEmptyLine_(const std::string& s);
-
     void createTags_(const std::string& trg_lang);
 
     std::string langCode_;
-    boost::shared_ptr<KeyValueStore> store_;
-    UTTLikeQuoter quoter_;
+    LexiconBase lexiconBase_;
     std::list<std::string> tags_;
 
     static const std::string DEFAULT_BINARY_LEXICON_SPEC;
