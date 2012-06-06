@@ -1,0 +1,111 @@
+<!doctype html>
+<html>
+
+<head>
+  <title>psi-toolkit :: psi server</title>
+
+  <script type="text/javascript" src="/js/shCore.js"></script>
+  <script type="text/javascript" src="/js/shBrushPerl.js"></script>
+  <link rel="stylesheet" type="text/css" href="/css/shCore.css" />
+  <link rel="stylesheet" type="text/css" href="/css/shThemeDefault.css" />
+
+  <!--#psis index_site_scripts_part -->
+
+  <script type="text/javascript" src="/js/jquery.autosize.js"></script>
+  <script type="text/javascript" src="/js/jquery.filestyle.js"></script>
+  <script type="text/javascript" src="/js/pipeline.js"></script>
+
+  <script type="text/javascript">
+    <!--#psis pipe_site_options -->
+  </script>
+</head>
+
+<body>
+<div id="body">
+  <a href="https://github.com"><img style="position: absolute; top: 0; right: 0; border: 0;" src="https://s3.amazonaws.com/github/ribbons/forkme_right_red_aa0000.png" alt="Fork me on GitHub"></a>
+
+  <!--#psis index_site_header_part -->
+
+<div id="content">
+
+  <!--#psis index_site_promotion_part -->
+
+  <div id="toolbox">
+    <form action="pipe.psis" class="wrapper" enctype="multipart/form-data" method="post">
+
+      <div id="toolbox-pipe">
+        <div class="toolbox-right">
+          <div class="bookmark">
+            <span class="bookmark-one">p</span>
+            <span class="bookmark-change">V</span>
+            <span class="bookmark-two">D</span>
+          </div>
+        </div>
+        <div class="toolbox-left">
+          <label>Write pipe line:</label>
+          <input name="pipe-text" type="text"
+            value="<!--#psis pipe_site_pipe_text -->" />
+          <div id="pipe-options">
+            <a id="random-example" href="#">random pipe-line example</a>
+          </div>
+        </div>
+      </div>
+
+      <div id="toolbox-text">
+        <div class="toolbox-right">
+          <input id="toolbox-submit" name="send" type="submit" value="Send data" />
+          <div class="bookmark">
+            <span class="bookmark-one">T</span>
+            <span class="bookmark-change">V</span>
+            <span class="bookmark-two">I</span>
+          </div>
+        </div>
+        <div id="input-text" class="toolbox-left">
+          <label>Write input text:</label>
+          <textarea name="input-text"><!--#psis pipe_site_input_text --></textarea>
+        </div>
+        <div id="input-file" class="toolbox-left">
+          <label>Select file:</label>
+          <input name="input-file" type="file" />
+        </div>
+
+        <input class="input-radio" id="radio-input-text" type="radio" name="radio-text"
+          checked="checked" />
+        <input class="input-radio" id="radio-input-file" type="radio" name="radio-file" />
+      </div>
+
+    </form>
+  </div>
+
+  <div id="results">
+    <h5 id="output-top-info" class="wrapper">
+      <span class="output-fontsize" id="decrease-output-fontsize">-</span>
+      <span class="output-fontsize" id="increase-output-fontsize">+</span>
+      The output of the text processing:
+    </h5>
+
+    <div id="output">
+      <!--#psis pipe_site_output_text -->
+    </div>
+
+    <div id="output-bottom-info" class="wrapper">
+      Or download the output file:
+      <a class="download-output" href="#">&nbsp;</a>
+    </div>
+  </div>
+
+</div> <!-- end of #content -->
+
+  <!--#psis index_site_footer_part -->
+
+</div> <!-- end of #body -->
+</body>
+
+<script type="text/javascript">
+  SyntaxHighlighter.defaults['gutter'] = 'off';
+  SyntaxHighlighter.defaults['tabSize'] = 2;
+  SyntaxHighlighter.defaults['toolbar'] = false;
+  SyntaxHighlighter.all()
+</script>
+
+</html>

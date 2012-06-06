@@ -59,7 +59,7 @@ char * PipeSite::actionPipe() {
     std::string output = runPipe(input);
     psiServer_.session()->setData("output-text", output);
 
-    return stringToChar(std::string("/index.html"));
+    return stringToChar(std::string("/psitoolkit.html"));
 }
 
 char * PipeSite::hiddenOptions() {

@@ -32,8 +32,8 @@ void HtmlHelpFormatter::formatUsingExamples_(std::vector<TestBatch> batches, std
         << "<h3>" << EXAMPLES_HEADER << "</h3>" << std::endl;
 
     for (unsigned int i = 0; i < batches.size(); i++) {
-       output << "<pre class=\"example-pipe\">"
-            << batches[i].getPipeline() << "</pre>" << std::endl;
+       output << "<code class=\"example-pipe\">"
+            << batches[i].getPipeline() << "</code>" << std::endl;
 
        output << "<div class=\"example-desc\">"
             << markdownString2String(batches[i].getDescription()) << "</div>" << std::endl;
@@ -44,11 +44,11 @@ void HtmlHelpFormatter::formatUsingExamples_(std::vector<TestBatch> batches, std
 
             std::string fileContent = getFileContent(inOuts[j].getInputFilePath());
             output << "<div class=\"in\">in:</div>"
-                << "<pre>" << fileContent << "</pre>" << std::endl;
+                << "<pre><code>" << fileContent << "</code></pre>" << std::endl;
 
             fileContent = getFileContent(inOuts[j].getExpectedOutputFilePath());
             output << "<div class=\"out\">out:</div>"
-                << "<pre>" << fileContent << "</pre>" << std::endl;
+                << "<pre><code>" << fileContent << "</code></pre>" << std::endl;
             output << "</div>" << std::endl;
         }
     }
