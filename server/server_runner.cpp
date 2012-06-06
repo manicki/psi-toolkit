@@ -71,7 +71,8 @@ void ServerRunner::setOptionsDescription_() {
         ;
 }
 
-const std::string ServerRunner::DEFAULT_PIPE = "txt-reader ! tp-tokenizer --lang pl ! psi-writer";
+const std::string ServerRunner::DEFAULT_PIPE = "txt-reader ! tokenize --lang en ! psi-writer";
+const std::string ServerRunner::DEFAULT_TEXT = "PSI-Toolkit is Skynet.";
 
 int ServerRunner::run() {
 
@@ -90,7 +91,7 @@ int ServerRunner::run() {
         // register all websites
         IndexSite index(psiServer);
         std::string opts = annotatorOptions_.empty() ? DEFAULT_PIPE : annotatorOptionsAsString_();
-        PipeSite pipe(psiServer, opts);
+        PipeSite pipe(psiServer, opts, DEFAULT_TEXT);
         HelpSite help(psiServer);
         JsonSite json(psiServer);
 

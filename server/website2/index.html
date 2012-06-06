@@ -2,7 +2,7 @@
 <html>
 
 <head>
-  <title>psi-toolkit :: psi server</title>
+  <title>psi-toolkit :: psi-server</title>
 
   <script type="text/javascript" src="/js/shCore.js"></script>
   <script type="text/javascript" src="/js/shBrushPerl.js"></script>
@@ -34,39 +34,37 @@
     <form action="pipe.psis" class="wrapper" enctype="multipart/form-data" method="post">
 
       <div id="toolbox-pipe">
-        <div class="toolbox-right">
-          <div class="bookmark">
-            <span class="bookmark-one">p</span>
-            <span class="bookmark-change">V</span>
-            <span class="bookmark-two">D</span>
-          </div>
-        </div>
+        <div class="toolbox-right"> </div>
+
         <div class="toolbox-left">
           <label>Write pipe line:</label>
-          <input name="pipe-text" type="text"
-            value="<!--#psis pipe_site_pipe_text -->" />
-          <div id="pipe-options">
-            <a id="random-example" href="#">random pipe-line example</a>
+          <input name="pipe-text" type="text" value="<!--#psis pipe_site_pipe_text -->" />
+
+          <div class="input-options">
+            <a id="random-example" href="#">random example</a>
           </div>
         </div>
       </div>
 
       <div id="toolbox-text">
         <div class="toolbox-right">
-          <input id="toolbox-submit" name="send" type="submit" value="Send data" />
-          <div class="bookmark">
-            <span class="bookmark-one">T</span>
-            <span class="bookmark-change">V</span>
-            <span class="bookmark-two">I</span>
+          <input id="toolbox-submit" name="send" type="submit" value="go!" />
+        </div>
+
+        <div class="toolbox-left">
+          <div id="input-text">
+            <label>Write input text:</label>
+            <textarea name="input-text"><!--#psis pipe_site_input_text --></textarea>
           </div>
-        </div>
-        <div id="input-text" class="toolbox-left">
-          <label>Write input text:</label>
-          <textarea name="input-text"><!--#psis pipe_site_input_text --></textarea>
-        </div>
-        <div id="input-file" class="toolbox-left">
-          <label>Select file:</label>
-          <input name="input-file" type="file" />
+          <div id="input-file">
+            <label>Select file:</label>
+            <input name="input-file" type="file" />
+          </div>
+
+          <div class="input-options bookmarks">
+            <a id="bookmark-text" href="#">...or select a txt, doc or pdf file!</a>
+            <a id="bookmark-file" href="#">...or write some text!</a>
+          </div>
         </div>
 
         <input class="input-radio" id="radio-input-text" type="radio" name="radio-text"

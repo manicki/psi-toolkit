@@ -5,14 +5,14 @@ $(document).ready(function(){
 
   bindTextBookmarks();
   bindRandomExamples();
-  bindChangeOutputFontSize();
+  bindChangeOutputSize();
 
   readPsisOptions();
 
 });
 
 function bindTextBookmarks() {
-  $('#toolbox-text > .toolbox-right > .bookmark').click(function(){
+  $('#toolbox-text .bookmarks > a').click(function(){
 
     if ($('#input-text').is(':visible')) {
       switchBookmark('text', 'file');
@@ -20,12 +20,12 @@ function bindTextBookmarks() {
     else {
       switchBookmark('file', 'text');
     }
-  });  
+  });
 }
 
 function switchBookmark(from, to) {
   if ($('#input-' + to).is(':visible')) { return; }
-  
+
   var toggleDuration = 300;
 
   $('input.input-radio').attr('checked', false);
@@ -34,16 +34,22 @@ function switchBookmark(from, to) {
     $('#input-' + from).hide();
     $('#input-' + to).fadeIn(toggleDuration);
     $('#radio-input-' + to).attr('checked', true);
-  }); 
+  });
+
+  $('#bookmark-' + from).fadeOut(toggleDuration, function(){
+    $('#bookmark-' + from).hide();
+    $('#bookmark-' + to).fadeIn(toggleDuration);
+  });
+
 }
 
 function bindRandomExamples() {
   var examples = [
-    { 'pipe' : 'tokenize --lang pl', 
-      'description' : 'Tokenizes Polish text and writes all tokens.' }, 
-    { 'pipe' : 'srx-segmenter --lang en ! simple-writer --tag segment', 
-      'description' : 'Splits English text into sentences.' }, 
-    { 'pipe' : 'tokenize --lang pl ! morfologik ! bilexicon --lang pl --trg-lang en ! simple-writer --tag bilexicon', 
+    { 'pipe' : 'tokenize --lang pl',
+      'description' : 'Tokenizes Polish text and writes all tokens.' },
+    { 'pipe' : 'srx-segmenter --lang en ! simple-writer --tag segment',
+      'description' : 'Splits English text into sentences.' },
+    { 'pipe' : 'tokenize --lang pl ! morfologik ! bilexicon --lang pl --trg-lang en ! simple-writer --tag bilexicon',
       'description' : 'Read text, tokenize, produce morphologic interpretations of eachword, generate translations for all morphological interpetations,return simplified output: filtered to show only translations.' }
   ]
 
@@ -65,29 +71,85 @@ function readPsisOptions() {
   }
 }
 
-function bindChangeOutputFontSize() {
-  var minFontSize = 8;
-  var maxFontSize = 20;
-  var step = 2;
+function bindChangeOutputSize() {
 
+  if (isOutputType('text')) {
+    var query = '#output';
+    changeOutputFontSize(query, 8, 20, 2);
+  }
+  else if (isOutputType('svg')) {
+    var query = '#output > svg';
+    var width = parseInt($(query).attr('width'));
+
+    changeOutputSVGSize(query,
+      width - Math.round(0.75*width), width + Math.round(0.25*width), Math.round(0.1*width)
+    );
+  }
+  else if (isOutputType('image')) {
+    var query = '#output > a > img';
+    var width = parseInt($(query).width());
+
+    changeOutputImageSize(query,
+      width - Math.round(0.75*width), width + Math.round(0.25*width), Math.round(0.1*width)
+    );
+  }
+
+}
+
+function changeOutputFontSize(query, min, max, step) {
   $('.output-fontsize').click(function() {
-    var currentFontSize = parseInt($('#output').css('font-size'));
-    var currentLineHeight = parseInt($('#output').css('line-height'));
 
-    if ($(this).attr('id') == 'increase-output-fontsize' && currentFontSize < maxFontSize) {
-      $('#output').css(
-        'font-size', (currentFontSize + step) + 'px'
-      ).css(
-        'line-height', (currentLineHeight + step) + 'px'
-      );
+    var currentFontSize = parseInt($(query).css('font-size'));
+    var currentLineHeight = parseInt($(query).css('line-height'));
+
+    if ($(this).attr('id') == 'increase-output-fontsize' && currentFontSize < max) {
+      $(query).css('font-size', (currentFontSize + step) + 'px')
+        .css('line-height', (currentLineHeight + step) + 'px');
     }
 
-    if ($(this).attr('id') == 'decrease-output-fontsize' && currentFontSize > minFontSize) {
-      $('#output').css(
-        'font-size', (currentFontSize - step) + 'px'
-      ).css(
-        'line-height', (currentLineHeight - step) + 'px'
-      );
+    if ($(this).attr('id') == 'decrease-output-fontsize' && currentFontSize > min) {
+      $(query).css('font-size', (currentFontSize - step) + 'px')
+        .css('line-height', (currentLineHeight - step) + 'px');
     }
   });
 }
+
+function changeOutputSVGSize(query, min, max, step) {
+  $('.output-fontsize').click(function() {
+    var currentSVGWidth = parseInt($(query).attr('width'));
+
+    if ($(this).attr('id') == 'increase-output-fontsize' && currentSVGWidth < max) {
+      $(query).attr('width', (currentSVGWidth + step) + 'pt');
+    }
+    if ($(this).attr('id') == 'decrease-output-fontsize' && currentSVGWidth > min) {
+      $(query).attr('width', (currentSVGWidth - step) + 'pt');
+    }
+  });
+}
+
+function changeOutputImageSize(query, min, max, step) {
+  $('.output-fontsize').click(function() {
+    var currentImageWidth = parseInt($(query).width());
+
+    if ($(this).attr('id') == 'increase-output-fontsize' && currentImageWidth < max) {
+      $(query).css('width', (currentImageWidth + step) + 'px');
+    }
+    if ($(this).attr('id') == 'decrease-output-fontsize' && currentImageWidth > min) {
+      $(query).css('width', (currentImageWidth - step) + 'px');
+    }
+  });
+}
+
+function isOutputType(type) {
+  switch(type) {
+    case 'text':
+      return $('#output > pre').length ? true : false;
+      break;
+    case 'svg':
+      return $('#output > svg').length ? true : false;
+      break;
+    case 'image':
+      return $('#output > a > img').length ? true : false;
+      break;
+  }
+};

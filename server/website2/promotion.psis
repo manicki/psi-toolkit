@@ -3,7 +3,7 @@
       <section>
       <h2>Who is this for?</h2>
       <p>
-        The psi-toolkit is designed for both: linguists and computer scientists who need to
+        PSI-Toolkit is designed for both: linguists and computer scientists who need to
         process natural language very fast.
       </p>
       <p>
@@ -15,7 +15,7 @@
       <section>
       <h2>Other languages bindings</h2>
       <p>
-        Using the psi-toolkit with other popular programming languages is very simple now.
+        Using the PSI-Toolkit with other popular programming languages is very simple now.
         Let's look at this code in perl:
       </p>
       <pre class="brush: perl; gutter: false;">
@@ -31,7 +31,7 @@ $runner->run_for_perl('Alice has a cat!');
       <h2>Ubuntu packages!</h2>
       <p>
         No more wasting time trying to compile strange, cumbersome toolboxes for natural
-        language processing! Psi-toolkit is packaged in popular Linux distributions:
+        language processing! PSI-Toolkit is packaged in popular Linux distributions:
         <br />
         <a id="download-button" class="button" href="/download.html">Ubuntu 11.10</a>
       </p>

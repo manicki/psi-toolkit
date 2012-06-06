@@ -5,7 +5,7 @@ been designed for Polish. Each tool is called a PSI-processor. There
 are three types pf PSI-processors: readers, annotators and writers.
 Readers convert input text into an internal PSI data structure, called
 PSI-Lattice, annotators annotate the text with linguistic information,
-adding new edges to PSI-Lattice, writers print the PSI-lattice in a
+adding new edges to PSI-Lattice, writers print the PSI-Lattice in a
 readable form.
 
 A text to be processed may be either uploaded (use the File tab) or

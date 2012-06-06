@@ -9,9 +9,9 @@
 #include <boost/bind.hpp>
 #include <boost/algorithm/string.hpp>
 
-PipeSite::PipeSite(PsiServer& server, const std::string & pipe)
+PipeSite::PipeSite(PsiServer& server, const std::string & pipe, const std::string & text)
     : TemplateSite(server),
-    initialText("Ala ma kota"), initialPipe(pipe.c_str()), initialOutput(""),
+    initialText(text.c_str()), initialPipe(pipe.c_str()), initialOutput(""),
     outputSaver_(std::string(psiServer_.websiteRoot))
 {
     registerIncludesAndActions();
@@ -65,6 +65,7 @@ char * PipeSite::actionPipe() {
 char * PipeSite::hiddenOptions() {
     std::string fileOnOff = psiServer_.session()->getData("radio-file");
     std::string outputFile = psiServer_.session()->getData("output-file");
+    std::string outputType = psiServer_.session()->getData("output-type");
 
     std::string opts =
         std::string("psisOptions = {") +
