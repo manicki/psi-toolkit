@@ -12,10 +12,10 @@
 #include "configurator.hpp"
 #include "version_information.hpp"
 
-#include "index_site.hpp"
-#include "pipe_site.hpp"
-#include "help_site.hpp"
-#include "json_site.hpp"
+#include "site/index_site.hpp"
+#include "site/pipe_site.hpp"
+#include "site/help_site.hpp"
+#include "site/json_site.hpp"
 
 ServerRunner::ServerRunner(int argc, char * argv[])
     : optionsDescription_(

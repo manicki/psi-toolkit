@@ -10,7 +10,7 @@ vera++-result.xml
 build/*
 server/t/reports/*
 *.so
-server/website/storage/*
+server/website*/storage/*
 \#*\#
 bindings/python/Test/__pycache__
 gcov.output.data

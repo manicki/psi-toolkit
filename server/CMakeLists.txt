@@ -2,15 +2,15 @@
 add_library(server SHARED
     psi_request_handler.cpp
     psi_server.cpp
-    index_site.cpp
-    pipe_site.cpp
-    help_site.cpp
-    json_site.cpp
+    site/index_site.cpp
+    site/pipe_site.cpp
+    site/help_site.cpp
+    site/json_site.cpp
+    site/output_saver.cpp
     guid_generator.cpp
     session.cpp
     session_manager.cpp
     server_runner.cpp
-    output_saver.cpp
 )
 
 target_link_libraries(server ${Boost_LIBRARIES} pthread mpfd-parser ${BASE_TARGETS} pcre pcrecpp tools-parsers-puddle test-extractor)
