@@ -44,7 +44,7 @@ footer { bottom:0; height:272px; position:absolute; width:100%; } /* 300 - 2*24 
 
 /* header */
 
-header { height:63px; width:100%; color:#fefefe;
+header { height:63px; width:100%; color:#fefefe; background-color:#333;
   background:-moz-linear-gradient(#444, #222) repeat scroll 0 0 transparent;
   border-bottom: 1px solid #222;
   box-shadow:0 1px 0 rgba(255, 255, 255, 0.5), 0 0 10px rgba(0, 0, 0, 0.5) }
@@ -74,16 +74,17 @@ header { height:63px; width:100%; color:#fefefe;
 #promotion .syntaxhighlighter { font-size:.77em !important; line-height:11px !important;
   margin:3px 0 3px 9px !important; overflow:hidden !important; }
 
-#download-button { background-image:url('../img/download-package.png'),
+#download-button { background-color:#333; background-image:url('../img/download-package.png'),
   -moz-linear-gradient(#444, #222); background-repeat:no-repeat; background-position:center right;
   height: 32px; line-height: 32px; padding: 3px 64px 3px 18px; vertical-align: middle;
   width: 130px; float:right; }
-#download-button:hover { background-image:url('../img/download-package.png'),
-  -moz-linear-gradient(#555, #333); }
+#download-button:hover { background-color:#444;
+  background-image:url('../img/download-package.png'), -moz-linear-gradient(#555, #333); }
 
 /* toolbox */
 
-#toolbox { background:-moz-linear-gradient(#1A6687, #004766) repeat scroll 0 0 transparent;
+#toolbox { background-color:#004766;
+  background:-moz-linear-gradient(#1A6687, #004766) repeat scroll 0 0 transparent;
   border-bottom:1px solid #000; border-top:1px solid #444;
   box-shadow:0 1px 0 rgba(255, 255, 255, 0.5), 0 0 10px rgba(0, 0, 0, 0.5);
   clear:both; font-size:13px; }
@@ -99,11 +100,11 @@ textarea, input, #input-file > div, .button { border:1px solid #113163; border-r
   box-shadow: inset 2px 2px 3px #999; font:14px "Droid Sans",Arial,"Trebuchet MS",Helvetica,serif;
   height:17px; margin:6px 0; padding:3px 6px; width:695px; }
 textarea { height:17px; resize:none; }
-input[type="submit"], #input-file > div, .button {
+input[type="submit"], #input-file > div, .button { background-color:#333;
   background:-moz-linear-gradient(#444, #222) repeat scroll 0 0 transparent; box-shadow:none;
   color:#ccc; cursor:pointer; height:25px; text-shadow:-1px -1px #000;
   width:auto; }
-input[type="submit"]:hover, #input-file > div:hover, a.button:hover {
+input[type="submit"]:hover, #input-file > div:hover, a.button:hover { background-color:#444;
   background:-moz-linear-gradient(#555, #333) repeat scroll 0 0 transparent; color:#ccc;
   text-decoration:none; }
 .button { display:inline-block; }
