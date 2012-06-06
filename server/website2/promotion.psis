@@ -20,9 +20,9 @@
       </p>
       <pre class="brush: perl; gutter: false;">
 my $psi = PSIToolkit::Simple::PipeRunner->new
-  ("tokenize --lang pl ! perl-simple-writer");
-$runner->run_for_perl('Alice has a cat!');
-#returns: ['Alice', 'has', 'a', 'cat', '!'];
+  ("tokenize --lang en ! perl-simple-writer");
+$runner->run_for_perl('PSI-Toolkit is Skynet.');
+#returns: ['PSI-Toolkit', 'is', 'Skynet', '.'];
       </pre>
       <p>It's simple, isn't?</p>
       </section>
@@ -33,7 +33,7 @@ $runner->run_for_perl('Alice has a cat!');
         No more wasting time trying to compile strange, cumbersome toolboxes for natural
         language processing! PSI-Toolkit is packaged in popular Linux distributions:
         <br />
-        <a id="download-button" class="button" href="/download.html">Ubuntu 11.10</a>
+        <a id="download-button" class="button" href="/download.html">Download packages</a>
       </p>
       </section>
       <div class="clear"> </div>

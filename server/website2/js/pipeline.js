@@ -12,7 +12,8 @@ $(document).ready(function(){
 });
 
 function bindTextBookmarks() {
-  $('#toolbox-text .bookmarks > a').click(function(){
+  $('#toolbox-text .bookmarks > a').click(function(e){
+  e.preventDefault();
 
     if ($('#input-text').is(':visible')) {
       switchBookmark('text', 'file');
@@ -44,19 +45,37 @@ function switchBookmark(from, to) {
 }
 
 function bindRandomExamples() {
+  var pipeInput = $('#toolbox-pipe input');
+
   var examples = [
     { 'pipe' : 'tokenize --lang pl',
       'description' : 'Tokenizes Polish text and writes all tokens.' },
     { 'pipe' : 'srx-segmenter --lang en ! simple-writer --tag segment',
       'description' : 'Splits English text into sentences.' },
     { 'pipe' : 'tokenize --lang pl ! morfologik ! bilexicon --lang pl --trg-lang en ! simple-writer --tag bilexicon',
-      'description' : 'Read text, tokenize, produce morphologic interpretations of eachword, generate translations for all morphological interpetations,return simplified output: filtered to show only translations.' }
+      'description' : 'Read text, tokenize, produce morphologic interpretations of eachword, generate translations for all morphological interpetations, return simplified output: filtered to show only translations.' }
   ]
+
+  pipeInput.attr('rel', 'tipsy');
+  $('#toolbox-pipe input').tipsy({
+      trigger : 'manual',
+      gravity : 's'
+  });
 
   $('#random-example').click(function(e){
     e.preventDefault();
-    var randomExample = Math.floor(Math.random() * examples.length)
-    $('#toolbox-pipe input').val(examples[randomExample]['pipe']);
+    var randomExample = Math.floor(Math.random() * examples.length);
+
+    pipeInput.val(examples[randomExample]['pipe']);
+    pipeInput.attr('title', examples[randomExample]['description']);
+    pipeInput.tipsy('show');
+
+    e.stopPropagation();
+    return false;
+  });
+
+  $('body').click(function(){
+    pipeInput.tipsy('hide');
   });
 }
 

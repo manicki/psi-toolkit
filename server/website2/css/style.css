@@ -72,14 +72,15 @@ header { height:63px; width:100%; color:#fefefe;
 
 #promotion pre { font-size:.77em; line-height:10px; margin-left:6px; }
 #promotion .syntaxhighlighter { font-size:.77em !important; line-height:11px !important;
-  margin:3px 0 3px 12px !important; }
+  margin:3px 0 3px 9px !important; overflow:hidden !important; }
 
-#download-button { background-image:url('../img/download-package3.png'),
+#download-button { background-image:url('../img/download-package.png'),
   -moz-linear-gradient(#444, #222); background-repeat:no-repeat; background-position:center right;
-  height: 32px; line-height: 32px; padding: 3px 18px; vertical-align: middle; width: 130px;
-  float:right; }
-#download-button:hover { background-image:url('../img/download-package3.png'),
+  height: 32px; line-height: 32px; padding: 3px 64px 3px 18px; vertical-align: middle;
+  width: 130px; float:right; }
+#download-button:hover { background-image:url('../img/download-package.png'),
   -moz-linear-gradient(#555, #333); }
+
 /* toolbox */
 
 #toolbox { background:-moz-linear-gradient(#1A6687, #004766) repeat scroll 0 0 transparent;
@@ -90,13 +91,13 @@ header { height:63px; width:100%; color:#fefefe;
 #toolbox-pipe { border-bottom:1px solid #004766; }
 #toolbox-text { border-top:1px solid #1A6687; }
 
-.toolbox-left { width:800px; margin-right:20px; }
+.toolbox-left { width:820px; margin-right:12px; }
 .toolbox-right { float:right; width:150px; }
 
 label { color:#eee; display:block; text-shadow:-1px -1px #163159; }
 textarea, input, #input-file > div, .button { border:1px solid #113163; border-radius:5px;
   box-shadow: inset 2px 2px 3px #999; font:14px "Droid Sans",Arial,"Trebuchet MS",Helvetica,serif;
-  height:17px; margin:6px 0; padding:3px 6px; width:680px; }
+  height:17px; margin:6px 0; padding:3px 6px; width:695px; }
 textarea { height:17px; resize:none; }
 input[type="submit"], #input-file > div, .button {
   background:-moz-linear-gradient(#444, #222) repeat scroll 0 0 transparent; box-shadow:none;
@@ -111,7 +112,7 @@ input[type="submit"]:hover, #input-file > div:hover, a.button:hover {
 #toolbox input[type="submit"] { float:right; padding:2px 48px; }
 
 #input-file { display:none; margin-bottom:2px; }
-#input-file > input { width:548px; }
+#input-file > input { width:564px; }
 #input-file > div { height:17px; margin-left:6px; padding-left:24px; width:94px; }
 #input-file > div > input { margin-top:-6px; top:-15px; }
 
@@ -133,6 +134,7 @@ input[type="submit"]:hover, #input-file > div:hover, a.button:hover {
 	}
 
 .bookmarks { margin-top:-4px; }
+.bookmarks > a { color:#eee; }
 #bookmark-file { display:none; }
 
 /* results and output */
@@ -163,7 +165,7 @@ footer a, footer a:visited { color:#ddd; }
 
 footer section { float:left; }
 footer section + section { padding-left:48px; }
-#what-is-this { width:290px; }
+#what-is-this { width:315px; }
 #what-is-this > p { text-align:left; }
 footer h1 { color:#eaeaea; font-size:18px; font-weight:bold; margin:6px 0;
   text-shadow:-1px -1px #000; }
@@ -175,6 +177,7 @@ footer li > a:hover { color:#ddd; }
 
 .footer-bottom { color:#666; font-size:11px; }
 .footer-bottom a, .footer-bottom a:visited { color:#999; }
+#author { float:right; margin-top:-12px; }
 
 /* help */
 
@@ -187,9 +190,16 @@ footer li > a:hover { color:#ddd; }
 
 /* about */
 
-.about > table { margin-left:24px; }
+#factsheet > table { margin-left:24px; }
+#factsheet td:first-child { padding-right:12px; }
 
 /* publications */
 
 #publications > li > span:first-child { }
 .bibtex-toggler + pre { display:none; margin:6px 0; }
+
+/* download */
+#downloads > h1 { margin-bottom:32px; }
+#downloads section { padding-bottom:32px; }
+.download-ubuntu { background: url('../img/logo-ubuntu.png') no-repeat right top; }
+.download-archlinux { background: url('../img/logo-archlinux.png') no-repeat right top; }
