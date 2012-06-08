@@ -53,7 +53,7 @@ function bindRandomExamples() {
     { 'pipe' : 'srx-segmenter --lang en ! simple-writer --tag segment',
       'description' : 'Splits English text into sentences.' },
     { 'pipe' : 'tokenize --lang pl ! morfologik ! bilexicon --lang pl --trg-lang en ! simple-writer --tag bilexicon',
-      'description' : 'Read text, tokenize, produce morphologic interpretations of each word, generate translations for all morphological interpetations, return simplified output: filtered to show only translations.' }
+      'description' : 'Reads text, tokenizes, produces morphologic interpretations of each word, generates translations for all morphological interpetations, returns simplified output: filtered to show only translations.' }
   ]
 
   pipeInput.attr('rel', 'tipsy');

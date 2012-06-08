@@ -68,7 +68,7 @@ header { height:63px; width:100%; color:#fefefe; background-color:#333;
 
 /* promotion */
 
-#promotion { margin:32px 0; }
+#promotion { margin:32px 0; padding-bottom:6px; }
 #promotion section { width:310px; float:left; padding:0; }
 #promotion section + section { padding-left:20px; }
 #promotion h2 { border-bottom:1px solid #004766; font-weight:bold; margin-bottom:6px; }
@@ -76,7 +76,7 @@ header { height:63px; width:100%; color:#fefefe; background-color:#333;
 
 #promotion pre { font-size:.77em; line-height:10px; margin-left:6px; }
 #promotion .syntaxhighlighter { font-size:.77em !important; line-height:11px !important;
-  margin:9px 0 4px 9px !important; overflow:hidden !important; }
+  margin:6px 0 3px 9px !important; overflow:hidden !important; }
 
 #download-button { background-color:#333;
   background-image:url('../img/download-package.png'), -moz-linear-gradient(#004766, #222);

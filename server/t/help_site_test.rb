@@ -8,7 +8,7 @@ class HelpSiteTest < Test::Unit::TestCase
 
     def setup
         @browser = Celerity::Browser.new
-        @browser.goto $server_address + 'help.html'
+        @browser.goto $server_address + '/help/processors.html'
     end
 
     def teardown
@@ -16,7 +16,7 @@ class HelpSiteTest < Test::Unit::TestCase
     end
 
     def test_if_help_container_exists
-        assert !@browser.div(:id, 'help-list').text.empty?
+        assert @browser.div(:class, 'help-item').exists?
     end
 
     def test_if_each_processor_has_a_title_and_an_option_list
