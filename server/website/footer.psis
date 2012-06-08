@@ -3,9 +3,9 @@
       <section id="what-is-this">
       <h1>What is this?</h1>
       <p>
-        PSI-Toolkit is a tool chain for automatic processing of Polish, English
-        and other languages with the focus on machine translation.
-        It will include all what linguists and language engineers need.
+PSI-Toolkit is a set of tools for natural language processing. Focused on the Polish language, the
+toolkit allows for processing various languages, including English, French or Russian. 
+<!--PSI-Toolkit provides an easy-to-use web-service and a set of advanced tools for users with some computer skills.-->
       </p>
       </section>
       <section>
