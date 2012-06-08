@@ -1,0 +1,31 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+ "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <title>Psi Server :: API</title>
+    <!--#psis index_site_scripts_part -->
+</head>
+
+<body>
+
+<div class="wrapper">
+
+    <!--#psis index_site_header_part -->
+
+    <div id="content">
+
+        <h1>API for JSON</h1>
+        <p>
+            To return an API response in JSON format, send encoded parameters <tt>pipe</tt> and <tt>input</tt>.
+            Currently only the GET request is supported. A simple
+            example (tokenisation of a Polish text):
+        </p>
+        <pre><a href="http://mrt.wmi.amu.edu.pl/json.psis?pipe=tokenize+--lang+pl+!+json-simple-writer&amp;input=Ala+ma+kota.">http://mrt.wmi.amu.edu.pl/json.psis?pipe=tokenize+--lang+pl+!+json-simple-writer&amp;input=Ala+ma+kota.</a></pre>
+    </div>
+</div>
+
+<!--#psis index_site_footer_part -->
+
+</body>
+
+</html>

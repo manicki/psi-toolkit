@@ -1,0 +1,108 @@
+html, body { height:100%; }
+body { background:url("/img/bg-gradient.jpg") repeat-x #FFFFFF;
+    font-family:helvetica,arial,freesans; font-size:14px; line-height:18px; }
+
+.wrapper { width:900px; margin:0 auto -100px; min-height:100%; }
+#content { overflow:auto; padding-bottom:100px; }
+p { padding:3px 0; }
+
+a { text-decoration:none; color:#334488; }
+a:hover { text-decoration:underline; }
+
+h1 { font-size:20px; padding:6px 0 12px 0; }
+h2 { font-size:16px; padding:6px 0; color:#1b4394; }
+h3 { padding:6px 0; color:#1b4394; }
+
+pre { font-family:monospace; font-size:13px; line-height:16px; padding:6px 15px; margin:3px 10px;
+    background-color:#F8F8F8; border:1px solid #CCCCCC; border-radius:3px 3px 3px 3px;}
+code { font-family:monospace; color:#666; }
+
+ul, ol { padding:3px 0; }
+ul { list-style:disc inside; }
+ul li, ol li { padding-left:12px; }
+
+table { width:95%; margin:0 auto; }
+td { padding:1px 8px; }
+
+/* Header */
+
+#header { min-height:50px; line-height:20px; margin-bottom:20px; }
+#main-logo { float:left; margin:15px; font-size:16px; font-weight:bold; }
+
+#menu { float:right; list-style:none; }
+#menu li { float:left; height:40px; line-height:40px; padding:0 20px; border-left:2px solid #666; }
+
+/* Forms */
+
+textarea { resize:none; }
+
+.box input, .box textarea { display:table; margin:0 auto; padding:5px; width:784px;
+    border-radius:5px; border:1px solid #CCCCCC; font-size:12px; }
+.box input:focus, .box textarea:focus { background-color:#FFFFFF; border:1px solid #888888;}
+
+#pipe {  }
+#inputs { margin-top:-1px; }
+#input-file input { width:620px; margin:21px auto; }
+
+#submit { margin:5px 35px; width:100px; height:32px; cursor:pointer;
+    background-color:#335599; color:#FFFFFF; border:1px solid #DEDEDE; border-radius:8px; }
+#submit:hover { background-color:#1b4394; }
+
+input.input-radio { visibility:hidden; display:none; }
+
+input.alert { color:#FF0000; }
+
+/* Boxes */
+
+.box { display:table; margin:10px auto; }
+.box.black { background-color:#EEEEEE; color:#000000; padding:15px; border:1px solid #DEDEDE;
+   border-radius:12px; }
+.box p { padding-top:0; }
+
+/* Output */
+
+#output { display:block; overflow:auto; }
+#output pre { border-width:1px; border-style:solid; padding:8px; }
+#download { margin-bottom:50px; }
+
+/* Input bookmarks */
+
+#bookmarks { overflow:hidden; width:600px; margin:0 auto; padding:0; }
+#bookmarks > li { width:90px; height:20px; float:right; display:block; text-align:center;
+    padding:3px; border:solid #DCDCDC; border-width:1px 1px 0 1px;
+    background-color:#CCCCCC; border-top-left-radius:12px; border-top-right-radius:12px; }
+#bookmarks > li > a { text-decoration:none; color:#FFF; cursor:pointer; padding:2px 25px; }
+#bookmarks > li.active { background-color:#EEE; }
+#bookmarks > li.active > a { color:#000; width:80px; height:100%; cursor:default; }
+
+#input-text { display:block; }
+#input-file { display:none; }
+
+/* Footer */
+
+#footer { background-color:#335599; height:100px; color:#FFFFFF; }
+#footer .logo { padding-top:20px; font-size:16px; font-weight:bold; }
+
+/* Resizable textarea */
+
+div.grippie { width:760px; height:8px; overflow:hidden; margin-left:20px; cursor:s-resize;
+    background:#DCDCDC url("/img/grippie.png") no-repeat scroll center 2px;
+    border:solid #BBBBBB; border-width:0 1px 1px; border-radius:3px; }
+
+/* Message box */
+
+.preloader { visibility:visible; display:block; min-height:20px;
+    background:url("/img/preloader.gif") no-repeat center; }
+
+/* Help list */
+
+#help-intro, #help-list, #aliases { margin:0 0 20px 0; }
+.help-item { padding:10px 0; border-top:1px dotted #CCC; }
+.alias-item { padding:3px 0; }
+
+.help-example, .help-opts { margin-left:25px; }
+.example-desc { margin-top:6px; }
+.in, .out { float:left; line-height:30px; width:25px; text-align:right; font-weight:bold;
+    margin-left:-25px; }
+.help-opts > pre { background-color:transparent; border:none; padding:10px 0; margin:0;
+    color:#000; }
