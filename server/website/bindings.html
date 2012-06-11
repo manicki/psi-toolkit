@@ -29,14 +29,19 @@
     <section>
     <h2>Perl</h2>
     Simple tokenization of Polish text:
-    <pre class="brush: perl">my $psi = PSIToolkit::Simple::PipeRunner->new("tokenize --lang pl ! perl-simple-writer");
+    <pre class="brush: perl">use PSIToolkit::Simple::PipeRunner;
+
+my $psi = PSIToolkit::Simple::PipeRunner->new("tokenize --lang pl ! perl-simple-writer");
 my $result = $psi->run('Pan prof. dr hab. Jan Nowak.');
 
 # $result = ['Pan', 'prof.', 'dr', 'hab.', 'Jan', 'Nowak', '.', ];</pre>
     </section>
 
+    <section>
     Tokenization and segmentation of Polish text:
-    <pre class="brush: perl">my $psi = PSIToolkit::Simple::PipeRunner->new(
+    <pre class="brush: perl">use PSIToolkit::Simple::PipeRunner;
+
+my $psi = PSIToolkit::Simple::PipeRunner->new(
   "tp-tokenizer --lang pl ! srx-segmenter --lang pl ! perl-simple-writer --tag token --spec segment");
 my $result = $psi->run('Ala ma kota. Kot ma mysz.');
 
@@ -46,8 +51,11 @@ my $result = $psi->run('Ala ma kota. Kot ma mysz.');
 # ];</pre>
     </section>
 
+    <section>
     Lemmatization with Morfologik:
-    <pre class="brush: perl">my $psi = PSIToolkit::Simple::PipeRunner->new(
+    <pre class="brush: perl">use PSIToolkit::Simple::PipeRunner;
+
+my $psi = PSIToolkit::Simple::PipeRunner->new(
   "tp-tokenizer --lang pl ! morfologik ! perl-simple-writer --with-args --tag form");
 my $result = $psi->run('ma');
 
@@ -90,7 +98,9 @@ my $result = $psi->run('ma');
     <section>
     <h2>Python</h2>
     Simple tokenization of Polish text:
-    <pre class="brush: python">psi = PSIToolkit.PipeRunner('tp-tokenizer --lang pl')
+    <pre class="brush: python">import PSIToolkit
+
+psi = PSIToolkit.PipeRunner('tp-tokenizer --lang pl')
 result = psi.run('Pan prof. dr hab. Jan Nowak.')
 
 # result = 'Pan\nprof.\ndr\nhab.\nJan\nNowak\n.\n'</pre>
@@ -102,12 +112,13 @@ result = psi.run('Pan prof. dr hab. Jan Nowak.')
   <!--#psis index_site_footer_part -->
 
 </div> <!-- end of #body -->
-</body>
 
 <script type="text/javascript">
   SyntaxHighlighter.defaults['tabSize'] = 2;
   SyntaxHighlighter.defaults['toolbar'] = false;
-  SyntaxHighlighter.all()
+  SyntaxHighlighter.all();
 </script>
+
+</body>
 
 </html>

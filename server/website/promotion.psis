@@ -1,7 +1,7 @@
   <div id="promotion">
     <div class="wrapper">
       <section>
-      <h2>Who is it for?</h2>
+      <h2><a href="/help/start.html">Who is it for?</a></h2>
       <p>
         PSI-Toolkit is designed for linguists, language engineers or any users who need to process natural language texts and get the result now!
       </p>
@@ -11,7 +11,7 @@
       </section>
 
       <section>
-      <h2>Binding to programming languages</h2>
+      <h2><a href="/bindings.html">Binding to programming languages</a></h2>
       <p>
         Using PSI-Toolkit within popular programming languages is as simple as possible. Let's have a look at this Perl code:
       </p>

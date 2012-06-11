@@ -4,7 +4,7 @@
       <h1>What is this?</h1>
       <p>
 PSI-Toolkit is a set of tools for natural language processing. Focused on the Polish language, the
-toolkit allows for processing various languages, including English, French or Russian. 
+toolkit allows for processing various languages, including English, French or Russian.
 <!--PSI-Toolkit provides an easy-to-use web-service and a set of advanced tools for users with some computer skills.-->
       </p>
       </section>
@@ -21,7 +21,7 @@ toolkit allows for processing various languages, including English, French or Ru
         <ul>
           <li><a href="/help/start.html">Getting started</a></li>
           <li><a href="/help/start.html#tutorial">Tutorial</a></li>
-          <li><a href="/help/processors.html">PSI-Pipe specification</a></li>
+          <li><a href="/help/processors.html">Command specification</a></li>
           <!--<li><a href="#">Installation guide</a></li>-->
           <li><a href="/help/aliases.html">Aliases</a></li>
         </ul>
