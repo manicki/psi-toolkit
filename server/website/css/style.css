@@ -26,11 +26,12 @@ h4 { color:#004767; font-size:14px; }
 
 section { padding:0 0 12px; }
 
-p { padding:6px 0; text-align:justify; }
+p, ul, pre { padding:0 0 9px; }
+p { text-align:justify; }
 ul { margin-left:32px; }
 pre { font-family:"Consolas","Monaco","DejaVu Sans Mono",monospace; text-align:left; }
 code { background-color:#dedede; border-radius:5px; font-family:monospace; font-size:13px;
-  padding:2px 6px; text-align:left; }
+  padding:1px 6px; text-align:left; }
 pre > code { display:block }
 
 /* to keep footer at the bottom of page */
@@ -43,7 +44,7 @@ footer { bottom:0; height:272px; position:absolute; width:100%; } /* 300 - 2*24 
 
 /* header */
 
-header { height:63px; width:100%; color:#fefefe; background:#333 repeat scroll 0 0;
+header { height:65px; width:100%; color:#fefefe; background:#333 repeat scroll 0 0;
   background-image:-webkit-gradient(linear, left top, left bottom, from(#444), to(#222));
   background-image:-webkit-linear-gradient(top, #444, #222);
   background-image:   -moz-linear-gradient(#444, #222);
@@ -130,7 +131,8 @@ input[type="submit"], #input-file > div, .button { background:#333 repeat scroll
   background-image:   -moz-linear-gradient(top, #444, #222);
   background-image:     -o-linear-gradient(top, #444, #222);
   background-image:        linear-gradient(to bottom, #444, #222);
-  box-shadow:none; color:#ccc; cursor:pointer; height:25px; text-shadow:-1px -1px #000; width:auto; }
+  box-shadow:none; color:#ccc; cursor:pointer; height:25px; text-shadow:-1px -1px #000;
+  width:auto; }
 input[type="submit"]:hover, #input-file > div:hover, a.button:hover {
   background:#444 repeat scroll 0 0;
   background-image:-webkit-gradient(linear, left top, left bottom, from(#555), to(#333));
@@ -175,8 +177,9 @@ input[type="submit"]:hover, #input-file > div:hover, a.button:hover {
   height:36px; width:32px; margin-left:12px; }
 .download-output:hover { text-decoration:none; }
 
-.output-fontsize { background-color:#555; border-radius:5px; color:#fff; cursor:pointer; float:right;
-  font-family:monospace; font-weight:bold; line-height:14px; margin-left:6px; padding:2px 5px; }
+.output-fontsize { background-color:#555; border-radius:5px; color:#fff; cursor:pointer;
+  float:right; font-family:monospace; font-weight:bold; line-height:14px; margin-left:6px;
+  padding:2px 5px; }
 
 /* footer */
 

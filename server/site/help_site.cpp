@@ -11,6 +11,8 @@ HelpSite::HelpSite(PsiServer& server) : TemplateSite(server)
         "help_site_processor_helps", boost::bind(&HelpSite::processorHelps, this));
     psiServer_.registerIncludeCode(
         "help_site_aliases", boost::bind(&HelpSite::aliases, this));
+    psiServer_.registerIncludeCode(
+        "help_site_tutorial", boost::bind(&HelpSite::tutorial, this));
 }
 
 char * HelpSite::introduction() {
@@ -32,4 +34,11 @@ char * HelpSite::aliases() {
     htmlHelpFormatter_.formatAliases(streamForAliases);
 
     return stringToChar(streamForAliases.str());
+}
+
+char * HelpSite::tutorial() {
+    std::ostringstream streamForTutorial;
+    htmlHelpFormatter_.formatTutorial(streamForTutorial);
+
+    return stringToChar(streamForTutorial.str());
 }

@@ -20,6 +20,7 @@ public:
     void formatAliases(std::ostream& output);
 
     void formatHelpIntroduction(std::ostream& output);
+    void formatTutorial(std::ostream& output);
 
     virtual ~HelpFormatter();
 
@@ -46,7 +47,9 @@ protected:
     std::list<std::string> getProcessorNamesForAlias(std::string alias);
 
     virtual void doFormatHelpIntroduction(std::string text, std::ostream& output) =0;
+    virtual void doFormatTutorial(std::string text, std::ostream& output) =0;
 
+    boost::filesystem::path getPathToFrameworkDataFile_(const std::string& filename);
     std::string getFileContent(const boost::filesystem::path& path);
 
     const static std::string EXAMPLES_HEADER;

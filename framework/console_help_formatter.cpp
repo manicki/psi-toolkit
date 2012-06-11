@@ -33,4 +33,8 @@ void ConsoleHelpFormatter::doFormatHelpIntroduction(std::string text, std::ostre
     output << text << std::endl;
 }
 
+void ConsoleHelpFormatter::doFormatTutorial(std::string text, std::ostream& output) {
+    output << text << std::endl;
+}
+
 ConsoleHelpFormatter::~ConsoleHelpFormatter() { }
