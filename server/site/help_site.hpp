@@ -15,6 +15,8 @@ public:
     char * tutorial();
     char * licence();
 
+    char * pipelineExamples();
+
 private:
     HtmlHelpFormatter htmlHelpFormatter_;
 

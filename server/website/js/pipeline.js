@@ -46,15 +46,8 @@ function switchBookmark(from, to) {
 
 function bindRandomExamples() {
   var pipeInput = $('#toolbox-pipe input');
-
-  var examples = [
-    { 'pipe' : 'tokenize --lang pl',
-      'description' : 'Tokenizes Polish text and writes all tokens.' },
-    { 'pipe' : 'srx-segmenter --lang en ! simple-writer --tag segment',
-      'description' : 'Splits English text into sentences.' },
-    { 'pipe' : 'tokenize --lang pl ! morfologik ! bilexicon --lang pl --trg-lang en ! simple-writer --tag bilexicon',
-      'description' : 'Reads text, tokenizes, produces morphologic interpretations of each word, generates translations for all morphological interpetations, returns simplified output: filtered to show only translations.' }
-  ]
+  var textInput = $('#toolbox-text textarea');
+  var examples = pipelineExamples == 'undefined' ? [] : pipelineExamples;
 
   pipeInput.attr('rel', 'tipsy');
   $('#toolbox-pipe input').tipsy({
@@ -69,6 +62,9 @@ function bindRandomExamples() {
     pipeInput.val(examples[randomExample]['pipe']);
     pipeInput.attr('title', examples[randomExample]['description']);
     pipeInput.tipsy('show');
+
+    textInput.val(examples[randomExample]['text']);
+    switchBookmark('file', 'text');
 
     e.stopPropagation();
     return false;

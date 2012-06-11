@@ -1,4 +1,5 @@
 #include <boost/algorithm/string/join.hpp>
+#include <boost/algorithm/string/trim.hpp>
 
 #include "html_help_formatter.hpp"
 
@@ -66,6 +67,38 @@ void HtmlHelpFormatter::doFormatTutorial(std::string text, std::ostream& output)
 
 void HtmlHelpFormatter::doFormatLicence(std::string text, std::ostream& output) {
     output << markdownString2String(text) << std::endl;
+}
+
+void HtmlHelpFormatter::formatPipelineExamplesInJSON(std::ostream& output) {
+    std::vector<std::string> processors = MainFactoriesKeeper::getInstance().getProcessorNames();
+
+    output << "var pipelineExamples = [" << std::endl;
+
+    BOOST_FOREACH(std::string processorName, processors) {
+        BOOST_FOREACH(TestBatch testBatch, getProcessorUsingExamples(processorName)) {
+            formatPipelineExampleInJSON_(testBatch, output);
+        };
+    }
+
+    output << "];" << std::endl;
+}
+
+void HtmlHelpFormatter::formatPipelineExampleInJSON_(TestBatch batch, std::ostream& output) {
+    output << "  {" << std::endl;
+
+    std::string description = batch.getDescription();
+    boost::algorithm::trim(description);
+    output << "    \"description\" : \"" << description << "\"," << std::endl;
+
+    std::string pipe = batch.getPipeline();
+    boost::algorithm::trim(pipe);
+    output << "    \"pipe\" : \"" << pipe << "\"," << std::endl;
+
+    std::string text = getFileContent(batch.getTestRuns()[0].getInputFilePath());
+    boost::algorithm::trim(text);
+    output << "    \"text\" : \"" << text << "\"" << std::endl;
+
+    output << "  }, " << std::endl;
 }
 
 void HtmlHelpFormatter::formatAllowedOptions_(boost::program_options::options_description options,

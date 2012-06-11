@@ -15,6 +15,9 @@ HelpSite::HelpSite(PsiServer& server) : TemplateSite(server)
         "help_site_tutorial", boost::bind(&HelpSite::tutorial, this));
     psiServer_.registerIncludeCode(
         "help_site_licence", boost::bind(&HelpSite::licence, this));
+
+    psiServer_.registerIncludeCode(
+        "help_site_pipeline_examples", boost::bind(&HelpSite::pipelineExamples, this));
 }
 
 char * HelpSite::introduction() {
@@ -50,4 +53,11 @@ char * HelpSite::licence() {
     htmlHelpFormatter_.formatLicence(streamForLicence);
 
     return stringToChar(streamForLicence.str());
+}
+
+char * HelpSite::pipelineExamples() {
+    std::ostringstream streamForExamples;
+    htmlHelpFormatter_.formatPipelineExamplesInJSON(streamForExamples);
+
+    return stringToChar(streamForExamples.str());
 }
