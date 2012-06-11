@@ -64,6 +64,10 @@ void HtmlHelpFormatter::doFormatTutorial(std::string text, std::ostream& output)
     output << markdownString2String(text) << std::endl;
 }
 
+void HtmlHelpFormatter::doFormatLicence(std::string text, std::ostream& output) {
+    output << markdownString2String(text) << std::endl;
+}
+
 void HtmlHelpFormatter::formatAllowedOptions_(boost::program_options::options_description options,
     std::ostream& output) {
 

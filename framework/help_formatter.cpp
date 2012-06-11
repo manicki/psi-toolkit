@@ -50,6 +50,12 @@ void HelpFormatter::formatTutorial(std::ostream& output) {
     doFormatTutorial(getFileContent(path), output);
 }
 
+void HelpFormatter::formatLicence(std::ostream& output) {
+    boost::filesystem::path path = getPathToFrameworkDataFile_("licence.txt");
+
+    doFormatLicence(getFileContent(path), output);
+}
+
 HelpFormatter::~HelpFormatter() { }
 
 boost::filesystem::path HelpFormatter::getPathToFrameworkDataFile_(const std::string& filename) {

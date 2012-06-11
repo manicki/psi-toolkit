@@ -1,0 +1,4 @@
+PSI-Toolkit Licence
+-------------------------
+PSI-Toolkit is released under Lesser General Public License.  
+This  is a free license, which, in addition to GPL, could be linked with proprietary software and further distributed under any terms. 

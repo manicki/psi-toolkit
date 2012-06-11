@@ -21,6 +21,7 @@ public:
 
     void formatHelpIntroduction(std::ostream& output);
     void formatTutorial(std::ostream& output);
+    void formatLicence(std::ostream& output);
 
     virtual ~HelpFormatter();
 
@@ -48,6 +49,7 @@ protected:
 
     virtual void doFormatHelpIntroduction(std::string text, std::ostream& output) =0;
     virtual void doFormatTutorial(std::string text, std::ostream& output) =0;
+    virtual void doFormatLicence(std::string text, std::ostream& output) =0;
 
     boost::filesystem::path getPathToFrameworkDataFile_(const std::string& filename);
     std::string getFileContent(const boost::filesystem::path& path);
