@@ -143,7 +143,7 @@ input[type="submit"]:hover, #input-file > div:hover, a.button:hover {
   color:#ccc; text-decoration:none; }
 .button { display:inline-block; }
 
-#toolbox label { float:left; margin:7px 0; padding-right:10px; text-align:right; width:95px; }
+#toolbox label { float:left; margin:7px 0; padding-right:10px; text-align:right; width:100px; }
 #toolbox input[type="submit"] { float:right; padding:2px 48px; }
 
 #input-file { display:none; margin-bottom:2px; }
