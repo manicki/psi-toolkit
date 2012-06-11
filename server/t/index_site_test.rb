@@ -16,7 +16,7 @@ class IndexSiteTest < Test::Unit::TestCase
     end
 
     def test_if_github_ribbon_exists
-        assert @browser.a(:id, 'github-ribbon').exists?
+        assert @browser.a(:id => 'github-ribbon').exists?
     end
 
     def test_psi_toolkit_text
@@ -24,13 +24,13 @@ class IndexSiteTest < Test::Unit::TestCase
     end
 
     def test_if_promotion_section_exists
-        assert @browser.div(:id, 'promotion').exists?
+        assert @browser.div(:id => 'promotion').exists?
     end
 
     def text_if_submit_hides_promotion_section
-        assert @browser.div(:id, 'promotion').exists?
+        assert @browser.div(:id => 'promotion').exists?
         @browser.button(:name => 'pipe-submit').click
-        assert !@browser.div(:id, 'promotion').exists?
+        assert !@browser.div(:id => 'promotion').exists?
     end
 
 end
