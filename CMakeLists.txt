@@ -223,7 +223,7 @@ endif(USE_STRING_FRAG_VALIDATION)
 # Finds SWIG
 
 find_package(SWIG)
-if(SWIG_FOUND)
+if (SWIG_FOUND)
 
   set(HAVE_SWIG_BINDINGS 1)
 
@@ -231,11 +231,14 @@ if(SWIG_FOUND)
   if (PERLLIBS_FOUND)
     set(HAVE_PERL_BINDINGS 1)
     include_directories(${PERL_INCLUDE_PATH})
+    message(STATUS "Have Perl bindings ${HAVE_PERL_BINDINGS}")
   endif(PERLLIBS_FOUND)
 
   find_package(PythonLibs)
   if (PYTHONLIBS_FOUND)
     set(HAVE_PYTHON_BINDINGS 1)
+    include_directories(${PYTHON_INCLUDE_PATH})
+    message(STATUS "Have Python bindings ${HAVE_PYTHON_BINDINGS}")
   endif(PYTHONLIBS_FOUND)
 endif(SWIG_FOUND)
 
