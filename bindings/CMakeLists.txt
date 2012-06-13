@@ -9,4 +9,8 @@ if (HAVE_SWIG_BINDINGS)
     add_subdirectory(python)
   endif (HAVE_PYTHON_BINDINGS)
 
+  if (HAVE_RUBY_BINDINGS)
+    add_subdirectory(ruby)
+  endif (HAVE_RUBY_BINDINGS)
+
 endif(HAVE_SWIG_BINDINGS)

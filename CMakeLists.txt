@@ -223,23 +223,31 @@ endif(USE_STRING_FRAG_VALIDATION)
 # Finds SWIG
 
 find_package(SWIG)
-if (SWIG_FOUND)
+if(SWIG_FOUND)
 
   set(HAVE_SWIG_BINDINGS 1)
 
   find_package(PerlLibs)
-  if (PERLLIBS_FOUND)
+  if(PERLLIBS_FOUND)
     set(HAVE_PERL_BINDINGS 1)
     include_directories(${PERL_INCLUDE_PATH})
     message(STATUS "Have Perl bindings ${HAVE_PERL_BINDINGS}")
   endif(PERLLIBS_FOUND)
 
   find_package(PythonLibs)
-  if (PYTHONLIBS_FOUND)
+  if(PYTHONLIBS_FOUND)
     set(HAVE_PYTHON_BINDINGS 1)
     include_directories(${PYTHON_INCLUDE_PATH})
     message(STATUS "Have Python bindings ${HAVE_PYTHON_BINDINGS}")
   endif(PYTHONLIBS_FOUND)
+
+  find_package(Ruby)
+  if(RUBY_FOUND)
+    set(HAVE_RUBY_BINDINGS 1)
+    include_directories(${RUBY_INCLUDE_PATH})
+    message(STATUS "Have Ruby bindings ${HAVE_RUBY_BINDINGS}")
+  endif(RUBY_FOUND)
+
 endif(SWIG_FOUND)
 
 
@@ -670,7 +678,7 @@ FOREACH(variable_name ${all_variables})
     GET_TARGET_PROPERTY(target_location ${library_name} LOCATION)
 
     if(NOT target_location MATCHES "NOTFOUND")
-      if (NOT target_location MATCHES "psitoolkit_perl_simple|python.*_PSIToolkit")
+      if (NOT target_location MATCHES "psitoolkit_perl_simple|python.*_PSIToolkit|psitoolkit_ruby_simple")
         SET_TARGET_PROPERTIES(${library_name}
           PROPERTIES
           PREFIX ${MY_TARGETLIB_PREFIX}
