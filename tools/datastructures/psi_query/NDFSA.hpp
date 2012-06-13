@@ -104,16 +104,16 @@ namespace psi {
         }
         setEndState(q);
     }
-    
+
     template <typename ArcT>
     NDFSA<ArcT>::NDFSA(std::string input) {
         state_type q0 = addState(true);
         state_type p, q = q0;
-  
-        for(std::string::iterator it = input.begin(); it != input.end(); it++) {
+
+        for (std::string::iterator it = input.begin(); it != input.end(); it++) {
             p = q;
             q = addState();
-  
+
             addArc(p, ArcT(*it, q));
         }
         setEndState(q);

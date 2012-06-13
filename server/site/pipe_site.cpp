@@ -65,7 +65,6 @@ char * PipeSite::actionPipe() {
 char * PipeSite::hiddenOptions() {
     std::string fileOnOff = psiServer_.session()->getData("radio-file");
     std::string outputFile = psiServer_.session()->getData("output-file");
-    std::string outputType = psiServer_.session()->getData("output-type");
 
     std::string opts =
         std::string("psisOptions = {") +

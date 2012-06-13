@@ -181,7 +181,7 @@ std::pair<std::vector<FormatRule>, std::vector<ReplacementRule> >
                 replacementRules.push_back(parseReplacementRule_(v.second));
             }
             else {
-                UnexpectedElementException(v.first);
+                throw UnexpectedElementException(v.first);
             }
         }
     }
