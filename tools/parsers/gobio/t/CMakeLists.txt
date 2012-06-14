@@ -10,6 +10,7 @@ include_directories("${psi-toolkit_SOURCE_DIR}/common/t")
 include_directories("${psi-toolkit_SOURCE_DIR}/formats/psi/psi_writer")
 
 add_library(tools-parsers-gobio-tests
+    av_ai_converter_tests.cpp
     chart_tests.cpp
     parser_tests.cpp
     tgbg_tests.cpp
