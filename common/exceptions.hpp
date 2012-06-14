@@ -77,4 +77,10 @@ public:
 };
 
 
+class ParserException : public PsiException {
+public:
+    ParserException(std::string message) : PsiException(message) { }
+};
+
+
 #endif

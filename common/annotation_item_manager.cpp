@@ -72,3 +72,12 @@ std::list< std::pair<std::string, std::string> > AnnotationItemManager::getValue
     }
     return result;
 }
+
+std::map<std::string, std::string> AnnotationItemManager::getAVMap(
+    const AnnotationItem & annotationItem
+) {
+    std::map<std::string, std::string> result;
+    std::list< std::pair<std::string, std::string> > list = getValues(annotationItem);
+    result.insert(list.begin(), list.end());
+    return result;
+}

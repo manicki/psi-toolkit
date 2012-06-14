@@ -1,6 +1,8 @@
 #ifndef LEMMATIZER_ANNOTATOR_HDR
 #define LEMMATIZER_ANNOTATOR_HDR
 
+#include <boost/assign/list_of.hpp>
+
 #include "annotator.hpp"
 #include "annotator_factory.hpp"
 #include "lattice_worker.hpp"
@@ -18,6 +20,7 @@ private:
     boost::shared_ptr<GeneralCaseConverter<std::string::const_iterator,
                                            std::back_insert_iterator<std::string> > >
        lowerCaseConverter_;
+    std::string langCode_;
 
 
 public:
@@ -26,6 +29,7 @@ public:
         :lemmatizer_(options) {
         lowerCaseConverter_ = StringCaseConverterManager::getInstance().
             getLowerCaseConverter(lemmatizer_.getLanguage());
+        langCode_ = lemmatizer_.getLanguage();
     }
 
     class Factory : public AnnotatorFactory {
@@ -61,7 +65,8 @@ public:
         }
 
         virtual std::list<std::list<std::string> > doRequiredLayerTags() {
-            return std::list<std::list<std::string> >();
+            return boost::assign::list_of(
+                boost::assign::list_of(std::string("token")));
         }
 
         virtual std::list<std::list<std::string> > doOptionalLayerTags() {
@@ -69,9 +74,17 @@ public:
         }
 
         virtual std::list<std::string> doProvidedLayerTags() {
-            std::list<std::string> layerTags;
-            layerTags.push_back("lemma");
-            return layerTags;
+            return boost::assign::list_of
+                (std::string("lemma"))
+                (std::string("lexeme"))
+                (std::string("form"));
+        }
+
+        virtual bool doCheckRequirements(
+            const boost::program_options::variables_map& options,
+            std::ostream & message) const {
+
+            return L::checkRequirements(options, message);
         }
     };
 
@@ -97,7 +110,9 @@ public:
 
         public:
             WorkerOutputIterator(
-                LayerTagCollection layerTags, Lattice& lattice, Lattice::EdgeDescriptor tokenEdge)
+                LayerTagCollection layerTags,
+                Lattice& lattice,
+                Lattice::EdgeDescriptor tokenEdge)
                 :lattice_(lattice),
                  correctionTag_(
                      createUnion(
@@ -233,7 +248,10 @@ public:
         Worker(Processor& processor, Lattice& lattice)
             :LatticeWorker(lattice),
              processor_(processor),
-             tokenMask_(lattice.getLayerTagManager().getMask("token")) {
+             tokenMask_(
+                 lattice.getLayerTagManager().getMaskWithLangCode(
+                     "token",
+                     dynamic_cast<LemmatizerAnnotator&>(processor_).lemmatizer_.getLanguage())) {
         }
 
    private:

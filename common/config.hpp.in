@@ -1,6 +1,7 @@
 #cmakedefine01 HAVE_POSTGRESQL
 #cmakedefine01 HAVE_JAVA
 #cmakedefine01 HAVE_RE2
+#cmakedefine01 HAVE_SFST
 #cmakedefine01 HAVE_PCRE
 #cmakedefine01 HAVE_LOG4CPP
 #cmakedefine01 HAVE_PERL_BINDINGS
@@ -11,6 +12,7 @@
 #cmakedefine01 USE_DOC_READER
 #cmakedefine01 HAVE_LIBMAGIC
 #cmakedefine01 HAVE_ASPELL
+#cmakedefine01 HAVE_LINK_GRAMMAR
 #cmakedefine01 _WITH_BONSAI_PARSEGRAPH
 #cmakedefine01 IS_INSTALLABLE
 #cmakedefine01 STRING_FRAG_VALIDATION

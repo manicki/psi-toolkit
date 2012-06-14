@@ -1,8 +1,15 @@
+# don't want to see warnings about deprecated hash_maps/sets used
+# in SFST
+if (HAVE_SFST)
+   add_definitions(-Wno-deprecated -DSGI__gnu_cxx)
+endif (HAVE_SFST)
+
 configure_file("${CMAKE_CURRENT_SOURCE_DIR}/git_info.cpp.in" "${CMAKE_CURRENT_BINARY_DIR}/git_info.cpp" @ONLY)
 
 # library framework
 add_library(framework SHARED
     aliaser.cpp
+    auto_completer.cpp
     factories_keeper.cpp
     main_factories_keeper.cpp
     help_formatter.cpp
@@ -18,6 +25,10 @@ target_link_libraries(framework ${Boost_LIBRARIES} pthread mpfd-parser ${BASE_TA
 if (WITH_RE2)
     target_link_libraries(framework re2)
 endif(WITH_RE2)
+
+if (HAVE_SFST)
+    target_link_libraries(framework sfst)
+endif(HAVE_SFST)
 
 foreach(dir ${formats_SUBDIRS})
     include_directories("${psi-toolkit_SOURCE_DIR}/formats/${dir}")
@@ -38,6 +49,11 @@ if(HAVE_DJVULIBRE)
     include_directories("${psi-toolkit_SOURCE_DIR}/formats/djvu")
     link_directories("${psi-toolkit_BINARY_DIR}/formats/djvu")
 endif(HAVE_DJVULIBRE)
+
+# if(HAVE_LINK_GRAMMAR)
+    # include_directories("${psi-toolkit_SOURCE_DIR}/tools/parsers/link")
+    # link_directories("${psi-toolkit_BINARY_DIR}/tools/parsers/link")
+# endif(HAVE_LINK_GRAMMAR)
 
 if(USE_DOC_READER)
     include_directories("${psi-toolkit_SOURCE_DIR}/formats/doc")
@@ -66,6 +82,12 @@ if(USE_JAVA)
     link_directories("${psi-toolkit_BINARY_DIR}/tools/lemmatizers/morfologik")
     target_link_libraries(psi-pipe tools-lemmatizers-morfologik)
 endif(USE_JAVA)
+
+if(HAVE_SFST)
+    include_directories("${psi-toolkit_SOURCE_DIR}/tools/lemmatizers/sfst")
+    link_directories("${psi-toolkit_BINARY_DIR}/tools/lemmatizers/sfst")
+    target_link_libraries(psi-pipe tools-lemmatizers-sfst)
+endif(HAVE_SFST)
 
 if(USE_POSTGRESQL)
     include_directories("${psi-toolkit_SOURCE_DIR}/tools/lemmatizers/lex_db")

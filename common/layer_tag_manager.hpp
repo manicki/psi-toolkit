@@ -6,6 +6,7 @@
 
 #include <boost/bimap.hpp>
 #include <boost/foreach.hpp>
+#include <boost/assign.hpp>
 
 #include "layer_tag_collection.hpp"
 #include "layer_tag_mask.hpp"
@@ -18,6 +19,12 @@
 class LayerTagManager {
 
 public:
+
+    LayerTagManager();
+
+    LayerTagCollection createEmptyTagCollection() {
+        return LayerTagCollection();
+    }
 
     LayerTagCollection createSingletonTagCollection(std::string tagName);
 
@@ -34,6 +41,33 @@ public:
     LayerTagCollection createTagCollectionFromVector(std::vector<std::string> tagNames) {
         return createTagCollection(tagNames);
     }
+
+    static std::string getLanguageTag(std::string langCode) {
+        return std::string("!") + langCode;
+    }
+
+    LayerTagCollection createLanguageTag(std::string langCode) {
+        return createSingletonTagCollection(getLanguageTag(langCode));
+    }
+
+    LayerTagCollection createSingletonTagCollectionWithLangCode(
+        std::string tagName,
+        std::string langCode) {
+        return createUnion(
+            createSingletonTagCollection(tagName),
+            createLanguageTag(langCode));
+    }
+
+    LayerTagCollection createTagCollectionFromListWithLangCode(
+        std::list<std::string> tagNames,
+        const std::string& langCode) {
+
+        return
+            createUnion(
+                createTagCollection(tagNames),
+                createLanguageTag(langCode));
+    }
+
 
     LayerTagCollection createTagCollection(LayerTagMask mask);
 
@@ -61,16 +95,73 @@ public:
         return getMask(createTagCollection(tagNames));
     }
 
-    LayerTagMask planeTags() {
-        return LayerTagMask(false, false, true);
+    LayerTagMask getMask(std::vector<std::string> tagNames) {
+        return getMask(createTagCollection(tagNames));
     }
+
+    LayerTagMask getMaskWithLangCode(
+        const std::string& tagName, const std::string& langCode) {
+
+        return getMask(
+            createUnion(
+                createSingletonTagCollection(tagName),
+                createLanguageTag(langCode)));
+    }
+
+    LayerTagMask getMaskWithLangCode(
+        std::list<std::string> tagNames,
+        const std::string& langCode) {
+
+        return getMask(
+            createUnion(createTagCollection(tagNames),
+                        createLanguageTag(langCode)));
+    }
+
+    LayerTagMask getAlternativeMask(
+        LayerTagCollection tagCollection1,
+        LayerTagCollection tagCollection2) {
+
+        std::vector<LayerTagCollection> alts =
+            boost::assign::list_of
+            (tagCollection1)
+            (tagCollection2);
+
+        return LayerTagMask(alts);
+    }
+
+    LayerTagMask getAlternativeMask(
+        LayerTagCollection tagCollection1,
+        LayerTagCollection tagCollection2,
+        LayerTagCollection tagCollection3) {
+
+        std::vector<LayerTagCollection> alts =
+            boost::assign::list_of
+            (tagCollection1)
+            (tagCollection2)
+            (tagCollection3);
+
+        return LayerTagMask(alts);
+    }
+
+    LayerTagMask getAlternativeMask(
+        std::vector<LayerTagCollection> tagCollections) {
+
+        return LayerTagMask(tagCollections);
+    }
+
+
+    LayerTagCollection planeTags();
+    LayerTagCollection onlyPlaneTags(LayerTagCollection tags);
 
     bool areInTheSamePlane(LayerTagCollection tags1, LayerTagCollection tags2);
 
-    bool match(LayerTagMask mask, std::string tagName);
+    bool isThere(std::string tagName, LayerTagCollection tags);
+
+    bool canBeAppliedToImplicitSymbol(const LayerTagMask& tags);
 
 private:
 
+    LayerTagCollection symbolTag_;
     typedef boost::bimap<std::string, size_t> StringBimap;
     typedef StringBimap::value_type StringBimapItem;
     StringBimap m_;

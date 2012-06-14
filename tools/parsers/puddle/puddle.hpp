@@ -48,8 +48,7 @@ class Puddle : public Annotator {
             static const std::string DEFAULT_RULE_FILE;
         };
 
-        Puddle();
-        Puddle(TagsetPtr tagset_, RulesPtr rules_);
+        Puddle(TagsetPtr tagset_, RulesPtr rules_, std::string langCode_);
         virtual void setTagset(bonsai::puddle::TagsetPtr tagset_);
         //@todo: po kiego te funkcje sa wirtualne?
         virtual void setRules(bonsai::puddle::RulesPtr rules_);
@@ -60,6 +59,7 @@ class Puddle : public Annotator {
         RulesPtr rules;
         RuleMatcherPtr ruleMatcher;
         RuleModifierPtr ruleModifier;
+        std::string langCode;
 
         bool syntok;
         bool verbose;

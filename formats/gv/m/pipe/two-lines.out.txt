@@ -31,4 +31,5 @@ digraph g {
 	49 -> 52 [label="psa (token) T"];
 	39 -> 53 [label="_Basia_ma_psa. (segment) sen"];
 	52 -> 53 [label=". (token) I"];
+	26 -> 27 [style=invis];
 }

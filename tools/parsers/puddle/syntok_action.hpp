@@ -14,10 +14,10 @@ class SyntokAction : public Action {
     public:
         SyntokAction(int aStart, int aEnd, std::vector<int> aTokenIndices,
                 std::vector<Morphology> aMorphology, std::string aRuleName);
-        bool apply(Lattice &lattice, int matchedStartIndex,
+        bool apply(Lattice &lattice, std::string langCode, int matchedStartIndex,
                 RuleTokenSizes &ruleTokenSizes,
                 std::list<Lattice::EdgeSequence> &rulePartitions);
-        bool test(Lattice &lattice, int matchedStartIndex,
+        bool test(Lattice &lattice, std::string langCode, int matchedStartIndex,
                 RuleTokenSizes &ruleTokenSizes,
                 std::list<Lattice::EdgeSequence> &rulePartitions);
 

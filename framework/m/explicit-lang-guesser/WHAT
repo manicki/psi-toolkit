@@ -1,0 +1,2 @@
+lang-guesser ! tp-tokenize --lang pl ! psi-writer
+

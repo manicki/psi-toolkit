@@ -37,7 +37,7 @@ class MeTagger : public Annotator {
             static const std::string DEFAULT_PROPER_NOUN_POS_LABEL;
         };
 
-        MeTagger(bool trainMode_, std::string modelFile_,
+        MeTagger(const std::string& langCode, bool trainMode_, std::string modelFile_,
                 int iterations_ = 50,
                 std::string unknownPosLabel_ = "ign",
                 std::string cardinalNumberPosLabel_ = "card",
@@ -64,6 +64,8 @@ class MeTagger : public Annotator {
         };
         virtual LatticeWorker* doCreateLatticeWorker(Lattice& lattice);
         virtual std::string doInfo();
+
+        std::string langCode_;
 
         typedef std::string Outcome;
         typedef std::string Feature;
@@ -119,6 +121,8 @@ class MeTagger : public Annotator {
         std::string getPartOfSpeechFromMorphoTag(std::string tag);
         std::list<std::pair<std::string, std::string> >
             getAttributesFromMorphoTag(std::string tag);
+        bool formMatchesTag(Lattice &lattice, Lattice::EdgeDescriptor form,
+                MeTagger::Outcome tag);
         bool lemmaEdgeExists(Lattice &lattice, Lattice::EdgeDescriptor token,
                 std::string lemma);
         bool lexemeEdgeExists(Lattice &lattice, Lattice::EdgeDescriptor token,

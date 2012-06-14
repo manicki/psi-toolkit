@@ -16,6 +16,7 @@
 
 #include <boost/assign.hpp>
 #include <boost/assign/list_of.hpp>
+#include <boost/foreach.hpp>
 
 #define LOWER_LETTER(i) ( ((i) > 90 || (i) < 65) ? (i) : ((i) + 32) )
 
@@ -33,33 +34,43 @@ LangGuesser::LangGuesser() {
 }
 
 LangGuesser::LangGuesser(const boost::program_options::variables_map& options) {
+    forceMode_ = options.count("force") ? true : false;
+
     if (options.count("only-langs")) {
-        initLanguages(options["only-langs"].as<std::vector<std::string> >());
+        std::vector<std::string> langsWanted =
+            options["only-langs"].as<std::vector<std::string> >();
+
+        if (forceMode_ && langsWanted.size() == 1) {
+            forcedLanguage_ = langsWanted[0];
+            initLanguages();
+        } else
+            initLanguages(langsWanted);
     }
-    else {
+    else
         initLanguages();
-    }
 }
 
 void LangGuesser::initLanguages() {
-
     std::map<std::string, std::string>::iterator it;
+
     for (it = LANGUAGES.begin(); it != LANGUAGES.end(); ++it) {
         addLanguage(it->first, it->second);
-
     }
 }
 
 void LangGuesser::initLanguages(std::vector<std::string> selectedLangs) {
-
     std::map<std::string, std::string>::iterator definedLang;
 
-    for (unsigned int i = 0; i < selectedLangs.size(); i++) {
-        definedLang = LANGUAGES.find(selectedLangs[i]);
+    BOOST_FOREACH(const std::string& selectedLang, selectedLangs) {
+        definedLang = LANGUAGES.find(selectedLang);
 
-        if (definedLang != LANGUAGES.end()) {
+        if (definedLang != LANGUAGES.end())
             addLanguage(definedLang->first, definedLang->second);
-        }
+        else
+            throw Exception(
+                std::string("lang-guesser cannot recognize language '")
+                + selectedLang
+                + "'");
     }
 
     if (languages_.empty()) {
@@ -76,7 +87,28 @@ void LangGuesser::addLanguage(std::string lang, std::string letters) {
 }
 
 std::string LangGuesser::guessLanguage(std::string text) {
+    if (!forcedLanguage_.empty())
+        return forcedLanguage_;
 
+    std::string guessedLanguage = (text.length() < MIN_TEXT_LENGTH_FOR_BIGRAM_METHOD) ?
+        guessLanguageByLetters(text) : guessLanguageByBigramModel(text);
+
+    if ((guessedLanguage == "unknown") && forceMode_) {
+        if (languages_.size() == 1) {
+            guessedLanguage = languages_.front().name;
+        }
+        else {
+            if (text.length() < MIN_TEXT_LENGTH_FOR_BIGRAM_METHOD) {
+                guessedLanguage = guessLanguageByBigramModel(text);
+                if (guessedLanguage == "unknown") guessedLanguage = languages_.front().name;
+            }
+        }
+    }
+
+    return guessedLanguage;
+}
+
+std::string LangGuesser::guessLanguageByBigramModel(std::string text) {
     if (text.length() == 0) {
         return UNKNOWN_LANGUAGE;
     }
@@ -223,7 +255,8 @@ boost::program_options::options_description LangGuesser::Factory::doOptionsHandl
 
     optionsDescription.add_options()
         ("only-langs", boost::program_options::value<std::vector<std::string> >()->multitoken(),
-            "Guesses language only from the given list of languages");
+            "Guesses language only from the given list of languages")
+        ("force", "All frags must be marked as text in some language");
 
     return optionsDescription;
 }
@@ -244,9 +277,7 @@ std::list<std::string> LangGuesser::Factory::doLanguagesHandled(
 
 LangGuesser::Worker::Worker(LangGuesser& processor, Lattice& lattice):
     LatticeWorker(lattice),
-    processor_(processor),
-    tags_(lattice_.getLayerTagManager().createTagCollectionFromList(
-              boost::assign::list_of("text")("lang-guesser"))) {
+    processor_(processor) {
     }
 
 void LangGuesser::Worker::doRun() {
@@ -254,22 +285,17 @@ void LangGuesser::Worker::doRun() {
 }
 
 bool LangGuesser::Worker::guessLanguage_() {
-
     LayerTagMask textMask = lattice_.getLayerTagManager().getMask("frag");
     Lattice::EdgesSortedBySourceIterator edgeIter(lattice_, textMask);
 
     while (edgeIter.hasNext()) {
         Lattice::EdgeDescriptor edge = edgeIter.next();
-
         std::string text = lattice_.getEdgeAnnotationItem(edge).getText();
 
-        std::string guessedLanguage = (text.length() < MIN_TEXT_LENGTH_FOR_BIGRAM_METHOD) ?
-            processor_.guessLanguageByLetters(text) : processor_.guessLanguage(text);
-
+        std::string guessedLanguage = processor_.guessLanguage(text);
         INFO("Guessed language for text [" << text << "] is " << guessedLanguage);
 
-        if (guessedLanguage != "unknown")
-            markLanguage_(guessedLanguage, edge);
+        if (guessedLanguage != "unknown") markLanguage_(guessedLanguage, edge);
     }
 
     return false;
@@ -279,7 +305,6 @@ void LangGuesser::Worker::markLanguage_(
     const std::string& language, Lattice::EdgeDescriptor edge) {
 
     AnnotationItem item("TEXT", lattice_.getEdgeAnnotationItem(edge).getText());
-    lattice_.getAnnotationItemManager().setValue(item, "lang", language);
 
     Lattice::EdgeSequence::Builder edgeSequenceBuilder(lattice_);
     edgeSequenceBuilder.addEdge(edge);
@@ -288,6 +313,14 @@ void LangGuesser::Worker::markLanguage_(
         lattice_.getEdgeSource(edge),
         lattice_.getEdgeTarget(edge),
         item,
-        tags_,
+        getTagForLanguage_(language),
         edgeSequenceBuilder.build());
+}
+
+LayerTagCollection LangGuesser::Worker::getTagForLanguage_(const std::string& language) {
+    return lattice_.getLayerTagManager().createTagCollectionFromList(
+        boost::assign::list_of
+        (LayerTagManager::getLanguageTag(language))
+        ("text")
+        ("lang-guesser"));
 }

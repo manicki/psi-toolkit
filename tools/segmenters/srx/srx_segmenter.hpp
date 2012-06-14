@@ -82,6 +82,8 @@ private:
         }
     };
 
+    std::string langCode_;
+
     std::vector<BreakingRuleInfo> breakingRules_;
 
     size_t hardLimit_;

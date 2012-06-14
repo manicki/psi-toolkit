@@ -1,0 +1,10 @@
+0000 00 BOS *
+0000 06 W Amelie lemma:Amelie,name:sg:f
+0006 01 B _
+0007 01 W a lemma:a,subst:pl:m;a,subst:sg:m;avoir,verb:ind:fin:ter:sg
+0008 01 B _
+0009 02 W un lemma:un,adj;un,det:sg:m;un,pron;un,subst:sg:m
+0011 01 B _
+0012 04 W chat lemma:chat,subst:sg:m
+0016 01 P .
+0017 00 EOS *

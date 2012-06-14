@@ -12,11 +12,17 @@ const std::string Morfologik::TAG_SEPARATORS = "+,|";
 const std::vector<std::string> Morfologik::DICTIONARIES = boost::assign::list_of
     ("morfologik")("morfeusz")("combined");
 
+std::list<std::pair<RegExp, std::string> > Morfologik::BREAK_FORMS_RULES = boost::assign::list_of
+    (std::pair<RegExp, std::string>(RegExp(":m:"), std::string(":m1.m2.m3:")))
+    (std::pair<RegExp, std::string>(RegExp(":m$"), std::string(":m1.m2.m3")))
+    ;
+
 Morfologik::Morfologik(const boost::program_options::variables_map& options)
     : level_(3), dictionary_("MORFOLOGIK"), annotationManager_(NULL) {
 
     if (options.count("level") > 0) setLevel(options["level"].as<int>());
     if (options.count("dict") > 0) setDictionary(options["dict"].as<std::string>());
+    keepOriginal_ = options.count("keep-original") ? true : false;
 
     jenv_ = NULL;
     JavaVirtualMachine *jvm = JavaVirtualMachine::Instance();
@@ -58,6 +64,14 @@ std::list<std::string> Morfologik::languagesHandled(
     const boost::program_options::variables_map& /*options*/) {
     return boost::assign::list_of(std::string("pl"));
 }
+
+bool Morfologik::checkRequirements(
+    const boost::program_options::variables_map& /*options*/,
+    std::ostream & /*message*/) {
+
+    return true;
+}
+
 
 void Morfologik::setLevel(int lvl) {
     if (0 <= lvl && lvl <= 3) {
@@ -107,6 +121,7 @@ boost::program_options::options_description Morfologik::optionsHandled() {
             "set word processing level 0-3")
         ("dict", boost::program_options::value<std::string>()
             ->default_value(DICTIONARIES[0]), dictionaryDescription.c_str())
+        ("keep-original", "keep original Morfologik's settings i.e. do not break brief forms")
     ;
 
     return desc;
@@ -227,6 +242,8 @@ void Morfologik::stemsOnFormLevel_(const std::string & word,
             AnnotationItem lexItm = createLexemeAnnotation_(*lem, *tag);
             outputIterator.addLexeme(lexItm);
 
+            DEBUG("tags: [" << boost::algorithm::join(tags, ", ") << "]");
+
             for (tag = tags.begin(); tag != tags.end(); ++tag) {
 
                 std::vector<std::map<std::string, std::string> > forms =
@@ -285,7 +302,7 @@ std::multimap<std::string, std::vector<std::string> > Morfologik::stem(const std
     jenv_->DeleteLocalRef(jword);
 
     int stemsCount = (int)jenv_->CallIntMethod(objList, midListGetSize_, NULL);
-    DEBUG("Found " << stemsCount << " stems for word " << word);
+    DEBUG("found " << stemsCount << " stems for word [" << word << "]");
 
     jobject objWordData = NULL;
     const char *pstem = NULL;
@@ -299,14 +316,25 @@ std::multimap<std::string, std::vector<std::string> > Morfologik::stem(const std
         pstem = getStemByJNI_(objWordData);
         ptags = getTagsByJNI_(objWordData);
 
+        std::string ptagsAsString = keepOriginal_ ? std::string(ptags) : breakForms_(ptags);
         tags.clear();
-        boost::split(tags, ptags, boost::is_any_of(TAG_SEPARATORS));
+        boost::split(tags, ptagsAsString, boost::is_any_of(TAG_SEPARATORS));
         result.insert(std::pair<std::string, std::vector<std::string> > (pstem, tags));
     }
 
     jenv_->DeleteLocalRef(objList);
     jenv_->DeleteLocalRef(objWordData);
     return result;
+}
+
+std::string Morfologik::breakForms_(std::string tags) {
+    std::list<std::pair<RegExp, std::string> >::iterator it;
+
+    for (it = BREAK_FORMS_RULES.begin(); it != BREAK_FORMS_RULES.end(); ++it) {
+        RegExp::GlobalReplace(&tags, it->first, it->second);
+    }
+
+    return tags;
 }
 
 const char* Morfologik::getStemByJNI_(jobject objWordData) {

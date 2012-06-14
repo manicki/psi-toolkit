@@ -14,47 +14,45 @@ TransformAction::TransformAction(std::string aGroup, int aElement,
     init(aGroup, aElement, aRuleName);
 }
 
-bool TransformAction::apply(Lattice &lattice, int matchedStartIndex,
-        RuleTokenSizes &ruleTokenSizes,
-        std::list<Lattice::EdgeSequence>&) {
+bool TransformAction::apply(Lattice &lattice, std::string langCode,
+        int matchedStartIndex, RuleTokenSizes &ruleTokenSizes,
+        std::list<Lattice::EdgeSequence> &rulePartitions) {
 
     int before = util::getTransformActionParams(ruleTokenSizes, element);
 
     Lattice::VertexDescriptor startVertex = lattice::getVertex(
-            lattice, before, matchedStartIndex);
+            lattice, langCode, before, matchedStartIndex);
     //@todo: czy te numerki tu sie kupy trzymaja trzeba sprawdzic
     Lattice::VertexDescriptor headVertex = lattice::getVertex(
-            lattice, before, matchedStartIndex);
+            lattice, langCode, before, matchedStartIndex);
     Lattice::VertexDescriptor endVertex = lattice::getVertex(
-            lattice, before, matchedStartIndex);
-    lattice::removeParseEdges(lattice, headVertex, headVertex + 1);
+            lattice, langCode, before, matchedStartIndex);
+    lattice::removeParseEdges(lattice, langCode, headVertex, headVertex + 1);
     std::list<Lattice::EdgeDescriptor> startEdges = lattice::getTopEdges(
-            lattice, startVertex);
+            lattice, langCode, startVertex);
     std::list<Lattice::EdgeDescriptor> headEdges = lattice::getTopEdges(
-            lattice, headVertex);
+            lattice, langCode, headVertex);
     std::list<Lattice::EdgeDescriptor> endEdges = lattice::getTopEdges(
-            lattice, endVertex);
+            lattice, langCode, endVertex);
     if (startEdges.empty() || headEdges.empty() || endEdges.empty()) {
         return false;
     }
-    std::list<Lattice::EdgeSequence> groupPartitions =
-        lattice::getEdgesRange(
-                lattice, startVertex, endVertex
-                );
+    rulePartitions =  lattice::getEdgesRange(lattice, langCode, startVertex, endVertex);
     lattice::addParseEdges(
             lattice,
+            langCode,
             startEdges,
             endEdges,
             this->group,
             headEdges,
-            groupPartitions,
+            rulePartitions,
             element - 1
             );
     return true;
 }
 
-bool TransformAction::test(Lattice &lattice, int matchedStartIndex,
-        RuleTokenSizes &ruleTokenSizes,
+bool TransformAction::test(Lattice &lattice, std::string langCode,
+        int matchedStartIndex, RuleTokenSizes &ruleTokenSizes,
         std::list<Lattice::EdgeSequence>&) {
     if ( (lattice.getLastVertex()) < element ) {
         return false;
@@ -70,7 +68,7 @@ bool TransformAction::test(Lattice &lattice, int matchedStartIndex,
 
     //Lattice::VertexDescriptor vertex = matchedStartIndex + before;
     Lattice::VertexDescriptor vertex = lattice::getVertex(lattice,
-            before, matchedStartIndex);
+            langCode, before, matchedStartIndex);
 //    //@todo: czy to sprawdzenie jest nadal konieczne?
 //    ta funkcja getVertex nie robi czegos takiego?
 //    while (lattice::getTopEdges(lattice, vertex).size() == 0) {
@@ -81,13 +79,11 @@ bool TransformAction::test(Lattice &lattice, int matchedStartIndex,
 //    }
 
     std::list<Lattice::EdgeDescriptor> edges = lattice::getTopEdges(
-            lattice, vertex);
+            lattice, langCode, vertex);
     if (! edges.empty()) {
         LayerTagCollection tags = lattice.getEdgeLayerTags(edges.front());
-        if (! lattice.getLayerTagManager().match(
-                    lattice.getLayerTagManager().getMask(tags),
-                    "parse"))
-        return false;
+        if (! lattice.getLayerTagManager().isThere("parse", tags))
+            return false;
     }
     return true;
 }

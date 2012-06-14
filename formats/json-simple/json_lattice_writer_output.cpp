@@ -129,7 +129,7 @@ void JSONLatticeWriterOutput::closeSubArray_(bool flattenOneElement) {
         currentArrayPointer_ = parentArrayPointer;
     } else {
 
-        if (currentArrayPointer_ && currentArrayPointer_->size()) {
+        if (currentArrayPointer_ && !currentArrayPointer_->empty()) {
             std::string elementToPrint;
             printCurrentArrayToStringWithFlatten_(elementToPrint, flattenOneElement);
             printElementToMainOutput_(elementToPrint);
@@ -188,7 +188,7 @@ void JSONLatticeWriterOutput::createEscapedJSONString_(
     output = content;
     boost::replace_all(output, "\\", "\\\\");
     boost::replace_all(output, "\"", "\\\"");
-    
+
     output = "\"" + output + "\"";
 }
 

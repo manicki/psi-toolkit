@@ -140,13 +140,16 @@ namespace psi {
     
         void construct (pointer p, const T& value) {
             if(!m_fixed) {
-                new(p) value_type(value);
+                // placement
+                new (p) T(value);
             }
         }
         
         void destroy (pointer p) {
-            if(!m_fixed)
+            if(!m_fixed) {
+                // desctruction
                 p->~T();
+            }
         }
          
         template <class T1, class T2>

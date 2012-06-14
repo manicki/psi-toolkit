@@ -2,12 +2,16 @@
 
 #include "logging.hpp"
 #include "string_helpers.hpp"
+#include "layer_tag_manager.hpp"
+
+#include <boost/assign.hpp>
 
 TpTokenCutter::TpTokenCutter(
+    const std::string& langCode,
     TPBasicTokenizerRuleSet& ruleSet,
     size_t hardLimit,
     size_t softLimit)
-    :ruleSet_(ruleSet), hardLimit_(hardLimit), softLimit_(softLimit) {
+    :langCode_(langCode), ruleSet_(ruleSet), hardLimit_(hardLimit), softLimit_(softLimit) {
 }
 
 AnnotationItem TpTokenCutter::doCutOff(const std::string& text, size_t& positionInText) {
@@ -29,11 +33,10 @@ size_t TpTokenCutter::doSegmentLengthSoftLimit() {
     return softLimit_;
 }
 
-std::list<std::string > TpTokenCutter::doLayerTags() {
-    std::list<std::string>  tags;
-    tags.push_back(std::string("token"));
-
-    return tags;
+std::list<std::string> TpTokenCutter::doLayerTags() {
+    return boost::assign::list_of
+        (std::string("token"))
+        (LayerTagManager::getLanguageTag(langCode_));
 }
 
 const std::string TpTokenCutter::DEFAULT_CATEGORY = "X";

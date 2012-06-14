@@ -13,13 +13,13 @@ BOOST_AUTO_TEST_CASE( simple_parse ) {
     LayerTagCollection raw_tag
         = lattice.getLayerTagManager().createSingletonTagCollection("symbol");
     LayerTagCollection token_tag
-        = lattice.getLayerTagManager().createSingletonTagCollection("token");
+        = lattice.getLayerTagManager().createSingletonTagCollectionWithLangCode("token", "pl");
     LayerTagCollection lemma_tag
-        = lattice.getLayerTagManager().createSingletonTagCollection("lemma");
+        = lattice.getLayerTagManager().createSingletonTagCollectionWithLangCode("lemma", "pl");
     LayerTagCollection lexeme_tag
-        = lattice.getLayerTagManager().createSingletonTagCollection("lexeme");
+        = lattice.getLayerTagManager().createSingletonTagCollectionWithLangCode("lexeme", "pl");
     LayerTagCollection form_tag
-        = lattice.getLayerTagManager().createSingletonTagCollection("form");
+        = lattice.getLayerTagManager().createSingletonTagCollectionWithLangCode("form", "pl");
     LayerTagMask rawMask = lattice.getLayerTagManager().getMask(raw_tag);
     LayerTagMask tokenMask = lattice.getLayerTagManager().getMask(token_tag);
     LayerTagMask lemmaMask = lattice.getLayerTagManager().getMask(lemma_tag);
@@ -269,17 +269,15 @@ BOOST_AUTO_TEST_CASE( simple_parse ) {
     poleng::bonsai::puddle::TagsetLoader tagset_loader;
     poleng::bonsai::puddle::RuleLoader rule_loader;
 
-    boost::scoped_ptr<poleng::bonsai::puddle::Puddle> puddle(new poleng::bonsai::puddle::Puddle());
-
     poleng::bonsai::puddle::TagsetPtr tagset;
     tagset = tagset_loader.load(tagsetFilename);
-    puddle->setTagset(tagset);
     rule_loader.setTagset(tagset);
     poleng::bonsai::puddle::RulesPtr rules =
         rule_loader.readFromFile(rulesFilename);
-    puddle->setRules(rules);
     BOOST_CHECK_EQUAL(rules->size(), (size_t) 1);
 
+    boost::scoped_ptr<poleng::bonsai::puddle::Puddle> puddle(
+            new poleng::bonsai::puddle::Puddle(tagset, rules, "pl"));
     //parsing
     BOOST_CHECK(puddle->parse(lattice));
 
@@ -292,13 +290,13 @@ BOOST_AUTO_TEST_CASE( load_rules_fr ) {
     LayerTagCollection raw_tag
         = lattice.getLayerTagManager().createSingletonTagCollection("symbol");
     LayerTagCollection token_tag
-        = lattice.getLayerTagManager().createSingletonTagCollection("token");
+        = lattice.getLayerTagManager().createSingletonTagCollectionWithLangCode("token", "pl");
     LayerTagCollection lemma_tag
-        = lattice.getLayerTagManager().createSingletonTagCollection("lemma");
+        = lattice.getLayerTagManager().createSingletonTagCollectionWithLangCode("lemma", "pl");
     LayerTagCollection lexeme_tag
-        = lattice.getLayerTagManager().createSingletonTagCollection("lexeme");
+        = lattice.getLayerTagManager().createSingletonTagCollectionWithLangCode("lexeme", "pl");
     LayerTagCollection form_tag
-        = lattice.getLayerTagManager().createSingletonTagCollection("form");
+        = lattice.getLayerTagManager().createSingletonTagCollectionWithLangCode("form", "pl");
     LayerTagMask rawMask = lattice.getLayerTagManager().getMask(raw_tag);
     LayerTagMask tokenMask = lattice.getLayerTagManager().getMask(token_tag);
     LayerTagMask lemmaMask = lattice.getLayerTagManager().getMask(lemma_tag);
@@ -382,18 +380,16 @@ BOOST_AUTO_TEST_CASE( load_rules_fr ) {
     poleng::bonsai::puddle::TagsetLoader tagset_loader;
     poleng::bonsai::puddle::RuleLoader rule_loader;
 
-    boost::scoped_ptr<poleng::bonsai::puddle::Puddle> puddle(new poleng::bonsai::puddle::Puddle());
-
     poleng::bonsai::puddle::TagsetPtr tagset;
     tagset = tagset_loader.load(tagsetFilename);
-    puddle->setTagset(tagset);
     rule_loader.setTagset(tagset);
     BOOST_CHECK_EQUAL(tagset->size(), (size_t) 28);
     poleng::bonsai::puddle::RulesPtr rules =
         rule_loader.readFromFile(rulesFilename);
-    puddle->setRules(rules);
     BOOST_CHECK_EQUAL(rules->size(), (size_t) 167);
 
+    boost::scoped_ptr<poleng::bonsai::puddle::Puddle> puddle(
+            new poleng::bonsai::puddle::Puddle(tagset, rules, "fr"));
     //parsing
     BOOST_CHECK(puddle->parse(lattice));
 
@@ -406,13 +402,13 @@ BOOST_AUTO_TEST_CASE( load_rules_pl ) {
     LayerTagCollection raw_tag
         = lattice.getLayerTagManager().createSingletonTagCollection("symbol");
     LayerTagCollection token_tag
-        = lattice.getLayerTagManager().createSingletonTagCollection("token");
+        = lattice.getLayerTagManager().createSingletonTagCollectionWithLangCode("token", "pl");
     LayerTagCollection lemma_tag
-        = lattice.getLayerTagManager().createSingletonTagCollection("lemma");
+        = lattice.getLayerTagManager().createSingletonTagCollectionWithLangCode("lemma", "pl");
     LayerTagCollection lexeme_tag
-        = lattice.getLayerTagManager().createSingletonTagCollection("lexeme");
+        = lattice.getLayerTagManager().createSingletonTagCollectionWithLangCode("lexeme", "pl");
     LayerTagCollection form_tag
-        = lattice.getLayerTagManager().createSingletonTagCollection("form");
+        = lattice.getLayerTagManager().createSingletonTagCollectionWithLangCode("form", "pl");
     LayerTagMask rawMask = lattice.getLayerTagManager().getMask(raw_tag);
     LayerTagMask tokenMask = lattice.getLayerTagManager().getMask(token_tag);
     LayerTagMask lemmaMask = lattice.getLayerTagManager().getMask(lemma_tag);
@@ -529,17 +525,16 @@ BOOST_AUTO_TEST_CASE( load_rules_pl ) {
     poleng::bonsai::puddle::TagsetLoader tagset_loader;
     poleng::bonsai::puddle::RuleLoader rule_loader;
 
-    boost::scoped_ptr<poleng::bonsai::puddle::Puddle> puddle(new poleng::bonsai::puddle::Puddle());
-
     poleng::bonsai::puddle::TagsetPtr tagset;
     tagset = tagset_loader.load(tagsetFilename);
-    puddle->setTagset(tagset);
     rule_loader.setTagset(tagset);
     BOOST_CHECK_EQUAL(tagset->size(), (size_t) 21);
     poleng::bonsai::puddle::RulesPtr rules =
         rule_loader.readFromFile(rulesFilename);
-    puddle->setRules(rules);
     BOOST_CHECK_EQUAL(rules->size(), (size_t) 274);
+    boost::scoped_ptr<poleng::bonsai::puddle::Puddle> puddle(
+            new poleng::bonsai::puddle::Puddle(tagset, rules, "pl")
+            );
 
     //parsing
     BOOST_CHECK(puddle->parse(lattice));

@@ -57,4 +57,7 @@ digraph g {
 	107 -> 111 [label="alę (token) T"];
 	99 -> 112 [label="_Kot_ma_alę. (segment) sen"];
 	111 -> 112 [label=". (token) I"];
+	27 -> 28 [style=invis];
+	60 -> 61 [style=invis];
+	86 -> 87 [style=invis];
 }

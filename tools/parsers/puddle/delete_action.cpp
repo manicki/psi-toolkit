@@ -10,8 +10,8 @@ namespace poleng {
                 init(aConditions, aTokenIndex);
             }
 
-bool DeleteAction::apply(Lattice &lattice, int matchedStartIndex,
-        RuleTokenSizes &ruleTokenSizes,
+bool DeleteAction::apply(Lattice &lattice, std::string langCode,
+        int matchedStartIndex, RuleTokenSizes &ruleTokenSizes,
         std::list<Lattice::EdgeSequence>&) {
     int count = ruleTokenSizes[tokenIndex - 1];
     if (count == 0) {
@@ -25,7 +25,7 @@ bool DeleteAction::apply(Lattice &lattice, int matchedStartIndex,
     //Lattice::VertexDescriptor vertex = matchedStartIndex; //@todo: tymczasowo.
     //to nie uwzglednia lewego kontekstu
     Lattice::VertexDescriptor vertex = lattice::getVertex(lattice,
-            before, matchedStartIndex);
+            langCode, before, matchedStartIndex);
 //    //@todo: czy to sprawdzenie jest nadal konieczne?
 //    ta funkcja getVertex nie robi czegos takiego?
 //    while (lattice::getTopEdges(lattice, vertex).size() == 0) {
@@ -35,12 +35,12 @@ bool DeleteAction::apply(Lattice &lattice, int matchedStartIndex,
 //        vertex = matchedStartIndex + before;
 //    }
 
-    lattice::deleteEdges(lattice, vertex, count, conditions);
+    lattice::deleteEdges(lattice, langCode, vertex, count, conditions);
 
     return true;
 }
 
-bool DeleteAction::test(Lattice &lattice,
+bool DeleteAction::test(Lattice &lattice, std::string langCode,
         int matchedStartIndex, RuleTokenSizes &ruleTokenSizes,
         std::list<Lattice::EdgeSequence>&) {
     bool ret = false;
@@ -63,7 +63,7 @@ bool DeleteAction::test(Lattice &lattice,
     //Lattice::VertexDescriptor vertex = matchedStartIndex; //@todo: tymczasowo.
     //to nie uwzglednia lewego kontekstu
     Lattice::VertexDescriptor vertex = lattice::getVertex(lattice,
-            before, matchedStartIndex);
+            langCode, before, matchedStartIndex);
 //    //@todo: czy to sprawdzenie jest nadal konieczne?
 //    //ta funkcja getVertex nie robi czegos takiego?
 //    while (lattice::getTopEdges(lattice, vertex).size() == 0) {
@@ -73,7 +73,7 @@ bool DeleteAction::test(Lattice &lattice,
 //        vertex = matchedStartIndex + before;
 //    }
     //bool foundToDelete = foundEdgesToDelete(lattice, vertex, count);
-    ret = foundEdgesToDelete(lattice, vertex, count);
+    ret = foundEdgesToDelete(lattice, langCode, vertex, count);
 
     //@todo: ten warunek to tak ma byc? w ogole ten test musi byc taki zlozony?
     //if (foundToDelete) {
@@ -91,15 +91,15 @@ void DeleteAction::init(DeleteConditions aConditions, int aTokenIndex) {
     type = "delete";
 }
 
-bool DeleteAction::foundEdgesToDelete(Lattice &lattice,
+bool DeleteAction::foundEdgesToDelete(Lattice &lattice, std::string langCode,
         Lattice::VertexDescriptor vertex, int count) {
     bool foundToDelete = false;
     int offset = vertex;
     int vertexI = 0;
     while (vertexI < count) {
-        vertex = lattice::getVertex(lattice, vertexI, offset);
+        vertex = lattice::getVertex(lattice, langCode, vertexI, offset);
         std::list<Lattice::EdgeDescriptor> edges =
-            lattice::getTopEdges(lattice, vertex);
+            lattice::getTopEdges(lattice, langCode, vertex);
         for (std::list<Lattice::EdgeDescriptor>::iterator edgeIt = edges.begin();
                 edgeIt != edges.end(); ++ edgeIt) {
             bool conditionsSatisfied = true;

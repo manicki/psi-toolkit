@@ -14,10 +14,12 @@ namespace poleng {
                     GroupAction(std::string aGroup, unsigned int aStart,
                             unsigned int aEnd, unsigned int aHead,
                             std::string aRuleName);
-                    bool apply(Lattice &lattice, int matchedStartIndex,
+                    bool apply(Lattice &lattice, std::string langCode,
+                            int matchedStartIndex,
                             RuleTokenSizes &ruleTokenSizes,
                             std::list<Lattice::EdgeSequence> &rulePartitions);
-                    bool test(Lattice &lattice, int matchedStartIndex,
+                    bool test(Lattice &lattice, std::string langCode,
+                            int matchedStartIndex,
                             RuleTokenSizes &ruleTokenSizes,
                             std::list<Lattice::EdgeSequence> &rulePartitions);
 

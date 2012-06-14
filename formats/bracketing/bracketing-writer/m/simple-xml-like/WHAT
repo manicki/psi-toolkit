@@ -1,0 +1,2 @@
+puddle --lang pl ! bracketing-writer --filter parse lexeme --opening-bracket <%T_cats="%*{;}{%c}"> --closing-bracket </%T>
+

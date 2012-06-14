@@ -1,9 +1,9 @@
 #ifndef GV_LATTICE_WRITER_HDR
 #define GV_LATTICE_WRITER_HDR
 
+#include <list>
 #include <set>
 #include <string>
-#include <list>
 
 #include <boost/foreach.hpp>
 
@@ -21,7 +21,8 @@ public:
         bool color,
         std::set<std::string> filter,
         std::string outputFormat,
-        bool tree
+        bool tree,
+        bool align
     );
 
     ~GVLatticeWriter();
@@ -56,6 +57,7 @@ public:
 
     std::string getOutputFormat() const { return outputFormat_; }
     bool isTree() const { return tree_; }
+    bool isAlign() const { return align_; }
 
 private:
     virtual std::string doInfo();
@@ -84,6 +86,7 @@ private:
     std::set<std::string> filter_;
     std::string outputFormat_;
     bool tree_;
+    bool align_;
 
     GraphvizAdapterInterface * adapter_;
 

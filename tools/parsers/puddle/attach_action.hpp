@@ -17,10 +17,10 @@ class AttachAction : public Action
     public:
         AttachAction(std::string aGroup, int aStart, int aEnd, int aHead,
                 std::string aRuleName);
-        bool apply(Lattice &lattice, int matchedStartIndex,
+        bool apply(Lattice &lattice, std::string langCode, int matchedStartIndex,
                 RuleTokenSizes &ruleTokenSizes,
                 std::list<Lattice::EdgeSequence> &rulePartitions);
-        bool test(Lattice &lattice, int matchedStartIndex,
+        bool test(Lattice &lattice, std::string langCode, int matchedStartIndex,
                 RuleTokenSizes &ruleTokenSizes,
                 std::list<Lattice::EdgeSequence> &rulePartitions);
 

@@ -1,4 +1,5 @@
 #include "by_spaces_cutter.hpp"
+#include "layer_tag_manager.hpp"
 
 AnnotationItem BySpacesCutter::doCutOff(const std::string& text, size_t& positionInText) {
     return performCutOff(text, positionInText);
@@ -22,6 +23,7 @@ size_t BySpacesCutter::doSegmentLengthSoftLimit() {
 std::list<std::string> BySpacesCutter::doLayerTags() {
     std::list<std::string> tags;
     tags.push_back(std::string("token"));
+    tags.push_back(LayerTagManager::getLanguageTag("pl"));
 
     return tags;
 }

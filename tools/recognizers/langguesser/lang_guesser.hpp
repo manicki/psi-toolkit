@@ -35,6 +35,7 @@ public:
     LangGuesser(const boost::program_options::variables_map& options);
 
     std::string guessLanguage(std::string text);
+    std::string guessLanguageByBigramModel(std::string text);
     std::string guessLanguageByLetters(std::string text);
 
     class Factory : public AnnotatorFactory {
@@ -56,6 +57,14 @@ public:
         virtual std::list<std::string> doProvidedLayerTags();
     };
 
+    class Exception : public PsiException  {
+    public:
+        Exception(const std::string& msg): PsiException(msg) {
+        }
+
+        virtual ~Exception() throw() {}
+    };
+
 private:
 
     static const unsigned int MIN_TEXT_LENGTH_FOR_BIGRAM_METHOD = 24;
@@ -72,6 +81,8 @@ private:
     };
 
     std::list<Language> languages_;
+    bool forceMode_;
+    std::string forcedLanguage_;
 
     void initLanguages();
     void initLanguages(std::vector<std::string> selectedLangs);
@@ -87,11 +98,11 @@ private:
         virtual void doRun();
 
         void markLanguage_(const std::string& language, Lattice::EdgeDescriptor edge);
+        LayerTagCollection getTagForLanguage_(const std::string& language);
+
         bool guessLanguage_();
 
         LangGuesser& processor_;
-
-        LayerTagCollection tags_;
     };
 
     virtual LatticeWorker* doCreateLatticeWorker(Lattice& lattice);

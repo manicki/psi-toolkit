@@ -63,6 +63,9 @@ else()
   set(HAVE_LOG4CPP 0)
 endif(EXISTS ${LOG4CPP_LIB} AND EXISTS ${LOG4CPP_INCLUDE})
 
+option(USE_ASPELL "Using aspell" ON)
+message(STATUS "Using aspell ${USE_ASPELL}")
+
 if (USE_ASPELL)
   find_library(ASPELL_LIB NAMES aspell)
   find_path(ASPELL_INCLUDE aspell.h)
@@ -95,6 +98,27 @@ else()
   message("-- Not using CMPH...")
   set(HAVE_CMPH 0)
 endif(EXISTS ${CMPH_LIB} AND EXISTS ${CMPH_INCLUDE})
+
+# SFST library (for TRmorph)
+option(USE_SFST "Using SFST" OFF)
+message(STATUS "Using SFST ${USE_SFST}")
+
+if (USE_SFST)
+   find_path(SFST_LIB libsfst.so /usr/lib/sfst)
+   find_path(SFST_LIB libsfst.so /usr/lib)
+   find_path(SFST_INCLUDE fst.h /usr/include/sfst)
+
+   if(EXISTS ${SFST_LIB} AND EXISTS ${SFST_INCLUDE})
+      message("-- Using SFST...")
+      include_directories(${SFST_INCLUDE})
+      link_directories(${SFST_LIB})
+      link_directories("${psi-toolkit_BINARY_DIR}/tools/lemmatizers/sfst/plugin")
+      set(HAVE_SFST 1)
+   else()
+      message("-- Not using SFST...")
+      set(HAVE_SFST 0)
+   endif(EXISTS ${SFST_LIB} AND EXISTS ${SFST_INCLUDE})
+endif (USE_SFST)
 
 # Finds and includes external libraries
 set(Boost_USE_STATIC_LIBS OFF)
@@ -196,21 +220,6 @@ if(USE_STRING_FRAG_VALIDATION)
     set(STRING_FRAG_VALIDATION 1)
 endif(USE_STRING_FRAG_VALIDATION)
 
-option(USE_GV_WRITER "Using gv-writer" ON)
-message(STATUS "Using gv-writer ${USE_GV_WRITER}")
-
-option(USE_PDF_READER "Using pdf-reader" OFF)
-message(STATUS "Using pdf-reader ${USE_PDF_READER}")
-
-option(USE_DJVU_READER "Using djvu-reader" OFF)
-message(STATUS "Using djvu-reader ${USE_DJVU_READER}")
-
-option(USE_DOC_READER "Using doc-reader" OFF)
-message(STATUS "Using doc-reader ${USE_DOC_READER}")
-
-option(USE_ASPELL "Using aspell" OFF)
-message(STATUS "Using aspell ${USE_ASPELL}")
-
 # Finds SWIG
 
 find_package(SWIG)
@@ -232,6 +241,9 @@ endif(SWIG_FOUND)
 
 
 # Finds GraphViz
+
+option(USE_GV_WRITER "Using gv-writer" ON)
+message(STATUS "Using gv-writer ${USE_GV_WRITER}")
 
 if (USE_GV_WRITER)
     find_package(Graphviz)
@@ -264,6 +276,9 @@ endif(LIBMAGIC_FOUND)
 
 # Finds Poppler
 
+option(USE_PDF_READER "Using pdf-reader" ON)
+message(STATUS "Using pdf-reader ${USE_PDF_READER}")
+
 if (USE_PDF_READER)
     find_package(Poppler)
     if (POPPLER_FOUND)
@@ -282,6 +297,9 @@ endif (USE_PDF_READER)
 
 # Finds DjVuLibre
 
+option(USE_DJVU_READER "Using djvu-reader" OFF)
+message(STATUS "Using djvu-reader ${USE_DJVU_READER}")
+
 if (USE_DJVU_READER)
     find_package(DjVuLibre)
     if (DJVULIBRE_FOUND)
@@ -298,7 +316,31 @@ else (USE_DJVU_READER)
     set(HAVE_DJVULIBRE 0)
 endif (USE_DJVU_READER)
 
+# Finds Link Grammar
+
+option(USE_LINK_GRAMMAR "Using link-parser" ON)
+message(STATUS "Using link-parser ${USE_LINK_GRAMMAR}")
+
+if (USE_LINK_GRAMMAR)
+    find_package(LinkGrammar)
+    if (LINK_GRAMMAR_FOUND)
+        message(STATUS "Found LinkGrammar")
+        include_directories(${LINK_GRAMMAR_INCLUDE_DIRS})
+        link_directories(${LINK_GRAMMAR_LIBRARIES})
+        link_directories("${psi-toolkit_BINARY_DIR}/tools/parsers/link/plugin")
+        set(HAVE_LINK_GRAMMAR 1)
+    else (LINK_GRAMMAR_FOUND)
+        message(WARNING "Could not find LinkGrammar: link-parser disabled")
+        set(HAVE_LINK_GRAMMAR 0)
+    endif (LINK_GRAMMAR_FOUND)
+else (USE_LINK_GRAMMAR)
+    set(HAVE_LINK_GRAMMAR 0)
+endif (USE_LINK_GRAMMAR)
+
 # Links Antiword plugin
+
+option(USE_DOC_READER "Using doc-reader" OFF)
+message(STATUS "Using doc-reader ${USE_DOC_READER}")
 
 if (USE_DOC_READER)
     link_directories("${psi-toolkit_BINARY_DIR}/formats/doc/plugin")
@@ -313,9 +355,11 @@ if (WITH_LOW_MEMORY_COMPILATION)
   set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} --param ggc-min-expand=30 --param ggc-min-heapsize=8192")
 endif (WITH_LOW_MEMORY_COMPILATION)
 
-set(BASE_TARGETS common common-plugins utf8case sundown framework formats-apertium formats-dot formats-nkjp formats-psi formats-simple formats-json-simple formats-txt formats-utt maxent tools-tokenizers-tp tools-segmenters-srx tools-recognizers-langguesser tools-parsers-gobio tools-parsers-puddle tools-taggers-metagger)
+set(BASE_TARGETS common common-plugins utf8case sundown framework
+formats-apertium formats-bracketing formats-dot formats-guessing formats-nkjp formats-psi formats-simple formats-json-simple formats-txt formats-utt
+maxent tools-tokenizers-tp tools-segmenters-srx tools-recognizers-langguesser tools-parsers-gobio tools-parsers-puddle tools-taggers-metagger)
 
-set(TESTS_TARGETS common-tests framework-tests tools-tokenizers-tp-tests tools-segmenters-srx-tests tools-datastructures-psi_query-tests tools-recognizers-langguesser-tests utf8case-tests formats-dot-tests formats-utt-tests formats-psi-tests formats-simple-tests tools-parsers-gobio-tests tools-parsers-puddle-tests tools-taggers-metagger-tests formats-apertium-tests)
+set(TESTS_TARGETS common-tests framework-tests tools-tokenizers-tp-tests tools-segmenters-srx-tests tools-datastructures-psi_query-tests tools-recognizers-langguesser-tests utf8case-tests formats-bracketing-tests formats-dot-tests formats-utt-tests formats-psi-tests formats-simple-tests tools-parsers-gobio-tests tools-parsers-puddle-tests tools-taggers-metagger-tests formats-apertium-tests)
 
 if(HAVE_ASPELL)
     set(TESTS_TARGETS ${TESTS_TARGETS} tools-spellcheckers-aspell-tests)
@@ -325,6 +369,13 @@ if(USE_JAVA)
     set(BASE_TARGETS ${BASE_TARGETS} tools-lemmatizers-morfologik)
     set(TESTS_TARGETS ${TESTS_TARGETS} tools-lemmatizers-morfologik-tests)
 endif(USE_JAVA)
+
+if(HAVE_SFST)
+	#add_subdirectory(sfst)
+    #set(BASE_TARGETS ${BASE_TARGETS} sfst)
+    set(BASE_TARGETS ${BASE_TARGETS} tools-lemmatizers-sfst)
+    set(TESTS_TARGETS ${TESTS_TARGETS} tools-lemmatizers-sfst-tests)
+endif(HAVE_SFST)
 
 if(HAVE_CMPH)
     set(BASE_TARGETS ${BASE_TARGETS} tools-datastructures-lexica)
@@ -354,6 +405,10 @@ endif(HAVE_POPPLER)
 if(HAVE_DJVULIBRE)
     set(BASE_TARGETS ${BASE_TARGETS} formats-djvu)
 endif(HAVE_DJVULIBRE)
+
+if(HAVE_LINK_GRAMMAR)
+    set(BASE_TARGETS ${BASE_TARGETS} tools-parsers-link)
+endif(HAVE_LINK_GRAMMAR)
 
 if(USE_DOC_READER)
     set(BASE_TARGETS ${BASE_TARGETS} formats-doc)
@@ -488,6 +543,11 @@ if(HAVE_DJVULIBRE)
     link_directories("${psi-toolkit_BINARY_DIR}/formats/djvu")
 endif(HAVE_DJVULIBRE)
 
+if(HAVE_LINK_GRAMMAR)
+    include_directories("${psi-toolkit_SOURCE_DIR}/tools/parsers/link")
+    link_directories("${psi-toolkit_BINARY_DIR}/tools/parsers/link")
+endif(HAVE_LINK_GRAMMAR)
+
 if(USE_DOC_READER)
     include_directories("${psi-toolkit_SOURCE_DIR}/formats/doc")
     link_directories("${psi-toolkit_BINARY_DIR}/formats/doc")
@@ -498,15 +558,13 @@ set(ALL_TARGETS ${TARGETS} ${TESTS_TARGETS})
 
 set_target_properties(${ALL_TARGETS} PROPERTIES
     COMPILE_FLAGS "-I${psi-toolkit_SOURCE_DIR}/utf8 -I${psi-toolkit_SOURCE_DIR}/utf8case -I${psi-toolkit_SOURCE_DIR}/tests")
-if(USE_PUDDLE)
-    if(USE_BONSAI_PARSEGRAPH)
-        set_target_properties(tools-parsers-puddle PROPERTIES
-        COMPILE_FLAGS "-I${psi-toolkit_SOURCE_DIR}/utf8  -I${psi-toolkit_SOURCE_DIR}/tests -I${BONSAI_PATH}")
-        set_target_properties(tools-parsers-puddle-tests PROPERTIES
-        COMPILE_FLAGS "-I${psi-toolkit_SOURCE_DIR}/utf8  -I${psi-toolkit_SOURCE_DIR}/tests -I${BONSAI_PATH}")
-        set(_WITH_BONSAI_PARSEGRAPH 1)
-    endif(USE_BONSAI_PARSEGRAPH)
-endif(USE_PUDDLE)
+if(USE_BONSAI_PARSEGRAPH)
+    set_target_properties(tools-parsers-puddle PROPERTIES
+    COMPILE_FLAGS "-I${psi-toolkit_SOURCE_DIR}/utf8 -I${psi-toolkit_SOURCE_DIR}/utf8case -I${psi-toolkit_SOURCE_DIR}/tests -I${BONSAI_PATH}")
+    set_target_properties(tools-parsers-puddle-tests PROPERTIES
+    COMPILE_FLAGS "-I${psi-toolkit_SOURCE_DIR}/utf8 -I${psi-toolkit_SOURCE_DIR}/utf8case -I${psi-toolkit_SOURCE_DIR}/tests -I${BONSAI_PATH}")
+    set(_WITH_BONSAI_PARSEGRAPH 1)
+endif(USE_BONSAI_PARSEGRAPH)
 
 add_subdirectory(tests)
 
@@ -580,8 +638,93 @@ function(download_artifact FILE)
 
 endfunction(download_artifact)
 
+function(download_and_unpack URL FILE CHECKSUM DESTINATION)
+
+  message(STATUS "Checking ${URL}...")
+
+  set(_downloaded_file "${psi-toolkit_SOURCE_DIR}/${DESTINATION}")
+
+  set(_skip_download 0)
+
+  if (EXISTS "${_downloaded_file}")
+     if ("${CMAKE_VERSION}" VERSION_LESS "2.8.7")
+         execute_process(COMMAND "md5sum" "-b" ${_downloaded_file}
+        OUTPUT_VARIABLE _file_md5_line
+        ERROR_QUIET
+        OUTPUT_STRIP_TRAILING_WHITESPACE)
+         string(REGEX MATCH "^[0-9a-f]+" _file_md5 "${_file_md5_line}")
+     else()
+        file(MD5 "${_downloaded_file}" _file_md5)
+     endif ()
+
+     message(STATUS "File ${_downloaded_file} already there with MD5 ${_file_md5}")
+     message(STATUS "Excpected MD5 is ${CHECKSUM}...")
+
+     if ("${CHECKSUM}" STREQUAL "${_file_md5}")
+        message(STATUS "MD5 is the same, skipping download")
+        set(_skip_download 1)
+     endif ()
+  endif ()
+
+  if (NOT "${_skip_download}")
+    message(STATUS "Downloading ${URL}...")
+
+    set(_tmp_archive_file "${psi-toolkit_BINARY_DIR}/pack.tmp.tar.gz")
+
+    message(STATUS "${_tmp_archive_file}")
+
+    file(DOWNLOAD
+          "${URL}"
+          "${_tmp_archive_file}"
+          STATUS status)
+
+    list(GET status 0 _status )
+    list(GET status 1 _status_message )
+
+    if (NOT ${_status} EQUAL 0)
+       file(REMOVE "${_tmp_archive_file}")
+       message(FATAL_ERROR
+             "Cannot download ${_url}:${_status_message}. Try running cmake with -DDOWNLOAD_DATA=OFF")
+    endif()
+
+    message(STATUS "unpacking into ${_downloaded_file}")
+
+    execute_process(COMMAND "tar" "zxfO" ${_tmp_archive_file} ${FILE}
+                    OUTPUT_FILE "${_downloaded_file}")
+
+
+    if ("${CMAKE_VERSION}" VERSION_LESS "2.8.7")
+        execute_process(COMMAND "md5sum" "-b" ${_downloaded_file}
+        OUTPUT_VARIABLE _file_md5_line
+        ERROR_QUIET
+        OUTPUT_STRIP_TRAILING_WHITESPACE)
+         string(REGEX MATCH "^[0-9a-f]+" _file_md5 "${_file_md5_line}")
+    else()
+       file(MD5 "${_downloaded_file}" _file_md5)
+    endif ()
+
+    if (NOT "${CHECKSUM}" STREQUAL "${_file_md5}")
+       message(FATAL_ERROR
+             "Wrong MD5 checksum for ${URL}")
+    endif()
+
+    file(REMOVE "${_tmp_archive_file}")
+
+  endif()
+
+endfunction(download_and_unpack)
+
 if(DOWNLOAD_DATA)
-        download_artifact("tools/lexica/bilexicon/data/plen.bin")
+    download_artifact("tools/lexica/bilexicon/data/plen.bin")
+
+    if (HAVE_SFST)
+       download_and_unpack(
+           "http://www.let.rug.nl/coltekin/trmorph/trmorph-0.2.1.tar.gz"
+           "trmorph-0.2.1/trmorph-0.2.1.a"
+           "0d8a94791fce28f862e2890406e81727"
+           "tools/lemmatizers/sfst/data/tr.a")
+    endif()
+
 endif(DOWNLOAD_DATA)
 
 # =====================================

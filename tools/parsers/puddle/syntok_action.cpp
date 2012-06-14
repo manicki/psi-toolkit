@@ -21,53 +21,43 @@ SyntokAction::SyntokAction(int aStart, int aEnd, std::vector<int> aTokenIndices,
 //NOWOSC: wczesniej bylo, ze albo dawaj krawedz group albo nic. teraz musi byc krawedz,
 //jak graf to jedyna struktura. ewentualnei mozna dac na koniec opcje,
 //wywal syntoki z grafu, przeliczyc reszte grafu
-bool SyntokAction::apply(Lattice &lattice, int matchedStartIndex,
-        RuleTokenSizes &ruleTokenSizes,
-        std::list<Lattice::EdgeSequence>&) {
+bool SyntokAction::apply(Lattice &lattice, std::string langCode,
+        int matchedStartIndex, RuleTokenSizes &ruleTokenSizes,
+        std::list<Lattice::EdgeSequence> &rulePartitions) {
     int realStart;
     int realEnd;
     util::getSyntokActionParams(ruleTokenSizes, start, end, realStart, realEnd);
 
     Lattice::VertexDescriptor startVertex = lattice::getVertex(
-            lattice, realStart, matchedStartIndex);
+            lattice, langCode, realStart, matchedStartIndex);
     Lattice::VertexDescriptor endVertex = lattice::getVertex(
-            lattice, realEnd, matchedStartIndex);
+            lattice, langCode, realEnd, matchedStartIndex);
     std::list<Lattice::EdgeDescriptor> startEdges = lattice::getTopEdges(
-            lattice, startVertex);
+            lattice, langCode, startVertex);
     std::list<Lattice::EdgeDescriptor> endEdges = lattice::getTopEdges(
-            lattice, endVertex);
+            lattice, langCode, endVertex);
     if (startEdges.empty() || endEdges.empty()) {
         return false;
     }
 
-    std::list<Lattice::EdgeSequence> edgeSequences =
-        lattice::getEdgesRange(
-                lattice, startVertex, endVertex
-                );
     std::vector<std::string> baseForms = generateBaseForms(lattice,
-            edgeSequences);
-    std::string concatenatedOrth = generateOrth(lattice, edgeSequences);
+            rulePartitions);
+    std::string concatenatedOrth = generateOrth(lattice, rulePartitions);
     std::string syntokCategory = concatenatedOrth;
-    LayerTagCollection tags = lattice.getLayerTagManager().createSingletonTagCollection("form");
-    if (syntok) {
-        syntokCategory = "SYNTOK";
-        tags =
-            lattice.getLayerTagManager().createSingletonTagCollection("parse");
-    }
     lattice::addSyntokEdges(
             lattice,
+            langCode,
             startEdges,
             endEdges,
             syntokCategory,
             concatenatedOrth,
             baseForms,
             morphology,
-            edgeSequences,
-            tags);
+            rulePartitions);
     return true;
 }
 
-bool SyntokAction::test(Lattice &, int,
+bool SyntokAction::test(Lattice &, std::string, int,
         RuleTokenSizes &ruleTokenSizes,
         std::list<Lattice::EdgeSequence>&) {
     for (std::vector<int>::iterator sizeIt = ruleTokenSizes.begin();

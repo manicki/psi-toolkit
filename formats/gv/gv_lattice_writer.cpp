@@ -1,10 +1,12 @@
 #include "gv_lattice_writer.hpp"
 
 #include <cstdio>
+#include <fstream>
 #include <iomanip>
 #include <iostream>
 #include <locale>
-#include <fstream>
+#include <map>
+#include <vector>
 
 #include "lattice.hpp"
 #include "plugin_manager.hpp"
@@ -16,13 +18,15 @@ GVLatticeWriter::GVLatticeWriter(
     bool color,
     std::set<std::string> filter,
     std::string outputFormat,
-    bool tree
+    bool tree,
+    bool align
 ) :
     showTags_(showTags),
     color_(color),
     filter_(filter),
     outputFormat_(outputFormat),
-    tree_(tree)
+    tree_(tree),
+    align_(align)
 {
     adapter_ = dynamic_cast<GraphvizAdapterInterface*>(
         PluginManager::getInstance().createPluginAdapter("graphviz")
@@ -70,7 +74,8 @@ LatticeWriter<std::ostream>* GVLatticeWriter::Factory::doCreateLatticeWriter(
         options.count("color"),
         filter,
         options["format"].as<std::string>(),
-        options.count("tree")
+        options.count("tree"),
+        !options.count("no-align")
     );
 }
 
@@ -82,8 +87,10 @@ boost::program_options::options_description GVLatticeWriter::Factory::doOptionsH
             "edges with different tags have different colors")
         ("filter", boost::program_options::value< std::vector<std::string> >()->multitoken(),
             "filters edges by specified tags")
-        ("format", boost::program_options::value<std::string>()->default_value("canon"),
+        ("format", boost::program_options::value<std::string>()->default_value("svg"),
             "output format")
+        ("no-align",
+            "allows nodes to be not aligned left to right")
         ("show-tags",
             "prints layer tags")
         ("tree",
@@ -185,6 +192,9 @@ void GVLatticeWriter::Worker::doRun() {
 
         PsiQuoter quoter;
 
+        std::map<int, int> vertexNodes;
+        std::set<int> startVertices;
+
         std::map<Lattice::EdgeDescriptor, int> edgeOrdinalMap;
         int ordinal = 0;
 
@@ -265,7 +275,7 @@ void GVLatticeWriter::Worker::doRun() {
                 processor_.getAdapter()->setNodeLabel(n, edgeLabelSs.str());
 
                 if (processor_.isColor()) {
-                    processor_.getAdapter()->setNodeLabel(n, colorSs.str());
+                    processor_.getAdapter()->setNodeColor(n, colorSs.str());
                 }
 
                 int partitionNumber = 0;
@@ -294,20 +304,33 @@ void GVLatticeWriter::Worker::doRun() {
             } else {
 
                 std::stringstream nSs;
+                int nIx;
                 if (lattice_.isLooseVertex(source)) {
-                    nSs << "L" << lattice_.getLooseVertexIndex(source);
+                    nIx = lattice_.getLooseVertexIndex(source);
+                    nSs << "L" << nIx;
                 } else {
-                    nSs << lattice_.getVertexRawCharIndex(source);
+                    nIx = lattice_.getVertexRawCharIndex(source);
+                    nSs << nIx;
                 }
                 n = processor_.getAdapter()->addNode(nSs.str());
+                if (processor_.isAlign() && !lattice_.isLooseVertex(source)) {
+                    vertexNodes.insert(std::pair<int, int>(nIx, n));
+                    startVertices.insert(nIx);
+                }
 
                 std::stringstream mSs;
+                int mIx;
                 if (lattice_.isLooseVertex(target)) {
-                    mSs << "L" << lattice_.getLooseVertexIndex(target);
+                    mIx = lattice_.getLooseVertexIndex(target);
+                    mSs << "L" << mIx;
                 } else {
-                    mSs << lattice_.getVertexRawCharIndex(target);
+                    mIx = lattice_.getVertexRawCharIndex(target);
+                    mSs << mIx;
                 }
                 m = processor_.getAdapter()->addNode(mSs.str());
+                if (processor_.isAlign() && !lattice_.isLooseVertex(target)) {
+                    vertexNodes.insert(std::pair<int, int>(mIx, m));
+                }
 
                 e = processor_.getAdapter()->addEdge(n, m);
 
@@ -319,6 +342,23 @@ void GVLatticeWriter::Worker::doRun() {
 
             }
 
+        }
+
+        if (processor_.isAlign() && !processor_.isTree()) {
+            std::map<int, int>::iterator vni = vertexNodes.begin();
+            int prevKey = vni->first;
+            int prevVal = vni->second;
+            int invisibleEdge;
+            ++vni;
+            while (vni != vertexNodes.end()) {
+                if (!startVertices.count(prevKey)) {
+                    invisibleEdge = processor_.getAdapter()->addEdge(prevVal, vni->second);
+                    processor_.getAdapter()->setEdgeStyle(invisibleEdge, "invis");
+                }
+                prevKey = vni->first;
+                prevVal = vni->second;
+                ++vni;
+            }
         }
 
         processor_.getAdapter()->finalize();

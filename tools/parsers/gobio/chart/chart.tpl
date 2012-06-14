@@ -16,13 +16,13 @@ chart<C,S,V,R,I>::chart(
     gobioTag_(lattice.getLayerTagManager().createSingletonTagCollection("parse")),
     tagMask_(lattice.getLayerTagManager().anyTag())
 {
-    std::list<std::string> tagNames;
-    tagNames.push_back("form");
-    tagNames.push_back("lemma");
-    tagNames.push_back("lexeme");
-    tagNames.push_back("parse");
-    tagNames.push_back("token");
-    setTagMask(lattice.getLayerTagManager().getMask(tagNames));
+    std::vector<LayerTagCollection> altTags;
+    altTags.push_back(lattice.getLayerTagManager().createSingletonTagCollection("form"));
+    altTags.push_back(lattice.getLayerTagManager().createSingletonTagCollection("lemma"));
+    altTags.push_back(lattice.getLayerTagManager().createSingletonTagCollection("lexeme"));
+    altTags.push_back(lattice.getLayerTagManager().createSingletonTagCollection("parse"));
+    altTags.push_back(lattice.getLayerTagManager().createSingletonTagCollection("token"));
+    setTagMask(lattice.getLayerTagManager().getAlternativeMask(altTags));
 }
 
 

@@ -49,6 +49,7 @@ public:
     };
 
     TpTokenizer(
+        const std::string& langCode,
         boost::filesystem::path rules,
         const std::map<std::string, boost::filesystem::path>& mapping,
         size_t hardLimit,
@@ -67,6 +68,8 @@ private:
     virtual LatticeWorker* doCreateLatticeWorker(Lattice& lattice);
 
     virtual std::string doInfo();
+
+    std::string langCode_;
 
     boost::scoped_ptr<TPBasicTokenizerRuleSet> ruleSet_;
 

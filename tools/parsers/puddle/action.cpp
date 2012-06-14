@@ -7,12 +7,12 @@ namespace poleng {
     namespace bonsai {
         namespace puddle {
 
-            bool Action::test(Lattice&, int,
+            bool Action::test(Lattice&, std::string, int,
                     RuleTokenSizes&, std::list<Lattice::EdgeSequence>&) {
                 return true;
             }
 
-            bool Action::apply(Lattice&, int,
+            bool Action::apply(Lattice&, std::string, int,
                     RuleTokenSizes&, std::list<Lattice::EdgeSequence>&) {
                 return true;
             }

@@ -24,7 +24,8 @@ LatticeWriter<std::ostream>* DotLatticeWriter::Factory::doCreateLatticeWriter(
         options.count("show-tags"),
         options.count("color"),
         filter,
-        options.count("tree")
+        options.count("tree"),
+        options.count("align")
     );
 }
 
@@ -32,6 +33,8 @@ boost::program_options::options_description DotLatticeWriter::Factory::doOptions
     boost::program_options::options_description optionsDescription("Allowed options");
 
     optionsDescription.add_options()
+        ("align",
+            "forces aligning nodes left to right")
         ("color",
             "edges with different tags have different colors")
         ("filter", boost::program_options::value< std::vector<std::string> >()->multitoken(),
@@ -70,6 +73,9 @@ void DotLatticeWriter::Worker::doRun() {
     DEBUG("starting writer...");
 
     PsiQuoter quoter;
+
+    std::set<int> vertexNodes;
+    std::set<int> startVertexNodes;
 
     std::map<Lattice::EdgeDescriptor, int> edgeOrdinalMap;
     int ordinal = 0;
@@ -180,14 +186,23 @@ void DotLatticeWriter::Worker::doRun() {
             if (lattice_.isLooseVertex(source)) {
                 nSs << "L" << lattice_.getLooseVertexIndex(source);
             } else {
-                nSs << lattice_.getVertexRawCharIndex(source);
+                int n = lattice_.getVertexRawCharIndex(source);
+                nSs << n;
+                if (processor_.isAlign()) {
+                    vertexNodes.insert(n);
+                    startVertexNodes.insert(n);
+                }
             }
 
             std::stringstream mSs;
             if (lattice_.isLooseVertex(target)) {
                 mSs << "L" << lattice_.getLooseVertexIndex(target);
             } else {
-                mSs << lattice_.getVertexRawCharIndex(target);
+                int m = lattice_.getVertexRawCharIndex(target);
+                mSs << m;
+                if (processor_.isAlign()) {
+                    vertexNodes.insert(m);
+                }
             }
 
             edgeSs << nSs.str() << " -> " << mSs.str();
@@ -202,6 +217,24 @@ void DotLatticeWriter::Worker::doRun() {
         alignOutput_(edgeSs.str());
         alignOutputNewline_();
 
+    }
+
+    if (processor_.isAlign()) {
+        std::set<int>::iterator vni = vertexNodes.begin();
+        int prev = *vni;
+        int next;
+        ++vni;
+        while (vni != vertexNodes.end()) {
+            next = *vni;
+            if (!startVertexNodes.count(prev)) {
+                std::stringstream invisibleEdgeSs;
+                invisibleEdgeSs << prev << " -> " << next << " [style=invis]";
+                alignOutput_(invisibleEdgeSs.str());
+                alignOutputNewline_();
+            }
+            prev = *vni;
+            ++vni;
+        }
     }
 
     alignOutput_("}");

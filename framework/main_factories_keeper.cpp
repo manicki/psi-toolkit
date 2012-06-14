@@ -7,6 +7,7 @@
 #include "psi_lattice_reader.hpp"
 #include "psi_lattice_writer.hpp"
 #include "simple_lattice_writer.hpp"
+#include "bracketing_lattice_writer.hpp"
 #include "json_lattice_writer.hpp"
 #include "dot_lattice_writer.hpp"
 #include "apertium_lattice_reader.hpp"
@@ -37,8 +38,13 @@
 #if HAVE_POSTGRESQL
 #include "lex_db_lemmatizer.hpp"
 #endif
+
 #if HAVE_JAVA
 #include "morfologik.hpp"
+#endif
+
+#if HAVE_SFST
+#include "sfst_lemmatizer.hpp"
 #endif
 
 #if HAVE_CMPH
@@ -51,9 +57,19 @@
 #endif
 
 #include "me_tagger.hpp"
+
 #if HAVE_ASPELL
 #include "psi_aspell.hpp"
 #endif
+
+#if HAVE_LIBMAGIC
+#include "guessing_reader.hpp"
+#endif
+
+#if HAVE_LINK_GRAMMAR
+#include "link_parser.hpp"
+#endif
+
 
 MainFactoriesKeeper::MainFactoriesKeeper() {
     keeper_.addTagBasedIzeAliases("token", "token");
@@ -74,6 +90,7 @@ MainFactoriesKeeper::MainFactoriesKeeper() {
     keeper_.takeProcessorFactory(new PsiLatticeReader::Factory());
     keeper_.takeProcessorFactory(new PsiLatticeWriter::Factory());
     keeper_.takeProcessorFactory(new SimpleLatticeWriter::Factory());
+    keeper_.takeProcessorFactory(new BracketingLatticeWriter::Factory());
     keeper_.takeProcessorFactory(new JSONLatticeWriter::Factory());
     keeper_.takeProcessorFactory(new DotLatticeWriter::Factory());
     keeper_.takeProcessorFactory(new ApertiumLatticeReader::Factory());
@@ -105,6 +122,11 @@ MainFactoriesKeeper::MainFactoriesKeeper() {
 #if HAVE_JAVA
     keeper_.takeProcessorFactory(new LemmatizerAnnotator<Morfologik>::Factory());
 #endif
+
+#if HAVE_SFST
+    keeper_.takeProcessorFactory(new LemmatizerAnnotator<SfstLemmatizer>::Factory());
+#endif
+
     keeper_.takeProcessorFactory(new poleng::bonsai::puddle::Puddle::Factory());
 
 #if HAVE_CMPH
@@ -119,6 +141,15 @@ MainFactoriesKeeper::MainFactoriesKeeper() {
 #if HAVE_ASPELL
     keeper_.takeProcessorFactory(new PSIAspell::Factory());
 #endif
+
+#if HAVE_LIBMAGIC
+    keeper_.takeProcessorFactory(new GuessingReader::Factory());
+#endif
+
+#if HAVE_LINK_GRAMMAR
+    keeper_.takeProcessorFactory(new LinkParser::Factory());
+#endif
+
 }
 
 ProcessorFactory& MainFactoriesKeeper::getProcessorFactory(std::string processorName) {

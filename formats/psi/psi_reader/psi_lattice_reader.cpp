@@ -81,8 +81,6 @@ void PsiLatticeReader::Worker::doRun() {
             item.unescape(quoter);
 
             LayerTagCollection tags = lattice_.getLayerTagManager().createTagCollection(item.tags);
-            LayerTagMask tagsMask = lattice_.getLayerTagManager().getMask(tags);
-
             std::stringstream formSs;
             formSs << std::setw(item.length) << item.text;
             std::string form = formSs.str();
@@ -92,12 +90,33 @@ void PsiLatticeReader::Worker::doRun() {
 
             if (!item.beginningLoose) {
                 try {
-                    if (lattice_.getLayerTagManager().match(tagsMask, "symbol")) {
+                    if (lattice_.getLayerTagManager().isThere("symbol", tags)) {
                         lattice_.appendString(form.substr(
                             lattice_.getVertexRawCharIndex(lattice_.getLastVertex())
                                 - item.beginning
                         ));
                     } else {
+                        if (
+                            (int)(lattice_.getVertexRawCharIndex(lattice_.getLastVertex())) <
+                                item.beginning
+                        ) {
+                            // throw FileFormatException(
+                                // "PSI reader: lattice text cannot be reconstructed "
+                                // "due to insufficient edge data"
+                            // );
+                            WARN(
+                                "Some lattice text cannot be reconstructed: " <<
+                                "the placeholder will be put instead ('" <<
+                                std::string(1, PLACEHOLDER) << "' at " <<
+                                (int)(lattice_.getVertexRawCharIndex(lattice_.getLastVertex())) <<
+                                ")."
+                            );
+                            lattice_.appendStringWithSymbols(std::string(
+                                item.beginning
+                                    - lattice_.getVertexRawCharIndex(lattice_.getLastVertex()),
+                                PLACEHOLDER
+                            ));
+                        }
                         lattice_.appendStringWithSymbols(form.substr(
                             lattice_.getVertexRawCharIndex(lattice_.getLastVertex())
                                 - item.beginning
@@ -185,7 +204,7 @@ void PsiLatticeReader::Worker::doRun() {
             if (item.annotationItem.partitions.empty()) {
 
                 Lattice::EdgeSequence::Builder seqBuilder(lattice_);
-                if (!lattice_.getLayerTagManager().match(tagsMask, "symbol")) {
+                if (!lattice_.getLayerTagManager().isThere("symbol", tags)) {
                     while (currentVertex != to) {
                         currentEdge = lattice_.firstOutEdge(currentVertex, rawMask);
                         seqBuilder.addEdge(currentEdge);

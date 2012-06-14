@@ -108,6 +108,8 @@ private:
 
     boost::shared_ptr<Combinator> combinator_;
 
+    virtual double doGetQualityScore(
+        const boost::program_options::variables_map& options) const;
 };
 
 

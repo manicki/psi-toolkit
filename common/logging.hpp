@@ -21,6 +21,7 @@ public:
 
     void setLoggingToFile(const std::string & filepath);
     void setLoggingPriority(const std::string & priorityName);
+    log4cpp::Priority::Value getLoggingPriority();
 
     void flush(log4cpp::Priority::Value priorityLevel);
 

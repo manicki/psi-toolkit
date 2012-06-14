@@ -20,20 +20,21 @@ class AddAction : public Action
     public:
         AddAction(std::vector<Morphology> aInterpretations, std::string aBase,
                 int aTokenIndex);
-        bool apply(Lattice &lattice, int matchedStartIndex,
+        bool apply(Lattice &lattice, std::string langCode, int matchedStartIndex,
                 RuleTokenSizes &ruleTokenSizes,
                 std::list<Lattice::EdgeSequence> &rulePartitions);
-        bool test(Lattice &lattice, int matchedStartIndex,
+        bool test(Lattice &lattice, std::string langCode, int matchedStartIndex,
                 RuleTokenSizes &ruleTokenSizes,
                 std::list<Lattice::EdgeSequence> &rulePartitions);
 
     private:
         void init(std::vector<Morphology> aInterpretations, std::string aBase,
                 int aTokenIndex);
-        bool checkInterpretationsToAdd(Lattice &lattice,
+        bool checkInterpretationsToAdd(Lattice &lattice, std::string langCode,
                 Lattice::VertexDescriptor startVertex,
                 Lattice::VertexDescriptor endVertex);
-        void addEdges(Lattice &lattice, Lattice::VertexDescriptor startVertex,
+        void addEdges(Lattice &lattice, std::string langCode,
+                Lattice::VertexDescriptor startVertex,
                 Lattice::VertexDescriptor endVertex);
         std::vector<Morphology> interpretations;
         std::string base;

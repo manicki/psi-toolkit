@@ -4,12 +4,14 @@
 #include <boost/program_options/options_description.hpp>
 #include <boost/program_options/variables_map.hpp>
 #include <boost/filesystem.hpp>
+#include <boost/regex.hpp>
 
 #include "java_virtual_machine.hpp"
 #include "morfologik_tags_parser.hpp"
 #include "annotation_item_manager.hpp"
 #include "lemmatizer_output_iterator.hpp"
 #include "annotator_factory.hpp"
+#include "regexp.hpp"
 
 #include <map>
 #include <list>
@@ -31,6 +33,10 @@ public:
 
     static std::list<std::string> languagesHandled(
         const boost::program_options::variables_map& options);
+
+    static bool checkRequirements(
+        const boost::program_options::variables_map& options,
+        std::ostream & message);
 
     void lemmatize(const std::string & word, AnnotationItemManager & manager,
         LemmatizerOutputIterator & iterator);
@@ -80,6 +86,10 @@ private:
     int level_;
     std::string dictionary_;
     MorfologikTagsParser tagsParser_;
+
+    static std::list<std::pair<RegExp, std::string> > BREAK_FORMS_RULES;
+    std::string breakForms_(std::string);
+    bool keepOriginal_;
 
     AnnotationItemManager * annotationManager_;
 

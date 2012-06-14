@@ -1,0 +1,53 @@
+Writes the input text with the language units (e.g. parses) marked
+with various types of "brackets", e.g. with square brackets with the
+category prepended (`NP[AP[very large] house]` or with XML tags
+(`<np><ap>very large</ap> house</np>`).
+
+The actual format of opening and closing brackets is specified with,
+respectively, `--opening-bracket` and `--closing-bracket`. The
+following expressions have a special meaning when given in
+`--opening/closing-bracket` option:
+
+  * `%T` - edge tags,
+  * `%c` - edge category,
+  * `%t` - edge text,
+  * `%A` - all edge attributes,
+  * `%a[...]` - the value of the given attribute,
+  * `%s` - score,
+  * `%*[...][...]`, `%*(...)(...)%`, `%*<...><...>` or
+    `%*{...}{...}` - join operators (see below).
+
+Let us call the elements of an edge description that were referred to
+in the `--opening/closing-bracket` (but not inside join operators)
+*active elements*. (E.g. for the specification `<edge tags="%T"
+category="%c">` the tags and the category are active elements). Edges
+covering the same span with same values of active elements will be
+*collapsed* (i.e. only one bracket pair will be generated).
+
+The alternative values of the elements of an edge description that are
+not active can be given with a join operator. A join operator has two
+arguments - a separator and the expression to be joined. Separator
+cannot contain %-specification, the expression to be joined must
+contain at least one %-specification. For instance the specification
+`<%c text="%*[,][%t]>` means that for each category one bracket will
+be generated, alternative text values will be separated with commas.
+
+No more than one join operator can be given. Join operators can be,
+hovewer, nested, e.g. `<%c>%*[][<text val="%t" attrs="%*(;)(%A)"/>]` is
+acceptable.
+
+The string that will substitute `%T` is obtained by joining tags with
+commas. An alternative separator can be given with `--tag-separator`.
+The tag names that will appear in `%T` substitions can be limited with
+the `--show-only-tags` options, if `--filter` is specified and
+`--show-only-tags` was not given, the `--filter` will be assumed for
+`--show-only-tags`.
+
+The string that will substtitue `%A` is obtainted by joining the
+attribute-value pairs with commas. An alternative separator can be
+given with `--av-pairs-separator` option. The attribute and its value
+are separated with `=`, an alternative separator can be given with
+`--av-separator`. The attribute to be shown can be chosen with the
+`--show-attributes` option.
+
+
