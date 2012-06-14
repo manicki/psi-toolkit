@@ -225,6 +225,7 @@ endif(USE_STRING_FRAG_VALIDATION)
 find_package(SWIG)
 if(SWIG_FOUND)
 
+  message(STATUS "Swig version: ${SWIG_VERSION}")
   set(HAVE_SWIG_BINDINGS 1)
 
   find_package(PerlLibs)
