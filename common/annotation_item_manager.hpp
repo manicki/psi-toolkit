@@ -28,6 +28,10 @@ public:
         return annotationItem.category_;
     }
 
+    std::list< std::pair<std::string, zvalue> > getValuesAsZvalues(
+        const AnnotationItem & annotationItem
+    );
+
     std::list< std::pair<std::string, std::string> > getValues(
         const AnnotationItem & annotationItem
     );

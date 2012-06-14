@@ -56,6 +56,23 @@ std::string AnnotationItemManager::getValueAsString(
 }
 
 
+std::list< std::pair<std::string, zvalue> > AnnotationItemManager::getValuesAsZvalues(
+    const AnnotationItem & annotationItem
+) {
+    std::list< std::pair<std::string, zvalue> > result;
+    for (
+        boost::dynamic_bitset<>::size_type i = annotationItem.attributes_.find_first();
+        i != boost::dynamic_bitset<>::npos && i < m_.size();
+        i = annotationItem.attributes_.find_next(i)
+    ) {
+        result.push_back(std::pair<std::string, zvalue>(
+            m_.right.at(i),
+            annotationItem.values_[i]
+        ));
+    }
+    return result;
+}
+
 std::list< std::pair<std::string, std::string> > AnnotationItemManager::getValues(
     const AnnotationItem & annotationItem
 ) {
