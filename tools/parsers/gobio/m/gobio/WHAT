@@ -1,1 +1,0 @@
-psi-reader ! gobio --lang pl --rules %ITSDATA%/test/rules_3.g ! psi-writer
