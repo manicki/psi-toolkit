@@ -16,7 +16,7 @@ namespace AV_AI_Converter_specialization {
 
     template <typename CategoryType>
     const CategoryType toAVMatrix(
-        Lattice & lattice,
+        Lattice & /*lattice*/,
         AnnotationItem ai
     ) {
         return (CategoryType)(ai.getCategory());
