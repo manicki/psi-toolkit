@@ -1,10 +1,11 @@
 #ifndef EXPRESSION_RUNNER_TPL_HDR
 #define EXPRESSION_RUNNER_TPL_HDR
 
+#include "atom_converter.hpp"
+#include "av_matrix.hpp"
+#include "compiled_expression.tpl"
 #include "expression_runner.hpp"
 #include "opcodes.hpp"
-#include "compiled_expression.tpl"
-#include "av_matrix.hpp"
 #include "registrar.tpl"
 
 #include <iostream>
@@ -61,17 +62,17 @@ T expression_runner<C,T,S,M,X,checking>::hooking(T a, T b, M& master)
 template<class C, class T, class S, class M, class X, bool checking>
 T expression_runner<C,T,S,M,X,checking>::add_(T a, T b, M& master)
 {
-    T r = master.false_value();
+    int r = AtomConverter::toInt(master.false_value());
 
     if(master.is_int(a) && master.is_int(b) &&
        master.to_int(a) >= 0 && master.to_int(b) >= 0)
     {
         r = master.to_int(a) + master.to_int(b);
         if(r > master.int_limit())
-            return master.int_limit();
+            return AtomConverter::toAtom<T>(master.int_limit());
     }
 
-    return r;
+    return AtomConverter::toAtom<T>(r);
 }
 
 template<class C, class T, class S, class M, class X, bool checking>
