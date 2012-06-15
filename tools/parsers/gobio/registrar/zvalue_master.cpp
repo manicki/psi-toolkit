@@ -1,0 +1,68 @@
+#include "zvalue_master.hpp"
+
+#include <assert.h>
+#include <sstream>
+
+
+zvalue_master::zvalue_master(int int_limit) : number_master_(int_limit) { }
+
+bool zvalue_master::is_int(zvalue value) const {
+    return number_master_.is_int(ZVALUE_TO_INTEGER(value));
+}
+
+bool zvalue_master::is_string(zvalue value) const {
+    return number_master_.is_string(ZVALUE_TO_INTEGER(value));
+}
+
+int zvalue_master::to_int(zvalue value) const {
+    return number_master_.to_int(ZVALUE_TO_INTEGER(value));
+}
+
+std::string zvalue_master::to_string(zvalue value) const {
+    return number_master_.to_string(ZVALUE_TO_INTEGER(value));
+}
+
+std::string zvalue_master::string_representation(zvalue value) const {
+    return number_master_.string_representation(ZVALUE_TO_INTEGER(value));
+}
+
+zvalue zvalue_master::from_int(int i) {
+    return INTEGER_TO_ZVALUE(number_master_.from_int(i));
+}
+
+zvalue zvalue_master::from_string(const std::string& s) {
+    return INTEGER_TO_ZVALUE(number_master_.from_string(s));
+}
+
+zvalue zvalue_master::from_bool(bool b) {
+    return INTEGER_TO_ZVALUE(number_master_.from_bool(b));
+}
+
+zvalue zvalue_master::false_value() const {
+    return INTEGER_TO_ZVALUE(number_master_.false_value());
+}
+
+zvalue zvalue_master::any_value() const {
+    return INTEGER_TO_ZVALUE(number_master_.any_value());
+}
+
+bool zvalue_master::is_false(zvalue value) const {
+    return INTEGER_TO_ZVALUE(number_master_.is_false(ZVALUE_TO_INTEGER(value)));
+}
+
+bool zvalue_master::is_true(zvalue value) const {
+    return number_master_.is_true(ZVALUE_TO_INTEGER(value));
+}
+
+bool zvalue_master::is_any(zvalue value) const {
+    return number_master_.is_any(ZVALUE_TO_INTEGER(value));
+}
+
+int zvalue_master::int_limit() const {
+    return number_master_.int_limit();
+}
+
+number_master & zvalue_master::get_number_master() {
+    return number_master_;
+}
+
