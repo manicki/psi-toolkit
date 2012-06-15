@@ -30,35 +30,12 @@ if (HAVE_SFST)
     target_link_libraries(framework sfst)
 endif(HAVE_SFST)
 
+
 foreach(dir ${formats_SUBDIRS})
     include_directories("${psi-toolkit_SOURCE_DIR}/formats/${dir}")
     link_directories("${psi-toolkit_BINARY_DIR}/formats/${dir}")
 endforeach(dir)
 
-if(HAVE_GRAPHVIZ)
-    include_directories("${psi-toolkit_SOURCE_DIR}/formats/gv")
-    link_directories("${psi-toolkit_BINARY_DIR}/formats/gv")
-endif(HAVE_GRAPHVIZ)
-
-if(HAVE_POPPLER)
-    include_directories("${psi-toolkit_SOURCE_DIR}/formats/pdf")
-    link_directories("${psi-toolkit_BINARY_DIR}/formats/pdf")
-endif(HAVE_POPPLER)
-
-if(HAVE_DJVULIBRE)
-    include_directories("${psi-toolkit_SOURCE_DIR}/formats/djvu")
-    link_directories("${psi-toolkit_BINARY_DIR}/formats/djvu")
-endif(HAVE_DJVULIBRE)
-
-# if(HAVE_LINK_GRAMMAR)
-    # include_directories("${psi-toolkit_SOURCE_DIR}/tools/parsers/link")
-    # link_directories("${psi-toolkit_BINARY_DIR}/tools/parsers/link")
-# endif(HAVE_LINK_GRAMMAR)
-
-if(USE_DOC_READER)
-    include_directories("${psi-toolkit_SOURCE_DIR}/formats/doc")
-    link_directories("${psi-toolkit_BINARY_DIR}/formats/doc")
-endif(USE_DOC_READER)
 
 foreach(dir ${tools_DIRS})
     include_directories("${psi-toolkit_SOURCE_DIR}/tools/${dir}")
@@ -78,20 +55,14 @@ target_link_libraries(psi-pipe ${Boost_LIBRARIES} framework common common-plugin
 include_directories("${psi-toolkit_SOURCE_DIR}/maxent")
 
 if(USE_JAVA)
-    include_directories("${psi-toolkit_SOURCE_DIR}/tools/lemmatizers/morfologik")
-    link_directories("${psi-toolkit_BINARY_DIR}/tools/lemmatizers/morfologik")
     target_link_libraries(psi-pipe tools-lemmatizers-morfologik)
 endif(USE_JAVA)
 
 if(HAVE_SFST)
-    include_directories("${psi-toolkit_SOURCE_DIR}/tools/lemmatizers/sfst")
-    link_directories("${psi-toolkit_BINARY_DIR}/tools/lemmatizers/sfst")
     target_link_libraries(psi-pipe tools-lemmatizers-sfst)
 endif(HAVE_SFST)
 
 if(USE_POSTGRESQL)
-    include_directories("${psi-toolkit_SOURCE_DIR}/tools/lemmatizers/lex_db")
-    link_directories("${psi-toolkit_BINARY_DIR}/tools/lemmatizers/lex_db")
     target_link_libraries(psi-pipe lex-db)
 endif(USE_POSTGRESQL)
 

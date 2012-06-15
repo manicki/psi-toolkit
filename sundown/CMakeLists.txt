@@ -12,6 +12,10 @@ add_library(sundown SHARED
     cpp/stringwrapper.cpp
 )
 
+include_directories("${psi-toolkit_SOURCE_DIR}/sundown/src")
+include_directories("${psi-toolkit_SOURCE_DIR}/sundown/html")
+include_directories("${psi-toolkit_SOURCE_DIR}/sundown/cpp")
+
 set_target_properties(sundown PROPERTIES LINKER_LANGUAGE CXX)
 
 install(TARGETS sundown DESTINATION lib/)

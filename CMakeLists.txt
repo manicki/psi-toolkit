@@ -3,9 +3,9 @@ cmake_minimum_required(VERSION 2.8)
 project(psi-toolkit CXX)
 
 SET(MY_TARGETLIB_PREFIX "libpsitoolkit_")
-
 SET(CMAKE_INSTALL_RPATH "${CMAKE_INSTALL_PREFIX}/lib")
 
+# ----------------------------------------------------
 # coverage mode
 
 if(CMAKE_CONFIGURATION_TYPES)
@@ -37,7 +37,6 @@ MARK_AS_ADVANCED(
     CMAKE_SHARED_LINKER_FLAGS_COVERAGE)
 
 # ----------------------------------------------------
-
 # extracting information from git, see http://stackoverflow.com/questions/1435953/how-can-i-pass-git-sha1-to-compiler-as-definition-using-cmake
 
 list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake-modules/")
@@ -49,78 +48,10 @@ git_last_date(GIT_LAST_DATE)
 
 include_directories(${psi-toolkit_SOURCE_DIR})
 
-# Logging
-find_library(LOG4CPP_LIB NAMES log4cpp)
-find_path(LOG4CPP_INCLUDE log4cpp/Appender.hh)
 
-if(EXISTS ${LOG4CPP_LIB} AND EXISTS ${LOG4CPP_INCLUDE})
-  message("-- Using Log4cpp logging...")
-  include_directories(${LOG4CPP_INCLUDE})
-  link_directories(${LOG4CPP_LIB})
-  set(HAVE_LOG4CPP 1)
-else()
-  message("-- Not using Log4cpp...")
-  set(HAVE_LOG4CPP 0)
-endif(EXISTS ${LOG4CPP_LIB} AND EXISTS ${LOG4CPP_INCLUDE})
-
-option(USE_ASPELL "Using aspell" ON)
-message(STATUS "Using aspell ${USE_ASPELL}")
-
-if (USE_ASPELL)
-  find_library(ASPELL_LIB NAMES aspell)
-  find_path(ASPELL_INCLUDE aspell.h)
-  if(EXISTS ${ASPELL_LIB} AND EXISTS ${ASPELL_INCLUDE})
-    message("-- Using Aspell...")
-    include_directories(${ASPELL_INCLUDE})
-    link_directories(${ASPELL_LIB})
-    link_directories("${psi-toolkit_BINARY_DIR}/tools/spellcheckers/aspell/plugin")
-    set(HAVE_ASPELL 1)
-  else()
-    message("-- Not using Aspell (can not find required libraries)...")
-    set(HAVE_ASPELL 0)
-  endif(EXISTS ${ASPELL_LIB} AND EXISTS ${ASPELL_INCLUDE})
-else()
-  message("-- Not using Aspell...")
-  set(HAVE_ASPELL 0)
-endif(USE_ASPELL)
-
-
-# CMPH library (for perfect hashing)
-find_library(CMPH_LIB NAMES cmph)
-find_path(CMPH_INCLUDE cmph.h)
-
-if(EXISTS ${CMPH_LIB} AND EXISTS ${CMPH_INCLUDE})
-  message("-- Using CMPH...")
-  include_directories(${CMPH_INCLUDE})
-  link_directories(${CMPH_LIB})
-  set(HAVE_CMPH 1)
-else()
-  message("-- Not using CMPH...")
-  set(HAVE_CMPH 0)
-endif(EXISTS ${CMPH_LIB} AND EXISTS ${CMPH_INCLUDE})
-
-# SFST library (for TRmorph)
-option(USE_SFST "Using SFST" OFF)
-message(STATUS "Using SFST ${USE_SFST}")
-
-if (USE_SFST)
-   find_path(SFST_LIB libsfst.so /usr/lib/sfst)
-   find_path(SFST_LIB libsfst.so /usr/lib)
-   find_path(SFST_INCLUDE fst.h /usr/include/sfst)
-
-   if(EXISTS ${SFST_LIB} AND EXISTS ${SFST_INCLUDE})
-      message("-- Using SFST...")
-      include_directories(${SFST_INCLUDE})
-      link_directories(${SFST_LIB})
-      link_directories("${psi-toolkit_BINARY_DIR}/tools/lemmatizers/sfst/plugin")
-      set(HAVE_SFST 1)
-   else()
-      message("-- Not using SFST...")
-      set(HAVE_SFST 0)
-   endif(EXISTS ${SFST_LIB} AND EXISTS ${SFST_INCLUDE})
-endif (USE_SFST)
-
+# ----------------------------------------------------
 # Finds and includes external libraries
+
 set(Boost_USE_STATIC_LIBS OFF)
 set(Boost_USE_STATIC_RUNTIME OFF)
 find_package(Boost COMPONENTS program_options graph serialization filesystem system thread unit_test_framework prg_exec_monitor REQUIRED)
@@ -148,13 +79,10 @@ else()
   message("-- Setting default package os")
 endif()
 
-option(USE_JAVA "Compiling Java components" OFF)
-message(STATUS "Compiling Java components ${USE_JAVA}")
-
 option(DOWNLOAD_DATA "Downloading data (artifacts)" ON)
 message(STATUS "Downloading data (artifacts) ${DOWNLOAD_DATA}")
 
-# Set psi-server variables
+# setting PSI-Server variables
 if(IS_INSTALLABLE)
     # ./server/website content has to be moved to /var/psi-server/website during installation
     set(WEBSITE_ROOT "/var/lib/psi-server/website" CACHE STRING "The website root directory")
@@ -164,7 +92,92 @@ endif(IS_INSTALLABLE)
 
 message(STATUS "The psi-server root directory is set to ${WEBSITE_ROOT}")
 
-# USE_xxx
+
+# ----------------------------------------------------
+# Logging
+# ----------------------------------------------------
+find_library(LOG4CPP_LIB NAMES log4cpp)
+find_path(LOG4CPP_INCLUDE log4cpp/Appender.hh)
+
+if(EXISTS ${LOG4CPP_LIB} AND EXISTS ${LOG4CPP_INCLUDE})
+  message("-- Using Log4cpp logging...")
+  include_directories(${LOG4CPP_INCLUDE})
+  link_directories(${LOG4CPP_LIB})
+  set(HAVE_LOG4CPP 1)
+else()
+  message("-- Not using Log4cpp...")
+  set(HAVE_LOG4CPP 0)
+endif(EXISTS ${LOG4CPP_LIB} AND EXISTS ${LOG4CPP_INCLUDE})
+
+# ----------------------------------------------------
+# aspell
+# ----------------------------------------------------
+option(USE_ASPELL "Using aspell" ON)
+message(STATUS "Using aspell ${USE_ASPELL}")
+
+if (USE_ASPELL)
+  find_library(ASPELL_LIB NAMES aspell)
+  find_path(ASPELL_INCLUDE aspell.h)
+  if(EXISTS ${ASPELL_LIB} AND EXISTS ${ASPELL_INCLUDE})
+    message("-- Using Aspell...")
+    include_directories(${ASPELL_INCLUDE})
+    link_directories(${ASPELL_LIB})
+    link_directories("${psi-toolkit_BINARY_DIR}/tools/spellcheckers/aspell/plugin")
+    set(HAVE_ASPELL 1)
+  else()
+    message("-- Not using Aspell (can not find required libraries)...")
+    set(HAVE_ASPELL 0)
+  endif(EXISTS ${ASPELL_LIB} AND EXISTS ${ASPELL_INCLUDE})
+else()
+  message("-- Not using Aspell...")
+  set(HAVE_ASPELL 0)
+endif(USE_ASPELL)
+
+# ----------------------------------------------------
+# CMPH library (for perfect hashing)
+# ----------------------------------------------------
+find_library(CMPH_LIB NAMES cmph)
+find_path(CMPH_INCLUDE cmph.h)
+
+if(EXISTS ${CMPH_LIB} AND EXISTS ${CMPH_INCLUDE})
+  message("-- Using CMPH...")
+  include_directories(${CMPH_INCLUDE})
+  link_directories(${CMPH_LIB})
+  set(HAVE_CMPH 1)
+else()
+  message("-- Not using CMPH...")
+  set(HAVE_CMPH 0)
+endif(EXISTS ${CMPH_LIB} AND EXISTS ${CMPH_INCLUDE})
+
+# ----------------------------------------------------
+# SFST library (for TRmorph)
+# ----------------------------------------------------
+option(USE_SFST "Using SFST" OFF)
+message(STATUS "Using SFST ${USE_SFST}")
+
+if (USE_SFST)
+   find_path(SFST_LIB libsfst.so /usr/lib/sfst)
+   find_path(SFST_LIB libsfst.so /usr/lib)
+   find_path(SFST_INCLUDE fst.h /usr/include/sfst)
+
+   if(EXISTS ${SFST_LIB} AND EXISTS ${SFST_INCLUDE})
+      message("-- Using SFST...")
+      include_directories(${SFST_INCLUDE})
+      link_directories(${SFST_LIB})
+      link_directories("${psi-toolkit_BINARY_DIR}/tools/lemmatizers/sfst/plugin")
+      set(HAVE_SFST 1)
+   else()
+      message("-- Not using SFST...")
+      set(HAVE_SFST 0)
+   endif(EXISTS ${SFST_LIB} AND EXISTS ${SFST_INCLUDE})
+endif (USE_SFST)
+
+# ----------------------------------------------------
+# Java components
+# ----------------------------------------------------
+option(USE_JAVA "Using Java components" OFF)
+message(STATUS "Using Java components ${USE_JAVA}")
+
 if(USE_JAVA)
     enable_language(Java)
 
@@ -183,6 +196,9 @@ if(USE_JAVA)
     set(HAVE_JAVA 1)
 endif(USE_JAVA)
 
+# ----------------------------------------------------
+# PostgreSQL
+# ----------------------------------------------------
 option(USE_POSTGRESQL "Compiling PostgreSQL components" OFF)
 message(STATUS "Compiling PostgreSQL components ${USE_POSTGRESQL}")
 
@@ -193,6 +209,9 @@ if(USE_POSTGRESQL)
         set(HAVE_POSTGRESQL 1)
 endif(USE_POSTGRESQL)
 
+# ----------------------------------------------------
+# regular expression libraries
+# ----------------------------------------------------
 option(WITH_RE2 "Using RE2 regular expression library" OFF)
 message(STATUS "Using RE2 regular expression library ${WITH_RE2}")
 
@@ -207,6 +226,9 @@ if(WITH_PCRE)
     set(HAVE_PCRE 1)
 endif(WITH_PCRE)
 
+# ----------------------------------------------------
+# bonsai and puddle
+# ----------------------------------------------------
 option(USE_BONSAI_PARSEGRAPH "Using bonsai ParseGraph with puddle shallow parser" OFF)
 message(STATUS "Using bonsai ParseGraph with puddle shallow parser ${USE_BONSAI_PARSEGRAPH}")
 
@@ -220,8 +242,9 @@ if(USE_STRING_FRAG_VALIDATION)
     set(STRING_FRAG_VALIDATION 1)
 endif(USE_STRING_FRAG_VALIDATION)
 
+# ----------------------------------------------------
 # Finds SWIG
-
+# ----------------------------------------------------
 find_package(SWIG)
 if(SWIG_FOUND)
 
@@ -252,8 +275,9 @@ if(SWIG_FOUND)
 endif(SWIG_FOUND)
 
 
+# ----------------------------------------------------
 # Finds GraphViz
-
+# ----------------------------------------------------
 option(USE_GV_WRITER "Using gv-writer" ON)
 message(STATUS "Using gv-writer ${USE_GV_WRITER}")
 
@@ -273,8 +297,9 @@ else (USE_GV_WRITER)
     set(HAVE_GRAPHVIZ 0)
 endif (USE_GV_WRITER)
 
+# ----------------------------------------------------
 # libmagic
-
+# ----------------------------------------------------
 find_package(LibMagic)
 if(LIBMAGIC_FOUND)
     message(STATUS "Found libmagic")
@@ -286,8 +311,9 @@ else()
     set(HAVE_LIBMAGIC 0)
 endif(LIBMAGIC_FOUND)
 
+# ----------------------------------------------------
 # Finds Poppler
-
+# ----------------------------------------------------
 option(USE_PDF_READER "Using pdf-reader" ON)
 message(STATUS "Using pdf-reader ${USE_PDF_READER}")
 
@@ -307,8 +333,9 @@ else (USE_PDF_READER)
     set(HAVE_POPPLER 0)
 endif (USE_PDF_READER)
 
+# ----------------------------------------------------
 # Finds DjVuLibre
-
+# ----------------------------------------------------
 option(USE_DJVU_READER "Using djvu-reader" OFF)
 message(STATUS "Using djvu-reader ${USE_DJVU_READER}")
 
@@ -328,8 +355,9 @@ else (USE_DJVU_READER)
     set(HAVE_DJVULIBRE 0)
 endif (USE_DJVU_READER)
 
+# ----------------------------------------------------
 # Finds Link Grammar
-
+# ----------------------------------------------------
 option(USE_LINK_GRAMMAR "Using link-parser" ON)
 message(STATUS "Using link-parser ${USE_LINK_GRAMMAR}")
 
@@ -349,8 +377,9 @@ else (USE_LINK_GRAMMAR)
     set(HAVE_LINK_GRAMMAR 0)
 endif (USE_LINK_GRAMMAR)
 
+# ----------------------------------------------------
 # Links Antiword plugin
-
+# ----------------------------------------------------
 option(USE_DOC_READER "Using doc-reader" OFF)
 message(STATUS "Using doc-reader ${USE_DOC_READER}")
 
@@ -359,7 +388,10 @@ if (USE_DOC_READER)
 endif (USE_DOC_READER)
 
 
-# Sets compiler flags
+# ====================================================
+# setting compiler flags
+# ====================================================
+
 set(CMAKE_CXX_FLAGS "-g -Wall -Wundef -Wnon-virtual-dtor -Wextra")
 
 if (WITH_LOW_MEMORY_COMPILATION)
@@ -368,10 +400,17 @@ if (WITH_LOW_MEMORY_COMPILATION)
 endif (WITH_LOW_MEMORY_COMPILATION)
 
 set(BASE_TARGETS common common-plugins utf8case sundown framework
-formats-apertium formats-bracketing formats-dot formats-guessing formats-nkjp formats-psi formats-simple formats-json-simple formats-txt formats-utt
-maxent tools-tokenizers-tp tools-segmenters-srx tools-recognizers-langguesser tools-parsers-gobio tools-parsers-puddle tools-taggers-metagger)
+    formats-apertium formats-bracketing formats-dot formats-guessing formats-nkjp formats-psi
+    formats-simple formats-json-simple formats-txt formats-utt
+    maxent tools-tokenizers-tp tools-segmenters-srx tools-recognizers-langguesser
+    tools-parsers-gobio tools-parsers-puddle tools-taggers-metagger)
 
-set(TESTS_TARGETS common-tests framework-tests tools-tokenizers-tp-tests tools-segmenters-srx-tests tools-datastructures-psi_query-tests tools-recognizers-langguesser-tests utf8case-tests formats-bracketing-tests formats-dot-tests formats-utt-tests formats-psi-tests formats-simple-tests tools-parsers-gobio-tests tools-parsers-puddle-tests tools-taggers-metagger-tests formats-apertium-tests)
+set(TESTS_TARGETS common-tests framework-tests utf8case-tests
+    formats-bracketing-tests formats-dot-tests formats-utt-tests formats-psi-tests
+    formats-simple-tests formats-apertium-tests
+    tools-tokenizers-tp-tests tools-segmenters-srx-tests tools-datastructures-psi_query-tests
+    tools-recognizers-langguesser-tests tools-parsers-gobio-tests tools-parsers-puddle-tests
+    tools-taggers-metagger-tests)
 
 if(HAVE_ASPELL)
     set(TESTS_TARGETS ${TESTS_TARGETS} tools-spellcheckers-aspell-tests)
@@ -426,62 +465,20 @@ if(USE_DOC_READER)
     set(BASE_TARGETS ${BASE_TARGETS} formats-doc)
 endif(USE_DOC_READER)
 
-include_directories("${psi-toolkit_SOURCE_DIR}/tools/parsers/puddle")
-
-include_directories("${psi-toolkit_SOURCE_DIR}/tools/parsers/gobio")
-include_directories("${psi-toolkit_SOURCE_DIR}/tools/parsers/gobio/chart")
-include_directories("${psi-toolkit_SOURCE_DIR}/tools/parsers/gobio/parser")
-
-link_directories("${psi-toolkit_BINARY_DIR}/tools/parsers/gobio")
-link_directories("${psi-toolkit_BINARY_DIR}/tools/parsers/gobio/chart")
-link_directories("${psi-toolkit_BINARY_DIR}/tools/parsers/gobio/parser")
-
 set(TARGETS ${BASE_TARGETS} psi-pipe)
 
-set(DIRS common common/plugins formats maxent tools framework utf8 utf8case server bindings)
+set(DIRS common common/plugins maxent formats tools framework server bindings utf8 utf8case sundown)
+
 foreach(dir ${DIRS})
     include_directories("${psi-toolkit_SOURCE_DIR}/${dir}")
     link_directories("${psi-toolkit_BINARY_DIR}/${dir}")
     add_subdirectory(${dir})
 endforeach(dir)
 
-
-include_directories("${psi-toolkit_SOURCE_DIR}/sundown/src")
-include_directories("${psi-toolkit_SOURCE_DIR}/sundown/html")
-include_directories("${psi-toolkit_SOURCE_DIR}/sundown/cpp")
-link_directories("${psi-toolkit_BINARY_DIR}/sundown")
-add_subdirectory(sundown)
-
 foreach(dir ${formats_SUBDIRS})
     include_directories("${psi-toolkit_SOURCE_DIR}/formats/${dir}")
     link_directories("${psi-toolkit_BINARY_DIR}/formats/${dir}")
 endforeach(dir)
-
-if(HAVE_GRAPHVIZ)
-    include_directories("${psi-toolkit_SOURCE_DIR}/formats/gv")
-    link_directories("${psi-toolkit_BINARY_DIR}/formats/gv")
-endif(HAVE_GRAPHVIZ)
-
-if(HAVE_POPPLER)
-    include_directories("${psi-toolkit_SOURCE_DIR}/formats/pdf")
-    link_directories("${psi-toolkit_BINARY_DIR}/formats/pdf")
-endif(HAVE_POPPLER)
-
-if(HAVE_DJVULIBRE)
-    include_directories("${psi-toolkit_SOURCE_DIR}/formats/djvu")
-    link_directories("${psi-toolkit_BINARY_DIR}/formats/djvu")
-endif(HAVE_DJVULIBRE)
-
-if(HAVE_LINK_GRAMMAR)
-    include_directories("${psi-toolkit_SOURCE_DIR}/tools/parsers/link")
-    link_directories("${psi-toolkit_BINARY_DIR}/tools/parsers/link")
-endif(HAVE_LINK_GRAMMAR)
-
-if(USE_DOC_READER)
-    include_directories("${psi-toolkit_SOURCE_DIR}/formats/doc")
-    link_directories("${psi-toolkit_BINARY_DIR}/formats/doc")
-endif(USE_DOC_READER)
-
 
 set(ALL_TARGETS ${TARGETS} ${TESTS_TARGETS})
 
@@ -498,6 +495,10 @@ endif(USE_BONSAI_PARSEGRAPH)
 add_subdirectory(tests)
 
 configure_file(${psi-toolkit_SOURCE_DIR}/common/config.hpp.in ${psi-toolkit_SOURCE_DIR}/common/config.hpp)
+
+
+# ----------------------------------------------------
+# cmake functions
 
 function(download_artifact FILE)
   set(_url

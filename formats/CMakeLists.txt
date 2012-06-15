@@ -8,31 +8,37 @@ set(formats_SUBDIRS
     simple json-simple
     txt
     utt
-CACHE PATH "Formats subdirectories" FORCE)
+CACHE PATH "Formats subdirectories")
 
 if(HAVE_GRAPHVIZ)
+    set(formats_SUBDIRS ${formats_SUBDIRS} gv PARENT_SCOPE)
     set(formats_SUBDIRS ${formats_SUBDIRS} gv)
 else(HAVE_GRAPHVIZ)
     unset(gv-t CACHE)
 endif(HAVE_GRAPHVIZ)
 
 if(HAVE_POPPLER)
+    set(formats_SUBDIRS ${formats_SUBDIRS} pdf PARENT_SCOPE)
     set(formats_SUBDIRS ${formats_SUBDIRS} pdf)
 else(HAVE_POPPLER)
     unset(pdf-t CACHE)
 endif(HAVE_POPPLER)
 
 if(HAVE_DJVULIBRE)
+    set(formats_SUBDIRS ${formats_SUBDIRS} djvu PARENT_SCOPE)
     set(formats_SUBDIRS ${formats_SUBDIRS} djvu)
 else(HAVE_DJVULIBRE)
     unset(djvu-t CACHE)
 endif(HAVE_DJVULIBRE)
 
 if(USE_DOC_READER)
+    set(formats_SUBDIRS ${formats_SUBDIRS} doc PARENT_SCOPE)
     set(formats_SUBDIRS ${formats_SUBDIRS} doc)
 else(USE_DOC_READER)
     unset(doc-t CACHE)
 endif(USE_DOC_READER)
+
+message("formats; formats_SUBDIRS:\n ${formats_SUBDIRS}")
 
 foreach(dir ${formats_SUBDIRS})
     add_subdirectory(${dir})
