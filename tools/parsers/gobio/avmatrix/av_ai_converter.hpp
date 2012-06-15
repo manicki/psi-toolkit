@@ -10,6 +10,9 @@
 #include "annotation_item.hpp"
 #include "av_matrix.hpp"
 #include "lattice.hpp"
+#include "number_master.hpp"
+#include "zvalue.hpp"
+#include "zvalue_master.hpp"
 
 
 namespace AV_AI_Converter_specialization {
@@ -22,7 +25,24 @@ namespace AV_AI_Converter_specialization {
         return (CategoryType)(ai.getCategory());
     }
 
-    // MOŻE WYDZIELIĆ PONIŻSZE DO .tpl ???
+    template <>
+    inline const av_matrix<int, zvalue> toAVMatrix< av_matrix<int, zvalue> >(
+        Lattice & lattice,
+        AnnotationItem ai
+    ) {
+        av_matrix<int, zvalue> result(ai.getCategory());
+        zvalue_master master;
+        typedef std::pair<std::string, zvalue> StringZvaluePair;
+        std::list< StringZvaluePair > values
+            = lattice.getAnnotationItemManager().getValuesAsZvalues(ai);
+        BOOST_FOREACH( StringZvaluePair avpair, values ) {
+            std::stringstream attrSs(avpair.first);
+            int a;
+            attrSs >> a;
+            result.set_attr(a, avpair.second, master.false_value());
+        }
+        return result;
+    }
 
     template <>
     inline const av_matrix<int, int> toAVMatrix< av_matrix<int, int> >(
@@ -30,6 +50,7 @@ namespace AV_AI_Converter_specialization {
         AnnotationItem ai
     ) {
         av_matrix<int, int> result(ai.getCategory());
+        number_master master;
         typedef std::pair<std::string, std::string> StringPair;
         std::list< StringPair > values
             = lattice.getAnnotationItemManager().getValues(ai);
@@ -40,7 +61,7 @@ namespace AV_AI_Converter_specialization {
             int v;
             attrSs >> a;
             valSs >> v;
-            result.set_attr(a, v, -1L); // -1L is number_master's false value
+            result.set_attr(a, v, master.false_value());
         }
         return result;
     }
@@ -61,6 +82,8 @@ class AV_AI_Converter {
 public:
 
     AV_AI_Converter(Lattice & lattice) : lattice_(lattice) { }
+
+    const AnnotationItem toAnnotationItem(av_matrix<int, zvalue> av);
 
     const AnnotationItem toAnnotationItem(av_matrix<int, int> av);
 
