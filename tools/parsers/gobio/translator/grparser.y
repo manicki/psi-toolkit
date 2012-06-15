@@ -14,7 +14,7 @@ int grparserlex()
 
 
 
-void grparsererror(char* s);
+void grparsererror(const char* s);
 
 GRuleList* grparser_all = NULL;
 char grerror_message[128] = "GRULES UNKNOWN ERROR";
@@ -594,7 +594,7 @@ symbol_ref: RTOKEN_ATOM
 ;
 
 %%
-void grparsererror(char* s)
+void grparsererror(const char* s)
     {
     printf("grparse error (%s) at line %d\n", s, grlexlineno);
     snprintf(grerror_message,127,"%d::%s",grlexlineno,s);
