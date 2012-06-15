@@ -211,11 +211,11 @@ unsigned int compiled_expression<T,S,N>::hash_fun() const
     h ^= HASH_WRAPPER_FULL_HASH_TRAITS<int>().operator()(instructions_[i].op_code);
 
     h <<= 1;
-    h ^= HASH_WRAPPER_FULL_HASH_TRAITS<int>().operator()(
+    h ^= HASH_WRAPPER_FULL_HASH_TRAITS<T>().operator()(
         instructions_[i].instruction_arguments[0].t);
 
     h <<= 1;
-    h ^= HASH_WRAPPER_FULL_HASH_TRAITS<T>().operator()(
+    h ^= HASH_WRAPPER_FULL_HASH_TRAITS<int>().operator()(
         instructions_[i].instruction_arguments[0].i);
     }
 
