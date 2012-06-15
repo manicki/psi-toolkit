@@ -38,8 +38,6 @@ else(USE_DOC_READER)
     unset(doc-t CACHE)
 endif(USE_DOC_READER)
 
-message("formats; formats_SUBDIRS:\n ${formats_SUBDIRS}")
-
 foreach(dir ${formats_SUBDIRS})
     add_subdirectory(${dir})
 endforeach(dir)

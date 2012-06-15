@@ -4,9 +4,12 @@ if (HAVE_SFST)
    add_definitions(-Wno-deprecated -DSGI__gnu_cxx)
 endif (HAVE_SFST)
 
-configure_file("${CMAKE_CURRENT_SOURCE_DIR}/git_info.cpp.in" "${CMAKE_CURRENT_BINARY_DIR}/git_info.cpp" @ONLY)
+configure_file("${CMAKE_CURRENT_SOURCE_DIR}/git_info.cpp.in"
+    "${CMAKE_CURRENT_BINARY_DIR}/git_info.cpp" @ONLY)
 
+# ----------------------------------------------------
 # library framework
+# ----------------------------------------------------
 add_library(framework SHARED
     aliaser.cpp
     auto_completer.cpp
@@ -20,7 +23,8 @@ add_library(framework SHARED
     "${CMAKE_CURRENT_BINARY_DIR}/git_info.cpp"
 )
 
-target_link_libraries(framework ${Boost_LIBRARIES} pthread mpfd-parser ${BASE_TARGETS} pcre pcrecpp tools-parsers-puddle test-extractor)
+target_link_libraries(framework
+    ${Boost_LIBRARIES} pthread ${BASE_TARGETS} pcre pcrecpp test-extractor)
 
 if (WITH_RE2)
     target_link_libraries(framework re2)
@@ -30,12 +34,10 @@ if (HAVE_SFST)
     target_link_libraries(framework sfst)
 endif(HAVE_SFST)
 
-
 foreach(dir ${formats_SUBDIRS})
     include_directories("${psi-toolkit_SOURCE_DIR}/formats/${dir}")
     link_directories("${psi-toolkit_BINARY_DIR}/formats/${dir}")
 endforeach(dir)
-
 
 foreach(dir ${tools_DIRS})
     include_directories("${psi-toolkit_SOURCE_DIR}/tools/${dir}")
@@ -45,10 +47,10 @@ endforeach(dir)
 include_directories("${psi-toolkit_SOURCE_DIR}/tests")
 link_directories("${psi-toolkit_BINARY_DIR}/tests")
 
+# ----------------------------------------------------
 # executable psi-pipe
-add_executable(psi-pipe
-    psi-pipe.cpp
-)
+# ----------------------------------------------------
+add_executable(psi-pipe psi-pipe.cpp)
 
 target_link_libraries(psi-pipe ${Boost_LIBRARIES} framework common common-plugins maxent)
 
@@ -80,7 +82,6 @@ else(WITH_RE2)
     endif(WITH_PCRE)
 endif(WITH_RE2)
 
-
 if(HAVE_PERL_BINDINGS)
     include_directories("${psi-toolkit_SOURCE_DIR}/bindings/perl/writers")
     link_directories("${psi-toolkit_BINARY_DIR}/bindings/perl/writers")
@@ -100,6 +101,9 @@ if (HAVE_ASPELL)
   target_link_libraries(psi-pipe tools-spellcheckers-aspell)
 endif (HAVE_ASPELL)
 
+# ----------------------------------------------------
+# install framework
+# ----------------------------------------------------
 install(TARGETS framework DESTINATION lib/)
 install(TARGETS psi-pipe DESTINATION bin/)
 install(FILES DESTINATION "${psi-toolkit_BINARY_DIR}")
