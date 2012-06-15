@@ -13,8 +13,11 @@
 #include "agenda_parser.tpl"
 #include "number_master.hpp"
 #include "semantics_wrapper.hpp"
+// #include "semantics_wrapper_for_zvalue.hpp"
 // #include "simple_cfg_combinator.tpl"
 #include "tgbg_combinator.tpl"
+// #include "zvalue.hpp"
+// #include "zvalue_master.hpp"
 
 
 class Gobio : public Annotator {
@@ -25,6 +28,7 @@ public:
 
     // typedef std::string Atom;
     typedef int Atom;
+    // typedef zvalue Atom;
 
     // typedef std::string Category;
     typedef av_matrix<int, Atom> Category;
@@ -32,9 +36,11 @@ public:
     typedef Lattice::Score Score;
 
     typedef number_master Master;
+    // typedef zvalue_master Master;
 
     // typedef number_master SemanticsMachine;
     typedef semantics_wrapper SemanticsMachine;
+    // typedef semantics_wrapper_for_zvalue SemanticsMachine;
 
     // typedef boost::shared_ptr<pe_target_info> Equivalent;
 
