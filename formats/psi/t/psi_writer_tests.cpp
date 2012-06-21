@@ -12,6 +12,18 @@
 BOOST_AUTO_TEST_SUITE( psi_lattice_writer )
 
 
+int countAllEdges(Lattice & lattice) {
+    int result = 0;
+    Lattice::EdgesSortedByTargetIterator ei
+        = lattice.edgesSortedByTarget(lattice.getLayerTagManager().anyTag());
+    while (ei.hasNext()) {
+        ei.next();
+        ++result;
+    }
+    return result;
+}
+
+
 BOOST_AUTO_TEST_CASE( psi_lattice_writer_simple ) {
     Lattice lattice;
     lattice_preparators::prepareSimpleLattice(lattice);
@@ -168,6 +180,7 @@ BOOST_AUTO_TEST_CASE( psi_lattice_writer_reflexive_simple ) {
     BOOST_CHECK_EQUAL(lattice1.getFirstVertex(), lattice2.getFirstVertex());
     BOOST_CHECK_EQUAL(lattice1.getLastVertex(), lattice2.getLastVertex());
     BOOST_CHECK_EQUAL(lattice1.countAllVertices(), lattice2.countAllVertices());
+    BOOST_CHECK_EQUAL(countAllEdges(lattice1), countAllEdges(lattice2));
 
 }
 
@@ -192,6 +205,7 @@ BOOST_AUTO_TEST_CASE( psi_lattice_writer_reflexive_advanced ) {
     BOOST_CHECK_EQUAL(lattice1.getFirstVertex(), lattice2.getFirstVertex());
     BOOST_CHECK_EQUAL(lattice1.getLastVertex(), lattice2.getLastVertex());
     BOOST_CHECK_EQUAL(lattice1.countAllVertices(), lattice2.countAllVertices());
+    BOOST_CHECK_EQUAL(countAllEdges(lattice1), countAllEdges(lattice2));
 
 }
 
@@ -216,6 +230,7 @@ BOOST_AUTO_TEST_CASE( psi_lattice_writer_reflexive_regular ) {
     BOOST_CHECK_EQUAL(lattice1.getFirstVertex(), lattice2.getFirstVertex());
     BOOST_CHECK_EQUAL(lattice1.getLastVertex(), lattice2.getLastVertex());
     BOOST_CHECK_EQUAL(lattice1.countAllVertices(), lattice2.countAllVertices());
+    BOOST_CHECK_EQUAL(countAllEdges(lattice1), countAllEdges(lattice2));
 
 }
 
@@ -236,12 +251,11 @@ BOOST_AUTO_TEST_CASE( psi_lattice_writer_reflexive_not_covered_text ) {
 
     reader->readIntoLattice(sstr, lattice2);
 
-WARN(lattice1.getAllText() << " =?= " << lattice2.getAllText());
-
     BOOST_CHECK_EQUAL(lattice1.getAllText(), lattice2.getAllText());
     BOOST_CHECK_EQUAL(lattice1.getFirstVertex(), lattice2.getFirstVertex());
     BOOST_CHECK_EQUAL(lattice1.getLastVertex(), lattice2.getLastVertex());
     BOOST_CHECK_EQUAL(lattice1.countAllVertices(), lattice2.countAllVertices());
+    BOOST_CHECK_EQUAL(countAllEdges(lattice1), countAllEdges(lattice2));
 
 }
 
