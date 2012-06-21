@@ -113,7 +113,8 @@ void PsiLatticeReader::Worker::doRun() {
                     }
                     if (
                         lattice_.getLayerTagManager().isThere("symbol", tags) ||
-                        lattice_.getLayerTagManager().isThere("∅", tags)
+                        lattice_.getLayerTagManager().isThere("∅", tags) ||
+                        item.annotationItem.partitions == "[]"
                     ) {
                         lattice_.appendString(form.substr(
                             lattice_.getVertexRawCharIndex(lattice_.getLastVertex())
