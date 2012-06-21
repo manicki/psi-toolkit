@@ -5,6 +5,7 @@
 #include <boost/scoped_ptr.hpp>
 
 #include "lattice_preparators.hpp"
+#include "psi_lattice_reader.hpp"
 #include "psi_lattice_writer.hpp"
 
 
@@ -144,6 +145,104 @@ BOOST_AUTO_TEST_CASE( psi_lattice_writer_planes ) {
     }
 
     BOOST_CHECK_EQUAL(osstr.str(), contents);
+}
+
+
+BOOST_AUTO_TEST_CASE( psi_lattice_writer_reflexive_simple ) {
+
+    Lattice lattice1;
+    Lattice lattice2;
+
+    std::stringstream sstr;
+
+    boost::scoped_ptr< LatticeWriter<std::ostream> > writer(new PsiLatticeWriter());
+    boost::scoped_ptr< LatticeReader<std::istream> > reader(new PsiLatticeReader());
+
+    lattice_preparators::prepareSimpleLattice(lattice1);
+
+    writer->writeLattice(lattice1, sstr);
+
+    reader->readIntoLattice(sstr, lattice2);
+
+    BOOST_CHECK_EQUAL(lattice1.getAllText(), lattice2.getAllText());
+    BOOST_CHECK_EQUAL(lattice1.getFirstVertex(), lattice2.getFirstVertex());
+    BOOST_CHECK_EQUAL(lattice1.getLastVertex(), lattice2.getLastVertex());
+    BOOST_CHECK_EQUAL(lattice1.countAllVertices(), lattice2.countAllVertices());
+
+}
+
+
+BOOST_AUTO_TEST_CASE( psi_lattice_writer_reflexive_advanced ) {
+
+    Lattice lattice1;
+    Lattice lattice2;
+
+    std::stringstream sstr;
+
+    boost::scoped_ptr< LatticeWriter<std::ostream> > writer(new PsiLatticeWriter());
+    boost::scoped_ptr< LatticeReader<std::istream> > reader(new PsiLatticeReader());
+
+    lattice_preparators::prepareAdvancedLattice(lattice1);
+
+    writer->writeLattice(lattice1, sstr);
+
+    reader->readIntoLattice(sstr, lattice2);
+
+    BOOST_CHECK_EQUAL(lattice1.getAllText(), lattice2.getAllText());
+    BOOST_CHECK_EQUAL(lattice1.getFirstVertex(), lattice2.getFirstVertex());
+    BOOST_CHECK_EQUAL(lattice1.getLastVertex(), lattice2.getLastVertex());
+    BOOST_CHECK_EQUAL(lattice1.countAllVertices(), lattice2.countAllVertices());
+
+}
+
+
+BOOST_AUTO_TEST_CASE( psi_lattice_writer_reflexive_regular ) {
+
+    Lattice lattice1;
+    Lattice lattice2;
+
+    std::stringstream sstr;
+
+    boost::scoped_ptr< LatticeWriter<std::ostream> > writer(new PsiLatticeWriter());
+    boost::scoped_ptr< LatticeReader<std::istream> > reader(new PsiLatticeReader());
+
+    lattice_preparators::prepareRegularLattice(lattice1);
+
+    writer->writeLattice(lattice1, sstr);
+
+    reader->readIntoLattice(sstr, lattice2);
+
+    BOOST_CHECK_EQUAL(lattice1.getAllText(), lattice2.getAllText());
+    BOOST_CHECK_EQUAL(lattice1.getFirstVertex(), lattice2.getFirstVertex());
+    BOOST_CHECK_EQUAL(lattice1.getLastVertex(), lattice2.getLastVertex());
+    BOOST_CHECK_EQUAL(lattice1.countAllVertices(), lattice2.countAllVertices());
+
+}
+
+
+BOOST_AUTO_TEST_CASE( psi_lattice_writer_reflexive_not_covered_text ) {
+
+    Lattice lattice1;
+    Lattice lattice2;
+
+    std::stringstream sstr;
+
+    boost::scoped_ptr< LatticeWriter<std::ostream> > writer(new PsiLatticeWriter());
+    boost::scoped_ptr< LatticeReader<std::istream> > reader(new PsiLatticeReader());
+
+    lattice_preparators::prepareLatticeWithNotCoveredText(lattice1);
+
+    writer->writeLattice(lattice1, sstr);
+
+    reader->readIntoLattice(sstr, lattice2);
+
+WARN(lattice1.getAllText() << " =?= " << lattice2.getAllText());
+
+    BOOST_CHECK_EQUAL(lattice1.getAllText(), lattice2.getAllText());
+    BOOST_CHECK_EQUAL(lattice1.getFirstVertex(), lattice2.getFirstVertex());
+    BOOST_CHECK_EQUAL(lattice1.getLastVertex(), lattice2.getLastVertex());
+    BOOST_CHECK_EQUAL(lattice1.countAllVertices(), lattice2.countAllVertices());
+
 }
 
 

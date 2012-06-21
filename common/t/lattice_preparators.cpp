@@ -475,3 +475,22 @@ void lattice_preparators::prepareLatticeWithOneSymbolTokens(Lattice & lattice, s
     delete [] vd;
 
 }
+
+
+void lattice_preparators::prepareLatticeWithNotCoveredText(Lattice & lattice) {
+
+    lattice.appendString("Ala ma&nbsp;<b>kta</b>.");
+    lattice.addSymbols(
+        lattice.getFirstVertex(),
+        lattice.getVertexForRawCharIndex(6)
+        );
+    lattice.addSymbols(
+        lattice.getVertexForRawCharIndex(15),
+        lattice.getVertexForRawCharIndex(18)
+        );
+    lattice.addSymbols(
+        lattice.getVertexForRawCharIndex(22),
+        lattice.getVertexForRawCharIndex(23)
+        );
+
+}
