@@ -1,2 +1,4 @@
 01 0000 17    ala_ma_kota_i_psa frag,txt-reader  ala_ma_kota_i_psa FRAG[]
-02 0019 12    ala_ma_kotka frag,txt-reader       ala_ma_kotka FRAG[]
+02 0017 01    \n           ∅                     ∅           ∅
+03 0018 01    \n           ∅                     ∅           ∅
+04 0019 12    ala_ma_kotka frag,txt-reader       ala_ma_kotka FRAG[]
