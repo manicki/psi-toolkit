@@ -111,7 +111,10 @@ void PsiLatticeReader::Worker::doRun() {
                             PLACEHOLDER
                         ));
                     }
-                    if (lattice_.getLayerTagManager().isThere("symbol", tags)) {
+                    if (
+                        lattice_.getLayerTagManager().isThere("symbol", tags) ||
+                        lattice_.getLayerTagManager().isThere("∅", tags)
+                    ) {
                         lattice_.appendString(form.substr(
                             lattice_.getVertexRawCharIndex(lattice_.getLastVertex())
                                 - item.beginning
@@ -126,6 +129,8 @@ void PsiLatticeReader::Worker::doRun() {
                     // Don't need to append lattice.
                 }
             }
+
+            if (lattice_.getLayerTagManager().isThere("∅", tags)) continue;
 
 
             // Defining source vertex.
