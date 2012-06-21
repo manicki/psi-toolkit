@@ -12,9 +12,6 @@ digraph g {
 	4 -> 6 [label="ma (token) 'ma'"];
 	6 -> 12 [label="&nbsp; (symbol) ' "];
 	6 -> 12 [label="&nbsp; (token) ' '"];
-	12 -> 13 [label="< (symbol) '<"];
-	13 -> 14 [label="b (symbol) 'b"];
-	14 -> 15 [label="> (symbol) '>"];
 	15 -> L0 [label="k (symbol) 'k"];
 	15 -> 16 [label="k (symbol) 'k"];
 	L0 -> 16 [label="o (symbol) 'o"];
@@ -22,10 +19,8 @@ digraph g {
 	17 -> 18 [label="a (symbol) 'a"];
 	15 -> 18 [label="kta (token) 'kta'"];
 	15 -> 18 [label="kta (token) 'kota'"];
-	18 -> 19 [label="< (symbol) '<"];
-	19 -> 20 [label="/ (symbol) '/"];
-	20 -> 21 [label="b (symbol) 'b"];
-	21 -> 22 [label="> (symbol) '>"];
 	22 -> 23 [label=". (symbol) '."];
 	22 -> 23 [label=". (token) '.'"];
+	12 -> 15 [style=invis];
+	18 -> 22 [style=invis];
 }

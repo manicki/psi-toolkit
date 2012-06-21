@@ -14,9 +14,6 @@ digraph g {
 	4 -> 6 [label="ma (token) 'ma'"];
 	6 -> 12 [label="&nbsp; (symbol) ' "];
 	6 -> 12 [label="&nbsp; (token) ' '"];
-	12 -> 13 [label="< (symbol) '<"];
-	13 -> 14 [label="b (symbol) 'b"];
-	14 -> 15 [label="> (symbol) '>"];
 	12 -> 15 [label="<b> (html,markup) open"];
 	15 -> L0 [label="k (symbol) 'k"];
 	15 -> 16 [label="k (symbol) 'k"];
@@ -26,10 +23,6 @@ digraph g {
 	15 -> 18 [label="kta (token) 'kta'"];
 	15 -> 18 [label="kta (corrector,token) 'kota'"];
 	15 -> 18 [label="kta (gobio,parse) fraza_rzeczownikowa"];
-	18 -> 19 [label="< (symbol) '<"];
-	19 -> 20 [label="/ (symbol) '/"];
-	20 -> 21 [label="b (symbol) 'b"];
-	21 -> 22 [label="> (symbol) '>"];
 	18 -> 22 [label="</b> (html,markup) close"];
 	12 -> 22 [label="<b>kta</b> (gobio,parse) fraza_rzeczownikowa"];
 	4 -> 22 [label="ma&nbsp;<b>kta</b> (gobio,parse) fraza_czasownikowa"];
