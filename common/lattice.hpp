@@ -373,6 +373,9 @@ public:
      */
     VertexDescriptor getLastVertex();
 
+    /**
+     * Gets vertex's raw char index; if vertex is loose, a WrongVertexException is thrown
+     */
     size_t getVertexRawCharIndex(VertexDescriptor vd);
 
     /**

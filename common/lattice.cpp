@@ -542,19 +542,11 @@ Lattice::Score Lattice::getEdgeScore(Lattice::EdgeDescriptor edge) const {
 }
 
 Lattice::VertexDescriptor Lattice::getEdgeSource(EdgeDescriptor edge) const {
-    if (edge.implicitIndex < 0) {
-        return VertexDescriptor(graph_[boost::source(edge.descriptor, graph_)].index);
-    }
-
-    return VertexDescriptor(edge.implicitIndex);
+    return VertexDescriptor(getEdgeBeginIndex(edge));
 }
 
 Lattice::VertexDescriptor Lattice::getEdgeTarget(EdgeDescriptor edge) const {
-    if (edge.implicitIndex < 0) {
-        return VertexDescriptor(graph_[boost::target(edge.descriptor, graph_)].index);
-    }
-
-    return VertexDescriptor(edge.implicitIndex + symbolLength_(edge.implicitIndex));
+    return VertexDescriptor(getEdgeEndIndex(edge));
 }
 
 
