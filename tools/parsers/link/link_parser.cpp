@@ -294,7 +294,7 @@ void LinkParser::fillInBlanks(Lattice & lattice) {
                 )
             );
             Lattice::EdgeSequence::Builder builder(lattice);
-            for (int i = currentIndex; i < edgeBeginIndex; i++) {
+            for (size_t i = currentIndex; i < edgeBeginIndex; i++) {
                 builder.addEdge(lattice.firstOutEdge(
                     lattice.getVertexForRawCharIndex(i),
                     lattice.getLayerTagManager().getMask("symbol")
