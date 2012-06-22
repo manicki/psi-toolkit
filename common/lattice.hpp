@@ -485,7 +485,16 @@ public:
      */
     VertexDescriptor getEdgeTarget(EdgeDescriptor edge) const;
 
+    /**
+     * Returns edge source's index if edge source is not loose.
+     * Otherwise, a WrongVertexException is thrown.
+     */
     int getEdgeBeginIndex(EdgeDescriptor edge) const;
+
+    /**
+     * Returns edge target's index if edge target is not loose.
+     * Otherwise, a WrongVertexException is thrown.
+     */
     int getEdgeEndIndex(EdgeDescriptor edge) const;
 
     /**
@@ -610,6 +619,9 @@ private:
 
     size_t symbolLength_(int ix) const;
     const LayerTagCollection& getSymbolTag_() const;
+
+    int getEdgeSourceInternalIndex_(EdgeDescriptor edge) const;
+    int getEdgeTargetInternalIndex_(EdgeDescriptor edge) const;
 
     VertexDescriptor firstSequenceVertex_(const EdgeSequence& sequence);
     VertexDescriptor lastSequenceVertex_(const EdgeSequence& sequence);

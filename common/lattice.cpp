@@ -98,7 +98,7 @@ Lattice::VertexDescriptor Lattice::getLastVertex() {
 
 size_t Lattice::getVertexRawCharIndex(VertexDescriptor vd) {
     if (isLooseVertex(vd)) {
-        throw WrongVertexException("Loose vertex have no raw char index");
+        throw WrongVertexException("Loose vertices have no raw char index");
     }
     return size_t(vd);
 }
@@ -497,25 +497,27 @@ const LayerTagCollection& Lattice::getEdgeLayerTags(Lattice::EdgeDescriptor edge
 }
 
 Lattice::VertexDescriptor Lattice::getEdgeSource(EdgeDescriptor edge) const {
-    return VertexDescriptor(getEdgeBeginIndex(edge));
+    return VertexDescriptor(getEdgeSourceInternalIndex_(edge));
 }
 
 Lattice::VertexDescriptor Lattice::getEdgeTarget(EdgeDescriptor edge) const {
-    return VertexDescriptor(getEdgeEndIndex(edge));
+    return VertexDescriptor(getEdgeTargetInternalIndex_(edge));
 }
 
 int Lattice::getEdgeBeginIndex(Lattice::EdgeDescriptor edge) const {
-    if (edge.isExplicit()) {
-        return graph_[boost::source(edge.descriptor, graph_)].index;
+    int result = getEdgeSourceInternalIndex_(edge);
+    if (isLooseVertex(result)) {
+        throw WrongVertexException("Edge source is loose. Loose vertices have no raw char index");
     }
-    return edge.implicitIndex;
+    return result;
 }
 
 int Lattice::getEdgeEndIndex(Lattice::EdgeDescriptor edge) const {
-    if (edge.isExplicit()) {
-        return graph_[boost::target(edge.descriptor, graph_)].index;
+    int result = getEdgeTargetInternalIndex_(edge);
+    if (isLooseVertex(result)) {
+        throw WrongVertexException("Edge target is loose. Loose vertices have no raw char index");
     }
-    return edge.implicitIndex + symbolLength_(edge.implicitIndex);
+    return result;
 }
 
 int Lattice::getEdgeLength(Lattice::EdgeDescriptor edge) const {
@@ -789,6 +791,21 @@ size_t Lattice::symbolLength_(int ix) const {
 const LayerTagCollection& Lattice::getSymbolTag_() const {
     return symbolTag_;
 }
+
+int Lattice::getEdgeSourceInternalIndex_(Lattice::EdgeDescriptor edge) const {
+    if (edge.isExplicit()) {
+        return graph_[boost::source(edge.descriptor, graph_)].index;
+    }
+    return edge.implicitIndex;
+}
+
+int Lattice::getEdgeTargetInternalIndex_(Lattice::EdgeDescriptor edge) const {
+    if (edge.isExplicit()) {
+        return graph_[boost::target(edge.descriptor, graph_)].index;
+    }
+    return edge.implicitIndex + symbolLength_(edge.implicitIndex);
+}
+
 
 Lattice::EdgeSequence::EdgeSequence() : begin(0), end(0) {
 }
