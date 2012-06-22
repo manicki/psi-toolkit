@@ -283,7 +283,7 @@ void LinkParser::fillInBlanks(Lattice & lattice) {
     Lattice::EdgesSortedBySourceIterator ei(lattice, maskToken);
     while (ei.hasNext()) {
         Lattice::EdgeDescriptor edge = ei.next();
-        edgeBeginIndex = lattice.getVertexRawCharIndex(lattice.getEdgeSource(edge));
+        edgeBeginIndex = lattice.getEdgeBeginIndex(edge);
         if (currentIndex < edgeBeginIndex) {
             AnnotationItem aiLink(
                 "B",
@@ -308,6 +308,6 @@ void LinkParser::fillInBlanks(Lattice & lattice) {
                 builder.build()
             );
         }
-        currentIndex = lattice.getVertexRawCharIndex(lattice.getEdgeTarget(edge));
+        currentIndex = lattice.getEdgeEndIndex(edge);
     }
 }
