@@ -496,6 +496,14 @@ const LayerTagCollection& Lattice::getEdgeLayerTags(Lattice::EdgeDescriptor edge
     return getSymbolTag_();
 }
 
+Lattice::VertexDescriptor Lattice::getEdgeSource(EdgeDescriptor edge) const {
+    return VertexDescriptor(getEdgeBeginIndex(edge));
+}
+
+Lattice::VertexDescriptor Lattice::getEdgeTarget(EdgeDescriptor edge) const {
+    return VertexDescriptor(getEdgeEndIndex(edge));
+}
+
 int Lattice::getEdgeBeginIndex(Lattice::EdgeDescriptor edge) const {
     if (edge.isExplicit()) {
         return graph_[boost::source(edge.descriptor, graph_)].index;
@@ -540,15 +548,6 @@ Lattice::Score Lattice::getEdgeScore(Lattice::EdgeDescriptor edge) const {
     }
     return 0.0;
 }
-
-Lattice::VertexDescriptor Lattice::getEdgeSource(EdgeDescriptor edge) const {
-    return VertexDescriptor(getEdgeBeginIndex(edge));
-}
-
-Lattice::VertexDescriptor Lattice::getEdgeTarget(EdgeDescriptor edge) const {
-    return VertexDescriptor(getEdgeEndIndex(edge));
-}
-
 
 const std::string& Lattice::getAllText() const {
     return allText_;
