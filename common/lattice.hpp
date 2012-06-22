@@ -68,6 +68,7 @@ public:
     struct VertexEntry {
         /**
          * Vertex's position in text.
+         * For loose vertices: index < 0.
          */
         int index;
 
@@ -216,6 +217,10 @@ public:
                 return descriptor == other.descriptor;
             }
             return implicitIndex == other.implicitIndex;
+        }
+
+        bool isExplicit() const {
+            return implicitIndex < 0;
         }
     };
 

@@ -184,7 +184,7 @@ Lattice::EdgeDescriptor Lattice::addEdge(
         if (tags != oldTags) {
             tags = createUnion(oldTags, tags);
         }
-        if (edge.implicitIndex < 0) {
+        if (edge.isExplicit()) {
             if (tags != oldTags) {
                 graph_[edge.descriptor].tagList = tags;
             }
@@ -476,7 +476,7 @@ AnnotationItemManager& Lattice::getAnnotationItemManager() {
 }
 
 const AnnotationItem Lattice::getEdgeAnnotationItem(Lattice::EdgeDescriptor edge) {
-    if (edge.implicitIndex < 0) {
+    if (edge.isExplicit()) {
         return graph_[edge.descriptor].item;
     }
     std::string::iterator iter = allText_.begin() + edge.implicitIndex;
@@ -490,28 +490,28 @@ const AnnotationItem Lattice::getEdgeAnnotationItem(Lattice::EdgeDescriptor edge
 }
 
 const LayerTagCollection& Lattice::getEdgeLayerTags(Lattice::EdgeDescriptor edge) const {
-    if (edge.implicitIndex < 0) {
+    if (edge.isExplicit()) {
         return graph_[edge.descriptor].tagList;
     }
     return getSymbolTag_();
 }
 
 int Lattice::getEdgeBeginIndex(Lattice::EdgeDescriptor edge) const {
-    if (edge.implicitIndex < 0) {
+    if (edge.isExplicit()) {
         return graph_[boost::source(edge.descriptor, graph_)].index;
     }
     return edge.implicitIndex;
 }
 
 int Lattice::getEdgeEndIndex(Lattice::EdgeDescriptor edge) const {
-    if (edge.implicitIndex < 0) {
+    if (edge.isExplicit()) {
         return graph_[boost::target(edge.descriptor, graph_)].index;
     }
     return edge.implicitIndex + symbolLength_(edge.implicitIndex);
 }
 
 int Lattice::getEdgeLength(Lattice::EdgeDescriptor edge) const {
-    if (edge.implicitIndex < 0) {
+    if (edge.isExplicit()) {
         if (isLooseVertex(getEdgeSource(edge)) || isLooseVertex(getEdgeTarget(edge))) {
             throw WrongVertexException("Edges linking loose vertices have no well-defined length");
         }
@@ -522,20 +522,20 @@ int Lattice::getEdgeLength(Lattice::EdgeDescriptor edge) const {
 }
 
 bool Lattice::isEdgeHidden(Lattice::EdgeDescriptor edge) const {
-    return edge.implicitIndex > -1
+    return !edge.isExplicit()
         && hiddenImplicitOutEdges_[edge.implicitIndex]
         && !visibleImplicitOutEdges_[edge.implicitIndex];
 }
 
 std::list<Lattice::Partition> Lattice::getEdgePartitions(Lattice::EdgeDescriptor edge) const {
-    if (edge.implicitIndex < 0) {
+    if (edge.isExplicit()) {
         return graph_[edge.descriptor].partitions;
     }
     return std::list<Lattice::Partition>();
 }
 
 Lattice::Score Lattice::getEdgeScore(Lattice::EdgeDescriptor edge) const {
-    if (edge.implicitIndex < 0) {
+    if (edge.isExplicit()) {
         return graph_[edge.descriptor].score;
     }
     return 0.0;
