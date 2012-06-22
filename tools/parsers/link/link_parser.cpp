@@ -283,31 +283,35 @@ void LinkParser::fillInBlanks(Lattice & lattice) {
     Lattice::EdgesSortedBySourceIterator ei(lattice, maskToken);
     while (ei.hasNext()) {
         Lattice::EdgeDescriptor edge = ei.next();
-        edgeBeginIndex = lattice.getEdgeBeginIndex(edge);
-        if (currentIndex < edgeBeginIndex) {
-            AnnotationItem aiLink(
-                "B",
-                StringFrag(
-                    lattice.getAllText(),
+        try {
+            edgeBeginIndex = lattice.getEdgeBeginIndex(edge);
+            if (currentIndex < edgeBeginIndex) {
+                AnnotationItem aiLink(
+                    "B",
+                    StringFrag(
+                        lattice.getAllText(),
+                        currentIndex,
+                        edgeBeginIndex - currentIndex
+                    )
+                );
+                Lattice::EdgeSequence::Builder builder(lattice);
+                for (size_t i = currentIndex; i < edgeBeginIndex; i++) {
+                    builder.addEdge(lattice.firstOutEdge(
+                        lattice.getVertexForRawCharIndex(i),
+                        lattice.getLayerTagManager().getMask("symbol")
+                    ));
+                }
+                lattice.addEdge(
                     currentIndex,
-                    edgeBeginIndex - currentIndex
-                )
-            );
-            Lattice::EdgeSequence::Builder builder(lattice);
-            for (size_t i = currentIndex; i < edgeBeginIndex; i++) {
-                builder.addEdge(lattice.firstOutEdge(
-                    lattice.getVertexForRawCharIndex(i),
-                    lattice.getLayerTagManager().getMask("symbol")
-                ));
+                    edgeBeginIndex,
+                    aiLink,
+                    tagToken,
+                    builder.build()
+                );
             }
-            lattice.addEdge(
-                currentIndex,
-                edgeBeginIndex,
-                aiLink,
-                tagToken,
-                builder.build()
-            );
+            currentIndex = lattice.getEdgeEndIndex(edge);
+        } catch (WrongVertexException) {
+            // If loose vertices then skip them and continue.
         }
-        currentIndex = lattice.getEdgeEndIndex(edge);
     }
 }
