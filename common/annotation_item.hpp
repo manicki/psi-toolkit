@@ -63,9 +63,27 @@ public:
 
 private:
 
+    /**
+     * Stores the annotation item's category.
+     */
     std::string category_;
+
+    /**
+     * Stores the annotation item's text as a string frag.
+     */
     StringFrag text_;
+
+    /**
+     * Stores the values of the annotation item's attributes.
+     * The value of the n'th attribute is stored in the n'th cell of the vector.
+     * Other cells are empty.
+     */
     std::vector<std::string> values_;
+
+    /**
+     * The value of attributes_[n] indicates whether the value of the n'th attribute
+     * is present in the values_ vector.
+     */
     boost::dynamic_bitset<> attributes_;
 
     size_t resize_(size_t size);
