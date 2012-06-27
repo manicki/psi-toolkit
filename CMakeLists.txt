@@ -3,11 +3,11 @@ cmake_minimum_required(VERSION 2.8)
 project(psi-toolkit CXX)
 
 SET(MY_TARGETLIB_PREFIX "libpsitoolkit_")
-
 SET(CMAKE_INSTALL_RPATH "${CMAKE_INSTALL_PREFIX}/lib")
 
-# coverage mode
+include_directories(${psi-toolkit_SOURCE_DIR})
 
+# coverage mode
 if(CMAKE_CONFIGURATION_TYPES)
   list(APPEND CMAKE_CONFIGURATION_TYPES Coverage)
   list(REMOVE_DUPLICATES CMAKE_CONFIGURATION_TYPES)
@@ -36,94 +36,15 @@ MARK_AS_ADVANCED(
     CMAKE_EXE_LINKER_FLAGS_COVERAGE
     CMAKE_SHARED_LINKER_FLAGS_COVERAGE)
 
-# ----------------------------------------------------
-
 # extracting information from git, see http://stackoverflow.com/questions/1435953/how-can-i-pass-git-sha1-to-compiler-as-definition-using-cmake
-
 list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake-modules/")
 include(GetGitRevisionDescription)
 get_git_head_revision(GIT_REFSPEC GIT_SHA1)
 git_last_date(GIT_LAST_DATE)
 
-# ----------------------------------------------------
-
-include_directories(${psi-toolkit_SOURCE_DIR})
-
-# Logging
-find_library(LOG4CPP_LIB NAMES log4cpp)
-find_path(LOG4CPP_INCLUDE log4cpp/Appender.hh)
-
-if(EXISTS ${LOG4CPP_LIB} AND EXISTS ${LOG4CPP_INCLUDE})
-  message("-- Using Log4cpp logging...")
-  include_directories(${LOG4CPP_INCLUDE})
-  link_directories(${LOG4CPP_LIB})
-  set(HAVE_LOG4CPP 1)
-else()
-  message("-- Not using Log4cpp...")
-  set(HAVE_LOG4CPP 0)
-endif(EXISTS ${LOG4CPP_LIB} AND EXISTS ${LOG4CPP_INCLUDE})
-
-option(USE_ASPELL "Using aspell" ON)
-message(STATUS "Using aspell ${USE_ASPELL}")
-
-if (USE_ASPELL)
-  find_library(ASPELL_LIB NAMES aspell)
-  find_path(ASPELL_INCLUDE aspell.h)
-  if(EXISTS ${ASPELL_LIB} AND EXISTS ${ASPELL_INCLUDE})
-    message("-- Using Aspell...")
-    include_directories(${ASPELL_INCLUDE})
-    link_directories(${ASPELL_LIB})
-    link_directories("${psi-toolkit_BINARY_DIR}/tools/spellcheckers/aspell/plugin")
-    set(HAVE_ASPELL 1)
-  else()
-    message("-- Not using Aspell (can not find required libraries)...")
-    set(HAVE_ASPELL 0)
-  endif(EXISTS ${ASPELL_LIB} AND EXISTS ${ASPELL_INCLUDE})
-else()
-  message("-- Not using Aspell...")
-  set(HAVE_ASPELL 0)
-endif(USE_ASPELL)
-
-
-# CMPH library (for perfect hashing)
-find_library(CMPH_LIB NAMES cmph)
-find_path(CMPH_INCLUDE cmph.h)
-
-if(EXISTS ${CMPH_LIB} AND EXISTS ${CMPH_INCLUDE})
-  message("-- Using CMPH...")
-  include_directories(${CMPH_INCLUDE})
-  link_directories(${CMPH_LIB})
-  set(HAVE_CMPH 1)
-else()
-  message("-- Not using CMPH...")
-  set(HAVE_CMPH 0)
-endif(EXISTS ${CMPH_LIB} AND EXISTS ${CMPH_INCLUDE})
-
-# SFST library (for TRmorph)
-option(USE_SFST "Using SFST" OFF)
-message(STATUS "Using SFST ${USE_SFST}")
-
-if (USE_SFST)
-   find_path(SFST_LIB libsfst.so /usr/lib/sfst)
-   find_path(SFST_LIB libsfst.so /usr/lib)
-   find_path(SFST_INCLUDE fst.h /usr/include/sfst)
-
-   if(EXISTS ${SFST_LIB} AND EXISTS ${SFST_INCLUDE})
-      message("-- Using SFST...")
-      include_directories(${SFST_INCLUDE})
-      link_directories(${SFST_LIB})
-      link_directories("${psi-toolkit_BINARY_DIR}/tools/lemmatizers/sfst/plugin")
-      set(HAVE_SFST 1)
-   else()
-      message("-- Not using SFST...")
-      set(HAVE_SFST 0)
-   endif(EXISTS ${SFST_LIB} AND EXISTS ${SFST_INCLUDE})
-endif (USE_SFST)
-
-# Finds and includes external libraries
-set(Boost_USE_STATIC_LIBS OFF)
-set(Boost_USE_STATIC_RUNTIME OFF)
-find_package(Boost COMPONENTS program_options graph serialization filesystem system thread unit_test_framework prg_exec_monitor REQUIRED)
+# ====================================================
+# Options for installable version
+# ====================================================
 
 set(PSITOOLKIT_INSTALL_DATA_DIR share/psi-toolkit)
 set(INSTALL_DATA_DIR "${CMAKE_INSTALL_PREFIX}/${PSITOOLKIT_INSTALL_DATA_DIR}")
@@ -148,13 +69,10 @@ else()
   message("-- Setting default package os")
 endif()
 
-option(USE_JAVA "Compiling Java components" OFF)
-message(STATUS "Compiling Java components ${USE_JAVA}")
-
 option(DOWNLOAD_DATA "Downloading data (artifacts)" ON)
 message(STATUS "Downloading data (artifacts) ${DOWNLOAD_DATA}")
 
-# Set psi-server variables
+# setting PSI-Server variables
 if(IS_INSTALLABLE)
     # ./server/website content has to be moved to /var/psi-server/website during installation
     set(WEBSITE_ROOT "/var/lib/psi-server/website" CACHE STRING "The website root directory")
@@ -164,7 +82,103 @@ endif(IS_INSTALLABLE)
 
 message(STATUS "The psi-server root directory is set to ${WEBSITE_ROOT}")
 
-# USE_xxx
+
+# ====================================================
+# Finds and includes external libraries
+# ====================================================
+
+# ----------------------------------------------------
+# Boost
+# ----------------------------------------------------
+set(Boost_USE_STATIC_LIBS OFF)
+set(Boost_USE_STATIC_RUNTIME OFF)
+find_package(Boost COMPONENTS program_options graph serialization filesystem system thread
+    unit_test_framework prg_exec_monitor REQUIRED)
+
+# ----------------------------------------------------
+# Logging
+# ----------------------------------------------------
+find_library(LOG4CPP_LIB NAMES log4cpp)
+find_path(LOG4CPP_INCLUDE log4cpp/Appender.hh)
+
+if(EXISTS ${LOG4CPP_LIB} AND EXISTS ${LOG4CPP_INCLUDE})
+  message(STATUS "Found Log4cpp")
+  include_directories(${LOG4CPP_INCLUDE})
+  link_directories(${LOG4CPP_LIB})
+  set(HAVE_LOG4CPP 1)
+else()
+  message(WARNING "Log4cpp not found")
+  set(HAVE_LOG4CPP 0)
+endif(EXISTS ${LOG4CPP_LIB} AND EXISTS ${LOG4CPP_INCLUDE})
+
+# ----------------------------------------------------
+# Aspell
+# ----------------------------------------------------
+option(USE_ASPELL "Using aspell" ON)
+message(STATUS "Using aspell ${USE_ASPELL}")
+
+if (USE_ASPELL)
+  find_library(ASPELL_LIB NAMES aspell)
+  find_path(ASPELL_INCLUDE aspell.h)
+  if(EXISTS ${ASPELL_LIB} AND EXISTS ${ASPELL_INCLUDE})
+    message(STATUS "Found Aspell")
+    include_directories(${ASPELL_INCLUDE})
+    link_directories(${ASPELL_LIB})
+    link_directories("${psi-toolkit_BINARY_DIR}/tools/spellcheckers/aspell/plugin")
+    set(HAVE_ASPELL 1)
+  else()
+    message(WARNING "Aspell not found: aspell disabled")
+    set(HAVE_ASPELL 0)
+  endif(EXISTS ${ASPELL_LIB} AND EXISTS ${ASPELL_INCLUDE})
+else()
+  set(HAVE_ASPELL 0)
+endif(USE_ASPELL)
+
+# ----------------------------------------------------
+# CMPH library (for perfect hashing)
+# ----------------------------------------------------
+find_library(CMPH_LIB NAMES cmph)
+find_path(CMPH_INCLUDE cmph.h)
+
+if(EXISTS ${CMPH_LIB} AND EXISTS ${CMPH_INCLUDE})
+  message(STATUS "Found CMPH")
+  include_directories(${CMPH_INCLUDE})
+  link_directories(${CMPH_LIB})
+  set(HAVE_CMPH 1)
+else()
+  message(WARNING "CMPH not found")
+  set(HAVE_CMPH 0)
+endif(EXISTS ${CMPH_LIB} AND EXISTS ${CMPH_INCLUDE})
+
+# ----------------------------------------------------
+# SFST library (for TRmorph)
+# ----------------------------------------------------
+option(USE_SFST "Using SFST" OFF)
+message(STATUS "Using SFST ${USE_SFST}")
+
+if (USE_SFST)
+   find_path(SFST_LIB libsfst.so /usr/lib/sfst)
+   find_path(SFST_LIB libsfst.so /usr/lib)
+   find_path(SFST_INCLUDE fst.h /usr/include/sfst)
+
+   if(EXISTS ${SFST_LIB} AND EXISTS ${SFST_INCLUDE})
+      message(STATUS "Found SFST")
+      include_directories(${SFST_INCLUDE})
+      link_directories(${SFST_LIB})
+      link_directories("${psi-toolkit_BINARY_DIR}/tools/lemmatizers/sfst/plugin")
+      set(HAVE_SFST 1)
+   else()
+      message(WARNING "SFST not found")
+      set(HAVE_SFST 0)
+   endif(EXISTS ${SFST_LIB} AND EXISTS ${SFST_INCLUDE})
+endif (USE_SFST)
+
+# ----------------------------------------------------
+# Java components
+# ----------------------------------------------------
+option(USE_JAVA "Using Java components" OFF)
+message(STATUS "Using Java components ${USE_JAVA}")
+
 if(USE_JAVA)
     enable_language(Java)
 
@@ -183,16 +197,22 @@ if(USE_JAVA)
     set(HAVE_JAVA 1)
 endif(USE_JAVA)
 
+# ----------------------------------------------------
+# Finds PostgreSQL
+# ----------------------------------------------------
 option(USE_POSTGRESQL "Compiling PostgreSQL components" OFF)
 message(STATUS "Compiling PostgreSQL components ${USE_POSTGRESQL}")
 
 if(USE_POSTGRESQL)
-        find_package(PostgreSQL REQUIRED)
-        include_directories(${PostgreSQL_INCLUDE_DIRS})
-        link_directories(${PostgreSQL_LIBRARY_DIRS})
-        set(HAVE_POSTGRESQL 1)
+    find_package(PostgreSQL REQUIRED)
+    include_directories(${PostgreSQL_INCLUDE_DIRS})
+    link_directories(${PostgreSQL_LIBRARY_DIRS})
+    set(HAVE_POSTGRESQL 1)
 endif(USE_POSTGRESQL)
 
+# ----------------------------------------------------
+# Regular expression libraries
+# ----------------------------------------------------
 option(WITH_RE2 "Using RE2 regular expression library" OFF)
 message(STATUS "Using RE2 regular expression library ${WITH_RE2}")
 
@@ -207,6 +227,9 @@ if(WITH_PCRE)
     set(HAVE_PCRE 1)
 endif(WITH_PCRE)
 
+# ----------------------------------------------------
+# Bonsai and puddle
+# ----------------------------------------------------
 option(USE_BONSAI_PARSEGRAPH "Using bonsai ParseGraph with puddle shallow parser" OFF)
 message(STATUS "Using bonsai ParseGraph with puddle shallow parser ${USE_BONSAI_PARSEGRAPH}")
 
@@ -220,28 +243,41 @@ if(USE_STRING_FRAG_VALIDATION)
     set(STRING_FRAG_VALIDATION 1)
 endif(USE_STRING_FRAG_VALIDATION)
 
+# ----------------------------------------------------
 # Finds SWIG
-
+# ----------------------------------------------------
 find_package(SWIG)
 if(SWIG_FOUND)
 
+  message(STATUS "Found SWIG version: ${SWIG_VERSION}")
   set(HAVE_SWIG_BINDINGS 1)
 
   find_package(PerlLibs)
-  if (PERLLIBS_FOUND)
+  if(PERLLIBS_FOUND)
     set(HAVE_PERL_BINDINGS 1)
     include_directories(${PERL_INCLUDE_PATH})
+    message(STATUS "Have Perl bindings ${HAVE_PERL_BINDINGS}")
   endif(PERLLIBS_FOUND)
 
   find_package(PythonLibs)
-  if (PYTHONLIBS_FOUND)
+  if(PYTHONLIBS_FOUND)
     set(HAVE_PYTHON_BINDINGS 1)
+    include_directories(${PYTHON_INCLUDE_PATH})
+    message(STATUS "Have Python bindings ${HAVE_PYTHON_BINDINGS}")
   endif(PYTHONLIBS_FOUND)
+
+  find_package(Ruby)
+  if(RUBY_FOUND)
+    set(HAVE_RUBY_BINDINGS 1)
+    include_directories(${RUBY_INCLUDE_PATH})
+    message(STATUS "Have Ruby bindings ${HAVE_RUBY_BINDINGS}")
+  endif(RUBY_FOUND)
+
 endif(SWIG_FOUND)
 
-
+# ----------------------------------------------------
 # Finds GraphViz
-
+# ----------------------------------------------------
 option(USE_GV_WRITER "Using gv-writer" ON)
 message(STATUS "Using gv-writer ${USE_GV_WRITER}")
 
@@ -254,28 +290,30 @@ if (USE_GV_WRITER)
         link_directories("${psi-toolkit_BINARY_DIR}/formats/gv/plugin")
         set(HAVE_GRAPHVIZ 1)
     else (GRAPHVIZ_FOUND)
-        message(WARNING "Could not find GraphViz: gv-writer disabled")
+        message(WARNING "GraphViz not found: gv-writer disabled")
         set(HAVE_GRAPHVIZ 0)
     endif (GRAPHVIZ_FOUND)
 else (USE_GV_WRITER)
     set(HAVE_GRAPHVIZ 0)
 endif (USE_GV_WRITER)
 
-# libmagic
-
+# ----------------------------------------------------
+# Finds LibMagic
+# ----------------------------------------------------
 find_package(LibMagic)
 if(LIBMAGIC_FOUND)
-    message(STATUS "Found libmagic")
+    message(STATUS "Found LibMagic")
     include_directories(${LibMagic_INCLUDE_DIRS})
     link_directories(${LibMagic_LIBRARY})
     set(HAVE_LIBMAGIC 1)
 else()
-    message(WARNING "Could not find libmagic library")
+    message(WARNING "LibMagic not found")
     set(HAVE_LIBMAGIC 0)
 endif(LIBMAGIC_FOUND)
 
+# ----------------------------------------------------
 # Finds Poppler
-
+# ----------------------------------------------------
 option(USE_PDF_READER "Using pdf-reader" ON)
 message(STATUS "Using pdf-reader ${USE_PDF_READER}")
 
@@ -288,15 +326,16 @@ if (USE_PDF_READER)
         link_directories("${psi-toolkit_BINARY_DIR}/formats/pdf/plugin")
         set(HAVE_POPPLER 1)
     else (POPPLER_FOUND)
-        message(WARNING "Could not find Poppler: pdf-reader disabled")
+        message(WARNING "Poppler not found: pdf-reader disabled")
         set(HAVE_POPPLER 0)
     endif (POPPLER_FOUND)
 else (USE_PDF_READER)
     set(HAVE_POPPLER 0)
 endif (USE_PDF_READER)
 
+# ----------------------------------------------------
 # Finds DjVuLibre
-
+# ----------------------------------------------------
 option(USE_DJVU_READER "Using djvu-reader" OFF)
 message(STATUS "Using djvu-reader ${USE_DJVU_READER}")
 
@@ -309,15 +348,16 @@ if (USE_DJVU_READER)
         link_directories("${psi-toolkit_BINARY_DIR}/formats/djvu/plugin")
         set(HAVE_DJVULIBRE 1)
     else (DJVULIBRE_FOUND)
-        message(WARNING "Could not find DjVuLibre: djvu-reader disabled")
+        message(WARNING "DjVuLibre not found: djvu-reader disabled")
         set(HAVE_DJVULIBRE 0)
     endif (DJVULIBRE_FOUND)
 else (USE_DJVU_READER)
     set(HAVE_DJVULIBRE 0)
 endif (USE_DJVU_READER)
 
+# ----------------------------------------------------
 # Finds Link Grammar
-
+# ----------------------------------------------------
 option(USE_LINK_GRAMMAR "Using link-parser" ON)
 message(STATUS "Using link-parser ${USE_LINK_GRAMMAR}")
 
@@ -330,15 +370,16 @@ if (USE_LINK_GRAMMAR)
         link_directories("${psi-toolkit_BINARY_DIR}/tools/parsers/link/plugin")
         set(HAVE_LINK_GRAMMAR 1)
     else (LINK_GRAMMAR_FOUND)
-        message(WARNING "Could not find LinkGrammar: link-parser disabled")
+        message(WARNING "LinkGrammar not found: link-parser disabled")
         set(HAVE_LINK_GRAMMAR 0)
     endif (LINK_GRAMMAR_FOUND)
 else (USE_LINK_GRAMMAR)
     set(HAVE_LINK_GRAMMAR 0)
 endif (USE_LINK_GRAMMAR)
 
+# ----------------------------------------------------
 # Links Antiword plugin
-
+# ----------------------------------------------------
 option(USE_DOC_READER "Using doc-reader" OFF)
 message(STATUS "Using doc-reader ${USE_DOC_READER}")
 
@@ -346,79 +387,9 @@ if (USE_DOC_READER)
     link_directories("${psi-toolkit_BINARY_DIR}/formats/doc/plugin")
 endif (USE_DOC_READER)
 
-
-# Sets compiler flags
-set(CMAKE_CXX_FLAGS "-g -Wall -Wundef -Wnon-virtual-dtor -Wextra")
-
-if (WITH_LOW_MEMORY_COMPILATION)
-  message("Setting low memory compilation flags")
-  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} --param ggc-min-expand=30 --param ggc-min-heapsize=8192")
-endif (WITH_LOW_MEMORY_COMPILATION)
-
-set(BASE_TARGETS common common-plugins utf8case sundown framework
-formats-apertium formats-bracketing formats-dot formats-guessing formats-nkjp formats-psi formats-simple formats-json-simple formats-txt formats-utt
-maxent tools-tokenizers-tp tools-segmenters-srx tools-recognizers-langguesser tools-parsers-gobio tools-parsers-puddle tools-taggers-metagger)
-
-set(TESTS_TARGETS common-tests framework-tests tools-tokenizers-tp-tests tools-segmenters-srx-tests tools-datastructures-psi_query-tests tools-recognizers-langguesser-tests utf8case-tests formats-bracketing-tests formats-dot-tests formats-utt-tests formats-psi-tests formats-simple-tests tools-parsers-gobio-tests tools-parsers-puddle-tests tools-taggers-metagger-tests formats-apertium-tests)
-
-if(HAVE_ASPELL)
-    set(TESTS_TARGETS ${TESTS_TARGETS} tools-spellcheckers-aspell-tests)
-endif(HAVE_ASPELL)
-
-if(USE_JAVA)
-    set(BASE_TARGETS ${BASE_TARGETS} tools-lemmatizers-morfologik)
-    set(TESTS_TARGETS ${TESTS_TARGETS} tools-lemmatizers-morfologik-tests)
-endif(USE_JAVA)
-
-if(HAVE_SFST)
-	#add_subdirectory(sfst)
-    #set(BASE_TARGETS ${BASE_TARGETS} sfst)
-    set(BASE_TARGETS ${BASE_TARGETS} tools-lemmatizers-sfst)
-    set(TESTS_TARGETS ${TESTS_TARGETS} tools-lemmatizers-sfst-tests)
-endif(HAVE_SFST)
-
-if(HAVE_CMPH)
-    set(BASE_TARGETS ${BASE_TARGETS} tools-datastructures-lexica)
-    set(TESTS_TARGETS ${TESTS_TARGETS} tools-datastructures-lexica-tests)
-
-    set(BASE_TARGETS ${BASE_TARGETS} tools-lexica-bilexicon)
-    set(TESTS_TARGETS ${TESTS_TARGETS} tools-lexica-bilexicon-tests)
-endif(HAVE_CMPH)
-
-if(USE_POSTGRESQL)
-        set(BASE_TARGETS ${BASE_TARGETS} lex-db)
-endif(USE_POSTGRESQL)
-
-if(USE_BONSAI_PARSEGRAPH)
-    include_directories(${BONSAI_PATH})
-endif(USE_BONSAI_PARSEGRAPH)
-
-if(HAVE_GRAPHVIZ)
-    set(BASE_TARGETS ${BASE_TARGETS} formats-gv)
-    set(TESTS_TARGETS ${TESTS_TARGETS} formats-gv-tests)
-endif(HAVE_GRAPHVIZ)
-
-if(HAVE_POPPLER)
-    set(BASE_TARGETS ${BASE_TARGETS} formats-pdf)
-endif(HAVE_POPPLER)
-
-if(HAVE_DJVULIBRE)
-    set(BASE_TARGETS ${BASE_TARGETS} formats-djvu)
-endif(HAVE_DJVULIBRE)
-
-if(HAVE_LINK_GRAMMAR)
-    set(BASE_TARGETS ${BASE_TARGETS} tools-parsers-link)
-endif(HAVE_LINK_GRAMMAR)
-
-if(USE_DOC_READER)
-    set(BASE_TARGETS ${BASE_TARGETS} formats-doc)
-endif(USE_DOC_READER)
-
-include_directories("${psi-toolkit_SOURCE_DIR}/tools/parsers/puddle")
-
-
-# Flex & Bison
-
+# ----------------------------------------------------
+# Flex and Bison stuff
+# ----------------------------------------------------
 if(NOT DEFINED FLEX_PREFIX_OUTPUTS)
     set(FLEX_PREFIX_OUTPUTS FALSE)
 endif(NOT DEFINED FLEX_PREFIX_OUTPUTS)
@@ -483,76 +454,106 @@ add_custom_command(
 )
 
 
+# ====================================================
+# Sets compiler
+# ====================================================
+
+set(CMAKE_CXX_FLAGS "-g -Wall -Wundef -Wnon-virtual-dtor -Wextra")
+
+if(WITH_LOW_MEMORY_COMPILATION)
+  message("Setting low memory compilation flags")
+  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} --param ggc-min-expand=30 --param ggc-min-heapsize=8192")
+endif(WITH_LOW_MEMORY_COMPILATION)
+
 # ----------------------------------------------------
+# BASE_TARGETS
+# ----------------------------------------------------
+set(BASE_TARGETS common common-plugins utf8case sundown framework
+    formats-apertium formats-bracketing formats-dot formats-guessing formats-nkjp formats-psi
+    formats-simple formats-json-simple formats-txt formats-utt
+    maxent tools-tokenizers-tp tools-segmenters-srx tools-recognizers-langguesser
+    tools-parsers-gobio tools-parsers-puddle tools-taggers-metagger)
 
-include_directories("${psi-toolkit_SOURCE_DIR}/tools/parsers/gobio")
-include_directories("${psi-toolkit_SOURCE_DIR}/tools/parsers/gobio/avmatrix")
-include_directories("${psi-toolkit_SOURCE_DIR}/tools/parsers/gobio/chart")
-include_directories("${psi-toolkit_SOURCE_DIR}/tools/parsers/gobio/helpers")
-include_directories("${psi-toolkit_SOURCE_DIR}/tools/parsers/gobio/parser")
-include_directories("${psi-toolkit_SOURCE_DIR}/tools/parsers/gobio/registrar")
-include_directories("${psi-toolkit_SOURCE_DIR}/tools/parsers/gobio/rules")
-include_directories("${psi-toolkit_SOURCE_DIR}/tools/parsers/gobio/translator")
-include_directories("${psi-toolkit_SOURCE_DIR}/tools/parsers/gobio/transporter")
-include_directories("${psi-toolkit_SOURCE_DIR}/tools/parsers/gobio/trees")
-
-link_directories("${psi-toolkit_BINARY_DIR}/tools/parsers/gobio")
-link_directories("${psi-toolkit_BINARY_DIR}/tools/parsers/gobio/avmatrix")
-link_directories("${psi-toolkit_BINARY_DIR}/tools/parsers/gobio/chart")
-link_directories("${psi-toolkit_BINARY_DIR}/tools/parsers/gobio/helpers")
-link_directories("${psi-toolkit_BINARY_DIR}/tools/parsers/gobio/parser")
-link_directories("${psi-toolkit_BINARY_DIR}/tools/parsers/gobio/registrar")
-link_directories("${psi-toolkit_BINARY_DIR}/tools/parsers/gobio/rules")
-link_directories("${psi-toolkit_BINARY_DIR}/tools/parsers/gobio/translator")
-link_directories("${psi-toolkit_BINARY_DIR}/tools/parsers/gobio/transporter")
-link_directories("${psi-toolkit_BINARY_DIR}/tools/parsers/gobio/trees")
+# ----------------------------------------------------
+# TESTS_TARGETS
+# ----------------------------------------------------
+set(TESTS_TARGETS common-tests framework-tests utf8case-tests
+    formats-bracketing-tests formats-dot-tests formats-utt-tests formats-psi-tests
+    formats-simple-tests formats-apertium-tests
+    tools-tokenizers-tp-tests tools-segmenters-srx-tests tools-datastructures-psi_query-tests
+    tools-recognizers-langguesser-tests tools-parsers-gobio-tests tools-parsers-puddle-tests
+    tools-taggers-metagger-tests)
 
 set(TARGETS ${BASE_TARGETS} psi-pipe)
 
-set(DIRS common common/plugins formats maxent tools framework utf8 utf8case server bindings)
+if(HAVE_ASPELL)
+    set(TESTS_TARGETS ${TESTS_TARGETS} tools-spellcheckers-aspell-tests)
+endif(HAVE_ASPELL)
+
+if(USE_JAVA)
+    set(BASE_TARGETS ${BASE_TARGETS} tools-lemmatizers-morfologik)
+    set(TESTS_TARGETS ${TESTS_TARGETS} tools-lemmatizers-morfologik-tests)
+endif(USE_JAVA)
+
+if(HAVE_SFST)
+    #add_subdirectory(sfst)
+    #set(BASE_TARGETS ${BASE_TARGETS} sfst)
+    set(BASE_TARGETS ${BASE_TARGETS} tools-lemmatizers-sfst)
+    set(TESTS_TARGETS ${TESTS_TARGETS} tools-lemmatizers-sfst-tests)
+endif(HAVE_SFST)
+
+if(HAVE_CMPH)
+    set(BASE_TARGETS ${BASE_TARGETS} tools-datastructures-lexica)
+    set(TESTS_TARGETS ${TESTS_TARGETS} tools-datastructures-lexica-tests)
+
+    set(BASE_TARGETS ${BASE_TARGETS} tools-lexica-bilexicon)
+    set(TESTS_TARGETS ${TESTS_TARGETS} tools-lexica-bilexicon-tests)
+endif(HAVE_CMPH)
+
+if(USE_POSTGRESQL)
+    set(BASE_TARGETS ${BASE_TARGETS} lex-db)
+endif(USE_POSTGRESQL)
+
+if(USE_BONSAI_PARSEGRAPH)
+    include_directories(${BONSAI_PATH})
+endif(USE_BONSAI_PARSEGRAPH)
+
+if(HAVE_GRAPHVIZ)
+    set(BASE_TARGETS ${BASE_TARGETS} formats-gv)
+    set(TESTS_TARGETS ${TESTS_TARGETS} formats-gv-tests)
+endif(HAVE_GRAPHVIZ)
+
+if(HAVE_POPPLER)
+    set(BASE_TARGETS ${BASE_TARGETS} formats-pdf)
+endif(HAVE_POPPLER)
+
+if(HAVE_DJVULIBRE)
+    set(BASE_TARGETS ${BASE_TARGETS} formats-djvu)
+endif(HAVE_DJVULIBRE)
+
+if(HAVE_LINK_GRAMMAR)
+    set(BASE_TARGETS ${BASE_TARGETS} tools-parsers-link)
+endif(HAVE_LINK_GRAMMAR)
+
+if(USE_DOC_READER)
+    set(BASE_TARGETS ${BASE_TARGETS} formats-doc)
+endif(USE_DOC_READER)
+
+# ----------------------------------------------------
+# Include and link directories
+# ----------------------------------------------------
+set(DIRS common common/plugins maxent formats tools framework server bindings utf8 utf8case sundown)
+
 foreach(dir ${DIRS})
     include_directories("${psi-toolkit_SOURCE_DIR}/${dir}")
     link_directories("${psi-toolkit_BINARY_DIR}/${dir}")
     add_subdirectory(${dir})
 endforeach(dir)
 
-
-include_directories("${psi-toolkit_SOURCE_DIR}/sundown/src")
-include_directories("${psi-toolkit_SOURCE_DIR}/sundown/html")
-include_directories("${psi-toolkit_SOURCE_DIR}/sundown/cpp")
-link_directories("${psi-toolkit_BINARY_DIR}/sundown")
-add_subdirectory(sundown)
-
 foreach(dir ${formats_SUBDIRS})
     include_directories("${psi-toolkit_SOURCE_DIR}/formats/${dir}")
     link_directories("${psi-toolkit_BINARY_DIR}/formats/${dir}")
 endforeach(dir)
-
-if(HAVE_GRAPHVIZ)
-    include_directories("${psi-toolkit_SOURCE_DIR}/formats/gv")
-    link_directories("${psi-toolkit_BINARY_DIR}/formats/gv")
-endif(HAVE_GRAPHVIZ)
-
-if(HAVE_POPPLER)
-    include_directories("${psi-toolkit_SOURCE_DIR}/formats/pdf")
-    link_directories("${psi-toolkit_BINARY_DIR}/formats/pdf")
-endif(HAVE_POPPLER)
-
-if(HAVE_DJVULIBRE)
-    include_directories("${psi-toolkit_SOURCE_DIR}/formats/djvu")
-    link_directories("${psi-toolkit_BINARY_DIR}/formats/djvu")
-endif(HAVE_DJVULIBRE)
-
-if(HAVE_LINK_GRAMMAR)
-    include_directories("${psi-toolkit_SOURCE_DIR}/tools/parsers/link")
-    link_directories("${psi-toolkit_BINARY_DIR}/tools/parsers/link")
-endif(HAVE_LINK_GRAMMAR)
-
-if(USE_DOC_READER)
-    include_directories("${psi-toolkit_SOURCE_DIR}/formats/doc")
-    link_directories("${psi-toolkit_BINARY_DIR}/formats/doc")
-endif(USE_DOC_READER)
-
 
 set(ALL_TARGETS ${TARGETS} ${TESTS_TARGETS})
 
@@ -568,16 +569,20 @@ endif(USE_BONSAI_PARSEGRAPH)
 
 add_subdirectory(tests)
 
-configure_file(${psi-toolkit_SOURCE_DIR}/common/config.hpp.in ${psi-toolkit_SOURCE_DIR}/common/config.hpp)
+configure_file(${psi-toolkit_SOURCE_DIR}/common/config.hpp.in
+    ${psi-toolkit_SOURCE_DIR}/common/config.hpp)
+
+
+# ====================================================
+# CMake functions
+# ====================================================
 
 function(download_artifact FILE)
-  set(_url
-      "http://mrt.wmi.amu.edu.pl:8080/job/psi-toolkit-data/lastSuccessfulBuild/artifact/psi-toolkit-data/${FILE}")
+  set(_url "http://mrt.wmi.amu.edu.pl:8080/job/psi-toolkit-data/lastSuccessfulBuild/artifact/psi-toolkit-data/${FILE}")
 
   message(STATUS "Checking ${_url}...")
 
-  set(_downloaded_file
-      "${psi-toolkit_SOURCE_DIR}/${FILE}")
+  set(_downloaded_file "${psi-toolkit_SOURCE_DIR}/${FILE}")
 
   set(_skip_download 0)
 
@@ -639,7 +644,6 @@ function(download_artifact FILE)
 endfunction(download_artifact)
 
 function(download_and_unpack URL FILE CHECKSUM DESTINATION)
-
   message(STATUS "Checking ${URL}...")
 
   set(_downloaded_file "${psi-toolkit_SOURCE_DIR}/${DESTINATION}")
@@ -727,36 +731,37 @@ if(DOWNLOAD_DATA)
 
 endif(DOWNLOAD_DATA)
 
-# =====================================
+# ====================================================
 # Sets prefix for all generated libraries
+# ====================================================
 
 # Helping macro
 MACRO(LIST_CONTAINS var value)
-  SET(${var})
-  FOREACH (value2 ${ARGN})
-    IF (${value} STREQUAL ${value2})
-      SET(${var} TRUE)
-    ENDIF (${value} STREQUAL ${value2})
-  ENDFOREACH (value2)
+    SET(${var})
+    FOREACH (value2 ${ARGN})
+        IF(${value} STREQUAL ${value2})
+            SET(${var} TRUE)
+        ENDIF(${value} STREQUAL ${value2})
+    ENDFOREACH (value2)
 ENDMACRO(LIST_CONTAINS)
 
 GET_CMAKE_PROPERTY(all_variables VARIABLES)
 
 FOREACH(variable_name ${all_variables})
+    if(variable_name MATCHES "_LIB_DEPENDS$")
+        STRING(REGEX REPLACE "_LIB_DEPENDS.*" "" library_name ${variable_name})
 
-  if(variable_name MATCHES "_LIB_DEPENDS$")
-    STRING(REGEX REPLACE "_LIB_DEPENDS.*" "" library_name ${variable_name})
+        GET_TARGET_PROPERTY(target_location ${library_name} LOCATION)
 
-    GET_TARGET_PROPERTY(target_location ${library_name} LOCATION)
+        if(NOT target_location MATCHES "NOTFOUND")
+            # the prefix 'libpsitoolkit_' will not be added to any library enumerated
+            # in regexp below
+            if(NOT target_location MATCHES
+                "psitoolkit_perl_simple|python.*_PSIToolkit|psitoolkit_ruby_simple")
 
-    if(NOT target_location MATCHES "NOTFOUND")
-      if (NOT target_location MATCHES "psitoolkit_perl_simple|python.*_PSIToolkit")
-        SET_TARGET_PROPERTIES(${library_name}
-          PROPERTIES
-          PREFIX ${MY_TARGETLIB_PREFIX}
-          )
-      endif()
+                SET_TARGET_PROPERTIES(${library_name} PROPERTIES PREFIX ${MY_TARGETLIB_PREFIX})
+            endif()
+        endif()
+
     endif()
-  endif()
-
 endforeach(variable_name)
