@@ -133,6 +133,7 @@ LinkParser::Worker::Worker(LinkParser& processor, Lattice& lattice) :
 void LinkParser::Worker::doRun() {
     if (processor_.isActive()) {
         processor_.parse(lattice_);
+        processor_.fillInBlanks(lattice_);
     }
 }
 
@@ -202,7 +203,7 @@ std::list<std::string> LinkParser::languagesHandled(
 }
 
 
-void LinkParser::parse(Lattice &lattice) {
+void LinkParser::parse(Lattice & lattice) {
     LayerTagMask maskSegment = lattice.getLayerTagManager().getMaskWithLangCode(
         "segment",
         langCode_
@@ -233,7 +234,7 @@ void LinkParser::parse(Lattice &lattice) {
                 StringFrag(
                     lattice.getAllText(),
                     edgeDescription.start,
-                    edgeDescription.end-edgeDescription.start
+                    edgeDescription.end - edgeDescription.start
                 )
             );
             Lattice::EdgeSequence::Builder builder(lattice);
@@ -262,6 +263,55 @@ void LinkParser::parse(Lattice &lattice) {
                 isToken ? tagParseToken : tagParse,
                 builder.build()
             );
+        }
+    }
+}
+
+
+void LinkParser::fillInBlanks(Lattice & lattice) {
+    LayerTagCollection tagToken
+        = lattice.getLayerTagManager().createTagCollectionFromListWithLangCode(
+            boost::assign::list_of("link-grammar")("token"),
+            langCode_
+        );
+    LayerTagMask maskToken = lattice.getLayerTagManager().getMaskWithLangCode(
+        "token",
+        langCode_
+    );
+    size_t edgeBeginIndex = 0;
+    size_t currentIndex = 0;
+    Lattice::EdgesSortedBySourceIterator ei(lattice, maskToken);
+    while (ei.hasNext()) {
+        Lattice::EdgeDescriptor edge = ei.next();
+        try {
+            edgeBeginIndex = lattice.getEdgeBeginIndex(edge);
+            if (currentIndex < edgeBeginIndex) {
+                AnnotationItem aiLink(
+                    "B",
+                    StringFrag(
+                        lattice.getAllText(),
+                        currentIndex,
+                        edgeBeginIndex - currentIndex
+                    )
+                );
+                Lattice::EdgeSequence::Builder builder(lattice);
+                for (size_t i = currentIndex; i < edgeBeginIndex; i++) {
+                    builder.addEdge(lattice.firstOutEdge(
+                        lattice.getVertexForRawCharIndex(i),
+                        lattice.getLayerTagManager().getMask("symbol")
+                    ));
+                }
+                lattice.addEdge(
+                    currentIndex,
+                    edgeBeginIndex,
+                    aiLink,
+                    tagToken,
+                    builder.build()
+                );
+            }
+            currentIndex = lattice.getEdgeEndIndex(edge);
+        } catch (WrongVertexException) {
+            // If loose vertices then skip them and continue.
         }
     }
 }

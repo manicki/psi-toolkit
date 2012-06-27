@@ -119,11 +119,41 @@ void PsiLatticeWriter::Worker::doRun() {
                 } catch (NoEdgeException) {
 
                     char uncoveredSymbol = lattice_.getAllText()[i];
-                    WARN(
-                        "Lattice contains some text ('" << std::string(1, uncoveredSymbol) <<
-                        "' at " << i << ") not covered by any edge. " <<
-                        "It may be nonreproducible from generated PSI output."
-                    );
+
+                    // WARN(
+                        // "Lattice contains some text ('" << std::string(1, uncoveredSymbol) <<
+                        // "' at " << i << ") not covered by any edge. " <<
+                        // "It may be nonreproducible from generated PSI output."
+                    // );
+
+                    ++ordinal;
+                    std::stringstream ordinalSs;
+                    ordinalSs << std::right << std::setfill('0') << std::setw(2);
+                    ordinalSs << ordinal;
+                    alignOutput_(ordinalSs.str(), alignments[0]);
+                    alignOutput_(" ");
+
+                    std::stringstream beginningSs;
+                    beginningSs << std::right << std::setfill('0') << std::setw(4);
+                    beginningSs << i;
+                    alignOutput_(beginningSs.str(), alignments[1]);
+                    alignOutput_(" ");
+
+                    alignOutput_("01", alignments[2]);
+                    alignOutput_(" ");
+
+                    alignOutput_(quoter.escape(std::string(1, uncoveredSymbol)), alignments[3]);
+                    alignOutput_(" ");
+
+                    alignOutput_("∅", alignments[4]);
+                    alignOutput_(" ");
+
+                    alignOutput_("∅", alignments[5]);
+                    alignOutput_(" ");
+
+                    alignOutput_("∅");
+                    alignOutputNewline_();
+
                     latticeTextCovered += uncoveredSymbol;
                     i++;
 

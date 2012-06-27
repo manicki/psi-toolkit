@@ -98,7 +98,7 @@ Lattice::VertexDescriptor Lattice::getLastVertex() {
 
 size_t Lattice::getVertexRawCharIndex(VertexDescriptor vd) {
     if (isLooseVertex(vd)) {
-        throw WrongVertexException("Loose vertex have no raw char index");
+        throw WrongVertexException("Loose vertices have no raw char index");
     }
     return size_t(vd);
 }
@@ -184,7 +184,7 @@ Lattice::EdgeDescriptor Lattice::addEdge(
         if (tags != oldTags) {
             tags = createUnion(oldTags, tags);
         }
-        if (edge.implicitIndex < 0) {
+        if (edge.isExplicit()) {
             if (tags != oldTags) {
                 graph_[edge.descriptor].tagList = tags;
             }
@@ -476,7 +476,7 @@ AnnotationItemManager& Lattice::getAnnotationItemManager() {
 }
 
 const AnnotationItem Lattice::getEdgeAnnotationItem(Lattice::EdgeDescriptor edge) {
-    if (edge.implicitIndex < 0) {
+    if (edge.isExplicit()) {
         return graph_[edge.descriptor].item;
     }
     std::string::iterator iter = allText_.begin() + edge.implicitIndex;
@@ -490,28 +490,38 @@ const AnnotationItem Lattice::getEdgeAnnotationItem(Lattice::EdgeDescriptor edge
 }
 
 const LayerTagCollection& Lattice::getEdgeLayerTags(Lattice::EdgeDescriptor edge) const {
-    if (edge.implicitIndex < 0) {
+    if (edge.isExplicit()) {
         return graph_[edge.descriptor].tagList;
     }
     return getSymbolTag_();
 }
 
+Lattice::VertexDescriptor Lattice::getEdgeSource(EdgeDescriptor edge) const {
+    return VertexDescriptor(getEdgeSourceInternalIndex_(edge));
+}
+
+Lattice::VertexDescriptor Lattice::getEdgeTarget(EdgeDescriptor edge) const {
+    return VertexDescriptor(getEdgeTargetInternalIndex_(edge));
+}
+
 int Lattice::getEdgeBeginIndex(Lattice::EdgeDescriptor edge) const {
-    if (edge.implicitIndex < 0) {
-        return graph_[boost::source(edge.descriptor, graph_)].index;
+    int result = getEdgeSourceInternalIndex_(edge);
+    if (isLooseVertex(result)) {
+        throw WrongVertexException("Edge source is loose. Loose vertices have no raw char index");
     }
-    return edge.implicitIndex;
+    return result;
 }
 
 int Lattice::getEdgeEndIndex(Lattice::EdgeDescriptor edge) const {
-    if (edge.implicitIndex < 0) {
-        return graph_[boost::target(edge.descriptor, graph_)].index;
+    int result = getEdgeTargetInternalIndex_(edge);
+    if (isLooseVertex(result)) {
+        throw WrongVertexException("Edge target is loose. Loose vertices have no raw char index");
     }
-    return edge.implicitIndex + symbolLength_(edge.implicitIndex);
+    return result;
 }
 
 int Lattice::getEdgeLength(Lattice::EdgeDescriptor edge) const {
-    if (edge.implicitIndex < 0) {
+    if (edge.isExplicit()) {
         if (isLooseVertex(getEdgeSource(edge)) || isLooseVertex(getEdgeTarget(edge))) {
             throw WrongVertexException("Edges linking loose vertices have no well-defined length");
         }
@@ -522,41 +532,24 @@ int Lattice::getEdgeLength(Lattice::EdgeDescriptor edge) const {
 }
 
 bool Lattice::isEdgeHidden(Lattice::EdgeDescriptor edge) const {
-    return edge.implicitIndex > -1
+    return !edge.isExplicit()
         && hiddenImplicitOutEdges_[edge.implicitIndex]
         && !visibleImplicitOutEdges_[edge.implicitIndex];
 }
 
 std::list<Lattice::Partition> Lattice::getEdgePartitions(Lattice::EdgeDescriptor edge) const {
-    if (edge.implicitIndex < 0) {
+    if (edge.isExplicit()) {
         return graph_[edge.descriptor].partitions;
     }
     return std::list<Lattice::Partition>();
 }
 
 Lattice::Score Lattice::getEdgeScore(Lattice::EdgeDescriptor edge) const {
-    if (edge.implicitIndex < 0) {
+    if (edge.isExplicit()) {
         return graph_[edge.descriptor].score;
     }
     return 0.0;
 }
-
-Lattice::VertexDescriptor Lattice::getEdgeSource(EdgeDescriptor edge) const {
-    if (edge.implicitIndex < 0) {
-        return VertexDescriptor(graph_[boost::source(edge.descriptor, graph_)].index);
-    }
-
-    return VertexDescriptor(edge.implicitIndex);
-}
-
-Lattice::VertexDescriptor Lattice::getEdgeTarget(EdgeDescriptor edge) const {
-    if (edge.implicitIndex < 0) {
-        return VertexDescriptor(graph_[boost::target(edge.descriptor, graph_)].index);
-    }
-
-    return VertexDescriptor(edge.implicitIndex + symbolLength_(edge.implicitIndex));
-}
-
 
 const std::string& Lattice::getAllText() const {
     return allText_;
@@ -798,6 +791,21 @@ size_t Lattice::symbolLength_(int ix) const {
 const LayerTagCollection& Lattice::getSymbolTag_() const {
     return symbolTag_;
 }
+
+int Lattice::getEdgeSourceInternalIndex_(Lattice::EdgeDescriptor edge) const {
+    if (edge.isExplicit()) {
+        return graph_[boost::source(edge.descriptor, graph_)].index;
+    }
+    return edge.implicitIndex;
+}
+
+int Lattice::getEdgeTargetInternalIndex_(Lattice::EdgeDescriptor edge) const {
+    if (edge.isExplicit()) {
+        return graph_[boost::target(edge.descriptor, graph_)].index;
+    }
+    return edge.implicitIndex + symbolLength_(edge.implicitIndex);
+}
+
 
 Lattice::EdgeSequence::EdgeSequence() : begin(0), end(0) {
 }

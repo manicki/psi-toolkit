@@ -39,14 +39,30 @@ void HelpFormatter::formatOneAlias(std::string aliasName, std::ostream& output) 
 }
 
 void HelpFormatter::formatHelpIntroduction(std::ostream& output) {
-    boost::filesystem::path path = Configurator::getInstance().isRunAsInstalled()
-        ? Configurator::getInstance().getDataDir().string() + "/framework/description.txt"
-        : "../framework/data/description.txt";
+    boost::filesystem::path path = getPathToFrameworkDataFile_("description.txt");
 
     doFormatHelpIntroduction(getFileContent(path), output);
 }
 
+void HelpFormatter::formatTutorial(std::ostream& output) {
+    boost::filesystem::path path = getPathToFrameworkDataFile_("tutorial.txt");
+
+    doFormatTutorial(getFileContent(path), output);
+}
+
+void HelpFormatter::formatLicence(std::ostream& output) {
+    boost::filesystem::path path = getPathToFrameworkDataFile_("licence.txt");
+
+    doFormatLicence(getFileContent(path), output);
+}
+
 HelpFormatter::~HelpFormatter() { }
+
+boost::filesystem::path HelpFormatter::getPathToFrameworkDataFile_(const std::string& filename) {
+    return Configurator::getInstance().isRunAsInstalled()
+        ? Configurator::getInstance().getDataDir().string() + "/framework/" + filename
+        : "../framework/data/" + filename;
+}
 
 std::string HelpFormatter::getProcessorDescription(std::string processorName) {
     return MainFactoriesKeeper::getInstance().getProcessorFactory(processorName).getDescription();

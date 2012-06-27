@@ -14,6 +14,16 @@ set(tools_DIRS
     parsers/gobio
     parsers/link
     parsers/puddle
+    parsers/gobio
+    parsers/gobio/avmatrix
+    parsers/gobio/chart
+    parsers/gobio/helpers
+    parsers/gobio/parser
+    parsers/gobio/registrar
+    parsers/gobio/rules
+    parsers/gobio/translator
+    parsers/gobio/transporter
+    parsers/gobio/trees
     segmenters/srx
     recognizers/langguesser
     lexica/bilexicon

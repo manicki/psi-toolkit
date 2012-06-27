@@ -12,7 +12,7 @@ server/t/reports/*
 *.so
 *.bis.cpp
 lex.*.cpp
-server/website/storage/*
+server/website*/storage/*
 \#*\#
 bindings/python/Test/__pycache__
 gcov.output.data

@@ -29,6 +29,7 @@ private:
     boost::filesystem::path rootDir_;
 
     static const std::string DEFAULT_PIPE;
+    static const std::string DEFAULT_TEXT;
 };
 
 #endif

@@ -68,6 +68,7 @@ public:
     struct VertexEntry {
         /**
          * Vertex's position in text.
+         * For loose vertices: index < 0.
          */
         int index;
 
@@ -217,6 +218,10 @@ public:
             }
             return implicitIndex == other.implicitIndex;
         }
+
+        bool isExplicit() const {
+            return implicitIndex < 0;
+        }
     };
 
     struct EdgeDescriptorWrapperToFoolBoost146OrGnu461 : public Graph::edge_descriptor {
@@ -339,40 +344,61 @@ public:
         virtual InOutEdgesIterator getEdgesIterator_(VertexDescriptor vd);
     };
 
+    /**
+     * Creates an empty lattice.
+     */
     Lattice();
 
     /**
-     * Creates a lattice from `text`. Initially each character of text will be
-     * represented as an edge labeled with layer tag `raw` and category `c`
-     * (where c is the given character)
+     * Creates a lattice with text `text` and no edges.
      */
     Lattice(const std::string & text);
 
     ~Lattice();
 
+    /**
+     * Appends string `text` at the end of the lattice (without adding any edges).
+     */
     void appendString(const std::string & text);
 
+    /**
+     * For each character between `startVertex` and `endVertex`
+     * an edge labelled with layer tag `symbol`
+     * and category `'c` (where `c` is a given character) is added.
+     */
     void addSymbols(VertexDescriptor startVertex, VertexDescriptor endVertex);
 
+    /**
+     * Appends string `text` at the end of the lattice and adds symbols to this string.
+     */
     void appendStringWithSymbols(const std::string & text);
 
+    /**
+     * Adds new loose vertex to the lattice.
+     * Returns vertex descriptor of added vertex.
+     */
     VertexDescriptor addLooseVertex();
 
     /**
-     * Gets the vertex for ix-th character of text
+     * Returns the vertex for `ix`-th character of text.
+     * If index `ix` is out of range, a NoVertexException is thrown.
      */
     VertexDescriptor getVertexForRawCharIndex(int ix) const;
 
     /**
-     * Gets the first vertex (the same as getVertexForRawCharIndex(0))
+     * Returns the first vertex (the same as getVertexForRawCharIndex(0)).
      */
     VertexDescriptor getFirstVertex() const;
 
-     /**
-     * Gets the last vertex
+    /**
+     * Returns the last vertex.
      */
     VertexDescriptor getLastVertex();
 
+    /**
+     * Returns vertex's raw char index.
+     * If vertex is loose, a WrongVertexException is thrown.
+     */
     size_t getVertexRawCharIndex(VertexDescriptor vd);
 
     /**
@@ -405,12 +431,17 @@ public:
      */
     void discard(EdgeDescriptor edge);
 
-    // return outgoing edges which has at least one layer tag from `mask`
+    /**
+     * Returns outgoing edges which has at least one layer tag from `mask`.
+     */
     InOutEdgesIterator outEdges(
         VertexDescriptor vertex,
         LayerTagMask mask
     );
 
+    /**
+     * Returns ingoing edges which has at least one layer tag from `mask`.
+     */
     InOutEdgesIterator inEdges(
         VertexDescriptor vertex,
         LayerTagMask mask
@@ -443,14 +474,43 @@ public:
 
     const AnnotationItem getEdgeAnnotationItem(EdgeDescriptor edge);
     const LayerTagCollection& getEdgeLayerTags(EdgeDescriptor edge) const;
+
+    /**
+     * Returns edge source vertex.
+     */
+    VertexDescriptor getEdgeSource(EdgeDescriptor edge) const;
+
+    /**
+     * Returns edge target vertex.
+     */
+    VertexDescriptor getEdgeTarget(EdgeDescriptor edge) const;
+
+    /**
+     * Returns edge source's index if edge source is not loose.
+     * Otherwise, a WrongVertexException is thrown.
+     */
     int getEdgeBeginIndex(EdgeDescriptor edge) const;
+
+    /**
+     * Returns edge target's index if edge target is not loose.
+     * Otherwise, a WrongVertexException is thrown.
+     */
     int getEdgeEndIndex(EdgeDescriptor edge) const;
+
+    /**
+     * Returns the length of the edge linking non-loose vertices.
+     * If edge's source or target is loose, a WrongVertexException is thrown.
+     */
     int getEdgeLength(EdgeDescriptor edge) const;
+
+    /**
+     * Symbol edges dominated by other edges are not printed by some writers by default.
+     * This method checks if the edge should not be printed.
+     */
     bool isEdgeHidden(EdgeDescriptor edge) const;
+
     std::list<Partition> getEdgePartitions(EdgeDescriptor edge) const;
     Score getEdgeScore(EdgeDescriptor edge) const;
-    VertexDescriptor getEdgeSource(EdgeDescriptor edge) const;
-    VertexDescriptor getEdgeTarget(EdgeDescriptor edge) const;
 
     const std::string& getAllText() const;
     const std::string getEdgeText(EdgeDescriptor edge) const;
@@ -474,15 +534,29 @@ public:
      */
     Lattice::EdgeSequence getPath(VertexDescriptor& vertex, LayerTagMask mask);
 
+    /**
+     * Checks if the vertex is loose.
+     */
     bool isLooseVertex(VertexDescriptor vd) const;
 
+    /**
+     * Returns a unique positive number for each loose vertex.
+     * Otherwise, a WrongVertexException is thrown.
+     */
     int getLooseVertexIndex(VertexDescriptor vd) const;
 
     void correctionInsert(VertexDescriptor here, std::string text);
     void correctionErase(VertexDescriptor from, VertexDescriptor to);
     void correctionReplace(VertexDescriptor from, VertexDescriptor to, std::string text);
 
+    /**
+     * Returns the number of all edges with source `from` and target `to`.
+     */
     int countEdges(VertexDescriptor from, VertexDescriptor to);
+
+    /**
+     * Returns the number of all vertices in the lattice.
+     */
     int countAllVertices();
 
 private:
@@ -493,6 +567,9 @@ private:
 
     AnnotationItemManager annotationItemManager_;
 
+    /**
+     * Stores the lattice text.
+     */
     std::string allText_;
 
     /**
@@ -524,6 +601,9 @@ private:
      */
     VerticesMap vertices_;
 
+    /**
+     * The number of loose vertices.
+     */
     int nLooseVertices_;
 
     typedef boost::bimap<LayerTagMask, int> TagMasksBimap;
@@ -539,6 +619,9 @@ private:
 
     size_t symbolLength_(int ix) const;
     const LayerTagCollection& getSymbolTag_() const;
+
+    int getEdgeSourceInternalIndex_(EdgeDescriptor edge) const;
+    int getEdgeTargetInternalIndex_(EdgeDescriptor edge) const;
 
     VertexDescriptor firstSequenceVertex_(const EdgeSequence& sequence);
     VertexDescriptor lastSequenceVertex_(const EdgeSequence& sequence);

@@ -104,13 +104,10 @@
    fun:FT_Init_FreeType
 }
 {
-   graphviz leak gvplugin
+   graphviz leak gvconfig
    Memcheck:Leak
    ...
-   fun:gvplugin_install
    fun:gvconfig
-   fun:dotneato_args_initialize
-   fun:gvParseArgs
    ...
 }
 {

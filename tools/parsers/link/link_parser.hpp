@@ -54,7 +54,8 @@ public:
     static std::list<std::string> languagesHandled(
         const boost::program_options::variables_map& options);
 
-    void parse(Lattice &lattice);
+    void parse(Lattice & lattice);
+    void fillInBlanks(Lattice & lattice);
 
 private:
 

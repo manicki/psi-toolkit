@@ -22,6 +22,8 @@ protected:
         std::ostream& output);
 
     void doFormatHelpIntroduction(std::string text, std::ostream& output);
+    void doFormatTutorial(std::string text, std::ostream& output);
+    void doFormatLicence(std::string text, std::ostream& output);
 
 };
 

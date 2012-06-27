@@ -33,7 +33,9 @@ LangGuesser::LangGuesser() {
     initLanguages();
 }
 
-LangGuesser::LangGuesser(const boost::program_options::variables_map& options) {
+LangGuesser::LangGuesser(const boost::program_options::variables_map& options)
+    : forceMode_(false) {
+
     forceMode_ = options.count("force") ? true : false;
 
     if (options.count("only-langs")) {

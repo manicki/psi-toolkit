@@ -1,6 +1,65 @@
-	<div id="footer">
-		<div class="wrapper">
-			<div class="logo">Psi Server</div>
-            <div class="version"><!--#psis version --></div>
-		</div>
-	</div>
+  <footer>
+    <div class="footer-top wrapper">
+      <section id="what-is-this">
+      <h1>What is this?</h1>
+      <p>
+PSI-Toolkit is a set of tools for natural language processing. Focused on the Polish language, the
+toolkit allows for processing various languages, including English, French or Russian.
+<!--PSI-Toolkit provides an easy-to-use web-service and a set of advanced tools for users with some computer skills.-->
+      </p>
+      </section>
+      <section>
+        <h1>Start</h1>
+        <ul>
+          <li><a href="/about.html">About PSI-Toolkit</a></li>
+          <li><a href="/publications.html">Publications</a></li>
+          <li><a href="/about.html#licence">Licence</a></li>
+          <li><a href="/about.html#contact">Contact</a></li>
+        </ul>
+      </section>
+      <section>
+        <h1>Help</h1>
+        <ul>
+          <li><a href="/help/start.html">Getting started</a></li>
+          <li><a href="/help/start.html#tutorial">Tutorial</a></li>
+          <!--<li><a href="/help/faq.html">FAQ</a></li>-->
+          <li><a href="/help/processors.html">Command specification</a></li>
+          <!--<li><a href="#">Installation guide</a></li>-->
+          <li><a href="/help/aliases.html">Aliases</a></li>
+        </ul>
+      </section>
+      <section>
+        <h1>Development</h1>
+        <ul>
+          <li><a href="http://github.com">Github</a></li>
+          <li><a href="http://psi-toolkit.wmi.amu.edu.pl:8000">Bug Tracker/Redmine</a></li>
+          <!--<li><a href="#">Code documentation</a></li>-->
+          <li><a href="http://psi-toolkit.wmi.amu.edu.pl:8080">Jenkins</a></li>
+        </ul>
+      </section>
+      <section>
+        <h1>Resources</h1>
+        <ul>
+          <li><a href="/download.html">Download</a></li>
+          <li><a href="/api.html">API in JSON</a></li>
+          <li><a href="/bindings.html">Bindings</a></li>
+        </ul>
+      </section>
+
+      <div id="version" class="clear">
+        <!--#psis version -->
+      </div>
+    </div>
+
+    <div class="footer-bottom wrapper">
+      <p>
+        &quot;Publicly available tools for automatic processing of Polish language&quot; &ndash;
+        a national Ministry of Science and Higher Education research grant (number N N516 480540)
+        <br />
+        <a href="http://psi.amu.edu.pl/">Information Systems Laboratory</a> ::
+        <a href="http://wmi.amu.edu.pl/">Faculty of Mathematics and Computer Science</a> ::
+        <a href="http://amu.edu.pl/">Adam Mickiewicz University</a>
+      </p>
+      <p id="author">website designed and created by Roman Grundkiewicz</p>
+    </div>
+  </footer>

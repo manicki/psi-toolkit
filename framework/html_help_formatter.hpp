@@ -8,6 +8,8 @@ class HtmlHelpFormatter : public HelpFormatter {
 public:
     ~HtmlHelpFormatter();
 
+    void formatPipelineExamplesInJSON(std::ostream& output);
+
 private:
 
     void doFormatOneProcessorHelp(
@@ -28,6 +30,10 @@ private:
         std::ostream& output);
 
     void doFormatHelpIntroduction(std::string text, std::ostream& output);
+    void doFormatTutorial(std::string text, std::ostream& output);
+    void doFormatLicence(std::string text, std::ostream& output);
+
+    void formatPipelineExampleInJSON_(TestBatch batch, std::ostream& output);
 };
 
 #endif

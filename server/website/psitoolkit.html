@@ -1,0 +1,105 @@
+<!doctype html>
+<html>
+
+<head>
+  <title>psi-toolkit :: psi-server</title>
+
+  <script type="text/javascript" src="/js/shCore.js"></script>
+  <script type="text/javascript" src="/js/shBrushPerl.js"></script>
+  <link rel="stylesheet" type="text/css" href="/css/shCore.css" />
+  <link rel="stylesheet" type="text/css" href="/css/shThemeDefault.css" />
+
+  <!--#psis index_site_scripts_part -->
+
+  <script type="text/javascript" src="/js/jquery.tipsy.js"></script>
+  <link rel="stylesheet" type="text/css" href="/css/tipsy.css" />
+
+  <script type="text/javascript" src="/js/jquery.autosize.js"></script>
+  <script type="text/javascript" src="/js/jquery.filestyle.js"></script>
+  <script type="text/javascript" src="/js/pipeline.js"></script>
+
+  <script type="text/javascript">
+    <!--#psis pipe_site_options -->
+  </script>
+  
+  <script type="text/javascript">
+    <!--#psis help_site_pipeline_examples -->
+  </script>
+</head>
+
+<body>
+<div id="body">
+  <!--#psis index_site_header_part -->
+
+<div id="content">
+
+  <div id="toolbox">
+    <form action="pipe.psis" class="wrapper" enctype="multipart/form-data" method="post">
+
+      <div id="toolbox-pipe">
+        <div class="toolbox-right"> </div>
+
+        <div class="toolbox-left">
+          <label>Write command:</label>
+          <input name="pipe-text" type="text" value="<!--#psis pipe_site_pipe_text -->" />
+
+          <div class="input-options">
+            <a id="random-example" href="#">random example</a>
+          </div>
+        </div>
+      </div>
+
+      <div id="toolbox-text">
+        <div class="toolbox-right">
+          <input id="toolbox-submit" name="pipe-submit" type="submit" value="go!" />
+        </div>
+
+        <div class="toolbox-left">
+          <div id="input-text">
+            <label>Write input text:</label>
+            <textarea name="input-text"><!--#psis pipe_site_input_text --></textarea>
+          </div>
+          <div id="input-file">
+            <label>Select file:</label>
+            <input name="input-file" type="file" />
+          </div>
+
+          <div class="input-options bookmarks">
+            <a id="bookmark-text" href="#">...or click here to select a txt, doc or pdf file!</a>
+            <a id="bookmark-file" href="#">...or write some text!</a>
+          </div>
+        </div>
+
+        <input class="input-radio" id="radio-input-text" type="radio" name="radio-text"
+          checked="checked" />
+        <input class="input-radio" id="radio-input-file" type="radio" name="radio-file" />
+      </div>
+
+    </form>
+  </div>
+
+  <div id="results">
+    <h5 id="output-top-info" class="wrapper">
+      <span class="output-fontsize" id="decrease-output-fontsize">-</span>
+      <span class="output-fontsize" id="increase-output-fontsize">+</span>
+      Result:
+    </h5>
+
+    <div id="output">
+      <!--#psis pipe_site_output_text -->
+    </div>
+
+    <div id="output-bottom-info" class="wrapper">
+      Or download the output file:
+      <a class="download-output" href="#">&nbsp;</a>
+    </div>
+  </div>
+
+</div> <!-- end of #content -->
+
+  <!--#psis index_site_footer_part -->
+
+</div> <!-- end of #body -->
+</body>
+
+</html>

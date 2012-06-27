@@ -31,12 +31,12 @@ namespace psi {
 
         PosT setLastBit(PosT) const;
         PosT unsetLastBit(PosT) const;
-        
+
         arc_iterator_type find(size_t, symbol_type) const;
 
       public:
         BinDFSA();
-        
+
         size_t delta(size_t, symbol_type) const;
 
         template <typename InputIterator>
@@ -64,22 +64,22 @@ namespace psi {
         size_t size() const;
         void swap(BinDFSA &);
         void print();
-        
+
         template <class IStream>
         void load(IStream& istream);
-        
+
         template <class OStream>
         void save(OStream& ostream);
 
     };
-    
+
     template <typename ArcT, typename PosT, template <typename> class Allocator>
     const std::set<size_t> BinDFSA<ArcT, PosT, Allocator>::getStartStates() const {
         std::set<size_t> startStates;
         startStates.insert(0);
         return startStates;
     };
-    
+
     template <typename ArcT, typename PosT, template <typename> class Allocator>
     bool BinDFSA<ArcT, PosT, Allocator>::isStartState(size_t p) const {
         return p == 0;
@@ -121,9 +121,9 @@ namespace psi {
 
             while (pos < end && cmp(m_arcs[pos], a))
                 pos++;
-                
+
             // Bugfix for the allocator, flawed insertion on reallocation
-            if(m_arcs.capacity() == m_arcs.size())
+            if (m_arcs.capacity() == m_arcs.size())
                 m_arcs.reserve(m_arcs.size()*2);
             m_arcs.insert(m_arcs.begin() + pos, a);
 
@@ -139,7 +139,9 @@ namespace psi {
     BinDFSA<ArcT, PosT, Allocator>::BinDFSA() { }
 
     template <typename ArcT, typename PosT, template <typename> class Allocator>
-    inline size_t BinDFSA<ArcT, PosT, Allocator>::delta(size_t p, typename ArcT::symbol_type a) const {
+    inline size_t BinDFSA<ArcT, PosT, Allocator>::delta(size_t p, typename ArcT::symbol_type a)
+        const {
+
         if (BinDFSA<ArcT, PosT, Allocator>::m_states.size() < p)
             return size_t(-1);
 
@@ -261,7 +263,7 @@ namespace psi {
             }
         }
     }
-    
+
     template <typename ArcT, typename PosT, template <typename> class Allocator>
     std::set<size_t> BinDFSA<ArcT, PosT, Allocator>::epsClosure(size_t p) const {
         std::set<size_t> closure;
@@ -284,7 +286,7 @@ namespace psi {
 
         return closure;
     }
-    
+
     template <typename ArcT, typename PosT, template <typename> class Allocator>
     template <class IStream>
     void BinDFSA<ArcT, PosT, Allocator>::load(IStream& istream) {
@@ -298,7 +300,7 @@ namespace psi {
       m_arcs.resize(arcsNum);
       istream.read((char*)&m_arcs[0], arcsNum * sizeof(ArcT));
     }
-    
+
     template <typename ArcT, typename PosT, template <typename> class Allocator>
     template <class OStream>
     void BinDFSA<ArcT, PosT, Allocator>::save(OStream& istream) {
@@ -310,7 +312,7 @@ namespace psi {
       istream.write((char*)&arcsNum, sizeof(size_t));
       istream.write((char*)&m_arcs[0], arcsNum * sizeof(ArcT));
     }
-    
+
     typedef BinDFSA<Arc<Symbol, size_t>, size_t, std::allocator> MemBinDFSA;
     typedef BinDFSA<Arc<Symbol, size_t>, size_t, MmapAllocator>  MapBinDFSA;
 

@@ -25,26 +25,26 @@ Creating an automaton that accepts the following regular expression: `(a|b|c)+aa
     NDFSA<> tfsa1("a");
     NDFSA<> tfsa2("b");
     NDFSA<> tfsa3("c");
-    
+
     unify(fsa, tfsa1);
     unify(fsa, tfsa2);
     unify(fsa, tfsa3);
-    
+
     kleene_plus(fsa);
-  
+
     NDFSA<> tfsa4("aabb");
-    
+
     concatenate(fsa, tfsa4);
-    
+
     NDFSA<> tfsa5("cc");
     kleene_option(tfsa5);
-    
+
     concatenate(fsa, tfsa5);
-    
+
     minimize(fsa);
-    
+
     std::cout << fsa.in("aabcccaaaabbcc") << std::endl; // prints 1
-    std::cout << fsa.in("aabcccaaaabb") << std::endl; // prints 1    
+    std::cout << fsa.in("aabcccaaaabb") << std::endl; // prints 1
     std::cout << fsa.in("aabcccaaaabcc") << std::endl; // prints 0
 
 
@@ -69,8 +69,8 @@ namespace psi {
             queue.push_back(s);
         }
 
-        while (!queue.empty()) {            
-            WrapperState s = queue.back();            
+        while (!queue.empty()) {
+            WrapperState s = queue.back();
             queue.pop_back();
 
             if (!mapper.count(s)) {
@@ -319,7 +319,7 @@ Reverses the given automaton.
 
     template <typename FSA>
     void reachable(FSA &fsa)
-    
+
 Keeps only reachable states.
 
 *******************************************************************************/
@@ -349,7 +349,7 @@ Keeps only reachable states.
 
     template <typename FSA>
     void epsRemove(FSA &fsa)
-    
+
 Removes epsilon transitions from a non-deterministic automaton.
 
 *******************************************************************************/
@@ -375,13 +375,13 @@ transitions first if present.
         traverse(dtr, temp);
         fsa.swap(temp);
     }
-    
+
 /*******************************************************************************
 ## Minimize
 
     template <typename FSA>
     void minimize(FSA &fsa)
-    
+
 Minimizes a non-deterministic automaton. Epsilon transtion removal and
 determinization are automatically performed.
 
@@ -399,10 +399,10 @@ determinization are automatically performed.
 ## Unify
 
     template <typename FSA1, typename FSA2>
-    void unify(FSA1 &dst, FSA2 &src) 
+    void unify(FSA1 &dst, FSA2 &src)
 
 Creates the union of two finite state automata. The result is saved in the first
-argument. This results in an automation with epsilon transtions. 
+argument. This results in an automation with epsilon transtions.
 
 *******************************************************************************/
     template <typename FSA1, typename FSA2>
@@ -416,7 +416,7 @@ argument. This results in an automation with epsilon transtions.
 
     template <typename FSA1, typename FSA2>
     void intersect(FSA1 &dst, FSA2 &src)
-    
+
 Creates the intersection of two finite state automata. The result is saved in
 the first argument.
 
@@ -434,7 +434,7 @@ the first argument.
 
     template <typename FSA1, typename FSA2>
     void concatenate(FSA1 &dst, FSA2 &src)
-    
+
 Creates the concatenation of two finite state automata. The result is saved in
 the first argument. This results in an automaton with epsilon transtions.
 
@@ -498,7 +498,7 @@ epsilon transtions.
 
     template <typename FSA>
     void kleene_plus(FSA &fsa)
-    
+
 Creates the non-empty Kleene closure of the passed automaton. The result will
 accept the language of the input automaton repeated one to infinite times. This
 results in an automaton with epsilon transtions.

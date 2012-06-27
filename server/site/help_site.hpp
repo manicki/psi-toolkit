@@ -12,6 +12,10 @@ public:
     char * introduction();
     char * processorHelps();
     char * aliases();
+    char * tutorial();
+    char * licence();
+
+    char * pipelineExamples();
 
 private:
     HtmlHelpFormatter htmlHelpFormatter_;

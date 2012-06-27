@@ -9,9 +9,9 @@
 #include <boost/bind.hpp>
 #include <boost/algorithm/string.hpp>
 
-PipeSite::PipeSite(PsiServer& server, const std::string & pipe)
+PipeSite::PipeSite(PsiServer& server, const std::string & pipe, const std::string & text)
     : TemplateSite(server),
-    initialText("Ala ma kota"), initialPipe(pipe.c_str()), initialOutput(""),
+    initialText(text.c_str()), initialPipe(pipe.c_str()), initialOutput(""),
     outputSaver_(std::string(psiServer_.websiteRoot))
 {
     registerIncludesAndActions();
@@ -59,7 +59,7 @@ char * PipeSite::actionPipe() {
     std::string output = runPipe(input);
     psiServer_.session()->setData("output-text", output);
 
-    return stringToChar(std::string("/index.html"));
+    return stringToChar(std::string("/psitoolkit.html"));
 }
 
 char * PipeSite::hiddenOptions() {
