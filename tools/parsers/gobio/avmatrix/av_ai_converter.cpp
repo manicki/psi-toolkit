@@ -4,10 +4,14 @@
 const AnnotationItem AV_AI_Converter::toAnnotationItem(av_matrix<int, int> av) {
     std::stringstream attrSs;
     std::stringstream valSs;
-    // std::stringstream catSs;
-    // catSs << av.get_cat();
-    // AnnotationItem result(catSs.str());
-    AnnotationItem result(registrar_.get_obj(av.get_cat()));
+    std::stringstream catSs;
+    int cat = av.get_cat();
+    if (cat > registrar_.last_id()) {
+        catSs << cat;
+    } else {
+        catSs << registrar_.get_obj(cat);
+    }
+    AnnotationItem result(catSs.str());
     for (int i = 0; i < av.nb_attrs(); ++i) {
         attrSs << i;
         valSs << av.get_attr(i);
@@ -21,10 +25,14 @@ const AnnotationItem AV_AI_Converter::toAnnotationItem(av_matrix<int, int> av) {
 
 const AnnotationItem AV_AI_Converter::toAnnotationItem(av_matrix<int, zvalue> av) {
     std::stringstream attrSs;
-    // std::stringstream catSs;
-    // catSs << av.get_cat();
-    // AnnotationItem result(catSs.str());
-    AnnotationItem result(registrar_.get_obj(av.get_cat()));
+    std::stringstream catSs;
+    int cat = av.get_cat();
+    if (cat > registrar_.last_id()) {
+        catSs << cat;
+    } else {
+        catSs << registrar_.get_obj(cat);
+    }
+    AnnotationItem result(catSs.str());
     for (int i = 0; i < av.nb_attrs(); ++i) {
         attrSs << i;
         lattice_.getAnnotationItemManager().setValue(result, attrSs.str(), av.get_attr(i));
