@@ -11,6 +11,7 @@
 #include "av_matrix.hpp"
 #include "lattice.hpp"
 #include "number_master.hpp"
+#include "registrar.tpl"
 #include "zvalue.hpp"
 #include "zvalue_master.hpp"
 
@@ -19,21 +20,24 @@ namespace AV_AI_Converter_specialization {
 
     template <typename CategoryType>
     const CategoryType toAVMatrix(
+        AnnotationItem ai,
         Lattice & /*lattice*/,
-        AnnotationItem ai
+        registrar<std::string> & /* reg */
     ) {
         return (CategoryType)(ai.getCategory());
     }
 
     template <>
     inline const av_matrix<int, int> toAVMatrix< av_matrix<int, int> >(
+        AnnotationItem ai,
         Lattice & lattice,
-        AnnotationItem ai
+        registrar<std::string> & reg
     ) {
-        int category;
-        std::stringstream catSs(ai.getCategory());
-        catSs >> category;
-        av_matrix<int, int> result(category);
+        // int category;
+        // std::stringstream catSs(ai.getCategory());
+        // catSs >> category;
+        // av_matrix<int, int> result(category);
+        av_matrix<int, int> result(reg.get_id(ai.getCategory()));
         number_master master;
         typedef std::pair<std::string, std::string> StringPair;
         std::list< StringPair > values
@@ -52,13 +56,15 @@ namespace AV_AI_Converter_specialization {
 
     template <>
     inline const av_matrix<int, zvalue> toAVMatrix< av_matrix<int, zvalue> >(
+        AnnotationItem ai,
         Lattice & lattice,
-        AnnotationItem ai
+        registrar<std::string> & reg
     ) {
-        int category;
-        std::stringstream catSs(ai.getCategory());
-        catSs >> category;
-        av_matrix<int, zvalue> result(category);
+        // int category;
+        // std::stringstream catSs(ai.getCategory());
+        // catSs >> category;
+        // av_matrix<int, zvalue> result(category);
+        av_matrix<int, zvalue> result(reg.get_id(ai.getCategory()));
         zvalue_master master;
         typedef std::pair<std::string, zvalue> StringZvaluePair;
         std::list< StringZvaluePair > values
@@ -74,8 +80,9 @@ namespace AV_AI_Converter_specialization {
 
     template <>
     inline const av_matrix<std::string, int> toAVMatrix< av_matrix<std::string, int> >(
+        AnnotationItem ai,
         Lattice & lattice,
-        AnnotationItem ai
+        registrar<std::string> & /* reg */
     ) {
         av_matrix<std::string, int> result(ai.getCategory());
         number_master master;
@@ -96,8 +103,9 @@ namespace AV_AI_Converter_specialization {
 
     template <>
     inline const av_matrix<std::string, zvalue> toAVMatrix< av_matrix<std::string, zvalue> >(
+        AnnotationItem ai,
         Lattice & lattice,
-        AnnotationItem ai
+        registrar<std::string> & /* reg */
     ) {
         av_matrix<std::string, zvalue> result(ai.getCategory());
         zvalue_master master;
@@ -115,8 +123,9 @@ namespace AV_AI_Converter_specialization {
 
     template <>
     inline const std::string toAVMatrix< std::string >(
+        AnnotationItem ai,
         Lattice & /* lattice */,
-        AnnotationItem ai
+        registrar<std::string> & /* reg */
     ) {
         return ai.getCategory();
     }
@@ -146,13 +155,14 @@ public:
 private:
 
     Lattice & lattice_;
+    registrar<std::string> registrar_;
 
 };
 
 
 template <typename CategoryType>
 const CategoryType AV_AI_Converter::toAVMatrix(AnnotationItem ai) {
-    return AV_AI_Converter_specialization::toAVMatrix<CategoryType>(lattice_, ai);
+    return AV_AI_Converter_specialization::toAVMatrix<CategoryType>(ai, lattice_, registrar_);
 }
 
 
