@@ -101,7 +101,11 @@ public:
 
     void purge_rules();
 
-    typedef av_matrix<int,T> entry_type;
+    typedef int BaseCategory;
+    // typedef std::string BaseCategory;
+
+    typedef av_matrix<BaseCategory, T> entry_type;
+
     typedef typename bare_av_matrix<T>::type variant_type;
 
     struct rule_holder
@@ -466,7 +470,7 @@ private:
     void read_score_encoded_in_special_rule_(int rule_ix, S& encoded_value);
     void apply_hooks_(int rule_ix);
 
-    typedef expression_runner<int, T, S, M, X, true> expression_runner_type;
+    typedef expression_runner<BaseCategory, T, S, M, X, true> expression_runner_type;
 
     expression_runner_type runner_;
 

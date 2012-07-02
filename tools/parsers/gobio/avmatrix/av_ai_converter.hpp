@@ -26,11 +26,39 @@ namespace AV_AI_Converter_specialization {
     }
 
     template <>
+    inline const av_matrix<int, int> toAVMatrix< av_matrix<int, int> >(
+        Lattice & lattice,
+        AnnotationItem ai
+    ) {
+        int category;
+        std::stringstream catSs(ai.getCategory());
+        catSs >> category;
+        av_matrix<int, int> result(category);
+        number_master master;
+        typedef std::pair<std::string, std::string> StringPair;
+        std::list< StringPair > values
+            = lattice.getAnnotationItemManager().getValues(ai);
+        BOOST_FOREACH( StringPair avpair, values ) {
+            std::stringstream attrSs(avpair.first);
+            std::stringstream valSs(avpair.second);
+            int a;
+            int v;
+            attrSs >> a;
+            valSs >> v;
+            result.set_attr(a, v, master.false_value());
+        }
+        return result;
+    }
+
+    template <>
     inline const av_matrix<int, zvalue> toAVMatrix< av_matrix<int, zvalue> >(
         Lattice & lattice,
         AnnotationItem ai
     ) {
-        av_matrix<int, zvalue> result(ai.getCategory());
+        int category;
+        std::stringstream catSs(ai.getCategory());
+        catSs >> category;
+        av_matrix<int, zvalue> result(category);
         zvalue_master master;
         typedef std::pair<std::string, zvalue> StringZvaluePair;
         std::list< StringZvaluePair > values
@@ -45,11 +73,11 @@ namespace AV_AI_Converter_specialization {
     }
 
     template <>
-    inline const av_matrix<int, int> toAVMatrix< av_matrix<int, int> >(
+    inline const av_matrix<std::string, int> toAVMatrix< av_matrix<std::string, int> >(
         Lattice & lattice,
         AnnotationItem ai
     ) {
-        av_matrix<int, int> result(ai.getCategory());
+        av_matrix<std::string, int> result(ai.getCategory());
         number_master master;
         typedef std::pair<std::string, std::string> StringPair;
         std::list< StringPair > values
@@ -62,6 +90,25 @@ namespace AV_AI_Converter_specialization {
             attrSs >> a;
             valSs >> v;
             result.set_attr(a, v, master.false_value());
+        }
+        return result;
+    }
+
+    template <>
+    inline const av_matrix<std::string, zvalue> toAVMatrix< av_matrix<std::string, zvalue> >(
+        Lattice & lattice,
+        AnnotationItem ai
+    ) {
+        av_matrix<std::string, zvalue> result(ai.getCategory());
+        zvalue_master master;
+        typedef std::pair<std::string, zvalue> StringZvaluePair;
+        std::list< StringZvaluePair > values
+            = lattice.getAnnotationItemManager().getValuesAsZvalues(ai);
+        BOOST_FOREACH( StringZvaluePair avpair, values ) {
+            std::stringstream attrSs(avpair.first);
+            int a;
+            attrSs >> a;
+            result.set_attr(a, avpair.second, master.false_value());
         }
         return result;
     }
@@ -83,9 +130,13 @@ public:
 
     AV_AI_Converter(Lattice & lattice) : lattice_(lattice) { }
 
+    const AnnotationItem toAnnotationItem(av_matrix<int, int> av);
+
     const AnnotationItem toAnnotationItem(av_matrix<int, zvalue> av);
 
-    const AnnotationItem toAnnotationItem(av_matrix<int, int> av);
+    const AnnotationItem toAnnotationItem(av_matrix<std::string, int> av);
+
+    const AnnotationItem toAnnotationItem(av_matrix<std::string, zvalue> av);
 
     const AnnotationItem toAnnotationItem(std::string av);
 

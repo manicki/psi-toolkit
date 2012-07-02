@@ -30,8 +30,11 @@ public:
     // typedef int Atom;
     typedef zvalue Atom;
 
-    // typedef std::string Category;
-    typedef av_matrix<int, Atom> Category;
+    typedef int BaseCategory;
+    // typedef std::string BaseCategory;
+
+    // typedef BaseCategory Category;
+    typedef av_matrix<BaseCategory, Atom> Category;
 
     typedef Lattice::Score Score;
 

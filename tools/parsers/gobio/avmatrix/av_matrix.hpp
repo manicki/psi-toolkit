@@ -1,7 +1,6 @@
 #ifndef AVMATRIX_HPP_HDR
 #define AVMATRIX_HPP_HDR
 
-#include <sstream>
 #include <vector>
 
 #include <boost/shared_ptr.hpp>
@@ -12,10 +11,10 @@ template<typename C, typename T>
 class av_matrix
 {
 public:
-    typedef int catprint_type;
+    typedef C BaseCategory;
 
 private:
-    catprint_type cat_;
+    BaseCategory cat_;
     typedef boost::shared_ptr<std::vector<T> > shared_ptr_type;
 
     shared_ptr_type avs_;
@@ -23,14 +22,9 @@ private:
 public:
     explicit av_matrix() { }
 
-    explicit av_matrix(catprint_type a_cat):cat_(a_cat) { }
+    explicit av_matrix(BaseCategory a_cat):cat_(a_cat) { }
 
-    explicit av_matrix(std::string a_cat):cat_(0) {
-        std::stringstream ss(a_cat);
-        ss >> cat_;
-    }
-
-    av_matrix(catprint_type a_cat, int a_nb_attrs, T default_value):
+    av_matrix(BaseCategory a_cat, int a_nb_attrs, T default_value):
         cat_(a_cat),
         avs_(new std::vector<T>(a_nb_attrs, default_value))
     { }
@@ -40,7 +34,7 @@ public:
         avs_(a_avm.avs_)
     { }
 
-    av_matrix(catprint_type a_cat, const av_matrix& a_avm) :
+    av_matrix(BaseCategory a_cat, const av_matrix& a_avm) :
         cat_(a_cat),
         avs_(a_avm.avs_)
     { }
@@ -109,11 +103,11 @@ public:
         return ((*avs_)[attr_ix] = val);
     }
 
-    catprint_type get_cat() const {
+    BaseCategory get_cat() const {
         return cat_;
     }
 
-    catprint_type catprint() const {
+    BaseCategory catprint() const {
         return cat_;
     }
 
