@@ -9,10 +9,11 @@
 
 template<typename C, typename S, typename V, typename R, template<typename, typename> class I>
 chart<C,S,V,R,I>::chart(
-    Lattice & lattice
+    Lattice & lattice,
+    AV_AI_Converter & av_ai_converter
 ) :
     lattice_(lattice),
-    av_ai_converter_(lattice),
+    av_ai_converter_(av_ai_converter),
     gobioTag_(lattice.getLayerTagManager().createSingletonTagCollection("parse")),
     tagMask_(lattice.getLayerTagManager().anyTag())
 {

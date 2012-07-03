@@ -79,7 +79,9 @@ Gobio::Gobio(boost::shared_ptr<Combinator> combinatorPtr) : combinator_(combinat
 
 void Gobio::parse(Lattice &lattice) {
 
-    Chart ch(lattice);
+    AV_AI_Converter av_ai_converter(lattice, combinator_->get_symbol_registrar());
+
+    Chart ch(lattice, av_ai_converter);
     Agenda agenda;
     Parser parser(ch, *combinator_, agenda);
 

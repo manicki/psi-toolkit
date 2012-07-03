@@ -137,7 +137,13 @@ class AV_AI_Converter {
 
 public:
 
-    AV_AI_Converter(Lattice & lattice) : lattice_(lattice) { }
+    AV_AI_Converter(
+        Lattice & lattice,
+        registrar<std::string> & reg
+    ) :
+        lattice_(lattice),
+        registrar_(reg)
+    { }
 
     const AnnotationItem toAnnotationItem(av_matrix<int, int> av);
 

@@ -28,12 +28,13 @@
         Combinator::variant_type, \
         Combinator::rule_type \
     > Chart; \
-    Chart ch(lattice); \
     number_master& master = combinator.get_master(); \
     registrar<std::string>& symbol_reg = combinator.get_symbol_registrar(); \
     registrar<std::string>& attribute_reg = combinator.get_attribute_registrar(); \
     registrar<std::string>& extra_attribute_reg = combinator.get_extra_attribute_registrar(); \
     simple_converter<int> converter(symbol_reg, attribute_reg, extra_attribute_reg); \
+    AV_AI_Converter av_ai_converter(lattice, symbol_reg); \
+    Chart ch(lattice, av_ai_converter); \
     std::vector<Combinator::rule_holder> local_rules; \
     avinput_parser< \
         int, \
@@ -145,12 +146,13 @@ BOOST_AUTO_TEST_CASE( avinput ) {
         Combinator::rule_type
     > Chart;
 
-    Chart ch(lattice);
     number_master master;
     registrar<std::string> symbol_reg;
     registrar<std::string> attribute_reg;
     registrar<std::string> extra_attribute_reg;
     simple_converter<int> converter(symbol_reg, attribute_reg, extra_attribute_reg);
+    AV_AI_Converter av_ai_converter(lattice, symbol_reg);
+    Chart ch(lattice, av_ai_converter);
 
     std::vector<Combinator::rule_holder> local_rules;
 

@@ -4,6 +4,7 @@
 #include "av_ai_converter.hpp"
 #include "av_matrix.hpp"
 #include "lattice.hpp"
+#include "registrar.tpl"
 #include "zvalue.hpp"
 
 
@@ -13,7 +14,8 @@ BOOST_AUTO_TEST_SUITE( av_ai_converter )
 BOOST_AUTO_TEST_CASE( conversion_int_av_to_ai ) {
 
     Lattice lattice;
-    AV_AI_Converter converter(lattice);
+    registrar<std::string> reg;
+    AV_AI_Converter converter(lattice, reg);
     av_matrix<int, int> avm(0);
     avm.set_attr(1, 2, -1L);
     avm.set_attr(3, 4, -1L);
@@ -33,7 +35,8 @@ BOOST_AUTO_TEST_CASE( conversion_int_av_to_ai ) {
 BOOST_AUTO_TEST_CASE( conversion_int_ai_to_av ) {
 
     Lattice lattice;
-    AV_AI_Converter converter(lattice);
+    registrar<std::string> reg;
+    AV_AI_Converter converter(lattice, reg);
     AnnotationItem ai("0");
     lattice.getAnnotationItemManager().setValue(ai, "1", INTEGER_TO_ZVALUE(2));
     lattice.getAnnotationItemManager().setValue(ai, "3", INTEGER_TO_ZVALUE(4));
@@ -53,7 +56,8 @@ BOOST_AUTO_TEST_CASE( conversion_int_ai_to_av ) {
 BOOST_AUTO_TEST_CASE( conversion_partially_string ) {
 
     Lattice lattice;
-    AV_AI_Converter converter(lattice);
+    registrar<std::string> reg;
+    AV_AI_Converter converter(lattice, reg);
     AnnotationItem ai("0");
     lattice.getAnnotationItemManager().setValue(ai, "1", "bbb");
     lattice.getAnnotationItemManager().setValue(ai, "3", "ddd");
@@ -69,7 +73,8 @@ BOOST_AUTO_TEST_CASE( conversion_partially_string ) {
 BOOST_AUTO_TEST_CASE( conversion_string ) {
 
     Lattice lattice;
-    AV_AI_Converter converter(lattice);
+    registrar<std::string> reg;
+    AV_AI_Converter converter(lattice, reg);
     AnnotationItem ai("category");
     lattice.getAnnotationItemManager().setValue(ai, "Aa", "bbb");
     lattice.getAnnotationItemManager().setValue(ai, "Cc", "ddd");
