@@ -52,24 +52,24 @@ BOOST_AUTO_TEST_CASE( conversion_int_ai_to_av ) {
 
 }
 
-/*
+
 BOOST_AUTO_TEST_CASE( conversion_partially_string ) {
 
     Lattice lattice;
     registrar<std::string> reg;
     AV_AI_Converter converter(lattice, reg);
-    AnnotationItem ai("0");
+    AnnotationItem ai("category");
     lattice.getAnnotationItemManager().setValue(ai, "1", "bbb");
     lattice.getAnnotationItemManager().setValue(ai, "3", "ddd");
-    av_matrix<int, int> avm = converter.toAVMatrix< av_matrix<int, int> >(ai);
+    av_matrix<int, zvalue> avm = converter.toAVMatrix< av_matrix<int, zvalue> >(ai);
     AnnotationItem ai2 = converter.toAnnotationItem(avm);
-    BOOST_CHECK_EQUAL(ai2.getCategory(), "0");
+    BOOST_CHECK_EQUAL(ai2.getCategory(), "category");
     BOOST_CHECK_EQUAL(lattice.getAnnotationItemManager().getValueAsString(ai2, "1"), "bbb");
     BOOST_CHECK_EQUAL(lattice.getAnnotationItemManager().getValueAsString(ai2, "3"), "ddd");
 
 }
 
-
+/*
 BOOST_AUTO_TEST_CASE( conversion_string ) {
 
     Lattice lattice;
@@ -78,13 +78,13 @@ BOOST_AUTO_TEST_CASE( conversion_string ) {
     AnnotationItem ai("category");
     lattice.getAnnotationItemManager().setValue(ai, "Aa", "bbb");
     lattice.getAnnotationItemManager().setValue(ai, "Cc", "ddd");
-    av_matrix<int, int> avm = converter.toAVMatrix< av_matrix<int, int> >(ai);
+    av_matrix<int, zvalue> avm = converter.toAVMatrix< av_matrix<int, zvalue> >(ai);
     AnnotationItem ai2 = converter.toAnnotationItem(avm);
     BOOST_CHECK_EQUAL(ai2.getCategory(), "category");
     BOOST_CHECK_EQUAL(lattice.getAnnotationItemManager().getValueAsString(ai2, "Aa"), "bbb");
     BOOST_CHECK_EQUAL(lattice.getAnnotationItemManager().getValueAsString(ai2, "Cc"), "ddd");
 
 }
-*/
+// */
 
 BOOST_AUTO_TEST_SUITE_END()
