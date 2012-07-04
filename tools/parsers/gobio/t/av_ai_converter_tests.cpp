@@ -26,8 +26,8 @@ BOOST_AUTO_TEST_CASE( conversion_int_av_to_ai ) {
 
     av_matrix<int, int> avm2 = converter.toAVMatrix< av_matrix<int, int> >(ai);
     BOOST_CHECK_EQUAL(avm2.get_cat(), 0);
-    BOOST_CHECK_EQUAL(avm2.get_attr(1), 2);
-    BOOST_CHECK_EQUAL(avm2.get_attr(3), 4);
+    BOOST_CHECK_EQUAL(avm2.get_attr(reg.get_id("1")), 2);
+    BOOST_CHECK_EQUAL(avm2.get_attr(reg.get_id("3")), 4);
 
 }
 
