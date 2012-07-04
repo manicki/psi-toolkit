@@ -6,10 +6,10 @@ const AnnotationItem AV_AI_Converter::toAnnotationItem(av_matrix<int, int> av) {
     std::stringstream valSs;
     std::stringstream catSs;
     int cat = av.get_cat();
-    if (cat > registrar_.last_id()) {
+    if (cat > symbol_reg_.last_id()) {
         catSs << cat;
     } else {
-        catSs << registrar_.get_obj(cat);
+        catSs << symbol_reg_.get_obj(cat);
     }
     AnnotationItem result(catSs.str());
     for (int i = 0; i < av.nb_attrs(); ++i) {
@@ -27,10 +27,10 @@ const AnnotationItem AV_AI_Converter::toAnnotationItem(av_matrix<int, zvalue> av
     std::stringstream attrSs;
     std::stringstream catSs;
     int cat = av.get_cat();
-    if (cat > registrar_.last_id()) {
+    if (cat > symbol_reg_.last_id()) {
         catSs << cat;
     } else {
-        catSs << registrar_.get_obj(cat);
+        catSs << symbol_reg_.get_obj(cat);
     }
     AnnotationItem result(catSs.str());
     for (int i = 0; i < av.nb_attrs(); ++i) {
