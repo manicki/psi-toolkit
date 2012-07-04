@@ -161,7 +161,7 @@ public:
 private:
 
     Lattice & lattice_;
-    registrar<std::string> symbol_reg_;
+    registrar<std::string> & symbol_reg_;
 
 };
 
