@@ -47,7 +47,7 @@ zvalue zvalue_master::any_value() const {
 }
 
 bool zvalue_master::is_false(zvalue value) const {
-    return INTEGER_TO_ZVALUE(number_master_.is_false(ZVALUE_TO_INTEGER(value)));
+    return number_master_.is_false(ZVALUE_TO_INTEGER(value));
 }
 
 bool zvalue_master::is_true(zvalue value) const {
