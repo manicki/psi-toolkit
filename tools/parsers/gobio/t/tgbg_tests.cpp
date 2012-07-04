@@ -33,7 +33,7 @@
     registrar<std::string>& attribute_reg = combinator.get_attribute_registrar(); \
     registrar<std::string>& extra_attribute_reg = combinator.get_extra_attribute_registrar(); \
     simple_converter<int> converter(symbol_reg, attribute_reg, extra_attribute_reg); \
-    AV_AI_Converter av_ai_converter(lattice, symbol_reg); \
+    AV_AI_Converter av_ai_converter(lattice, symbol_reg, attribute_reg); \
     Chart ch(lattice, av_ai_converter); \
     std::vector<Combinator::rule_holder> local_rules; \
     avinput_parser< \
@@ -151,7 +151,7 @@ BOOST_AUTO_TEST_CASE( avinput ) {
     registrar<std::string> attribute_reg;
     registrar<std::string> extra_attribute_reg;
     simple_converter<int> converter(symbol_reg, attribute_reg, extra_attribute_reg);
-    AV_AI_Converter av_ai_converter(lattice, symbol_reg);
+    AV_AI_Converter av_ai_converter(lattice, symbol_reg, attribute_reg);
     Chart ch(lattice, av_ai_converter);
 
     std::vector<Combinator::rule_holder> local_rules;

@@ -43,13 +43,10 @@ namespace AV_AI_Converter_specialization {
         std::list< StringPair > values
             = lattice.getAnnotationItemManager().getValues(ai);
         BOOST_FOREACH( StringPair avpair, values ) {
-            std::stringstream attrSs(avpair.first);
             std::stringstream valSs(avpair.second);
-            int a;
             int v;
-            attrSs >> a;
             valSs >> v;
-            result.set_attr(a, v, master.false_value());
+            result.set_attr(symbol_reg.get_id(avpair.first), v, master.false_value());
         }
         return result;
     }
@@ -70,10 +67,7 @@ namespace AV_AI_Converter_specialization {
         std::list< StringZvaluePair > values
             = lattice.getAnnotationItemManager().getValuesAsZvalues(ai);
         BOOST_FOREACH( StringZvaluePair avpair, values ) {
-            std::stringstream attrSs(avpair.first);
-            int a;
-            attrSs >> a;
-            result.set_attr(a, avpair.second, master.false_value());
+            result.set_attr(symbol_reg.get_id(avpair.first), avpair.second, master.false_value());
         }
         return result;
     }
@@ -139,10 +133,12 @@ public:
 
     AV_AI_Converter(
         Lattice & lattice,
-        registrar<std::string> & symbol_reg
+        registrar<std::string> & symbol_reg,
+        registrar<std::string> & attribute_reg
     ) :
         lattice_(lattice),
-        symbol_reg_(symbol_reg)
+        symbol_reg_(symbol_reg),
+        attribute_reg_(attribute_reg)
     { }
 
     const AnnotationItem toAnnotationItem(av_matrix<int, int> av);
@@ -162,6 +158,7 @@ private:
 
     Lattice & lattice_;
     registrar<std::string> & symbol_reg_;
+    registrar<std::string> & attribute_reg_;
 
 };
 

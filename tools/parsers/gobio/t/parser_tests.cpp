@@ -43,7 +43,7 @@
     Agenda agenda; \
     Combinator combinator; \
     registrar<std::string> reg; \
-    AV_AI_Converter av_ai_converter(lattice, reg); \
+    AV_AI_Converter av_ai_converter(lattice, reg, reg); \
     Chart ch(lattice, av_ai_converter);
 
 
@@ -151,7 +151,7 @@ BOOST_AUTO_TEST_CASE( helpers ) {
     Combinator combinator;
 
     registrar<std::string> reg;
-    AV_AI_Converter av_ai_converter(lattice, reg);
+    AV_AI_Converter av_ai_converter(lattice, reg, reg);
     Chart ch(lattice, av_ai_converter);
 
     BOOST_CHECK_EQUAL(count_vertices(ch), 7);
