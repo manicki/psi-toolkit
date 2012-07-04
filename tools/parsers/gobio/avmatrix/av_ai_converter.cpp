@@ -16,7 +16,7 @@ const AnnotationItem AV_AI_Converter::toAnnotationItem(av_matrix<int, int> av) {
         if (i > attribute_reg_.last_id()) {
             attrSs << i;
         } else {
-            attrSs << symbol_reg_.get_obj(i);
+            attrSs << attribute_reg_.get_obj(i);
         }
         valSs << av.get_attr(i);
         lattice_.getAnnotationItemManager().setValue(result, attrSs.str(), valSs.str());
@@ -41,7 +41,7 @@ const AnnotationItem AV_AI_Converter::toAnnotationItem(av_matrix<int, zvalue> av
         if (i > attribute_reg_.last_id()) {
             attrSs << i;
         } else {
-            attrSs << symbol_reg_.get_obj(i);
+            attrSs << attribute_reg_.get_obj(i);
         }
         lattice_.getAnnotationItemManager().setValue(result, attrSs.str(), av.get_attr(i));
         attrSs.str("");
