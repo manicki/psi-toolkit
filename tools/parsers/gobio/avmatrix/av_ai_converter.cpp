@@ -12,16 +12,20 @@ const AnnotationItem AV_AI_Converter::toAnnotationItem(av_matrix<int, int> av) {
         catSs << symbol_reg_.get_obj(cat);
     }
     AnnotationItem result(catSs.str());
+    number_master master;
     for (int i = 0; i < av.nb_attrs(); ++i) {
         if (i > attribute_reg_.last_id()) {
             attrSs << i;
         } else {
             attrSs << attribute_reg_.get_obj(i);
         }
-        valSs << av.get_attr(i);
-        lattice_.getAnnotationItemManager().setValue(result, attrSs.str(), valSs.str());
+        int val = av.get_attr(i);
+        if (!master.is_false(val)) {
+            valSs << val;
+            lattice_.getAnnotationItemManager().setValue(result, attrSs.str(), valSs.str());
+            valSs.str("");
+        }
         attrSs.str("");
-        valSs.str("");
     }
     return result;
 }
@@ -37,13 +41,17 @@ const AnnotationItem AV_AI_Converter::toAnnotationItem(av_matrix<int, zvalue> av
         catSs << symbol_reg_.get_obj(cat);
     }
     AnnotationItem result(catSs.str());
+    zvalue_master master;
     for (int i = 0; i < av.nb_attrs(); ++i) {
         if (i > attribute_reg_.last_id()) {
             attrSs << i;
         } else {
             attrSs << attribute_reg_.get_obj(i);
         }
-        lattice_.getAnnotationItemManager().setValue(result, attrSs.str(), av.get_attr(i));
+        zvalue val = av.get_attr(i);
+        if (!master.is_false(val)) {
+            lattice_.getAnnotationItemManager().setValue(result, attrSs.str(), val);
+        }
         attrSs.str("");
     }
     return result;
