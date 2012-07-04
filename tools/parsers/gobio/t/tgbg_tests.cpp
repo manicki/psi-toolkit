@@ -13,50 +13,44 @@
 #error "RUN_PARSER already defined"
 #endif
 #define RUN_PARSER(FILE_RULES, FILE_INPUT, FILE_OUTPUT) \
+    typedef Lattice::EdgeDescriptor Edge; \
+    typedef zvalue Atom; \
+    typedef int BaseCategory; \
+    typedef av_matrix<BaseCategory, Atom> Category; \
+    typedef Lattice::Score Score; \
+    typedef zvalue_master Master; \
+    typedef semantics_stub<Atom, Master, double> SemanticsMachine; \
+    typedef tgbg_combinator<Atom, Score, Master, SemanticsMachine> Combinator; \
+    typedef Combinator::rule_type Rule; \
+    typedef Combinator::variant_type Variant; \
+    typedef fifo_agenda<Edge> Agenda; \
+    typedef chart<Category, Score, Variant, Rule> Chart; \
+    typedef agenda_parser<Category, Score, Variant, Rule, Combinator, Agenda> Parser; \
+    typedef simple_converter<Atom> SimpleConverter; \
     Lattice lattice; \
-    typedef tgbg_combinator< \
-        int, \
-        Lattice::Score, \
-        number_master, \
-        semantics_stub<int, number_master, double> \
-    > Combinator; \
     Combinator combinator; \
     combinator.add_rules(ROOT_DIR FILE_RULES); \
-    typedef chart< \
-        av_matrix<int, int>, \
-        Lattice::Score, \
-        Combinator::variant_type, \
-        Combinator::rule_type \
-    > Chart; \
-    number_master& master = combinator.get_master(); \
+    Master & master = combinator.get_master(); \
     registrar<std::string>& symbol_reg = combinator.get_symbol_registrar(); \
     registrar<std::string>& attribute_reg = combinator.get_attribute_registrar(); \
     registrar<std::string>& extra_attribute_reg = combinator.get_extra_attribute_registrar(); \
-    simple_converter<int> converter(symbol_reg, attribute_reg, extra_attribute_reg); \
+    SimpleConverter converter(symbol_reg, attribute_reg, extra_attribute_reg); \
     AV_AI_Converter av_ai_converter(lattice, symbol_reg, attribute_reg); \
     Chart ch(lattice, av_ai_converter); \
     std::vector<Combinator::rule_holder> local_rules; \
     avinput_parser< \
-        int, \
-        Combinator::rule_type, \
-        int, \
-        number_master, \
+        BaseCategory, \
+        Rule, \
+        Atom, \
+        Master, \
         Chart, \
-        simple_converter<int>, \
+        SimpleConverter, \
         Combinator::rule_holder \
     > av_parser(master, ch, converter, local_rules); \
     BOOST_CHECK(av_parser.parse(slurp_file(ROOT_DIR FILE_INPUT))); \
     boost::scoped_ptr<LatticeWriter<std::ostream> > writer(new PsiLatticeWriter()); \
-    typedef fifo_agenda<Chart::edge_descriptor> Agenda; \
     Agenda agenda; \
-    agenda_parser< \
-        av_matrix<int, int>, \
-        Lattice::Score, \
-        Combinator::variant_type, \
-        Combinator::rule_type, \
-        Combinator, \
-        Agenda \
-    > tgbg_parser(ch, combinator, agenda); \
+    Parser tgbg_parser(ch, combinator, agenda); \
     tgbg_parser.run(); \
     std::ostringstream osstr; \
     writer->writeLattice(lattice, osstr); \
@@ -130,39 +124,39 @@ BOOST_AUTO_TEST_CASE( compiling_binarized_rules ) {
 
 BOOST_AUTO_TEST_CASE( avinput ) {
 
+    typedef Lattice::EdgeDescriptor Edge;
+    typedef zvalue Atom;
+    typedef int BaseCategory;
+    typedef av_matrix<BaseCategory, Atom> Category;
+    typedef Lattice::Score Score;
+    typedef zvalue_master Master;
+    typedef semantics_stub<Atom, Master, double> SemanticsMachine;
+    typedef tgbg_combinator<Atom, Score, Master, SemanticsMachine> Combinator;
+    typedef Combinator::rule_type Rule;
+    typedef Combinator::variant_type Variant;
+    typedef fifo_agenda<Edge> Agenda;
+    typedef chart<Category, Score, Variant, Rule> Chart;
+    typedef simple_converter<Atom> SimpleConverter;
+
     Lattice lattice;
 
-    typedef tgbg_combinator<
-        int,
-        Lattice::Score,
-        number_master,
-        semantics_stub<int, number_master, double>
-    > Combinator;
-
-    typedef chart<
-        av_matrix<int, int>,
-        Lattice::Score,
-        Combinator::variant_type,
-        Combinator::rule_type
-    > Chart;
-
-    number_master master;
+    Master master;
     registrar<std::string> symbol_reg;
     registrar<std::string> attribute_reg;
     registrar<std::string> extra_attribute_reg;
-    simple_converter<int> converter(symbol_reg, attribute_reg, extra_attribute_reg);
+    SimpleConverter converter(symbol_reg, attribute_reg, extra_attribute_reg);
     AV_AI_Converter av_ai_converter(lattice, symbol_reg, attribute_reg);
     Chart ch(lattice, av_ai_converter);
 
     std::vector<Combinator::rule_holder> local_rules;
 
     avinput_parser<
-        int,
-        Combinator::rule_type,
-        int,
-        number_master,
+        BaseCategory,
+        Rule,
+        Atom,
+        Master,
         Chart,
-        simple_converter<int>,
+        SimpleConverter,
         Combinator::rule_holder
     > av_parser(
         master,
