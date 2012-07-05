@@ -18,7 +18,18 @@ public:
     AnnotationItemManager();
     ~AnnotationItemManager();
 
+    /**
+     * Sets value to be stored as a zvalue's string representation.
+     */
+    void setStringValue(AnnotationItem & annotationItem, std::string attribute, std::string value);
+
+    /**
+     * Sets value and stores it as zvalue-string if it's not a number.
+     * Numbers are stored as zvalue-integers.
+     */
     void setValue(AnnotationItem & annotationItem, std::string attribute, std::string value);
+
+    void setValue(AnnotationItem & annotationItem, std::string attribute, int value);
     void setValue(AnnotationItem & annotationItem, std::string attribute, zvalue value);
 
     zvalue getValue(AnnotationItem & annotationItem, std::string attribute);

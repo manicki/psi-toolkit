@@ -1,6 +1,9 @@
 #include "annotation_item_manager.hpp"
 
 
+#include <sstream>
+
+
 AnnotationItemManager::AnnotationItemManager() {
     zObjectsHolder_ = zvector::generate(EMPTY_ZOBJECTS_HOLDER);
     zSymbolFactory_ = new zsymbolfactory(zsymboltable::generate(zObjectsHolder_));
@@ -12,12 +15,36 @@ AnnotationItemManager::~AnnotationItemManager() {
 }
 
 
-void AnnotationItemManager::setValue(
+void AnnotationItemManager::setStringValue(
     AnnotationItem & annotationItem,
     std::string attribute,
     std::string value
 ) {
     setValue(annotationItem, attribute, zSymbolFactory_->get_symbol(value.c_str()));
+}
+
+
+void AnnotationItemManager::setValue(
+    AnnotationItem & annotationItem,
+    std::string attribute,
+    std::string value
+) {
+    int intVal;
+    std::stringstream valSs(value);
+    if (valSs >> intVal && valSs.eof()) {
+        setValue(annotationItem, attribute, intVal);
+    } else {
+        setStringValue(annotationItem, attribute, value);
+    }
+}
+
+
+void AnnotationItemManager::setValue(
+    AnnotationItem & annotationItem,
+    std::string attribute,
+    int value
+) {
+    setValue(annotationItem, attribute, INTEGER_TO_ZVALUE(value));
 }
 
 
