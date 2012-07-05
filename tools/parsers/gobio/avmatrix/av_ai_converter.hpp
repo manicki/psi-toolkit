@@ -22,7 +22,8 @@ namespace AV_AI_Converter_specialization {
     const CategoryType toAVMatrix(
         AnnotationItem ai,
         Lattice & /*lattice*/,
-        registrar<std::string> & /* symbol_reg */
+        registrar<std::string> & /* symbol_reg */,
+        registrar<std::string> & /* attribute_reg */
     ) {
         return (CategoryType)(ai.getCategory());
     }
@@ -31,7 +32,8 @@ namespace AV_AI_Converter_specialization {
     inline const av_matrix<int, int> toAVMatrix< av_matrix<int, int> >(
         AnnotationItem ai,
         Lattice & lattice,
-        registrar<std::string> & symbol_reg
+        registrar<std::string> & symbol_reg,
+        registrar<std::string> & attribute_reg
     ) {
         av_matrix<int, int> result(symbol_reg.get_id(ai.getCategory()));
         number_master master;
@@ -42,7 +44,7 @@ namespace AV_AI_Converter_specialization {
             std::stringstream valSs(avpair.second);
             int v;
             valSs >> v;
-            result.set_attr(symbol_reg.get_id(avpair.first), v, master.false_value());
+            result.set_attr(attribute_reg.get_id(avpair.first), v, master.false_value());
         }
         return result;
     }
@@ -51,7 +53,8 @@ namespace AV_AI_Converter_specialization {
     inline const av_matrix<int, zvalue> toAVMatrix< av_matrix<int, zvalue> >(
         AnnotationItem ai,
         Lattice & lattice,
-        registrar<std::string> & symbol_reg
+        registrar<std::string> & symbol_reg,
+        registrar<std::string> & attribute_reg
     ) {
         av_matrix<int, zvalue> result(symbol_reg.get_id(ai.getCategory()));
         zvalue_master master;
@@ -59,7 +62,7 @@ namespace AV_AI_Converter_specialization {
         std::list< StringZvaluePair > values
             = lattice.getAnnotationItemManager().getValuesAsZvalues(ai);
         BOOST_FOREACH( StringZvaluePair avpair, values ) {
-            result.set_attr(symbol_reg.get_id(avpair.first), avpair.second, master.false_value());
+            result.set_attr(attribute_reg.get_id(avpair.first), avpair.second, master.false_value());
         }
         return result;
     }
@@ -68,7 +71,8 @@ namespace AV_AI_Converter_specialization {
     inline const av_matrix<std::string, int> toAVMatrix< av_matrix<std::string, int> >(
         AnnotationItem ai,
         Lattice & lattice,
-        registrar<std::string> & /* symbol_reg */
+        registrar<std::string> & /* symbol_reg */,
+        registrar<std::string> & /* attribute_reg */
     ) {
         av_matrix<std::string, int> result(ai.getCategory());
         number_master master;
@@ -91,7 +95,8 @@ namespace AV_AI_Converter_specialization {
     inline const av_matrix<std::string, zvalue> toAVMatrix< av_matrix<std::string, zvalue> >(
         AnnotationItem ai,
         Lattice & lattice,
-        registrar<std::string> & /* symbol_reg */
+        registrar<std::string> & /* symbol_reg */,
+        registrar<std::string> & /* attribute_reg */
     ) {
         av_matrix<std::string, zvalue> result(ai.getCategory());
         zvalue_master master;
@@ -111,7 +116,8 @@ namespace AV_AI_Converter_specialization {
     inline const std::string toAVMatrix< std::string >(
         AnnotationItem ai,
         Lattice & /* lattice */,
-        registrar<std::string> & /* symbol_reg */
+        registrar<std::string> & /* symbol_reg */,
+        registrar<std::string> & /* attribute_reg */
     ) {
         return ai.getCategory();
     }
@@ -157,7 +163,12 @@ private:
 
 template <typename CategoryType>
 const CategoryType AV_AI_Converter::toAVMatrix(AnnotationItem ai) {
-    return AV_AI_Converter_specialization::toAVMatrix<CategoryType>(ai, lattice_, symbol_reg_);
+    return AV_AI_Converter_specialization::toAVMatrix<CategoryType>(
+        ai,
+        lattice_,
+        symbol_reg_,
+        attribute_reg_
+    );
 }
 
 
