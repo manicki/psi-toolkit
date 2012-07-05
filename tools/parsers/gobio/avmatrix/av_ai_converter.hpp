@@ -33,10 +33,6 @@ namespace AV_AI_Converter_specialization {
         Lattice & lattice,
         registrar<std::string> & symbol_reg
     ) {
-        // int category;
-        // std::stringstream catSs(ai.getCategory());
-        // catSs >> category;
-        // av_matrix<int, int> result(category);
         av_matrix<int, int> result(symbol_reg.get_id(ai.getCategory()));
         number_master master;
         typedef std::pair<std::string, std::string> StringPair;
@@ -57,10 +53,6 @@ namespace AV_AI_Converter_specialization {
         Lattice & lattice,
         registrar<std::string> & symbol_reg
     ) {
-        // int category;
-        // std::stringstream catSs(ai.getCategory());
-        // catSs >> category;
-        // av_matrix<int, zvalue> result(category);
         av_matrix<int, zvalue> result(symbol_reg.get_id(ai.getCategory()));
         zvalue_master master;
         typedef std::pair<std::string, zvalue> StringZvaluePair;
