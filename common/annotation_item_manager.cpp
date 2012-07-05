@@ -10,11 +10,6 @@ AnnotationItemManager::AnnotationItemManager() {
 }
 
 
-AnnotationItemManager::~AnnotationItemManager() {
-    delete zSymbolFactory_;
-}
-
-
 void AnnotationItemManager::setStringValue(
     AnnotationItem & annotationItem,
     std::string attribute,

@@ -16,7 +16,6 @@ class AnnotationItemManager {
 public:
 
     AnnotationItemManager();
-    ~AnnotationItemManager();
 
     /**
      * Sets value to be stored as a zvalue's string representation.
