@@ -1,4 +1,4 @@
-01 @0   *@1   ∅            parse                             przyslowek,Typ=przym[]
-02 @1   *@2   ∅            parse                             przymiotnik,L=1,R=z,P=bier[]
-03 @1   *@2   ∅            parse                             rzeczownik,L=1,R=z,P=bier[]
-04 @2   *@3   ∅            parse                             rzeczownik,L=1,R=z,P=bier[]
+01 @0   *@1   ∅            parse                             przyslowek,Typ=65536[]
+02 @1   *@2   ∅            parse                             przymiotnik,L=1,R=65537,P=65538[]
+03 @1   *@2   ∅            parse                             rzeczownik,L=1,R=65537,P=65538[]
+04 @2   *@3   ∅            parse                             rzeczownik,L=1,R=65537,P=65538[]
