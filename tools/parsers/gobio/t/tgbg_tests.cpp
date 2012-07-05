@@ -14,11 +14,11 @@
 #endif
 #define RUN_PARSER(FILE_RULES, FILE_INPUT, FILE_OUTPUT) \
     typedef Lattice::EdgeDescriptor Edge; \
-    typedef int Atom; \
+    typedef zvalue Atom; \
     typedef int BaseCategory; \
     typedef av_matrix<BaseCategory, Atom> Category; \
     typedef Lattice::Score Score; \
-    typedef number_master Master; \
+    typedef zvalue_master Master; \
     typedef semantics_stub<Atom, Master, double> SemanticsMachine; \
     typedef tgbg_combinator<Atom, Score, Master, SemanticsMachine> Combinator; \
     typedef Combinator::rule_type Rule; \
