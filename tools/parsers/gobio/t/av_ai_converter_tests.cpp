@@ -69,7 +69,7 @@ BOOST_AUTO_TEST_CASE( conversion_partially_string ) {
 
 }
 
-/*
+
 BOOST_AUTO_TEST_CASE( conversion_string ) {
 
     Lattice lattice;
@@ -85,6 +85,6 @@ BOOST_AUTO_TEST_CASE( conversion_string ) {
     BOOST_CHECK_EQUAL(lattice.getAnnotationItemManager().getValueAsString(ai2, "Cc"), "ddd");
 
 }
-// */
+
 
 BOOST_AUTO_TEST_SUITE_END()
