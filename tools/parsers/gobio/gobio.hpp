@@ -44,6 +44,7 @@ public:
     // typedef number_master SemanticsMachine;
     // typedef semantics_wrapper SemanticsMachine;
     typedef semantics_wrapper_for_zvalue SemanticsMachine;
+    // typedef semantics_stub<Atom, Master, double> SemanticsMachine;
 
     // typedef boost::shared_ptr<pe_target_info> Equivalent;
 

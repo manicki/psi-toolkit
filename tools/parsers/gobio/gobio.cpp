@@ -2,8 +2,8 @@
 
 
 Annotator* Gobio::Factory::doCreateAnnotator(
-    const boost::program_options::variables_map& options) {
-
+    const boost::program_options::variables_map & options
+) {
     std::string lang = options["lang"].as<std::string>();
     LangSpecificProcessorFileFetcher fileFetcher(__FILE__, lang);
 
@@ -11,8 +11,7 @@ Annotator* Gobio::Factory::doCreateAnnotator(
 
     if (options.count("rules")) {
         std::string rulesFilename = options["rules"].as<std::string>();
-        boost::filesystem::path rulesPath =
-            fileFetcher.getOneFile(rulesFilename);
+        boost::filesystem::path rulesPath = fileFetcher.getOneFile(rulesFilename);
         std::string rulesPathString = rulesPath.string();
         combinatorPtr->add_rules(rulesPathString);
     }
@@ -21,7 +20,8 @@ Annotator* Gobio::Factory::doCreateAnnotator(
 }
 
 void Gobio::Factory::doAddLanguageIndependentOptionsHandled(
-    boost::program_options::options_description& optionsDescription) {
+    boost::program_options::options_description& optionsDescription
+) {
     optionsDescription.add_options()
         ("rules",
         boost::program_options::value<std::string>()->default_value(DEFAULT_RULE_FILE),
@@ -54,15 +54,13 @@ std::list<std::string> Gobio::Factory::doProvidedLayerTags() {
 const std::string Gobio::Factory::DEFAULT_RULE_FILE
     = "%ITSDATA%/%LANG%/rules.g";
 
-LatticeWorker* Gobio::doCreateLatticeWorker(Lattice& lattice) {
+LatticeWorker* Gobio::doCreateLatticeWorker(Lattice & lattice) {
     return new Worker(*this, lattice);
 }
 
-Gobio::Worker::Worker(Gobio& processor, Lattice& lattice) :
+Gobio::Worker::Worker(Gobio & processor, Lattice & lattice) :
     LatticeWorker(lattice), processor_(processor)
-{
-    //TODO
-}
+{ }
 
 void Gobio::Worker::doRun() {
     processor_.parse(lattice_);
@@ -72,12 +70,9 @@ std::string Gobio::doInfo() {
     return "gobio parser";
 }
 
-Gobio::Gobio(boost::shared_ptr<Combinator> combinatorPtr) : combinator_(combinatorPtr) {
-    //TODO
-}
+Gobio::Gobio(boost::shared_ptr<Combinator> combinatorPtr) : combinator_(combinatorPtr) { }
 
-
-void Gobio::parse(Lattice &lattice) {
+void Gobio::parse(Lattice & lattice) {
 
     AV_AI_Converter av_ai_converter(
         lattice,
@@ -91,22 +86,10 @@ void Gobio::parse(Lattice &lattice) {
 
     parser.run();
 
-    //DUMMY IMPLEMENTATION (for testing in psi-pipe)
-    /*
-    AnnotationItem aiGobio("parsed by GOBIO");
-    LayerTagCollection
-        tagParse = lattice.getLayerTagManager().createSingletonTagCollection("parse");
-    lattice.addEdge(
-        lattice.getFirstVertex(),
-        lattice.getLastVertex(),
-        aiGobio,
-        tagParse
-    );
-    // */
 }
 
 double Gobio::doGetQualityScore(
-    const boost::program_options::variables_map& /*options*/) const {
+    const boost::program_options::variables_map & /*options*/) const {
 
     return -9999;
 }
