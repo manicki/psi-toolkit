@@ -77,7 +77,8 @@ void Gobio::parse(Lattice & lattice) {
     AV_AI_Converter av_ai_converter(
         lattice,
         combinator_->get_symbol_registrar(),
-        combinator_->get_attribute_registrar()
+        combinator_->get_attribute_registrar(),
+        true
     );
 
     Chart ch(lattice, av_ai_converter);

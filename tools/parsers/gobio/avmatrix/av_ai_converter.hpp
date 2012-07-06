@@ -2,6 +2,7 @@
 #define AV_AI_CONVERTER_HDR
 
 
+#include <cctype>
 #include <sstream>
 #include <string>
 
@@ -23,7 +24,8 @@ namespace AV_AI_Converter_specialization {
         AnnotationItem ai,
         Lattice & /*lattice*/,
         registrar<std::string> & /* symbol_reg */,
-        registrar<std::string> & /* attribute_reg */
+        registrar<std::string> & /* attribute_reg */,
+        bool /* convert_cases */
     ) {
         return (CategoryType)(ai.getCategory());
     }
@@ -33,18 +35,23 @@ namespace AV_AI_Converter_specialization {
         AnnotationItem ai,
         Lattice & lattice,
         registrar<std::string> & symbol_reg,
-        registrar<std::string> & attribute_reg
+        registrar<std::string> & attribute_reg,
+        bool convert_cases
     ) {
-        av_matrix<int, int> result(symbol_reg.get_id(ai.getCategory()));
+        std::string category = ai.getCategory();
+        if (convert_cases && !category.empty()) category[0] = tolower(category[0]);
+        av_matrix<int, int> result(symbol_reg.get_id(category));
         number_master master;
         typedef std::pair<std::string, std::string> StringPair;
         std::list< StringPair > values
             = lattice.getAnnotationItemManager().getValues(ai);
         BOOST_FOREACH( StringPair avpair, values ) {
+            std::string attr = avpair.first;
+            if (convert_cases && !attr.empty()) attr[0] = toupper(attr[0]);
             std::stringstream valSs(avpair.second);
             int v;
             valSs >> v;
-            result.set_attr(attribute_reg.get_id(avpair.first), v, master.false_value());
+            result.set_attr(attribute_reg.get_id(attr), v, master.false_value());
         }
         return result;
     }
@@ -54,15 +61,20 @@ namespace AV_AI_Converter_specialization {
         AnnotationItem ai,
         Lattice & lattice,
         registrar<std::string> & symbol_reg,
-        registrar<std::string> & attribute_reg
+        registrar<std::string> & attribute_reg,
+        bool convert_cases
     ) {
-        av_matrix<int, zvalue> result(symbol_reg.get_id(ai.getCategory()));
+        std::string category = ai.getCategory();
+        if (convert_cases && !category.empty()) category[0] = tolower(category[0]);
+        av_matrix<int, zvalue> result(symbol_reg.get_id(category));
         zvalue_master master;
         typedef std::pair<std::string, zvalue> StringZvaluePair;
         std::list< StringZvaluePair > values
             = lattice.getAnnotationItemManager().getValuesAsZvalues(ai);
         BOOST_FOREACH( StringZvaluePair avpair, values ) {
-            result.set_attr(attribute_reg.get_id(avpair.first), avpair.second, master.false_value());
+            std::string attr = avpair.first;
+            if (convert_cases && !attr.empty()) attr[0] = toupper(attr[0]);
+            result.set_attr(attribute_reg.get_id(attr), avpair.second, master.false_value());
         }
         return result;
     }
@@ -72,21 +84,23 @@ namespace AV_AI_Converter_specialization {
         AnnotationItem ai,
         Lattice & lattice,
         registrar<std::string> & /* symbol_reg */,
-        registrar<std::string> & /* attribute_reg */
+        registrar<std::string> & attribute_reg,
+        bool convert_cases
     ) {
-        av_matrix<std::string, int> result(ai.getCategory());
+        std::string category = ai.getCategory();
+        if (convert_cases && !category.empty()) category[0] = tolower(category[0]);
+        av_matrix<std::string, int> result(category);
         number_master master;
         typedef std::pair<std::string, std::string> StringPair;
         std::list< StringPair > values
             = lattice.getAnnotationItemManager().getValues(ai);
         BOOST_FOREACH( StringPair avpair, values ) {
-            std::stringstream attrSs(avpair.first);
+            std::string attr = avpair.first;
+            if (convert_cases && !attr.empty()) attr[0] = toupper(attr[0]);
             std::stringstream valSs(avpair.second);
-            int a;
             int v;
-            attrSs >> a;
             valSs >> v;
-            result.set_attr(a, v, master.false_value());
+            result.set_attr(attribute_reg.get_id(attr), v, master.false_value());
         }
         return result;
     }
@@ -96,18 +110,20 @@ namespace AV_AI_Converter_specialization {
         AnnotationItem ai,
         Lattice & lattice,
         registrar<std::string> & /* symbol_reg */,
-        registrar<std::string> & /* attribute_reg */
+        registrar<std::string> & attribute_reg,
+        bool convert_cases
     ) {
-        av_matrix<std::string, zvalue> result(ai.getCategory());
+        std::string category = ai.getCategory();
+        if (convert_cases && !category.empty()) category[0] = tolower(category[0]);
+        av_matrix<std::string, zvalue> result(category);
         zvalue_master master;
         typedef std::pair<std::string, zvalue> StringZvaluePair;
         std::list< StringZvaluePair > values
             = lattice.getAnnotationItemManager().getValuesAsZvalues(ai);
         BOOST_FOREACH( StringZvaluePair avpair, values ) {
-            std::stringstream attrSs(avpair.first);
-            int a;
-            attrSs >> a;
-            result.set_attr(a, avpair.second, master.false_value());
+            std::string attr = avpair.first;
+            if (convert_cases && !attr.empty()) attr[0] = toupper(attr[0]);
+            result.set_attr(attribute_reg.get_id(attr), avpair.second, master.false_value());
         }
         return result;
     }
@@ -117,9 +133,12 @@ namespace AV_AI_Converter_specialization {
         AnnotationItem ai,
         Lattice & /* lattice */,
         registrar<std::string> & /* symbol_reg */,
-        registrar<std::string> & /* attribute_reg */
+        registrar<std::string> & /* attribute_reg */,
+        bool convert_cases
     ) {
-        return ai.getCategory();
+        std::string category = ai.getCategory();
+        if (convert_cases && !category.empty()) category[0] = tolower(category[0]);
+        return category;
     }
 
 }
@@ -129,14 +148,24 @@ class AV_AI_Converter {
 
 public:
 
+
+    /**
+     * convert_cases :
+     *   Gobio grammar files require all categories to begin with a lowercase letter
+     *   and all attributes to begin with an uppercase letter.
+     *   If convert_cases is switched on, such case conversion is performed
+     *   while converting from AV to AI.
+     */
     AV_AI_Converter(
         Lattice & lattice,
         registrar<std::string> & symbol_reg,
-        registrar<std::string> & attribute_reg
+        registrar<std::string> & attribute_reg,
+        bool convert_cases = false
     ) :
         lattice_(lattice),
         symbol_reg_(symbol_reg),
-        attribute_reg_(attribute_reg)
+        attribute_reg_(attribute_reg),
+        convert_cases_(convert_cases)
     { }
 
     const AnnotationItem toAnnotationItem(av_matrix<int, int> av);
@@ -157,6 +186,7 @@ private:
     Lattice & lattice_;
     registrar<std::string> & symbol_reg_;
     registrar<std::string> & attribute_reg_;
+    bool convert_cases_;
 
 };
 
@@ -167,7 +197,8 @@ const CategoryType AV_AI_Converter::toAVMatrix(AnnotationItem ai) {
         ai,
         lattice_,
         symbol_reg_,
-        attribute_reg_
+        attribute_reg_,
+        convert_cases_
     );
 }
 
