@@ -19,9 +19,5 @@ vp = verb*
 vp = adv b vp*
 
 vp = vp* b np
-
-#    np.Case == acc
-
-# Bezpośrednie przypisywanie atrybutów na razie nie działa,
-# ponieważ są zamieniane przez tgbg_combinator::add_rules na liczby
+    np.Case == acc
 
