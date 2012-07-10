@@ -104,18 +104,18 @@ public:
     typedef int BaseCategory;
     // typedef std::string BaseCategory;
 
-    typedef av_matrix<BaseCategory, T> entry_type;
+    typedef av_matrix<BaseCategory, atom_type> entry_type;
 
-    typedef typename bare_av_matrix<T>::type variant_type;
+    typedef typename bare_av_matrix<atom_type>::type variant_type;
 
     struct rule_holder
     {
     boost::shared_ptr<GRule> g_rule;
 
-    boost::shared_ptr<compiled_expression<T,S,2> > compiled_expr;
-    boost::shared_ptr<compiled_expression<T,S,2> > compiled_extra_expr;
+    boost::shared_ptr<compiled_expression<atom_type,S,2> > compiled_expr;
+    boost::shared_ptr<compiled_expression<atom_type,S,2> > compiled_extra_expr;
     std::vector<bool> extra_independence;
-    std::vector<boost::shared_ptr<tree_specification<T> > > tree_specs;
+    std::vector<boost::shared_ptr<tree_specification<atom_type> > > tree_specs;
 
     int lhs_symbol;
     std::vector<int> rhs_symbols;
@@ -151,7 +151,7 @@ public:
         {}
 
     // tworzy li¶æ
-    rule_holder(T cat, E eq = E())
+    rule_holder(atom_type cat, E eq = E())
         :g_rule(),
          compiled_expr(),
          compiled_extra_expr(),
@@ -169,13 +169,13 @@ public:
 #endif
         {
         tree_specs.push_back(
-            boost::shared_ptr<tree_specification<T> >(
-            new tree_specification<T>(
-                boost::shared_ptr<tree_specification_root<T> >(
-                new category_root<T>(cat)))));
+            boost::shared_ptr<tree_specification<atom_type> >(
+            new tree_specification<atom_type>(
+                boost::shared_ptr<tree_specification_root<atom_type> >(
+                new category_root<atom_type>(cat)))));
         }
 
-    rule_holder(boost::shared_ptr<tree_specification<T> > ts, E eq = E())
+    rule_holder(boost::shared_ptr<tree_specification<atom_type> > ts, E eq = E())
         :g_rule(),
          compiled_expr(),
          compiled_extra_expr(),
@@ -201,10 +201,10 @@ public:
     template<class Archive>
     void serialize(Archive & ar, const unsigned int /*version*/)
         {
-        ar.template register_type<empty_root<T> >();
-        ar.template register_type<category_root<T> >();
-        ar.template register_type<hook_root<T> >();
-        ar.template register_type<hook_contents_root<T> >();
+        ar.template register_type<empty_root<atom_type> >();
+        ar.template register_type<category_root<atom_type> >();
+        ar.template register_type<hook_root<atom_type> >();
+        ar.template register_type<hook_contents_root<atom_type> >();
 
         ar & compiled_expr;
         ar & compiled_extra_expr;
@@ -253,7 +253,7 @@ public:
     bool could_be_final(const entry_type& entry);
     bool could_be_final_variant(const entry_type& entry, const variant_type& variant);
     bool is_lexical(const rule_type& rule) const;
-    boost::shared_ptr<tree_specification<T> > tree_spec(
+    boost::shared_ptr<tree_specification<atom_type> > tree_spec(
     const rule_type& rule, const std::vector<rule_holder>& local_rules);
     E equivalent(
     const rule_type& rule, const std::vector<rule_holder>& local_rules);
@@ -282,7 +282,7 @@ public:
     const rule_type& rule,
     int symbol_ix);
 
-    S get_preference(T syncat);
+    S get_preference(atom_type syncat);
 
     std::string get_option(const std::string& option_name) const;
 
@@ -431,12 +431,12 @@ private:
     void resize_binary_rules_index_(int sid);
 
     int pre_hook_symbol_id_;
-    boost::shared_ptr<compiled_expression<T, S, 2> > pre_hook_binary_expr_;
+    boost::shared_ptr<compiled_expression<atom_type, S, 2> > pre_hook_binary_expr_;
 
-    boost::shared_ptr<compiled_expression<T, S, 2> > pre_hook_unary_expr_;
+    boost::shared_ptr<compiled_expression<atom_type, S, 2> > pre_hook_unary_expr_;
     int final_hook_symbol_id_;
-    boost::shared_ptr<compiled_expression<T, S, 2> > final_hook_expr_;
-    boost::shared_ptr<compiled_expression<T, S, 2> > final_hook_extra_expr_;
+    boost::shared_ptr<compiled_expression<atom_type, S, 2> > final_hook_expr_;
+    boost::shared_ptr<compiled_expression<atom_type, S, 2> > final_hook_extra_expr_;
 
     int extra_attributes_symbol_id_;
 
@@ -444,7 +444,7 @@ private:
     S setscore_factor_;
 
     int preference_id_;
-    std::map<T, S> preference_table_;
+    std::map<atom_type, S> preference_table_;
 
     int options_id_;
     std::map<std::string, std::string> options_;
@@ -470,7 +470,7 @@ private:
     void read_score_encoded_in_special_rule_(int rule_ix, S& encoded_value);
     void apply_hooks_(int rule_ix);
 
-    typedef expression_runner<BaseCategory, T, S, M, X, true> expression_runner_type;
+    typedef expression_runner<BaseCategory, atom_type, S, M, X, true> expression_runner_type;
 
     expression_runner_type runner_;
 
@@ -539,7 +539,7 @@ private:
     int symbol_ix,
     int d);
 
-    static boost::shared_ptr<compiled_expression<T,S,2> >
+    static boost::shared_ptr<compiled_expression<atom_type,S,2> >
     get_assignments_expression_(
     registrar<std::string>& attr_registrar,
     const std::string& prefix,
@@ -557,9 +557,9 @@ private:
     int ix);
 
     static void get_attrs_(
-    std::set<int>& s, const compiled_expression<T,S,2>& expr, int symbol_ix);
+    std::set<int>& s, const compiled_expression<atom_type,S,2>& expr, int symbol_ix);
     static void get_extra_attrs_(
-    std::set<int>& s, const compiled_expression<T,S,2>& expr, int symbol_ix);
+    std::set<int>& s, const compiled_expression<atom_type,S,2>& expr, int symbol_ix);
 
     static void create_reindex_hash_(
     registrar<std::string>& attr_registrar,
@@ -568,7 +568,7 @@ private:
     typename HashWrapper<int,int>::type & r_hash,
     int already_reserved_for_temps);
 
-    boost::shared_ptr<tree_specification<T> > empty_tree_spec_;
+    boost::shared_ptr<tree_specification<atom_type> > empty_tree_spec_;
 
     int last_useful_symbol_id_;
 
@@ -576,9 +576,9 @@ private:
 
     int last_filtre_ix_;
     typename HashWrapper3<
-    std::pair<int, compiled_expression<T,S,2> >,
+    std::pair<int, compiled_expression<atom_type,S,2> >,
     int,
-    int_compiled_expression_hash_fun<T,S,2> >::type
+    int_compiled_expression_hash_fun<atom_type,S,2> >::type
     filtres_hash_;
 
     friend class boost::serialization::access;
@@ -600,9 +600,9 @@ private:
 #endif
 
     // klasa rzutujaca ten kombinator musi byc zaprzyjazniona
-    friend class tgbg_to_simple_cfg_projector<T,S,M,X,E>;
-    friend class tgbg_to_tab_int_projector<T,S,M,X,E>;
-    friend class tgbg_attribute_projector<T,S,M,X,E>;
+    friend class tgbg_to_simple_cfg_projector<atom_type,S,M,X,E>;
+    friend class tgbg_to_tab_int_projector<atom_type,S,M,X,E>;
+    friend class tgbg_attribute_projector<atom_type,S,M,X,E>;
 
     BOOST_SERIALIZATION_SPLIT_MEMBER()
 };

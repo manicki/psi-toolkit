@@ -66,9 +66,9 @@ tgbg_combinator<T,S,M,X,E>::tgbg_combinator(bool with_decomposition):
     setscore_factor_id_ = symbol_reg_.get_id("__SETSCORE_FACTOR__");
     preference_id_ = symbol_reg_.get_id("__PREFERENCE__");
 
-    empty_tree_spec_.reset(new tree_specification<T>(
-                   boost::shared_ptr<tree_specification_root<T> >(
-                   new empty_root<T>())));
+    empty_tree_spec_.reset(new tree_specification<atom_type>(
+                   boost::shared_ptr<tree_specification_root<atom_type> >(
+                   new empty_root<atom_type>())));
 
     options_id_ = symbol_reg_.get_id("__OPTIONS__");
 
@@ -130,7 +130,7 @@ std::cerr << " SCORE READER IS EMPTY!" << std::endl;
         return;
     }
 
-    gen_ruledumper<T,S,M,X,E> grd;
+    gen_ruledumper<atom_type,S,M,X,E> grd;
 
     std::pair<typename std::vector<rule_holder>::iterator,typename std::vector<rule_holder>::iterator> itp
         = get_rules_iterator();
@@ -395,7 +395,7 @@ void tgbg_combinator<T,S,M,X,E>::binarize_all_rules()
         true);
 
 
-    rules_.back().extra_independence = get_independence_vector<T,S>(
+    rules_.back().extra_independence = get_independence_vector<atom_type,S>(
         rules_.back().compiled_extra_expr,
         2,
         d);
@@ -405,7 +405,7 @@ void tgbg_combinator<T,S,M,X,E>::binarize_all_rules()
     reserved_for_temps_hash[bid_symbol] = reserved_for_temps;
     reserved_for_extra_temps_hash[bid_symbol] = reserved_for_extra_temps;
 
-    rules_.back().tree_specs.push_back(default_tree_spec<T>(2, -1L, master_));
+    rules_.back().tree_specs.push_back(default_tree_spec<atom_type>(2, -1L, master_));
 
     rules_.back().lhs_symbol = bid_symbol;
     rules_.back().rhs_symbols.push_back((*max_it).first.first.first);
@@ -415,9 +415,9 @@ void tgbg_combinator<T,S,M,X,E>::binarize_all_rules()
 
     unsigned int nb_of_rules = 0;
     typename HashWrapper3<
-        compiled_expression<T,S,2>,
+        compiled_expression<atom_type,S,2>,
         int,
-        compiled_expression_hash_fun<T,S,2> >::type bifs_hash;
+        compiled_expression_hash_fun<atom_type,S,2> >::type bifs_hash;
 
 
 
@@ -440,7 +440,7 @@ void tgbg_combinator<T,S,M,X,E>::binarize_all_rules()
         assert(symbol_ix >= 0 && symbol_ix < (signed int)((*rule_it).rhs_symbols.size() - 1));
 
         // sprawdzenie, czy nie mozna jakichs filtrow nalozyc
-        std::vector<boost::shared_ptr<compiled_expression<T,S,2> > > bifs
+        std::vector<boost::shared_ptr<compiled_expression<atom_type,S,2> > > bifs
         = get_bifiltres(
             (*rule_it).compiled_expr,
             (*rule_it).rhs_symbols.size(),
@@ -504,7 +504,7 @@ void tgbg_combinator<T,S,M,X,E>::binarize_all_rules()
         // poprawiamy normalne atrybuty
 
         (*rule_it).compiled_expr.reset(
-        new compiled_expression<T,S,2>(*(*rule_it).compiled_expr));
+        new compiled_expression<atom_type,S,2>(*(*rule_it).compiled_expr));
         reindex_attributes(
         *(*rule_it).compiled_expr,
         symbol_ix + (1 - d),
@@ -545,7 +545,7 @@ void tgbg_combinator<T,S,M,X,E>::binarize_all_rules()
         if((*rule_it).compiled_extra_expr)
         {
         (*rule_it).compiled_extra_expr.reset(
-            new compiled_expression<T,S,2>(*(*rule_it).compiled_extra_expr));
+            new compiled_expression<atom_type,S,2>(*(*rule_it).compiled_extra_expr));
         reindex_attributes(
             *(*rule_it).compiled_extra_expr,
             symbol_ix + (1 - d),
@@ -568,7 +568,7 @@ void tgbg_combinator<T,S,M,X,E>::binarize_all_rules()
         --(*rule_it).starred_ix;
 
         // i drzewa
-        for(typename std::vector<boost::shared_ptr<tree_specification<T> > >::iterator ts_it
+        for(typename std::vector<boost::shared_ptr<tree_specification<atom_type> > >::iterator ts_it
             = (*rule_it).tree_specs.begin();
         ts_it != (*rule_it).tree_specs.end();
         ++ts_it)
@@ -604,9 +604,9 @@ void tgbg_combinator<T,S,M,X,E>::binarize_all_rules()
 
     // badamy filtry
     typename HashWrapper3<
-        compiled_expression<T,S,2>,
+        compiled_expression<atom_type,S,2>,
         int,
-        compiled_expression_hash_fun<T,S,2> >::type::iterator bifs_hash_it
+        compiled_expression_hash_fun<atom_type,S,2> >::type::iterator bifs_hash_it
         = bifs_hash.begin();
 
     bool was_filtre_added = false;
@@ -625,8 +625,8 @@ void tgbg_combinator<T,S,M,X,E>::binarize_all_rules()
 
         was_filtre_added = true;
 
-        boost::shared_ptr<compiled_expression<T,S,2> > f_expr
-            = paste_expressions_with_ifnjump<T,S>(
+        boost::shared_ptr<compiled_expression<atom_type,S,2> > f_expr
+            = paste_expressions_with_ifnjump<atom_type,S>(
             (*bifs_hash_it).first, *rules_[added_bi_rule_ix].compiled_expr);
 
         rules_[added_bi_rule_ix].compiled_expr
@@ -923,10 +923,10 @@ tgbg_combinator<T,S,M,X,E>::get_assignments_expression_(
     if(could_be_null && attrs.empty())
     {
     reserved_for_temps = already_reserved_for_temps;
-    return boost::shared_ptr<compiled_expression<T,S,2> >();
+    return boost::shared_ptr<compiled_expression<atom_type,S,2> >();
     }
 
-    boost::shared_ptr<compiled_expression<T,S,2> > expr(new compiled_expression<T,S,2>());
+    boost::shared_ptr<compiled_expression<atom_type,S,2> > expr(new compiled_expression<atom_type,S,2>());
 
     expr->push_instruction_0(gobio_opcodes::OPCODE_PUSH_TRUE);
 
@@ -1558,7 +1558,7 @@ void tgbg_combinator<T,S,M,X,E>::print_rule_(
         ostr << " %(?NONE?)%";
     else
     {
-        for(typename std::vector<boost::shared_ptr<tree_specification<T> > >::const_iterator
+        for(typename std::vector<boost::shared_ptr<tree_specification<atom_type> > >::const_iterator
             ts_it
             = h.tree_specs.begin();
         ts_it != h.tree_specs.end();
@@ -1630,7 +1630,7 @@ void tgbg_combinator<T,S,M,X,E>::index_rule_(int rule_ix)
 
     if(rules_[rule_ix].compiled_expr)
     {
-        rules_[rule_ix].extra_independence = get_independence_vector<T,S>(
+        rules_[rule_ix].extra_independence = get_independence_vector<atom_type,S>(
         rules_[rule_ix].compiled_extra_expr,
         rules_[rule_ix].rhs_symbols.size(),
         rules_[rule_ix].starred_ix);
@@ -1706,7 +1706,7 @@ void tgbg_combinator<T,S,M,X,E>::check_special_rule_(int rule_ix)
     compile_rule_(rule_ix);
 
     pre_hook_binary_expr_.reset(
-        new compiled_expression<T,S,2>(
+        new compiled_expression<atom_type,S,2>(
         *rh.compiled_expr));
 
     if(pre_hook_binary_expr_)
@@ -1722,7 +1722,7 @@ void tgbg_combinator<T,S,M,X,E>::check_special_rule_(int rule_ix)
         compile_rule_(rule_ix);
 
         pre_hook_unary_expr_.reset(
-        new compiled_expression<T,S,2>(
+        new compiled_expression<atom_type,S,2>(
             *rh.compiled_expr));
 
         if(pre_hook_unary_expr_)
@@ -1735,12 +1735,12 @@ void tgbg_combinator<T,S,M,X,E>::check_special_rule_(int rule_ix)
         compile_rule_(rule_ix);
 
         final_hook_expr_.reset(
-        new compiled_expression<T,S,2>(
+        new compiled_expression<atom_type,S,2>(
             *rh.compiled_expr));
 
         if(rh.compiled_extra_expr)
         final_hook_extra_expr_.reset(
-            new compiled_expression<T,S,2>(
+            new compiled_expression<atom_type,S,2>(
             *rh.compiled_extra_expr));
 
         rh.is_an_origin = true;
@@ -1749,7 +1749,7 @@ void tgbg_combinator<T,S,M,X,E>::check_special_rule_(int rule_ix)
     {
         compile_rule_(rule_ix);
 
-        boost::shared_ptr<compiled_expression<T,S,2> > ce
+        boost::shared_ptr<compiled_expression<atom_type,S,2> > ce
         = rules_[rule_ix].compiled_expr;
 
         assert(ce);
@@ -1759,7 +1759,7 @@ void tgbg_combinator<T,S,M,X,E>::check_special_rule_(int rule_ix)
         if(ce->get_opcode(i) == gobio_opcodes::OPCODE_PUSH
            || ce->get_opcode(i) == gobio_opcodes::OPCODE_SETTOP)
         {
-            T v = ce->get_targ(i, 0);
+            atom_type v = ce->get_targ(i, 0);
 
             if(!master_.is_string(v))
             throw std::runtime_error("only strings expected in __EXTRA_ATTRIBUTES__");
@@ -1781,13 +1781,13 @@ void tgbg_combinator<T,S,M,X,E>::check_special_rule_(int rule_ix)
     {
         compile_rule_(rule_ix);
 
-        boost::shared_ptr<compiled_expression<T,S,2> > ce
+        boost::shared_ptr<compiled_expression<atom_type,S,2> > ce
         = rules_[rule_ix].compiled_expr;
 
         assert(ce);
 
-        T fvalue = master_.false_value();
-        T current_value = fvalue;
+        atom_type fvalue = master_.false_value();
+        atom_type current_value = fvalue;
 
         for(int i = 0; i < ce->first_available_address(); ++i)
         {
@@ -1806,12 +1806,12 @@ void tgbg_combinator<T,S,M,X,E>::check_special_rule_(int rule_ix)
     {
         compile_rule_(rule_ix);
 
-        boost::shared_ptr<compiled_expression<T,S,2> > ce
+        boost::shared_ptr<compiled_expression<atom_type,S,2> > ce
         = rules_[rule_ix].compiled_expr;
 
         assert(ce);
 
-        T options_name = master_.false_value();
+        atom_type options_name = master_.false_value();
 
         for(int i = 0; i < ce->first_available_address(); ++i)
         {
@@ -1831,7 +1831,7 @@ void tgbg_combinator<T,S,M,X,E>::check_special_rule_(int rule_ix)
     {
         compile_rule_(rule_ix);
 
-        boost::shared_ptr<compiled_expression<T,S,2> > ce
+        boost::shared_ptr<compiled_expression<atom_type,S,2> > ce
         = rules_[rule_ix].compiled_expr;
 
         assert(ce);
@@ -1871,7 +1871,7 @@ void tgbg_combinator<T,S,M,X,E>::read_score_encoded_in_special_rule_(int rule_ix
 
     compile_rule_(rule_ix);
 
-    boost::shared_ptr<compiled_expression<T,S,2> > ce
+    boost::shared_ptr<compiled_expression<atom_type,S,2> > ce
     = rules_[rule_ix].compiled_expr;
 
     assert(ce);
@@ -1894,20 +1894,20 @@ void tgbg_combinator<T,S,M,X,E>::apply_hooks_(int rule_ix)
     {
     if(pre_hook_binary_expr_ && rh.rhs_symbols.size() == 2)
     {
-        boost::shared_ptr<compiled_expression<T,S,2> > t = rh.compiled_expr;
+        boost::shared_ptr<compiled_expression<atom_type,S,2> > t = rh.compiled_expr;
 
         int delta = pre_hook_binary_expr_->first_available_address();
-        rh.compiled_expr.reset(new compiled_expression<T,S,2>(*pre_hook_binary_expr_));
+        rh.compiled_expr.reset(new compiled_expression<atom_type,S,2>(*pre_hook_binary_expr_));
         rh.compiled_expr->append(*t);
         relocate_jumps(*rh.compiled_expr, delta, delta);
         rh.is_prehooked = true;
     }
     else if(pre_hook_unary_expr_ && rh.rhs_symbols.size() == 1)
     {
-        boost::shared_ptr<compiled_expression<T,S,2> > t = rh.compiled_expr;
+        boost::shared_ptr<compiled_expression<atom_type,S,2> > t = rh.compiled_expr;
 
         int delta = pre_hook_unary_expr_->first_available_address();
-        rh.compiled_expr.reset(new compiled_expression<T,S,2>(*pre_hook_unary_expr_));
+        rh.compiled_expr.reset(new compiled_expression<atom_type,S,2>(*pre_hook_unary_expr_));
         rh.compiled_expr->append(*t);
         relocate_jumps(*rh.compiled_expr, delta, delta);
         rh.is_prehooked = true;
@@ -2067,9 +2067,9 @@ void tgbg_combinator<T,S,M,X,E>::decompose_rule_(int rule_ix)
 {
     if(rules_[rule_ix].compiled_expr)
     {
-    std::vector<boost::shared_ptr<compiled_expression<T,S,2> > > parts;
+    std::vector<boost::shared_ptr<compiled_expression<atom_type,S,2> > > parts;
 
-    boost::shared_ptr<compiled_expression<T,S,2> > new_expr = decompose_expression(
+    boost::shared_ptr<compiled_expression<atom_type,S,2> > new_expr = decompose_expression(
         rules_[rule_ix].compiled_expr,
         rules_[rule_ix].rhs_symbols.size(),
         rules_[rule_ix].starred_ix,
@@ -2082,7 +2082,7 @@ void tgbg_combinator<T,S,M,X,E>::decompose_rule_(int rule_ix)
 
     for(size_t p = 0; p < parts.size(); ++p)
     {
-        boost::shared_ptr<compiled_expression<T,S,2> > expr
+        boost::shared_ptr<compiled_expression<atom_type,S,2> > expr
         = parts[p];
 
         if(expr)
@@ -2098,14 +2098,14 @@ void tgbg_combinator<T,S,M,X,E>::decompose_rule_(int rule_ix)
             gobio_opcodes::OPCODE_SETTOP_SUBVAR);
 
         if(!filtres_hash_.count(
-               std::pair<int, compiled_expression<T,S,2> >(rhs_smbs[p],*expr)))
+               std::pair<int, compiled_expression<atom_type,S,2> >(rhs_smbs[p],*expr)))
         {
             rules_.push_back(rule_holder());
             rules_.back().compiled_expr = parts[p];
             rules_.back().extra_independence.resize(1);
             rules_.back().extra_independence[0] = true;
             rules_.back().tree_specs.push_back(
-            default_tree_spec<T>(1, 0, master_));
+            default_tree_spec<atom_type>(1, 0, master_));
             rules_.back().lhs_symbol = get_filtre_id_(
             rhs_smbs[p],
             last_filtre_ix_++);
@@ -2114,13 +2114,13 @@ void tgbg_combinator<T,S,M,X,E>::decompose_rule_(int rule_ix)
             = rhs_smbs[p];
             rules_.back().starred_ix = 0;
 
-            filtres_hash_[std::pair<int, compiled_expression<T,S,2> >
+            filtres_hash_[std::pair<int, compiled_expression<atom_type,S,2> >
                   (rhs_smbs[p],*expr)]
             = rules_.back().lhs_symbol;
         }
 
         rhs_smbs[p] = filtres_hash_[
-            std::pair<int, compiled_expression<T,S,2> >
+            std::pair<int, compiled_expression<atom_type,S,2> >
             (rhs_smbs[p],*expr)];
         }
     }
@@ -2143,13 +2143,13 @@ template<class T, class S, class M, class X, class E>
 void tgbg_combinator<T,S,M,X,E>::relocate_grule_(
     rule_holder& rh, int begin_attr_ix, int end_attr_ix, bool delete_star)
 {
-    rh.compiled_expr.reset(new compiled_expression<T,S,2>(*rh.compiled_expr));
+    rh.compiled_expr.reset(new compiled_expression<atom_type,S,2>(*rh.compiled_expr));
     relocate_expression(*rh.compiled_expr, begin_attr_ix, end_attr_ix);
 
     if(rh.compiled_extra_expr)
     {
     rh.compiled_extra_expr.reset(
-        new compiled_expression<T,S,2>(*rh.compiled_extra_expr));
+        new compiled_expression<atom_type,S,2>(*rh.compiled_extra_expr));
     relocate_expression(*rh.compiled_extra_expr, begin_attr_ix, end_attr_ix);
     }
 
@@ -2160,7 +2160,7 @@ void tgbg_combinator<T,S,M,X,E>::relocate_grule_(
     else if(rh.starred_ix >= end_attr_ix)
     rh.starred_ix -= (end_attr_ix - begin_attr_ix);
 
-    for(typename std::vector<boost::shared_ptr<tree_specification<T> > >::iterator ts_it
+    for(typename std::vector<boost::shared_ptr<tree_specification<atom_type> > >::iterator ts_it
         = rh.tree_specs.begin();
     ts_it != rh.tree_specs.end();
     ++ts_it)
@@ -2202,20 +2202,20 @@ void tgbg_combinator<T,S,M,X,E>::compile_rule_(int rule_ix)
 
         rh.tree_specs.push_back(
         ((rh.g_rule->recipe)
-         ? convert_tree_recipe<T,M>(
+         ? convert_tree_recipe<atom_type,M>(
              rh.g_rule->recipe,
              rhs_hash,
              master_,
              symbol_reg_,
              starred_ix)
-         : default_tree_spec<T>(current_ix, starred_ix, master_, true)));
+         : default_tree_spec<atom_type>(current_ix, starred_ix, master_, true)));
     }
 
     if(!rh.compiled_expr)
     {
         assert(rh.g_rule);
 
-        rh.compiled_expr.reset(new compiled_expression<T,S,2>());
+        rh.compiled_expr.reset(new compiled_expression<atom_type,S,2>());
 
         assert(starred_ix >= -1L);
         rh.starred_ix = starred_ix;
@@ -2242,10 +2242,10 @@ void tgbg_combinator<T,S,M,X,E>::compile_rule_(int rule_ix)
         {
         assert(!rh.compiled_extra_expr);
 
-        rh.compiled_extra_expr.reset(new compiled_expression<T,S,2>());
+        rh.compiled_extra_expr.reset(new compiled_expression<atom_type,S,2>());
 
-        std::vector<boost::shared_ptr<tree_specification<T> > > tree_specs_stub;
-        tree_specs_stub.push_back(boost::shared_ptr<tree_specification<T> >());
+        std::vector<boost::shared_ptr<tree_specification<atom_type> > > tree_specs_stub;
+        tree_specs_stub.push_back(boost::shared_ptr<tree_specification<atom_type> >());
 
         compile_gruleexpression(
             rh.g_rule->extra_expr,
@@ -2265,7 +2265,7 @@ void tgbg_combinator<T,S,M,X,E>::compile_rule_(int rule_ix)
         }
 
         if(rh.is_indexed)
-        rh.extra_independence = get_independence_vector<T,S>(
+        rh.extra_independence = get_independence_vector<atom_type,S>(
             rh.compiled_extra_expr,
             rh.rhs_symbols.size(),
             starred_ix);
