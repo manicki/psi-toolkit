@@ -4,7 +4,10 @@
 #include <sstream>
 
 
-zvalue_master::zvalue_master(int int_limit) : number_master_(int_limit) { }
+zvalue_master::zvalue_master(int int_limit) : number_master_(int_limit) {
+    zObjectsHolder_ = zvector::generate(EMPTY_ZOBJECTS_HOLDER);
+    zSymbolFactory_ = new zsymbolfactory(zsymboltable::generate(zObjectsHolder_));
+}
 
 bool zvalue_master::is_int(zvalue value) const {
     return number_master_.is_int(ZVALUE_TO_INTEGER(value));
@@ -19,7 +22,7 @@ int zvalue_master::to_int(zvalue value) const {
 }
 
 std::string zvalue_master::to_string(zvalue value) const {
-    return number_master_.to_string(ZVALUE_TO_INTEGER(value));
+    return zvalue_to_string(value);
 }
 
 std::string zvalue_master::string_representation(zvalue value) const {
@@ -31,7 +34,8 @@ zvalue zvalue_master::from_int(int i) {
 }
 
 zvalue zvalue_master::from_string(const std::string& s) {
-    return INTEGER_TO_ZVALUE(number_master_.from_string(s));
+    return zSymbolFactory_->get_symbol(s.c_str());
+    // return INTEGER_TO_ZVALUE(number_master_.from_string(s));
 }
 
 zvalue zvalue_master::from_bool(bool b) {

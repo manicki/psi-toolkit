@@ -38,6 +38,8 @@ public:
 
 private:
     number_master number_master_;
+    zobjects_holder * zObjectsHolder_;
+    zsymbolfactory * zSymbolFactory_;
 
 };
 
