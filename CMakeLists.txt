@@ -506,6 +506,10 @@ add_subdirectory(tests)
 configure_file(${psi-toolkit_SOURCE_DIR}/common/config.hpp.in
     ${psi-toolkit_SOURCE_DIR}/common/config.hpp)
 
+if (HAVE_PERL_BINDINGS)
+   get_directory_property(PERL_LIBRARY_DIR DIRECTORY bindings/perl/PSIToolkit DEFINITION PERL_LIBRARY_DIR)
+   SET(CMAKE_INSTALL_RPATH "${CMAKE_INSTALL_RPATH}:${PERL_LIBRARY_DIR}")
+endif (HAVE_PERL_BINDINGS)
 
 # ====================================================
 # CMake functions
@@ -699,3 +703,5 @@ FOREACH(variable_name ${all_variables})
 
     endif()
 endforeach(variable_name)
+
+message("RPATH is: ${CMAKE_INSTALL_RPATH}")
