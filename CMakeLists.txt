@@ -433,8 +433,6 @@ if(USE_JAVA)
 endif(USE_JAVA)
 
 if(HAVE_SFST)
-    #add_subdirectory(sfst)
-    #set(BASE_TARGETS ${BASE_TARGETS} sfst)
     set(BASE_TARGETS ${BASE_TARGETS} tools-lemmatizers-sfst)
     set(TESTS_TARGETS ${TESTS_TARGETS} tools-lemmatizers-sfst-tests)
 endif(HAVE_SFST)

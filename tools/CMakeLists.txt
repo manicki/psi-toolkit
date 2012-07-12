@@ -26,3 +26,9 @@ set(tools_DIRS
     CACHE PATH "Tools' paths to use in include_ and link_directories" FORCE
 )
 
+
+if(HAVE_SFST)
+set(tools_DIRS
+    ${tools_DIRS}
+    lemmatizers/sfst CACHE PATH "Tools' paths to use in include_ and link_directories" FORCE)
+endif(HAVE_SFST)
