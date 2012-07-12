@@ -50,6 +50,11 @@ public:
         const AnnotationItem & annotationItem
     );
 
+    //Converter stuff:
+
+    zvalue stringToZvalue(std::string s);
+    std::string zvalueToString(zvalue z);
+
 private:
 
     typedef boost::bimap<std::string, int> StringBimap;

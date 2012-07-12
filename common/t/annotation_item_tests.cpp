@@ -55,3 +55,13 @@ BOOST_AUTO_TEST_CASE( annotation_text_as_string_frag ) {
     BOOST_CHECK_EQUAL(ai.getText(), "ma");
     BOOST_CHECK_EQUAL(ai.getTextAsStringFrag().str(), "ma");
 };
+
+BOOST_AUTO_TEST_CASE( zvalue_conversion ) {
+    AnnotationItemManager manager;
+    std::string text("Ala ma kota.");
+    zvalue ztext = manager.stringToZvalue(text);
+    std::string text2 = manager.zvalueToString(ztext);
+    BOOST_CHECK_EQUAL(text2, text);
+    zvalue ztext2 = manager.stringToZvalue(text2);
+    BOOST_CHECK_EQUAL(ztext2, ztext);
+};
