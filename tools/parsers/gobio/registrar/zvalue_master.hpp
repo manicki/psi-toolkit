@@ -4,6 +4,7 @@
 
 #include <string>
 
+#include "annotation_item_manager.hpp"
 #include "number_master.hpp"
 #include "zvalue.hpp"
 
@@ -11,7 +12,7 @@
 class zvalue_master {
 
 public:
-    zvalue_master(int int_limit=65535);
+    zvalue_master(AnnotationItemManager & annotationItemManager, int int_limit=65535);
 
     bool is_int(zvalue value) const;
     bool is_string(zvalue value) const;
@@ -38,8 +39,8 @@ public:
 
 private:
     number_master number_master_;
-    zobjects_holder * zObjectsHolder_;
-    zsymbolfactory * zSymbolFactory_;
+
+    AnnotationItemManager annotationItemManager_;
 
 };
 

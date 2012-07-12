@@ -52,8 +52,8 @@ public:
 
     //Converter stuff:
 
-    zvalue stringToZvalue(std::string s);
-    std::string zvalueToString(zvalue z);
+    zvalue stringToZvalue(std::string s) const;
+    std::string zvalueToString(zvalue z) const;
 
 private:
 

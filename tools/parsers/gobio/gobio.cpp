@@ -7,16 +7,15 @@ Annotator* Gobio::Factory::doCreateAnnotator(
     std::string lang = options["lang"].as<std::string>();
     LangSpecificProcessorFileFetcher fileFetcher(__FILE__, lang);
 
-    boost::shared_ptr<Combinator> combinatorPtr = boost::shared_ptr<Combinator>(new Combinator());
+    std::string rulesPathString;
 
     if (options.count("rules")) {
         std::string rulesFilename = options["rules"].as<std::string>();
         boost::filesystem::path rulesPath = fileFetcher.getOneFile(rulesFilename);
-        std::string rulesPathString = rulesPath.string();
-        combinatorPtr->add_rules(rulesPathString);
+        rulesPathString = rulesPath.string();
     }
 
-    return new Gobio(combinatorPtr);
+    return new Gobio(rulesPathString);
 }
 
 void Gobio::Factory::doAddLanguageIndependentOptionsHandled(
@@ -70,20 +69,25 @@ std::string Gobio::doInfo() {
     return "gobio parser";
 }
 
-Gobio::Gobio(boost::shared_ptr<Combinator> combinatorPtr) : combinator_(combinatorPtr) { }
+Gobio::Gobio(std::string rulesPath) : rulesPath_(rulesPath) { }
 
 void Gobio::parse(Lattice & lattice) {
 
+    Master master(lattice.getAnnotationItemManager());
+    Combinator combinator(master);
+
+    combinator.add_rules(rulesPath_);
+
     AV_AI_Converter av_ai_converter(
         lattice,
-        combinator_->get_symbol_registrar(),
-        combinator_->get_attribute_registrar(),
+        combinator.get_symbol_registrar(),
+        combinator.get_attribute_registrar(),
         true
     );
 
     Chart ch(lattice, av_ai_converter);
     Agenda agenda;
-    Parser parser(ch, *combinator_, agenda);
+    Parser parser(ch, combinator, agenda);
 
     parser.run();
 

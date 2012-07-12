@@ -82,7 +82,7 @@ public:
     typedef T atom_type;
     typedef E equivalent_type;
 
-    tgbg_combinator(bool with_decomposition=false);
+    tgbg_combinator(M & master, bool with_decomposition=false);
     ~tgbg_combinator();
 
     void add_rules(std::istream& rules_stream);

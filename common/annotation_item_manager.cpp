@@ -121,10 +121,10 @@ std::map<std::string, std::string> AnnotationItemManager::getAVMap(
     return result;
 }
 
-zvalue AnnotationItemManager::stringToZvalue(std::string s) {
+zvalue AnnotationItemManager::stringToZvalue(std::string s) const {
     return zSymbolFactory_->get_symbol(s.c_str());
 }
 
-std::string AnnotationItemManager::zvalueToString(zvalue z) {
+std::string AnnotationItemManager::zvalueToString(zvalue z) const {
     return zvalue_to_string(z);
 }

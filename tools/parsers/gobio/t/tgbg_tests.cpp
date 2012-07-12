@@ -28,9 +28,9 @@
     typedef agenda_parser<Category, Score, Variant, Rule, Combinator, Agenda> Parser; \
     typedef simple_converter<Atom> SimpleConverter; \
     Lattice lattice; \
-    Combinator combinator; \
+    Master master(lattice.getAnnotationItemManager()); \
+    Combinator combinator(master); \
     combinator.add_rules(ROOT_DIR FILE_RULES); \
-    Master & master = combinator.get_master(); \
     registrar<std::string>& symbol_reg = combinator.get_symbol_registrar(); \
     registrar<std::string>& attribute_reg = combinator.get_attribute_registrar(); \
     registrar<std::string>& extra_attribute_reg = combinator.get_extra_attribute_registrar(); \
@@ -62,12 +62,13 @@ BOOST_AUTO_TEST_SUITE( gobio_tgbg )
 
 BOOST_AUTO_TEST_CASE( reading_rules ) {
 
+    number_master master;
     tgbg_combinator<
         int,
         Lattice::Score,
         number_master,
         semantics_stub<int, number_master, double>
-    > tgbg;
+    > tgbg(master);
     tgbg.add_rules(ROOT_DIR "tools/parsers/gobio/t/files/rules_3.g");
 
 }
@@ -76,32 +77,35 @@ BOOST_AUTO_TEST_CASE( reading_rules ) {
 BOOST_AUTO_TEST_CASE( reading_markov_binarized_rules ) {
 
     {
+        number_master master;
         tgbg_combinator<
             int,
             Lattice::Score,
             number_master,
             semantics_stub<int, number_master, double>
-        > tgbg;
+        > tgbg(master);
         tgbg.add_rules(ROOT_DIR "tools/parsers/gobio/t/files/rules_4.g");
     }
 
     {
+        number_master master;
         tgbg_combinator<
             int,
             Lattice::Score,
             number_master,
             semantics_stub<int, number_master, double>
-        > tgbg;
+        > tgbg(master);
         tgbg.add_rules(ROOT_DIR "tools/parsers/gobio/t/files/rules_5.g");
     }
 
     {
+        number_master master;
         tgbg_combinator<
             int,
             Lattice::Score,
             number_master,
             semantics_stub<int, number_master, double>
-        > tgbg;
+        > tgbg(master);
         tgbg.add_rules(ROOT_DIR "tools/parsers/gobio/t/files/rules_6.g");
     }
 
@@ -110,12 +114,13 @@ BOOST_AUTO_TEST_CASE( reading_markov_binarized_rules ) {
 
 BOOST_AUTO_TEST_CASE( compiling_binarized_rules ) {
 
+    number_master master;
     tgbg_combinator<
         int,
         Lattice::Score,
         number_master,
         semantics_stub<int, number_master, double>
-    > tgbg;
+    > tgbg(master);
     tgbg.add_rules(ROOT_DIR "tools/parsers/gobio/t/files/rules_6.g");
     tgbg.compile_all_rules();
 
@@ -140,7 +145,7 @@ BOOST_AUTO_TEST_CASE( avinput ) {
 
     Lattice lattice;
 
-    Master master;
+    Master master(lattice.getAnnotationItemManager());
     registrar<std::string> symbol_reg;
     registrar<std::string> attribute_reg;
     registrar<std::string> extra_attribute_reg;
@@ -198,12 +203,13 @@ BOOST_AUTO_TEST_CASE( tgbg_parsing_tougher ) {
 
 BOOST_AUTO_TEST_CASE( tgbg_linearization_optional ) {
 
+    number_master master;
     tgbg_combinator<
         int,
         Lattice::Score,
         number_master,
         semantics_stub<int, number_master, double>
-    > tgbg;
+    > tgbg(master);
     tgbg.add_rules(ROOT_DIR "tools/parsers/gobio/t/files/rules_7.g");
 
     std::ostringstream osstr;
@@ -218,12 +224,13 @@ BOOST_AUTO_TEST_CASE( tgbg_linearization_optional ) {
 
 BOOST_AUTO_TEST_CASE( tgbg_linearization ) {
 
+    number_master master;
     tgbg_combinator<
         int,
         Lattice::Score,
         number_master,
         semantics_stub<int, number_master, double>
-    > tgbg;
+    > tgbg(master);
     tgbg.add_rules(ROOT_DIR "tools/parsers/gobio/t/files/rules_8.g");
 
     std::ostringstream osstr;
@@ -238,12 +245,13 @@ BOOST_AUTO_TEST_CASE( tgbg_linearization ) {
 
 BOOST_AUTO_TEST_CASE( tgbg_binarization_simple ) {
 
+    number_master master;
     tgbg_combinator<
         int,
         Lattice::Score,
         number_master,
         semantics_stub<int, number_master, double>
-    > tgbg;
+    > tgbg(master);
     tgbg.add_rules(ROOT_DIR "tools/parsers/gobio/t/files/rules_9.g");
 
     std::ostringstream osstr;
@@ -258,12 +266,13 @@ BOOST_AUTO_TEST_CASE( tgbg_binarization_simple ) {
 
 BOOST_AUTO_TEST_CASE( tgbg_binarization ) {
 
+    number_master master;
     tgbg_combinator<
         int,
         Lattice::Score,
         number_master,
         semantics_stub<int, number_master, double>
-    > tgbg;
+    > tgbg(master);
     tgbg.add_rules(ROOT_DIR "tools/parsers/gobio/t/files/rules_10.g");
 
     std::ostringstream osstr;
@@ -278,12 +287,13 @@ BOOST_AUTO_TEST_CASE( tgbg_binarization ) {
 
 BOOST_AUTO_TEST_CASE( tgbg_binarization_with_star ) {
 
+    number_master master;
     tgbg_combinator<
         int,
         Lattice::Score,
         number_master,
         semantics_stub<int, number_master, double>
-    > tgbg;
+    > tgbg(master);
     tgbg.add_rules(ROOT_DIR "tools/parsers/gobio/t/files/rules_11.g");
 
     std::ostringstream osstr;
@@ -298,12 +308,13 @@ BOOST_AUTO_TEST_CASE( tgbg_binarization_with_star ) {
 
 BOOST_AUTO_TEST_CASE( tgbg_binarization_with_attrs ) {
 
+    number_master master;
     tgbg_combinator<
         int,
         Lattice::Score,
         number_master,
         semantics_stub<int, number_master, double>
-    > tgbg;
+    > tgbg(master);
     tgbg.add_rules(ROOT_DIR "tools/parsers/gobio/t/files/rules_12.g");
 
     std::ostringstream osstr;
@@ -318,12 +329,13 @@ BOOST_AUTO_TEST_CASE( tgbg_binarization_with_attrs ) {
 
 BOOST_AUTO_TEST_CASE( tgbg_binarization_with_attrs_2 ) {
 
+    number_master master;
     tgbg_combinator<
         int,
         Lattice::Score,
         number_master,
         semantics_stub<int, number_master, double>
-    > tgbg;
+    > tgbg(master);
     tgbg.add_rules(ROOT_DIR "tools/parsers/gobio/t/files/rules_13.g");
 
     std::ostringstream osstr;
@@ -356,12 +368,13 @@ BOOST_AUTO_TEST_CASE( tgbg_finalhook ) {
 
 BOOST_AUTO_TEST_CASE( setscore_factor ) {
 
+    number_master master;
     tgbg_combinator<
         int,
         Lattice::Score,
         number_master,
         semantics_stub<int, number_master, double>
-    > tgbg;
+    > tgbg(master);
     tgbg.add_rules(ROOT_DIR "tools/parsers/gobio/t/files/rules_23.g");
     tgbg.compile_all_rules();
 
@@ -386,12 +399,13 @@ BOOST_AUTO_TEST_CASE( shambo ) {
 
 BOOST_AUTO_TEST_CASE( options ) {
 
+    number_master master;
     tgbg_combinator<
         int,
         Lattice::Score,
         number_master,
         semantics_stub<int, number_master, double>
-    > tgbg;
+    > tgbg(master);
     tgbg.add_rules(ROOT_DIR "tools/parsers/gobio/t/files/rules_28.g");
 
     BOOST_CHECK_EQUAL(tgbg.get_option("super"), "yes");
@@ -404,12 +418,13 @@ BOOST_AUTO_TEST_CASE( options ) {
 
 BOOST_AUTO_TEST_CASE( limits ) {
 
+    number_master master;
     tgbg_combinator<
         int,
         Lattice::Score,
         number_master,
         semantics_stub<int, number_master, double>
-    > tgbg;
+    > tgbg(master);
     tgbg.add_rules(ROOT_DIR "tools/parsers/gobio/t/files/rules_28.g");
 
     BOOST_CHECK_EQUAL(tgbg.get_nb_limits(), 3);

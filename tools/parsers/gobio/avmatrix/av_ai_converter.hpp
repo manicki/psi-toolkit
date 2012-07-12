@@ -67,7 +67,7 @@ namespace AV_AI_Converter_specialization {
         std::string category = ai.getCategory();
         if (convert_cases && !category.empty()) category[0] = tolower(category[0]);
         av_matrix<int, zvalue> result(symbol_reg.get_id(category));
-        zvalue_master master;
+        zvalue_master master(lattice.getAnnotationItemManager());
         typedef std::pair<std::string, zvalue> StringZvaluePair;
         std::list< StringZvaluePair > values
             = lattice.getAnnotationItemManager().getValuesAsZvalues(ai);
@@ -116,7 +116,7 @@ namespace AV_AI_Converter_specialization {
         std::string category = ai.getCategory();
         if (convert_cases && !category.empty()) category[0] = tolower(category[0]);
         av_matrix<std::string, zvalue> result(category);
-        zvalue_master master;
+        zvalue_master master(lattice.getAnnotationItemManager());
         typedef std::pair<std::string, zvalue> StringZvaluePair;
         std::list< StringZvaluePair > values
             = lattice.getAnnotationItemManager().getValuesAsZvalues(ai);

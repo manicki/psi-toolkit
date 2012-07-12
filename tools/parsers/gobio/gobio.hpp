@@ -98,7 +98,7 @@ public:
         static const std::string DEFAULT_RULE_FILE;
     };
 
-    Gobio(boost::shared_ptr<Combinator> combinatorPtr);
+    Gobio(std::string rulesPath);
 
     void parse(Lattice &lattice);
 
@@ -116,7 +116,7 @@ private:
 
     virtual std::string doInfo();
 
-    boost::shared_ptr<Combinator> combinator_;
+    std::string rulesPath_;
 
     virtual double doGetQualityScore(
         const boost::program_options::variables_map& options) const;

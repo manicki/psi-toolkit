@@ -39,8 +39,9 @@ public:
 
 
 template<class T, class S, class M, class X, class E>
-tgbg_combinator<T,S,M,X,E>::tgbg_combinator(bool with_decomposition):
+tgbg_combinator<T,S,M,X,E>::tgbg_combinator(M & master, bool with_decomposition):
     with_decomposition_(with_decomposition),
+    master_(master),
     semantics_machine_(master_),
     pre_hook_symbol_id_(-1L),
     final_hook_symbol_id_(-1L),
