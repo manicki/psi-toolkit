@@ -257,6 +257,9 @@ if(SWIG_FOUND)
     set(HAVE_PERL_BINDINGS 1)
     include_directories(${PERL_INCLUDE_PATH})
     message(STATUS "Have Perl bindings ${HAVE_PERL_BINDINGS}")
+
+    GET_FILENAME_COMPONENT(PERL_LIBRARY_DIR ${PERL_LIBRARY} PATH)
+    SET(CMAKE_INSTALL_RPATH "${CMAKE_INSTALL_RPATH}:${PERL_LIBRARY_DIR}")
   endif(PERLLIBS_FOUND)
 
   find_package(PythonLibs)
@@ -506,10 +509,6 @@ add_subdirectory(tests)
 configure_file(${psi-toolkit_SOURCE_DIR}/common/config.hpp.in
     ${psi-toolkit_SOURCE_DIR}/common/config.hpp)
 
-if (HAVE_PERL_BINDINGS)
-   get_directory_property(PERL_LIBRARY_DIR DIRECTORY bindings/perl/PSIToolkit DEFINITION PERL_LIBRARY_DIR)
-   SET(CMAKE_INSTALL_RPATH "${CMAKE_INSTALL_RPATH}:${PERL_LIBRARY_DIR}")
-endif (HAVE_PERL_BINDINGS)
 
 # ====================================================
 # CMake functions
