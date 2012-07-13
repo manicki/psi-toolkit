@@ -151,18 +151,11 @@ std::cerr << " SCORE READER IS EMPTY!" << std::endl;
                 apply_extscores_(it, rst);
 #else
             if (!rst.empty()) {
-// std::cerr << "[+] ";
                 apply_extscores_(it, rst);
             } else {
-// std::cerr << "[-] [" << fixed << setprecision(2) << (*it).compiled_expr->get_score() << "|----] ";
                 (*it).compiled_expr->set_score(-1000);
             }
 #endif
-// std::cerr << (*it).lhs_symbol << ":" << symbol_reg_.get_obj((*it).lhs_symbol) << " ->";
-// for (int i = 0; i < (*it).rhs_symbols.size(); ++i) {
-    // std::cerr << " " << (*it).rhs_symbols[i] << ":" << symbol_reg_.get_obj((*it).rhs_symbols[i]);
-// }
-// std::cerr << std::endl;
         }
 
         ++it;
@@ -201,7 +194,6 @@ void tgbg_combinator<T,S,M,X,E>::apply_extscores_(
             if (!((*it).compiled_expr)) {
                 throw incompatible_extscores();
             } else {
-// std::cerr << fixed << setprecision(2) << "[" << (*it).compiled_expr->get_score() << "|" << single_score << "] ";
                 (*it).compiled_expr->set_score(single_score);
             }
 #endif
