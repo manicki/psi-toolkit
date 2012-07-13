@@ -8,7 +8,6 @@
 
 @def MULTI \@rule multiDot/X := (?:[a-zàâçéèêëîïôûùüÿ]\.){3,}(?!\p{L}) | ([A-ZÀÂÇÉÈÊËÎÏÔÛÙÜŸ]\.){2,}
 
-#@def ABBREV \@rule todo/X := zzzzzdsdssdsdsdsssssdsdsdsdsdsdsdsdsd
 @def ABBREV \@include "abbrev_fr"
 
 @include "common"
@@ -29,4 +28,3 @@
 @rule pre_postpron/T := ([\p{L}\p{M}~\@\#\$%\^\&\*\/\\\+_])+(?=\-(?:postprons)\b) # TODO: trzeba dodac 'litery' inne jeszcze
 
 #LM koniec
-
