@@ -25,6 +25,10 @@ int zvalue_master::to_int(zvalue value) const {
 }
 
 std::string zvalue_master::to_string(zvalue value) const {
+    int number = ZVALUE_TO_INTEGER(value);
+    if (number_master_.is_false(number) || number_master_.is_any(number)) {
+        return number_master_.to_string(number);
+    }
     return annotationItemManager_.zvalueToString(value);
 }
 
@@ -37,6 +41,10 @@ zvalue zvalue_master::from_int(int i) {
 }
 
 zvalue zvalue_master::from_string(const std::string& s) {
+    int number = number_master_.from_string(s);
+    if (number == number_master_.false_value() || number == number_master_.any_value()) {
+        return INTEGER_TO_ZVALUE(number);
+    }
     return annotationItemManager_.stringToZvalue(s);
 }
 
