@@ -4,9 +4,6 @@
 #include <iostream>
 
 
-#include "logging.hpp"
-
-
 void zobject::freeZObjects(zobjects_holder* holder)
 {
     if (holder)
@@ -367,8 +364,7 @@ char* itoa(int i)
         *s++ = '0' + i%10;
         i/=10;
     }
-    // char* result = new char[s-buf+1+neg];
-    char result[12]; // To avoid memory leaks. Integer has still no more digits than 12.
+    char* result = new char[s-buf+1+neg];
     char* r = result;
     if (neg) *r++ = '-';
     s--;
