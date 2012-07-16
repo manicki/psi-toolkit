@@ -128,6 +128,6 @@ zvalue AnnotationItemManager::stringToZvalue(std::string s) const {
 std::string AnnotationItemManager::zvalueToString(zvalue z) const {
     char * resultCStr = zvalue_to_string(z);
     std::string result(resultCStr);
-    delete resultCStr;
+    delete [] resultCStr;
     return result;
 }

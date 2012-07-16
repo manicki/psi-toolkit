@@ -25,7 +25,7 @@ long AnnotationItem::getHash() const {
     BOOST_FOREACH(const zvalue & av, values_) {
         char * avStr = zvalue_to_string(av);
         str += avStr;
-        delete avStr;
+        delete [] avStr;
     }
     const std::collate<char>& coll = std::use_facet<std::collate<char> >(std::locale());
     return coll.hash(str.data(), str.data() + str.length());
@@ -61,7 +61,7 @@ bool AnnotationItem::areAttributesTheSame_(const AnnotationItem& other) const {
    for (size_t i = smallerSize; i < largerSize; ++i) {
        char * valStr = zvalue_to_string((*largerVector)[i]);
        if (strcmp(valStr, "") != 0) {
-           delete valStr;
+           delete [] valStr;
            return false;
        }
    }
