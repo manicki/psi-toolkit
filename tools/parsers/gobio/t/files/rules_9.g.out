@@ -1,0 +1,40 @@
+* x = a b c
+0000.  PUSH TRUE
+0001.  STOP
+
+
+* y = b c d e
+0000.  PUSH TRUE
+0001.  STOP
+
+
+* z = b c d
+0000.  PUSH TRUE
+0001.  STOP
+
+
++ <b!c!0> = b* c
+0000.  PUSH TRUE
+0001.  STOP
+
+
++ x = a <b!c!0>
+0000.  PUSH TRUE
+0001.  STOP
+
+
++ z = <b!c!0> d
+0000.  PUSH TRUE
+0001.  STOP
+
+
++ <d!e!0> = d* e
+0000.  PUSH TRUE
+0001.  STOP
+
+
++ y = <b!c!0> <d!e!0>
+0000.  PUSH TRUE
+0001.  STOP
+
+

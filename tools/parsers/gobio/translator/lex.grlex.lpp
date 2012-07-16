@@ -1,0 +1,135 @@
+/* UWAGA: ten lekser wymaga takiego ustawienia locale'u, w którym
+  kropka oddziela czê¶æ dziesietna. */
+
+%option never-interactive
+%option prefix="grlex"
+
+%{
+#include "grules.h"
+#include "grparser.tab.h"
+#include "prandseq.h"
+#include <iostream>
+
+#include "grules_moa_key.h"
+
+extern istream* grlex_input_stream;
+
+bool          first_read  = true;
+unsigned int  current_key = 0;
+bool          encoded     = true;
+imoa_key key;
+
+#define YY_INPUT(buf,result,max_size) \
+{ \
+    grlex_input_stream->read(buf, max_size); \
+    result = grlex_input_stream->gcount(); \
+    if (first_read) { \
+        key.set(GRULES_MOA_KEY); \
+        first_read = false; \
+    } \
+    if (encoded) { \
+        imoaxor(buf, result, key); \
+    } \
+}
+
+%}
+
+
+
+%s firstnl
+%s remnl
+%s inrule
+%s outrule
+
+%option noyywrap
+%option yylineno
+
+PLUPPER [A-Z¡ÆÊ£ÑÓ¦¬¯]
+PLLOWER [a-z±æê³ñó¶¼¿]
+PLLETTER [a-z±æê³ñó¶¼¿A-Z¡ÆÊ£ÑÓ¦¬¯]
+
+
+%%
+
+\/\*.*\*\/
+
+"setscore"  return RTOKEN_SETSCORE;
+
+({PLLOWER}|_)({PLLETTER}|[_0-9-])*    { if(YY_START == INITIAL ||
+                    YY_START == outrule)
+                    BEGIN(inrule);
+
+                    grparserlval.s = new string(grlextext);
+                            return RTOKEN_ATOM;}
+
+\'[^\']*\'                        { grparserlval.s = new string(grlextext);
+                    size_t i;
+                    for(i = 1; i < grparserlval.s->length(); ++i)
+                    {
+                        if((*grparserlval.s)[i] == '~')
+                            (*grparserlval.s)[i] = '\'';
+                    }
+                      return RTOKEN_ATOM;}
+
+\"[^\"]*\"          {    string t = grlextext;
+                     t = t.substr(1,t.length()-2);
+                     grparserlval.s = new string(t);
+                                 return RTOKEN_ATOM; }
+
+{PLUPPER}({PLLETTER}|[_0-9-])*     {  grparserlval.s = new string(grlextext);
+                                      return RTOKEN_ATTRIBUTE;}
+
+"-"?[0-9]+                              { grparserlval.i = atoi(grlextext);
+                          return RTOKEN_NUMBER; }
+
+"-"?[0-9]+"."[0-9]*         { grparserlval.score = atof(grlextext);
+                      return RTOKEN_SCORE;
+                      }
+
+">>"                return RTOKEN_RIGHT_LAPKI;
+"==>"               return RTOKEN_IMPLICATION;
+":::"               return RTOKEN_BINARG;
+"::"                return RTOKEN_ELSE;
+
+":=="               return RTOKEN_UASSIGN;
+"!="                            return RTOKEN_NOT_EQUAL;
+"=="                return RTOKEN_UEQUAL;
+":="                            return RTOKEN_ASSIGN;
+
+"("             return RTOKEN_LEFT_PAREN;
+")"             return RTOKEN_RIGHT_PAREN;
+"{"             return RTOKEN_LEFT_CURLY;
+"}"             return RTOKEN_RIGHT_CURLY;
+"["             return RTOKEN_LEFT_SQUARE;
+"]"             return RTOKEN_RIGHT_SQUARE;
+
+"="             return RTOKEN_EQUAL;
+"^"             return RTOKEN_CARET;
+"|"             return RTOKEN_PIPE;
+"."             return RTOKEN_DOT;
+","             return RTOKEN_COMMA;
+";"             return RTOKEN_SEMICOLON;
+"*"             return RTOKEN_STAR;
+"?"             return RTOKEN_QMARK;
+":"             return RTOKEN_COLON;
+"/"             return RTOKEN_SLASH;
+"%"             return RTOKEN_PERCENT;
+"+"             return RTOKEN_PLUS;
+"&"             return RTOKEN_AMPERSAND;
+
+"<"             return RTOKEN_LT;
+">"             return RTOKEN_GT;
+
+<inrule,remnl>([ \t]*\n){2,}[ \t]*      { BEGIN(outrule);
+                                  return RTOKEN_MULTIPLE_NEWLINE;}
+<inrule>[ \t]*\n[ \t]*      { BEGIN(remnl);
+                                  return RTOKEN_FIRST_NEWLINE;}
+
+#[^\n]*\n
+
+[ \t\n]+
+
+<<EOF>>                         {BEGIN(INITIAL); yyterminate();}
+.               {BEGIN(INITIAL);return RTOKEN_ERROR;}
+%%
+

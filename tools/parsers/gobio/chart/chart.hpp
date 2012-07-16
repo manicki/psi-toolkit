@@ -2,6 +2,7 @@
 #define CHART_HPP_HDR
 
 
+#include "av_ai_converter.hpp"
 #include "lattice.hpp"
 
 
@@ -59,7 +60,7 @@ public:
     typedef typename std::list<Lattice::Partition>::iterator partition_iterator;
     // typedef typename std::string::iterator variant_iterator;
 
-    typedef std::string category_type;
+    typedef C category_type;
     typedef V variant_category_type;
     typedef S score_type;
     typedef R rule_type;
@@ -68,9 +69,9 @@ public:
 
     typedef I<edge_descriptor, category_type> marked_edges_index_type;
 
-    chart(Lattice & lattice);
+    chart(Lattice & lattice, AV_AI_Converter & av_ai_converter);
 
-    // vertex_descriptor add_vertex();
+    vertex_descriptor add_vertex();
 
     std::pair<edge_descriptor, bool>   add_edge(
     vertex_descriptor u,
@@ -195,18 +196,13 @@ public:
 
 private:
 
-    // std::pair<edge_descriptor, bool> add_edge_(
-    // vertex_descriptor u,
-    // vertex_descriptor v,
-    // const category_type& category,
-    // score_type score);
-
     typedef Lattice::VertexEntry vertex_entry;
     typedef Lattice::Partition partition;
 
     // typename Lattice::Graph graph_;
 
     Lattice & lattice_;
+    AV_AI_Converter av_ai_converter_;
 
     LayerTagCollection gobioTag_;
     LayerTagMask tagMask_;

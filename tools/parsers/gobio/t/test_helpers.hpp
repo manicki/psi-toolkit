@@ -6,6 +6,8 @@
 #include <string>
 #include <fstream>
 
+#include "chart.tpl"
+
 
 template<typename C, typename S, typename V, typename R>
 int count_vertices(chart<C, S, V, R>& ch)
@@ -195,21 +197,18 @@ bool is_consistent(chart<C, S, V, R>& ch)
     return true;
 }
 
-/*
+
 inline std::string slurp_file(const std::string& filename)
 {
     std::string line;
     std::string contents;
-
     std::ifstream s(filename.c_str());
-    while (getline(s, line))
-    {
-    contents += line;
-    contents += "\n";
+    while (getline(s, line)) {
+        contents += line;
+        contents += "\n";
     }
-
     return contents;
 }
-*/
+
 
 #endif

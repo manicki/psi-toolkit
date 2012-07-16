@@ -9,6 +9,7 @@
 #include <boost/foreach.hpp>
 
 #include "string_frag.hpp"
+#include "zvalue.hpp"
 
 class AnnotationItem {
 
@@ -78,7 +79,7 @@ private:
      * The value of the n'th attribute is stored in the n'th cell of the vector.
      * Other cells are empty.
      */
-    std::vector<std::string> values_;
+    std::vector<zvalue> values_;
 
     /**
      * The value of attributes_[n] indicates whether the value of the n'th attribute

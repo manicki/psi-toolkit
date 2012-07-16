@@ -2,9 +2,11 @@
 
 #include "agenda.hpp"
 #include "agenda_parser.tpl"
+#include "av_ai_converter.hpp"
 #include "chart.tpl"
 #include "lattice_preparators.hpp"
 #include "psi_lattice_writer.hpp"
+#include "registrar.tpl"
 #include "simple_cfg_combinator.tpl"
 #include "test_helpers.hpp"
 
@@ -40,7 +42,9 @@
     lattice_preparators::prepareLatticeWithOneSymbolTokens(lattice, (input_string)); \
     Agenda agenda; \
     Combinator combinator; \
-    Chart ch(lattice);
+    registrar<std::string> reg; \
+    AV_AI_Converter av_ai_converter(lattice, reg, reg); \
+    Chart ch(lattice, av_ai_converter);
 
 
 #ifdef RUN_PARSER_TEST
@@ -146,7 +150,9 @@ BOOST_AUTO_TEST_CASE( helpers ) {
     Agenda agenda;
     Combinator combinator;
 
-    Chart ch(lattice);
+    registrar<std::string> reg;
+    AV_AI_Converter av_ai_converter(lattice, reg, reg);
+    Chart ch(lattice, av_ai_converter);
 
     BOOST_CHECK_EQUAL(count_vertices(ch), 7);
     BOOST_CHECK_EQUAL(count_out_edges(ch), 6);
