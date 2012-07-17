@@ -10,6 +10,12 @@ AnnotationItemManager::AnnotationItemManager() {
 }
 
 
+AnnotationItemManager::~AnnotationItemManager() {
+    zobject::freeZObjects(zObjectsHolder_);
+    zObjectsHolder_->annihilate();
+}
+
+
 void AnnotationItemManager::setStringValue(
     AnnotationItem & annotationItem,
     std::string attribute,
