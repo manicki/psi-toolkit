@@ -1,6 +1,9 @@
 /* UWAGA: ten lekser wymaga takiego ustawienia locale'u, w którym
   kropka oddziela czê¶æ dziesietna. */
 
+/* option nounput to suppress "yyunput defined but not used" warning */
+%option nounput
+
 %option never-interactive
 %option prefix="grlex"
 
