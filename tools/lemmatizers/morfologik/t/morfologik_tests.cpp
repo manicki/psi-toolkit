@@ -83,9 +83,8 @@ BOOST_AUTO_TEST_CASE( lexeme_level ) {
         BOOST_CHECK_EQUAL(prowokacjamiItem.getCategory(), "subst");
         BOOST_CHECK_EQUAL(prowokacjamiItem.getText(), "prowokacja+subst");
 
-        AnnotationItemManager annItmMng = lattice.getAnnotationItemManager();
         std::list<std::pair<std::string, std::string> > lexemeValues =
-            annItmMng.getValues(prowokacjamiItem);
+            lattice.getAnnotationItemManager().getValues(prowokacjamiItem);
 
         BOOST_CHECK_EQUAL((int)lexemeValues.size(), 1);
         std::list<std::pair<std::string, std::string> >::iterator valItr = lexemeValues.begin();
@@ -108,9 +107,8 @@ BOOST_AUTO_TEST_CASE( lexeme_level ) {
         BOOST_CHECK_EQUAL(prowokacjamiItem.getCategory(), "subst");
         BOOST_CHECK_EQUAL(prowokacjamiItem.getText(), "prowokacjami");
 
-        AnnotationItemManager annItmMng = lattice.getAnnotationItemManager();
         std::list<std::pair<std::string, std::string> > formValues =
-            annItmMng.getValues(prowokacjamiItem);
+            lattice.getAnnotationItemManager().getValues(prowokacjamiItem);
 
         BOOST_CHECK_EQUAL((int)formValues.size(), 3);
         std::list<std::pair<std::string, std::string> >::iterator valItr = formValues.begin();
