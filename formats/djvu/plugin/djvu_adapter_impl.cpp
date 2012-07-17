@@ -29,7 +29,6 @@ void DjVuAdapterImpl::convertDjVuToText(std::istream & djvuStream, std::iostream
     ddjvu_message_pop(context);
 
     miniexp_t me;
-    char * text;
 
     message = ddjvu_message_wait(context);
     if (message->m_any.tag == DDJVU_DOCINFO) {
@@ -39,6 +38,7 @@ void DjVuAdapterImpl::convertDjVuToText(std::istream & djvuStream, std::iostream
                 ddjvu_message_wait(context);
                 ddjvu_message_pop(context);
             }
+            char * text;
             if (me && (text = (char*)(miniexp_to_str(miniexp_nth(5, me))))) {
                 textStream << text << std::endl;
             }
