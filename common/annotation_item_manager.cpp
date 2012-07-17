@@ -11,8 +11,8 @@ AnnotationItemManager::AnnotationItemManager() {
 
 
 AnnotationItemManager::~AnnotationItemManager() {
-    // zobject::freeZObjects(zObjectsHolder_);
-    // zObjectsHolder_->annihilate();
+    zobject::freeZObjects(zObjectsHolder_);
+    zObjectsHolder_->annihilate();
     delete zSymbolFactory_;
 }
 
