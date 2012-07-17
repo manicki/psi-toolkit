@@ -38,7 +38,7 @@ public:
     number_master & get_number_master();
 
 private:
-    AnnotationItemManager annotationItemManager_;
+    AnnotationItemManager & annotationItemManager_;
     number_master number_master_;
 
 };
