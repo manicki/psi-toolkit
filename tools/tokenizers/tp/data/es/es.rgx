@@ -14,17 +14,3 @@
 
 @rule ord/X := \d*(?:1st|2nd|3rd|\dth)(?!\p{L})
 
-#LM dodane przeze mnie poniżej:
-
-@def postprons t-elle|t-elles|t-en|t-en|t-il|t-ils|t-on|t-telle|t-un|t-une|t-y|t-y|aucun|autre|autres|ce|ce|ceci|cela|celle|celui|ceux|combien|comment|con|dont|elle|elles|en|en|eux|il|ils|je|la|le|les|les|leur|leur|leurs|lui|me|moi|même|mêmes|ne|nous|nul|nulle|on|où|personne|plusieurs|pourquoi|puisque|quand|que|quel|quelle|quelles|qui|quoi|rien|se|se|soi|te|tel|telle|telles|toi|tous|tout|toute|toutes|tu|un|une|uns|vous|y|y|ça
-@def elisions c|d|j|l|m|n|s|t|qu|ct|ch|chaqu|jusqu|lorsqu|presqu|puisqu|quelqu|quéqu|quiconqu|quoiqu|vot|ç            # aujourd'hui nie rozdzielam
-
-@rule elision/T := (?:elisions)['’]
-#@rule postpron/T := [\-](moi)
-@rule postpron/T := \-(?:postprons)\b
-
-@rule pre_elision/T := ([\p{L}\p{M}~\@\#\$%\^\&\*\/\\\-\+_])+(?=(?:elisions)['’]) # TODO: patrz nizej
-
-@rule pre_postpron/T := ([\p{L}\p{M}~\@\#\$%\^\&\*\/\\\+_])+(?=\-(?:postprons)\b) # TODO: trzeba dodac 'litery' inne jeszcze
-
-#LM koniec
