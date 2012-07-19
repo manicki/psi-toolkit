@@ -1,9 +1,59 @@
 #include "annotation_item_manager.hpp"
 
+
+#include <sstream>
+
+
+AnnotationItemManager::AnnotationItemManager() {
+    zObjectsHolder_ = zvector::generate(EMPTY_ZOBJECTS_HOLDER);
+    zSymbolFactory_ = new zsymbolfactory(zsymboltable::generate(zObjectsHolder_));
+}
+
+
+AnnotationItemManager::~AnnotationItemManager() {
+    zobject::freeZObjects(zObjectsHolder_);
+    zObjectsHolder_->annihilate();
+    delete zSymbolFactory_;
+}
+
+
+void AnnotationItemManager::setStringValue(
+    AnnotationItem & annotationItem,
+    std::string attribute,
+    std::string value
+) {
+    setValue(annotationItem, attribute, zSymbolFactory_->get_symbol(value.c_str()));
+}
+
+
 void AnnotationItemManager::setValue(
     AnnotationItem & annotationItem,
     std::string attribute,
     std::string value
+) {
+    int intVal;
+    std::stringstream valSs(value);
+    if (valSs >> intVal && valSs.eof()) {
+        setValue(annotationItem, attribute, intVal);
+    } else {
+        setStringValue(annotationItem, attribute, value);
+    }
+}
+
+
+void AnnotationItemManager::setValue(
+    AnnotationItem & annotationItem,
+    std::string attribute,
+    int value
+) {
+    setValue(annotationItem, attribute, INTEGER_TO_ZVALUE(value));
+}
+
+
+void AnnotationItemManager::setValue(
+    AnnotationItem & annotationItem,
+    std::string attribute,
+    zvalue value
 ) {
     m_.insert(StringBimapItem(attribute, m_.size()));
     size_t ix = m_.left.at(attribute);
@@ -14,15 +64,42 @@ void AnnotationItemManager::setValue(
     annotationItem.attributes_[ix] = true;
 }
 
-std::string AnnotationItemManager::getValue(
+
+zvalue AnnotationItemManager::getValue(
     AnnotationItem & annotationItem,
     std::string attribute
 ) {
     if (m_.left.find(attribute) == m_.left.end()) {
-        return "";
+        return NULL_ZVALUE;
     } else {
         return annotationItem.values_[m_.left.at(attribute)];
     }
+}
+
+
+std::string AnnotationItemManager::getValueAsString(
+    AnnotationItem & annotationItem,
+    std::string attribute
+) {
+    return zvalueToString(getValue(annotationItem, attribute));
+}
+
+
+std::list< std::pair<std::string, zvalue> > AnnotationItemManager::getValuesAsZvalues(
+    const AnnotationItem & annotationItem
+) {
+    std::list< std::pair<std::string, zvalue> > result;
+    for (
+        boost::dynamic_bitset<>::size_type i = annotationItem.attributes_.find_first();
+        i != boost::dynamic_bitset<>::npos && i < m_.size();
+        i = annotationItem.attributes_.find_next(i)
+    ) {
+        result.push_back(std::pair<std::string, zvalue>(
+            m_.right.at(i),
+            annotationItem.values_[i]
+        ));
+    }
+    return result;
 }
 
 std::list< std::pair<std::string, std::string> > AnnotationItemManager::getValues(
@@ -36,7 +113,7 @@ std::list< std::pair<std::string, std::string> > AnnotationItemManager::getValue
     ) {
         result.push_back(std::pair<std::string, std::string>(
             m_.right.at(i),
-            annotationItem.values_[i]
+            zvalueToString(annotationItem.values_[i])
         ));
     }
     return result;
@@ -48,5 +125,16 @@ std::map<std::string, std::string> AnnotationItemManager::getAVMap(
     std::map<std::string, std::string> result;
     std::list< std::pair<std::string, std::string> > list = getValues(annotationItem);
     result.insert(list.begin(), list.end());
+    return result;
+}
+
+zvalue AnnotationItemManager::stringToZvalue(std::string s) const {
+    return zSymbolFactory_->get_symbol(s.c_str());
+}
+
+std::string AnnotationItemManager::zvalueToString(zvalue z) const {
+    char * resultCStr = zvalue_to_string(z);
+    std::string result(resultCStr);
+    delete [] resultCStr;
     return result;
 }

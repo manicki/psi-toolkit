@@ -1,0 +1,50 @@
+* x0 = a b* c
+0000.  PUSH TRUE
+0001.  STOP
+
+
+* x1 = d d d d*
+0000.  PUSH TRUE
+0001.  STOP
+
+
+* x2 = e f f f f*
+0000.  PUSH TRUE
+0001.  STOP
+
+
++ <d!d!1> = d d*
+0000.  PUSH TRUE
+0001.  STOP
+
+
++ x1 = <d!d!1> <d!d!1>*
+0000.  PUSH TRUE
+0001.  STOP
+
+
++ <f!f!1> = f f*
+0000.  PUSH TRUE
+0001.  STOP
+
+
++ <a!b!1> = a b*
+0000.  PUSH TRUE
+0001.  STOP
+
+
++ x0 = <a!b!1>* c
+0000.  PUSH TRUE
+0001.  STOP
+
+
++ <e!<f!f!1>!0> = e* <f!f!1>
+0000.  PUSH TRUE
+0001.  STOP
+
+
++ x2 = <e!<f!f!1>!0> <f!f!1>*
+0000.  PUSH TRUE
+0001.  STOP
+
+

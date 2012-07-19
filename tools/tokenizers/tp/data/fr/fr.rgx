@@ -27,4 +27,3 @@
 @rule pre_postpron/T := ([\p{L}\p{M}~\@\#\$%\^\&\*\/\\\+_])+(?=\-(?:postprons)\b) # TODO: trzeba dodac 'litery' inne jeszcze
 
 #LM koniec
-

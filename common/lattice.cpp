@@ -938,16 +938,16 @@ Lattice::EdgeSequence Lattice::EdgeSequence::Builder::build() {
     }
 }
 
-Lattice::EdgeSequence::EdgeSequence(const std::vector<EdgeDescriptor>& aLinks) {
-    links = aLinks;
-    begin = 0;
-    end = 0;
-}
+Lattice::EdgeSequence::EdgeSequence(const std::vector<EdgeDescriptor>& aLinks) :
+    links(aLinks),
+    begin(0),
+    end(0)
+{ }
 
-Lattice::EdgeSequence::EdgeSequence(int aBegin, int aEnd) {
-    begin = aBegin;
-    end = aEnd;
-}
+Lattice::EdgeSequence::EdgeSequence(int aBegin, int aEnd) :
+    begin(aBegin),
+    end(aEnd)
+{ }
 
 
 Lattice::Partition::Partition(LayerTagCollection aTagList,

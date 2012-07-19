@@ -51,7 +51,7 @@ namespace poleng {
                         }
                         std::string base = lattice::getBase(lattice, edge);
                         std::string partOfSpeech = getPartOfSpeech(lattice, edge);
-                        //std::string morpho = lattice.getAnnotationItemManager().getValue(
+                        //std::string morpho = lattice.getAnnotationItemManager().getValueAsString(
                         //        ai, "morpho");
                         std::string morphology = getMorphologyString(lattice, edge);
                         //std::string morphology = partOfSpeech;
@@ -735,10 +735,10 @@ namespace poleng {
                     AnnotationItem annotationItem =
                         lattice.getEdgeAnnotationItem(edge);
                     int headEdgeIndex = 0;
-                    if (lattice.getAnnotationItemManager().getValue(
+                    if (lattice.getAnnotationItemManager().getValueAsString(
                                 annotationItem, "head") != "") {
                         headEdgeIndex = boost::lexical_cast<int>(
-                                lattice.getAnnotationItemManager().getValue(
+                                lattice.getAnnotationItemManager().getValueAsString(
                                     annotationItem, "head") );
                     }
                     Lattice::Partition partition =
@@ -784,11 +784,11 @@ namespace poleng {
                     AnnotationItem annotationItem =
                         lattice.getEdgeAnnotationItem(edge);
                     int headEdgeIndex = 0;
-                    std::string headString = lattice.getAnnotationItemManager().getValue(
+                    std::string headString = lattice.getAnnotationItemManager().getValueAsString(
                                 annotationItem, "head");
                     if (headString != "") {
                         headEdgeIndex = boost::lexical_cast<int>(
-                                lattice.getAnnotationItemManager().getValue(
+                                lattice.getAnnotationItemManager().getValueAsString(
                                     annotationItem, "head") );
                     }
                     int edgeCount = 0;

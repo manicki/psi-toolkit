@@ -565,7 +565,7 @@ boost::program_options::variables_map PipeRunner::tryOptions_(
                                 == langCode)
                                 return optionsWithoutLang;
                             else
-                                throw Exception(langCode + " is not handled");
+                                throw;
                         }
                         else
                             throw;

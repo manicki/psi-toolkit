@@ -129,3 +129,11 @@
    fun:aspell_speller_suggest
    ...
 }
+{
+   zobject annihilate
+   Memcheck:Free
+   fun:_ZdlPv
+   fun:_ZN7zobject10annihilateEv
+   fun:_ZN7zobject12freeZObjectsEP7zvector
+   fun:_ZN21AnnotationItemManagerD1Ev
+}

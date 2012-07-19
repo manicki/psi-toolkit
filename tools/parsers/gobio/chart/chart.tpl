@@ -9,9 +9,11 @@
 
 template<typename C, typename S, typename V, typename R, template<typename, typename> class I>
 chart<C,S,V,R,I>::chart(
-    Lattice & lattice
+    Lattice & lattice,
+    AV_AI_Converter & av_ai_converter
 ) :
     lattice_(lattice),
+    av_ai_converter_(av_ai_converter),
     gobioTag_(lattice.getLayerTagManager().createSingletonTagCollection("parse")),
     tagMask_(lattice.getLayerTagManager().anyTag())
 {
@@ -24,15 +26,14 @@ chart<C,S,V,R,I>::chart(
     setTagMask(lattice.getLayerTagManager().getAlternativeMask(altTags));
 }
 
-/*
+
 template<typename C, typename S, typename V, typename R, template<typename, typename> class I>
 typename chart<C,S,V,R,I>::vertex_descriptor chart<C,S,V,R,I>::add_vertex()
 {
-    vertex_descriptor vd = boost::add_vertex(graph_);
-
+    vertex_descriptor vd = lattice_.addLooseVertex();
     return vd;
 }
-*/
+
 
 template<typename C, typename S, typename V, typename R, template<typename, typename> class I>
 std::pair<typename chart<C,S,V,R,I>::edge_descriptor,bool> chart<C,S,V,R,I>::add_edge(
@@ -43,11 +44,12 @@ std::pair<typename chart<C,S,V,R,I>::edge_descriptor,bool> chart<C,S,V,R,I>::add
     rule_type rule)
 {
     try {
+        AnnotationItem ai = av_ai_converter_.toAnnotationItem(category);
         int num1 = lattice_.countEdges(u, v);
         Lattice::EdgeDescriptor result = lattice_.addEdge(
             u,
             v,
-            category,
+            ai,
             getGobioTag_(),
             Lattice::EdgeSequence(),
             score,
@@ -70,7 +72,7 @@ std::pair<typename chart<C,S,V,R,I>::edge_descriptor,bool> chart<C,S,V,R,I>::add
     edge_descriptor link)
 {
     try {
-        AnnotationItem ai(category);
+        AnnotationItem ai = av_ai_converter_.toAnnotationItem(category);
         Lattice::EdgeSequence::Builder builder(lattice_);
         builder.addEdge(link);
         int num1 = lattice_.countEdges(u, v);
@@ -97,10 +99,11 @@ std::pair<typename chart<C,S,V,R,I>::edge_descriptor,bool> chart<C,S,V,R,I>::add
     const category_type& category,
     score_type score,
     rule_type rule,
-    edge_descriptor  left_link,
+    edge_descriptor left_link,
     edge_descriptor right_link)
 {
     try {
+        AnnotationItem ai = av_ai_converter_.toAnnotationItem(category);
         Lattice::EdgeSequence::Builder builder(lattice_);
         builder.addEdge(left_link);
         builder.addEdge(right_link);
@@ -108,7 +111,7 @@ std::pair<typename chart<C,S,V,R,I>::edge_descriptor,bool> chart<C,S,V,R,I>::add
         Lattice::EdgeDescriptor result = lattice_.addEdge(
             u,
             v,
-            category,
+            ai,
             getGobioTag_(),
             builder.build(),
             score,
@@ -121,25 +124,6 @@ std::pair<typename chart<C,S,V,R,I>::edge_descriptor,bool> chart<C,S,V,R,I>::add
     }
 }
 
-/*
-template<typename C, typename S, typename V, typename R, template<typename, typename> class I>
-std::pair<typename chart<C,S,V,R,I>::edge_descriptor,bool> chart<C,S,V,R,I>::add_edge_(
-    vertex_descriptor u,
-    vertex_descriptor v,
-    const category_type& category,
-    score_type score)
-{
-    Lattice::EdgeDescriptor result = lattice_.addEdge(
-        u,
-        v,
-        category,
-        getGobioTag_(),
-        Lattice::EdgeSequence(),
-        score
-    );
-    return std::pair<edge_descriptor,bool>(result, true);
-}
-*/
 
 template<typename C, typename S, typename V, typename R, template<typename, typename> class I>
 void chart<C,S,V,R,I>::remove_edge(
@@ -272,7 +256,7 @@ template<typename C, typename S, typename V, typename R, template<typename, type
 typename chart<C,S,V,R,I>::category_type chart<C,S,V,R,I>::edge_category(
     edge_descriptor edge)
 {
-    return lattice_.getAnnotationCategory(edge);
+    return av_ai_converter_.toAVMatrix<category_type>(lattice_.getEdgeAnnotationItem(edge));
 }
 
 template<typename C, typename S, typename V, typename R, template<typename, typename> class I>
@@ -301,7 +285,7 @@ std::pair<typename chart<C,S,V,R,I>::partition_iterator,
 chart<C,S,V,R,I>::edge_partitions(
     edge_descriptor edge)
 {
-    std::list<Lattice::Partition>& partition_vector = lattice_.getEdgePartitions(edge);
+    std::list<Lattice::Partition> partition_vector = lattice_.getEdgePartitions(edge);
 
     return std::pair<
     partition_iterator,

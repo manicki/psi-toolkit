@@ -1,12 +1,23 @@
 #include "tests.hpp"
 
+#include <string>
+
 #include <boost/scoped_ptr.hpp>
 
+#include "av_ai_converter.hpp"
 #include "chart.tpl"
 #include "lattice.hpp"
 #include "lattice_preparators.hpp"
 #include "psi_lattice_writer.hpp"
+#include "registrar.tpl"
 #include "test_helpers.hpp"
+
+
+#define SIMPLE_CHART(CH, LATTICE) \
+    registrar<std::string> reg; \
+    AV_AI_Converter av_ai_converter(lattice, reg, reg); \
+    typedef chart<std::string, double, int, int_rule> simple_chart; \
+    simple_chart (CH)((LATTICE), av_ai_converter);
 
 
 class int_rule {
@@ -28,8 +39,7 @@ BOOST_AUTO_TEST_SUITE( gobio_chart )
 BOOST_AUTO_TEST_CASE( chart_vertices ) {
 
     Lattice lattice;
-    typedef chart<std::string, double, int, int_rule> simple_chart;
-    simple_chart ch(lattice);
+    SIMPLE_CHART(ch, lattice);
 
     BOOST_CHECK_EQUAL(count_vertices(ch), 1);
 
@@ -51,8 +61,7 @@ BOOST_AUTO_TEST_CASE( chart_vertices ) {
 BOOST_AUTO_TEST_CASE( chart_vertices_with_preparator ) {
 
     Lattice lattice;
-    typedef chart<std::string, double, int, int_rule> simple_chart;
-    simple_chart ch(lattice);
+    SIMPLE_CHART(ch, lattice);
 
     BOOST_CHECK_EQUAL(count_vertices(ch), 1);
 
@@ -66,8 +75,7 @@ BOOST_AUTO_TEST_CASE( chart_vertices_with_preparator ) {
 BOOST_AUTO_TEST_CASE( chart_edges ) {
 
     Lattice lattice(std::string(7, 's'));
-    typedef chart<std::string, double, int, int_rule> simple_chart;
-    simple_chart ch(lattice);
+    SIMPLE_CHART(ch, lattice);
 
     BOOST_CHECK_EQUAL(count_vertices(ch), 8);
 
@@ -112,8 +120,7 @@ BOOST_AUTO_TEST_CASE( chart_mask ) {
 
     Lattice lattice;
     lattice_preparators::prepareLatticeWithOneSymbolTokens(lattice, "abccdddd");
-    typedef chart<std::string, double, int, int_rule> simple_chart;
-    simple_chart ch(lattice);
+    SIMPLE_CHART(ch, lattice);
 
     BOOST_CHECK_EQUAL(count_out_edges(ch), 8);
     BOOST_CHECK_EQUAL(count_in_edges(ch), 8);
@@ -128,8 +135,7 @@ BOOST_AUTO_TEST_CASE( chart_mask ) {
 BOOST_AUTO_TEST_CASE( chart_empty ) {
 
     Lattice lattice(std::string(2012, 's'));
-    typedef chart<std::string, double, int, int_rule> simple_chart;
-    simple_chart ch(lattice);
+    SIMPLE_CHART(ch, lattice);
 
     BOOST_CHECK_EQUAL(count_out_edges(ch), 0);
     BOOST_CHECK_EQUAL(count_in_edges(ch), 0);
@@ -149,8 +155,7 @@ BOOST_AUTO_TEST_CASE( chart_linear ) {
     const int nb_vertices = 200;
 
     Lattice lattice(std::string(nb_vertices-1, 's'));
-    typedef chart<std::string, double, int, int_rule> sample_chart;
-    sample_chart ch(lattice);
+    SIMPLE_CHART(ch, lattice);
 
     for (int i=0; i<nb_vertices; ++i) {
         if (i > 0) {
@@ -184,8 +189,7 @@ BOOST_AUTO_TEST_CASE( chart_complete ) {
     const int nb_vertices = 30;
 
     Lattice lattice(std::string(nb_vertices-1, 's'));
-    typedef chart<std::string, double, int, int_rule> simple_chart;
-    simple_chart ch(lattice);
+    SIMPLE_CHART(ch, lattice);
 
     for (int i=0; i<nb_vertices; ++i) {
         for (int j=0; j<i; ++j) {
@@ -219,8 +223,7 @@ BOOST_AUTO_TEST_CASE( chart_marked ) {
     const int nb_vertices = 60;
 
     Lattice lattice(std::string(nb_vertices-1, 's'));
-    typedef chart<std::string, double, int, int_rule> simple_chart;
-    simple_chart ch(lattice);
+    SIMPLE_CHART(ch, lattice);
 
     std::vector<simple_chart::edge_descriptor> e;
 
@@ -302,8 +305,7 @@ BOOST_AUTO_TEST_CASE( chart_partitions ) {
     const int nb_vertices = 11;
 
     Lattice lattice(std::string(nb_vertices-1, 's'));
-    typedef chart<std::string, double, int, int_rule> simple_chart;
-    simple_chart ch(lattice);
+    SIMPLE_CHART(ch, lattice);
 
     std::vector<simple_chart::edge_descriptor> e;
 
