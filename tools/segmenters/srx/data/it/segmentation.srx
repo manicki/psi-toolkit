@@ -18,7 +18,13 @@
 	<body>
 		<languagerules>
 
-			<languagerule languagerulename="fr">
+			<languagerule languagerulename="it">
+
+			        <!-- Zbyt dlugi segment -->
+				<rule break="yes">
+					<beforebreak>(?:.|\n){600}</beforebreak>
+					<afterbreak>\s</afterbreak>
+				</rule>
 
 				<!-- Wypunktowanie -->
 				<rule break="no">
@@ -38,14 +44,15 @@
 				</rule>
 
 				<!-- ABBREVS -->
-				<rule break="no">
-                    <beforebreak>\b(?:A\.O|C\.B|C\.-B|I\.-P\.-E|I\.P\.E|M|Me|Mlle|Mlles|N\.-B|N\.-É|Ste|T\.-N|av\. J\.-C|apr\. J\.-C|V\.O\.S\.T\.F|VOSTF|v\.o\.s\.t\.f|vostf|VOSTFR|vostfr|w\.-c|c\.-à-d|cf|p\.ex|p\. ex|éd|s\.o|J\.-C|div|mar|ex|dép|hab|p|c\.o\.d|av|B\.P|boul|cap|ch.\-l|circonscr|E\.V|faub|fl|pl|riv|MM|S\.M|S\.A|S\.Em|S\.E|S\.Exc|Acad|adm|Admin|anc|ann|Antiq|append|apr|arch|archéol|arithm|art|astron|bdc|biblio|bibliogr|biol|bot|br|bull|caract|cart|Cass|ch|chap|chronol|circ|C\. civ|C\. pén|col|coll|cf|dict|doc|dr|ecclés|encycl|env|etc|ép|épil|éts|étym|f|ff|fasc|fém|fig|généal|géogr|géol|géom|graph|grav|gr\. cap|haut|hist|iconogr|ill|illustr|impr|inf|introd|invar|ital|jur|l|larg|lat|libr|liv|loc|long|L|masc|math|max|ms|mss|mus|myth|N\.-D|N\.D\.A|N\.D\.E|N\.D\.L\.R|N\.D\.T|nouv|numism|obs|p|p\. cap|P\.C\.C|paragr|part|pharm|phys|plur|P\.J|préf|P\.-S|rel|R\.S\.V\.P|sc|s\.d|s\.l|s\.l\.n\.d|sect|sing|subst|suiv|suppl|S\.V\.P|t|tél|T\.S\.V\.P|T\.T\.C|v|var|vol|zool|vs|sq|sqq|loc\. cit|loc\. laud|i\.e|id|ibid)\.</beforebreak>
+                	<rule break="no">
+                        <beforebreak>\b(?:abit|a\.C|B\.V|B\.V\.M|c\.a|cap|cfr|cf|d\.C|dir|es|FF\.AA|LL|N\.d\.A|N\.d\.E|N\.d\.R|N\.d\.T|N\.S|N\.S\.G\.C|PP\.TT|Prof|Dr|S\.V|V\.Em|depr|err|etim|evit|inter|loc\.v|obsol|opp|pl|sf|sin|spreg|tecn|var)\.</beforebreak>
 					<afterbreak>\s</afterbreak>
-				</rule>
+                </rule>
+
 
 				<rule break="yes">
 					<beforebreak>[\.\?!]+</beforebreak>
-					<afterbreak>\s+\p{Lu}</afterbreak>
+					<afterbreak>\s+([\-–]\s*)?\p{Lu}</afterbreak>
 				</rule>
 
                                 <!-- przypisy -->
@@ -68,7 +75,7 @@
 
 		<maprules>
 			<maprule maprulename="Default">
-				<languagemap languagepattern="(?:FR|fr|French|FRENCH).*" languagerulename="fr"/>
+				<languagemap languagepattern="(?:IT|it|Italian|ITALIAN).*" languagerulename="it"/>
 			</maprule>
 		</maprules>
 
