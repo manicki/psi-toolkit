@@ -8,7 +8,6 @@
 
 @def MULTI \@rule multiDot/X := (?:[a-zàâçéèêëîïôûùüÿ]\.){3,}(?!\p{L}) | ([A-ZÀÂÇÉÈÊËÎÏÔÛÙÜŸ]\.){2,}
 
-#@def ABBREV \@rule todo/X := zzzzzdsdssdsdsdsssssdsdsdsdsdsdsdsdsd
 @def ABBREV \@include "abbrev_fr"
 
 @include "common"
@@ -21,7 +20,6 @@
 @def elisions c|d|j|l|m|n|s|t|qu|ct|ch|chaqu|jusqu|lorsqu|presqu|puisqu|quelqu|quéqu|quiconqu|quoiqu|vot|ç            # aujourd'hui nie rozdzielam
 
 @rule elision/T := (?:elisions)['’]
-#@rule postpron/T := [\-](moi)
 @rule postpron/T := \-(?:postprons)\b
 
 @rule pre_elision/T := ([\p{L}\p{M}~\@\#\$%\^\&\*\/\\\-\+_])+(?=(?:elisions)['’]) # TODO: patrz nizej
