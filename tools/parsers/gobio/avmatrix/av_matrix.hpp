@@ -12,6 +12,7 @@ class av_matrix
 {
 public:
     typedef C BaseCategory;
+    typedef T Atom;
 
 private:
     BaseCategory cat_;
@@ -24,9 +25,9 @@ public:
 
     explicit av_matrix(BaseCategory a_cat):cat_(a_cat) { }
 
-    av_matrix(BaseCategory a_cat, int a_nb_attrs, T default_value):
+    av_matrix(BaseCategory a_cat, int a_nb_attrs, Atom default_value):
         cat_(a_cat),
-        avs_(new std::vector<T>(a_nb_attrs, default_value))
+        avs_(new std::vector<Atom>(a_nb_attrs, default_value))
     { }
 
     av_matrix(const av_matrix& a_avm) :
@@ -67,18 +68,18 @@ public:
         return !operator==(b);
     }
 
-    T get_attr(int attr_ix) const {
+    Atom get_attr(int attr_ix) const {
         return (*avs_)[attr_ix];
     }
 
-    T get_attr(int attr_ix, T default_value) const {
+    Atom get_attr(int attr_ix, Atom default_value) const {
         if (!avs_ || attr_ix >= (signed int)avs_->size()) {
             return default_value;
         }
         return (*avs_)[attr_ix];
     }
 
-    T set_attr(int attr_ix, T val, T default_value) {
+    Atom set_attr(int attr_ix, Atom val, Atom default_value) {
         if (!avs_) {
             if (val == default_value) {
                 return val;
