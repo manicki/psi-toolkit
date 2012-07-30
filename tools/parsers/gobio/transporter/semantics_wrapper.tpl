@@ -1,8 +1,8 @@
-#include "templated_semantics_wrapper.hpp"
+#include "semantics_wrapper.hpp"
 
 
 template<typename Atom, typename Master>
-templated_semantics_wrapper<Atom, Master>::templated_semantics_wrapper(
+semantics_wrapper<Atom, Master>::semantics_wrapper(
     Master & master, int bonus_divisor
 ) :
     master_(master),
@@ -11,13 +11,13 @@ templated_semantics_wrapper<Atom, Master>::templated_semantics_wrapper(
 
 
 template<typename Atom, typename Master>
-void templated_semantics_wrapper<Atom, Master>::set_divisor(int bonus_divisor) {
+void semantics_wrapper<Atom, Master>::set_divisor(int bonus_divisor) {
     bonus_divisor_ = bonus_divisor;
 }
 
 
 template<typename Atom, typename Master>
-Atom templated_semantics_wrapper<Atom, Master>::intersect(
+Atom semantics_wrapper<Atom, Master>::intersect(
     Atom sem,
     Atom pattern,
     double & bonus
@@ -27,7 +27,7 @@ Atom templated_semantics_wrapper<Atom, Master>::intersect(
 
 
 template<typename Atom, typename Master>
-Atom templated_semantics_wrapper<Atom, Master>::tri_intersect(
+Atom semantics_wrapper<Atom, Master>::tri_intersect(
     Atom word,
     Atom sem,
     Atom pattern,
@@ -40,7 +40,7 @@ Atom templated_semantics_wrapper<Atom, Master>::tri_intersect(
 
 
 template<typename Atom, typename Master>
-Atom templated_semantics_wrapper<Atom, Master>::tri_intersect_(
+Atom semantics_wrapper<Atom, Master>::tri_intersect_(
     Atom /*word*/,
     Atom sem,
     Atom pattern,

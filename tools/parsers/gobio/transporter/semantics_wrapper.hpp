@@ -3,10 +3,10 @@
 
 
 template<typename Atom, typename Master>
-class templated_semantics_wrapper {
+class semantics_wrapper {
 
 public:
-    templated_semantics_wrapper(Master &, int bonus_divisor = 1);
+    semantics_wrapper(Master &, int bonus_divisor = 1);
 
     Atom intersect(Atom sem, Atom pattern, double& bonus);
     Atom tri_intersect(Atom word, Atom sem, Atom pattern, double& bonus);
