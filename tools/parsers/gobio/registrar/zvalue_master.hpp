@@ -41,6 +41,13 @@ private:
     AnnotationItemManager & annotationItemManager_;
     number_master number_master_;
 
+    std::string fail_string_;
+    std::string false_string_;
+    std::string empty_string_;
+
+    std::string any_string_;
+    std::string nil_string_;
+
 };
 
 

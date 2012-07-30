@@ -9,7 +9,12 @@ zvalue_master::zvalue_master(
     int int_limit
 ) :
     annotationItemManager_(annotationItemManager),
-    number_master_(int_limit)
+    number_master_(int_limit),
+    fail_string_("fail"),
+    false_string_("false"),
+    empty_string_("empty"),
+    any_string_("any"),
+    nil_string_("nil")
 { }
 
 bool zvalue_master::is_int(zvalue value) const {
@@ -26,9 +31,12 @@ int zvalue_master::to_int(zvalue value) const {
 }
 
 std::string zvalue_master::to_string(zvalue value) const {
-    int number = ZVALUE_TO_INTEGER(value);
-    if (number_master_.is_false(number) || number_master_.is_any(number)) {
-        return number_master_.to_string(number);
+    assert(is_string(value));
+    if (is_any(value)) {
+        return nil_string_;
+    }
+    if (is_false(value)) {
+        return fail_string_;
     }
     return annotationItemManager_.zvalueToString(value);
 }
@@ -42,9 +50,11 @@ zvalue zvalue_master::from_int(int i) {
 }
 
 zvalue zvalue_master::from_string(const std::string& s) {
-    int number = number_master_.from_string(s);
-    if (number == number_master_.false_value() || number == number_master_.any_value()) {
-        return INTEGER_TO_ZVALUE(number);
+    if (s == any_string_ || s == nil_string_) {
+        return any_value();
+    }
+    if (s == fail_string_ || s == false_string_ || s == empty_string_) {
+        return false_value();
     }
     return annotationItemManager_.stringToZvalue(s);
 }
