@@ -35,11 +35,9 @@ public:
 
     int int_limit() const;
 
-    number_master & get_number_master();
-
 private:
     AnnotationItemManager & annotationItemManager_;
-    number_master number_master_;
+    int int_limit_;
 
     std::string fail_string_;
     std::string false_string_;

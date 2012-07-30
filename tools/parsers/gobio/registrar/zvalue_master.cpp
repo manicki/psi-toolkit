@@ -9,7 +9,7 @@ zvalue_master::zvalue_master(
     int int_limit
 ) :
     annotationItemManager_(annotationItemManager),
-    number_master_(int_limit),
+    int_limit_(int_limit),
     fail_string_("fail"),
     false_string_("false"),
     empty_string_("empty"),
@@ -42,7 +42,7 @@ std::string zvalue_master::to_string(zvalue value) const {
 }
 
 std::string zvalue_master::string_representation(zvalue value) const {
-    return number_master_.string_representation(ZVALUE_TO_INTEGER(value));
+    return annotationItemManager_.zvalueToString(value);
 }
 
 zvalue zvalue_master::from_int(int i) {
@@ -84,10 +84,5 @@ bool zvalue_master::is_any(zvalue value) const {
 }
 
 int zvalue_master::int_limit() const {
-    return number_master_.int_limit();
+    return int_limit_;
 }
-
-number_master & zvalue_master::get_number_master() {
-    return number_master_;
-}
-
