@@ -64,8 +64,7 @@ zvalue zvalue_master::from_bool(bool b) {
 }
 
 zvalue zvalue_master::false_value() const {
-    // return NULL_ZVALUE;
-    return INTEGER_TO_ZVALUE(number_master_.false_value());
+    return NULL_ZVALUE;
 }
 
 zvalue zvalue_master::any_value() const {
@@ -73,13 +72,11 @@ zvalue zvalue_master::any_value() const {
 }
 
 bool zvalue_master::is_false(zvalue value) const {
-    // return NULLP(value);
-    return number_master_.is_false(ZVALUE_TO_INTEGER(value));
+    return NULLP(value);
 }
 
 bool zvalue_master::is_true(zvalue value) const {
-    // return !NULLP(value);
-    return number_master_.is_true(ZVALUE_TO_INTEGER(value));
+    return !NULLP(value);
 }
 
 bool zvalue_master::is_any(zvalue value) const {
