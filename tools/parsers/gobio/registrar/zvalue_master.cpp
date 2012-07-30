@@ -13,15 +13,16 @@ zvalue_master::zvalue_master(
 { }
 
 bool zvalue_master::is_int(zvalue value) const {
-    return number_master_.is_int(ZVALUE_TO_INTEGER(value));
+    return INTEGERP(value);
 }
 
 bool zvalue_master::is_string(zvalue value) const {
-    return number_master_.is_string(ZVALUE_TO_INTEGER(value));
+    return !INTEGERP(value);
 }
 
 int zvalue_master::to_int(zvalue value) const {
-    return number_master_.to_int(ZVALUE_TO_INTEGER(value));
+    assert(is_int(value));
+    return ZVALUE_TO_INTEGER(value);
 }
 
 std::string zvalue_master::to_string(zvalue value) const {
@@ -37,7 +38,7 @@ std::string zvalue_master::string_representation(zvalue value) const {
 }
 
 zvalue zvalue_master::from_int(int i) {
-    return INTEGER_TO_ZVALUE(number_master_.from_int(i));
+    return INTEGER_TO_ZVALUE(i);
 }
 
 zvalue zvalue_master::from_string(const std::string& s) {
