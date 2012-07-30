@@ -50,27 +50,30 @@ zvalue zvalue_master::from_string(const std::string& s) {
 }
 
 zvalue zvalue_master::from_bool(bool b) {
-    return INTEGER_TO_ZVALUE(number_master_.from_bool(b));
+    return (b ? any_value() : false_value());
 }
 
 zvalue zvalue_master::false_value() const {
+    // return NULL_ZVALUE;
     return INTEGER_TO_ZVALUE(number_master_.false_value());
 }
 
 zvalue zvalue_master::any_value() const {
-    return INTEGER_TO_ZVALUE(number_master_.any_value());
+    return DEFAULT_ZVALUE;
 }
 
 bool zvalue_master::is_false(zvalue value) const {
+    // return NULLP(value);
     return number_master_.is_false(ZVALUE_TO_INTEGER(value));
 }
 
 bool zvalue_master::is_true(zvalue value) const {
+    // return !NULLP(value);
     return number_master_.is_true(ZVALUE_TO_INTEGER(value));
 }
 
 bool zvalue_master::is_any(zvalue value) const {
-    return number_master_.is_any(ZVALUE_TO_INTEGER(value));
+    return DEFAULTP(value);
 }
 
 int zvalue_master::int_limit() const {
