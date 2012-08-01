@@ -7,7 +7,7 @@
 
 #include "lattice.hpp"
 
-// uwaga! GNU C++ i Builder maj± ró¿ne pogl±dy nt. kolejno¶ci deklaracji
+// uwaga! GNU C++ i Builder maja rozne poglady nt. kolejnosci deklaracji
 
 using std::string;
 using std::ostream;

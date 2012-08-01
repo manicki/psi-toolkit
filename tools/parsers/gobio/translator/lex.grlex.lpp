@@ -1,5 +1,5 @@
-/* UWAGA: ten lekser wymaga takiego ustawienia locale'u, w którym
-  kropka oddziela czê¶æ dziesietna. */
+/* UWAGA: ten lekser wymaga takiego ustawienia locale'u, w ktorym
+  kropka oddziela czesc dziesietna. */
 
 /* option nounput to suppress "yyunput defined but not used" warning */
 %option nounput
@@ -47,9 +47,9 @@ imoa_key key;
 %option noyywrap
 %option yylineno
 
-PLUPPER [A-Z¡ÆÊ£ÑÓ¦¬¯]
-PLLOWER [a-z±æê³ñó¶¼¿]
-PLLETTER [a-z±æê³ñó¶¼¿A-Z¡ÆÊ£ÑÓ¦¬¯]
+PLUPPER [A-ZÄ„Ä†Ä˜ÅÅƒÃ“ÅšÅ»]
+PLLOWER [a-zÄ…Ä‡Ä™Å‚Å„Ã³Å›ÅºÅ¼]
+PLLETTER [a-zÄ…Ä‡Ä™Å‚Å„Ã³Å›ÅºÅ¼A-ZÄ„Ä†Ä˜ÅÅƒÃ“ÅšÅ»]
 
 
 %%

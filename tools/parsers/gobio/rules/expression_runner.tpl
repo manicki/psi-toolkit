@@ -88,7 +88,7 @@ bool expression_runner<C,T,S,M,X,checking>::run(
     M& master,
     X& semantics_machine)
 {
-    // puste wyrażenie nie musi mieć instrukcji STOP
+    // puste wyrazenie nie musi miec instrukcji STOP
     if(expr.first_available_address() == 0)
         return false;
 
@@ -205,7 +205,7 @@ bool expression_runner<C,T,S,M,X,checking>::run(
             else
                 stack_.top() = master.false_value();
             }
-            // else: wartość zostaje na stosie
+            // else: wartosc zostaje na stosie
         }
         break;
 
@@ -448,7 +448,7 @@ bool expression_runner<C,T,S,M,X,checking>::run(
             break;
 
         case gobio_opcodes::OPCODE_STOP:
-            // nie można użyć po prostu break-a, bo jesteśmy wewnątrz switch-a
+            // nie mozna uzyc po prostu break-a, bo jestesmy wewnatrz switch-a
             goto loop_exit;
 
         case gobio_opcodes::OPCODE_TREE_CHOICE:
@@ -492,7 +492,7 @@ bool expression_runner<C,T,S,M,X,checking>::run(
             else
                 stack_.top() = master.false_value();
             }
-            // else: wartość zostaje na stosie
+            // else: wartosc zostaje na stosie
         }
         break;
 

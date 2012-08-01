@@ -183,7 +183,7 @@ public:
     size_t topological_index(vertex_descriptor vertex) const;
     vertex_descriptor vertex_by_index(size_t i) const;
 
-    // zwraca rozmiar wektora wierzchołków
+    // zwraca rozmiar wektora wierzcholkow
     size_t topological_count() const;
 
     void setTagMask(LayerTagMask layerTagMask);
