@@ -34,8 +34,7 @@ boost::filesystem::path Configurator::getFinalPath(
     const boost::filesystem::path& sourcePath,
     const boost::filesystem::path& subdirectory) const {
 
-    return
-        isRunAsInstalled()
+    return isRunAsInstalled()
         ? getDataDir() / underscores2minuses_(componentName)
         : boost::filesystem::path("..") / sourcePath / subdirectory;
 }

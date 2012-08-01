@@ -75,8 +75,7 @@ void LanguageDependentAnnotatorFactory::addLanguageDependentOptions(
                 ->default_value(GUESS_VALUE_FOR_LANG_OPTION)->required(),
          "language")
         ("force-language", boost::program_options::bool_switch()->default_value(false),
-         "force using specified language even if a text was resognised otherwise")
-        ;
+         "force using specified language even if a text was resognised otherwise");
 }
 
 const std::string LanguageDependentAnnotatorFactory::GUESS_VALUE_FOR_LANG_OPTION = "guess";

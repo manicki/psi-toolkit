@@ -30,8 +30,7 @@ bool Cutter::shouldFragmentQueueBeUsed_() const {
 }
 
 bool Cutter::areLimitsBroken_(size_t segmentLength) {
-    return
-        isSoftLimitBroken_(segmentLength)
+    return isSoftLimitBroken_(segmentLength)
         || isHardLimitBroken_(segmentLength);
 }
 

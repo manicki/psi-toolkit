@@ -21,8 +21,7 @@ std::map<std::string, std::string> FileRecognizer::mimeTypeToFileExtension_ =
         ("image/vnd.djvu", "djvu")
         ("model/vrml", "wrl")
         ("text/html", "html")
-        ("text/plain", "txt")
-        ;
+        ("text/plain", "txt");
 
 FileRecognizer::FileRecognizer() {
 #if HAVE_LIBMAGIC

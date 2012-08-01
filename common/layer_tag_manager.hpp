@@ -52,20 +52,22 @@ public:
 
     LayerTagCollection createSingletonTagCollectionWithLangCode(
         std::string tagName,
-        std::string langCode) {
+        std::string langCode
+    ) {
         return createUnion(
             createSingletonTagCollection(tagName),
-            createLanguageTag(langCode));
+            createLanguageTag(langCode)
+        );
     }
 
     LayerTagCollection createTagCollectionFromListWithLangCode(
         std::list<std::string> tagNames,
-        const std::string& langCode) {
-
-        return
-            createUnion(
-                createTagCollection(tagNames),
-                createLanguageTag(langCode));
+        const std::string& langCode
+    ) {
+        return createUnion(
+            createTagCollection(tagNames),
+            createLanguageTag(langCode)
+        );
     }
 
 

@@ -27,7 +27,7 @@ private:
 
     virtual bool doIsAnnotator() const;
 
-    virtual double doGetQualityScore() const ;
+    virtual double doGetQualityScore() const;
 
     virtual double doGetEstimatedTime() const;
 

@@ -214,10 +214,11 @@ protected:
     zvalue first;
     zvalue second;
 
-    zpair(zobjects_holder* holder, zvalue a_first, zvalue a_second):zobject(holder, EZPAIR)
-        , first(a_first)
-        , second(a_second)
-        {}
+    zpair(zobjects_holder* holder, zvalue a_first, zvalue a_second) :
+        zobject(holder, EZPAIR),
+        first(a_first),
+        second(a_second)
+    { }
 
     ~zpair() { }
 
@@ -421,7 +422,7 @@ protected:
 
     ~zvector()
         {
-            delete[] block;
+            delete [] block;
         }
 
     void memRequest(int elementCount)
@@ -615,19 +616,21 @@ protected:
     f_identity_function key_val_function;
 
     zhash(
-    zobjects_holder* holder,
-    int                 a_init_size,
-    f_hash_function     a_key_hash_function=NULL,
-    f_hash_function     a_val_hash_function=NULL,
-    f_identity_function a_key_val_function=NULL,
-    bool                allocate_atomic_mem=false):zobject(holder, EZHASH)
-    , size(0)
-    , occupied(0)
-    , occupied_and_deleted(0)
-    , block(NULL)
-    , key_hash_function(a_key_hash_function)
-    , val_hash_function(a_val_hash_function)
-    , key_val_function(a_key_val_function)
+        zobjects_holder* holder,
+        int a_init_size,
+        f_hash_function a_key_hash_function=NULL,
+        f_hash_function a_val_hash_function=NULL,
+        f_identity_function a_key_val_function=NULL,
+        bool allocate_atomic_mem=false
+    ) :
+        zobject(holder, EZHASH),
+        size(0),
+        occupied(0),
+        occupied_and_deleted(0),
+        block(NULL),
+        key_hash_function(a_key_hash_function),
+        val_hash_function(a_val_hash_function),
+        key_val_function(a_key_val_function)
     {
         (void)allocate_atomic_mem; // to suppress WARNING: unused parameter ‘allocate_atomic_mem’
         if (key_hash_function == NULL)
@@ -902,7 +905,6 @@ public:
      * Syntactic label, for example "podmiot", "Compl1".
      */
     zsymbol* label;
-
 
 
     /**

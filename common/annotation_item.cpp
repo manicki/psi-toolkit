@@ -1,8 +1,7 @@
 #include "annotation_item.hpp"
 
 bool AnnotationItem::operator==(const AnnotationItem& other) const {
-    return
-        getCategory() == other.getCategory()
+    return getCategory() == other.getCategory()
         && getText() == other.getText()
         && areAttributesTheSame_(other);
 }

@@ -15,21 +15,18 @@ void addCutterAnnotatorOptions(
          (getHardLimitDescription_(edgeName)).c_str())
         ((edgeName + "-length-soft-limit").c_str(),
          boost::program_options::value<size_t>()->default_value(softLimit),
-         (getSoftLimitDescription_(edgeName)).c_str())
-        ;
+         (getSoftLimitDescription_(edgeName)).c_str());
 }
 
 std::string getHardLimitDescription_(const std::string& edgeName) {
-    return
-        "maximum length (in bytes, not in characters) of a " + edgeName
+    return "maximum length (in bytes, not in characters) of a " + edgeName
         + " (if, according to rules, a " + edgeName +
         + " of a greater length would be generated, a " + edgeName
         + " break is forced), zero turns the limit off";
 }
 
 std::string getSoftLimitDescription_(const std::string& edgeName) {
-    return
-        "soft limit on the length (in bytes) of a " + edgeName
+    return "soft limit on the length (in bytes) of a " + edgeName
         + " (" + edgeName
         + " break is forced only on spaces), zero turns the limit off";
 }

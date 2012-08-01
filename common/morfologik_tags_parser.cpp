@@ -116,8 +116,7 @@ std::map<std::string, std::string> MorfologikTagsParser::POS_GENERALIZATIONS =
         ("pact", "verb")
         ("pant", "verb")
         ("pcon", "verb")
-        ("ppas", "verb")
-        ;
+        ("ppas", "verb");
 
 std::vector<std::map<std::string, std::string> > MorfologikTagsParser::getFormAttributes(
     std::string & tag) {

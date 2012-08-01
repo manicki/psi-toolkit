@@ -242,8 +242,8 @@ std::string zsyntree::_to_parsable_string() {
     result+="|";
     std::string attr = zhash::to_parsable_string_modif (true);
     attr.erase(0, 1); attr.erase(attr.length()-1, 1); //obcinam klamerki
-    if (attr.find("=>")) { //je¿eli s± w ogóle jakie¶ atrybuty
-        result+=", "; result+=attr; //atrybuty s± na tym samym poziomie co category i label
+    if (attr.find("=>")) { //jezeli sa w ogole jakies atrybuty
+        result+=", "; result+=attr; //atrybuty sa na tym samym poziomie co category i label
     }
     result += ", q|subtrees| => [ ";
     if (0<=last_subtree) {
@@ -988,7 +988,6 @@ char* zvalue_to_string(zvalue z, bool /* full_print */) {
 
 std::string zvalue_to_parsable_string(zvalue z) {
     std::string result;
-    char tmp[100];
     if (NULLP(z)) {
         result = "NULL_ZVALUE";
         return result;
@@ -998,6 +997,7 @@ std::string zvalue_to_parsable_string(zvalue z) {
         return result;
     }
     if (INTEGERP(z)) {
+        char tmp[100];
         sprintf(tmp, "%i", int(ZVALUE_TO_INTEGER(z)));
         result += tmp;
         return result;

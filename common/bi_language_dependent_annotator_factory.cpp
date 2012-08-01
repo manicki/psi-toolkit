@@ -27,8 +27,7 @@ void BiLanguageDependentAnnotatorFactory::addOnlyBiLanguageDependentOptions(
     boost::program_options::options_description& optionsDescription) {
 
     optionsDescription.add_options()
-        ("trg-lang", boost::program_options::value<std::string>()->required(), "target language")
-        ;
+        ("trg-lang", boost::program_options::value<std::string>()->required(), "target language");
 }
 
 void BiLanguageDependentAnnotatorFactory::doAddLanguageIndependentOptionsHandled(
