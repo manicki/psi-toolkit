@@ -45,8 +45,7 @@ struct avinput_grammar : public grammar<avinput_grammar>
                       ] ];
 
         assignment   =
-        attribute >> no_node_d[ch_p('=')] >> (integer | symbol) >> no_node_d[ch_p('\n')]
-        ;
+        attribute >> no_node_d[ch_p('=')] >> (integer | symbol) >> no_node_d[ch_p('\n')];
 
 
         category =
@@ -92,4 +91,3 @@ struct avinput_grammar : public grammar<avinput_grammar>
 
 
 #endif
-

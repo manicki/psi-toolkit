@@ -39,7 +39,7 @@ public:
         avs_(a_avm.avs_)
     { }
 
-    bool operator==(const av_matrix<C,T>& b) const {
+    bool operator==(const av_matrix<C, T>& b) const {
         if (this == &b) {
             return true;
         }
@@ -63,7 +63,7 @@ public:
         return true;
     }
 
-    bool operator!=(const av_matrix<C,T>& b) const {
+    bool operator!=(const av_matrix<C, T>& b) const {
         return !operator==(b);
     }
 
@@ -128,14 +128,14 @@ public:
 
 HASH_WRAPPER_HASH_INTRO
     template<>
-    struct HASH_WRAPPER_HASH_TRAITS<av_matrix<int,int> >
+    struct HASH_WRAPPER_HASH_TRAITS<av_matrix<int, int> >
     {
-        size_t operator()(const av_matrix<int,int>& k) const
+        size_t operator()(const av_matrix<int, int>& k) const
         {
             size_t r = HASH_WRAPPER_HASH_TRAITS<int>().operator()(k.get_cat());
 
             int i;
-            for(i = 0; i < k.nb_attrs(); ++i)
+            for (i = 0; i < k.nb_attrs(); ++i)
             r ^= HASH_WRAPPER_HASH_TRAITS<int>().operator()(k.get_attr(i));
 
             return r;
@@ -144,8 +144,8 @@ HASH_WRAPPER_HASH_INTRO
         HASH_WRAPPER_EXTRA_STUFF
 
 #ifdef __VS__
-        bool operator()(const av_matrix<int,int>& a,
-                const av_matrix<int,int>& b) const
+        bool operator()(const av_matrix<int, int>& a,
+                const av_matrix<int, int>& b) const
         {
             return a != b;
         }
@@ -163,7 +163,7 @@ struct bare_av_matrix
     bool operator!=(const null_av_matrix_category&) const { return false; }
     };
 
-    typedef av_matrix<null_av_matrix_category,T> type;
+    typedef av_matrix<null_av_matrix_category, T> type;
 };
 
 #endif
