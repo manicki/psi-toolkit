@@ -72,8 +72,7 @@ boost::program_options::options_description BracketingLatticeWriter::Factory::do
             "separates the attribute and its value")
         ("show-attributes",
             boost::program_options::value< std::vector<std::string> >()->multitoken(),
-            "the attributes to be shown")
-        ;
+            "the attributes to be shown");
 
     return optionsDescription;
 }

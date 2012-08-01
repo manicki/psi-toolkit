@@ -412,9 +412,10 @@ protected:
     int occupied;
     zvalue* block;
 
-    zvector(zobjects_holder* holder, int initialSize):zobject(holder, EZVECTOR)
-        , size(initialSize)
-        , occupied(0)
+    zvector(zobjects_holder* holder, int initialSize) :
+        zobject(holder, EZVECTOR),
+        size(initialSize),
+        occupied(0)
         {
             block = new zvalue[initialSize];
             memset(block, 0, size*sizeof(zvalue));

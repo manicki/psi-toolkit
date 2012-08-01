@@ -26,7 +26,6 @@ std::map<std::string, GuessingReader::PointerToReader> GuessingReader::fileTypeT
         ("txt", PointerToReader(new TxtLatticeReader::Factory()))
         ("html", PointerToReader(new ApertiumLatticeReader::Factory()))
         ("psi", PointerToReader(new PsiLatticeReader::Factory()))
-        ("utt", PointerToReader(new UTTLatticeReader::Factory()))
 #if HAVE_POPPLER
         ("pdf", PointerToReader(new PDFLatticeReader::Factory()))
 #endif
@@ -36,12 +35,11 @@ std::map<std::string, GuessingReader::PointerToReader> GuessingReader::fileTypeT
 #if USE_DOC_READER
         ("doc", PointerToReader(new DocLatticeReader::Factory()))
 #endif
-        ;
+        ("utt", PointerToReader(new UTTLatticeReader::Factory()));
 
 std::map<std::string, std::string> GuessingReader::fileTypeToReaderOptionsMap_ =
     boost::assign::map_list_of
-        ("html", "--format html")
-        ;
+        ("html", "--format html");
 
 std::string GuessingReader::getFormatName() {
     return "Guessing";
@@ -136,8 +134,7 @@ boost::program_options::options_description GuessingReader::Factory::doOptionsHa
 
     optionsDescription.add_options()
         ("block-size", boost::program_options::value<int>()->default_value(DEFAULT_BLOCK_SIZE),
-            "the size of the input data used to determine the format")
-        ;
+            "the size of the input data used to determine the format");
 
     return optionsDescription;
 }

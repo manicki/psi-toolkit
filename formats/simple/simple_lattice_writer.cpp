@@ -53,8 +53,7 @@ boost::program_options::options_description SimpleLatticeWriter::Factory::doOpti
         ("spec", boost::program_options::value< std::vector<std::string> >()->multitoken(),
             "specification of higher-order tags and their separators")
         ("tag", boost::program_options::value<std::string>()->default_value("token"),
-            "basic tag")
-        ;
+            "basic tag");
 
     return optionsDescription;
 }

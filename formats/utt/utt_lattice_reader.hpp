@@ -64,13 +64,11 @@ struct UTTLRGrammar : public qi::grammar<
             >> +(qi::char_ - ' ')
             >> whitespaces
             >> +(qi::char_ - ' ')
-            >> -(whitespaces >> +(qi::char_))
-            ;
+            >> -(whitespaces >> +(qi::char_));
 
         optionalInt
             = qi::eps[qi::_val = -1]
-            >> -(qi::int_[qi::_val = qi::_1] >> +(qi::space))
-            ;
+            >> -(qi::int_[qi::_val = qi::_1] >> +(qi::space));
 
         whitespaces = +(qi::space);
 
@@ -91,8 +89,7 @@ struct UTTLRAnnotationsGrammar : public qi::grammar<
     UTTLRAnnotationsGrammar() : UTTLRAnnotationsGrammar::base_type(start) {
 
         start
-            %= +(qi::char_- ' ') % whitespaces
-            ;
+            %= +(qi::char_- ' ') % whitespaces;
 
         whitespaces = +(qi::space);
 
@@ -127,8 +124,7 @@ struct UTTLRAVGrammar : public qi::grammar<
         start
             %= +(qi::char_ - ' ' - ':')
             >> ':'
-            >> +(qi::char_ - ' ')
-            ;
+            >> +(qi::char_ - ' ');
 
     }
 

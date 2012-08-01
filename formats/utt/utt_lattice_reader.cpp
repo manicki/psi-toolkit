@@ -21,8 +21,7 @@ LatticeReader<std::istream>* UTTLatticeReader::Factory::doCreateLatticeReader(
 boost::program_options::options_description UTTLatticeReader::Factory::doOptionsHandled() {
     boost::program_options::options_description optionsDescription("Allowed options");
 
-    optionsDescription.add_options()
-        ;
+    optionsDescription.add_options();
 
     return optionsDescription;
 }

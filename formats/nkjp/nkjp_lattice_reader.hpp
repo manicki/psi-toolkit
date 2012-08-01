@@ -41,8 +41,7 @@ struct NKJPSegmentationCorrespGrammar : public qi::grammar<
             >> qi::int_
             >> qi::lit(",")
             >> qi::int_
-            >> qi::lit(")")
-            ;
+            >> qi::lit(")");
 
     }
 
@@ -65,8 +64,7 @@ struct NKJPMorphosyntaxCommentGrammar : public qi::grammar<
             >> qi::int_
             >> qi::lit(",")
             >> qi::int_
-            >> qi::lit("] ")
-            ;
+            >> qi::lit("] ");
 
     }
 

@@ -29,8 +29,7 @@ boost::program_options::options_description TxtLatticeReader::Factory::doOptions
         ("whole-text",   "read the whole text")
         ("paragraphs",   "paragraphs are delimited with double newlines")
         ("discard-comments", "discards comments")
-        ("pass-through-comments", "marks comments as single markup")
-        ;
+        ("pass-through-comments", "marks comments as single markup");
 
     return optionsDescription;
 }

@@ -48,8 +48,7 @@ boost::program_options::options_description JSONLatticeWriter::Factory::doOption
         ("spec", boost::program_options::value< std::vector<std::string> >()->multitoken(),
             "specification of higher-order tags")
         ("with-args",
-         "if set, then returns text with annotation as a hash element")
-        ;
+         "if set, then returns text with annotation as a hash element");
 
     return optionsDescription;
 }

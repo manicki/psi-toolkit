@@ -94,8 +94,7 @@ boost::program_options::options_description GVLatticeWriter::Factory::doOptionsH
         ("show-tags",
             "prints layer tags")
         ("tree",
-            "shows dependencies between edges instead of the content of the lattice")
-        ;
+            "shows dependencies between edges instead of the content of the lattice");
 
     return optionsDescription;
 }

@@ -37,8 +37,7 @@ struct StringSequenceGrammar : public qi::grammar<
     StringSequenceGrammar() : StringSequenceGrammar::base_type(start) {
 
         start
-            %= +(qi::char_ - ' ') % whitespaces
-            ;
+            %= +(qi::char_ - ' ') % whitespaces;
 
         whitespaces = +(qi::space);
 
@@ -131,36 +130,30 @@ struct PsiLRGrammar : public qi::grammar<
             >> tags
             >> whitespaces
             >> -(+(qi::char_ - ' ') >> whitespaces)
-            >> annotation
-            ;
+            >> annotation;
 
         whitespaces = +(qi::space);
 
         loose
             = qi::eps[qi::_val = false]
-            >> -(qi::lit("@")[qi::_val = true])
-            ;
+            >> -(qi::lit("@")[qi::_val = true]);
 
         point
             = qi::eps[qi::_val = false]
-            >> -(qi::lit("*")[qi::_val = true])
-            ;
+            >> -(qi::lit("*")[qi::_val = true]);
 
         tags
-            %= +(qi::char_ - ' ' - ',') % ','
-            ;
+            %= +(qi::char_ - ' ' - ',') % ',';
 
         annotation
             %= +(qi::char_ - ' ' - ',' - '[' - '<')                         //category
             >> score                                                        //score
             >> -(',' >> +(qi::char_ - '['))                                 //av
-            >> -(qi::char_("[") >> *(qi::char_ - ']') >> qi::char_("]"))    //partitions
-            ;
+            >> -(qi::char_("[") >> *(qi::char_ - ']') >> qi::char_("]"));   //partitions
 
         score
             = qi::eps[qi::_val = 0.0]
-            >> -('<' >> qi::double_[qi::_val = qi::_1] >> '>')
-            ;
+            >> -('<' >> qi::double_[qi::_val = qi::_1] >> '>');
 
     }
 
@@ -183,8 +176,7 @@ struct PsiLRAVGrammar : public qi::grammar<
     PsiLRAVGrammar() : PsiLRAVGrammar::base_type(start) {
 
         start
-            %= +(qi::char_ - ',') % ','
-            ;
+            %= +(qi::char_ - ',') % ',';
 
     }
 
@@ -216,8 +208,7 @@ struct PsiLRAVPairGrammar : public qi::grammar<
         start
             %= +(qi::char_ - ',' - '=')
             >> '='
-            >> +(qi::char_ - ',' - '=')
-            ;
+            >> +(qi::char_ - ',' - '=');
 
     }
 
@@ -236,8 +227,7 @@ struct PsiLRPartitionsGrammar : public qi::grammar<
         start
             %= '['
             >> partition % ','
-            >> ']'
-            ;
+            >> ']';
 
         partition
             = qi::eps[qi::_val = ""]
@@ -251,8 +241,7 @@ struct PsiLRPartitionsGrammar : public qi::grammar<
                 qi::char_('<')[qi::_val += qi::_1]
                 >> +(qi::char_ - '>')[qi::_val += qi::_1]
                 >> qi::char_('>')[qi::_val += qi::_1]
-                )
-            ;
+                );
 
     }
 
@@ -287,21 +276,17 @@ struct PsiLRPartitionGrammar : public qi::grammar<
         start
             %= edge % '-'
             >> tags
-            >> score
-            ;
+            >> score;
 
         edge
             = qi::eps[qi::_val = 0]
-            >> -(qi::int_[qi::_val = qi::_1])
-            ;
+            >> -(qi::int_[qi::_val = qi::_1]);
 
         tags
-            %= -('(' >> +(qi::char_ - ')' - ' ' - ',') % ',' >> ')')
-            ;
+            %= -('(' >> +(qi::char_ - ')' - ' ' - ',') % ',' >> ')');
 
         score
-            %= -('<' >> qi::double_ >> '>')
-            ;
+            %= -('<' >> qi::double_ >> '>');
 
     }
 
