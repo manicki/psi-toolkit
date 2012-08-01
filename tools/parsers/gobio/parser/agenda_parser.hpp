@@ -26,7 +26,7 @@ public:
     K& combinator_,
     A& agenda_)
     {
-        // zastosowanie regu³ binarnych z bie¿±c± krawêdzi± po prawej stronie
+        // zastosowanie regul binarnych z biezaca krawedzia po prawej stronie
         typename chart_type::vertex_descriptor source = chart_.edge_source(e);
 
         std::pair<
@@ -39,7 +39,7 @@ public:
         ++it)
         apply_binary_rules_for_pair_((*it), e, min_score, chart_, combinator_, agenda_);
 
-        // zastosowanie regu³ binarnych z bie¿±c± krawêdzi± po lewej stronie
+        // zastosowanie regul binarnych z biezaca krawedzia po lewej stronie
         typename chart_type::vertex_descriptor target = chart_.edge_target(e);
 
         std::pair<
@@ -217,15 +217,15 @@ private:
  * C - typ kategorii (odpowiada symbolowi terminalnemu/nieterminalnemu z tradycyjnej
  *     gramatyki bezkontekstowej
  * S - typ oceny (np. int albo double)
- * V - typ wariantu (z ka¿d± kategori± typu C w wyniku parsowania mo¿e byæ zwi±zanych
- *     kilka wariantów, ustalanie wariantów odbywa siê po parsowaniu, za pomoc±
+ * V - typ wariantu (z kazda kategoria typu C w wyniku parsowania moze byc zwiazanych
+ *     kilka wariantow, ustalanie wariantow odbywa sie po parsowaniu, za pomoca
  *     osobnego mechanizmu)
- * R - typ regu³y; regu³a powinna udostêpniaæ funkcjê category() zwracaj±c±
- *     kategoriê "po lewej stronie" regu³y
+ * R - typ reguly; regula powinna udostepniac funkcje category() zwracajaca
+ *     kategorie "po lewej stronie" reguly
  * K - typ kombinatora
  * A - typ agendy
- * I - rodzaj indeksu na³o¿onego na krawêdzie, domy¶lnie indeksujemy zarówno
- *     wchodz±ce, jak i wychodz±ce
+ * I - rodzaj indeksu nalozonego na krawedzie, domyslnie indeksujemy zarowno
+ *     wchodzace, jak i wychodzace
  */
 template<typename C, typename S, typename V, typename R, typename K, typename A,
      template<typename, typename> class I=simple_marked_edges_index>

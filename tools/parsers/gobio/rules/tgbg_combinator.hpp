@@ -122,7 +122,7 @@ public:
     int starred_ix;
 
     int origin;
-    // tylko w regu³ach lokalnych
+    // tylko w regulach lokalnych
     E equivalent;
 
     bool is_an_origin;
@@ -150,7 +150,7 @@ public:
 #endif
         {}
 
-    // tworzy li¶æ
+    // tworzy lisc
     rule_holder(atom_type cat, E eq = E())
         :g_rule(),
          compiled_expr(),
@@ -303,10 +303,10 @@ public:
 
     bool check_rules();
 
-    //! Wypisuje regu³y parsera
+    //! Wypisuje reguly parsera
     /**
-     * Nie jest to format zgodny z pierwotnym zapisem regu³, na przyk³ad
-     * wyra¿enia atrybutywne s± wypisywanie w "kodzie maszynowym
+     * Nie jest to format zgodny z pierwotnym zapisem regul, na przyklad
+     * wyrazenia atrybutywne sa wypisywanie w "kodzie maszynowym
      */
     void print_rules(std::ostream& ostr, bool with_tree_specifications=false) const;
 
@@ -315,7 +315,7 @@ public:
 
     // vvv METODY POTRZEBNE DO ASTAR vvv
 
-    // znajduje mozliwych rodziców jedynaków
+    // znajduje mozliwych rodzicow jedynakow
     std::vector<rule_type> find_only_child_parent(const entry_type& symbol);
 
     // znajduje mozliwych lewych braci z rodzicami
@@ -324,11 +324,11 @@ public:
     // znajduje mozliwych prawych braci z rodzicami
     std::vector<std::pair<rule_type,entry_type> > find_right_sibling_with_parent(entry_type first_symbol);
 
-    // znajduje reguly binarne, których glowa jest dany wezel
+    // znajduje reguly binarne, ktorych glowa jest dany wezel
     std::vector< std::pair< rule_type, std::pair<entry_type,entry_type> > > split(entry_type parent_symbol);
 
-    // znajduje reguly unarne, których glowa jest dany wezel
-    // z tajemniczego powodu, je¶li definicja ponizszej funkcji by³a w .tpl nie chcia³o
+    // znajduje reguly unarne, ktorych glowa jest dany wezel
+    // z tajemniczego powodu, jesli definicja ponizszej funkcji byla w .tpl nie chcialo
     // sie kompilowac pod Visual C++
     std::vector<std::pair<rule_type,entry_type> > find_only_children(entry_type parent_entry)
     {
@@ -392,7 +392,7 @@ public:
 #endif
 
 private:
-    // zablokowany konstruktor kopiuj±cy
+    // zablokowany konstruktor kopiujacy
     tgbg_combinator(const tgbg_combinator&);
 
     bool with_decomposition_;
@@ -477,7 +477,7 @@ private:
     void compile_rule_(int rule_ix);
     void print_rule_(std::ostream& ostr, size_t rule_ix, bool with_tree_specifications) const;
 
-    // skrót "bid" oznacza parê symboli które po³±czyæ w jeden sztuczny symbol "<...!...>"
+    // skrot "bid" oznacza pare symboli ktore polaczyc w jeden sztuczny symbol "<...!...>"
 
     // miejsce pary symboli w regule
     struct bid_ref
@@ -485,9 +485,9 @@ private:
     typename list<rule_holder>::iterator rule_it;
     // indeks lewego symbolu w regule
     int symbol_ix;
-    // atrybuty, które trzeba przepchaæ do sztucznego symbolu
+    // atrybuty, ktore trzeba przepchac do sztucznego symbolu
     std::set<int> attrs;
-    // to samo dla extra-atrybutów
+    // to samo dla extra-atrybutow
     std::set<int> extra_attrs;
 
     bid_ref(
@@ -506,8 +506,8 @@ private:
     };
 
     // para symboli jest reprezentowana przez ((l,r),g), gdzie
-    // l - lewy symbol, r - prawy symbol, g - 0 lub 1 (który jest g³ówny)
-    // a zatem ((l,r),0) i ((l,r),1) to ró¿ne bid-y!
+    // l - lewy symbol, r - prawy symbol, g - 0 lub 1 (ktory jest glowny)
+    // a zatem ((l,r),0) i ((l,r),1) to rozne bid-y!
     typedef std::pair<std::pair<int, int>, int> bid_key;
 
     void gather_bids_(
