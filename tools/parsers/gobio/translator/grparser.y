@@ -13,7 +13,6 @@ int grparserlex()
 }
 
 
-
 void grparsererror(const char* s);
 
 GRuleList* grparser_all = NULL;
@@ -577,7 +576,6 @@ expr: RTOKEN_SETSCORE score_number
     $$ = new GRuleExpression(GRuleExpression::SETSCORE);
     $$->score = $2;
 }
-
 
 
 symbol_ref: RTOKEN_ATOM

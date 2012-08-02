@@ -107,8 +107,6 @@
 #define RTOKEN_SCORE 294
 
 
-
-
 #if ! defined (YYSTYPE) && ! defined (YYSTYPE_IS_DECLARED)
 // #line 22 "grparser.y"
 typedef union YYSTYPE {
@@ -135,6 +133,3 @@ typedef union YYSTYPE {
 #endif
 
 extern YYSTYPE grparserlval;
-
-
-

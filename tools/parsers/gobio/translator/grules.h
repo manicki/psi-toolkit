@@ -32,7 +32,7 @@ struct GRuleRightSymbolsSeq: public vector<GRuleRightSymbolAltsSeq*>
 
 struct GRuleRightSymbolAltsSeq
 {
-    string* atom;
+    std::string* atom;
     bool is_starred;
     bool is_optional;
     vector<GRuleRightSymbolsSeq*> alts;
@@ -43,14 +43,12 @@ struct GRuleRightSymbolAltsSeq
 };
 
 
-
-
 // ==================================================================
 
 struct GRuleTreeRecipePathNode
 {
-    string* category;
-    string* label;
+    std::string* category;
+    std::string* label;
 
     enum ESearchType
     {
@@ -71,9 +69,9 @@ typedef list<GRuleTreeRecipePathNode*> GRuleTreeRecipePath;
 
 struct GRuleTreeRecipe
 {
-    string* category;
-    string* label;
-    string* symbol;
+    std::string* category;
+    std::string* label;
+    std::string* symbol;
     int number;
     GRuleTreeRecipePath* path;
     list<GRuleTreeRecipe*>* subrecipes;
@@ -133,8 +131,8 @@ struct GRuleExpression
     EOperator expr_operator;
 
     int number;
-    string* atom;
-    string* attribute;
+    std::string* atom;
+    std::string* attribute;
     Lattice::Score score;
     GRuleTreeRecipe* tree_choice;
 
@@ -158,7 +156,7 @@ struct GRuleExpression
 
 struct GRule
 {
-    string* left_symbol;
+    std::string* left_symbol;
     GRuleRightSymbolsSeq* right_symbols;
     GRuleExpression* expr;
     GRuleExpression* extra_expr;

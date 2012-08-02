@@ -38,7 +38,6 @@ imoa_key key;
 %}
 
 
-
 %s firstnl
 %s remnl
 %s inrule
@@ -135,4 +134,3 @@ PLLETTER [a-ząćęłńóśźżA-ZĄĆĘŁŃÓŚŻ]
 <<EOF>>                         {BEGIN(INITIAL); yyterminate();}
 .               {BEGIN(INITIAL);return RTOKEN_ERROR;}
 %%
-
