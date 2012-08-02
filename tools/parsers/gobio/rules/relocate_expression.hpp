@@ -42,7 +42,7 @@ bool find_non_extras_assignments(const compiled_expression<T, S, 2>& expr);
 template<class T, class S>
 bool find_badindexes(const compiled_expression<T, S, 2>& expr, size_t nb_right_symbols);
 
-    
+
 template<class T, class S>
 bool is_extra_independent_on_symbol(
     boost::shared_ptr<compiled_expression<T, S, 2> > expr,

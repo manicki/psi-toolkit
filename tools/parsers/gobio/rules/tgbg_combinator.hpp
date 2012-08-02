@@ -53,10 +53,9 @@ HASH_WRAPPER_HASH_INTRO
 
         size_t operator()(const std::pair<std::pair<int, int>, int>& k) const
         {
-            return
-            HASH_WRAPPER_HASH_TRAITS<int>().operator()(k.first.first)
-            & HASH_WRAPPER_HASH_TRAITS<int>().operator()(k.first.second)
-            & HASH_WRAPPER_HASH_TRAITS<int>().operator()(k.second);
+            return HASH_WRAPPER_HASH_TRAITS<int>().operator()(k.first.first)
+                & HASH_WRAPPER_HASH_TRAITS<int>().operator()(k.first.second)
+                & HASH_WRAPPER_HASH_TRAITS<int>().operator()(k.second);
         }
 
 #ifdef __VS__
@@ -164,8 +163,9 @@ public:
          is_indexed(false),
          is_prehooked(false)
 #ifdef _T5_WITH_EXTSCORES
-            , is_extscore(false)
-            , extscore(0)
+            ,
+            is_extscore(false),
+            extscore(0)
 #endif
         {
         tree_specs.push_back(
@@ -188,8 +188,9 @@ public:
          is_indexed(false),
          is_prehooked(false)
 #ifdef _T5_WITH_EXTSCORES
-            , is_extscore(false)
-            , extscore(0)
+            ,
+            is_extscore(false),
+            extscore(0)
 #endif
         {
         tree_specs.push_back(ts);
@@ -240,7 +241,11 @@ public:
         {}
     };
 
-    std::pair<typename std::vector<rule_holder>::iterator,typename std::vector<rule_holder>::iterator> get_rules_iterator();
+    std::pair<
+        typename std::vector<rule_holder>::iterator,
+        typename std::vector<rule_holder>::iterator
+    > get_rules_iterator();
+
     std::vector<rule_type> combine_unary(const entry_type& entry);
     std::vector<rule_type> combine_binary(
     const entry_type& first_entry,
@@ -311,26 +316,27 @@ public:
     void print_rules(std::ostream& ostr, bool with_tree_specifications=false) const;
 
 
-
-
     // vvv METODY POTRZEBNE DO ASTAR vvv
 
     // znajduje mozliwych rodzicow jedynakow
     std::vector<rule_type> find_only_child_parent(const entry_type& symbol);
 
     // znajduje mozliwych lewych braci z rodzicami
-    std::vector<std::pair<rule_type,entry_type> > find_left_sibling_with_parent(entry_type second_symbol);
+    std::vector< std::pair<rule_type, entry_type> >
+        find_left_sibling_with_parent(entry_type second_symbol);
 
     // znajduje mozliwych prawych braci z rodzicami
-    std::vector<std::pair<rule_type,entry_type> > find_right_sibling_with_parent(entry_type first_symbol);
+    std::vector< std::pair<rule_type, entry_type> >
+        find_right_sibling_with_parent(entry_type first_symbol);
 
     // znajduje reguly binarne, ktorych glowa jest dany wezel
-    std::vector< std::pair< rule_type, std::pair<entry_type,entry_type> > > split(entry_type parent_symbol);
+    std::vector< std::pair< rule_type, std::pair<entry_type, entry_type> > >
+        split(entry_type parent_symbol);
 
     // znajduje reguly unarne, ktorych glowa jest dany wezel
     // z tajemniczego powodu, jesli definicja ponizszej funkcji byla w .tpl nie chcialo
     // sie kompilowac pod Visual C++
-    std::vector<std::pair<rule_type,entry_type> > find_only_children(entry_type parent_entry)
+    std::vector<std::pair<rule_type, entry_type> > find_only_children(entry_type parent_entry)
     {
     std::vector< std::pair< rule_type, entry_type > > r;
     int parent_symbol_id = parent_entry.get_cat();
@@ -514,8 +520,10 @@ private:
     typename list<rule_holder>::iterator rule_it,
     typename HashWrapper<bid_key, bid_info>::type& bids);
 
-    typename HashWrapper<typename tgbg_combinator<T,S,M,X,E>::bid_key, typename tgbg_combinator<T,S,M,X,E>::bid_info>::type::iterator
-    best_bid_(typename HashWrapper<bid_key, bid_info>::type& bids);
+    typename HashWrapper<
+        typename tgbg_combinator<T, S, M, X, E>::bid_key,
+        typename tgbg_combinator<T, S, M, X, E>::bid_info
+    >::type::iterator best_bid_(typename HashWrapper<bid_key, bid_info>::type& bids);
 
     int get_bid_symbol_(const bid_key& k);
 
@@ -600,9 +608,9 @@ private:
 #endif
 
     // klasa rzutujaca ten kombinator musi byc zaprzyjazniona
-    friend class tgbg_to_simple_cfg_projector<atom_type,S,M,X,E>;
-    friend class tgbg_to_tab_int_projector<atom_type,S,M,X,E>;
-    friend class tgbg_attribute_projector<atom_type,S,M,X,E>;
+    friend class tgbg_to_simple_cfg_projector<atom_type, S, M, X, E>;
+    friend class tgbg_to_tab_int_projector<atom_type, S, M, X, E>;
+    friend class tgbg_attribute_projector<atom_type, S, M, X, E>;
 
     BOOST_SERIALIZATION_SPLIT_MEMBER()
 };

@@ -14,14 +14,14 @@ class expression_runner
 public:
     struct runner_frame
     {
-	S score;
-	int chosen_tree_ix;
-	av_matrix<C, T>* lhs;
-	typename bare_av_matrix<T>::type* extra_lhs;
-	std::vector<const av_matrix<C, T>*> rhs;
-	std::vector<const typename bare_av_matrix<T>::type*> extra_rhs;
+    S score;
+    int chosen_tree_ix;
+    av_matrix<C, T>* lhs;
+    typename bare_av_matrix<T>::type* extra_lhs;
+    std::vector<const av_matrix<C, T>*> rhs;
+    std::vector<const typename bare_av_matrix<T>::type*> extra_rhs;
 
-	runner_frame():score(0),chosen_tree_ix(0),lhs(0), rhs(0) { }
+    runner_frame() : score(0), chosen_tree_ix(0), lhs(0), rhs(0) { }
     };
 
     expression_runner();
@@ -29,19 +29,19 @@ public:
     void clear();
 
     bool run(
-	compiled_expression<T, S, 2>& expr,
-	runner_frame& frame,
-	M& master,
-	X& semantics_machine);
-	
-	S get_score(compiled_expression<T, S, 2>& expr);
+    compiled_expression<T, S, 2>& expr,
+    runner_frame& frame,
+    M& master,
+    X& semantics_machine);
+
+    S get_score(compiled_expression<T, S, 2>& expr);
 
 private:
     std::stack<T> stack_;
 
     void check_stack_();
     bool check_hook_(int h, int q, int r, int& v);
-    
+
     T add_(T a, T b, M& master);
     T hooking(T a, T b, M& master);
 };

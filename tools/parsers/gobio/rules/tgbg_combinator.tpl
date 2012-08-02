@@ -39,7 +39,7 @@ public:
 
 
 template<class T, class S, class M, class X, class E>
-tgbg_combinator<T,S,M,X,E>::tgbg_combinator(M & master, bool with_decomposition):
+tgbg_combinator<T, S, M, X, E>::tgbg_combinator(M & master, bool with_decomposition):
     with_decomposition_(with_decomposition),
     master_(master),
     semantics_machine_(master_),
@@ -80,14 +80,14 @@ tgbg_combinator<T,S,M,X,E>::tgbg_combinator(M & master, bool with_decomposition)
 }
 
 template<class T, class S, class M, class X, class E>
-tgbg_combinator<T,S,M,X,E>::~tgbg_combinator()
+tgbg_combinator<T, S, M, X, E>::~tgbg_combinator()
 {
     for (unsigned int i=0;i<binary_rules_index_.size();++i)
     delete binary_rules_index_[i];
 }
 
 template<class T, class S, class M, class X, class E>
-void tgbg_combinator<T,S,M,X,E>::add_rules(std::istream& rules_stream)
+void tgbg_combinator<T, S, M, X, E>::add_rules(std::istream& rules_stream)
 {
     GRParser G;
 
@@ -111,7 +111,7 @@ void tgbg_combinator<T,S,M,X,E>::add_rules(std::istream& rules_stream)
 }
 
 template<class T, class S, class M, class X, class E>
-void tgbg_combinator<T,S,M,X,E>::add_rules(const std::string& filename)
+void tgbg_combinator<T, S, M, X, E>::add_rules(const std::string& filename)
 {
     std::ifstream fs(filename.c_str());
 
@@ -121,7 +121,7 @@ void tgbg_combinator<T,S,M,X,E>::add_rules(const std::string& filename)
 
 #ifdef _T5_WITH_EXTSCORES
 template<class T, class S, class M, class X, class E>
-void tgbg_combinator<T,S,M,X,E>::read_extscores(rule_score_reader<S>* rs_reader)
+void tgbg_combinator<T, S, M, X, E>::read_extscores(rule_score_reader<S>* rs_reader)
 {
 
 std::cerr << "Reading extscores..." << std::flush;
@@ -131,7 +131,7 @@ std::cerr << " SCORE READER IS EMPTY!" << std::endl;
         return;
     }
 
-    gen_ruledumper<atom_type,S,M,X,E> grd;
+    gen_ruledumper<atom_type, S, M, X, E> grd;
 
     std::pair<typename std::vector<rule_holder>::iterator,typename std::vector<rule_holder>::iterator> itp
         = get_rules_iterator();
@@ -166,7 +166,7 @@ std::cerr << " DONE" << std::endl;
 }
 
 template<class T, class S, class M, class X, class E>
-void tgbg_combinator<T,S,M,X,E>::apply_extscores_(
+void tgbg_combinator<T, S, M, X, E>::apply_extscores_(
     typename std::vector<rule_holder>::iterator it,
     typename rule_score_reader<S>::rule_scores_t& rst)
 {
@@ -202,7 +202,7 @@ void tgbg_combinator<T,S,M,X,E>::apply_extscores_(
 }
 
 template<class T, class S, class M, class X, class E>
-void tgbg_combinator<T,S,M,X,E>::try_using_extscore_(
+void tgbg_combinator<T, S, M, X, E>::try_using_extscore_(
     const rule_holder& rule,
     typename expression_runner_type::runner_frame& frame)
 {
@@ -214,28 +214,28 @@ void tgbg_combinator<T,S,M,X,E>::try_using_extscore_(
 
 //ZZZ
 template<class T, class S, class M, class X, class E>
-std::pair<typename std::vector<typename tgbg_combinator<T,S,M,X,E>::rule_holder>::iterator,typename std::vector<typename tgbg_combinator<T,S,M,X,E>::rule_holder>::iterator>
- tgbg_combinator<T,S,M,X,E>::get_rules_iterator()
+std::pair<typename std::vector<typename tgbg_combinator<T, S, M, X, E>::rule_holder>::iterator,typename std::vector<typename tgbg_combinator<T, S, M, X, E>::rule_holder>::iterator>
+ tgbg_combinator<T, S, M, X, E>::get_rules_iterator()
 {
 return std::pair<typename std::vector<rule_holder>::iterator,typename std::vector<rule_holder>::iterator>(rules_.begin(),rules_.end());
 }
 
 template<class T, class S, class M, class X, class E>
-void tgbg_combinator<T,S,M,X,E>::compile_all_rules()
+void tgbg_combinator<T, S, M, X, E>::compile_all_rules()
 {
     for (int i=0;i < (signed int)rules_.size();++i)
     compile_rule_(i);
 }
 
 template<class T, class S, class M, class X, class E>
-void tgbg_combinator<T,S,M,X,E>::index_all_rules()
+void tgbg_combinator<T, S, M, X, E>::index_all_rules()
 {
     for (int i=0;i < (signed int)rules_.size();++i)
     index_rule_(i);
 }
 
 template<class T, class S, class M, class X, class E>
-void clear_is_indexed_for_rule_holder_(typename tgbg_combinator<T,S,M,X,E>::rule_holder& rh)
+void clear_is_indexed_for_rule_holder_(typename tgbg_combinator<T, S, M, X, E>::rule_holder& rh)
 {
     rh.is_indexed = false;
 }
@@ -254,26 +254,26 @@ void clear_binary_index_element_(std::vector<int>*& bie)
 }
 
 template<class T, class S, class M, class X, class E>
-void tgbg_combinator<T,S,M,X,E>::clear_indexes()
+void tgbg_combinator<T, S, M, X, E>::clear_indexes()
 {
     std::for_each(
     rules_.begin(),
     rules_.end(),
-    clear_is_indexed_for_rule_holder_<T,S,M,X,E>);
+    clear_is_indexed_for_rule_holder_<T, S, M, X, E>);
 
     std::for_each(
     unary_rules_index_.begin(),
     unary_rules_index_.end(),
-    clear_unary_index_element_<T,S,M,X,E>);
+    clear_unary_index_element_<T, S, M, X, E>);
 
     std::for_each(
     binary_rules_index_.begin(),
     binary_rules_index_.end(),
-    clear_binary_index_element_<T,S,M,X,E>);
+    clear_binary_index_element_<T, S, M, X, E>);
 }
 
 template<class T, class S, class M, class X, class E>
-void tgbg_combinator<T,S,M,X,E>::binarize_all_rules()
+void tgbg_combinator<T, S, M, X, E>::binarize_all_rules()
 {
     typename HashWrapper<bid_key, bid_info>::type bids;
 
@@ -408,9 +408,9 @@ void tgbg_combinator<T,S,M,X,E>::binarize_all_rules()
 
     unsigned int nb_of_rules = 0;
     typename HashWrapper3<
-        compiled_expression<atom_type,S,2>,
+        compiled_expression<atom_type, S, 2>,
         int,
-        compiled_expression_hash_fun<atom_type,S,2> >::type bifs_hash;
+        compiled_expression_hash_fun<atom_type, S, 2> >::type bifs_hash;
 
 
 
@@ -433,7 +433,7 @@ void tgbg_combinator<T,S,M,X,E>::binarize_all_rules()
         assert(symbol_ix >= 0 && symbol_ix < (signed int)((*rule_it).rhs_symbols.size() - 1));
 
         // sprawdzenie, czy nie mozna jakichs filtrow nalozyc
-        std::vector<boost::shared_ptr<compiled_expression<atom_type,S,2> > > bifs
+        std::vector<boost::shared_ptr<compiled_expression<atom_type, S, 2> > > bifs
         = get_bifiltres(
             (*rule_it).compiled_expr,
             (*rule_it).rhs_symbols.size(),
@@ -497,7 +497,7 @@ void tgbg_combinator<T,S,M,X,E>::binarize_all_rules()
         // poprawiamy normalne atrybuty
 
         (*rule_it).compiled_expr.reset(
-        new compiled_expression<atom_type,S,2>(*(*rule_it).compiled_expr));
+        new compiled_expression<atom_type, S, 2>(*(*rule_it).compiled_expr));
         reindex_attributes(
         *(*rule_it).compiled_expr,
         symbol_ix + (1 - d),
@@ -538,7 +538,7 @@ void tgbg_combinator<T,S,M,X,E>::binarize_all_rules()
         if ((*rule_it).compiled_extra_expr)
         {
         (*rule_it).compiled_extra_expr.reset(
-            new compiled_expression<atom_type,S,2>(*(*rule_it).compiled_extra_expr));
+            new compiled_expression<atom_type, S, 2>(*(*rule_it).compiled_extra_expr));
         reindex_attributes(
             *(*rule_it).compiled_extra_expr,
             symbol_ix + (1 - d),
@@ -597,9 +597,9 @@ void tgbg_combinator<T,S,M,X,E>::binarize_all_rules()
 
     // badamy filtry
     typename HashWrapper3<
-        compiled_expression<atom_type,S,2>,
+        compiled_expression<atom_type, S, 2>,
         int,
-        compiled_expression_hash_fun<atom_type,S,2> >::type::iterator bifs_hash_it
+        compiled_expression_hash_fun<atom_type, S, 2> >::type::iterator bifs_hash_it
         = bifs_hash.begin();
 
     bool was_filtre_added = false;
@@ -618,7 +618,7 @@ void tgbg_combinator<T,S,M,X,E>::binarize_all_rules()
 
         was_filtre_added = true;
 
-        boost::shared_ptr<compiled_expression<atom_type,S,2> > f_expr
+        boost::shared_ptr<compiled_expression<atom_type, S, 2> > f_expr
             = paste_expressions_with_ifnjump<atom_type,S>(
             (*bifs_hash_it).first, *rules_[added_bi_rule_ix].compiled_expr);
 
@@ -640,7 +640,7 @@ void tgbg_combinator<T,S,M,X,E>::binarize_all_rules()
 }
 
 template<class T, class S, class M, class X, class E>
-void tgbg_combinator<T,S,M,X,E>::decompose_all_rules()
+void tgbg_combinator<T, S, M, X, E>::decompose_all_rules()
 {
     if (!with_decomposition_)
     return;
@@ -661,13 +661,13 @@ void tgbg_combinator<T,S,M,X,E>::decompose_all_rules()
 }
 
 template<class T, class S, class M, class X, class E>
-bool is_purgeable(const typename tgbg_combinator<T,S,M,X,E>::rule_holder& rh)
+bool is_purgeable(const typename tgbg_combinator<T, S, M, X, E>::rule_holder& rh)
 {
     return rh.is_an_origin;
 }
 
 template<class T, class S, class M, class X, class E>
-void tgbg_combinator<T,S,M,X,E>::purge_rules()
+void tgbg_combinator<T, S, M, X, E>::purge_rules()
 {
     clear_indexes();
 
@@ -675,7 +675,7 @@ void tgbg_combinator<T,S,M,X,E>::purge_rules()
     std::remove_if(
         rules_.begin(),
         rules_.end(),
-        is_purgeable<T,S,M,X,E>),
+        is_purgeable<T, S, M, X, E>),
     rules_.end());
 
     index_all_rules();
@@ -683,7 +683,7 @@ void tgbg_combinator<T,S,M,X,E>::purge_rules()
 }
 
 template<class T, class S, class M, class X, class E>
-int tgbg_combinator<T,S,M,X,E>::get_bid_symbol_(
+int tgbg_combinator<T, S, M, X, E>::get_bid_symbol_(
     const bid_key& k)
 {
     return symbol_reg_.get_id(
@@ -697,9 +697,9 @@ int tgbg_combinator<T,S,M,X,E>::get_bid_symbol_(
 }
 
 template<class T, class S, class M, class X, class E>
-typename HashWrapper<typename tgbg_combinator<T,S,M,X,E>::bid_key,
-                      typename tgbg_combinator<T,S,M,X,E>::bid_info>::type::iterator
-tgbg_combinator<T,S,M,X,E>::best_bid_(
+typename HashWrapper<typename tgbg_combinator<T, S, M, X, E>::bid_key,
+                      typename tgbg_combinator<T, S, M, X, E>::bid_info>::type::iterator
+tgbg_combinator<T, S, M, X, E>::best_bid_(
     typename HashWrapper<bid_key, bid_info>::type& bids)
 {
     int max_freq = -1L;
@@ -742,7 +742,7 @@ tgbg_combinator<T,S,M,X,E>::best_bid_(
 }
 
 template<class T, class S, class M, class X, class E>
-void tgbg_combinator<T,S,M,X,E>::remove_bid_ref_(
+void tgbg_combinator<T, S, M, X, E>::remove_bid_ref_(
     typename HashWrapper<
     bid_key,
     bid_info>::type& bids,
@@ -806,7 +806,7 @@ void tgbg_combinator<T,S,M,X,E>::remove_bid_ref_(
 }
 
 template<class T, class S, class M, class X, class E>
-void tgbg_combinator<T,S,M,X,E>::move_bid_ref_(
+void tgbg_combinator<T, S, M, X, E>::move_bid_ref_(
     typename HashWrapper<
     bid_key,
     bid_info>::type& bids,
@@ -851,7 +851,7 @@ void tgbg_combinator<T,S,M,X,E>::move_bid_ref_(
 }
 
 template<class T, class S, class M, class X, class E>
-void tgbg_combinator<T,S,M,X,E>::add_bid_(
+void tgbg_combinator<T, S, M, X, E>::add_bid_(
     typename HashWrapper<
     bid_key,
     bid_info>::type& bids,
@@ -900,7 +900,7 @@ void tgbg_combinator<T,S,M,X,E>::add_bid_(
 
 template<class T, class S, class M, class X, class E>
 boost::shared_ptr<compiled_expression<T, S, 2> >
-tgbg_combinator<T,S,M,X,E>::get_assignments_expression_(
+tgbg_combinator<T, S, M, X, E>::get_assignments_expression_(
     registrar<std::string>& attr_registrar,
     const std::string& prefix,
     const std::multiset<int>& attrs,
@@ -916,10 +916,10 @@ tgbg_combinator<T,S,M,X,E>::get_assignments_expression_(
     if (could_be_null && attrs.empty())
     {
     reserved_for_temps = already_reserved_for_temps;
-    return boost::shared_ptr<compiled_expression<atom_type,S,2> >();
+    return boost::shared_ptr<compiled_expression<atom_type, S, 2> >();
     }
 
-    boost::shared_ptr<compiled_expression<atom_type,S,2> > expr(new compiled_expression<atom_type,S,2>());
+    boost::shared_ptr<compiled_expression<atom_type, S, 2> > expr(new compiled_expression<atom_type, S, 2>());
 
     expr->push_instruction_0(gobio_opcodes::OPCODE_PUSH_TRUE);
 
@@ -950,7 +950,7 @@ tgbg_combinator<T,S,M,X,E>::get_assignments_expression_(
 }
 
 template<class T, class S, class M, class X, class E>
-int tgbg_combinator<T,S,M,X,E>::get_temp_attribute_(
+int tgbg_combinator<T, S, M, X, E>::get_temp_attribute_(
     registrar<std::string>& attr_registrar,
     const std::string& prefix,
     int ix)
@@ -961,7 +961,7 @@ int tgbg_combinator<T,S,M,X,E>::get_temp_attribute_(
 }
 
 template<class T, class S, class M, class X, class E>
-void tgbg_combinator<T,S,M,X,E>::get_attrs_(
+void tgbg_combinator<T, S, M, X, E>::get_attrs_(
     std::set<int>& s,
     const compiled_expression<T, S, 2>& expr,
     int symbol_ix)
@@ -976,7 +976,7 @@ void tgbg_combinator<T,S,M,X,E>::get_attrs_(
 }
 
 template<class T, class S, class M, class X, class E>
-void tgbg_combinator<T,S,M,X,E>::get_extra_attrs_(
+void tgbg_combinator<T, S, M, X, E>::get_extra_attrs_(
     std::set<int>& s,
     const compiled_expression<T, S, 2>& expr,
     int symbol_ix)
@@ -991,7 +991,7 @@ void tgbg_combinator<T,S,M,X,E>::get_extra_attrs_(
 }
 
 template<class T, class S, class M, class X, class E>
-void tgbg_combinator<T,S,M,X,E>::create_reindex_hash_(
+void tgbg_combinator<T, S, M, X, E>::create_reindex_hash_(
     registrar<std::string>& attr_registrar,
     const std::string& prefix,
     const std::multiset<int> & attrs_mset,
@@ -1017,8 +1017,8 @@ void tgbg_combinator<T,S,M,X,E>::create_reindex_hash_(
 
 
 template<class T, class S, class M, class X, class E>
-std::vector<typename tgbg_combinator<T,S,M,X,E>::rule_type>
-    tgbg_combinator<T,S,M,X,E>::combine_unary(
+std::vector<typename tgbg_combinator<T, S, M, X, E>::rule_type>
+    tgbg_combinator<T, S, M, X, E>::combine_unary(
     const entry_type& entry)
 {
     std::vector<rule_type> r;
@@ -1067,7 +1067,7 @@ std::vector<typename tgbg_combinator<T,S,M,X,E>::rule_type>
 }
 
 template<class T, class S, class M, class X, class E>
-bool tgbg_combinator<T,S,M,X,E>::could_be_final(const entry_type& entry)
+bool tgbg_combinator<T, S, M, X, E>::could_be_final(const entry_type& entry)
 {
     // odrzucamy symbole pomocnicze
     std::string symbol = symbol_reg_.get_obj(entry.get_cat());
@@ -1096,7 +1096,7 @@ bool tgbg_combinator<T,S,M,X,E>::could_be_final(const entry_type& entry)
 }
 
 template<class T, class S, class M, class X, class E>
-bool tgbg_combinator<T,S,M,X,E>::could_be_final_variant(
+bool tgbg_combinator<T, S, M, X, E>::could_be_final_variant(
     const entry_type& entry, const variant_type& variant)
 {
     if (final_hook_extra_expr_)
@@ -1122,13 +1122,13 @@ bool tgbg_combinator<T,S,M,X,E>::could_be_final_variant(
 }
 
 template<class T, class S, class M, class X, class E>
-bool tgbg_combinator<T,S,M,X,E>::is_lexical(const rule_type& rule) const
+bool tgbg_combinator<T, S, M, X, E>::is_lexical(const rule_type& rule) const
 {
     return rule.rule_ix_ < 0;
 }
 
 template<class T, class S, class M, class X, class E>
-boost::shared_ptr<tree_specification<T> > tgbg_combinator<T,S,M,X,E>::tree_spec(
+boost::shared_ptr<tree_specification<T> > tgbg_combinator<T, S, M, X, E>::tree_spec(
     const rule_type& rule, const std::vector<rule_holder>& local_rules)
 {
     assert(rule.rule_ix_ < (signed int)rules_.size());
@@ -1152,7 +1152,7 @@ boost::shared_ptr<tree_specification<T> > tgbg_combinator<T,S,M,X,E>::tree_spec(
 }
 
 template<class T, class S, class M, class X, class E>
-E tgbg_combinator<T,S,M,X,E>::equivalent(
+E tgbg_combinator<T, S, M, X, E>::equivalent(
     const rule_type& rule, const std::vector<rule_holder>& local_rules)
 {
     assert(rule.rule_ix_ < (signed int)rules_.size());
@@ -1175,19 +1175,19 @@ E tgbg_combinator<T,S,M,X,E>::equivalent(
 }
 
 template<class T, class S, class M, class X, class E>
-bool tgbg_combinator<T,S,M,X,E>::is_useful(const entry_type& entry) const
+bool tgbg_combinator<T, S, M, X, E>::is_useful(const entry_type& entry) const
 {
     return entry.get_cat() <= last_useful_symbol_id_;
 }
 
 template<class T, class S, class M, class X, class E>
-void tgbg_combinator<T,S,M,X,E>::clear_parser_caches()
+void tgbg_combinator<T, S, M, X, E>::clear_parser_caches()
 {
     runner_.clear();
 }
 
 template<class T, class S, class M, class X, class E>
-bool tgbg_combinator<T,S,M,X,E>::variant_combine_unary(
+bool tgbg_combinator<T, S, M, X, E>::variant_combine_unary(
     entry_type& super_entry,
     const entry_type& sub_entry,
     const variant_type& sub_variant,
@@ -1226,7 +1226,7 @@ bool tgbg_combinator<T,S,M,X,E>::variant_combine_unary(
 }
 
 template<class T, class S, class M, class X, class E>
-bool tgbg_combinator<T,S,M,X,E>::variant_combine_binary(
+bool tgbg_combinator<T, S, M, X, E>::variant_combine_binary(
     entry_type& super_entry,
     const entry_type& left_sub_entry,
     const entry_type& right_sub_entry,
@@ -1271,7 +1271,7 @@ bool tgbg_combinator<T,S,M,X,E>::variant_combine_binary(
 }
 
 template<class T, class S, class M, class X, class E>
-bool tgbg_combinator<T,S,M,X,E>::is_variant_independent(
+bool tgbg_combinator<T, S, M, X, E>::is_variant_independent(
     const rule_type& rule,
     int symbol_ix)
 {
@@ -1287,7 +1287,7 @@ bool tgbg_combinator<T,S,M,X,E>::is_variant_independent(
 
 
 template<class T, class S, class M, class X, class E>
-S tgbg_combinator<T,S,M,X,E>::get_preference(T syncat)
+S tgbg_combinator<T, S, M, X, E>::get_preference(T syncat)
 {
     if (preference_table_.count(syncat))
     return preference_table_[syncat];
@@ -1296,7 +1296,7 @@ S tgbg_combinator<T,S,M,X,E>::get_preference(T syncat)
 }
 
 template<class T, class S, class M, class X, class E>
-std::string tgbg_combinator<T,S,M,X,E>::get_option(const std::string& option_name) const
+std::string tgbg_combinator<T, S, M, X, E>::get_option(const std::string& option_name) const
 {
     if (options_.count(option_name))
     return (*options_.find(option_name)).second;
@@ -1305,13 +1305,13 @@ std::string tgbg_combinator<T,S,M,X,E>::get_option(const std::string& option_nam
 }
 
 template<class T, class S, class M, class X, class E>
-size_t tgbg_combinator<T,S,M,X,E>::get_nb_limits() const
+size_t tgbg_combinator<T, S, M, X, E>::get_nb_limits() const
 {
     return limits_.size();
 }
 
 template<class T, class S, class M, class X, class E>
-int tgbg_combinator<T,S,M,X,E>::get_limit_threshold(size_t limit_ix) const
+int tgbg_combinator<T, S, M, X, E>::get_limit_threshold(size_t limit_ix) const
 {
     assert(limit_ix < limits_.size());
 
@@ -1319,7 +1319,7 @@ int tgbg_combinator<T,S,M,X,E>::get_limit_threshold(size_t limit_ix) const
 }
 
 template<class T, class S, class M, class X, class E>
-S tgbg_combinator<T,S,M,X,E>::get_limit_min_score(size_t limit_ix) const
+S tgbg_combinator<T, S, M, X, E>::get_limit_min_score(size_t limit_ix) const
 {
     assert(limit_ix < limits_.size());
 
@@ -1327,7 +1327,7 @@ S tgbg_combinator<T,S,M,X,E>::get_limit_min_score(size_t limit_ix) const
 }
 
 template<class T, class S, class M, class X, class E>
-int tgbg_combinator<T,S,M,X,E>::get_limit_edges(int len) const
+int tgbg_combinator<T, S, M, X, E>::get_limit_edges(int len) const
 {
     return 1000/len;
     // switch (len) {
@@ -1346,8 +1346,8 @@ int tgbg_combinator<T,S,M,X,E>::get_limit_edges(int len) const
 }
 
 template<class T, class S, class M, class X, class E>
-std::vector<typename tgbg_combinator<T,S,M,X,E>::rule_type>
-    tgbg_combinator<T,S,M,X,E>::combine_binary(
+std::vector<typename tgbg_combinator<T, S, M, X, E>::rule_type>
+    tgbg_combinator<T, S, M, X, E>::combine_binary(
     const entry_type& first_entry,
     const entry_type& second_entry)
 {
@@ -1407,43 +1407,43 @@ std::vector<typename tgbg_combinator<T,S,M,X,E>::rule_type>
 }
 
 template<class T, class S, class M, class X, class E>
-bool tgbg_combinator<T,S,M,X,E>::are_rules_for_catprints(int catprint_a, int catprint_b) const
+bool tgbg_combinator<T, S, M, X, E>::are_rules_for_catprints(int catprint_a, int catprint_b) const
 {
     return binary_rules_index_[catprint_a * nb_indexed_symbols_ + catprint_b] != 0;
 }
 
 template<class T, class S, class M, class X, class E>
-registrar<std::string>& tgbg_combinator<T,S,M,X,E>::get_attribute_registrar()
+registrar<std::string>& tgbg_combinator<T, S, M, X, E>::get_attribute_registrar()
 {
     return attribute_reg_;
 }
 
 template<class T, class S, class M, class X, class E>
-registrar<std::string>& tgbg_combinator<T,S,M,X,E>::get_extra_attribute_registrar()
+registrar<std::string>& tgbg_combinator<T, S, M, X, E>::get_extra_attribute_registrar()
 {
     return extra_attribute_reg_;
 }
 
 template<class T, class S, class M, class X, class E>
-registrar<std::string>& tgbg_combinator<T,S,M,X,E>::get_symbol_registrar()
+registrar<std::string>& tgbg_combinator<T, S, M, X, E>::get_symbol_registrar()
 {
     return symbol_reg_;
 }
 
 template<class T, class S, class M, class X, class E>
-M& tgbg_combinator<T,S,M,X,E>::get_master()
+M& tgbg_combinator<T, S, M, X, E>::get_master()
 {
     return master_;
 }
 
 template<class T, class S, class M, class X, class E>
-X& tgbg_combinator<T,S,M,X,E>::get_semantics_machine()
+X& tgbg_combinator<T, S, M, X, E>::get_semantics_machine()
 {
     return semantics_machine_;
 }
 
 template<class T, class S, class M, class X, class E>
-bool tgbg_combinator<T,S,M,X,E>::check_rules()
+bool tgbg_combinator<T, S, M, X, E>::check_rules()
 {
     for (size_t i = 0; i < rules_.size(); ++i)
     {
@@ -1515,7 +1515,7 @@ bool tgbg_combinator<T,S,M,X,E>::check_rules()
 
 
 template<class T, class S, class M, class X, class E>
-void tgbg_combinator<T,S,M,X,E>::print_rules(std::ostream& ostr, bool with_tree_specifications) const
+void tgbg_combinator<T, S, M, X, E>::print_rules(std::ostream& ostr, bool with_tree_specifications) const
 {
     for (size_t i = 0; i < rules_.size(); ++i)
     {
@@ -1525,7 +1525,7 @@ void tgbg_combinator<T,S,M,X,E>::print_rules(std::ostream& ostr, bool with_tree_
 }
 
 template<class T, class S, class M, class X, class E>
-void tgbg_combinator<T,S,M,X,E>::print_rule_(
+void tgbg_combinator<T, S, M, X, E>::print_rule_(
     std::ostream& ostr,
     size_t rule_ix,
     bool with_tree_specifications) const
@@ -1585,7 +1585,7 @@ void tgbg_combinator<T,S,M,X,E>::print_rule_(
 }
 
 template<class T, class S, class M, class X, class E>
-void tgbg_combinator<T,S,M,X,E>::add_rule_(GRule* g_rule)
+void tgbg_combinator<T, S, M, X, E>::add_rule_(GRule* g_rule)
 {
     assert(g_rule);
 
@@ -1602,7 +1602,7 @@ void tgbg_combinator<T,S,M,X,E>::add_rule_(GRule* g_rule)
 }
 
 template<class T, class S, class M, class X, class E>
-void tgbg_combinator<T,S,M,X,E>::index_rule_(int rule_ix)
+void tgbg_combinator<T, S, M, X, E>::index_rule_(int rule_ix)
 {
     assert(rule_ix >= 0 && rule_ix < (signed int)rules_.size());
 
@@ -1632,7 +1632,7 @@ void tgbg_combinator<T,S,M,X,E>::index_rule_(int rule_ix)
 }
 
 template<class T, class S, class M, class X, class E>
-void tgbg_combinator<T,S,M,X,E>::index_unary_rule_(int rule_ix)
+void tgbg_combinator<T, S, M, X, E>::index_unary_rule_(int rule_ix)
 {
     rule_holder& rh = rules_[rule_ix];
 
@@ -1643,7 +1643,7 @@ void tgbg_combinator<T,S,M,X,E>::index_unary_rule_(int rule_ix)
 }
 
 template<class T, class S, class M, class X, class E>
-void tgbg_combinator<T,S,M,X,E>::index_binary_rule_(int rule_ix)
+void tgbg_combinator<T, S, M, X, E>::index_binary_rule_(int rule_ix)
 {
     rule_holder& rh = rules_[rule_ix];
 
@@ -1664,7 +1664,7 @@ void tgbg_combinator<T,S,M,X,E>::index_binary_rule_(int rule_ix)
 }
 
 template<class T, class S, class M, class X, class E>
-void tgbg_combinator<T,S,M,X,E>::resize_binary_rules_index_(int sid)
+void tgbg_combinator<T, S, M, X, E>::resize_binary_rules_index_(int sid)
 {
     int new_nb_indexed_symbols = (3*(sid+1))/2+2;
 
@@ -1686,7 +1686,7 @@ void tgbg_combinator<T,S,M,X,E>::resize_binary_rules_index_(int sid)
 }
 
 template<class T, class S, class M, class X, class E>
-void tgbg_combinator<T,S,M,X,E>::check_special_rule_(int rule_ix)
+void tgbg_combinator<T, S, M, X, E>::check_special_rule_(int rule_ix)
 {
     assert(pre_hook_symbol_id_ >= 0);
 
@@ -1699,7 +1699,7 @@ void tgbg_combinator<T,S,M,X,E>::check_special_rule_(int rule_ix)
     compile_rule_(rule_ix);
 
     pre_hook_binary_expr_.reset(
-        new compiled_expression<atom_type,S,2>(
+        new compiled_expression<atom_type, S, 2>(
         *rh.compiled_expr));
 
     if (pre_hook_binary_expr_)
@@ -1715,7 +1715,7 @@ void tgbg_combinator<T,S,M,X,E>::check_special_rule_(int rule_ix)
         compile_rule_(rule_ix);
 
         pre_hook_unary_expr_.reset(
-        new compiled_expression<atom_type,S,2>(
+        new compiled_expression<atom_type, S, 2>(
             *rh.compiled_expr));
 
         if (pre_hook_unary_expr_)
@@ -1728,12 +1728,12 @@ void tgbg_combinator<T,S,M,X,E>::check_special_rule_(int rule_ix)
         compile_rule_(rule_ix);
 
         final_hook_expr_.reset(
-        new compiled_expression<atom_type,S,2>(
+        new compiled_expression<atom_type, S, 2>(
             *rh.compiled_expr));
 
         if (rh.compiled_extra_expr)
         final_hook_extra_expr_.reset(
-            new compiled_expression<atom_type,S,2>(
+            new compiled_expression<atom_type, S, 2>(
             *rh.compiled_extra_expr));
 
         rh.is_an_origin = true;
@@ -1742,7 +1742,7 @@ void tgbg_combinator<T,S,M,X,E>::check_special_rule_(int rule_ix)
     {
         compile_rule_(rule_ix);
 
-        boost::shared_ptr<compiled_expression<atom_type,S,2> > ce
+        boost::shared_ptr<compiled_expression<atom_type, S, 2> > ce
         = rules_[rule_ix].compiled_expr;
 
         assert(ce);
@@ -1774,7 +1774,7 @@ void tgbg_combinator<T,S,M,X,E>::check_special_rule_(int rule_ix)
     {
         compile_rule_(rule_ix);
 
-        boost::shared_ptr<compiled_expression<atom_type,S,2> > ce
+        boost::shared_ptr<compiled_expression<atom_type, S, 2> > ce
         = rules_[rule_ix].compiled_expr;
 
         assert(ce);
@@ -1799,7 +1799,7 @@ void tgbg_combinator<T,S,M,X,E>::check_special_rule_(int rule_ix)
     {
         compile_rule_(rule_ix);
 
-        boost::shared_ptr<compiled_expression<atom_type,S,2> > ce
+        boost::shared_ptr<compiled_expression<atom_type, S, 2> > ce
         = rules_[rule_ix].compiled_expr;
 
         assert(ce);
@@ -1824,7 +1824,7 @@ void tgbg_combinator<T,S,M,X,E>::check_special_rule_(int rule_ix)
     {
         compile_rule_(rule_ix);
 
-        boost::shared_ptr<compiled_expression<atom_type,S,2> > ce
+        boost::shared_ptr<compiled_expression<atom_type, S, 2> > ce
         = rules_[rule_ix].compiled_expr;
 
         assert(ce);
@@ -1858,13 +1858,13 @@ void tgbg_combinator<T,S,M,X,E>::check_special_rule_(int rule_ix)
 }
 
 template<class T, class S, class M, class X, class E>
-void tgbg_combinator<T,S,M,X,E>::read_score_encoded_in_special_rule_(int rule_ix, S& encoded_value)
+void tgbg_combinator<T, S, M, X, E>::read_score_encoded_in_special_rule_(int rule_ix, S& encoded_value)
 {
     rule_holder& rh = rules_[rule_ix];
 
     compile_rule_(rule_ix);
 
-    boost::shared_ptr<compiled_expression<atom_type,S,2> > ce
+    boost::shared_ptr<compiled_expression<atom_type, S, 2> > ce
     = rules_[rule_ix].compiled_expr;
 
     assert(ce);
@@ -1879,7 +1879,7 @@ void tgbg_combinator<T,S,M,X,E>::read_score_encoded_in_special_rule_(int rule_ix
 }
 
 template<class T, class S, class M, class X, class E>
-void tgbg_combinator<T,S,M,X,E>::apply_hooks_(int rule_ix)
+void tgbg_combinator<T, S, M, X, E>::apply_hooks_(int rule_ix)
 {
     rule_holder & rh = rules_[rule_ix];
 
@@ -1887,20 +1887,20 @@ void tgbg_combinator<T,S,M,X,E>::apply_hooks_(int rule_ix)
     {
     if (pre_hook_binary_expr_ && rh.rhs_symbols.size() == 2)
     {
-        boost::shared_ptr<compiled_expression<atom_type,S,2> > t = rh.compiled_expr;
+        boost::shared_ptr<compiled_expression<atom_type, S, 2> > t = rh.compiled_expr;
 
         int delta = pre_hook_binary_expr_->first_available_address();
-        rh.compiled_expr.reset(new compiled_expression<atom_type,S,2>(*pre_hook_binary_expr_));
+        rh.compiled_expr.reset(new compiled_expression<atom_type, S, 2>(*pre_hook_binary_expr_));
         rh.compiled_expr->append(*t);
         relocate_jumps(*rh.compiled_expr, delta, delta);
         rh.is_prehooked = true;
     }
     else if (pre_hook_unary_expr_ && rh.rhs_symbols.size() == 1)
     {
-        boost::shared_ptr<compiled_expression<atom_type,S,2> > t = rh.compiled_expr;
+        boost::shared_ptr<compiled_expression<atom_type, S, 2> > t = rh.compiled_expr;
 
         int delta = pre_hook_unary_expr_->first_available_address();
-        rh.compiled_expr.reset(new compiled_expression<atom_type,S,2>(*pre_hook_unary_expr_));
+        rh.compiled_expr.reset(new compiled_expression<atom_type, S, 2>(*pre_hook_unary_expr_));
         rh.compiled_expr->append(*t);
         relocate_jumps(*rh.compiled_expr, delta, delta);
         rh.is_prehooked = true;
@@ -1909,7 +1909,7 @@ void tgbg_combinator<T,S,M,X,E>::apply_hooks_(int rule_ix)
 }
 
 template<class T, class S, class M, class X, class E>
-void tgbg_combinator<T,S,M,X,E>::linearize_rule_(int rule_ix)
+void tgbg_combinator<T, S, M, X, E>::linearize_rule_(int rule_ix)
 {
     assert(rule_ix >= 0 && rule_ix < (signed int)rules_.size());
 
@@ -1970,8 +1970,8 @@ void tgbg_combinator<T,S,M,X,E>::linearize_rule_(int rule_ix)
 }
 
 template<class T, class S, class M, class X, class E>
-std::vector<typename tgbg_combinator<T,S,M,X,E>::rule_holder>
-          tgbg_combinator<T,S,M,X,E>::linearize_seq_(
+std::vector<typename tgbg_combinator<T, S, M, X, E>::rule_holder>
+          tgbg_combinator<T, S, M, X, E>::linearize_seq_(
     const std::vector<rule_holder>& v,
     const GRuleRightSymbolsSeq* seq)
 {
@@ -1986,8 +1986,8 @@ std::vector<typename tgbg_combinator<T,S,M,X,E>::rule_holder>
 }
 
 template<class T, class S, class M, class X, class E>
-std::vector<typename tgbg_combinator<T,S,M,X,E>::rule_holder>
-          tgbg_combinator<T,S,M,X,E>::linearize_alt_(
+std::vector<typename tgbg_combinator<T, S, M, X, E>::rule_holder>
+          tgbg_combinator<T, S, M, X, E>::linearize_alt_(
     const std::vector<rule_holder>& v,
     const GRuleRightSymbolAltsSeq* alt)
 {
@@ -2056,13 +2056,13 @@ std::vector<typename tgbg_combinator<T,S,M,X,E>::rule_holder>
 }
 
 template<class T, class S, class M, class X, class E>
-void tgbg_combinator<T,S,M,X,E>::decompose_rule_(int rule_ix)
+void tgbg_combinator<T, S, M, X, E>::decompose_rule_(int rule_ix)
 {
     if (rules_[rule_ix].compiled_expr)
     {
-    std::vector<boost::shared_ptr<compiled_expression<atom_type,S,2> > > parts;
+    std::vector<boost::shared_ptr<compiled_expression<atom_type, S, 2> > > parts;
 
-    boost::shared_ptr<compiled_expression<atom_type,S,2> > new_expr = decompose_expression(
+    boost::shared_ptr<compiled_expression<atom_type, S, 2> > new_expr = decompose_expression(
         rules_[rule_ix].compiled_expr,
         rules_[rule_ix].rhs_symbols.size(),
         rules_[rule_ix].starred_ix,
@@ -2075,7 +2075,7 @@ void tgbg_combinator<T,S,M,X,E>::decompose_rule_(int rule_ix)
 
     for (size_t p = 0; p < parts.size(); ++p)
     {
-        boost::shared_ptr<compiled_expression<atom_type,S,2> > expr
+        boost::shared_ptr<compiled_expression<atom_type, S, 2> > expr
         = parts[p];
 
         if (expr)
@@ -2091,7 +2091,7 @@ void tgbg_combinator<T,S,M,X,E>::decompose_rule_(int rule_ix)
             gobio_opcodes::OPCODE_SETTOP_SUBVAR);
 
         if (!filtres_hash_.count(
-               std::pair<int, compiled_expression<atom_type,S,2> >(rhs_smbs[p],*expr)))
+               std::pair<int, compiled_expression<atom_type, S, 2> >(rhs_smbs[p],*expr)))
         {
             rules_.push_back(rule_holder());
             rules_.back().compiled_expr = parts[p];
@@ -2107,13 +2107,13 @@ void tgbg_combinator<T,S,M,X,E>::decompose_rule_(int rule_ix)
             = rhs_smbs[p];
             rules_.back().starred_ix = 0;
 
-            filtres_hash_[std::pair<int, compiled_expression<atom_type,S,2> >
+            filtres_hash_[std::pair<int, compiled_expression<atom_type, S, 2> >
                   (rhs_smbs[p],*expr)]
             = rules_.back().lhs_symbol;
         }
 
         rhs_smbs[p] = filtres_hash_[
-            std::pair<int, compiled_expression<atom_type,S,2> >
+            std::pair<int, compiled_expression<atom_type, S, 2> >
             (rhs_smbs[p],*expr)];
         }
     }
@@ -2133,16 +2133,16 @@ void tgbg_combinator<T,S,M,X,E>::decompose_rule_(int rule_ix)
 }
 
 template<class T, class S, class M, class X, class E>
-void tgbg_combinator<T,S,M,X,E>::relocate_grule_(
+void tgbg_combinator<T, S, M, X, E>::relocate_grule_(
     rule_holder& rh, int begin_attr_ix, int end_attr_ix, bool delete_star)
 {
-    rh.compiled_expr.reset(new compiled_expression<atom_type,S,2>(*rh.compiled_expr));
+    rh.compiled_expr.reset(new compiled_expression<atom_type, S, 2>(*rh.compiled_expr));
     relocate_expression(*rh.compiled_expr, begin_attr_ix, end_attr_ix);
 
     if (rh.compiled_extra_expr)
     {
     rh.compiled_extra_expr.reset(
-        new compiled_expression<atom_type,S,2>(*rh.compiled_extra_expr));
+        new compiled_expression<atom_type, S, 2>(*rh.compiled_extra_expr));
     relocate_expression(*rh.compiled_extra_expr, begin_attr_ix, end_attr_ix);
     }
 
@@ -2166,7 +2166,7 @@ void tgbg_combinator<T,S,M,X,E>::relocate_grule_(
 }
 
 template<class T, class S, class M, class X, class E>
-void tgbg_combinator<T,S,M,X,E>::compile_rule_(int rule_ix)
+void tgbg_combinator<T, S, M, X, E>::compile_rule_(int rule_ix)
 {
     assert(rule_ix < (signed int)rules_.size());
 
@@ -2208,7 +2208,7 @@ void tgbg_combinator<T,S,M,X,E>::compile_rule_(int rule_ix)
     {
         assert(rh.g_rule);
 
-        rh.compiled_expr.reset(new compiled_expression<atom_type,S,2>());
+        rh.compiled_expr.reset(new compiled_expression<atom_type, S, 2>());
 
         assert(starred_ix >= -1L);
         rh.starred_ix = starred_ix;
@@ -2235,7 +2235,7 @@ void tgbg_combinator<T,S,M,X,E>::compile_rule_(int rule_ix)
         {
         assert(!rh.compiled_extra_expr);
 
-        rh.compiled_extra_expr.reset(new compiled_expression<atom_type,S,2>());
+        rh.compiled_extra_expr.reset(new compiled_expression<atom_type, S, 2>());
 
         std::vector<boost::shared_ptr<tree_specification<atom_type> > > tree_specs_stub;
         tree_specs_stub.push_back(boost::shared_ptr<tree_specification<atom_type> >());
@@ -2267,7 +2267,7 @@ void tgbg_combinator<T,S,M,X,E>::compile_rule_(int rule_ix)
 }
 
 template<class T, class S, class M, class X, class E>
-void tgbg_combinator<T,S,M,X,E>::gather_bids_(
+void tgbg_combinator<T, S, M, X, E>::gather_bids_(
     typename list<rule_holder>::iterator rule_it,
     typename HashWrapper<
     bid_key,
@@ -2282,7 +2282,7 @@ void tgbg_combinator<T,S,M,X,E>::gather_bids_(
 }
 
 template<class T, class S, class M, class X, class E>
-int tgbg_combinator<T,S,M,X,E>::get_filtre_id_(int symbol_ix, int filtre_ix)
+int tgbg_combinator<T, S, M, X, E>::get_filtre_id_(int symbol_ix, int filtre_ix)
 {
     std::ostringstream ostr;
     ostr << filtre_ix;
@@ -2296,7 +2296,7 @@ int tgbg_combinator<T,S,M,X,E>::get_filtre_id_(int symbol_ix, int filtre_ix)
 }
 
 template<class T, class S, class M, class X, class E> template<class Archive>
-void tgbg_combinator<T,S,M,X,E>::save(Archive & ar, const unsigned int /*version*/) const
+void tgbg_combinator<T, S, M, X, E>::save(Archive & ar, const unsigned int /*version*/) const
 {
     ar & attribute_reg_;
     ar & extra_attribute_reg_;
@@ -2332,7 +2332,7 @@ void tgbg_combinator<T,S,M,X,E>::save(Archive & ar, const unsigned int /*version
 }
 
 template<class T, class S, class M, class X, class E> template<class Archive>
-void tgbg_combinator<T,S,M,X,E>::load(Archive & ar, const unsigned int /*version*/)
+void tgbg_combinator<T, S, M, X, E>::load(Archive & ar, const unsigned int /*version*/)
 {
     ar & attribute_reg_;
     ar & extra_attribute_reg_;
@@ -2388,14 +2388,14 @@ void tgbg_combinator<T,S,M,X,E>::load(Archive & ar, const unsigned int /*version
  */
 
 template<class T, class S, class M, class X, class E>
-std::vector<typename tgbg_combinator<T,S,M,X,E>::rule_type>
-tgbg_combinator<T,S,M,X,E>::find_only_child_parent(const entry_type& symbol)
+std::vector<typename tgbg_combinator<T, S, M, X, E>::rule_type>
+tgbg_combinator<T, S, M, X, E>::find_only_child_parent(const entry_type& symbol)
 {
     return combine_unary(symbol);
 }
 
 template<class T, class S, class M, class X, class E>
-std::vector< std::pair<typename tgbg_combinator<T,S,M,X,E>::rule_type,typename tgbg_combinator<T,S,M,X,E>::entry_type> > tgbg_combinator<T,S,M,X,E>::find_left_sibling_with_parent(typename tgbg_combinator<T,S,M,X,E>::entry_type second_entry)
+std::vector< std::pair<typename tgbg_combinator<T, S, M, X, E>::rule_type,typename tgbg_combinator<T, S, M, X, E>::entry_type> > tgbg_combinator<T, S, M, X, E>::find_left_sibling_with_parent(typename tgbg_combinator<T, S, M, X, E>::entry_type second_entry)
 {
     std::vector< std::pair< rule_type, entry_type > > r;
     int second_symbol_id = second_entry.get_cat();
@@ -2442,7 +2442,7 @@ std::vector< std::pair<typename tgbg_combinator<T,S,M,X,E>::rule_type,typename t
 }
 
 template<class T, class S, class M, class X, class E>
-std::vector< std::pair<typename tgbg_combinator<T,S,M,X,E>::rule_type,typename tgbg_combinator<T,S,M,X,E>::entry_type> > tgbg_combinator<T,S,M,X,E>::find_right_sibling_with_parent(typename tgbg_combinator<T,S,M,X,E>::entry_type first_entry)
+std::vector< std::pair<typename tgbg_combinator<T, S, M, X, E>::rule_type,typename tgbg_combinator<T, S, M, X, E>::entry_type> > tgbg_combinator<T, S, M, X, E>::find_right_sibling_with_parent(typename tgbg_combinator<T, S, M, X, E>::entry_type first_entry)
 {
     std::vector< std::pair< rule_type, entry_type > > r;
     int first_symbol_id = first_entry.get_cat();
@@ -2489,7 +2489,7 @@ std::vector< std::pair<typename tgbg_combinator<T,S,M,X,E>::rule_type,typename t
 }
 
 template<class T, class S, class M, class X, class E>
-std::vector< std::pair< typename tgbg_combinator<T,S,M,X,E>::rule_type, std::pair<typename tgbg_combinator<T,S,M,X,E>::entry_type,typename tgbg_combinator<T,S,M,X,E>::entry_type> > > tgbg_combinator<T,S,M,X,E>::split(typename tgbg_combinator<T,S,M,X,E>::entry_type parent_entry)
+std::vector< std::pair< typename tgbg_combinator<T, S, M, X, E>::rule_type, std::pair<typename tgbg_combinator<T, S, M, X, E>::entry_type,typename tgbg_combinator<T, S, M, X, E>::entry_type> > > tgbg_combinator<T, S, M, X, E>::split(typename tgbg_combinator<T, S, M, X, E>::entry_type parent_entry)
 {
     std::vector< std::pair< rule_type, std::pair< entry_type, entry_type > > > r;
     int parent_symbol_id = parent_entry.get_cat();
@@ -2536,12 +2536,12 @@ std::vector< std::pair< typename tgbg_combinator<T,S,M,X,E>::rule_type, std::pai
 }
 
 template<class T, class S, class M, class X, class E>
-void tgbg_combinator<T,S,M,X,E>::set_root(typename tgbg_combinator<T,S,M,X,E>::entry_type state) {
+void tgbg_combinator<T, S, M, X, E>::set_root(typename tgbg_combinator<T, S, M, X, E>::entry_type state) {
     // W TGBG JEST NIEPOTRZEBNA. KORZEN BRANY Z PLIKU WEJSCIOWEGO.
 }
 
 template<class T, class S, class M, class X, class E>
-bool tgbg_combinator<T,S,M,X,E>::is_root(typename tgbg_combinator<T,S,M,X,E>::entry_type state) {
+bool tgbg_combinator<T, S, M, X, E>::is_root(typename tgbg_combinator<T, S, M, X, E>::entry_type state) {
 /*
 #if USE_ASTAR_IN_PARSER
     return (state.get_cat() == symbol_reg_.get_id("__ROOT__") || state.get_cat() == symbol_reg_.get_id("simpx"));
