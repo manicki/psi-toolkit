@@ -1850,7 +1850,7 @@ void tgbg_combinator<T, S, M, X, E>::check_special_rule_(int rule_ix)
         }
         }
 
-        assert(limits_.size() > 0);
+        assert(!limits_.empty());
 
         rh.is_an_origin = true;
     }

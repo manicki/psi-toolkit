@@ -26,7 +26,7 @@ size_t grule_alt_length(const GRuleRightSymbolAltsSeq* alt)
     for (size_t i = 0; i < alt->alts.size(); ++i)
     {
     const size_t alen = grule_seq_length((alt->alts)[i]);
-    if(alen > m)
+    if (alen > m)
         m = alen;
     }
 

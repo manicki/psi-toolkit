@@ -33,7 +33,7 @@ void right_symbol_alts_seq_to_hash(
 {
     if (a_symbol_alts_seq.atom)
     {
-    assert(a_symbol_alts_seq.alts.size() == 0);
+    assert(a_symbol_alts_seq.alts.empty());
 
     int symbol_id = symbol_registrar.get_id(*(a_symbol_alts_seq.atom));
     int symbol_no = 0;

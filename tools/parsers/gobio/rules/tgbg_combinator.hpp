@@ -111,8 +111,8 @@ public:
     {
     boost::shared_ptr<GRule> g_rule;
 
-    boost::shared_ptr<compiled_expression<atom_type,S,2> > compiled_expr;
-    boost::shared_ptr<compiled_expression<atom_type,S,2> > compiled_extra_expr;
+    boost::shared_ptr<compiled_expression<atom_type, S, 2> > compiled_expr;
+    boost::shared_ptr<compiled_expression<atom_type, S, 2> > compiled_extra_expr;
     std::vector<bool> extra_independence;
     std::vector<boost::shared_ptr<tree_specification<atom_type> > > tree_specs;
 
@@ -129,72 +129,78 @@ public:
     bool is_prehooked;
 
 #ifdef _T5_WITH_EXTSCORES
-        bool is_extscore;
-        S extscore;
+    bool is_extscore;
+    S extscore;
 #endif
 
-    rule_holder():g_rule(),
-              compiled_expr(),
-              compiled_extra_expr(),
-              tree_specs(),
-              lhs_symbol(-1L),
-              starred_ix(-1L),
-              origin(0),
-              is_an_origin(false),
-              is_indexed(false),
-              is_prehooked(false)
+    rule_holder() :
+        g_rule(),
+        compiled_expr(),
+        compiled_extra_expr(),
+        tree_specs(),
+        lhs_symbol(-1L),
+        starred_ix(-1L),
+        origin(0),
+        is_an_origin(false),
+        is_indexed(false),
+        is_prehooked(false)
 #ifdef _T5_WITH_EXTSCORES
-                     , is_extscore(false)
-                     , extscore(0)
+        ,
+        is_extscore(false),
+        extscore(0)
 #endif
-        {}
+    { }
 
     // tworzy lisc
-    rule_holder(atom_type cat, E eq = E())
-        :g_rule(),
-         compiled_expr(),
-         compiled_extra_expr(),
-         tree_specs(),
-         lhs_symbol(-1L),
-         starred_ix(-1L),
-         origin(0),
-         equivalent(eq),
-         is_an_origin(false),
-         is_indexed(false),
-         is_prehooked(false)
+    rule_holder(atom_type cat, E eq = E()) :
+        g_rule(),
+        compiled_expr(),
+        compiled_extra_expr(),
+        tree_specs(),
+        lhs_symbol(-1L),
+        starred_ix(-1L),
+        origin(0),
+        equivalent(eq),
+        is_an_origin(false),
+        is_indexed(false),
+        is_prehooked(false)
 #ifdef _T5_WITH_EXTSCORES
-            ,
-            is_extscore(false),
-            extscore(0)
+        ,
+        is_extscore(false),
+        extscore(0)
 #endif
-        {
+    {
         tree_specs.push_back(
             boost::shared_ptr<tree_specification<atom_type> >(
-            new tree_specification<atom_type>(
-                boost::shared_ptr<tree_specification_root<atom_type> >(
-                new category_root<atom_type>(cat)))));
-        }
+                new tree_specification<atom_type>(
+                    boost::shared_ptr< tree_specification_root<atom_type> >(
+                        new category_root<atom_type>(cat)
+                    )
+                )
+            )
+        );
+    }
 
-    rule_holder(boost::shared_ptr<tree_specification<atom_type> > ts, E eq = E())
-        :g_rule(),
-         compiled_expr(),
-         compiled_extra_expr(),
-         tree_specs(),
-         lhs_symbol(-1L),
-         starred_ix(-1L),
-         origin(0),
-         equivalent(eq),
-         is_an_origin(false),
-         is_indexed(false),
-         is_prehooked(false)
+    rule_holder(boost::shared_ptr<tree_specification<atom_type> > ts, E eq = E()) :
+        g_rule(),
+        compiled_expr(),
+        compiled_extra_expr(),
+        tree_specs(),
+        lhs_symbol(-1L),
+        starred_ix(-1L),
+        origin(0),
+        equivalent(eq),
+        is_an_origin(false),
+        is_indexed(false),
+        is_prehooked(false)
 #ifdef _T5_WITH_EXTSCORES
-            ,
-            is_extscore(false),
-            extscore(0)
+        ,
+        is_extscore(false),
+        extscore(0)
 #endif
-        {
+    {
         tree_specs.push_back(ts);
-        }
+    }
 
     ~rule_holder() { }
 
@@ -547,7 +553,7 @@ private:
     int symbol_ix,
     int d);
 
-    static boost::shared_ptr<compiled_expression<atom_type,S,2> >
+    static boost::shared_ptr<compiled_expression<atom_type, S, 2> >
     get_assignments_expression_(
     registrar<std::string>& attr_registrar,
     const std::string& prefix,
@@ -565,9 +571,9 @@ private:
     int ix);
 
     static void get_attrs_(
-    std::set<int>& s, const compiled_expression<atom_type,S,2>& expr, int symbol_ix);
+    std::set<int>& s, const compiled_expression<atom_type, S, 2>& expr, int symbol_ix);
     static void get_extra_attrs_(
-    std::set<int>& s, const compiled_expression<atom_type,S,2>& expr, int symbol_ix);
+    std::set<int>& s, const compiled_expression<atom_type, S, 2>& expr, int symbol_ix);
 
     static void create_reindex_hash_(
     registrar<std::string>& attr_registrar,
@@ -584,9 +590,9 @@ private:
 
     int last_filtre_ix_;
     typename HashWrapper3<
-    std::pair<int, compiled_expression<atom_type,S,2> >,
+    std::pair<int, compiled_expression<atom_type, S, 2> >,
     int,
-    int_compiled_expression_hash_fun<atom_type,S,2> >::type
+    int_compiled_expression_hash_fun<atom_type, S, 2> >::type
     filtres_hash_;
 
     friend class boost::serialization::access;
