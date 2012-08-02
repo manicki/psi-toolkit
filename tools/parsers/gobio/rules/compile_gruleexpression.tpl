@@ -6,16 +6,16 @@
 HASH_WRAPPER_HASH_INTRO
 
     template<>
-    struct HASH_WRAPPER_HASH_TRAITS<std::pair<int,int> >
+    struct HASH_WRAPPER_HASH_TRAITS<std::pair<int, int> >
     {
         HASH_WRAPPER_EXTRA_STUFF
 
-        size_t operator()(const std::pair<int,int>& k) const
+        size_t operator()(const std::pair<int, int>& k) const
         { return HASH_WRAPPER_HASH_TRAITS<int>()(k.first) ^ HASH_WRAPPER_HASH_TRAITS<int>()(k.second); }
 
 #ifdef __VS__
-        bool operator()(const std::pair<int,int>& a,
-                const std::pair<int,int>& b) const
+        bool operator()(const std::pair<int, int>& a,
+                const std::pair<int, int>& b) const
         {
             return a != b;
         }
@@ -40,14 +40,14 @@ HASH_WRAPPER_HASH_OUTRO
 
 void right_symbols_to_hash(
     const GRuleRightSymbolsSeq& a_symbols_seq,
-    HashWrapper<std::pair<int,int>, int>::type& right_symbols_hash,
+    HashWrapper<std::pair<int, int>, int>::type& right_symbols_hash,
     registrar<std::string>& symbol_registrar,
     int& current_ix,
     int& starred_ix);
 
 void right_symbol_alts_seq_to_hash(
     const GRuleRightSymbolAltsSeq& a_symbol_alts_seq,
-    HashWrapper<std::pair<int,int>, int>::type& right_symbols_hash,
+    HashWrapper<std::pair<int, int>, int>::type& right_symbols_hash,
     registrar<std::string>& symbol_registrar,
     int& current_ix,
     int& starred_ix);
@@ -86,7 +86,7 @@ struct traversal_stack_item
 template<class T, class S, class M>
 void compile_gruleexpression(
     const GRuleExpression* original_expr,
-    HashWrapper<std::pair<int,int>, int>::type& rhs_hash,
+    HashWrapper<std::pair<int, int>, int>::type& rhs_hash,
     compiled_expression<T,S,2>& compiled_expr,
     M& master,
     registrar<std::string>& attribute_registrar,
@@ -411,7 +411,7 @@ bool is_top_true(
 template<class T, class S, class M>
 void compile_gruleexpression_node(
     const GRuleExpression* expr,
-    HashWrapper<std::pair<int,int>, int>::type& rhs_hash,
+    HashWrapper<std::pair<int, int>, int>::type& rhs_hash,
     compiled_expression<T,S,2>& compiled_expr,
     M& master,
     registrar<std::string>& attribute_registrar,
@@ -490,7 +490,7 @@ void compile_gruleexpression_node(
         int symbol_id = symbol_registrar.get_id(*(expr->atom));
 
         if (!rhs_hash.count(
-           std::pair<int,int>(
+           std::pair<int, int>(
                symbol_id,
                expr->number)))
         throw std::runtime_error("unknown symbol");
@@ -510,7 +510,7 @@ void compile_gruleexpression_node(
             (is_extra ? gobio_opcodes::OPCODE_SETTOP_EXTRA_SUBVAR : gobio_opcodes::OPCODE_SETTOP_SUBVAR),
             reg.get_id(*(expr->attribute)),
             rhs_hash[
-            std::pair<int,int>(
+            std::pair<int, int>(
                 symbol_id,
                 expr->number)]);
         }
@@ -519,7 +519,7 @@ void compile_gruleexpression_node(
             (is_extra ? gobio_opcodes::OPCODE_PUSH_EXTRA_SUBVAR : gobio_opcodes::OPCODE_PUSH_SUBVAR),
             reg.get_id(*(expr->attribute)),
             rhs_hash[
-            std::pair<int,int>(
+            std::pair<int, int>(
                 symbol_id,
                 expr->number)]);
     }

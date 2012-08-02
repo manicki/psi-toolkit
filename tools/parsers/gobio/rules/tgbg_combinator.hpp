@@ -565,7 +565,7 @@ private:
     registrar<std::string>& attr_registrar,
     const std::string& prefix,
     const std::multiset<int> & attrs_mset,
-    typename HashWrapper<int,int>::type & r_hash,
+    typename HashWrapper<int, int>::type & r_hash,
     int already_reserved_for_temps);
 
     boost::shared_ptr<tree_specification<atom_type> > empty_tree_spec_;

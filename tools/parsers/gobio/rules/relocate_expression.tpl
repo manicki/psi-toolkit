@@ -44,7 +44,7 @@ void reindex_attributes(
     compiled_expression<T,S,2>& expr,
     int symbol_ix,
     int new_symbol_ix,
-    HashWrapper<int,int>::type & r_hash,
+    HashWrapper<int, int>::type & r_hash,
     int opcode_push_subvar,
     int opcode_settop_subvar)
 {

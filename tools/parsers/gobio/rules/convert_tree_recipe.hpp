@@ -10,7 +10,7 @@
 template<class T, class M>
 boost::shared_ptr<tree_specification<T> > convert_tree_recipe(
     const GRuleTreeRecipe* recipe,
-    HashWrapper<std::pair<int,int>, int>::type& rhs_hash,
+    HashWrapper<std::pair<int, int>, int>::type& rhs_hash,
     M& master,
     registrar<std::string>& symbol_registrar,
     int starred_ix);

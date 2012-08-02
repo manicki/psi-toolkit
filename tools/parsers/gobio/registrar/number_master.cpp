@@ -46,9 +46,9 @@ std::string number_master::string_representation(int value) const
 {
     if (is_int(value))
     {
-	std::ostringstream osstr;
-	osstr << to_int(value);
-	return osstr.str();
+    std::ostringstream osstr;
+    osstr << to_int(value);
+    return osstr.str();
     }
 
     assert(is_string(value));
@@ -56,7 +56,7 @@ std::string number_master::string_representation(int value) const
     return to_string(value);
 }
 
-int number_master::from_int(int i) 
+int number_master::from_int(int i)
 {
     assert(i <= int_limit_);
 
@@ -105,4 +105,3 @@ int number_master::int_limit() const
 {
     return int_limit_;
 }
-

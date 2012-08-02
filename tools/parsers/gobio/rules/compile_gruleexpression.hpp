@@ -15,8 +15,8 @@
 template<class T, class S, class M>
 void compile_gruleexpression(
     const GRuleExpression* original_expr,
-    HashWrapper<std::pair<int,int>, int>::type& rhs_hash,
-    compiled_expression<T,S,2>& compiled_expr,
+    HashWrapper<std::pair<int, int>, int>::type& rhs_hash,
+    compiled_expression<T, S, 2>& compiled_expr,
     M& master,
     registrar<std::string>& attribute_registrar,
     registrar<std::string>& extra_attribute_registrar,
@@ -24,8 +24,6 @@ void compile_gruleexpression(
     int starred_ix,
     std::vector<boost::shared_ptr<tree_specification<T> > >& tree_specs,
     S setscore_factor=1);
-
-
 
 
 #endif

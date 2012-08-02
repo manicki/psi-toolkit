@@ -8,7 +8,7 @@ class string_representationer
 {
 public:
     virtual std::string string_representation(T val) = 0;
-    
+
     virtual ~string_representationer() {}
 };
 
@@ -23,9 +23,9 @@ public:
     ~master_string_representationer() {}
 
     std::string string_representation(T val)
-	{
-	    return master_.string_representation(val);
-	}
+    {
+        return master_.string_representation(val);
+    }
 };
 
 

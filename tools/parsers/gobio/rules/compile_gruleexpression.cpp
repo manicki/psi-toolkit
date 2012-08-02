@@ -5,7 +5,7 @@
 
 void right_symbols_to_hash(
     const GRuleRightSymbolsSeq& a_symbols_seq,
-    HashWrapper<std::pair<int,int>, int>::type& right_symbols_hash,
+    HashWrapper<std::pair<int, int>, int>::type& right_symbols_hash,
     registrar<std::string>& symbol_registrar,
     int& current_ix,
     int& starred_ix)
@@ -26,7 +26,7 @@ void right_symbols_to_hash(
 
 void right_symbol_alts_seq_to_hash(
     const GRuleRightSymbolAltsSeq& a_symbol_alts_seq,
-    HashWrapper<std::pair<int,int>, int>::type& right_symbols_hash,
+    HashWrapper<std::pair<int, int>, int>::type& right_symbols_hash,
     registrar<std::string>& symbol_registrar,
     int& current_ix,
     int& starred_ix)
@@ -39,7 +39,7 @@ void right_symbol_alts_seq_to_hash(
     int symbol_no = 0;
 
     while (right_symbols_hash.count(
-          std::pair<int,int>(
+          std::pair<int, int>(
               symbol_id,
               symbol_no)))
         ++symbol_no;
@@ -52,7 +52,7 @@ void right_symbol_alts_seq_to_hash(
         throw std::runtime_error("symbols_wrongly_starred");
     }
 
-    right_symbols_hash[std::pair<int,int>(symbol_id, symbol_no)]
+    right_symbols_hash[std::pair<int, int>(symbol_id, symbol_no)]
         = current_ix++;
     }
     else

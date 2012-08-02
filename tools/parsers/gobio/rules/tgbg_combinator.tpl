@@ -330,7 +330,7 @@ void tgbg_combinator<T,S,M,X,E>::binarize_all_rules()
           reserved_for_temps_hash[(*max_it).first.first.first] :
           0));
 
-    typename HashWrapper<int,int>::type attrs_to_ts_hash;
+    typename HashWrapper<int, int>::type attrs_to_ts_hash;
     create_reindex_hash_(
         attribute_reg_,
         "!T",
@@ -348,7 +348,7 @@ void tgbg_combinator<T,S,M,X,E>::binarize_all_rules()
           reserved_for_extra_temps_hash[(*max_it).first.first.first] :
           0));
 
-    typename HashWrapper<int,int>::type extra_attrs_to_ts_hash;
+    typename HashWrapper<int, int>::type extra_attrs_to_ts_hash;
     create_reindex_hash_(
         extra_attribute_reg_,
         "!X",
@@ -763,7 +763,7 @@ void tgbg_combinator<T,S,M,X,E>::remove_bid_ref_(
     return;
 
     bid_key k(
-    std::pair<int,int>(
+    std::pair<int, int>(
         left_symbol_id,
         right_symbol_id),
     d);
@@ -827,7 +827,7 @@ void tgbg_combinator<T,S,M,X,E>::move_bid_ref_(
     return;
 
     bid_key k(
-    std::pair<int,int>(
+    std::pair<int, int>(
         left_symbol_id,
         right_symbol_id),
     d);
@@ -867,7 +867,7 @@ void tgbg_combinator<T,S,M,X,E>::add_bid_(
        (*rule_it).starred_ix == symbol_ix + (1-d))
     return;
 
-    const bid_key k(std::pair<int,int>(
+    const bid_key k(std::pair<int, int>(
             (*rule_it).rhs_symbols[symbol_ix],
             (*rule_it).rhs_symbols[symbol_ix+1]),
             d);
@@ -995,7 +995,7 @@ void tgbg_combinator<T,S,M,X,E>::create_reindex_hash_(
     registrar<std::string>& attr_registrar,
     const std::string& prefix,
     const std::multiset<int> & attrs_mset,
-    typename HashWrapper<int,int>::type & r_hash,
+    typename HashWrapper<int, int>::type & r_hash,
     int already_reserved_for_temps)
 {
     int temp_ix = already_reserved_for_temps;
@@ -2174,7 +2174,7 @@ void tgbg_combinator<T,S,M,X,E>::compile_rule_(int rule_ix)
 
     if (!rh.compiled_expr || rh.tree_specs.empty())
     {
-    typename HashWrapper<std::pair<int,int>, int>::type rhs_hash;
+    typename HashWrapper<std::pair<int, int>, int>::type rhs_hash;
 
     int current_ix = 0;
     int starred_ix = -1L;
