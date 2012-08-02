@@ -9,12 +9,12 @@ extern int grlexlineno;
 
 int grparserparse();
 
-istream* grlex_input_stream;
+std::istream* grlex_input_stream;
 
 extern bool first_read;
 extern bool encoded;
 
-GRuleList* GRParser::parse(istream& a_input_stream, bool a_encoded)
+GRuleList* GRParser::parse(std::istream& a_input_stream, bool a_encoded)
 {
     bool ended_with_error = false;
     std::string error_message;

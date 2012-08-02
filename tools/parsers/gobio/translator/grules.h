@@ -9,23 +9,18 @@
 
 // uwaga! GNU C++ i Builder maja rozne poglady nt. kolejnosci deklaracji
 
-using std::string;
-using std::ostream;
-using std::istream;
-
-using namespace std;
 
 struct GRule;
 
 
-struct GRuleList: public vector<GRule*>
+struct GRuleList: public std::vector<GRule*>
 {
     ~GRuleList();
 };
 
 
 struct GRuleRightSymbolAltsSeq;
-struct GRuleRightSymbolsSeq: public vector<GRuleRightSymbolAltsSeq*>
+struct GRuleRightSymbolsSeq: public std::vector<GRuleRightSymbolAltsSeq*>
 {
     ~GRuleRightSymbolsSeq();
 };
@@ -35,7 +30,7 @@ struct GRuleRightSymbolAltsSeq
     std::string* atom;
     bool is_starred;
     bool is_optional;
-    vector<GRuleRightSymbolsSeq*> alts;
+    std::vector<GRuleRightSymbolsSeq*> alts;
 
     GRuleRightSymbolAltsSeq():atom(NULL), is_starred(false),
     is_optional(false) {}
@@ -65,7 +60,7 @@ struct GRuleTreeRecipePathNode
     { delete category; delete label;}
 };
 
-typedef list<GRuleTreeRecipePathNode*> GRuleTreeRecipePath;
+typedef std::list<GRuleTreeRecipePathNode*> GRuleTreeRecipePath;
 
 struct GRuleTreeRecipe
 {
@@ -74,7 +69,7 @@ struct GRuleTreeRecipe
     std::string* symbol;
     int number;
     GRuleTreeRecipePath* path;
-    list<GRuleTreeRecipe*>* subrecipes;
+    std::list<GRuleTreeRecipe*>* subrecipes;
     enum EHowToInsert
     {
     INSERT_BEFORE,

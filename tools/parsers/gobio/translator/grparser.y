@@ -21,7 +21,7 @@ char grerror_message[128] = "GRULES UNKNOWN ERROR";
 
 %union{
     int i;
-    string* s;
+    std::string* s;
     bool b;
     GRule* grule;
     GRuleList* grule_seq;
@@ -32,7 +32,7 @@ char grerror_message[128] = "GRULES UNKNOWN ERROR";
     GRuleTreeRecipePathNode::ESearchType search_type_spec;
     GRuleTreeRecipePath* tree_recipe_path;
     GRuleTreeRecipe* tree_recipe;
-    list<GRuleTreeRecipe*>* tree_subrecipes_list;
+    std::list<GRuleTreeRecipe*>* tree_subrecipes_list;
     Lattice::Score score;
 }
 
@@ -273,7 +273,7 @@ tree_recipe_head_main: parse_category
 
 tree_subrecipes_list: tree_recipe
 {
-    $$ = new list<GRuleTreeRecipe*>;
+    $$ = new std::list<GRuleTreeRecipe*>;
     $$->push_back($1);
 }
 | tree_subrecipes_list RTOKEN_COMMA tree_recipe

@@ -15,7 +15,7 @@
 
 #include "grules_moa_key.h"
 
-extern istream* grlex_input_stream;
+extern std::istream* grlex_input_stream;
 
 bool          first_read  = true;
 unsigned int  current_key = 0;
@@ -61,10 +61,10 @@ PLLETTER [a-ząćęłńóśźżA-ZĄĆĘŁŃÓŚŻ]
                     YY_START == outrule)
                     BEGIN(inrule);
 
-                    grparserlval.s = new string(grlextext);
+                    grparserlval.s = new std::string(grlextext);
                             return RTOKEN_ATOM;}
 
-\'[^\']*\'                        { grparserlval.s = new string(grlextext);
+\'[^\']*\'                        { grparserlval.s = new std::string(grlextext);
                     size_t i;
                     for(i = 1; i < grparserlval.s->length(); ++i)
                     {
@@ -73,12 +73,12 @@ PLLETTER [a-ząćęłńóśźżA-ZĄĆĘŁŃÓŚŻ]
                     }
                       return RTOKEN_ATOM;}
 
-\"[^\"]*\"          {    string t = grlextext;
+\"[^\"]*\"          {    std::string t = grlextext;
                      t = t.substr(1,t.length()-2);
-                     grparserlval.s = new string(t);
+                     grparserlval.s = new std::string(t);
                                  return RTOKEN_ATOM; }
 
-{PLUPPER}({PLLETTER}|[_0-9-])*     {  grparserlval.s = new string(grlextext);
+{PLUPPER}({PLLETTER}|[_0-9-])*     {  grparserlval.s = new std::string(grlextext);
                                       return RTOKEN_ATTRIBUTE;}
 
 "-"?[0-9]+                              { grparserlval.i = atoi(grlextext);

@@ -12,7 +12,7 @@ GRule::~GRule()
 
 GRuleList::~GRuleList()
 {
-    vector<GRule*>::iterator iter = begin();
+    std::vector<GRule*>::iterator iter = begin();
     for ( ; iter != end(); ++iter)
     {
     delete (*iter);
@@ -23,7 +23,7 @@ GRuleList::~GRuleList()
 
 GRuleRightSymbolsSeq::~GRuleRightSymbolsSeq()
 {
-    vector<GRuleRightSymbolAltsSeq*>::iterator iter = begin();
+    std::vector<GRuleRightSymbolAltsSeq*>::iterator iter = begin();
     for ( ; iter != end(); ++iter)
     {
     delete (*iter);
@@ -36,7 +36,7 @@ GRuleRightSymbolAltsSeq::~GRuleRightSymbolAltsSeq()
 {
     delete atom;
 
-    vector<GRuleRightSymbolsSeq*>::iterator iter = alts.begin();
+    std::vector<GRuleRightSymbolsSeq*>::iterator iter = alts.begin();
     for ( ; iter != alts.end(); ++iter)
     delete (*iter);
 }
@@ -56,7 +56,7 @@ GRuleTreeRecipe::~GRuleTreeRecipe()
 
   if (this->subrecipes)
   {
-    list<GRuleTreeRecipe*>::iterator i=this->subrecipes->begin();
+    std::list<GRuleTreeRecipe*>::iterator i=this->subrecipes->begin();
 
     while (i!=this->subrecipes->end())
     {

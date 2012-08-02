@@ -494,7 +494,7 @@ private:
     // miejsce pary symboli w regule
     struct bid_ref
     {
-    typename list<rule_holder>::iterator rule_it;
+    typename std::list<rule_holder>::iterator rule_it;
     // indeks lewego symbolu w regule
     int symbol_ix;
     // atrybuty, ktore trzeba przepchac do sztucznego symbolu
@@ -503,7 +503,7 @@ private:
     std::set<int> extra_attrs;
 
     bid_ref(
-        typename list<rule_holder>::iterator a_rule_it,
+        typename std::list<rule_holder>::iterator a_rule_it,
         int a_symbol_ix):
         rule_it(a_rule_it),
         symbol_ix(a_symbol_ix)
@@ -523,7 +523,7 @@ private:
     typedef std::pair<std::pair<int, int>, int> bid_key;
 
     void gather_bids_(
-    typename list<rule_holder>::iterator rule_it,
+    typename std::list<rule_holder>::iterator rule_it,
     typename HashWrapper<bid_key, bid_info>::type& bids);
 
     typename HashWrapper<
@@ -535,21 +535,21 @@ private:
 
     void remove_bid_ref_(
     typename HashWrapper<bid_key, bid_info>::type& bids,
-    typename list<rule_holder>::iterator rule_it,
+    typename std::list<rule_holder>::iterator rule_it,
     int symbol_ix,
     int d,
     const bid_key& forbidden);
 
     void move_bid_ref_(
     typename HashWrapper<bid_key, bid_info>::type& bids,
-    typename list<rule_holder>::iterator rule_it,
+    typename std::list<rule_holder>::iterator rule_it,
     int symbol_ix,
     int d,
     const bid_key& forbidden);
 
     void add_bid_(
     typename HashWrapper<bid_key, bid_info>::type& bids,
-    typename list<rule_holder>::iterator rule_it,
+    typename std::list<rule_holder>::iterator rule_it,
     int symbol_ix,
     int d);
 

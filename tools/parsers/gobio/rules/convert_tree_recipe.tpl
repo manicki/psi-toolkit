@@ -48,7 +48,7 @@ boost::shared_ptr<tree_specification<T> > convert_tree_recipe(
     {
     bool is_single_subrecipe = (recipe->subrecipes->size() == 1);
 
-    for (list<GRuleTreeRecipe*>::const_iterator it = recipe->subrecipes->begin();
+    for (std::list<GRuleTreeRecipe*>::const_iterator it = recipe->subrecipes->begin();
         it != recipe->subrecipes->end();
         ++it)
     {

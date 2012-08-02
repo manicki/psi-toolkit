@@ -12,14 +12,14 @@ public:
     GRParser() {}
     ~GRParser() {}
 
-    GRuleList* parse(istream& a_input_stream, bool a_encoded);
+    GRuleList* parse(std::istream& a_input_stream, bool a_encoded);
 
-    class ParseError: public exception
+    class ParseError: public std::exception
     {
     public:
         int line_no;
-        string message;
-        ParseError(int a_line_no, string a_message)
+        std::string message;
+        ParseError(int a_line_no, std::string a_message)
         :line_no(a_line_no), message(a_message) {}
         ~ParseError() throw() {}
     };

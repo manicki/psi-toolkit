@@ -111,7 +111,7 @@
 // #line 22 "grparser.y"
 typedef union YYSTYPE {
     int i;
-    string* s;
+    std::string* s;
     bool b;
     GRule* grule;
     GRuleList* grule_seq;
@@ -122,7 +122,7 @@ typedef union YYSTYPE {
     GRuleTreeRecipePathNode::ESearchType search_type_spec;
     GRuleTreeRecipePath* tree_recipe_path;
     GRuleTreeRecipe* tree_recipe;
-    list<GRuleTreeRecipe*>* tree_subrecipes_list;
+    std::list<GRuleTreeRecipe*>* tree_subrecipes_list;
     Lattice::Score score;
 } YYSTYPE;
 /* Line 1240 of yacc.c.  */

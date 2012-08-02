@@ -1073,7 +1073,7 @@ bool tgbg_combinator<T, S, M, X, E>::could_be_final(const entry_type& entry)
     std::string symbol = symbol_reg_.get_obj(entry.get_cat());
     if (symbol.length() > 0
        && (symbol[0] == '<'
-       || symbol[0] == '\'' && symbol.find(' ') != string::npos))
+       || symbol[0] == '\'' && symbol.find(' ') != std::string::npos))
     return false;
 
     if (final_hook_expr_)
@@ -2268,7 +2268,7 @@ void tgbg_combinator<T, S, M, X, E>::compile_rule_(int rule_ix)
 
 template<class T, class S, class M, class X, class E>
 void tgbg_combinator<T, S, M, X, E>::gather_bids_(
-    typename list<rule_holder>::iterator rule_it,
+    typename std::list<rule_holder>::iterator rule_it,
     typename HashWrapper<
     bid_key,
     bid_info>::type& bids)

@@ -10,7 +10,7 @@ void right_symbols_to_hash(
     int& current_ix,
     int& starred_ix)
 {
-    vector<GRuleRightSymbolAltsSeq*>::const_iterator iter =
+    std::vector<GRuleRightSymbolAltsSeq*>::const_iterator iter =
     a_symbols_seq.begin();
 
     for ( ; iter != a_symbols_seq.end(); ++iter)
@@ -60,7 +60,7 @@ void right_symbol_alts_seq_to_hash(
     int subcurrent_ix;
     int max_ix = current_ix;
 
-    vector<GRuleRightSymbolsSeq*>::const_iterator iter =
+    std::vector<GRuleRightSymbolsSeq*>::const_iterator iter =
         a_symbol_alts_seq.alts.begin();
 
     for ( ; iter != a_symbol_alts_seq.alts.end() ; ++iter)
