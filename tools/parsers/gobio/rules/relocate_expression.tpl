@@ -12,18 +12,18 @@ void relocate_expression(
 {
     assert(end_attr_ix >= begin_attr_ix);
 
-    for(int i = 0; i < expr.first_available_address(); ++i)
+    for (int i = 0; i < expr.first_available_address(); ++i)
     {
-    if(expr.get_opcode(i) == gobio_opcodes::OPCODE_PUSH_SUBVAR ||
+    if (expr.get_opcode(i) == gobio_opcodes::OPCODE_PUSH_SUBVAR ||
        expr.get_opcode(i) == gobio_opcodes::OPCODE_SETTOP_SUBVAR ||
        expr.get_opcode(i) == gobio_opcodes::OPCODE_PUSH_EXTRA_SUBVAR ||
        expr.get_opcode(i) == gobio_opcodes::OPCODE_SETTOP_EXTRA_SUBVAR)
     {
         const int attr_ix = expr.get_iarg(i, 1);
 
-        if(attr_ix >= begin_attr_ix && attr_ix < end_attr_ix)
+        if (attr_ix >= begin_attr_ix && attr_ix < end_attr_ix)
         {
-        if(expr.get_opcode(i) == gobio_opcodes::OPCODE_PUSH_SUBVAR
+        if (expr.get_opcode(i) == gobio_opcodes::OPCODE_PUSH_SUBVAR
            || expr.get_opcode(i) == gobio_opcodes::OPCODE_PUSH_EXTRA_SUBVAR)
             expr.set_opcode(i, gobio_opcodes::OPCODE_PUSH_FALSE);
         else
@@ -33,7 +33,7 @@ void relocate_expression(
             expr.set_opcode(i, gobio_opcodes::OPCODE_ALWAYS_FALSE);
         }
         }
-        else if(attr_ix >= end_attr_ix)
+        else if (attr_ix >= end_attr_ix)
         expr.set_iarg(i, 1, attr_ix - (end_attr_ix - begin_attr_ix));
     }
     }
@@ -48,9 +48,9 @@ void reindex_attributes(
     int opcode_push_subvar,
     int opcode_settop_subvar)
 {
-    for(int i = 0; i < expr.first_available_address(); ++i)
+    for (int i = 0; i < expr.first_available_address(); ++i)
     {
-    if((expr.get_opcode(i) == opcode_push_subvar ||
+    if ((expr.get_opcode(i) == opcode_push_subvar ||
         expr.get_opcode(i) == opcode_settop_subvar) &&
        expr.get_iarg(i, 1) == symbol_ix &&
        r_hash.count(expr.get_iarg(i, 0)))
@@ -69,9 +69,9 @@ void relocate_attributes_from_symbol_to_symbol(
     int opcode_push_subvar,
     int opcode_settop_subvar)
 {
-    for(int i = 0; i < expr.first_available_address(); ++i)
+    for (int i = 0; i < expr.first_available_address(); ++i)
     {
-    if((expr.get_opcode(i) == opcode_push_subvar ||
+    if ((expr.get_opcode(i) == opcode_push_subvar ||
         expr.get_opcode(i) == opcode_settop_subvar) &&
        expr.get_iarg(i, 1) == symbol_ix)
         expr.set_iarg(i, 1, new_symbol_ix);
@@ -84,7 +84,7 @@ void relocate_jumps(
     int start_ip,
     int delta)
 {
-    for(int i = start_ip; i < expr.first_available_address(); ++i)
+    for (int i = start_ip; i < expr.first_available_address(); ++i)
     {
     switch(expr.get_opcode(i))
     {
@@ -138,14 +138,14 @@ void relocate_jumps(
 template<class T, class S>
 bool find_loops(const compiled_expression<T,S,2>& expr)
 {
-    for(int i = 0; i < expr.first_available_address(); ++i)
+    for (int i = 0; i < expr.first_available_address(); ++i)
     {
     switch(expr.get_opcode(i))
     {
     case gobio_opcodes::OPCODE_IFJUMP:
     case gobio_opcodes::OPCODE_IFNJUMP:
     case gobio_opcodes::OPCODE_JUMP:
-        if(expr.get_iarg(i, 0) <= i)
+        if (expr.get_iarg(i, 0) <= i)
         return true;
         break;
 
@@ -203,7 +203,7 @@ bool find_loops(const compiled_expression<T,S,2>& expr)
 template<class T, class S>
 bool find_extras(const compiled_expression<T,S,2>& expr)
 {
-    for(int i = 0; i < expr.first_available_address(); ++i)
+    for (int i = 0; i < expr.first_available_address(); ++i)
     {
     switch(expr.get_opcode(i))
     {
@@ -266,7 +266,7 @@ bool find_extras(const compiled_expression<T,S,2>& expr)
 template<class T, class S>
 bool find_non_extras_assignments(const compiled_expression<T,S,2>& expr)
 {
-    for(int i = 0; i < expr.first_available_address(); ++i)
+    for (int i = 0; i < expr.first_available_address(); ++i)
     {
     switch(expr.get_opcode(i))
     {
@@ -330,14 +330,14 @@ bool find_non_extras_assignments(const compiled_expression<T,S,2>& expr)
 template<class T, class S>
 bool find_badindexes(const compiled_expression<T,S,2>& expr, size_t nb_right_symbols)
 {
-    for(int i = 0; i < expr.first_available_address(); ++i)
+    for (int i = 0; i < expr.first_available_address(); ++i)
     {
     switch(expr.get_opcode(i))
     {
     case gobio_opcodes::OPCODE_IFJUMP:
     case gobio_opcodes::OPCODE_IFNJUMP:
     case gobio_opcodes::OPCODE_JUMP:
-        if(expr.get_iarg(i, 0) >= expr.first_available_address())
+        if (expr.get_iarg(i, 0) >= expr.first_available_address())
         return true;
         break;
 
@@ -345,7 +345,7 @@ bool find_badindexes(const compiled_expression<T,S,2>& expr, size_t nb_right_sym
     case gobio_opcodes::OPCODE_PUSH_SUBVAR:
     case gobio_opcodes::OPCODE_SETTOP_EXTRA_SUBVAR:
     case gobio_opcodes::OPCODE_SETTOP_SUBVAR:
-        if(expr.get_iarg(i, 1) >= nb_right_symbols ||
+        if (expr.get_iarg(i, 1) >= nb_right_symbols ||
            expr.get_iarg(i, 1) < 0)
         return true;
         break;
@@ -407,19 +407,19 @@ bool is_extra_independent_on_symbol(
     assert(symbol_ix >= 0);
     assert(starred_ix >= -1L);
 
-    if(symbol_ix == starred_ix)
+    if (symbol_ix == starred_ix)
     return false;
 
-    if(!expr)
+    if (!expr)
     return true;
 
-    for(int i = 0; i < expr->first_available_address(); ++i)
+    for (int i = 0; i < expr->first_available_address(); ++i)
     {
     switch(expr->get_opcode(i))
     {
     case gobio_opcodes::OPCODE_PUSH_EXTRA_SUBVAR:
     case gobio_opcodes::OPCODE_SETTOP_EXTRA_SUBVAR:
-        if(expr->get_iarg(i, 1) == symbol_ix)
+        if (expr->get_iarg(i, 1) == symbol_ix)
         return false;
         break;
 
@@ -486,7 +486,7 @@ std::vector<bool> get_independence_vector(
 
     std::vector<bool> r;
 
-    for(int i = 0; i < (signed int)rhs_size; ++i)
+    for (int i = 0; i < (signed int)rhs_size; ++i)
     r.push_back(
         is_extra_independent_on_symbol<T,S>(
         expr,
@@ -538,7 +538,7 @@ push2settop(const compiled_expression<T,S,2>& expr)
     boost::shared_ptr<compiled_expression<T,S,2> > r_expr(
     new compiled_expression<T,S,2>(expr));
 
-    if(r_expr->first_available_address() > 0)
+    if (r_expr->first_available_address() > 0)
     {
     switch(r_expr->get_opcode(0))
     {
@@ -618,7 +618,7 @@ settop2push(const compiled_expression<T,S,2>& expr)
     boost::shared_ptr<compiled_expression<T,S,2> > r_expr(
     new compiled_expression<T,S,2>(expr));
 
-    if(r_expr->first_available_address() > 0)
+    if (r_expr->first_available_address() > 0)
     {
     switch(r_expr->get_opcode(0))
     {

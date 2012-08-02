@@ -13,7 +13,7 @@ GRule::~GRule()
 GRuleList::~GRuleList()
 {
     vector<GRule*>::iterator iter = begin();
-    for( ; iter != end(); ++iter)
+    for ( ; iter != end(); ++iter)
     {
     delete (*iter);
     }
@@ -24,7 +24,7 @@ GRuleList::~GRuleList()
 GRuleRightSymbolsSeq::~GRuleRightSymbolsSeq()
 {
     vector<GRuleRightSymbolAltsSeq*>::iterator iter = begin();
-    for( ; iter != end(); ++iter)
+    for ( ; iter != end(); ++iter)
     {
     delete (*iter);
     }
@@ -37,28 +37,28 @@ GRuleRightSymbolAltsSeq::~GRuleRightSymbolAltsSeq()
     delete atom;
 
     vector<GRuleRightSymbolsSeq*>::iterator iter = alts.begin();
-    for( ; iter != alts.end(); ++iter)
+    for ( ; iter != alts.end(); ++iter)
     delete (*iter);
 }
 
 GRuleTreeRecipe::~GRuleTreeRecipe()
 {
-  if(this->path)
+  if (this->path)
   {
     GRuleTreeRecipePath::iterator i=this->path->begin();
 
-    while(i!=this->path->end())
+    while (i!=this->path->end())
     {
       delete (*i);
       ++i;
     }
   }
 
-  if(this->subrecipes)
+  if (this->subrecipes)
   {
     list<GRuleTreeRecipe*>::iterator i=this->subrecipes->begin();
 
-    while(i!=this->subrecipes->end())
+    while (i!=this->subrecipes->end())
     {
       delete (*i);
       ++i;

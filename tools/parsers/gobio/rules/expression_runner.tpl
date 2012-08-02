@@ -19,13 +19,13 @@ expression_runner<C,T,S,M,X,checking>::expression_runner()
 template<class C, class T, class S, class M, class X, bool checking>
 bool expression_runner<C,T,S,M,X,checking>::check_hook_(int h, int q, int r, int& v)
 {
-    if((q & h) && (r & h))
+    if ((q & h) && (r & h))
     {
         v = -1L;
         return false;
     }
 
-    if((q & h) || (r & h))
+    if ((q & h) || (r & h))
     {
         v |= h;
     }
@@ -36,7 +36,7 @@ bool expression_runner<C,T,S,M,X,checking>::check_hook_(int h, int q, int r, int
 template<class C, class T, class S, class M, class X, bool checking>
 T expression_runner<C,T,S,M,X,checking>::hooking(T a, T b, M& master)
 {
-    if(!master.is_int(a) || !master.is_int(b))
+    if (!master.is_int(a) || !master.is_int(b))
         return master.false_value();
 
     int r = master.to_int(a);
@@ -53,7 +53,7 @@ T expression_runner<C,T,S,M,X,checking>::hooking(T a, T b, M& master)
         && check_hook_(64, r, q, v)
         && check_hook_(128, r, q, v);
 
-    if(v == -1L)
+    if (v == -1L)
         return master.false_value();
 
     return master.from_int(v);
@@ -64,11 +64,11 @@ T expression_runner<C,T,S,M,X,checking>::add_(T a, T b, M& master)
 {
     int r = AtomConverter::toInt(master.false_value());
 
-    if(master.is_int(a) && master.is_int(b) &&
+    if (master.is_int(a) && master.is_int(b) &&
        master.to_int(a) >= 0 && master.to_int(b) >= 0)
     {
         r = master.to_int(a) + master.to_int(b);
-        if(r > master.int_limit())
+        if (r > master.int_limit())
             return AtomConverter::toAtom<T>(master.int_limit());
     }
 
@@ -89,7 +89,7 @@ bool expression_runner<C,T,S,M,X,checking>::run(
     X& semantics_machine)
 {
     // puste wyrazenie nie musi miec instrukcji STOP
-    if(expr.first_available_address() == 0)
+    if (expr.first_available_address() == 0)
         return false;
 
     assert(expr.first_available_address() > 0);
@@ -98,11 +98,11 @@ bool expression_runner<C,T,S,M,X,checking>::run(
     S bonus = 0;
 
     int i = 0;
-    while(1)
+    while (1)
     {
-        if(checking)
+        if (checking)
         {
-            if(i >= expr.first_available_address())
+            if (i >= expr.first_available_address())
             throw std::runtime_error("wrong instruction index");
         }
 
@@ -193,14 +193,14 @@ bool expression_runner<C,T,S,M,X,checking>::run(
 
             check_stack_();
 
-            if(v != stack_.top())
+            if (v != stack_.top())
             {
-            if(master.is_any(v))
+            if (master.is_any(v))
                 stack_.top() = frame.extra_lhs->set_attr(
                 expr.get_iarg(i, 0),
                 stack_.top(),
                 master.false_value());
-            else if(master.is_any(stack_.top()))
+            else if (master.is_any(stack_.top()))
                 stack_.top() = v;
             else
                 stack_.top() = master.false_value();
@@ -216,15 +216,15 @@ bool expression_runner<C,T,S,M,X,checking>::run(
             T v = frame.extra_lhs->get_attr(expr.get_iarg(i, 0), master.false_value());
             T a = expr.get_targ(i, 1);
 
-            if(v != a)
+            if (v != a)
             {
-            if(master.is_any(v))
+            if (master.is_any(v))
                 stack_.push(
                 frame.extra_lhs->set_attr(
                     expr.get_iarg(i, 0),
                     a,
                     master.false_value()));
-            else if(master.is_any(a))
+            else if (master.is_any(a))
                 stack_.push(v);
             else
                 stack_.push(master.false_value());
@@ -252,7 +252,7 @@ bool expression_runner<C,T,S,M,X,checking>::run(
 
         case gobio_opcodes::OPCODE_IFJUMP:
             check_stack_();
-            if(master.is_true(stack_.top()))
+            if (master.is_true(stack_.top()))
             {
             i = expr.get_iarg(i, 0);
             continue;
@@ -261,7 +261,7 @@ bool expression_runner<C,T,S,M,X,checking>::run(
 
         case gobio_opcodes::OPCODE_IFNJUMP:
             check_stack_();
-            if(master.is_false(stack_.top()))
+            if (master.is_false(stack_.top()))
             {
             i = expr.get_iarg(i, 0);
             continue;
@@ -307,9 +307,9 @@ bool expression_runner<C,T,S,M,X,checking>::run(
         case gobio_opcodes::OPCODE_PRINT:
             check_stack_();
 
-            if(master.is_string(stack_.top()))
+            if (master.is_string(stack_.top()))
             std::cerr << master.to_string(stack_.top()) << std::endl;
-            else if(master.is_int(stack_.top()))
+            else if (master.is_int(stack_.top()))
             std::cerr << master.to_int(stack_.top()) << std::endl;
             else
             std::cerr << "???\n";
@@ -322,9 +322,9 @@ bool expression_runner<C,T,S,M,X,checking>::run(
             break;
 
         case gobio_opcodes::OPCODE_PUSH_EXTRA_SUBVAR:
-            if(checking)
+            if (checking)
             {
-            if(expr.get_iarg(i, 1) >= (signed int)frame.extra_rhs.size())
+            if (expr.get_iarg(i, 1) >= (signed int)frame.extra_rhs.size())
                 throw std::runtime_error("PUSH subvar overflow");
             }
 
@@ -345,9 +345,9 @@ bool expression_runner<C,T,S,M,X,checking>::run(
             break;
 
         case gobio_opcodes::OPCODE_PUSH_SUBVAR:
-            if(checking)
+            if (checking)
             {
-            if(expr.get_iarg(i, 1) >= (signed int)frame.rhs.size())
+            if (expr.get_iarg(i, 1) >= (signed int)frame.rhs.size())
                 throw std::runtime_error("PUSH subvar overflow");
             }
 
@@ -398,9 +398,9 @@ bool expression_runner<C,T,S,M,X,checking>::run(
         case gobio_opcodes::OPCODE_SETTOP_EXTRA_SUBVAR:
             check_stack_();
 
-            if(checking)
+            if (checking)
             {
-            if(expr.get_iarg(i, 1) >= (signed int)frame.extra_rhs.size())
+            if (expr.get_iarg(i, 1) >= (signed int)frame.extra_rhs.size())
                 throw std::runtime_error("SETTOP subvar overflow");
             }
 
@@ -421,9 +421,9 @@ bool expression_runner<C,T,S,M,X,checking>::run(
         case gobio_opcodes::OPCODE_SETTOP_SUBVAR:
             check_stack_();
 
-            if(checking)
+            if (checking)
             {
-            if(expr.get_iarg(i, 1) >= (signed int)frame.rhs.size())
+            if (expr.get_iarg(i, 1) >= (signed int)frame.rhs.size())
                 throw std::runtime_error("SETTOP subvar overflow");
             }
 
@@ -480,14 +480,14 @@ bool expression_runner<C,T,S,M,X,checking>::run(
 
             check_stack_();
 
-            if(v != stack_.top())
+            if (v != stack_.top())
             {
-            if(master.is_any(v))
+            if (master.is_any(v))
                 stack_.top() = frame.lhs->set_attr(
                 expr.get_iarg(i, 0),
                 stack_.top(),
                 master.false_value());
-            else if(master.is_any(stack_.top()))
+            else if (master.is_any(stack_.top()))
                 stack_.top() = v;
             else
                 stack_.top() = master.false_value();
@@ -502,15 +502,15 @@ bool expression_runner<C,T,S,M,X,checking>::run(
             T v = frame.lhs->get_attr(expr.get_iarg(i, 0), master.false_value());
             T a = expr.get_targ(i, 1);
 
-            if(v != a)
+            if (v != a)
             {
-            if(master.is_any(v))
+            if (master.is_any(v))
                 stack_.push(
                 frame.lhs->set_attr(
                     expr.get_iarg(i, 0),
                     a,
                     master.false_value()));
-            else if(master.is_any(a))
+            else if (master.is_any(a))
                 stack_.push(v);
             else
                 stack_.push(master.false_value());
@@ -528,9 +528,9 @@ bool expression_runner<C,T,S,M,X,checking>::run(
 
             check_stack_();
 
-            if(q == stack_.top() || master.is_any(stack_.top()))
+            if (q == stack_.top() || master.is_any(stack_.top()))
             stack_.top() = q;
-            else if(master.is_any(q))
+            else if (master.is_any(q))
             stack_.top() = stack_.top();
             else
             stack_.top() = master.false_value();
@@ -543,9 +543,9 @@ bool expression_runner<C,T,S,M,X,checking>::run(
             T a = expr.get_targ(i, 0);
             check_stack_();
 
-            if(a == stack_.top() || master.is_any(stack_.top()))
+            if (a == stack_.top() || master.is_any(stack_.top()))
             stack_.top() = a;
-            else if(master.is_any(a))
+            else if (master.is_any(a))
             stack_.top() = stack_.top();
             else
             stack_.top() = master.false_value();
@@ -571,9 +571,9 @@ loop_exit:
 template<class C, class T, class S, class M, class X, bool checking>
 void expression_runner<C,T,S,M,X,checking>::check_stack_()
 {
-    if(checking)
+    if (checking)
     {
-        if(stack_.empty())
+        if (stack_.empty())
             throw std::runtime_error("empty stack");
     }
 }
@@ -586,7 +586,7 @@ S expression_runner<C,T,S,M,X,checking>::get_score(compiled_expression<T,S,2>& e
     S score;
     int setscores = 0;
     int i = 0;
-    while(true) {
+    while (true) {
         if (expr.get_opcode(i) == gobio_opcodes::OPCODE_STOP) {
             break;
         }

@@ -56,7 +56,7 @@ void agenda_parser<C,S,V,R,K,A,I>::go_()
 
 //     unsigned int log_2_nb_vertices = 1;
 //     unsigned int b = 1;
-//     while(b < nb_vertices)
+//     while (b < nb_vertices)
 //     {
 //  b <<= 1;
 //  ++log_2_nb_vertices;
@@ -67,7 +67,7 @@ void agenda_parser<C,S,V,R,K,A,I>::go_()
     S current_min_score = combinator_.get_limit_min_score(0);
     int nb_turns = 0;
 
-    while(!agenda_.empty())
+    while (!agenda_.empty())
     {
         // wybranie bieżącej krawędzi
         typename chart_type::edge_descriptor e = agenda_.top();
@@ -75,9 +75,9 @@ void agenda_parser<C,S,V,R,K,A,I>::go_()
 
         // liczba obrotów może przyrastać liniowo
         // poprzedni warunek: ((++nb_turns) >> log_2_nb_vertices)
-        if((++nb_turns) + (signed int)agenda_.size() > current_threshold)
+        if ((++nb_turns) + (signed int)agenda_.size() > current_threshold)
         {
-            if(++limit_level >= combinator_.get_nb_limits())
+            if (++limit_level >= combinator_.get_nb_limits())
             break;
 
             current_threshold = combinator_.get_limit_threshold(limit_level);
@@ -127,7 +127,7 @@ void agenda_parser<C,S,V,R,K,A,I>::apply_unary_rules_(
 
     S escore = chart_.edge_score(e);
 
-    for(typename std::vector<R>::iterator it = rules.begin();
+    for (typename std::vector<R>::iterator it = rules.begin();
     it != rules.end();
     ++it)
     {
@@ -140,7 +140,7 @@ void agenda_parser<C,S,V,R,K,A,I>::apply_unary_rules_(
         (*it),
         e);
 
-    if(p.second)
+    if (p.second)
         agenda_.push(p.first);
     }
 }
@@ -168,7 +168,7 @@ void agenda_parser<C,S,V,R,K,A,I>::apply_binary_rules_(
 /*  typename chart_type::marked_in_edge_iterator> ins =  */
 /*  chart_.marked_edges_index(source).marked_in_edges(); */
 
-/*     for(typename chart_type::marked_in_edge_iterator it = ins.first; */
+/*     for (typename chart_type::marked_in_edge_iterator it = ins.first; */
 /*  it != ins.second; */
 /*  ++it) */
 /*  apply_binary_rules_for_pair_((*it), e); */
@@ -181,7 +181,7 @@ void agenda_parser<C,S,V,R,K,A,I>::apply_binary_rules_(
 /*  typename chart_type::marked_out_edge_iterator> outs = */
 /*  chart_.marked_edges_index(target).marked_out_edges(); */
 
-/*     for(typename chart_type::marked_out_edge_iterator it = outs.first; */
+/*     for (typename chart_type::marked_out_edge_iterator it = outs.first; */
 /*  it != outs.second; */
 /*  ++it) */
 /*  apply_binary_rules_for_pair_(e,(*it)); */
@@ -197,14 +197,14 @@ void agenda_parser<C,S,V,R,K,A,I>::apply_binary_rules_(
 /*  chart_.edge_category(e), */
 /*  chart_.edge_category(f))); */
 
-/*     if(rules.empty()) */
+/*     if (rules.empty()) */
 /*  return; */
 
 /*     typename chart_type::vertex_descriptor source = chart_.edge_source(e); */
 /*     typename chart_type::vertex_descriptor target = chart_.edge_target(f); */
 /*     S escore = chart_.edge_score(e) + chart_.edge_score(f); */
 
-/*     for(typename std::vector<R>::iterator it = rules.begin(); */
+/*     for (typename std::vector<R>::iterator it = rules.begin(); */
 /*  it != rules.end(); */
 /*  ++it) */
 /*     { */
@@ -218,7 +218,7 @@ void agenda_parser<C,S,V,R,K,A,I>::apply_binary_rules_(
 /*      e, */
 /*      f); */
 
-/*  if(p.second) */
+/*  if (p.second) */
 /*      agenda_.push(p.first); */
 /*     } */
 /* } */

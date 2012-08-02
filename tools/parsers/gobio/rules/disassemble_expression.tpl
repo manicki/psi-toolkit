@@ -14,9 +14,9 @@ void print_value(
     T val,
     ostream& s)
 {
-    if(master.is_string(val))
+    if (master.is_string(val))
 	s << master.to_string(val);
-    else if(master.is_int(val))
+    else if (master.is_int(val))
 	s << master.to_int(val);
     else
 	s << "???";
@@ -31,7 +31,7 @@ void disassemble_expression(
     const M& master,
     std::ostream& s)
 {
-    for(int i=0; i < expr.first_available_address(); ++i)
+    for (int i=0; i < expr.first_available_address(); ++i)
     {
 	s << std::setw(4) << std::setfill('0') << i;
 

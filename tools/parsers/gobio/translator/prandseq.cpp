@@ -13,7 +13,7 @@ unsigned int getPrandomStartKey()
 
 void doxor(char* text, unsigned int len, unsigned int* key) 
 {
-    while( len>0 ) {
+    while ( len>0 ) {
         *key = prandomSequence(*key);
         *text = (unsigned char)(*text ^ *key);
         ++text;
@@ -23,7 +23,7 @@ void doxor(char* text, unsigned int len, unsigned int* key)
 
 void imoaxor(char* text, unsigned int len, imoa_key& key) 
 {
-    while( len>0 ) {
+    while ( len>0 ) {
         int k = imoa_irandom(key,0,256);
         *text = (unsigned char)(*text ^ k);
         ++text;
@@ -35,7 +35,7 @@ void imoaxor(std::string& text, imoa_key& key)
 {
     size_t len = text.length();
     size_t i = 0;
-    while( len>0 ) {
+    while ( len>0 ) {
         int k = imoa_irandom(key,0,256);
         text[i] = (unsigned char)(text[i] ^ k);
         ++i;

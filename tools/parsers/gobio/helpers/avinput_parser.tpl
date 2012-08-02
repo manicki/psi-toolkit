@@ -27,7 +27,7 @@ bool avinput_parser<C,R,T,M,H,Q,L>::parse(const std::string& s)
 template<class C, class R, class T, class M, class H, class Q, class L>
 typename H::vertex_descriptor avinput_parser<C,R,T,M,H,Q,L>::get_vertex_(int vertex_ix)
 {
-    while(vertex_ix >= (signed int)vertices_.size())
+    while (vertex_ix >= (signed int)vertices_.size())
     {
     typename H::vertex_descriptor vd = chart_.add_vertex();
 
@@ -42,7 +42,7 @@ template<class C, class R, class T, class M, class H, class Q, class L>
 void avinput_parser<C,R,T,M,H,Q,L>::walk_all_(iter_t const& i)
 {
     iter_t sub_i;
-    for(sub_i=i->children.begin(); sub_i != i->children.end(); ++sub_i)
+    for (sub_i=i->children.begin(); sub_i != i->children.end(); ++sub_i)
     walk_segment_(sub_i);
 }
 
@@ -73,7 +73,7 @@ void avinput_parser<C,R,T,M,H,Q,L>::walk_segment_(iter_t const& i)
     int start_v = get_vertex_(start_ix);
     int stop_v  = get_vertex_(stop_ix);
 
-    for(sub_i=i->children.begin()+2; sub_i != i->children.end(); ++sub_i)
+    for (sub_i=i->children.begin()+2; sub_i != i->children.end(); ++sub_i)
     walk_node_(sub_i, start_v, stop_v);
 }
 
@@ -99,9 +99,9 @@ void avinput_parser<C,R,T,M,H,Q,L>::walk_node_(
 
     double score = 0.0;
 
-    if(i->children.size() > 0)
+    if (i->children.size() > 0)
     {
-    if((signed int)i->children.size() > start_assignment_ix
+    if ((signed int)i->children.size() > start_assignment_ix
        &&
        (i->children.begin()+start_assignment_ix)->value.id()
        == avinput_grammar::categoryID)
@@ -117,7 +117,7 @@ void avinput_parser<C,R,T,M,H,Q,L>::walk_node_(
     }
 
 
-    if((signed int)i->children.size() > start_assignment_ix
+    if ((signed int)i->children.size() > start_assignment_ix
        && (i->children.begin()+start_assignment_ix)->value.id()
        == avinput_grammar::scoreID)
     {
@@ -127,9 +127,9 @@ void avinput_parser<C,R,T,M,H,Q,L>::walk_node_(
         ++start_assignment_ix;
     }
 
-    for(sub_i=i->children.begin()+start_assignment_ix; sub_i != i->children.end(); ++sub_i)
+    for (sub_i=i->children.begin()+start_assignment_ix; sub_i != i->children.end(); ++sub_i)
     {
-        if(sub_i->value.id() == avinput_grammar::extraID)
+        if (sub_i->value.id() == avinput_grammar::extraID)
         break;
 
         walk_assignment_(sub_i, entry);
@@ -162,7 +162,7 @@ void avinput_parser<C,R,T,M,H,Q,L>::walk_node_(
         }
     }
 /*
-    if(!was_variant_added)
+    if (!was_variant_added)
     {
         chart_.add_variant(new_edge, new_partition, typename bare_av_matrix<T>::type(), score);
     }
@@ -187,7 +187,7 @@ void avinput_parser<C,R,T,M,H,Q,L>::walk_assignment_(
     std::string attr(attr_i->value.begin(), attr_i->value.end());
     std::string val (val_i->value.begin(),  val_i->value.end());
 
-    if(val_i->value.id() == avinput_grammar::integerID)
+    if (val_i->value.id() == avinput_grammar::integerID)
     {
     avm.set_attr(
         converter_.attribute_reader(attr),
@@ -211,11 +211,11 @@ double avinput_parser<C,R,T,M,H,Q,L>::walk_extra_(
 
     double score = 0.0;
 
-    if(i->children.size() > 0)
+    if (i->children.size() > 0)
     {
     int start_assignment_ix = 0;
 
-    if((i->children.begin()+start_assignment_ix)->value.id()
+    if ((i->children.begin()+start_assignment_ix)->value.id()
        == avinput_grammar::scoreID)
     {
         iter_t score_i = (i->children.begin()+start_assignment_ix)->children.begin();
@@ -226,12 +226,12 @@ double avinput_parser<C,R,T,M,H,Q,L>::walk_extra_(
 
     iter_t sub_i;
 
-    for(sub_i=i->children.begin()+start_assignment_ix; sub_i != i->children.end(); ++sub_i)
+    for (sub_i=i->children.begin()+start_assignment_ix; sub_i != i->children.end(); ++sub_i)
         walk_extra_assignment_(sub_i, avm);
     }
 /*     else */
 /*     { */
-/*  if(i->value.id() == avinput_grammar::scoreID) */
+/*  if (i->value.id() == avinput_grammar::scoreID) */
 /*  { */
 /*      iter_t score_i = i; */
 /*      std::string score_str(score_i->value.begin(), score_i->value.end());         */
@@ -261,7 +261,7 @@ void avinput_parser<C,R,T,M,H,Q,L>::walk_extra_assignment_(
     std::string attr(attr_i->value.begin(), attr_i->value.end());
     std::string val (val_i->value.begin(),  val_i->value.end());
 
-    if(val_i->value.id() == avinput_grammar::integerID)
+    if (val_i->value.id() == avinput_grammar::integerID)
     {
     avm.set_attr(
         converter_.extra_attribute_reader(attr),

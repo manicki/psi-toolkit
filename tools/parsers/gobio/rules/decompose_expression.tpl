@@ -100,7 +100,7 @@ void empty_block(
 
     assert(cut_point_ix < expr->first_available_address());
 
-    for(int i = start_ix; i < cut_point_ix - 1; ++i)
+    for (int i = start_ix; i < cut_point_ix - 1; ++i)
     expr->set_opcode(i, gobio_opcodes::OPCODE_NOP, true);
 
     expr->set_opcode(
@@ -118,23 +118,23 @@ void denopify(boost::shared_ptr<compiled_expression<T,S,2> > expr)
 
     int start_nop_seq = -1L;
 
-    for(int i = 0; i < expr->first_available_address(); ++i)
+    for (int i = 0; i < expr->first_available_address(); ++i)
     {
-    if(expr->get_opcode(i) == gobio_opcodes::OPCODE_NOP)
+    if (expr->get_opcode(i) == gobio_opcodes::OPCODE_NOP)
     {
-        if(start_nop_seq == -1L)
+        if (start_nop_seq == -1L)
         start_nop_seq = i;
     }
     else
     {
-        if(start_nop_seq >= 0)
+        if (start_nop_seq >= 0)
         {
         // przesuwamy
 
         int delta = i - start_nop_seq;
 
-        for(int j = 0; j < expr->first_available_address(); ++j)
-            if((expr->get_opcode(j) == gobio_opcodes::OPCODE_IFNJUMP
+        for (int j = 0; j < expr->first_available_address(); ++j)
+            if ((expr->get_opcode(j) == gobio_opcodes::OPCODE_IFNJUMP
             || expr->get_opcode(j) == gobio_opcodes::OPCODE_IFJUMP
             || expr->get_opcode(j) == gobio_opcodes::OPCODE_JUMP)
                && expr->get_iarg(j, 0) >= i)
@@ -156,9 +156,9 @@ void detruify(boost::shared_ptr<compiled_expression<T,S,2> > expr)
 
     bool prev_always_true = false;
 
-    for(int i = 0; i < expr->first_available_address(); ++i)
+    for (int i = 0; i < expr->first_available_address(); ++i)
     {
-    if(prev_always_true
+    if (prev_always_true
        && expr->get_opcode(i) == gobio_opcodes::OPCODE_ALWAYS_TRUE)
         expr->set_opcode(i, gobio_opcodes::OPCODE_NOP, true);
     else
@@ -178,14 +178,14 @@ void deifnjumpify(boost::shared_ptr<compiled_expression<T,S,2> > expr)
 {
     assert(expr);
 
-    if(expr->first_available_address() >= 2)
+    if (expr->first_available_address() >= 2)
     {
     assert(expr->get_opcode(expr->first_available_address() - 1)
            == gobio_opcodes::OPCODE_STOP);
 
     int penult = expr->first_available_address() - 2;
 
-    if(expr->get_opcode(penult)
+    if (expr->get_opcode(penult)
        == gobio_opcodes::OPCODE_IFNJUMP)
     {
         assert(expr->get_iarg(penult,0) == penult + 1);
@@ -199,16 +199,16 @@ void depushtruify(boost::shared_ptr<compiled_expression<T,S,2> > expr)
 {
     assert(expr);
 
-    if(expr->first_available_address() >= 2)
+    if (expr->first_available_address() >= 2)
     {
-    if(expr->get_opcode(0) == gobio_opcodes::OPCODE_PUSH_TRUE)
+    if (expr->get_opcode(0) == gobio_opcodes::OPCODE_PUSH_TRUE)
     {
-        if(expr->get_opcode(1) == gobio_opcodes::OPCODE_SETTOP_VAR)
+        if (expr->get_opcode(1) == gobio_opcodes::OPCODE_SETTOP_VAR)
         {
         expr->set_opcode(0, gobio_opcodes::OPCODE_NOP);
         expr->set_opcode(1, gobio_opcodes::OPCODE_PUSH_VAR);
         }
-        else if(expr->get_opcode(1) == gobio_opcodes::OPCODE_SETTOP_SUBVAR)
+        else if (expr->get_opcode(1) == gobio_opcodes::OPCODE_SETTOP_SUBVAR)
         {
         expr->set_opcode(0, gobio_opcodes::OPCODE_NOP);
         expr->set_opcode(1, gobio_opcodes::OPCODE_PUSH_SUBVAR);
@@ -242,7 +242,7 @@ boost::shared_ptr<compiled_expression<T,S,2> > decompose_expression(
     block_used_subvars.resize(nb_symbols);
     int min_cut_point = -1L;
 
-    for(int i = 0; i <= last_address; ++i)
+    for (int i = 0; i <= last_address; ++i)
     {
     size_t nb_popped_not_peeked = 0;
     size_t nb_popped_peeked = 0;
@@ -264,7 +264,7 @@ boost::shared_ptr<compiled_expression<T,S,2> > decompose_expression(
         is_assign,
         is_var_ref);
 
-    if(is_jump
+    if (is_jump
        && !(expr->get_iarg(i, 0) == last_address
         &&  expr->get_opcode(i) == gobio_opcodes::OPCODE_IFNJUMP)
        && expr->get_iarg(i, 0) > min_cut_point)
@@ -274,7 +274,7 @@ boost::shared_ptr<compiled_expression<T,S,2> > decompose_expression(
     assert(nb_popped_peeked <= 3);
     assert(nb_pushed <= 1);
 
-    if(stack_elements_at_play > 0
+    if (stack_elements_at_play > 0
        && stack_elements_at_play - nb_popped_not_peeked <= 0
        && i >= min_cut_point)
     {
@@ -288,33 +288,33 @@ boost::shared_ptr<compiled_expression<T,S,2> > decompose_expression(
 
         size_t nb_used_subvars = 0;
         int choosen_ix = -1L;
-        for(size_t i = 0; i < block_used_subvars.size(); ++i)
-        if(block_used_subvars[i])
+        for (size_t i = 0; i < block_used_subvars.size(); ++i)
+        if (block_used_subvars[i])
         {
             choosen_ix = (signed int)i;
             ++nb_used_subvars;
         }
 
-        if(nb_used_subvars == 1 && !block_side_effects)
+        if (nb_used_subvars == 1 && !block_side_effects)
         {
         assert(choosen_ix >= 0);
 
         empty_block(new_expr, prev_block_cut_point, block_cut_point);
 
-        if(!parts[choosen_ix])
+        if (!parts[choosen_ix])
         {
             parts[choosen_ix].reset(
             new compiled_expression<T,S,2>(*expr));
 
-            if(prev_block_cut_point > 0)
+            if (prev_block_cut_point > 0)
             empty_block(parts[choosen_ix], 0, prev_block_cut_point);
         }
         }
         else
         choosen_ix = -1L;
 
-        for(int j = 0; j < (signed int)nb_symbols; ++j)
-        if(j != choosen_ix && parts[j])
+        for (int j = 0; j < (signed int)nb_symbols; ++j)
+        if (j != choosen_ix && parts[j])
             empty_block(parts[j], prev_block_cut_point, block_cut_point);
 
         // sprzatamy po bloku
@@ -329,24 +329,24 @@ boost::shared_ptr<compiled_expression<T,S,2> > decompose_expression(
     else
         stack_elements_at_play -= nb_popped_not_peeked;
 
-    if(is_subvar_ref)
+    if (is_subvar_ref)
     {
         assert(expr->get_iarg(i, 1) <= (signed int)nb_symbols);
         block_used_subvars[expr->get_iarg(i, 1)] = true;
     }
 
-    if(is_assign)
+    if (is_assign)
     {
         int attr_ix = expr->get_iarg(i, 0);
         set_attrs.resize(attr_ix+1);
         set_attrs[attr_ix] = true;
     }
 
-    if(is_var_ref)
+    if (is_var_ref)
     {
         int attr_ix = expr->get_iarg(i, 0);
 
-        if(starred_ix >= 0
+        if (starred_ix >= 0
            && (attr_ix >= (signed int)set_attrs.size()
            || !set_attrs[attr_ix]))
         block_used_subvars[starred_ix] = true;
@@ -354,15 +354,15 @@ boost::shared_ptr<compiled_expression<T,S,2> > decompose_expression(
         side_effects = true;
     }
 
-    if(side_effects)
+    if (side_effects)
         block_side_effects = true;
 
     stack_elements_at_play -= nb_popped_peeked;
     stack_elements_at_play += nb_pushed;
     }
 
-    for(size_t p = 0; p < nb_symbols; ++p)
-    if(parts[p])
+    for (size_t p = 0; p < nb_symbols; ++p)
+    if (parts[p])
     {
         denopify(parts[p]);
         detruify(parts[p]);
@@ -404,7 +404,7 @@ std::vector<boost::shared_ptr<compiled_expression<T,S,2> > > get_bifiltres(
     block_used_subvars.resize(nb_symbols);
     int min_cut_point = -1L;
 
-    for(int i = 0; i <= last_address; ++i)
+    for (int i = 0; i <= last_address; ++i)
     {
     size_t nb_popped_not_peeked = 0;
     size_t nb_popped_peeked = 0;
@@ -426,7 +426,7 @@ std::vector<boost::shared_ptr<compiled_expression<T,S,2> > > get_bifiltres(
         is_assign,
         is_var_ref);
 
-    if(is_jump
+    if (is_jump
        && !(expr->get_iarg(i, 0) == last_address
         &&  expr->get_opcode(i) == gobio_opcodes::OPCODE_IFNJUMP)
        && expr->get_iarg(i, 0) > min_cut_point)
@@ -436,7 +436,7 @@ std::vector<boost::shared_ptr<compiled_expression<T,S,2> > > get_bifiltres(
     assert(nb_popped_peeked <= 3);
     assert(nb_pushed <= 1);
 
-    if(stack_elements_at_play > 0
+    if (stack_elements_at_play > 0
        && stack_elements_at_play - nb_popped_not_peeked <= 0
        && i >= min_cut_point)
     {
@@ -449,11 +449,11 @@ std::vector<boost::shared_ptr<compiled_expression<T,S,2> > > get_bifiltres(
         // mamy blok, analizujemy go
 
         size_t nb_used_subvars = 0;
-        for(size_t i = 0; i < block_used_subvars.size(); ++i)
-        if(block_used_subvars[i])
+        for (size_t i = 0; i < block_used_subvars.size(); ++i)
+        if (block_used_subvars[i])
             ++nb_used_subvars;
 
-        if(nb_used_subvars == 2
+        if (nb_used_subvars == 2
            && block_used_subvars[first_symbol_ix]
            && block_used_subvars[first_symbol_ix + 1]
            && !block_side_effects)
@@ -488,24 +488,24 @@ std::vector<boost::shared_ptr<compiled_expression<T,S,2> > > get_bifiltres(
     else
         stack_elements_at_play -= nb_popped_not_peeked;
 
-    if(is_subvar_ref)
+    if (is_subvar_ref)
     {
         assert(expr->get_iarg(i, 1) <= (signed int)nb_symbols);
         block_used_subvars[expr->get_iarg(i, 1)] = true;
     }
 
-    if(is_assign)
+    if (is_assign)
     {
         int attr_ix = expr->get_iarg(i, 0);
         set_attrs.resize(attr_ix+1);
         set_attrs[attr_ix] = true;
     }
 
-    if(is_var_ref)
+    if (is_var_ref)
     {
         int attr_ix = expr->get_iarg(i, 0);
 
-        if(starred_ix >= 0
+        if (starred_ix >= 0
            && (attr_ix >= (signed int)set_attrs.size()
            || !set_attrs[attr_ix]))
         block_used_subvars[starred_ix] = true;
@@ -513,7 +513,7 @@ std::vector<boost::shared_ptr<compiled_expression<T,S,2> > > get_bifiltres(
         side_effects = true;
     }
 
-    if(side_effects)
+    if (side_effects)
         block_side_effects = true;
 
     stack_elements_at_play -= nb_popped_peeked;

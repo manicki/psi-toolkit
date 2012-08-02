@@ -13,7 +13,7 @@ void right_symbols_to_hash(
     vector<GRuleRightSymbolAltsSeq*>::const_iterator iter =
     a_symbols_seq.begin();
 
-    for( ; iter != a_symbols_seq.end(); ++iter)
+    for ( ; iter != a_symbols_seq.end(); ++iter)
     right_symbol_alts_seq_to_hash(
         *(*iter),
         right_symbols_hash,
@@ -31,24 +31,24 @@ void right_symbol_alts_seq_to_hash(
     int& current_ix,
     int& starred_ix)
 {
-    if(a_symbol_alts_seq.atom)
+    if (a_symbol_alts_seq.atom)
     {
     assert(a_symbol_alts_seq.alts.size() == 0);
 
     int symbol_id = symbol_registrar.get_id(*(a_symbol_alts_seq.atom));
     int symbol_no = 0;
 
-    while(right_symbols_hash.count(
+    while (right_symbols_hash.count(
           std::pair<int,int>(
               symbol_id,
               symbol_no)))
         ++symbol_no;
 
-    if(a_symbol_alts_seq.is_starred)
+    if (a_symbol_alts_seq.is_starred)
     {
-        if(starred_ix == -1L)
+        if (starred_ix == -1L)
         starred_ix = current_ix;
-        else if(starred_ix != current_ix)
+        else if (starred_ix != current_ix)
         throw std::runtime_error("symbols_wrongly_starred");
     }
 
@@ -63,7 +63,7 @@ void right_symbol_alts_seq_to_hash(
     vector<GRuleRightSymbolsSeq*>::const_iterator iter =
         a_symbol_alts_seq.alts.begin();
 
-    for( ; iter != a_symbol_alts_seq.alts.end() ; ++iter)
+    for ( ; iter != a_symbol_alts_seq.alts.end() ; ++iter)
     {
         subcurrent_ix = current_ix;
 
@@ -74,7 +74,7 @@ void right_symbol_alts_seq_to_hash(
         subcurrent_ix,
         starred_ix);
 
-        if(subcurrent_ix > max_ix)
+        if (subcurrent_ix > max_ix)
         max_ix = subcurrent_ix;
     }
 

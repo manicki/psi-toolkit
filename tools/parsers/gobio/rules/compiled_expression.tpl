@@ -70,9 +70,9 @@ void compiled_expression<T,S,N>::pop_instruction()
 template<class T, class S, int N>
 void compiled_expression<T,S,N>::pop_if_instruction(int opcode)
 {
-    if(!instructions_.empty())
+    if (!instructions_.empty())
     {
-    if(instructions_.back().op_code == opcode)
+    if (instructions_.back().op_code == opcode)
         instructions_.pop_back();
     }
 }
@@ -165,9 +165,9 @@ void compiled_expression<T,S,N>::set_opcode(int address, int opc, bool clear_arg
     assert(address >=0 && address < (signed int)instructions_.size());
     instructions_[address].op_code = opc;
 
-    if(clear_args)
+    if (clear_args)
     {
-    for(int i = 0; i < N; ++i)
+    for (int i = 0; i < N; ++i)
         instructions_[address].instruction_arguments[i]
         = typename instruction::instruction_argument();
     }
@@ -183,7 +183,7 @@ int compiled_expression<T,S,N>::first_available_address() const
 template<class T, class S, int N>
 void compiled_expression<T,S,N>::append(const compiled_expression& a)
 {
-    for(size_t i = 0; i < a.instructions_.size(); ++i)
+    for (size_t i = 0; i < a.instructions_.size(); ++i)
     instructions_.push_back(a.instructions_[i]);
 }
 
@@ -196,7 +196,7 @@ boost::shared_ptr<compiled_expression<T,S,N> > compiled_expression<T,S,N>::get_s
     boost::shared_ptr<compiled_expression<T,S,N> > r(
     new compiled_expression<T,S,N>());
 
-    for(int ix = begin_ix; ix < end_ix; ++ix)
+    for (int ix = begin_ix; ix < end_ix; ++ix)
     r->instructions_.push_back(instructions_[ix]);
 
     return r;
@@ -206,7 +206,7 @@ template<class T, class S, int N>
 unsigned int compiled_expression<T,S,N>::hash_fun() const
 {
     int h = 0;
-    for(size_t i = 0; i < instructions_.size(); ++i)
+    for (size_t i = 0; i < instructions_.size(); ++i)
     {
     h ^= HASH_WRAPPER_FULL_HASH_TRAITS<int>().operator()(instructions_[i].op_code);
 
@@ -225,16 +225,16 @@ unsigned int compiled_expression<T,S,N>::hash_fun() const
 template<class T, class S, int N>
 bool compiled_expression<T,S,N>::operator==(const compiled_expression& a) const
 {
-    if(instructions_.size() != a.instructions_.size())
+    if (instructions_.size() != a.instructions_.size())
     return false;
 
-    for(size_t i = 0; i < instructions_.size(); ++i)
+    for (size_t i = 0; i < instructions_.size(); ++i)
     {
-    if(instructions_[i].op_code != a.instructions_[i].op_code)
+    if (instructions_[i].op_code != a.instructions_[i].op_code)
         return false;
 
-    for(size_t j = 0; j < N; ++j)
-        if(instructions_[i].instruction_arguments[j].t
+    for (size_t j = 0; j < N; ++j)
+        if (instructions_[i].instruction_arguments[j].t
            != a.instructions_[i].instruction_arguments[j].t
            ||
            instructions_[i].instruction_arguments[j].f

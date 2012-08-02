@@ -8,7 +8,7 @@ int registrar<T>::get_id(const T& k)
 {
     hash_iterator_type_ found_it(hash_.find(k));
 
-    if(found_it == hash_.end())
+    if (found_it == hash_.end())
     {
 	vec_.push_back(k);
 	return (hash_[k] = vec_.size() - 1);
@@ -46,7 +46,7 @@ void registrar<T>::load(Archive & ar, const unsigned int /*version*/)
 {
     ar & vec_;
 
-    for(typename std::vector<T>::const_iterator it = vec_.begin();
+    for (typename std::vector<T>::const_iterator it = vec_.begin();
 	it != vec_.end();
 	++it)
 	hash_[*it] = it - vec_.begin();

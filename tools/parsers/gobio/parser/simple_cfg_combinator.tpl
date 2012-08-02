@@ -25,8 +25,8 @@ std::vector<R> simple_cfg_combinator<T,R>::combine_unary(T symbol)
     std::vector<R> rules_found;
 
     typename std::list<unary_rule_entry>::iterator iter = unary_rules_.begin();
-    for( ; iter != unary_rules_.end(); ++iter)
-    if((*iter).rhs == symbol)
+    for ( ; iter != unary_rules_.end(); ++iter)
+    if ((*iter).rhs == symbol)
         rules_found.push_back((*iter).rule);
 
     return rules_found;
@@ -38,8 +38,8 @@ std::vector<R> simple_cfg_combinator<T,R>::combine_binary(T first_symbol, T seco
     std::vector<R> rules_found;
 
     typename std::list<binary_rule_entry>::iterator iter = binary_rules_.begin();
-    for( ; iter != binary_rules_.end(); ++iter)
-    if((*iter).first_rhs == first_symbol && (*iter).second_rhs == second_symbol)
+    for ( ; iter != binary_rules_.end(); ++iter)
+    if ((*iter).first_rhs == first_symbol && (*iter).second_rhs == second_symbol)
         rules_found.push_back((*iter).rule);
 
     return rules_found;
@@ -51,8 +51,8 @@ std::vector<T> simple_cfg_combinator<T,R>::find_left_sibling(R parent_rule, T se
     std::vector<T> left_siblings_found;
 
     typename std::list<binary_rule_entry>::iterator iter = binary_rules_.begin();
-    for( ; iter != binary_rules_.end(); ++iter)
-    if((*iter).rule == parent_rule && (*iter).second_rhs == second_symbol)
+    for ( ; iter != binary_rules_.end(); ++iter)
+    if ((*iter).rule == parent_rule && (*iter).second_rhs == second_symbol)
         left_siblings_found.push_back((*iter).first_rhs);
 
     return left_siblings_found;
@@ -64,8 +64,8 @@ std::vector<T> simple_cfg_combinator<T,R>::find_right_sibling(R parent_rule, T f
     std::vector<T> right_siblings_found;
 
     typename std::list<binary_rule_entry>::iterator iter = binary_rules_.begin();
-    for( ; iter != binary_rules_.end(); ++iter)
-    if((*iter).rule == parent_rule && (*iter).first_rhs == first_symbol)
+    for ( ; iter != binary_rules_.end(); ++iter)
+    if ((*iter).rule == parent_rule && (*iter).first_rhs == first_symbol)
         right_siblings_found.push_back((*iter).second_rhs);
 
     return right_siblings_found;
@@ -77,11 +77,11 @@ std::vector<R> simple_cfg_combinator<T,R>::find_only_child_parent(T symbol)
     std::vector<R> parents_found;
 
     typename std::list<unary_rule_entry>::iterator iter = unary_rules_.begin();
-    for( ; iter != unary_rules_.end(); ++iter) {
+    for ( ; iter != unary_rules_.end(); ++iter) {
 //DEBUG
 //std::cout << (*iter).rhs << " = " << symbol << " : ";
 //std::cout << ((*iter).rhs == symbol) << std::endl;
-        if((*iter).rhs == symbol) {
+        if ((*iter).rhs == symbol) {
             parents_found.push_back((*iter).rule);
         }
     }
@@ -95,8 +95,8 @@ std::vector< std::pair<R,T> > simple_cfg_combinator<T,R>::find_left_sibling_with
     std::vector<std::pair<R,T> > families_found;
 
     typename std::list<binary_rule_entry>::iterator iter = binary_rules_.begin();
-    for( ; iter != binary_rules_.end(); ++iter)
-    if((*iter).second_rhs == second_symbol)
+    for ( ; iter != binary_rules_.end(); ++iter)
+    if ((*iter).second_rhs == second_symbol)
         families_found.push_back(std::pair<R,T>((*iter).rule,(*iter).first_rhs));
 
     return families_found;
@@ -108,8 +108,8 @@ std::vector<std::pair<R,T> > simple_cfg_combinator<T,R>::find_right_sibling_with
     std::vector<std::pair<R,T> > families_found;
 
     typename std::list<binary_rule_entry>::iterator iter = binary_rules_.begin();
-    for( ; iter != binary_rules_.end(); ++iter)
-    if((*iter).first_rhs == first_symbol)
+    for ( ; iter != binary_rules_.end(); ++iter)
+    if ((*iter).first_rhs == first_symbol)
         families_found.push_back(std::pair<R,T>((*iter).rule,(*iter).second_rhs));
 
     return families_found;
@@ -121,8 +121,8 @@ std::vector< std::pair< R, std::pair<T,T> > > simple_cfg_combinator<T,R>::split(
     std::vector< std::pair< R, std::pair<T,T> > > rules_found;
 
     typename std::list<binary_rule_entry>::iterator iter = binary_rules_.begin();
-    for( ; iter != binary_rules_.end(); ++iter)
-    if((*iter).rule.category() == parent_symbol)
+    for ( ; iter != binary_rules_.end(); ++iter)
+    if ((*iter).rule.category() == parent_symbol)
         rules_found.push_back(
             std::pair< R, std::pair<T,T> >(
                 (*iter).rule,
@@ -139,8 +139,8 @@ std::vector< std::pair< R,T > > simple_cfg_combinator<T,R>::find_only_children(T
     std::vector< std::pair< R,T > > rules_found;
 
     typename std::list<unary_rule_entry>::iterator iter = unary_rules_.begin();
-    for( ; iter != unary_rules_.end(); ++iter)
-    if((*iter).rule.category() == parent_symbol)
+    for ( ; iter != unary_rules_.end(); ++iter)
+    if ((*iter).rule.category() == parent_symbol)
         rules_found.push_back(
             std::pair< R,T >(
                 (*iter).rule,
@@ -161,8 +161,8 @@ void simple_cfg_combinator<T,R>::set_root(T state) {
 template<typename T, typename R>
 bool simple_cfg_combinator<T,R>::is_root(T state) {
     typename std::list<T>::iterator iter = roots_.begin();
-    for( ; iter != roots_.end(); ++iter)
-    if(*iter == state) {
+    for ( ; iter != roots_.end(); ++iter)
+    if (*iter == state) {
         return true;
     }
     return false;
@@ -180,8 +180,8 @@ void simple_cfg_combinator<T,R>::mark_as_used(T state) {
 template<typename T, typename R>
 bool simple_cfg_combinator<T,R>::is_used(T state) {
     typename std::list<T>::iterator iter = used_.begin();
-    for( ; iter != used_.end(); ++iter)
-    if(*iter == state) {
+    for ( ; iter != used_.end(); ++iter)
+    if (*iter == state) {
         return true;
     }
 }

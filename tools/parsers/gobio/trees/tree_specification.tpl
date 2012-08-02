@@ -41,7 +41,7 @@ boost::shared_ptr<tree_specification<T> > tree_specification<T>::subspec(size_t 
 {
     assert(i < nb_subspecs());
 
-    if(i >= nb_left_subspecs())
+    if (i >= nb_left_subspecs())
     return right_subspec(i - nb_left_subspecs());
 
     return left_subspec(i);
@@ -52,7 +52,7 @@ T tree_specification<T>::subspec_label(size_t i) const
 {
     assert(i < nb_subspecs());
 
-    if(i >= nb_left_subspecs())
+    if (i >= nb_left_subspecs())
     return right_subspec_label(i - nb_left_subspecs());
 
     return left_subspec_label(i);
@@ -116,19 +116,19 @@ void tree_specification<T>::relocate(size_t begin_symbol_ix, int delta)
 {
     root_->relocate(begin_symbol_ix, delta);
 
-    for(typename std::vector<typename tree_specification<T>::spec_link>::iterator lit
+    for (typename std::vector<typename tree_specification<T>::spec_link>::iterator lit
         = left_subspecs_.begin();
     lit != left_subspecs_.end();
     ++lit)
     (*lit).spec->relocate(begin_symbol_ix, delta);
 
-    for(typename std::vector<typename tree_specification<T>::spec_link>::iterator rit
+    for (typename std::vector<typename tree_specification<T>::spec_link>::iterator rit
         = right_subspecs_.begin();
     rit != right_subspecs_.end();
     ++rit)
     (*rit).spec->relocate(begin_symbol_ix, delta);
 
-    for(typename std::vector<typename tree_specification<T>::insert>::iterator iit
+    for (typename std::vector<typename tree_specification<T>::insert>::iterator iit
         = inserts_.begin();
     iit != inserts_.end();
     ++iit)
@@ -142,7 +142,7 @@ bool tree_specification<T>::remove_hooks(size_t begin_symbol_ix, size_t end_symb
 {
     bool all_removed = true;
 
-    if(root_->remove_hook(begin_symbol_ix, end_symbol_ix))
+    if (root_->remove_hook(begin_symbol_ix, end_symbol_ix))
     root_.reset(new empty_root<T>());
     else
     all_removed = false;
@@ -168,7 +168,7 @@ bool tree_specification<T>::remove_hooks(size_t begin_symbol_ix, size_t end_symb
         remove_hooks_predicate_for_inserts(begin_symbol_ix, end_symbol_ix)),
     inserts_.end());
 
-    if(left_subspecs_.size() > 0 ||
+    if (left_subspecs_.size() > 0 ||
        right_subspecs_.size() > 0 ||
        inserts_.size() > 0)
        all_removed = false;
@@ -283,19 +283,19 @@ boost::shared_ptr<tree_specification<T> > tree_specification<T>::clone() const
     cloned_spec->right_subspecs_.reserve(right_subspecs_.size());
     cloned_spec->inserts_.reserve(inserts_.size());
 
-    for(size_t i = 0; i < left_subspecs_.size(); ++i)
+    for (size_t i = 0; i < left_subspecs_.size(); ++i)
     cloned_spec->left_subspecs_.push_back(
         typename tree_specification<T>::spec_link(
         left_subspecs_[i].spec->clone(),
         left_subspecs_[i].label));
 
-    for(size_t j = 0; j < right_subspecs_.size(); ++j)
+    for (size_t j = 0; j < right_subspecs_.size(); ++j)
     cloned_spec->right_subspecs_.push_back(
         typename tree_specification<T>::spec_link(
         right_subspecs_[j].spec->clone(),
         right_subspecs_[j].label));
 
-    for(size_t k = 0; k < inserts_.size(); ++k)
+    for (size_t k = 0; k < inserts_.size(); ++k)
     {
     cloned_spec->inserts_.push_back(
         typename tree_specification<T>::insert(
@@ -325,7 +325,7 @@ std::string tree_specification<T>::string_representation(M& master) const
 
     std::string subs;
 
-    for(size_t li = 0; li < left_subspecs_.size(); ++li)
+    for (size_t li = 0; li < left_subspecs_.size(); ++li)
     subs += std::string(subs.length() ? "," : "")
         + left_subspecs_[li].spec->string_representation(master)
         + (master.is_false(left_subspecs_[li].label)
@@ -335,7 +335,7 @@ std::string tree_specification<T>::string_representation(M& master) const
         + "+";
 
 
-    for(size_t li = 0; li < right_subspecs_.size(); ++li)
+    for (size_t li = 0; li < right_subspecs_.size(); ++li)
     subs += std::string(subs.length() ? ",+" : "+")
         + right_subspecs_[li].spec->string_representation(master)
         + (master.is_false(right_subspecs_[li].label)
@@ -343,10 +343,10 @@ std::string tree_specification<T>::string_representation(M& master) const
            : (std::string(":")
           + master.string_representation(right_subspecs_[li].label)));
 
-    for(size_t ii = 0; ii < inserts_.size(); ++ii)
+    for (size_t ii = 0; ii < inserts_.size(); ++ii)
     {
     std::string p;
-    for(size_t pi = 0; pi < inserts_[ii].path.size();++pi)
+    for (size_t pi = 0; pi < inserts_[ii].path.size();++pi)
         p += std::string("/")
         + (master.is_false(inserts_[ii].path[pi].category)
            ? std::string()
@@ -360,13 +360,13 @@ std::string tree_specification<T>::string_representation(M& master) const
 
     subs += inserts_[ii].spec->string_representation(master);
 
-    if(master.is_true(inserts_[ii].label))
+    if (master.is_true(inserts_[ii].label))
         subs += std::string(":")
         + master.string_representation(inserts_[ii].label);
     }
 
 
-    if(subs.length() > 0)
+    if (subs.length() > 0)
     r += std::string("[") + subs + std::string("]");
 
     return r;
@@ -406,16 +406,16 @@ boost::shared_ptr<tree_specification_root<T> > hook_root<T>::clone() const
 template<class T>
 void hook_root<T>::relocate(size_t begin_symbol_ix, int delta)
 {
-    for(size_t i = 0; i < symbol_ixs_.size(); ++i)
-    if(symbol_ixs_[i] >= begin_symbol_ix)
+    for (size_t i = 0; i < symbol_ixs_.size(); ++i)
+    if (symbol_ixs_[i] >= begin_symbol_ix)
         symbol_ixs_[i] += delta;
 }
 
 template<class T>
 bool hook_root<T>::remove_hook(size_t begin_symbol_ix, size_t end_symbol_ix)
 {
-    for(size_t i = 0; i < symbol_ixs_.size(); ++i)
-    if(symbol_ixs_[i] >= begin_symbol_ix
+    for (size_t i = 0; i < symbol_ixs_.size(); ++i)
+    if (symbol_ixs_[i] >= begin_symbol_ix
        && symbol_ixs_[i] < end_symbol_ix)
         return true;
 
@@ -428,7 +428,7 @@ void hook_root<T>::move_hook_down(
 {
     assert(symbol_ixs_.size() > 0);
 
-    if(symbol_ixs_[0] == symbol_ix)
+    if (symbol_ixs_[0] == symbol_ix)
     {
     symbol_ixs_.insert(symbol_ixs_.begin() + 1, sub_symbol_ix);
     symbol_ixs_[0] = new_symbol_ix;
@@ -458,7 +458,7 @@ std::string hook_root<T>::string_representation(string_representationer<T>&) con
 {
     std::ostringstream osstr;
 
-    for(size_t i = 0; i < symbol_ixs_.size(); ++i)
+    for (size_t i = 0; i < symbol_ixs_.size(); ++i)
     osstr << '#' << symbol_ixs_[i];
 
     return osstr.str();
@@ -480,16 +480,16 @@ boost::shared_ptr<tree_specification_root<T> > hook_contents_root<T>::clone() co
 template<class T>
 void hook_contents_root<T>::relocate(size_t begin_symbol_ix, int delta)
 {
-    for(size_t i = 0; i < symbol_ixs_.size(); ++i)
-    if(symbol_ixs_[i] >= begin_symbol_ix)
+    for (size_t i = 0; i < symbol_ixs_.size(); ++i)
+    if (symbol_ixs_[i] >= begin_symbol_ix)
         symbol_ixs_[i] += delta;
 }
 
 template<class T>
 bool hook_contents_root<T>::remove_hook(size_t begin_symbol_ix, size_t end_symbol_ix)
 {
-    for(size_t i = 0; i < symbol_ixs_.size(); ++i)
-    if(symbol_ixs_[i] >= begin_symbol_ix
+    for (size_t i = 0; i < symbol_ixs_.size(); ++i)
+    if (symbol_ixs_[i] >= begin_symbol_ix
        && symbol_ixs_[i] < end_symbol_ix)
         return true;
 
@@ -502,7 +502,7 @@ void hook_contents_root<T>::move_hook_down(
 {
     assert(symbol_ixs_.size() > 0);
 
-    if(symbol_ixs_[0] == symbol_ix)
+    if (symbol_ixs_[0] == symbol_ix)
     {
     symbol_ixs_.insert(symbol_ixs_.begin() + 1, sub_symbol_ix);
     symbol_ixs_[0] = new_symbol_ix;
@@ -525,7 +525,7 @@ std::string hook_contents_root<T>::string_representation(string_representationer
 
     osstr << '*';
 
-    for(size_t i = 0; i < symbol_ixs_.size(); ++i)
+    for (size_t i = 0; i < symbol_ixs_.size(); ++i)
     osstr << '#' << symbol_ixs_[i];
 
     return osstr.str();

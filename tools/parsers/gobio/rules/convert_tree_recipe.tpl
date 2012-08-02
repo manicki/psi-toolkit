@@ -19,12 +19,12 @@ boost::shared_ptr<tree_specification<T> > convert_tree_recipe(
 
     bool is_category_root = false;
 
-    if(recipe->category)
+    if (recipe->category)
     {
     root.reset(new category_root<T>(master.from_string(*(recipe->category))));
     is_category_root = true;
     }
-    else if(recipe->symbol)
+    else if (recipe->symbol)
     {
     assert(recipe->number >= 0);
 
@@ -34,7 +34,7 @@ boost::shared_ptr<tree_specification<T> > convert_tree_recipe(
 
     assert(rhs_hash.count(k));
 
-    if(recipe->is_contents_ref)
+    if (recipe->is_contents_ref)
         root.reset(new hook_contents_root<T>(rhs_hash[k]));
     else
         root.reset(new hook_root<T>(rhs_hash[k]));
@@ -44,11 +44,11 @@ boost::shared_ptr<tree_specification<T> > convert_tree_recipe(
 
     boost::shared_ptr<tree_specification<T> > spec(new tree_specification<T>(root));
 
-    if(recipe->subrecipes)
+    if (recipe->subrecipes)
     {
     bool is_single_subrecipe = (recipe->subrecipes->size() == 1);
 
-    for(list<GRuleTreeRecipe*>::const_iterator it = recipe->subrecipes->begin();
+    for (list<GRuleTreeRecipe*>::const_iterator it = recipe->subrecipes->begin();
         it != recipe->subrecipes->end();
         ++it)
     {

@@ -36,15 +36,15 @@ std::string number_master::to_string(int value) const
 {
     assert(is_string(value));
 
-    if(value == 0) return nil_string_;
-    else if(value == -1L) return fail_string_;
+    if (value == 0) return nil_string_;
+    else if (value == -1L) return fail_string_;
 
     return registrar_.get_obj(value - (1 + int_limit_));
 }
 
 std::string number_master::string_representation(int value) const
 {
-    if(is_int(value))
+    if (is_int(value))
     {
 	std::ostringstream osstr;
 	osstr << to_int(value);
@@ -65,8 +65,8 @@ int number_master::from_int(int i)
 
 int number_master::from_string(const std::string& s)
 {
-    if(s == any_string_ || s == nil_string_) return 0;
-    else if(s == fail_string_ || s == false_string_ || s == empty_string_) return -1L;
+    if (s == any_string_ || s == nil_string_) return 0;
+    else if (s == fail_string_ || s == false_string_ || s == empty_string_) return -1L;
 
     return registrar_.get_id(s) + 1 + int_limit_;
 }

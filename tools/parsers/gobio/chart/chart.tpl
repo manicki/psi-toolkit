@@ -325,14 +325,14 @@ public:
 template<typename C, typename S, typename V, typename R, template<typename, typename> class I>
 void chart<C,S,V,R,I>::remove_duplicate_variants(edge_descriptor edge)
 {
-    if(graph_[edge].variants.size() <= 1)
+    if (graph_[edge].variants.size() <= 1)
     return;
 
     std::vector<variant> new_variants;
     variant_iterator i;
     i = graph_[edge].variants.begin();
 
-    for(;i != graph_[edge].variants.end();++i)
+    for (;i != graph_[edge].variants.end();++i)
     {
     the_same_variant_category<variant> epred(*i);
 
@@ -342,9 +342,9 @@ void chart<C,S,V,R,I>::remove_duplicate_variants(edge_descriptor edge)
         new_variants.end(),
         epred);
 
-    if(prev != new_variants.end())
+    if (prev != new_variants.end())
     {
-        if((*i).score > (*prev).score)
+        if ((*i).score > (*prev).score)
         *prev = *i;
     }
     else
@@ -363,7 +363,7 @@ void chart<C,S,V,R,I>::sort_variants(edge_descriptor edge, size_t limit)
         graph_[edge].variants.begin(),
         graph_[edge].variants.end());
 
-    if(graph_[edge].variants.size() > limit && limit != 0)
+    if (graph_[edge].variants.size() > limit && limit != 0)
     graph_[edge].variants.erase(
         graph_[edge].variants.begin() + limit,
         graph_[edge].variants.end());

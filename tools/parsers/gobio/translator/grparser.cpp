@@ -34,7 +34,7 @@ GRuleList* GRParser::parse(istream& a_input_stream, bool a_encoded)
     encoded = a_encoded;
 
     grlex_input_stream = &a_input_stream;
-    if(grparserparse())
+    if (grparserparse())
     {
         ended_with_error = true;
         error_message = grerror_message;
@@ -47,7 +47,7 @@ GRuleList* GRParser::parse(istream& a_input_stream, bool a_encoded)
     }
     }
 
-    if(ended_with_error)
+    if (ended_with_error)
     throw ParseError(0, error_message);
 
     return grparser_all;

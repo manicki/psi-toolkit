@@ -98,7 +98,7 @@ void compile_gruleexpression(
 {
     assert(tree_specs.size() == 1);
 
-    if(!original_expr)
+    if (!original_expr)
     {
     compiled_expr.push_instruction_0(gobio_opcodes::OPCODE_PUSH_TRUE);
     compiled_expr.push_instruction_0(gobio_opcodes::OPCODE_STOP);
@@ -115,7 +115,7 @@ void compile_gruleexpression(
     traversal_stack.push_back(traversal_stack_item());
     traversal_stack.back().expr = current_expr;
 
-    while(!traversal_stack.empty())
+    while (!traversal_stack.empty())
     {
     current_expr = traversal_stack.back().expr;
 
@@ -124,7 +124,7 @@ void compile_gruleexpression(
               (current_expr->expr_operator == GRuleExpression::OPERATOR_ASSIGN
                || current_expr->expr_operator == GRuleExpression::OPERATOR_UASSIGN));
 
-    if(current_expr->left_subexpr && !is_assign && !traversal_stack.back().left_visited )
+    if (current_expr->left_subexpr && !is_assign && !traversal_stack.back().left_visited )
     {
         traversal_stack.back().left_visited = true;
 
@@ -133,7 +133,7 @@ void compile_gruleexpression(
         continue;
     }
 
-    if(current_expr->right_subexpr
+    if (current_expr->right_subexpr
        && !traversal_stack.back().right_visited)
     {
         // is_right_constant wskazuje, czy prawe wyrażenie jest stałe
@@ -143,7 +143,7 @@ void compile_gruleexpression(
         // będą rzadkie)
         bool is_right_constant = false;
 
-        if(current_expr->expr_type == GRuleExpression::OPERATOR_BI)
+        if (current_expr->expr_type == GRuleExpression::OPERATOR_BI)
         {
         switch(current_expr->expr_operator)
         {
@@ -153,7 +153,7 @@ void compile_gruleexpression(
             // kładzie na stos wartość prawdziwą i nie ma
             // żadnego IFNJUMP do tego miejsca
             // nie umieszczamy instrukcji IFNJUMP
-            if(is_top_true(compiled_expr, master)
+            if (is_top_true(compiled_expr, master)
                && !is_jump_or_ifnjump_to(
                compiled_expr, compiled_expr.first_available_address()))
             traversal_stack.back().address = -1L;
@@ -217,7 +217,7 @@ void compile_gruleexpression(
         }
         }
 
-        if(!is_right_constant)
+        if (!is_right_constant)
         {
         traversal_stack.back().right_visited = true;
 
@@ -266,13 +266,13 @@ bool is_top_pop(const compiled_expression<T,S,2>& compiled_expr)
 template<class T, class S>
 bool is_jump_or_ifnjump_to(const compiled_expression<T,S,2>& expr, int addr)
 {
-    for(int i = 0; i < expr.first_available_address(); ++i)
+    for (int i = 0; i < expr.first_available_address(); ++i)
     {
     switch(expr.get_opcode(i))
     {
     case gobio_opcodes::OPCODE_IFNJUMP:
     case gobio_opcodes::OPCODE_JUMP:
-        if(expr.get_iarg(i, 0) == addr)
+        if (expr.get_iarg(i, 0) == addr)
         return true;
         break;
 
@@ -336,12 +336,12 @@ bool is_top_true(
     int i = compiled_expr.first_available_address() - 1;
 
     // pomijamy instrukcje ASSIGN, które nie zmieniają stanu stosu
-    while(i >= 0
+    while (i >= 0
       &&
       (compiled_expr.get_opcode(i) == gobio_opcodes::OPCODE_ASSIGN
        || compiled_expr.get_opcode(i) == gobio_opcodes::OPCODE_EXTRA_ASSIGN)) --i;
 
-    if(i >= 0)
+    if (i >= 0)
     {
     switch(compiled_expr.get_opcode(i))
     {
@@ -429,7 +429,7 @@ void compile_gruleexpression_node(
     case GRuleExpression::NUMBER:
     // Sprawdzamy, czy poprzednią wygenerowaną instrukcją nie było POP, jeśli
     // tak zamiast sekwencji POP/PUSH generujemy pojedynczą instrukcję SETTOP
-    if(is_top_pop(compiled_expr))
+    if (is_top_pop(compiled_expr))
     {
         compiled_expr.pop_instruction();
         compiled_expr.push_instruction_1t(
@@ -445,7 +445,7 @@ void compile_gruleexpression_node(
     case GRuleExpression::ATOM:
     assert(expr->atom);
 
-    if(is_top_pop(compiled_expr))
+    if (is_top_pop(compiled_expr))
     {
         compiled_expr.pop_instruction();
         compiled_expr.push_instruction_1t(
@@ -461,7 +461,7 @@ void compile_gruleexpression_node(
     case GRuleExpression::ATTRIBUTE:
     assert(expr->attribute);
 
-    if(!(expr->atom))
+    if (!(expr->atom))
     {
         bool is_extra = extra_attribute_registrar.is_registered(
         *(expr->attribute));
@@ -471,7 +471,7 @@ void compile_gruleexpression_node(
          ? extra_attribute_registrar
          : attribute_registrar);
 
-        if(is_top_pop(compiled_expr))
+        if (is_top_pop(compiled_expr))
         {
         compiled_expr.pop_instruction();
         compiled_expr.push_instruction_1i(
@@ -489,7 +489,7 @@ void compile_gruleexpression_node(
 
         int symbol_id = symbol_registrar.get_id(*(expr->atom));
 
-        if(!rhs_hash.count(
+        if (!rhs_hash.count(
            std::pair<int,int>(
                symbol_id,
                expr->number)))
@@ -503,7 +503,7 @@ void compile_gruleexpression_node(
          ? extra_attribute_registrar
          : attribute_registrar);
 
-        if(is_top_pop(compiled_expr))
+        if (is_top_pop(compiled_expr))
         {
         compiled_expr.pop_instruction();
         compiled_expr.push_instruction_2ii(
@@ -578,7 +578,7 @@ void compile_gruleexpression_node(
          ? extra_attribute_registrar
          : attribute_registrar);
 
-        if(is_constant(expr->right_subexpr))
+        if (is_constant(expr->right_subexpr))
         compiled_expr.push_instruction_2it(
             (is_extra ? gobio_opcodes::OPCODE_EXTRA_ASSIGN_CONST : gobio_opcodes::OPCODE_ASSIGN_CONST),
             reg.get_id(*(expr->left_subexpr->attribute)),
@@ -604,7 +604,7 @@ void compile_gruleexpression_node(
          ? extra_attribute_registrar
          : attribute_registrar);
 
-        if(is_constant(expr->right_subexpr))
+        if (is_constant(expr->right_subexpr))
         compiled_expr.push_instruction_2it(
             (is_extra ? gobio_opcodes::OPCODE_EXTRA_UASSIGN_CONST : gobio_opcodes::OPCODE_UASSIGN_CONST),
             reg.get_id(*(expr->left_subexpr->attribute)),
@@ -631,7 +631,7 @@ void compile_gruleexpression_node(
         int instruction_to_repair_ix = traversal_stack.back().address;
 
         // uwzględniamy optymalizację (patrz wyżej)
-        if(instruction_to_repair_ix >= 0)
+        if (instruction_to_repair_ix >= 0)
         compiled_expr.set_iarg(
             instruction_to_repair_ix,
             0,
@@ -666,7 +666,7 @@ void compile_gruleexpression_node(
     break;
 
     case GRuleExpression::OPERATOR_EQUAL:
-        if(is_constant(expr->right_subexpr))
+        if (is_constant(expr->right_subexpr))
         compiled_expr.push_instruction_1t(
             gobio_opcodes::OPCODE_EQUAL_CONST,
             expr_to_constant<T>(
@@ -677,7 +677,7 @@ void compile_gruleexpression_node(
         break;
 
     case GRuleExpression::OPERATOR_UEQUAL:
-        if(is_constant(expr->right_subexpr))
+        if (is_constant(expr->right_subexpr))
         compiled_expr.push_instruction_1t(
             gobio_opcodes::OPCODE_UEQUAL_CONST,
             expr_to_constant<T>(
@@ -688,7 +688,7 @@ void compile_gruleexpression_node(
         break;
 
     case GRuleExpression::OPERATOR_NOT_EQUAL:
-        if(is_constant(expr->right_subexpr))
+        if (is_constant(expr->right_subexpr))
         compiled_expr.push_instruction_1t(
             gobio_opcodes::OPCODE_NOT_EQUAL_CONST,
             expr_to_constant<T>(
@@ -699,7 +699,7 @@ void compile_gruleexpression_node(
         break;
 
     case GRuleExpression::OPERATOR_HOOKING:
-        if(is_constant(expr->right_subexpr))
+        if (is_constant(expr->right_subexpr))
         compiled_expr.push_instruction_1t(
             gobio_opcodes::OPCODE_HOOKING_CONST,
             expr_to_constant<T>(
@@ -711,10 +711,10 @@ void compile_gruleexpression_node(
 
     case GRuleExpression::OPERATOR_SEMANTICS_INTERSECTION:
 
-        if(expr->left_subexpr->expr_type == GRuleExpression::OPERATOR_BI
+        if (expr->left_subexpr->expr_type == GRuleExpression::OPERATOR_BI
            && expr->left_subexpr->expr_operator == GRuleExpression::OPERATOR_BINARG)
         compiled_expr.push_instruction_0(gobio_opcodes::OPCODE_TRI_SEMANTICS_INTERSECTION);
-        else if(is_constant(expr->right_subexpr))
+        else if (is_constant(expr->right_subexpr))
         compiled_expr.push_instruction_1t(
             gobio_opcodes::OPCODE_SEMANTICS_INTERSECTION_CONST,
             expr_to_constant<T>(
@@ -725,7 +725,7 @@ void compile_gruleexpression_node(
         break;
 
     case GRuleExpression::OPERATOR_SUM:
-        if(is_constant(expr->right_subexpr))
+        if (is_constant(expr->right_subexpr))
         compiled_expr.push_instruction_1t(
             gobio_opcodes::OPCODE_ADD_CONST,
             expr_to_constant<T>(
