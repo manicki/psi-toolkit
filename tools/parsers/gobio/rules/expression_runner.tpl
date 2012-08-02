@@ -83,7 +83,7 @@ void expression_runner<C,T,S,M,X,checking>::clear()
 
 template<class C, class T, class S, class M, class X, bool checking>
 bool expression_runner<C,T,S,M,X,checking>::run(
-    compiled_expression<T,S,2>& expr,
+    compiled_expression<T, S, 2>& expr,
     runner_frame& frame,
     M& master,
     X& semantics_machine)
@@ -580,7 +580,7 @@ void expression_runner<C,T,S,M,X,checking>::check_stack_()
 
 
 template<class C, class T, class S, class M, class X, bool checking>
-S expression_runner<C,T,S,M,X,checking>::get_score(compiled_expression<T,S,2>& expr) {
+S expression_runner<C,T,S,M,X,checking>::get_score(compiled_expression<T, S, 2>& expr) {
     assert(expr.first_available_address() > 0);
     assert(expr.get_opcode(expr.first_available_address()-1) == gobio_opcodes::OPCODE_STOP);
     S score;

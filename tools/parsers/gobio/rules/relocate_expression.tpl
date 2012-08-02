@@ -6,7 +6,7 @@
 
 template<class T, class S>
 void relocate_expression(
-    compiled_expression<T,S,2>& expr,
+    compiled_expression<T, S, 2>& expr,
     int begin_attr_ix,
     int end_attr_ix)
 {
@@ -41,7 +41,7 @@ void relocate_expression(
 
 template<class T, class S>
 void reindex_attributes(
-    compiled_expression<T,S,2>& expr,
+    compiled_expression<T, S, 2>& expr,
     int symbol_ix,
     int new_symbol_ix,
     HashWrapper<int, int>::type & r_hash,
@@ -63,7 +63,7 @@ void reindex_attributes(
 
 template<class T, class S>
 void relocate_attributes_from_symbol_to_symbol(
-    compiled_expression<T,S,2>& expr,
+    compiled_expression<T, S, 2>& expr,
     int symbol_ix,
     int new_symbol_ix,
     int opcode_push_subvar,
@@ -80,7 +80,7 @@ void relocate_attributes_from_symbol_to_symbol(
 
 template<class T, class S>
 void relocate_jumps(
-    compiled_expression<T,S,2>& expr,
+    compiled_expression<T, S, 2>& expr,
     int start_ip,
     int delta)
 {
@@ -136,7 +136,7 @@ void relocate_jumps(
 }
 
 template<class T, class S>
-bool find_loops(const compiled_expression<T,S,2>& expr)
+bool find_loops(const compiled_expression<T, S, 2>& expr)
 {
     for (int i = 0; i < expr.first_available_address(); ++i)
     {
@@ -201,7 +201,7 @@ bool find_loops(const compiled_expression<T,S,2>& expr)
 }
 
 template<class T, class S>
-bool find_extras(const compiled_expression<T,S,2>& expr)
+bool find_extras(const compiled_expression<T, S, 2>& expr)
 {
     for (int i = 0; i < expr.first_available_address(); ++i)
     {
@@ -264,7 +264,7 @@ bool find_extras(const compiled_expression<T,S,2>& expr)
 }
 
 template<class T, class S>
-bool find_non_extras_assignments(const compiled_expression<T,S,2>& expr)
+bool find_non_extras_assignments(const compiled_expression<T, S, 2>& expr)
 {
     for (int i = 0; i < expr.first_available_address(); ++i)
     {
@@ -328,7 +328,7 @@ bool find_non_extras_assignments(const compiled_expression<T,S,2>& expr)
 }
 
 template<class T, class S>
-bool find_badindexes(const compiled_expression<T,S,2>& expr, size_t nb_right_symbols)
+bool find_badindexes(const compiled_expression<T, S, 2>& expr, size_t nb_right_symbols)
 {
     for (int i = 0; i < expr.first_available_address(); ++i)
     {
@@ -400,7 +400,7 @@ bool find_badindexes(const compiled_expression<T,S,2>& expr, size_t nb_right_sym
 
 template<class T, class S>
 bool is_extra_independent_on_symbol(
-    boost::shared_ptr<compiled_expression<T,S,2> > expr,
+    boost::shared_ptr<compiled_expression<T, S, 2> > expr,
     int symbol_ix,
     int starred_ix)
 {
@@ -477,7 +477,7 @@ bool is_extra_independent_on_symbol(
 
 template<class T, class S>
 std::vector<bool> get_independence_vector(
-    boost::shared_ptr<compiled_expression<T,S,2> > expr,
+    boost::shared_ptr<compiled_expression<T, S, 2> > expr,
     size_t rhs_size,
     int starred_ix)
 {
@@ -498,13 +498,13 @@ std::vector<bool> get_independence_vector(
 }
 
 template<class T, class S>
-boost::shared_ptr<compiled_expression<T,S,2> >
+boost::shared_ptr<compiled_expression<T, S, 2> >
 paste_expressions(
-    const compiled_expression<T,S,2>& first_expr,
-    const compiled_expression<T,S,2>& second_expr)
+    const compiled_expression<T, S, 2>& first_expr,
+    const compiled_expression<T, S, 2>& second_expr)
 {
-    boost::shared_ptr<compiled_expression<T,S,2> > r_expr(
-    new compiled_expression<T,S,2>(first_expr));
+    boost::shared_ptr<compiled_expression<T, S, 2> > r_expr(
+    new compiled_expression<T, S, 2>(first_expr));
 
     r_expr->append(second_expr);
 
@@ -517,12 +517,12 @@ paste_expressions(
 }
 
 template<class T, class S>
-boost::shared_ptr<compiled_expression<T,S,2> >
+boost::shared_ptr<compiled_expression<T, S, 2> >
 paste_expressions_with_ifnjump(
-    const compiled_expression<T,S,2>& first_expr,
-    const compiled_expression<T,S,2>& second_expr)
+    const compiled_expression<T, S, 2>& first_expr,
+    const compiled_expression<T, S, 2>& second_expr)
 {
-    compiled_expression<T,S,2> expr_with_ifnjump(first_expr);
+    compiled_expression<T, S, 2> expr_with_ifnjump(first_expr);
 
     expr_with_ifnjump.push_instruction_1i(
     gobio_opcodes::OPCODE_IFNJUMP,
@@ -532,11 +532,11 @@ paste_expressions_with_ifnjump(
 }
 
 template<class T, class S>
-boost::shared_ptr<compiled_expression<T,S,2> >
-push2settop(const compiled_expression<T,S,2>& expr)
+boost::shared_ptr<compiled_expression<T, S, 2> >
+push2settop(const compiled_expression<T, S, 2>& expr)
 {
-    boost::shared_ptr<compiled_expression<T,S,2> > r_expr(
-    new compiled_expression<T,S,2>(expr));
+    boost::shared_ptr<compiled_expression<T, S, 2> > r_expr(
+    new compiled_expression<T, S, 2>(expr));
 
     if (r_expr->first_available_address() > 0)
     {
@@ -612,11 +612,11 @@ push2settop(const compiled_expression<T,S,2>& expr)
 }
 
 template<class T, class S>
-boost::shared_ptr<compiled_expression<T,S,2> >
-settop2push(const compiled_expression<T,S,2>& expr)
+boost::shared_ptr<compiled_expression<T, S, 2> >
+settop2push(const compiled_expression<T, S, 2>& expr)
 {
-    boost::shared_ptr<compiled_expression<T,S,2> > r_expr(
-    new compiled_expression<T,S,2>(expr));
+    boost::shared_ptr<compiled_expression<T, S, 2> > r_expr(
+    new compiled_expression<T, S, 2>(expr));
 
     if (r_expr->first_available_address() > 0)
     {

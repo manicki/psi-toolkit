@@ -899,7 +899,7 @@ void tgbg_combinator<T,S,M,X,E>::add_bid_(
 }
 
 template<class T, class S, class M, class X, class E>
-boost::shared_ptr<compiled_expression<T,S,2> >
+boost::shared_ptr<compiled_expression<T, S, 2> >
 tgbg_combinator<T,S,M,X,E>::get_assignments_expression_(
     registrar<std::string>& attr_registrar,
     const std::string& prefix,
@@ -963,7 +963,7 @@ int tgbg_combinator<T,S,M,X,E>::get_temp_attribute_(
 template<class T, class S, class M, class X, class E>
 void tgbg_combinator<T,S,M,X,E>::get_attrs_(
     std::set<int>& s,
-    const compiled_expression<T,S,2>& expr,
+    const compiled_expression<T, S, 2>& expr,
     int symbol_ix)
 {
     assert(symbol_ix >= 0);
@@ -978,7 +978,7 @@ void tgbg_combinator<T,S,M,X,E>::get_attrs_(
 template<class T, class S, class M, class X, class E>
 void tgbg_combinator<T,S,M,X,E>::get_extra_attrs_(
     std::set<int>& s,
-    const compiled_expression<T,S,2>& expr,
+    const compiled_expression<T, S, 2>& expr,
     int symbol_ix)
 {
     assert(symbol_ix >= 0);

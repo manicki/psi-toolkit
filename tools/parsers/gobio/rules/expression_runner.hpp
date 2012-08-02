@@ -29,12 +29,12 @@ public:
     void clear();
 
     bool run(
-	compiled_expression<T,S,2>& expr,
+	compiled_expression<T, S, 2>& expr,
 	runner_frame& frame,
 	M& master,
 	X& semantics_machine);
 	
-	S get_score(compiled_expression<T,S,2>& expr);
+	S get_score(compiled_expression<T, S, 2>& expr);
 
 private:
     std::stack<T> stack_;

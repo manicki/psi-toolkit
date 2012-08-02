@@ -91,7 +91,7 @@ void stack_behaviour(
 
 template<class T, class S>
 void empty_block(
-    boost::shared_ptr<compiled_expression<T,S,2> > expr,
+    boost::shared_ptr<compiled_expression<T, S, 2> > expr,
     int start_ix,
     int cut_point_ix)
 {
@@ -112,7 +112,7 @@ void empty_block(
 }
 
 template<class T, class S>
-void denopify(boost::shared_ptr<compiled_expression<T,S,2> > expr)
+void denopify(boost::shared_ptr<compiled_expression<T, S, 2> > expr)
 {
     assert(expr);
 
@@ -150,7 +150,7 @@ void denopify(boost::shared_ptr<compiled_expression<T,S,2> > expr)
 }
 
 template<class T, class S>
-void detruify(boost::shared_ptr<compiled_expression<T,S,2> > expr)
+void detruify(boost::shared_ptr<compiled_expression<T, S, 2> > expr)
 {
     assert(expr);
 
@@ -174,7 +174,7 @@ void detruify(boost::shared_ptr<compiled_expression<T,S,2> > expr)
 }
 
 template<class T, class S>
-void deifnjumpify(boost::shared_ptr<compiled_expression<T,S,2> > expr)
+void deifnjumpify(boost::shared_ptr<compiled_expression<T, S, 2> > expr)
 {
     assert(expr);
 
@@ -195,7 +195,7 @@ void deifnjumpify(boost::shared_ptr<compiled_expression<T,S,2> > expr)
 }
 
 template<class T, class S>
-void depushtruify(boost::shared_ptr<compiled_expression<T,S,2> > expr)
+void depushtruify(boost::shared_ptr<compiled_expression<T, S, 2> > expr)
 {
     assert(expr);
 
@@ -219,15 +219,15 @@ void depushtruify(boost::shared_ptr<compiled_expression<T,S,2> > expr)
 
 
 template<class T, class S>
-boost::shared_ptr<compiled_expression<T,S,2> > decompose_expression(
-    boost::shared_ptr<compiled_expression<T,S,2> > expr,
+boost::shared_ptr<compiled_expression<T, S, 2> > decompose_expression(
+    boost::shared_ptr<compiled_expression<T, S, 2> > expr,
     size_t nb_symbols,
     int starred_ix,
-    std::vector<boost::shared_ptr<compiled_expression<T,S,2> > >&  parts)
+    std::vector<boost::shared_ptr<compiled_expression<T, S, 2> > >&  parts)
 {
-    boost::shared_ptr<compiled_expression<T,S,2> > new_expr
-    = boost::shared_ptr<compiled_expression<T,S,2> >(
-        new compiled_expression<T,S,2>(*expr));
+    boost::shared_ptr<compiled_expression<T, S, 2> > new_expr
+    = boost::shared_ptr<compiled_expression<T, S, 2> >(
+        new compiled_expression<T, S, 2>(*expr));
 
     parts.resize(nb_symbols);
 
@@ -304,7 +304,7 @@ boost::shared_ptr<compiled_expression<T,S,2> > decompose_expression(
         if (!parts[choosen_ix])
         {
             parts[choosen_ix].reset(
-            new compiled_expression<T,S,2>(*expr));
+            new compiled_expression<T, S, 2>(*expr));
 
             if (prev_block_cut_point > 0)
             empty_block(parts[choosen_ix], 0, prev_block_cut_point);
@@ -385,13 +385,13 @@ boost::shared_ptr<compiled_expression<T,S,2> > decompose_expression(
 }
 
 template<class T, class S>
-std::vector<boost::shared_ptr<compiled_expression<T,S,2> > > get_bifiltres(
-    boost::shared_ptr<compiled_expression<T,S,2> > expr,
+std::vector<boost::shared_ptr<compiled_expression<T, S, 2> > > get_bifiltres(
+    boost::shared_ptr<compiled_expression<T, S, 2> > expr,
     size_t nb_symbols,
     int starred_ix,
     int first_symbol_ix)
 {
-    std::vector<boost::shared_ptr<compiled_expression<T,S,2> > > bifiltres;
+    std::vector<boost::shared_ptr<compiled_expression<T, S, 2> > > bifiltres;
 
     int prev_block_cut_point = 0;
     int stack_elements_at_play = 0;
@@ -460,7 +460,7 @@ std::vector<boost::shared_ptr<compiled_expression<T,S,2> > > get_bifiltres(
         {
         assert(block_cut_point > prev_block_cut_point);
 
-        boost::shared_ptr<compiled_expression<T,S,2> > bif
+        boost::shared_ptr<compiled_expression<T, S, 2> > bif
             = expr->get_slice(prev_block_cut_point, block_cut_point-1);
 
         relocate_jumps<T,S>(

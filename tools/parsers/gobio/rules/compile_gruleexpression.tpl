@@ -87,7 +87,7 @@ template<class T, class S, class M>
 void compile_gruleexpression(
     const GRuleExpression* original_expr,
     HashWrapper<std::pair<int, int>, int>::type& rhs_hash,
-    compiled_expression<T,S,2>& compiled_expr,
+    compiled_expression<T, S, 2>& compiled_expr,
     M& master,
     registrar<std::string>& attribute_registrar,
     registrar<std::string>& extra_attribute_registrar,
@@ -256,7 +256,7 @@ void compile_gruleexpression(
 
 
 template<class T, class S>
-bool is_top_pop(const compiled_expression<T,S,2>& compiled_expr)
+bool is_top_pop(const compiled_expression<T, S, 2>& compiled_expr)
 {
     return
     compiled_expr.first_available_address() > 0
@@ -264,7 +264,7 @@ bool is_top_pop(const compiled_expression<T,S,2>& compiled_expr)
 }
 
 template<class T, class S>
-bool is_jump_or_ifnjump_to(const compiled_expression<T,S,2>& expr, int addr)
+bool is_jump_or_ifnjump_to(const compiled_expression<T, S, 2>& expr, int addr)
 {
     for (int i = 0; i < expr.first_available_address(); ++i)
     {
@@ -330,7 +330,7 @@ bool is_jump_or_ifnjump_to(const compiled_expression<T,S,2>& expr, int addr)
 
 template<class T, class S, class M>
 bool is_top_true(
-    const compiled_expression<T,S,2>& compiled_expr,
+    const compiled_expression<T, S, 2>& compiled_expr,
     const M& master)
 {
     int i = compiled_expr.first_available_address() - 1;
@@ -412,7 +412,7 @@ template<class T, class S, class M>
 void compile_gruleexpression_node(
     const GRuleExpression* expr,
     HashWrapper<std::pair<int, int>, int>::type& rhs_hash,
-    compiled_expression<T,S,2>& compiled_expr,
+    compiled_expression<T, S, 2>& compiled_expr,
     M& master,
     registrar<std::string>& attribute_registrar,
     registrar<std::string>& extra_attribute_registrar,
