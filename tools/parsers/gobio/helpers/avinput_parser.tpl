@@ -4,8 +4,8 @@
 #include "avinput_parser.hpp"
 #include "avinput_grammar.hpp"
 
-typedef char const*         iterator_t;
-typedef tree_match<iterator_t> parse_tree_match_t;
+typedef char const * iterator_t;
+typedef boost::spirit::classic::tree_match<iterator_t> parse_tree_match_t;
 typedef parse_tree_match_t::tree_iterator iter_t;
 
 
@@ -13,7 +13,11 @@ template<class C, class R, class T, class M, class H, class Q, class L>
 bool avinput_parser<C,R,T,M,H,Q,L>::parse(const std::string& s)
 {
     avinput_grammar avgrammar;
-    tree_parse_info<> info = pt_parse(s.c_str(), avgrammar,  (ch_p(' ') | ch_p('\t')));
+    boost::spirit::classic::tree_parse_info<> info = pt_parse(
+        s.c_str(),
+        avgrammar,
+        (boost::spirit::classic::ch_p(' ') | boost::spirit::classic::ch_p('\t'))
+    );
 
     walk_all_(info.trees.begin());
 

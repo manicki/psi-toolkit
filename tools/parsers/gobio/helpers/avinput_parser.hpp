@@ -32,7 +32,7 @@ public:
     attribute_reg_(attribute_reg),
     extra_attribute_reg_(extra_attribute_reg) {}
 
-    av_matrix<int,T>& matrix_reader(av_matrix<int,T>& x) { return x;}
+    av_matrix<int, T>& matrix_reader(av_matrix<int, T>& x) { return x;}
 
     int symbol_reader(std::string& s) { return symbol_reg_.get_id(s);}
     int attribute_reader(std::string& s) { return attribute_reg_.get_id(s);}
@@ -74,7 +74,7 @@ private:
     iter_t const& i,
     typename H::vertex_descriptor start_d,
     typename H::vertex_descriptor stop_d);
-    void walk_assignment_(iter_t const& i, av_matrix<C,T>& avm);
+    void walk_assignment_(iter_t const& i, av_matrix<C, T>& avm);
     double walk_extra_(iter_t const& i, typename bare_av_matrix<T>::type& avm);
     void walk_extra_assignment_(iter_t const& i, typename bare_av_matrix<T>::type& avm);
 
@@ -82,4 +82,3 @@ private:
 
 
 #endif
-

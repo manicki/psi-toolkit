@@ -8,10 +8,11 @@
 #include <boost/spirit/include/classic_tree_to_xml.hpp>
 
 
-using namespace boost::spirit::classic;
+namespace classic = boost::spirit::classic;
 
-struct avinput_grammar : public grammar<avinput_grammar>
-{
+
+struct avinput_grammar : public classic::grammar<avinput_grammar> {
+
     static const int attributeID = 1;
     static const int integerID = 2;
     static const int assignmentID = 3;
@@ -24,48 +25,79 @@ struct avinput_grammar : public grammar<avinput_grammar>
     static const int scoreID = 10;
 
     template <typename ScannerT>
-    struct definition
-    {
-        definition(avinput_grammar const& /*self*/)
-        {
-            //  Start grammar definition
-            integer     =   lexeme_d [ leaf_node_d [ uint_p ] ];
+    struct definition {
 
-        attribute   =   lexeme_d[ leaf_node_d[
-                         upper_p >> *(alpha_p | digit_p)
-                         ] ];
+        definition(avinput_grammar const & /*self*/) {
 
-        score = no_node_d[ch_p('[')]
-        >> lexeme_d[leaf_node_d[real_p]]
-        >> no_node_d[ch_p(']')];
+            // Start grammar definition
 
-        symbol = lexeme_d[ leaf_node_d [
-                      (lower_p >> *(lower_p | digit_p | ch_p('_')))
-                      |  (ch_p('\'') >> *~ch_p('\'') >> ch_p('\''))
-                      ] ];
+            integer
+                = classic::lexeme_d[classic::leaf_node_d[classic::uint_p]];
 
-        assignment   =
-        attribute >> no_node_d[ch_p('=')] >> (integer | symbol) >> no_node_d[ch_p('\n')];
+            attribute
+                = classic::lexeme_d[classic::leaf_node_d[
+                    classic::upper_p >> *(classic::alpha_p | classic::digit_p)
+                ]];
+
+            score
+                = classic::no_node_d[classic::ch_p('[')]
+                >> classic::lexeme_d[classic::leaf_node_d[classic::real_p]]
+                >> classic::no_node_d[classic::ch_p(']')];
+
+            symbol
+                = classic::lexeme_d[classic::leaf_node_d[
+                    (
+                        classic::lower_p
+                        >> *(classic::lower_p | classic::digit_p | classic::ch_p('_'))
+                    ) | (
+                        classic::ch_p('\'')
+                        >> *~classic::ch_p('\'')
+                        >> classic::ch_p('\'')
+                    )
+                ]];
+
+            assignment
+                = attribute
+                >> classic::no_node_d[classic::ch_p('=')]
+                >> (integer | symbol)
+                >> classic::no_node_d[classic::ch_p('\n')];
 
 
-        category =
-        no_node_d[ch_p('%')] >> lexeme_d[leaf_node_d[*~ch_p('%')]] >> no_node_d[ch_p('%')];
+            category
+                = classic::no_node_d[classic::ch_p('%')]
+                >> classic::lexeme_d[classic::leaf_node_d[*~classic::ch_p('%')]]
+                >> classic::no_node_d[classic::ch_p('%')];
 
-        node =
-        symbol >> !category >> !score >> no_node_d[ch_p('\n')] >> *assignment >> *extra;
+            node
+                = symbol
+                >> !category
+                >> !score
+                >> classic::no_node_d[classic::ch_p('\n')]
+                >> *assignment
+                >> *extra;
 
-        extra =
-        no_node_d[ch_p('>')] >> no_node_d[ch_p('>')] >> !score >> no_node_d[ch_p('\n')] >>
-        *assignment;
+            extra
+                = classic::no_node_d[classic::ch_p('>')]
+                >> classic::no_node_d[classic::ch_p('>')]
+                >> !score
+                >> classic::no_node_d[classic::ch_p('\n')]
+                >> *assignment;
 
-        segment =
-        no_node_d[ch_p('!')] >> integer >> no_node_d[ch_p('-')]
-                     >> integer >> no_node_d[ch_p('\n')]
-              >> *(no_node_d[*ch_p('\n')] >> node) >> no_node_d[*ch_p('\n')];
+            segment
+                = classic::no_node_d[classic::ch_p('!')]
+                >> integer
+                >> classic::no_node_d[classic::ch_p('-')]
+                >> integer
+                >> classic::no_node_d[classic::ch_p('\n')]
+                >> *(classic::no_node_d[*classic::ch_p('\n')] >> node)
+                >> classic::no_node_d[*classic::ch_p('\n')];
 
-        spec = no_node_d[*ch_p('\n')] >> *segment >> no_node_d[end_p];
+            spec
+                = classic::no_node_d[*classic::ch_p('\n')]
+                >> *segment
+                >> classic::no_node_d[classic::end_p];
 
-            //  End grammar definition
+            // End grammar definition
 
             // turn on the debugging info.
             BOOST_SPIRIT_DEBUG_RULE(attribute);
@@ -73,20 +105,32 @@ struct avinput_grammar : public grammar<avinput_grammar>
             BOOST_SPIRIT_DEBUG_RULE(assignment);
         }
 
-        rule<ScannerT, parser_context<>, parser_tag<attributeID> >   attribute;
-        rule<ScannerT, parser_context<>, parser_tag<integerID> >         integer;
-        rule<ScannerT, parser_context<>, parser_tag<assignmentID> > assignment;
-        rule<ScannerT, parser_context<>, parser_tag<nodeID> > node;
-        rule<ScannerT, parser_context<>, parser_tag<symbolID> > symbol;
-        rule<ScannerT, parser_context<>, parser_tag<segmentID> > segment;
-        rule<ScannerT, parser_context<>, parser_tag<specID> > spec;
-        rule<ScannerT, parser_context<>, parser_tag<categoryID> > category;
-        rule<ScannerT, parser_context<>, parser_tag<extraID> > extra;
-        rule<ScannerT, parser_context<>, parser_tag<scoreID> > score;
+        classic::rule< ScannerT, classic::parser_context<>, classic::parser_tag<attributeID> >
+            attribute;
+        classic::rule< ScannerT, classic::parser_context<>, classic::parser_tag<integerID> >
+            integer;
+        classic::rule< ScannerT, classic::parser_context<>, classic::parser_tag<assignmentID> >
+            assignment;
+        classic::rule< ScannerT, classic::parser_context<>, classic::parser_tag<nodeID> >
+            node;
+        classic::rule< ScannerT, classic::parser_context<>, classic::parser_tag<symbolID> >
+            symbol;
+        classic::rule< ScannerT, classic::parser_context<>, classic::parser_tag<segmentID> >
+            segment;
+        classic::rule< ScannerT, classic::parser_context<>, classic::parser_tag<specID> >
+            spec;
+        classic::rule< ScannerT, classic::parser_context<>, classic::parser_tag<categoryID> >
+            category;
+        classic::rule< ScannerT, classic::parser_context<>, classic::parser_tag<extraID> >
+            extra;
+        classic::rule< ScannerT, classic::parser_context<>, classic::parser_tag<scoreID> >
+            score;
 
-        rule<ScannerT, parser_context<>, parser_tag<specID> > const&
-        start() const { return spec; }
+        classic::rule< ScannerT, classic::parser_context<>, classic::parser_tag<specID> > const &
+            start() const { return spec; }
+
     };
+
 };
 
 
