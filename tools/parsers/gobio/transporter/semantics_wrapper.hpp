@@ -1,27 +1,25 @@
 #ifndef SEMANTICS_WRAPPER_HPP_HDR
 #define SEMANTICS_WRAPPER_HPP_HDR
 
-// #include "dhierarchy.h"
-#include "number_master.hpp"
 
-class semantics_wrapper
-{
+template<typename Atom, typename Master>
+class semantics_wrapper {
 
 public:
-    semantics_wrapper(number_master&, int bonus_divisor=1);
+    semantics_wrapper(Master &, int bonus_divisor = 1);
 
-    int intersect(int sem, int pattern, double& bonus);
-    int tri_intersect(int word, int sem, int pattern, double& bonus);
+    Atom intersect(Atom sem, Atom pattern, double& bonus);
+    Atom tri_intersect(Atom word, Atom sem, Atom pattern, double& bonus);
 
-    // void set_dhierarchy(DomainHierarchy* dhierarchy);
     void set_divisor(int bonus_divisor);
 
 private:
-    int tri_intersect_(int /*word*/, int sem, int pattern, double& bonus);
+    Atom tri_intersect_(Atom /*word*/, Atom sem, Atom pattern, double& bonus);
 
-    number_master& master_;
-    // DomainHierarchy* dhierarchy_;
+    Master & master_;
     double bonus_divisor_;
+
 };
+
 
 #endif

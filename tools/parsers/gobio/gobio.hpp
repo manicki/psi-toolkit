@@ -12,8 +12,7 @@
 #include "agenda.hpp"
 #include "agenda_parser.tpl"
 // #include "number_master.hpp"
-// #include "semantics_wrapper.hpp"
-#include "semantics_wrapper_for_zvalue.hpp"
+#include "semantics_wrapper.tpl"
 // #include "simple_cfg_combinator.tpl"
 #include "tgbg_combinator.tpl"
 #include "zvalue.hpp"
@@ -42,8 +41,7 @@ public:
     typedef zvalue_master Master;
 
     // typedef number_master SemanticsMachine;
-    // typedef semantics_wrapper SemanticsMachine;
-    typedef semantics_wrapper_for_zvalue SemanticsMachine;
+    typedef semantics_wrapper<Atom, Master> SemanticsMachine;
     // typedef semantics_stub<Atom, Master, double> SemanticsMachine;
 
     // typedef boost::shared_ptr<pe_target_info> Equivalent;

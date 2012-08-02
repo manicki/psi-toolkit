@@ -14,8 +14,6 @@ add_library(tools-parsers-gobio SHARED
     translator/grparser.bis.cpp
     translator/grules.cpp
     translator/prandseq.cpp
-    transporter/semantics_wrapper.cpp
-    transporter/semantics_wrapper_for_zvalue.cpp
 )
 
 set_source_files_properties(${psi-toolkit_SOURCE_DIR}/tools/parsers/gobio/translator/lex.grlex.cpp GENERATED)
