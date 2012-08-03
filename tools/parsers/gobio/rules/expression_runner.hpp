@@ -21,7 +21,7 @@ public:
     std::vector<const av_matrix<C, T>*> rhs;
     std::vector<const typename bare_av_matrix<T>::type*> extra_rhs;
 
-    runner_frame() : score(0), chosen_tree_ix(0), lhs(0), rhs(0) { }
+    runner_frame() : score(0), chosen_tree_ix(0), lhs(0), rhs(0), extra_lhs(0) { }
     };
 
     expression_runner();
