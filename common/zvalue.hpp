@@ -621,8 +621,8 @@ protected:
         int a_init_size,
         f_hash_function a_key_hash_function=NULL,
         f_hash_function a_val_hash_function=NULL,
-        f_identity_function a_key_val_function=NULL,
-        bool allocate_atomic_mem=false
+        f_identity_function a_key_val_function=NULL
+        // bool allocate_atomic_mem=false // unused
     ) :
         zobject(holder, EZHASH),
         size(0),
@@ -633,7 +633,6 @@ protected:
         val_hash_function(a_val_hash_function),
         key_val_function(a_key_val_function)
     {
-        (void)allocate_atomic_mem; // to suppress WARNING: unused parameter ‘allocate_atomic_mem’
         if (key_hash_function == NULL)
         key_hash_function = standard_zvalue_hash_function;
 
