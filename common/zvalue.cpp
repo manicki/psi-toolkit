@@ -173,7 +173,7 @@ std::string zhash::to_parsable_string_modif (bool without_int_keys) {
 char* zenvironment::_to_string() {
     char* result = NULL;
 #define ADDCON(zv) 1
-#define GETSTRING(s, zv) s=((zpair*)zv)->to_string();
+#define GETSTRING(s, zv) s=reinterpret_cast<zpair*>(zv)->to_string();
     EZHASH_PRINT(result);
 #undef ADDCON
 #undef GETSTRING
@@ -187,7 +187,7 @@ std::string zenvironment::_to_parsable_string() {
 char* zsymboltable::_to_string() {
     char* result = NULL;
 #define ADDCON(zv) 1
-#define GETSTRING(s, zv) s=((zsymbol*)zv)->_to_string();
+#define GETSTRING(s, zv) s=reinterpret_cast<zsymbol*>(zv)->_to_string();
     EZHASH_PRINT(result);
 #undef ADDCON
 #undef GETSTRING

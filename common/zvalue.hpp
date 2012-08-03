@@ -842,10 +842,11 @@ public:
     {
         zvalue p = get(s);
 
-        if (NULLP(p))
-        put(zpair::generate(my_holder, s, d));
-        else
-        ((zpair*)p)->setSecond(d);
+        if (NULLP(p)) {
+            put(zpair::generate(my_holder, s, d));
+        } else {
+            reinterpret_cast<zpair*>(p)->setSecond(d);
+        }
     }
 
 
@@ -1213,7 +1214,9 @@ zvector* zf_put_to_vector(zobjects_holder* holder,
 
 
 inline zsymbol::~zsymbol() {
-    if (!NULLP(my_zst)) reinterpret_cast<zsymboltable*>(my_zst)->remove(ZWRAP(const_cast<char*>(get_string())));
+    if (!NULLP(my_zst)) {
+        reinterpret_cast<zsymboltable*>(my_zst)->remove(ZWRAP(const_cast<char*>(get_string())));
+    }
     my_zst=NULL_ZVALUE;
 }
 
