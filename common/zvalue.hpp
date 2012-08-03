@@ -827,7 +827,7 @@ public:
         if (NULLP(p))
         return NULL_ZVALUE;
 
-        return ((zpair*)p)->getSecond();
+        return reinterpret_cast<zpair*>(p)->getSecond();
     }
 
     zvalue defined(zvalue s) const
@@ -1213,7 +1213,7 @@ zvector* zf_put_to_vector(zobjects_holder* holder,
 
 
 inline zsymbol::~zsymbol() {
-    if (!NULLP(my_zst)) ((zsymboltable*)my_zst)->remove(ZWRAP(const_cast<char*>(get_string())));
+    if (!NULLP(my_zst)) reinterpret_cast<zsymboltable*>(my_zst)->remove(ZWRAP(const_cast<char*>(get_string())));
     my_zst=NULL_ZVALUE;
 }
 
@@ -1221,28 +1221,28 @@ inline zsymbol::~zsymbol() {
       {
       switch (type) {
       case EZOBJECT:
-          delete (zobject*)this;
+          delete reinterpret_cast<zobject*>(this);
           break;
       case EZPAIR:
-          delete (zpair*)this;
+          delete reinterpret_cast<zpair*>(this);
           break;
       case EZSYMBOL:
-          delete (zsymbol*)this;
+          delete reinterpret_cast<zsymbol*>(this);
           break;
       case EZHASH:
-          delete (zhash*)this;
+          delete reinterpret_cast<zhash*>(this);
           break;
       case EZENVIRONMENT:
-          delete (zenvironment*)this;
+          delete reinterpret_cast<zenvironment*>(this);
           break;
       case EZVECTOR:
-          delete (zvector*)this;
+          delete reinterpret_cast<zvector*>(this);
           break;
       case EZSYMBOLTABLE:
-          delete (zsymboltable*)this;
+          delete reinterpret_cast<zsymboltable*>(this);
           break;
       case EZSYNTREE:
-          delete (zsyntree*)this;
+          delete reinterpret_cast<zsyntree*>(this);
           break;
       default: assert(EZOBJECT==type);
           //implementation error, unknown subclass of zobject or type not set
