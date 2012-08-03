@@ -194,15 +194,15 @@ tree_recipe_expr: RTOKEN_PERCENT tree_recipe RTOKEN_PERCENT
 tree_recipe: p_plus tree_recipe_head p_plus
 {
     $$ = $2;
-    if($1) $$->how_to_insert = GRuleTreeRecipe::INSERT_AFTER;
-    if($3) $$->how_to_insert = GRuleTreeRecipe::INSERT_BEFORE;
+    if ($1) $$->how_to_insert = GRuleTreeRecipe::INSERT_AFTER;
+    if ($3) $$->how_to_insert = GRuleTreeRecipe::INSERT_BEFORE;
 }
 | p_plus tree_recipe_head RTOKEN_LEFT_SQUARE tree_subrecipes_list RTOKEN_RIGHT_SQUARE p_plus
 {
     $$ = $2;
     $$->subrecipes = $4;
-    if($1) $$->how_to_insert = GRuleTreeRecipe::INSERT_AFTER;
-    if($6) $$->how_to_insert = GRuleTreeRecipe::INSERT_BEFORE;
+    if ($1) $$->how_to_insert = GRuleTreeRecipe::INSERT_AFTER;
+    if ($6) $$->how_to_insert = GRuleTreeRecipe::INSERT_BEFORE;
 }
 ;
 
@@ -593,7 +593,7 @@ symbol_ref: RTOKEN_ATOM
 
 %%
 void grparsererror(const char* s)
-    {
+{
     printf("grparse error (%s) at line %d\n", s, grlexlineno);
-    snprintf(grerror_message,127,"%d::%s",grlexlineno,s);
-   }
+    snprintf(grerror_message, 127, "%d::%s", grlexlineno, s);
+}
