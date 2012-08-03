@@ -242,7 +242,7 @@ std::string zsyntree::_to_parsable_string() {
     result+="|";
     std::string attr = zhash::to_parsable_string_modif (true);
     attr.erase(0, 1); attr.erase(attr.length()-1, 1); //obcinam klamerki
-    if (attr.find("=>")) { //jezeli sa w ogole jakies atrybuty
+    if (attr.find("=>") != std::string::npos) { //jezeli sa w ogole jakies atrybuty
         result+=", "; result+=attr; //atrybuty sa na tym samym poziomie co category i label
     }
     result += ", q|subtrees| => [ ";
