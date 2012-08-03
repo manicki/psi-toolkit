@@ -75,23 +75,23 @@ class zobject;
  * <code>zobject::to_string()</code> and do it the same way.
  */
 #define VIRTUAL_FUNCTION_CALL(return_value, function) \
-    zobject* zo = (zobject*)this; \
+    zobject* zo = reinterpret_cast<zobject*>(this); \
     switch (zo->type) { \
-        case EZOBJECT: return_value=((zobject*)zo)->function; \
+        case EZOBJECT: return_value=(reinterpret_cast<zobject*>(zo))->function; \
                        break; \
-        case EZPAIR: return_value=((zpair*)zo)->function; \
+        case EZPAIR: return_value=(reinterpret_cast<zpair*>(zo))->function; \
                      break; \
-        case EZSYMBOL: return_value=((zsymbol*)zo)->function; \
+        case EZSYMBOL: return_value=(reinterpret_cast<zsymbol*>(zo))->function; \
                        break; \
-        case EZHASH: return_value=((zhash*)zo)->function; \
+        case EZHASH: return_value=(reinterpret_cast<zhash*>(zo))->function; \
                      break; \
-        case EZENVIRONMENT: return_value=((zenvironment*)zo)->function; \
+        case EZENVIRONMENT: return_value=(reinterpret_cast<zenvironment*>(zo))->function; \
                             break; \
-        case EZVECTOR: return_value=((zvector*)zo)->function; \
+        case EZVECTOR: return_value=(reinterpret_cast<zvector*>(zo))->function; \
                        break; \
-        case EZSYMBOLTABLE: return_value=((zsymboltable*)zo)->function; \
+        case EZSYMBOLTABLE: return_value=(reinterpret_cast<zsymboltable*>(zo))->function; \
                             break; \
-        case EZSYNTREE: return_value=((zsyntree*)zo)->function; \
+        case EZSYNTREE: return_value=(reinterpret_cast<zsyntree*>(zo))->function; \
                         break; \
         default: assert(EZOBJECT==zo->type); \
             /* implementation error, unknown subclass of zobject or type not set */ \

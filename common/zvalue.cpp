@@ -112,13 +112,13 @@ char* zhash::_to_string() {
     strcpy(result, "{ "); \
     if (0<v->getSize()) \
     {\
-        char *s = (char*)(v->elementAt(0)); \
+        char *s = reinterpret_cast<char*>(v->elementAt(0)); \
         strcat(result, s); \
         delete s; \
     }\
     for (i=1; i<v->getSize(); ++i) { \
         strcat(result, ", "); \
-        char *s = (char*)(v->elementAt(i)); \
+        char *s = reinterpret_cast<char*>(v->elementAt(i)); \
         strcat(result, s); \
         delete s; \
     } \
@@ -147,7 +147,7 @@ std::string zhash::to_parsable_string_modif (bool without_int_keys) {
         if ( (!NULLP(block[i]) && !DELETEDP(block[i])) ) {
             result += ", ";
             if (ZPAIRP(block[i])) {
-                zpair* p = (zpair*)block[i];
+                zpair* p = reinterpret_cast<zpair*>(block[i]);
                 zvalue pf = p->getFirst();
                 if (! (INTEGERP(pf) && without_int_keys) ) {
                     result += zvalue_to_parsable_string(pf);
@@ -388,14 +388,14 @@ int the_same_identity_function(zvalue z, zvalue t)
 int env_val_hash_function(zvalue z)
 {
     assert(ZPAIRP(z));
-    return standard_zvalue_hash_function(((zpair*) z)->getFirst());
+    return standard_zvalue_hash_function(reinterpret_cast<zpair*>(z)->getFirst());
 }
 
 
 int env_identity_function(zvalue k, zvalue v)
 {
     assert(ZPAIRP(v));
-    return k == ((zpair*) v)->getFirst();
+    return k == reinterpret_cast<zpair*>(v)->getFirst();
 }
 
 
@@ -532,8 +532,8 @@ zsyntree::zsyntree(zobjects_holder* holder):zenvironment(holder, 16)
 {
     type = EZSYNTREE;
 
-    category = label = (zsymbol*)NULL_ZVALUE;
-    equiv_tree = parent_tree = (zsyntree*)NULL_ZVALUE;
+    category = label = reinterpret_cast<zsymbol*>(NULL_ZVALUE);
+    equiv_tree = parent_tree = reinterpret_cast<zsyntree*>(NULL_ZVALUE);
     number_in_parent_tree = -1L;
     last_subtree = -1L;
     segment_beg = -1L;
@@ -738,7 +738,7 @@ void zsyntree::insertAsNthSubtree(zsyntree* a_subtree, int a_n)
     assert(NULL == a_subtree->parent_tree);
     assert( -1L == a_subtree->number_in_parent_tree);
 
-    (*a_subtree).setLabel((zsymbol*)NULL_ZVALUE);
+    a_subtree->setLabel(reinterpret_cast<zsymbol*>(NULL_ZVALUE));
 
     int i;
 
@@ -759,7 +759,7 @@ void zsyntree::insertAsNthSubtree(zsyntree* a_subtree, int a_n)
 
 void zsyntree::addSubtree(zsyntree* a_subtree)
 {
-    addSubtree(a_subtree, (zsymbol*)NULL_ZVALUE);
+    addSubtree(a_subtree, reinterpret_cast<zsymbol*>(NULL_ZVALUE));
 }
 
 void zsyntree::insertBeside(zsyntree* a_subtree, bool after)
@@ -822,8 +822,8 @@ char* zsyntree::zsyntree_to_itf(char* lexeme, char* equiv) {
 
     zsymboltable* zst = NULL;
     if (NULL!=category) {
-        if (!NULLP(((zst_ref*)category)->my_zst)) {
-            zst = ((zsymboltable*)((zst_ref*)category)->my_zst);
+        if (!NULLP(reinterpret_cast<zst_ref*>(category)->my_zst)) {
+            zst = reinterpret_cast<zsymboltable*>(reinterpret_cast<zst_ref*>(category)->my_zst);
         }
     }
     bool terminal = false;
@@ -1068,22 +1068,22 @@ zsymbol* zf_itos(zsymbolfactory* a_sym_fac, zobjects_holder* holder, zvalue i)
 /** BEGIN: for hashes with elements like: zpair(zpair, something) */
 int pair_key_val_hash_function(zvalue z)
 {
-    zpair* zp = (zpair*)((zpair*)z)->getFirst();
+    zpair* zp = reinterpret_cast<zpair*>(reinterpret_cast<zpair*>(z)->getFirst());
     return standard_zvalue_hash_function(zp->getFirst()) +
         standard_zvalue_hash_function(zp->getSecond());
 }
 
 int pair_key_key_hash_function(zvalue z)
 {
-    return standard_zvalue_hash_function(((zpair*) z)->getFirst()) +
-        standard_zvalue_hash_function(((zpair*) z)->getSecond());
+    return standard_zvalue_hash_function(reinterpret_cast<zpair*>(z)->getFirst())
+        + standard_zvalue_hash_function(reinterpret_cast<zpair*>(z)->getSecond());
 }
 
 int pair_key_identity_function(zvalue k, zvalue v)
 {
-    zpair* zp = (zpair*)((zpair*)v)->getFirst();
-    return ( ( ((zpair*)k)->getFirst() == zp->getFirst() ) &&
-            ( ((zpair*)k)->getSecond() == zp->getSecond() ) );
+    zpair* zp = reinterpret_cast<zpair*>(reinterpret_cast<zpair*>(v)->getFirst());
+    return (reinterpret_cast<zpair*>(k)->getFirst() == zp->getFirst())
+        && (reinterpret_cast<zpair*>(k)->getSecond() == zp->getSecond());
 }
 /** END: for hashes with elements like: zpair(zpair, something) */
 
