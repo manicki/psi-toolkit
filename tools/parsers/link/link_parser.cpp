@@ -85,8 +85,7 @@ void LinkParser::Factory::doAddLanguageIndependentOptionsHandled(
         "constituent knowledge file name")
         ("affix",
         boost::program_options::value<std::string>(),
-        "affix file name")
-        ;
+        "affix file name");
 }
 
 std::string LinkParser::Factory::doGetName() const {
@@ -98,8 +97,7 @@ std::list<std::string> LinkParser::Factory::doGetAliases() {
         (std::string("link-grammar"))
         (std::string("link-grammar-parse"))
         (std::string("link-grammar-parser"))
-        (std::string("link-parse"))
-    ;
+        (std::string("link-parse"));
 }
 
 boost::filesystem::path LinkParser::Factory::doGetFile() const {
