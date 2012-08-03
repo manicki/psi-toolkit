@@ -22,7 +22,7 @@ unsigned int  current_key = 0;
 bool          encoded     = true;
 imoa_key key;
 
-#define YY_INPUT(buf,result,max_size) \
+#define YY_INPUT(buf, result, max_size) \
 { \
     grlex_input_stream->read(buf, max_size); \
     result = grlex_input_stream->gcount(); \
@@ -57,7 +57,7 @@ PLLETTER [a-ząćęłńóśźżA-ZĄĆĘŁŃÓŚŻ]
 
 "setscore"  return RTOKEN_SETSCORE;
 
-({PLLOWER}|_)({PLLETTER}|[_0-9-])*    { if(YY_START == INITIAL ||
+({PLLOWER}|_)({PLLETTER}|[_0-9-])*    { if (YY_START == INITIAL ||
                     YY_START == outrule)
                     BEGIN(inrule);
 
@@ -66,15 +66,15 @@ PLLETTER [a-ząćęłńóśźżA-ZĄĆĘŁŃÓŚŻ]
 
 \'[^\']*\'                        { grparserlval.s = new std::string(grlextext);
                     size_t i;
-                    for(i = 1; i < grparserlval.s->length(); ++i)
+                    for (i = 1; i < grparserlval.s->length(); ++i)
                     {
-                        if((*grparserlval.s)[i] == '~')
+                        if ((*grparserlval.s)[i] == '~')
                             (*grparserlval.s)[i] = '\'';
                     }
                       return RTOKEN_ATOM;}
 
 \"[^\"]*\"          {    std::string t = grlextext;
-                     t = t.substr(1,t.length()-2);
+                     t = t.substr(1, t.length()-2);
                      grparserlval.s = new std::string(t);
                                  return RTOKEN_ATOM; }
 
