@@ -168,10 +168,9 @@ bool tree_specification<T>::remove_hooks(size_t begin_symbol_ix, size_t end_symb
         remove_hooks_predicate_for_inserts(begin_symbol_ix, end_symbol_ix)),
     inserts_.end());
 
-    if (left_subspecs_.size() > 0 ||
-       right_subspecs_.size() > 0 ||
-       inserts_.size() > 0)
-       all_removed = false;
+    if (!left_subspecs_.empty() || !right_subspecs_.empty() || !inserts_.empty()) {
+        all_removed = false;
+    }
 
     return all_removed;
 }
@@ -426,7 +425,7 @@ template<class T>
 void hook_root<T>::move_hook_down(
     size_t symbol_ix, size_t new_symbol_ix, size_t sub_symbol_ix)
 {
-    assert(symbol_ixs_.size() > 0);
+    assert(!symbol_ixs_.empty());
 
     if (symbol_ixs_[0] == symbol_ix)
     {
@@ -441,7 +440,7 @@ void hook_root<T>::move_hook_down(
 template<class T>
 bool hook_root<T>::is_hook(size_t symbol_ix)
 {
-    assert(symbol_ixs_.size() > 0);
+    assert(!symbol_ixs_.empty());
 
     return symbol_ixs_[0] == symbol_ix;
 }
@@ -500,7 +499,7 @@ template<class T>
 void hook_contents_root<T>::move_hook_down(
     size_t symbol_ix, size_t new_symbol_ix, size_t sub_symbol_ix)
 {
-    assert(symbol_ixs_.size() > 0);
+    assert(!symbol_ixs_.empty());
 
     if (symbol_ixs_[0] == symbol_ix)
     {
