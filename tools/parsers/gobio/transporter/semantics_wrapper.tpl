@@ -57,7 +57,6 @@ Atom semantics_wrapper<Atom, Master>::tri_intersect_(
     }
 
     std::string pattern_s = master_.string_representation(pattern);
-    std::string sem_s = master_.string_representation(sem);
 
     if (master_.is_any(sem) && strchr(pattern_s.c_str(), '\'') == 0) {
         if (strchr(pattern_s.c_str(), '[') == 0) {
