@@ -81,9 +81,17 @@ struct GRuleTreeRecipe
 
     bool is_contents_ref;
 
-    GRuleTreeRecipe():category(NULL),label(NULL),symbol(NULL), number(0),
-    path(NULL),subrecipes(NULL),how_to_insert(INSERT_AFTER),
-    is_contents_ref(false) {}
+    GRuleTreeRecipe() :
+        category(NULL),
+        label(NULL),
+        symbol(NULL),
+        number(0),
+        path(NULL),
+        subrecipes(NULL),
+        how_to_insert(INSERT_AFTER),
+        is_contents_ref(false)
+    { }
+
     ~GRuleTreeRecipe();
 };
 
@@ -157,7 +165,7 @@ struct GRule
     GRuleExpression* extra_expr;
     GRuleTreeRecipe* recipe;
 
-    GRule():left_symbol(NULL), right_symbols(NULL), expr(NULL), extra_expr(0) {}
+    GRule():left_symbol(NULL), right_symbols(NULL), expr(NULL), extra_expr(0), recipe(NULL) {}
     ~GRule();
 };
 
