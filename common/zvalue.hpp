@@ -330,15 +330,19 @@ protected:
      */
     char block[1];
 
-    zsymbol(zobjects_holder* holder, const char* a_s):zst_ref(holder, EZSYMBOL)
-        {
-            strcpy(block, a_s);
-        }
+    zsymbol(zobjects_holder* holder, const char* a_s) :
+        zst_ref(holder, EZSYMBOL),
+        block()
+    {
+        strcpy(block, a_s);
+    }
 
-    zsymbol(zobjects_holder* holder, size_t /* a_size */):zst_ref(holder, EZSYMBOL)
-        {
-            type = EZSYMBOL;
-        }
+    zsymbol(zobjects_holder* holder, size_t /* a_size */) :
+        zst_ref(holder, EZSYMBOL),
+        block()
+    {
+        type = EZSYMBOL;
+    }
 
     inline ~zsymbol();
 

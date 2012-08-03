@@ -21,7 +21,7 @@ private:
     shared_ptr_type avs_;
 
 public:
-    explicit av_matrix() { }
+    explicit av_matrix():cat_() { }
 
     explicit av_matrix(BaseCategory a_cat):cat_(a_cat) { }
 
