@@ -6,12 +6,12 @@ unsigned int prandomSequence(unsigned int x)
     return x+1;
 }
 
-unsigned int getPrandomStartKey() 
+unsigned int getPrandomStartKey()
 {
     return 8042003;
 }
 
-void doxor(char* text, unsigned int len, unsigned int* key) 
+void doxor(char* text, unsigned int len, unsigned int* key)
 {
     while ( len>0 ) {
         *key = prandomSequence(*key);
@@ -21,10 +21,10 @@ void doxor(char* text, unsigned int len, unsigned int* key)
     }
 }
 
-void imoaxor(char* text, unsigned int len, imoa_key& key) 
+void imoaxor(char* text, unsigned int len, imoa_key& key)
 {
     while ( len>0 ) {
-        int k = imoa_irandom(key,0,256);
+        int k = imoa_irandom(key, 0, 256);
         *text = (unsigned char)(*text ^ k);
         ++text;
         --len;
@@ -36,14 +36,14 @@ void imoaxor(std::string& text, imoa_key& key)
     size_t len = text.length();
     size_t i = 0;
     while ( len>0 ) {
-        int k = imoa_irandom(key,0,256);
+        int k = imoa_irandom(key, 0, 256);
         text[i] = (unsigned char)(text[i] ^ k);
         ++i;
         --len;
     }
 }
 
-prand_uint32 imoa_random(imoa_key& key) 
+prand_uint32 imoa_random(imoa_key& key)
 {
     prand_uint64 _2_32 = ((prand_uint64)65536) * 65536;
     prand_uint64 s;

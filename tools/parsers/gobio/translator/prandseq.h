@@ -26,19 +26,20 @@ struct imoa_key {
     prand_uint32 x_1;
     prand_uint32 c;
 
-    void set( prand_uint32 a1
-            , prand_uint32 a2
-            , prand_uint32 a3
-            , prand_uint32 a4
-            , prand_uint32 a5 )
-    {
+    void set(
+        prand_uint32 a1,
+        prand_uint32 a2,
+        prand_uint32 a3,
+        prand_uint32 a4,
+        prand_uint32 a5
+    ) {
       x_4 = a1;
       x_3 = a2;
       x_2 = a3;
       x_1 = a4;
       c = a5;
     }
-  };
+};
 
 
 /**
