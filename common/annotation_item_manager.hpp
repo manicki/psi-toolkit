@@ -52,10 +52,29 @@ public:
         const AnnotationItem & annotationItem
     );
 
-    //Converter stuff:
+    //Converter & master stuff:
 
     zvalue stringToZvalue(std::string s) const;
     std::string zvalueToString(zvalue z) const;
+
+    bool is_int(zvalue value) const;
+    bool is_string(zvalue value) const;
+
+    int to_int(zvalue value) const;
+    std::string to_string(zvalue value) const;
+
+    std::string string_representation(zvalue value) const;
+
+    zvalue from_int(int i);
+    zvalue from_string(const std::string& s);
+    zvalue from_bool(bool b);
+
+    zvalue false_value() const;
+    zvalue any_value() const;
+
+    bool is_false(zvalue value) const;
+    bool is_true(zvalue value) const;
+    bool is_any(zvalue value) const;
 
 private:
 
@@ -64,6 +83,12 @@ private:
     StringBimap m_;
     zobjects_holder * zObjectsHolder_;
     zsymbolfactory * zSymbolFactory_;
+
+    std::string fail_string_;
+    std::string false_string_;
+    std::string empty_string_;
+    std::string any_string_;
+    std::string nil_string_;
 
 };
 

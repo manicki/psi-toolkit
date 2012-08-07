@@ -4,7 +4,13 @@
 #include <sstream>
 
 
-AnnotationItemManager::AnnotationItemManager() {
+AnnotationItemManager::AnnotationItemManager() :
+    fail_string_("fail"),
+    false_string_("false"),
+    empty_string_("empty"),
+    any_string_("any"),
+    nil_string_("nil")
+{
     zObjectsHolder_ = zvector::generate(EMPTY_ZOBJECTS_HOLDER);
     zSymbolFactory_ = new zsymbolfactory(zsymboltable::generate(zObjectsHolder_));
 }
@@ -137,4 +143,84 @@ std::string AnnotationItemManager::zvalueToString(zvalue z) const {
     std::string result(resultCStr);
     delete [] resultCStr;
     return result;
+}
+
+
+//Master stuff
+
+
+bool AnnotationItemManager::is_int(zvalue value) const {
+    return INTEGERP(value);
+}
+
+
+bool AnnotationItemManager::is_string(zvalue value) const {
+    return !INTEGERP(value);
+}
+
+
+int AnnotationItemManager::to_int(zvalue value) const {
+    assert(is_int(value));
+    return ZVALUE_TO_INTEGER(value);
+}
+
+
+std::string AnnotationItemManager::to_string(zvalue value) const {
+    assert(is_string(value));
+    if (is_any(value)) {
+        return nil_string_;
+    }
+    if (is_false(value)) {
+        return fail_string_;
+    }
+    return zvalueToString(value);
+}
+
+
+std::string AnnotationItemManager::string_representation(zvalue value) const {
+    return zvalueToString(value);
+}
+
+
+zvalue AnnotationItemManager::from_int(int i) {
+    return INTEGER_TO_ZVALUE(i);
+}
+
+
+zvalue AnnotationItemManager::from_string(const std::string& s) {
+    if (s == any_string_ || s == nil_string_) {
+        return any_value();
+    }
+    if (s == fail_string_ || s == false_string_ || s == empty_string_) {
+        return false_value();
+    }
+    return stringToZvalue(s);
+}
+
+
+zvalue AnnotationItemManager::from_bool(bool b) {
+    return (b ? any_value() : false_value());
+}
+
+zvalue AnnotationItemManager::false_value() const {
+    return NULL_ZVALUE;
+}
+
+
+zvalue AnnotationItemManager::any_value() const {
+    return DEFAULT_ZVALUE;
+}
+
+bool AnnotationItemManager::is_false(zvalue value) const {
+    return NULLP(value);
+}
+
+
+bool AnnotationItemManager::is_true(zvalue value) const {
+    return !NULLP(value);
+}
+
+
+bool AnnotationItemManager::is_any(zvalue value) const {
+    return DEFAULTP(value);
 }
