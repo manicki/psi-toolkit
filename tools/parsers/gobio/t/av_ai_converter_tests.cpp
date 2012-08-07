@@ -13,7 +13,8 @@ BOOST_AUTO_TEST_SUITE( av_ai_converter )
 
 BOOST_AUTO_TEST_CASE( conversion_int_av_to_ai ) {
 
-    Lattice lattice;
+    AnnotationItemManager aim;
+    Lattice lattice(aim);
     registrar<std::string> reg;
     AV_AI_Converter converter(lattice, reg, reg);
     av_matrix<int, int> avm(0);
@@ -34,7 +35,8 @@ BOOST_AUTO_TEST_CASE( conversion_int_av_to_ai ) {
 
 BOOST_AUTO_TEST_CASE( conversion_int_ai_to_av ) {
 
-    Lattice lattice;
+    AnnotationItemManager aim;
+    Lattice lattice(aim);
     registrar<std::string> reg;
     AV_AI_Converter converter(lattice, reg, reg);
     AnnotationItem ai("0");
@@ -55,7 +57,8 @@ BOOST_AUTO_TEST_CASE( conversion_int_ai_to_av ) {
 
 BOOST_AUTO_TEST_CASE( conversion_partially_string ) {
 
-    Lattice lattice;
+    AnnotationItemManager aim;
+    Lattice lattice(aim);
     registrar<std::string> reg;
     AV_AI_Converter converter(lattice, reg, reg);
     AnnotationItem ai("category");
@@ -72,7 +75,8 @@ BOOST_AUTO_TEST_CASE( conversion_partially_string ) {
 
 BOOST_AUTO_TEST_CASE( conversion_string ) {
 
-    Lattice lattice;
+    AnnotationItemManager aim;
+    Lattice lattice(aim);
     registrar<std::string> reg;
     AV_AI_Converter converter(lattice, reg, reg);
     AnnotationItem ai("category");

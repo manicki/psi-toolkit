@@ -38,7 +38,8 @@
         Agenda, \
         simple_marked_edges_index \
     > Parser; \
-    Lattice lattice; \
+    AnnotationItemManager aim; \
+    Lattice lattice(aim); \
     lattice_preparators::prepareLatticeWithOneSymbolTokens(lattice, (input_string)); \
     Agenda agenda; \
     Combinator combinator; \
@@ -144,7 +145,8 @@ BOOST_AUTO_TEST_CASE( helpers ) {
         simple_marked_edges_index
     > Parser;
 
-    Lattice lattice;
+    AnnotationItemManager aim;
+    Lattice lattice(aim);
     lattice_preparators::prepareLatticeWithOneSymbolTokens(lattice, "baaaaa");
 
     Agenda agenda;

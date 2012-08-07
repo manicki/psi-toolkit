@@ -6,6 +6,8 @@
 
 #include <boost/scoped_ptr.hpp>
 
+#include "annotation_item_manager.hpp"
+#include "lattice.hpp"
 #include "lattice_preparators.hpp"
 #include "dot_lattice_writer.hpp"
 
@@ -15,7 +17,8 @@ BOOST_AUTO_TEST_SUITE( dot_lattice_writer )
 
 BOOST_AUTO_TEST_CASE( dot_lattice_writer_simple ) {
 
-    Lattice lattice;
+    AnnotationItemManager aim;
+    Lattice lattice(aim);
     lattice_preparators::prepareSimpleLattice(lattice);
 
     std::set<std::string> filter;
@@ -49,7 +52,8 @@ BOOST_AUTO_TEST_CASE( dot_lattice_writer_simple ) {
 
 BOOST_AUTO_TEST_CASE( dot_lattice_writer_advanced ) {
 
-    Lattice lattice;
+    AnnotationItemManager aim;
+    Lattice lattice(aim);
     lattice_preparators::prepareAdvancedLattice(lattice);
 
     std::set<std::string> filter;
@@ -80,7 +84,8 @@ BOOST_AUTO_TEST_CASE( dot_lattice_writer_advanced ) {
 
 BOOST_AUTO_TEST_CASE( dot_lattice_writer_tree ) {
 
-    Lattice lattice;
+    AnnotationItemManager aim;
+    Lattice lattice(aim);
     lattice_preparators::prepareRegularLattice(lattice);
 
     std::set<std::string> filter;

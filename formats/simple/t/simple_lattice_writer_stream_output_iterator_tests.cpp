@@ -17,7 +17,8 @@ BOOST_AUTO_TEST_SUITE( simple_lattice_writer_stream_output_iterator )
 
 BOOST_AUTO_TEST_CASE( simple_lattice_writer_stream_output_iterator ) {
 
-    Lattice lattice;
+    AnnotationItemManager aim;
+    Lattice lattice(aim);
     lattice_preparators::prepareSimpleLattice(lattice);
 
     std::vector<std::string> handledTags;
@@ -62,7 +63,8 @@ BOOST_AUTO_TEST_CASE( simple_lattice_writer_stream_output_iterator ) {
 
 BOOST_AUTO_TEST_CASE( simple_lattice_writer_stream_output_iterator_advanced ) {
 
-    Lattice lattice;
+    AnnotationItemManager aim;
+    Lattice lattice(aim);
     lattice_preparators::prepareRegularLattice(lattice);
 
     std::vector<std::string> handledTags;

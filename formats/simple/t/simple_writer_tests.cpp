@@ -13,7 +13,8 @@ BOOST_AUTO_TEST_SUITE( simple_lattice_writer )
 
 BOOST_AUTO_TEST_CASE( simple_lattice_writer ) {
 
-    Lattice lattice;
+    AnnotationItemManager aim;
+    Lattice lattice(aim);
     lattice_preparators::prepareSimpleLattice(lattice);
 
     std::map<std::string, std::string> tagsSeparators;
@@ -47,7 +48,8 @@ BOOST_AUTO_TEST_CASE( simple_lattice_writer ) {
 
 BOOST_AUTO_TEST_CASE( simple_lattice_writer_linear ) {
 
-    Lattice lattice;
+    AnnotationItemManager aim;
+    Lattice lattice(aim);
     lattice_preparators::prepareSimpleLattice(lattice);
 
     std::map<std::string, std::string> tagsSeparators;
@@ -81,7 +83,8 @@ BOOST_AUTO_TEST_CASE( simple_lattice_writer_linear ) {
 
 BOOST_AUTO_TEST_CASE( simple_lattice_writer_advanced ) {
 
-    Lattice lattice;
+    AnnotationItemManager aim;
+    Lattice lattice(aim);
     lattice_preparators::prepareAdvancedLattice(lattice);
 
     std::map<std::string, std::string> tagsSeparators;

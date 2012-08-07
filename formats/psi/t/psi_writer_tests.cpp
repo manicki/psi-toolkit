@@ -25,7 +25,8 @@ int countAllEdges(Lattice & lattice) {
 
 
 BOOST_AUTO_TEST_CASE( psi_lattice_writer_simple ) {
-    Lattice lattice;
+    AnnotationItemManager aim;
+    Lattice lattice(aim);
     lattice_preparators::prepareSimpleLattice(lattice);
 
     boost::scoped_ptr<LatticeWriter<std::ostream> > writer(new PsiLatticeWriter());
@@ -47,7 +48,8 @@ BOOST_AUTO_TEST_CASE( psi_lattice_writer_simple ) {
 
 
 BOOST_AUTO_TEST_CASE( psi_lattice_writer_advanced ) {
-    Lattice lattice;
+    AnnotationItemManager aim;
+    Lattice lattice(aim);
     lattice_preparators::prepareAdvancedLattice(lattice);
 
     boost::scoped_ptr<LatticeWriter<std::ostream> > writer(new PsiLatticeWriter());
@@ -68,7 +70,8 @@ BOOST_AUTO_TEST_CASE( psi_lattice_writer_advanced ) {
 
 
 BOOST_AUTO_TEST_CASE( psi_lattice_writer_regular ) {
-    Lattice lattice;
+    AnnotationItemManager aim;
+    Lattice lattice(aim);
     lattice_preparators::prepareRegularLattice(lattice);
 
     boost::scoped_ptr<LatticeWriter<std::ostream> > writer(new PsiLatticeWriter());
@@ -89,7 +92,8 @@ BOOST_AUTO_TEST_CASE( psi_lattice_writer_regular ) {
 
 
 BOOST_AUTO_TEST_CASE( psi_lattice_writer_one_symbol_tokens ) {
-    Lattice lattice;
+    AnnotationItemManager aim;
+    Lattice lattice(aim);
     lattice_preparators::prepareLatticeWithOneSymbolTokens(lattice, "abccdddd");
 
     boost::scoped_ptr<LatticeWriter<std::ostream> > writer(new PsiLatticeWriter());
@@ -110,7 +114,8 @@ BOOST_AUTO_TEST_CASE( psi_lattice_writer_one_symbol_tokens ) {
 
 
 BOOST_AUTO_TEST_CASE( psi_lattice_writer_planes ) {
-    Lattice lattice;
+    AnnotationItemManager aim;
+    Lattice lattice(aim);
     lattice_preparators::prepareSimpleLattice(lattice);
 
     Lattice::VertexDescriptor pre_ala = lattice.getFirstVertex();
@@ -162,8 +167,9 @@ BOOST_AUTO_TEST_CASE( psi_lattice_writer_planes ) {
 
 BOOST_AUTO_TEST_CASE( psi_lattice_writer_reflexive_simple ) {
 
-    Lattice lattice1;
-    Lattice lattice2;
+    AnnotationItemManager aim;
+    Lattice lattice1(aim);
+    Lattice lattice2(aim);
 
     std::stringstream sstr;
 
@@ -187,8 +193,9 @@ BOOST_AUTO_TEST_CASE( psi_lattice_writer_reflexive_simple ) {
 
 BOOST_AUTO_TEST_CASE( psi_lattice_writer_reflexive_advanced ) {
 
-    Lattice lattice1;
-    Lattice lattice2;
+    AnnotationItemManager aim;
+    Lattice lattice1(aim);
+    Lattice lattice2(aim);
 
     std::stringstream sstr;
 
@@ -212,8 +219,9 @@ BOOST_AUTO_TEST_CASE( psi_lattice_writer_reflexive_advanced ) {
 
 BOOST_AUTO_TEST_CASE( psi_lattice_writer_reflexive_regular ) {
 
-    Lattice lattice1;
-    Lattice lattice2;
+    AnnotationItemManager aim;
+    Lattice lattice1(aim);
+    Lattice lattice2(aim);
 
     std::stringstream sstr;
 
@@ -237,8 +245,9 @@ BOOST_AUTO_TEST_CASE( psi_lattice_writer_reflexive_regular ) {
 
 BOOST_AUTO_TEST_CASE( psi_lattice_writer_reflexive_not_covered_text ) {
 
-    Lattice lattice1;
-    Lattice lattice2;
+    AnnotationItemManager aim;
+    Lattice lattice1(aim);
+    Lattice lattice2(aim);
 
     std::stringstream sstr;
 

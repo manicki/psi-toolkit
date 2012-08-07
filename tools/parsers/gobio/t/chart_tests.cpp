@@ -38,7 +38,8 @@ BOOST_AUTO_TEST_SUITE( gobio_chart )
 
 BOOST_AUTO_TEST_CASE( chart_vertices ) {
 
-    Lattice lattice;
+    AnnotationItemManager aim;
+    Lattice lattice(aim);
     SIMPLE_CHART(ch, lattice);
 
     BOOST_CHECK_EQUAL(count_vertices(ch), 1);
@@ -60,7 +61,8 @@ BOOST_AUTO_TEST_CASE( chart_vertices ) {
 
 BOOST_AUTO_TEST_CASE( chart_vertices_with_preparator ) {
 
-    Lattice lattice;
+    AnnotationItemManager aim;
+    Lattice lattice(aim);
     SIMPLE_CHART(ch, lattice);
 
     BOOST_CHECK_EQUAL(count_vertices(ch), 1);
@@ -74,7 +76,8 @@ BOOST_AUTO_TEST_CASE( chart_vertices_with_preparator ) {
 
 BOOST_AUTO_TEST_CASE( chart_edges ) {
 
-    Lattice lattice(std::string(7, 's'));
+    AnnotationItemManager aim;
+    Lattice lattice(aim, std::string(7, 's'));
     SIMPLE_CHART(ch, lattice);
 
     BOOST_CHECK_EQUAL(count_vertices(ch), 8);
@@ -118,7 +121,8 @@ BOOST_AUTO_TEST_CASE( chart_edges ) {
 
 BOOST_AUTO_TEST_CASE( chart_mask ) {
 
-    Lattice lattice;
+    AnnotationItemManager aim;
+    Lattice lattice(aim);
     lattice_preparators::prepareLatticeWithOneSymbolTokens(lattice, "abccdddd");
     SIMPLE_CHART(ch, lattice);
 
@@ -134,7 +138,8 @@ BOOST_AUTO_TEST_CASE( chart_mask ) {
 
 BOOST_AUTO_TEST_CASE( chart_empty ) {
 
-    Lattice lattice(std::string(2012, 's'));
+    AnnotationItemManager aim;
+    Lattice lattice(aim, std::string(2012, 's'));
     SIMPLE_CHART(ch, lattice);
 
     BOOST_CHECK_EQUAL(count_out_edges(ch), 0);
@@ -154,7 +159,8 @@ BOOST_AUTO_TEST_CASE( chart_linear ) {
 
     const int nb_vertices = 200;
 
-    Lattice lattice(std::string(nb_vertices-1, 's'));
+    AnnotationItemManager aim;
+    Lattice lattice(aim, std::string(nb_vertices-1, 's'));
     SIMPLE_CHART(ch, lattice);
 
     for (int i=0; i<nb_vertices; ++i) {
@@ -188,7 +194,8 @@ BOOST_AUTO_TEST_CASE( chart_complete ) {
 
     const int nb_vertices = 30;
 
-    Lattice lattice(std::string(nb_vertices-1, 's'));
+    AnnotationItemManager aim;
+    Lattice lattice(aim, std::string(nb_vertices-1, 's'));
     SIMPLE_CHART(ch, lattice);
 
     for (int i=0; i<nb_vertices; ++i) {
@@ -222,7 +229,8 @@ BOOST_AUTO_TEST_CASE( chart_marked ) {
 
     const int nb_vertices = 60;
 
-    Lattice lattice(std::string(nb_vertices-1, 's'));
+    AnnotationItemManager aim;
+    Lattice lattice(aim, std::string(nb_vertices-1, 's'));
     SIMPLE_CHART(ch, lattice);
 
     std::vector<simple_chart::edge_descriptor> e;
@@ -304,7 +312,8 @@ BOOST_AUTO_TEST_CASE( chart_partitions ) {
 
     const int nb_vertices = 11;
 
-    Lattice lattice(std::string(nb_vertices-1, 's'));
+    AnnotationItemManager aim;
+    Lattice lattice(aim, std::string(nb_vertices-1, 's'));
     SIMPLE_CHART(ch, lattice);
 
     std::vector<simple_chart::edge_descriptor> e;

@@ -5,6 +5,8 @@
 
 #include <boost/scoped_ptr.hpp>
 
+#include "annotation_item_manager.hpp"
+#include "lattice.hpp"
 #include "lattice_iter_writer.hpp"
 #include "lattice_preparators.hpp"
 #include "literal_test_output_iterator.hpp"
@@ -17,7 +19,8 @@ BOOST_AUTO_TEST_SUITE( lattice_iter_writer )
 
 BOOST_AUTO_TEST_CASE( lattice_iter_writer ) {
 
-    Lattice lattice;
+    AnnotationItemManager aim;
+    Lattice lattice(aim);
     lattice_preparators::prepareRegularLattice(lattice);
 
     std::vector<std::string> handledTags;

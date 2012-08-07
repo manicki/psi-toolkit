@@ -5,7 +5,8 @@
 BOOST_AUTO_TEST_SUITE( me_tagger_tests )
 
 BOOST_AUTO_TEST_CASE( training_test ) {
-    Lattice lattice("Ala ma kota. Koty są czarne.");
+    AnnotationItemManager aim;
+    Lattice lattice(aim, "Ala ma kota. Koty są czarne.");
     lattice.addSymbols(lattice.getFirstVertex(), lattice.getLastVertex());
 
     std::string langCode = "pl";
@@ -328,7 +329,7 @@ BOOST_AUTO_TEST_CASE( training_test ) {
     trainer->train(lattice);
     trainer->saveModel(trainer->getModelFile());
 
-    Lattice test_lattice("Kobieta ma psa.");
+    Lattice test_lattice(aim, "Kobieta ma psa.");
     test_lattice.addSymbols(test_lattice.getFirstVertex(), test_lattice.getLastVertex());
 
     symbolTag

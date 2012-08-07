@@ -8,7 +8,8 @@ BOOST_AUTO_TEST_SUITE( puddle_autodelete )
 
 BOOST_AUTO_TEST_CASE( autodelete_pl ) {
     //preparing lattice
-    Lattice lattice("Ala ma kota");
+    AnnotationItemManager aim;
+    Lattice lattice(aim, "Ala ma kota");
     lattice.addSymbols(lattice.getFirstVertex(), lattice.getLastVertex());
     LayerTagCollection raw_tag
         = lattice.getLayerTagManager().createSingletonTagCollection("symbol");

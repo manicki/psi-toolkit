@@ -27,7 +27,8 @@
     typedef chart<Category, Score, Variant, Rule> Chart; \
     typedef agenda_parser<Category, Score, Variant, Rule, Combinator, Agenda> Parser; \
     typedef simple_converter<Atom> SimpleConverter; \
-    Lattice lattice; \
+    AnnotationItemManager aim; \
+    Lattice lattice(aim); \
     Master master(lattice.getAnnotationItemManager()); \
     Combinator combinator(master); \
     combinator.add_rules(ROOT_DIR FILE_RULES); \
@@ -143,7 +144,8 @@ BOOST_AUTO_TEST_CASE( avinput ) {
     typedef chart<Category, Score, Variant, Rule> Chart;
     typedef simple_converter<Atom> SimpleConverter;
 
-    Lattice lattice;
+    AnnotationItemManager aim;
+    Lattice lattice(aim);
 
     Master master(lattice.getAnnotationItemManager());
     registrar<std::string> symbol_reg;

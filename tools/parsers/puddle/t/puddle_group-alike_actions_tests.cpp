@@ -8,7 +8,8 @@ BOOST_AUTO_TEST_SUITE( puddle_group_alike_actions )
 
 BOOST_AUTO_TEST_CASE( puddle_attach ) {
     //preparing lattice
-    Lattice lattice("ananas noirs");
+    AnnotationItemManager aim;
+    Lattice lattice(aim, "ananas noirs");
     lattice.addSymbols(lattice.getFirstVertex(), lattice.getLastVertex());
     LayerTagCollection raw_tag
         = lattice.getLayerTagManager().createSingletonTagCollection("symbol");
@@ -269,7 +270,8 @@ BOOST_AUTO_TEST_CASE( puddle_attach ) {
 
 BOOST_AUTO_TEST_CASE( puddle_group ) {
     //preparing lattice
-    Lattice lattice("ananas noirs");
+    AnnotationItemManager aim;
+    Lattice lattice(aim, "ananas noirs");
     lattice.addSymbols(lattice.getFirstVertex(), lattice.getLastVertex());
     LayerTagCollection raw_tag
         = lattice.getLayerTagManager().createSingletonTagCollection("symbol");
@@ -477,7 +479,8 @@ BOOST_AUTO_TEST_CASE( puddle_group ) {
 
 BOOST_AUTO_TEST_CASE( puddle_join ) {
     //preparing lattice
-    Lattice lattice("ananas noirs");
+    AnnotationItemManager aim;
+    Lattice lattice(aim, "ananas noirs");
     lattice.addSymbols(lattice.getFirstVertex(), lattice.getLastVertex());
     LayerTagCollection raw_tag
         = lattice.getLayerTagManager().createSingletonTagCollection("symbol");
@@ -766,7 +769,8 @@ BOOST_AUTO_TEST_CASE( puddle_join ) {
 
 BOOST_AUTO_TEST_CASE( puddle_syntok ) {
     //preparing lattice
-    Lattice lattice("coup d'état");
+    AnnotationItemManager aim;
+    Lattice lattice(aim, "coup d'état");
     lattice.addSymbols(lattice.getFirstVertex(), lattice.getLastVertex());
     LayerTagCollection raw_tag
         = lattice.getLayerTagManager().createSingletonTagCollection("symbol");
@@ -1553,7 +1557,8 @@ BOOST_AUTO_TEST_CASE( puddle_syntok ) {
 
 BOOST_AUTO_TEST_CASE( puddle_transform ) {
     //preparing lattice
-    Lattice lattice("ananas noirs");
+    AnnotationItemManager aim;
+    Lattice lattice(aim, "ananas noirs");
     lattice.addSymbols(lattice.getFirstVertex(), lattice.getLastVertex());
     LayerTagCollection raw_tag
         = lattice.getLayerTagManager().createSingletonTagCollection("symbol");

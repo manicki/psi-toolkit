@@ -11,7 +11,8 @@ BOOST_AUTO_TEST_SUITE( psi_lattice_reader )
 
 BOOST_AUTO_TEST_CASE( psi_lattice_reader_reflexive ) {
 
-    Lattice lattice("");
+    AnnotationItemManager aim;
+    Lattice lattice(aim, "");
 
     boost::scoped_ptr<StreamLatticeReader> reader(new PsiLatticeReader());
 
@@ -40,7 +41,8 @@ BOOST_AUTO_TEST_CASE( psi_lattice_reader_reflexive ) {
 
 BOOST_AUTO_TEST_CASE( psi_lattice_reader_corrupted ) {
 
-    Lattice lattice("");
+    AnnotationItemManager aim;
+    Lattice lattice(aim, "");
 
     boost::scoped_ptr<StreamLatticeReader> reader(new PsiLatticeReader());
 

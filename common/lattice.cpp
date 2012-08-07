@@ -2,19 +2,21 @@
 
 #include "string_helpers.hpp"
 
-Lattice::Lattice() :
+Lattice::Lattice(AnnotationItemManager & annotationItemManager) :
+    annotationItemManager_(annotationItemManager),
     nLooseVertices_(0),
     symbolTag_(layerTagManager_.createSingletonTagCollection("symbol")),
-    discardedTag_(layerTagManager_.createSingletonTagCollection("discarded")) {
-
+    discardedTag_(layerTagManager_.createSingletonTagCollection("discarded"))
+{
     resizeImplicitEdgesStructures_();
 }
 
-Lattice::Lattice(const std::string & text) :
+Lattice::Lattice(AnnotationItemManager & annotationItemManager, const std::string & text) :
+    annotationItemManager_(annotationItemManager),
     nLooseVertices_(0),
     symbolTag_(layerTagManager_.createSingletonTagCollection("symbol")),
-    discardedTag_(layerTagManager_.createSingletonTagCollection("discarded")) {
-
+    discardedTag_(layerTagManager_.createSingletonTagCollection("discarded"))
+{
     appendString(text);
 }
 

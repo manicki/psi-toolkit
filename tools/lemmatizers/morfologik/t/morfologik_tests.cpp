@@ -50,7 +50,8 @@ BOOST_AUTO_TEST_CASE( stems ) {
 
 BOOST_AUTO_TEST_CASE( lexeme_level ) {
 
-    Lattice lattice;
+    AnnotationItemManager aim;
+    Lattice lattice(aim);
     std::string paragraph = "prowokacjami";
     lattice.appendStringWithSymbols(paragraph);
 
@@ -128,7 +129,8 @@ BOOST_AUTO_TEST_CASE( lexeme_level ) {
 
 BOOST_AUTO_TEST_CASE( many_lexemes ) {
 
-    Lattice lattice;
+    AnnotationItemManager aim;
+    Lattice lattice(aim);
     std::string paragraph = "mam";
     lattice.appendStringWithSymbols(paragraph);
 

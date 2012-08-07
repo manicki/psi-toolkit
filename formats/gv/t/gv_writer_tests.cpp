@@ -16,7 +16,8 @@ BOOST_AUTO_TEST_SUITE( gv_lattice_writer )
 
 BOOST_AUTO_TEST_CASE( gv_lattice_writer_simple ) {
 
-    Lattice lattice;
+    AnnotationItemManager aim;
+    Lattice lattice(aim);
     lattice_preparators::prepareSimpleLattice(lattice);
 
     std::set<std::string> filter;
@@ -58,7 +59,8 @@ BOOST_AUTO_TEST_CASE( gv_lattice_writer_simple ) {
 
 BOOST_AUTO_TEST_CASE( gv_lattice_writer_advanced ) {
 
-    Lattice lattice;
+    AnnotationItemManager aim;
+    Lattice lattice(aim);
     lattice_preparators::prepareAdvancedLattice(lattice);
 
     std::set<std::string> filter;
@@ -97,7 +99,8 @@ BOOST_AUTO_TEST_CASE( gv_lattice_writer_advanced ) {
 
 BOOST_AUTO_TEST_CASE( dot_lattice_writer_tree ) {
 
-    Lattice lattice;
+    AnnotationItemManager aim;
+    Lattice lattice(aim);
     lattice_preparators::prepareRegularLattice(lattice);
 
     std::set<std::string> filter;
@@ -136,7 +139,8 @@ BOOST_AUTO_TEST_CASE( dot_lattice_writer_tree ) {
 
 BOOST_AUTO_TEST_CASE( dot_lattice_writer_tree_canon ) {
 
-    Lattice lattice;
+    AnnotationItemManager aim;
+    Lattice lattice(aim);
     lattice_preparators::prepareRegularLattice(lattice);
 
     std::set<std::string> filter;

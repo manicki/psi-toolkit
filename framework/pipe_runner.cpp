@@ -382,7 +382,8 @@ void PipeRunner::addLangGuesser_() {
 
 template<typename Source, typename Sink>
 int PipeRunner::run_(Source& in, Sink& out) {
-    Lattice lattice;
+    AnnotationItemManager aim;
+    Lattice lattice(aim);
 
     for (FinalPipeline::iterator current = finalPipeline_.begin();
          current != finalPipeline_.end();

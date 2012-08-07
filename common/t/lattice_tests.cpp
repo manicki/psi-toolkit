@@ -2,6 +2,7 @@
 
 #include "lattice.hpp"
 #include "annotation_item.hpp"
+#include "annotation_item_manager.hpp"
 
 #include "by_spaces_cutter.hpp"
 #include "fake_lemmatizer.hpp"
@@ -13,7 +14,8 @@ BOOST_AUTO_TEST_SUITE( lattice )
 void initAndTokenize_(Lattice& lattice, const std::string& paragraph, bool addSymbols=true);
 
 BOOST_AUTO_TEST_CASE( lattice_simple ) {
-    Lattice lattice("Ala ma kota");
+    AnnotationItemManager aim;
+    Lattice lattice(aim, "Ala ma kota");
 
     lattice.addSymbols(lattice.getFirstVertex(), lattice.getLastVertex());
 
@@ -190,7 +192,8 @@ BOOST_AUTO_TEST_CASE( lattice_simple ) {
 }
 
 BOOST_AUTO_TEST_CASE( vertex_iterator ) {
-    Lattice lattice;
+    AnnotationItemManager aim;
+    Lattice lattice(aim);
     lattice.appendStringWithSymbols("żeś");
 
     Lattice::VertexIterator iter(lattice);
@@ -205,7 +208,8 @@ BOOST_AUTO_TEST_CASE( vertex_iterator ) {
 }
 
 BOOST_AUTO_TEST_CASE( get_path ) {
-    Lattice lattice;
+    AnnotationItemManager aim;
+    Lattice lattice(aim);
     lattice.appendStringWithSymbols("ćma zielona");
     lattice.appendString("<br>");
     lattice.appendStringWithSymbols("mucha");
@@ -224,7 +228,8 @@ BOOST_AUTO_TEST_CASE( get_path ) {
 }
 
 BOOST_AUTO_TEST_CASE( cutter ) {
-    Lattice lattice;
+    AnnotationItemManager aim;
+    Lattice lattice(aim);
     initAndTokenize_(lattice, "szybki zielony rower");
 
     LayerTagMask tokenMask = lattice.getLayerTagManager().getMaskWithLangCode(
@@ -270,7 +275,8 @@ BOOST_AUTO_TEST_CASE( cutter ) {
 }
 
 BOOST_AUTO_TEST_CASE( cutter_on_no_symbols ) {
-    Lattice lattice;
+    AnnotationItemManager aim;
+    Lattice lattice(aim);
     initAndTokenize_(lattice, "<a>", false);
 
     LayerTagMask tokenMask = lattice.getLayerTagManager().getMask("token");
@@ -281,7 +287,8 @@ BOOST_AUTO_TEST_CASE( cutter_on_no_symbols ) {
 }
 
 BOOST_AUTO_TEST_CASE( lemmatizer ) {
-    Lattice lattice;
+    AnnotationItemManager aim;
+    Lattice lattice(aim);
     initAndTokenize_(lattice, "prowokacjami");
 
     boost::program_options::variables_map noOptions;
@@ -330,7 +337,8 @@ BOOST_AUTO_TEST_CASE( lemmatizer ) {
 
 BOOST_AUTO_TEST_CASE( variant_edges ) {
     //preparing lattice
-    Lattice lattice("ananas");
+    AnnotationItemManager aim;
+    Lattice lattice(aim, "ananas");
     lattice.addSymbols(lattice.getFirstVertex(), lattice.getLastVertex());
     LayerTagCollection raw_tag
         = lattice.getLayerTagManager().createSingletonTagCollection("symbol");
@@ -424,7 +432,8 @@ BOOST_AUTO_TEST_CASE( variant_edges ) {
 
 BOOST_AUTO_TEST_CASE( edges_layer_tags ) {
     //preparing lattice
-    Lattice lattice("ananas");
+    AnnotationItemManager aim;
+    Lattice lattice(aim, "ananas");
     lattice.addSymbols(lattice.getFirstVertex(), lattice.getLastVertex());
     LayerTagCollection raw_tag
         = lattice.getLayerTagManager().createSingletonTagCollection("symbol");
@@ -476,7 +485,8 @@ BOOST_AUTO_TEST_CASE( edges_layer_tags ) {
 
 BOOST_AUTO_TEST_CASE( edges_tags_combining ) {
     //preparing lattice
-    Lattice lattice("ananas");
+    AnnotationItemManager aim;
+    Lattice lattice(aim, "ananas");
     lattice.addSymbols(lattice.getFirstVertex(), lattice.getLastVertex());
     LayerTagCollection raw_tag
         = lattice.getLayerTagManager().createSingletonTagCollection("symbol");
@@ -530,7 +540,8 @@ BOOST_AUTO_TEST_CASE( edges_tags_combining ) {
 
 BOOST_AUTO_TEST_CASE( edges_scores_combining ) {
     //preparing lattice
-    Lattice lattice("ananas");
+    AnnotationItemManager aim;
+    Lattice lattice(aim, "ananas");
     lattice.addSymbols(lattice.getFirstVertex(), lattice.getLastVertex());
     LayerTagCollection raw_tag
         = lattice.getLayerTagManager().createSingletonTagCollection("symbol");
@@ -572,7 +583,8 @@ BOOST_AUTO_TEST_CASE( edges_scores_combining ) {
 
 BOOST_AUTO_TEST_CASE( loose_vertices ) {
     //preparing lattice
-    Lattice lattice("abc");
+    AnnotationItemManager aim;
+    Lattice lattice(aim, "abc");
     lattice.addSymbols(lattice.getFirstVertex(), lattice.getLastVertex());
     LayerTagCollection token_tag
         = lattice.getLayerTagManager().createSingletonTagCollection("token");
@@ -618,7 +630,8 @@ BOOST_AUTO_TEST_CASE( loose_vertices ) {
 
 BOOST_AUTO_TEST_CASE( vertex_iterator_advanced ) {
     //preparing lattice
-    Lattice lattice("abc");
+    AnnotationItemManager aim;
+    Lattice lattice(aim, "abc");
     lattice.addSymbols(lattice.getFirstVertex(), lattice.getLastVertex());
     LayerTagCollection token_tag
         = lattice.getLayerTagManager().createSingletonTagCollection("token");
@@ -651,7 +664,8 @@ BOOST_AUTO_TEST_CASE( vertex_iterator_advanced ) {
 
 BOOST_AUTO_TEST_CASE( correction_erase ) {
     //preparing lattice
-    Lattice lattice("cear");
+    AnnotationItemManager aim;
+    Lattice lattice(aim, "cear");
     lattice.addSymbols(lattice.getFirstVertex(), lattice.getLastVertex());
 
     lattice.correctionErase(
@@ -696,7 +710,8 @@ BOOST_AUTO_TEST_CASE( correction_erase ) {
 
 BOOST_AUTO_TEST_CASE( correction_insert ) {
     //preparing lattice
-    Lattice lattice("cear");
+    AnnotationItemManager aim;
+    Lattice lattice(aim, "cear");
     lattice.addSymbols(lattice.getFirstVertex(), lattice.getLastVertex());
 
     lattice.correctionInsert(
@@ -752,7 +767,8 @@ BOOST_AUTO_TEST_CASE( correction_insert ) {
 
 BOOST_AUTO_TEST_CASE( correction_replace ) {
     //preparing lattice
-    Lattice lattice("cear");
+    AnnotationItemManager aim;
+    Lattice lattice(aim, "cear");
     lattice.addSymbols(lattice.getFirstVertex(), lattice.getLastVertex());
 
     lattice.correctionReplace(
@@ -806,7 +822,8 @@ BOOST_AUTO_TEST_CASE( correction_replace ) {
 
 BOOST_AUTO_TEST_CASE( correction_replace_advanced ) {
     //preparing lattice
-    Lattice lattice("cear");
+    AnnotationItemManager aim;
+    Lattice lattice(aim, "cear");
     lattice.addSymbols(lattice.getFirstVertex(), lattice.getLastVertex());
 
     lattice.correctionReplace(
@@ -870,7 +887,8 @@ void initAndTokenize_(Lattice& lattice, const std::string& paragraph, bool addSy
 }
 
 BOOST_AUTO_TEST_CASE( discard ) {
-    Lattice lattice;
+    AnnotationItemManager aim;
+    Lattice lattice(aim);
 
     {
         initAndTokenize_(lattice, "Ala ma kota");
@@ -905,7 +923,8 @@ BOOST_AUTO_TEST_CASE( discard ) {
 }
 
 BOOST_AUTO_TEST_CASE( edge_self_reference ) {
-    Lattice lattice("a");
+    AnnotationItemManager aim;
+    Lattice lattice(aim, "a");
     Lattice::VertexDescriptor from = lattice.getFirstVertex();
     Lattice::VertexDescriptor to = lattice.getLastVertex();
     AnnotationItem item("item");
@@ -928,7 +947,8 @@ BOOST_AUTO_TEST_CASE( edge_self_reference ) {
 }
 
 BOOST_AUTO_TEST_CASE( reversed_edges ) {
-    Lattice lattice("abcd");
+    AnnotationItemManager aim;
+    Lattice lattice(aim, "abcd");
     Lattice::VertexDescriptor from = lattice.getVertexForRawCharIndex(3);
     Lattice::VertexDescriptor to = lattice.getVertexForRawCharIndex(1);
     AnnotationItem item("item");
@@ -942,7 +962,8 @@ BOOST_AUTO_TEST_CASE( reversed_edges ) {
 
 
 BOOST_AUTO_TEST_CASE( loop_edges ) {
-    Lattice lattice("ab");
+    AnnotationItemManager aim;
+    Lattice lattice(aim, "ab");
     Lattice::VertexDescriptor vertex = lattice.getVertexForRawCharIndex(1);
     AnnotationItem item("item");
     LayerTagCollection tags(lattice.getLayerTagManager().createSingletonTagCollection("tag"));
@@ -955,8 +976,8 @@ BOOST_AUTO_TEST_CASE( loop_edges ) {
 
 
 BOOST_AUTO_TEST_CASE( lattice_vertices ) {
-
-    Lattice lattice;
+    AnnotationItemManager aim;
+    Lattice lattice(aim);
     BOOST_CHECK_EQUAL(lattice.countAllVertices(), 1);
 
     {
@@ -1100,7 +1121,8 @@ BOOST_AUTO_TEST_CASE( lattice_vertices ) {
 
 
 BOOST_AUTO_TEST_CASE( planes ) {
-    Lattice lattice("abcd");
+    AnnotationItemManager aim;
+    Lattice lattice(aim, "abcd");
 
     LayerTagCollection tagsFoo(lattice.getLayerTagManager().createSingletonTagCollection("foo"));
     LayerTagCollection tagsBar(lattice.getLayerTagManager().createSingletonTagCollection("bar"));

@@ -8,7 +8,8 @@ BOOST_AUTO_TEST_SUITE( puddle_non_group_actions )
 
 BOOST_AUTO_TEST_CASE( puddle_add ) {
     //preparing lattice
-    Lattice lattice("ananas noirs");
+    AnnotationItemManager aim;
+    Lattice lattice(aim, "ananas noirs");
     lattice.addSymbols(lattice.getFirstVertex(), lattice.getLastVertex());
     LayerTagCollection raw_tag
         = lattice.getLayerTagManager().createSingletonTagCollection("symbol");
@@ -258,7 +259,8 @@ BOOST_AUTO_TEST_CASE( puddle_add ) {
 
 BOOST_AUTO_TEST_CASE( puddle_delete ) {
     //preparing lattice
-    Lattice lattice("ananas noirs");
+    AnnotationItemManager aim;
+    Lattice lattice(aim, "ananas noirs");
     lattice.addSymbols(lattice.getFirstVertex(), lattice.getLastVertex());
     LayerTagCollection raw_tag
         = lattice.getLayerTagManager().createSingletonTagCollection("symbol");
@@ -511,7 +513,8 @@ BOOST_AUTO_TEST_CASE( puddle_delete ) {
 
 BOOST_AUTO_TEST_CASE( puddle_unify ) {
     //preparing lattice
-    Lattice lattice("ananas noirs");
+    AnnotationItemManager aim;
+    Lattice lattice(aim, "ananas noirs");
     lattice.addSymbols(lattice.getFirstVertex(), lattice.getLastVertex());
     LayerTagCollection raw_tag
         = lattice.getLayerTagManager().createSingletonTagCollection("symbol");

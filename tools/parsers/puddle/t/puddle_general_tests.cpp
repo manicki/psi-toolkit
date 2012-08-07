@@ -8,7 +8,8 @@ BOOST_AUTO_TEST_SUITE( puddle_general )
 
 BOOST_AUTO_TEST_CASE( simple_parse ) {
 
-    Lattice lattice("blanc chat");
+    AnnotationItemManager aim;
+    Lattice lattice(aim, "blanc chat");
     lattice.addSymbols(lattice.getFirstVertex(), lattice.getLastVertex());
     LayerTagCollection raw_tag
         = lattice.getLayerTagManager().createSingletonTagCollection("symbol");
@@ -285,7 +286,8 @@ BOOST_AUTO_TEST_CASE( simple_parse ) {
 
 BOOST_AUTO_TEST_CASE( load_rules_fr ) {
     //preparing lattice
-    Lattice lattice("blanc chat");
+    AnnotationItemManager aim;
+    Lattice lattice(aim, "blanc chat");
     lattice.addSymbols(lattice.getFirstVertex(), lattice.getLastVertex());
     LayerTagCollection raw_tag
         = lattice.getLayerTagManager().createSingletonTagCollection("symbol");
@@ -397,7 +399,8 @@ BOOST_AUTO_TEST_CASE( load_rules_fr ) {
 
 BOOST_AUTO_TEST_CASE( load_rules_pl ) {
     //preparing lattice
-    Lattice lattice("Ala ma kota");
+    AnnotationItemManager aim;
+    Lattice lattice(aim, "Ala ma kota");
     lattice.addSymbols(lattice.getFirstVertex(), lattice.getLastVertex());
     LayerTagCollection raw_tag
         = lattice.getLayerTagManager().createSingletonTagCollection("symbol");

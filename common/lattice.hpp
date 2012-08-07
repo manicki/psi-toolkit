@@ -347,12 +347,12 @@ public:
     /**
      * Creates an empty lattice.
      */
-    Lattice();
+    Lattice(AnnotationItemManager & annotationItemManager);
 
     /**
      * Creates a lattice with text `text` and no edges.
      */
-    Lattice(const std::string & text);
+    Lattice(AnnotationItemManager & annotationItemManager, const std::string & text);
 
     ~Lattice();
 
@@ -565,7 +565,7 @@ private:
 
     LayerTagManager layerTagManager_;
 
-    AnnotationItemManager annotationItemManager_;
+    AnnotationItemManager & annotationItemManager_;
 
     /**
      * Stores the lattice text.

@@ -132,7 +132,8 @@ void testOnLattice(
     const std::string& cat,
     const std::list<std::string>& expectedEntries) {
 
-    Lattice lattice(word);
+    AnnotationItemManager aim;
+    Lattice lattice(aim, word);
     AnnotationItem item(cat, StringFrag(lexeme));
 
     LayerTagCollection tags = lattice.getLayerTagManager().createTagCollectionFromList(
