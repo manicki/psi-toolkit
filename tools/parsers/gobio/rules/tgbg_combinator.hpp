@@ -432,7 +432,7 @@ private:
     registrar<std::string> attribute_reg_;
     registrar<std::string> extra_attribute_reg_;
     registrar<std::string> symbol_reg_;
-    M master_;
+    M & master_;
     X semantics_machine_;
     std::vector<rule_holder> rules_;
 

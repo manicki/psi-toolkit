@@ -72,8 +72,7 @@ Gobio::Gobio(std::string rulesPath) : rulesPath_(rulesPath) { }
 
 void Gobio::parse(Lattice & lattice) {
 
-    Master master(lattice.getAnnotationItemManager());
-    Combinator combinator(master);
+    Combinator combinator(lattice.getAnnotationItemManager());
 
     combinator.add_rules(rulesPath_);
 

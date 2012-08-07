@@ -38,7 +38,8 @@ public:
     typedef Lattice::Score Score;
 
     // typedef number_master Master;
-    typedef zvalue_master Master;
+    // typedef zvalue_master Master;
+    typedef AnnotationItemManager Master;
 
     // typedef number_master SemanticsMachine;
     typedef semantics_wrapper<Atom, Master> SemanticsMachine;
