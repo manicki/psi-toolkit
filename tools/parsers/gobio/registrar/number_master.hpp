@@ -10,7 +10,7 @@
 class number_master
 {
 public:
-    number_master(int int_limit=65535);
+    number_master();
 
     bool is_int(int value) const;
     bool is_string(int value) const;
@@ -31,8 +31,6 @@ public:
     bool is_true(int value) const;
     bool is_any(int value) const;
 
-    int int_limit() const;
-
 private:
     registrar<std::string> registrar_;
     int int_limit_;
@@ -43,7 +41,7 @@ private:
     std::string fail_string_;
     std::string false_string_;
     std::string empty_string_;
-    
+
     std::string any_string_;
     std::string nil_string_;
 
@@ -65,7 +63,7 @@ void number_master::serialize(Archive & ar, const unsigned int /*version*/)
     ar & fail_string_;
     ar & false_string_;
     ar & empty_string_;
-    
+
     ar & any_string_;
     ar & nil_string_;
 }

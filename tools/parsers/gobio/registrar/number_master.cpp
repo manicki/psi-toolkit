@@ -3,8 +3,8 @@
 #include <assert.h>
 #include <sstream>
 
-number_master::number_master(int int_limit):
-    int_limit_(int_limit),
+number_master::number_master() :
+    int_limit_(65535),
     false_value_(-1L),
     any_value_(0L),
     fail_string_("fail"),
@@ -99,9 +99,4 @@ bool number_master::is_true(int value) const
 bool number_master::is_any(int value) const
 {
     return value == any_value_;
-}
-
-int number_master::int_limit() const
-{
-    return int_limit_;
 }
