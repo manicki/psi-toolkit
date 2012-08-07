@@ -18,7 +18,7 @@
     typedef int BaseCategory; \
     typedef av_matrix<BaseCategory, Atom> Category; \
     typedef Lattice::Score Score; \
-    typedef zvalue_master Master; \
+    typedef AnnotationItemManager Master; \
     typedef semantics_stub<Atom, Master, double> SemanticsMachine; \
     typedef tgbg_combinator<Atom, Score, Master, SemanticsMachine> Combinator; \
     typedef Combinator::rule_type Rule; \
@@ -29,8 +29,7 @@
     typedef simple_converter<Atom> SimpleConverter; \
     AnnotationItemManager aim; \
     Lattice lattice(aim); \
-    Master master(aim); \
-    Combinator combinator(master); \
+    Combinator combinator(aim); \
     combinator.add_rules(ROOT_DIR FILE_RULES); \
     registrar<std::string>& symbol_reg = combinator.get_symbol_registrar(); \
     registrar<std::string>& attribute_reg = combinator.get_attribute_registrar(); \
@@ -47,7 +46,7 @@
         Chart, \
         SimpleConverter, \
         Combinator::rule_holder \
-    > av_parser(master, ch, converter, local_rules); \
+    > av_parser(aim, ch, converter, local_rules); \
     BOOST_CHECK(av_parser.parse(slurp_file(ROOT_DIR FILE_INPUT))); \
     boost::scoped_ptr<LatticeWriter<std::ostream> > writer(new PsiLatticeWriter()); \
     Agenda agenda; \
@@ -135,7 +134,7 @@ BOOST_AUTO_TEST_CASE( avinput ) {
     typedef int BaseCategory;
     typedef av_matrix<BaseCategory, Atom> Category;
     typedef Lattice::Score Score;
-    typedef zvalue_master Master;
+    typedef AnnotationItemManager Master;
     typedef semantics_stub<Atom, Master, double> SemanticsMachine;
     typedef tgbg_combinator<Atom, Score, Master, SemanticsMachine> Combinator;
     typedef Combinator::rule_type Rule;
@@ -147,7 +146,6 @@ BOOST_AUTO_TEST_CASE( avinput ) {
     AnnotationItemManager aim;
     Lattice lattice(aim);
 
-    Master master(aim);
     registrar<std::string> symbol_reg;
     registrar<std::string> attribute_reg;
     registrar<std::string> extra_attribute_reg;
@@ -166,7 +164,7 @@ BOOST_AUTO_TEST_CASE( avinput ) {
         SimpleConverter,
         Combinator::rule_holder
     > av_parser(
-        master,
+        aim,
         ch,
         converter,
         local_rules
