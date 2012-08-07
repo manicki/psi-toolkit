@@ -11,12 +11,10 @@
 
 #include "agenda.hpp"
 #include "agenda_parser.tpl"
-// #include "number_master.hpp"
+#include "annotation_item_manager.hpp"
 #include "semantics_wrapper.tpl"
-// #include "simple_cfg_combinator.tpl"
 #include "tgbg_combinator.tpl"
 #include "zvalue.hpp"
-#include "zvalue_master.hpp"
 
 
 class Gobio : public Annotator {

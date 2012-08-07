@@ -41,7 +41,6 @@ const AnnotationItem AV_AI_Converter::toAnnotationItem(av_matrix<int, zvalue> av
         catSs << symbol_reg_.get_obj(cat);
     }
     AnnotationItem result(catSs.str());
-    zvalue_master master(lattice_.getAnnotationItemManager());
     for (int i = 0; i < av.nb_attrs(); ++i) {
         if (i > attribute_reg_.last_id()) {
             attrSs << i;
@@ -49,7 +48,7 @@ const AnnotationItem AV_AI_Converter::toAnnotationItem(av_matrix<int, zvalue> av
             attrSs << attribute_reg_.get_obj(i);
         }
         zvalue val = av.get_attr(i);
-        if (!master.is_false(val)) {
+        if (!lattice_.getAnnotationItemManager().is_false(val)) {
             lattice_.getAnnotationItemManager().setValue(result, attrSs.str(), val);
         }
         attrSs.str("");

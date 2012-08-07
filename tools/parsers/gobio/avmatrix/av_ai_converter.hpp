@@ -9,12 +9,12 @@
 #include <boost/foreach.hpp>
 
 #include "annotation_item.hpp"
+#include "annotation_item_manager.hpp"
 #include "av_matrix.hpp"
 #include "lattice.hpp"
 #include "number_master.hpp"
 #include "registrar.tpl"
 #include "zvalue.hpp"
-#include "zvalue_master.hpp"
 
 
 namespace AV_AI_Converter_specialization {
@@ -67,14 +67,13 @@ namespace AV_AI_Converter_specialization {
         std::string category = ai.getCategory();
         if (convert_cases && !category.empty()) category[0] = tolower(category[0]);
         av_matrix<int, zvalue> result(symbol_reg.get_id(category));
-        zvalue_master master(lattice.getAnnotationItemManager());
+        AnnotationItemManager & aim = lattice.getAnnotationItemManager();
         typedef std::pair<std::string, zvalue> StringZvaluePair;
-        std::list< StringZvaluePair > values
-            = lattice.getAnnotationItemManager().getValuesAsZvalues(ai);
+        std::list< StringZvaluePair > values = aim.getValuesAsZvalues(ai);
         BOOST_FOREACH( StringZvaluePair avpair, values ) {
             std::string attr = avpair.first;
             if (convert_cases && !attr.empty()) attr[0] = toupper(attr[0]);
-            result.set_attr(attribute_reg.get_id(attr), avpair.second, master.false_value());
+            result.set_attr(attribute_reg.get_id(attr), avpair.second, aim.false_value());
         }
         return result;
     }
@@ -116,14 +115,13 @@ namespace AV_AI_Converter_specialization {
         std::string category = ai.getCategory();
         if (convert_cases && !category.empty()) category[0] = tolower(category[0]);
         av_matrix<std::string, zvalue> result(category);
-        zvalue_master master(lattice.getAnnotationItemManager());
+        AnnotationItemManager & aim = lattice.getAnnotationItemManager();
         typedef std::pair<std::string, zvalue> StringZvaluePair;
-        std::list< StringZvaluePair > values
-            = lattice.getAnnotationItemManager().getValuesAsZvalues(ai);
+        std::list< StringZvaluePair > values = aim.getValuesAsZvalues(ai);
         BOOST_FOREACH( StringZvaluePair avpair, values ) {
             std::string attr = avpair.first;
             if (convert_cases && !attr.empty()) attr[0] = toupper(attr[0]);
-            result.set_attr(attribute_reg.get_id(attr), avpair.second, master.false_value());
+            result.set_attr(attribute_reg.get_id(attr), avpair.second, aim.false_value());
         }
         return result;
     }
