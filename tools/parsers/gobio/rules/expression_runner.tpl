@@ -64,12 +64,15 @@ T expression_runner<C,T,S,M,X,checking>::add_(T a, T b, M& master)
 {
     int r = AtomConverter::toInt(master.false_value());
 
-    if (master.is_int(a) && master.is_int(b) &&
-       master.to_int(a) >= 0 && master.to_int(b) >= 0)
-    {
+    if (
+        master.is_int(a) &&
+        master.is_int(b) &&
+        master.to_int(a) >= 0 &&
+        master.to_int(b) >= 0
+    ) {
         r = master.to_int(a) + master.to_int(b);
-        if (r > master.int_limit())
-            return AtomConverter::toAtom<T>(master.int_limit());
+
+        // if (r > master.int_limit()) return AtomConverter::toAtom<T>(master.int_limit());
     }
 
     return AtomConverter::toAtom<T>(r);

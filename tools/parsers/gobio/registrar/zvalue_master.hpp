@@ -12,7 +12,7 @@
 class zvalue_master {
 
 public:
-    zvalue_master(AnnotationItemManager & annotationItemManager, int int_limit=65535);
+    zvalue_master(AnnotationItemManager & annotationItemManager);
 
     bool is_int(zvalue value) const;
     bool is_string(zvalue value) const;
@@ -33,11 +33,8 @@ public:
     bool is_true(zvalue value) const;
     bool is_any(zvalue value) const;
 
-    int int_limit() const;
-
 private:
     AnnotationItemManager & annotationItemManager_;
-    int int_limit_;
 
     std::string fail_string_;
     std::string false_string_;

@@ -4,12 +4,8 @@
 #include <sstream>
 
 
-zvalue_master::zvalue_master(
-    AnnotationItemManager & annotationItemManager,
-    int int_limit
-) :
+zvalue_master::zvalue_master(AnnotationItemManager & annotationItemManager) :
     annotationItemManager_(annotationItemManager),
-    int_limit_(int_limit),
     fail_string_("fail"),
     false_string_("false"),
     empty_string_("empty"),
@@ -81,8 +77,4 @@ bool zvalue_master::is_true(zvalue value) const {
 
 bool zvalue_master::is_any(zvalue value) const {
     return DEFAULTP(value);
-}
-
-int zvalue_master::int_limit() const {
-    return int_limit_;
 }
