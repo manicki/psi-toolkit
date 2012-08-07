@@ -29,7 +29,7 @@
     typedef simple_converter<Atom> SimpleConverter; \
     AnnotationItemManager aim; \
     Lattice lattice(aim); \
-    Master master(lattice.getAnnotationItemManager()); \
+    Master master(aim); \
     Combinator combinator(master); \
     combinator.add_rules(ROOT_DIR FILE_RULES); \
     registrar<std::string>& symbol_reg = combinator.get_symbol_registrar(); \
@@ -147,7 +147,7 @@ BOOST_AUTO_TEST_CASE( avinput ) {
     AnnotationItemManager aim;
     Lattice lattice(aim);
 
-    Master master(lattice.getAnnotationItemManager());
+    Master master(aim);
     registrar<std::string> symbol_reg;
     registrar<std::string> attribute_reg;
     registrar<std::string> extra_attribute_reg;

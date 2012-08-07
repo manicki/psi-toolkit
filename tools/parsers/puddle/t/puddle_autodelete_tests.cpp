@@ -93,35 +93,35 @@ BOOST_AUTO_TEST_CASE( autodelete_pl ) {
     Lattice::EdgeSequence::Builder al_lexeme_builder(lattice);
     al_lexeme_builder.addEdge(al_lemma_edge);
     AnnotationItem ai_al_lexeme("subst", StringFrag("Al+subst"));
-    lattice.getAnnotationItemManager().setValue(ai_al_lexeme, "gender", "m1");
+    aim.setValue(ai_al_lexeme, "gender", "m1");
     Lattice::EdgeDescriptor al_lexeme_edge = lattice.addEdge(
             pre_ala, post_ala, ai_al_lexeme, lexeme_tag, al_lexeme_builder.build());
     Lattice::EdgeSequence::Builder ala_lexeme_builder(lattice);
     ala_lexeme_builder.addEdge(ala_lemma_edge);
     AnnotationItem ai_ala_lexeme("subst", StringFrag("Ala+subst"));
-    lattice.getAnnotationItemManager().setValue(ai_ala_lexeme, "gender", "f");
+    aim.setValue(ai_ala_lexeme, "gender", "f");
     Lattice::EdgeDescriptor ala_lexeme_edge = lattice.addEdge(
             pre_ala, post_ala, ai_ala_lexeme, lexeme_tag, ala_lexeme_builder.build());
     Lattice::EdgeSequence::Builder al_form_gen_builder(lattice);
     al_form_gen_builder.addEdge(al_lexeme_edge);
     AnnotationItem ai_al_form_gen("subst", StringFrag("Ala"));
-    lattice.getAnnotationItemManager().setValue(ai_al_form_gen, "gender", "m1");
-    lattice.getAnnotationItemManager().setValue(ai_al_form_gen, "case", "gen");
-    lattice.getAnnotationItemManager().setValue(ai_al_form_gen, "number", "sg");
+    aim.setValue(ai_al_form_gen, "gender", "m1");
+    aim.setValue(ai_al_form_gen, "case", "gen");
+    aim.setValue(ai_al_form_gen, "number", "sg");
     lattice.addEdge(pre_ala, post_ala, ai_al_form_gen, form_tag, al_form_gen_builder.build());
     Lattice::EdgeSequence::Builder al_form_acc_builder(lattice);
     al_form_acc_builder.addEdge(al_lexeme_edge);
     AnnotationItem ai_al_form_acc("subst", StringFrag("Ala"));
-    lattice.getAnnotationItemManager().setValue(ai_al_form_acc, "gender", "m1");
-    lattice.getAnnotationItemManager().setValue(ai_al_form_acc, "case", "acc");
-    lattice.getAnnotationItemManager().setValue(ai_al_form_acc, "number", "sg");
+    aim.setValue(ai_al_form_acc, "gender", "m1");
+    aim.setValue(ai_al_form_acc, "case", "acc");
+    aim.setValue(ai_al_form_acc, "number", "sg");
     lattice.addEdge(pre_ala, post_ala, ai_al_form_acc, form_tag, al_form_acc_builder.build());
     Lattice::EdgeSequence::Builder ala_form_builder(lattice);
     ala_form_builder.addEdge(ala_lexeme_edge);
     AnnotationItem ai_ala_form("subst", StringFrag("Ala"));
-    lattice.getAnnotationItemManager().setValue(ai_ala_form, "gender", "f");
-    lattice.getAnnotationItemManager().setValue(ai_ala_form, "case", "nom");
-    lattice.getAnnotationItemManager().setValue(ai_ala_form, "number", "sg");
+    aim.setValue(ai_ala_form, "gender", "f");
+    aim.setValue(ai_ala_form, "case", "nom");
+    aim.setValue(ai_ala_form, "number", "sg");
     lattice.addEdge(pre_ala, post_ala, ai_ala_form, form_tag, ala_form_builder.build());
 
     Lattice::EdgeSequence::Builder miec_lemma_builder(lattice);
@@ -138,7 +138,7 @@ BOOST_AUTO_TEST_CASE( autodelete_pl ) {
     Lattice::EdgeSequence::Builder miec_lexeme_builder(lattice);
     miec_lexeme_builder.addEdge(miec_lemma_edge);
     AnnotationItem ai_miec_lexeme("verb", StringFrag("mieć+verb"));
-    lattice.getAnnotationItemManager().setValue(ai_miec_lexeme, "aspect", "imperf");
+    aim.setValue(ai_miec_lexeme, "aspect", "imperf");
     Lattice::EdgeDescriptor miec_lexeme_edge = lattice.addEdge(
             pre_ma, post_ma, ai_miec_lexeme, lexeme_tag, miec_lexeme_builder.build());
     Lattice::EdgeSequence::Builder moj_lexeme_builder(lattice);
@@ -149,26 +149,26 @@ BOOST_AUTO_TEST_CASE( autodelete_pl ) {
     Lattice::EdgeSequence::Builder miec_form_builder(lattice);
     miec_form_builder.addEdge(miec_lexeme_edge);
     AnnotationItem ai_miec_form("verb", StringFrag("ma"));
-    lattice.getAnnotationItemManager().setValue(ai_miec_form, "number", "sg");
-    lattice.getAnnotationItemManager().setValue(ai_miec_form, "aspect", "imperf");
-    lattice.getAnnotationItemManager().setValue(ai_miec_form, "person", "ter");
-    lattice.getAnnotationItemManager().setValue(ai_miec_form, "tense", "fin");
+    aim.setValue(ai_miec_form, "number", "sg");
+    aim.setValue(ai_miec_form, "aspect", "imperf");
+    aim.setValue(ai_miec_form, "person", "ter");
+    aim.setValue(ai_miec_form, "tense", "fin");
     lattice.addEdge(pre_ma, post_ma, ai_miec_form, form_tag, miec_form_builder.build());
     Lattice::EdgeSequence::Builder moj_form_nom_builder(lattice);
     moj_form_nom_builder.addEdge(moj_lexeme_edge);
     AnnotationItem ai_moj_nom_form("adj", StringFrag("ma"));
-    lattice.getAnnotationItemManager().setValue(ai_moj_nom_form, "gender", "f");
-    lattice.getAnnotationItemManager().setValue(ai_moj_nom_form, "case", "nom");
-    lattice.getAnnotationItemManager().setValue(ai_moj_nom_form, "number", "sg");
-    lattice.getAnnotationItemManager().setValue(ai_moj_nom_form, "degree", "pos");
+    aim.setValue(ai_moj_nom_form, "gender", "f");
+    aim.setValue(ai_moj_nom_form, "case", "nom");
+    aim.setValue(ai_moj_nom_form, "number", "sg");
+    aim.setValue(ai_moj_nom_form, "degree", "pos");
     lattice.addEdge(pre_ma, post_ma, ai_moj_nom_form, form_tag, moj_form_nom_builder.build());
     Lattice::EdgeSequence::Builder moj_form_voc_builder(lattice);
     moj_form_voc_builder.addEdge(moj_lexeme_edge);
     AnnotationItem ai_moj_voc_form("adj", StringFrag("ma"));
-    lattice.getAnnotationItemManager().setValue(ai_moj_voc_form, "gender", "f");
-    lattice.getAnnotationItemManager().setValue(ai_moj_voc_form, "case", "voc");
-    lattice.getAnnotationItemManager().setValue(ai_moj_voc_form, "number", "sg");
-    lattice.getAnnotationItemManager().setValue(ai_moj_voc_form, "degree", "pos");
+    aim.setValue(ai_moj_voc_form, "gender", "f");
+    aim.setValue(ai_moj_voc_form, "case", "voc");
+    aim.setValue(ai_moj_voc_form, "number", "sg");
+    aim.setValue(ai_moj_voc_form, "degree", "pos");
     lattice.addEdge(pre_ma, post_ma, ai_moj_voc_form, form_tag, moj_form_voc_builder.build());
 
     Lattice::EdgeSequence::Builder kot_lemma_builder(lattice);
@@ -186,35 +186,35 @@ BOOST_AUTO_TEST_CASE( autodelete_pl ) {
     Lattice::EdgeSequence::Builder kot_lexeme_builder(lattice);
     kot_lexeme_builder.addEdge(kot_lemma_edge);
     AnnotationItem ai_kot_lexeme("subst", StringFrag("kot+subst"));
-    lattice.getAnnotationItemManager().setValue(ai_kot_lexeme, "gender", "m2");
+    aim.setValue(ai_kot_lexeme, "gender", "m2");
     Lattice::EdgeDescriptor kot_lexeme_edge = lattice.addEdge(
             pre_kota, post_kota, ai_kot_lexeme, lexeme_tag, kot_lexeme_builder.build());
     Lattice::EdgeSequence::Builder kota_lexeme_builder(lattice);
     kota_lexeme_builder.addEdge(kota_lemma_edge);
     AnnotationItem ai_kota_lexeme("subst", StringFrag("kota+subst"));
-    lattice.getAnnotationItemManager().setValue(ai_kota_lexeme, "gender", "f");
+    aim.setValue(ai_kota_lexeme, "gender", "f");
     Lattice::EdgeDescriptor kota_lexeme_edge = lattice.addEdge(
             pre_kota, post_kota, ai_kota_lexeme, lexeme_tag, kota_lexeme_builder.build());
     Lattice::EdgeSequence::Builder kot_form_acc_builder(lattice);
     kot_form_acc_builder.addEdge(kot_lexeme_edge);
     AnnotationItem ai_kot_form_acc("subst", StringFrag("kota"));
-    lattice.getAnnotationItemManager().setValue(ai_kot_form_acc, "gender", "m2");
-    lattice.getAnnotationItemManager().setValue(ai_kot_form_acc, "case", "acc");
-    lattice.getAnnotationItemManager().setValue(ai_kot_form_acc, "number", "sg");
+    aim.setValue(ai_kot_form_acc, "gender", "m2");
+    aim.setValue(ai_kot_form_acc, "case", "acc");
+    aim.setValue(ai_kot_form_acc, "number", "sg");
     lattice.addEdge(pre_kota, post_kota, ai_kot_form_acc, form_tag, kot_form_acc_builder.build());
     Lattice::EdgeSequence::Builder kot_form_gen_builder(lattice);
     kot_form_gen_builder.addEdge(kot_lexeme_edge);
     AnnotationItem ai_kot_form_gen("subst", StringFrag("kota"));
-    lattice.getAnnotationItemManager().setValue(ai_kot_form_gen, "gender", "m2");
-    lattice.getAnnotationItemManager().setValue(ai_kot_form_gen, "case", "gen");
-    lattice.getAnnotationItemManager().setValue(ai_kot_form_gen, "number", "sg");
+    aim.setValue(ai_kot_form_gen, "gender", "m2");
+    aim.setValue(ai_kot_form_gen, "case", "gen");
+    aim.setValue(ai_kot_form_gen, "number", "sg");
     lattice.addEdge(pre_kota, post_kota, ai_kot_form_gen, form_tag, kot_form_gen_builder.build());
     Lattice::EdgeSequence::Builder kota_form_builder(lattice);
     kota_form_builder.addEdge(kota_lexeme_edge);
     AnnotationItem ai_kota_form("subst", StringFrag("kota"));
-    lattice.getAnnotationItemManager().setValue(ai_kota_form, "gender", "f");
-    lattice.getAnnotationItemManager().setValue(ai_kota_form, "case", "nom");
-    lattice.getAnnotationItemManager().setValue(ai_kota_form, "number", "sg");
+    aim.setValue(ai_kota_form, "gender", "f");
+    aim.setValue(ai_kota_form, "case", "nom");
+    aim.setValue(ai_kota_form, "number", "sg");
     lattice.addEdge(pre_kota, post_kota, ai_kota_form, form_tag, kota_form_builder.build());
 
     //preparing parser
@@ -252,10 +252,8 @@ BOOST_AUTO_TEST_CASE( autodelete_pl ) {
             lattice.getEdgeLength(edge),
             3
             );
-    std::list< std::pair<std::string, std::string> > av =
-        lattice.getAnnotationItemManager().getValues(
-            lattice.getEdgeAnnotationItem(edge)
-            );
+    std::list< std::pair<std::string, std::string> > av
+        = aim.getValues(lattice.getEdgeAnnotationItem(edge));
     std::list< std::pair<std::string, std::string> >::iterator avi = av.begin();
     BOOST_CHECK_EQUAL((*avi).first, "gender");
     BOOST_CHECK_EQUAL((*avi).second, "m1");
@@ -287,10 +285,7 @@ BOOST_AUTO_TEST_CASE( autodelete_pl ) {
             lattice.getEdgeLength(edge),
             3
             );
-    av =
-        lattice.getAnnotationItemManager().getValues(
-            lattice.getEdgeAnnotationItem(edge)
-            );
+    av = aim.getValues(lattice.getEdgeAnnotationItem(edge));
     avi = av.begin();
     BOOST_CHECK_EQUAL((*avi).first, "gender");
     BOOST_CHECK_EQUAL((*avi).second, "m1");
@@ -322,10 +317,7 @@ BOOST_AUTO_TEST_CASE( autodelete_pl ) {
             lattice.getEdgeLength(edge),
             3
             );
-    av =
-        lattice.getAnnotationItemManager().getValues(
-            lattice.getEdgeAnnotationItem(edge)
-            );
+    av = aim.getValues(lattice.getEdgeAnnotationItem(edge));
     avi = av.begin();
     BOOST_CHECK_EQUAL((*avi).first, "gender");
     BOOST_CHECK_EQUAL((*avi).second, "f");
@@ -357,10 +349,7 @@ BOOST_AUTO_TEST_CASE( autodelete_pl ) {
             lattice.getEdgeLength(edge),
             11
             );
-    av =
-        lattice.getAnnotationItemManager().getValues(
-            lattice.getEdgeAnnotationItem(edge)
-            );
+    av = aim.getValues(lattice.getEdgeAnnotationItem(edge));
     avi = av.begin();
     BOOST_CHECK_EQUAL((*avi).first, "number");
     BOOST_CHECK_EQUAL((*avi).second, "sg");
@@ -396,10 +385,7 @@ BOOST_AUTO_TEST_CASE( autodelete_pl ) {
             lattice.getEdgeLength(edge),
             2
             );
-    av =
-        lattice.getAnnotationItemManager().getValues(
-            lattice.getEdgeAnnotationItem(edge)
-            );
+    av = aim.getValues(lattice.getEdgeAnnotationItem(edge));
     avi = av.begin();
     BOOST_CHECK_EQUAL((*avi).first, "number");
     BOOST_CHECK_EQUAL((*avi).second, "sg");
@@ -435,10 +421,7 @@ BOOST_AUTO_TEST_CASE( autodelete_pl ) {
             lattice.getEdgeLength(edge),
             4
             );
-    av =
-        lattice.getAnnotationItemManager().getValues(
-            lattice.getEdgeAnnotationItem(edge)
-            );
+    av = aim.getValues(lattice.getEdgeAnnotationItem(edge));
     avi = av.begin();
     BOOST_CHECK_EQUAL((*avi).first, "gender");
     BOOST_CHECK_EQUAL((*avi).second, "m2");
@@ -470,10 +453,7 @@ BOOST_AUTO_TEST_CASE( autodelete_pl ) {
             lattice.getEdgeLength(edge),
             4
             );
-    av =
-        lattice.getAnnotationItemManager().getValues(
-            lattice.getEdgeAnnotationItem(edge)
-            );
+    av = aim.getValues(lattice.getEdgeAnnotationItem(edge));
     avi = av.begin();
     BOOST_CHECK_EQUAL((*avi).first, "gender");
     BOOST_CHECK_EQUAL((*avi).second, "m2");
@@ -505,10 +485,7 @@ BOOST_AUTO_TEST_CASE( autodelete_pl ) {
             lattice.getEdgeLength(edge),
             4
             );
-    av =
-        lattice.getAnnotationItemManager().getValues(
-            lattice.getEdgeAnnotationItem(edge)
-            );
+    av = aim.getValues(lattice.getEdgeAnnotationItem(edge));
     avi = av.begin();
     BOOST_CHECK_EQUAL((*avi).first, "gender");
     BOOST_CHECK_EQUAL((*avi).second, "f");
@@ -542,9 +519,7 @@ BOOST_AUTO_TEST_CASE( autodelete_pl ) {
             lattice.getEdgeLength(discardedEdge),
             2
             );
-    av = lattice.getAnnotationItemManager().getValues(
-            discardedItem
-            );
+    av = aim.getValues(discardedItem);
     avi = av.begin();
     BOOST_CHECK_EQUAL((*avi).first, "gender");
     BOOST_CHECK_EQUAL((*avi).second, "f");
@@ -574,9 +549,7 @@ BOOST_AUTO_TEST_CASE( autodelete_pl ) {
             lattice.getEdgeLength(discardedEdge),
             2
             );
-    av = lattice.getAnnotationItemManager().getValues(
-            discardedItem
-            );
+    av = aim.getValues(discardedItem);
     avi = av.begin();
     BOOST_CHECK_EQUAL((*avi).first, "gender");
     BOOST_CHECK_EQUAL((*avi).second, "f");

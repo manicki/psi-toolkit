@@ -79,8 +79,8 @@ BOOST_AUTO_TEST_CASE( puddle_attach ) {
     ananas_form_builder.addEdge(lattice.firstOutEdge(
                 lattice.getVertexForRawCharIndex(0), lexemeMask));
     AnnotationItem ai_ananas_form("subst", StringFrag("ananas"));
-    lattice.getAnnotationItemManager().setValue(ai_ananas_form, "number", "pl");
-    lattice.getAnnotationItemManager().setValue(ai_ananas_form, "gender", "m");
+    aim.setValue(ai_ananas_form, "number", "pl");
+    aim.setValue(ai_ananas_form, "gender", "m");
     lattice.addEdge(pre_ananas, post_ananas, ai_ananas_form, form_tag,
             ananas_form_builder.build());
 
@@ -100,24 +100,24 @@ BOOST_AUTO_TEST_CASE( puddle_attach ) {
     noirs_form_builder.addEdge(lattice.firstOutEdge(
                 lattice.getVertexForRawCharIndex(7), lexemeMask));
     AnnotationItem ai_noirs_form("adj", StringFrag("noir"));
-    lattice.getAnnotationItemManager().setValue(ai_noirs_form, "number", "pl");
-    lattice.getAnnotationItemManager().setValue(ai_noirs_form, "gender", "m");
+    aim.setValue(ai_noirs_form, "number", "pl");
+    aim.setValue(ai_noirs_form, "gender", "m");
     lattice.addEdge(pre_noirs, post_noirs, ai_noirs_form, form_tag, noirs_form_builder.build());
 
     Lattice::EdgeSequence::Builder np_builder(lattice);
     np_builder.addEdge(lattice.firstOutEdge(lattice.getVertexForRawCharIndex(0), formMask));
     AnnotationItem ai_np("NP");
-    lattice.getAnnotationItemManager().setValue(ai_np, "number", "pl");
-    lattice.getAnnotationItemManager().setValue(ai_np, "gender", "m");
-    lattice.getAnnotationItemManager().setValue(ai_np, "head", "0");
+    aim.setValue(ai_np, "number", "pl");
+    aim.setValue(ai_np, "gender", "m");
+    aim.setValue(ai_np, "head", "0");
     lattice.addEdge(pre_ananas, post_ananas, ai_np, parse_tag, np_builder.build());
 
     Lattice::EdgeSequence::Builder ap_builder(lattice);
     ap_builder.addEdge(lattice.firstOutEdge(lattice.getVertexForRawCharIndex(7), formMask));
     AnnotationItem ai_ap("AP");
-    lattice.getAnnotationItemManager().setValue(ai_ap, "number", "pl");
-    lattice.getAnnotationItemManager().setValue(ai_ap, "gender", "m");
-    lattice.getAnnotationItemManager().setValue(ai_ap, "head", "0");
+    aim.setValue(ai_ap, "number", "pl");
+    aim.setValue(ai_ap, "gender", "m");
+    aim.setValue(ai_ap, "head", "0");
     lattice.addEdge(pre_noirs, post_noirs, ai_ap, parse_tag, ap_builder.build());
 
     //preparing parser
@@ -155,9 +155,7 @@ BOOST_AUTO_TEST_CASE( puddle_attach ) {
             6
             );
     std::list< std::pair<std::string, std::string> > av
-        = lattice.getAnnotationItemManager().getValues(
-                lattice.getEdgeAnnotationItem(edge)
-                );
+        = aim.getValues(lattice.getEdgeAnnotationItem(edge));
     std::list< std::pair<std::string, std::string> >::iterator avi = av.begin();
     BOOST_CHECK_EQUAL((*avi).first, "number");
     BOOST_CHECK_EQUAL((*avi).second, "pl");
@@ -185,9 +183,7 @@ BOOST_AUTO_TEST_CASE( puddle_attach ) {
             lattice.getEdgeLength(edge),
             12
             );
-    av = lattice.getAnnotationItemManager().getValues(
-            lattice.getEdgeAnnotationItem(edge)
-            );
+    av = aim.getValues(lattice.getEdgeAnnotationItem(edge));
     avi = av.begin();
     BOOST_CHECK_EQUAL((*avi).first, "number");
     BOOST_CHECK_EQUAL((*avi).second, "pl");
@@ -215,9 +211,7 @@ BOOST_AUTO_TEST_CASE( puddle_attach ) {
             lattice.getEdgeLength(edge),
             5
             );
-    av = lattice.getAnnotationItemManager().getValues(
-            lattice.getEdgeAnnotationItem(edge)
-            );
+    av = aim.getValues(lattice.getEdgeAnnotationItem(edge));
     avi = av.begin();
     BOOST_CHECK_EQUAL((*avi).first, "number");
     BOOST_CHECK_EQUAL((*avi).second, "pl");
@@ -248,9 +242,7 @@ BOOST_AUTO_TEST_CASE( puddle_attach ) {
             lattice.getEdgeLength(discardedEdge),
             6
             );
-    av = lattice.getAnnotationItemManager().getValues(
-            discardedItem
-            );
+    av = aim.getValues(discardedItem);
     avi = av.begin();
     BOOST_CHECK_EQUAL((*avi).first, "number");
     BOOST_CHECK_EQUAL((*avi).second, "pl");
@@ -341,13 +333,13 @@ BOOST_AUTO_TEST_CASE( puddle_group ) {
     ananas_form_builder.addEdge(lattice.firstOutEdge(
                 lattice.getVertexForRawCharIndex(0), lexemeMask));
     AnnotationItem ai_ananas_form_sg("subst", StringFrag("ananas"));
-    lattice.getAnnotationItemManager().setValue(ai_ananas_form_sg, "number", "sg");
-    lattice.getAnnotationItemManager().setValue(ai_ananas_form_sg, "gender", "m");
+    aim.setValue(ai_ananas_form_sg, "number", "sg");
+    aim.setValue(ai_ananas_form_sg, "gender", "m");
     lattice.addEdge(pre_ananas, post_ananas, ai_ananas_form_sg, form_tag,
             ananas_form_builder.build());
     AnnotationItem ai_ananas_form_pl("subst", StringFrag("ananas"));
-    lattice.getAnnotationItemManager().setValue(ai_ananas_form_pl, "number", "pl");
-    lattice.getAnnotationItemManager().setValue(ai_ananas_form_pl, "gender", "m");
+    aim.setValue(ai_ananas_form_pl, "number", "pl");
+    aim.setValue(ai_ananas_form_pl, "gender", "m");
     lattice.addEdge(pre_ananas, post_ananas, ai_ananas_form_pl, form_tag,
             ananas_form_builder.build());
 
@@ -382,13 +374,13 @@ BOOST_AUTO_TEST_CASE( puddle_group ) {
             noirs_form_subst_builder.addEdge(edge);
     }
     AnnotationItem ai_noirs_form_adj("adj", StringFrag("noir"));
-    lattice.getAnnotationItemManager().setValue(ai_noirs_form_adj, "number", "pl");
-    lattice.getAnnotationItemManager().setValue(ai_noirs_form_adj, "gender", "m");
+    aim.setValue(ai_noirs_form_adj, "number", "pl");
+    aim.setValue(ai_noirs_form_adj, "gender", "m");
     lattice.addEdge(pre_noirs, post_noirs, ai_noirs_form_adj, form_tag,
             noirs_form_adj_builder.build());
     AnnotationItem ai_noirs_form_subst("subst", StringFrag("noir"));
-    lattice.getAnnotationItemManager().setValue(ai_noirs_form_subst, "number", "pl");
-    lattice.getAnnotationItemManager().setValue(ai_noirs_form_subst, "gender", "m");
+    aim.setValue(ai_noirs_form_subst, "number", "pl");
+    aim.setValue(ai_noirs_form_subst, "gender", "m");
     lattice.addEdge(pre_noirs, post_noirs, ai_noirs_form_subst, form_tag,
             noirs_form_subst_builder.build());
 
@@ -427,9 +419,7 @@ BOOST_AUTO_TEST_CASE( puddle_group ) {
         12
         );
     std::list< std::pair<std::string, std::string> > av
-        = lattice.getAnnotationItemManager().getValues(
-            lattice.getEdgeAnnotationItem(edge)
-            );
+        = aim.getValues(lattice.getEdgeAnnotationItem(edge));
     std::list< std::pair<std::string, std::string> >::iterator avi = av.begin();
     BOOST_CHECK_EQUAL((*avi).first, "number");
     BOOST_CHECK_EQUAL((*avi).second, "sg");
@@ -457,9 +447,7 @@ BOOST_AUTO_TEST_CASE( puddle_group ) {
         lattice.getEdgeLength(edge),
         12
         );
-    av = lattice.getAnnotationItemManager().getValues(
-        lattice.getEdgeAnnotationItem(edge)
-        );
+    av = aim.getValues(lattice.getEdgeAnnotationItem(edge));
     avi = av.begin();
     BOOST_CHECK_EQUAL((*avi).first, "number");
     BOOST_CHECK_EQUAL((*avi).second, "pl");
@@ -550,8 +538,8 @@ BOOST_AUTO_TEST_CASE( puddle_join ) {
     ananas_form_builder.addEdge(lattice.firstOutEdge(
                 lattice.getVertexForRawCharIndex(0), lexemeMask));
     AnnotationItem ai_ananas_form("subst", StringFrag("ananas"));
-    lattice.getAnnotationItemManager().setValue(ai_ananas_form, "number", "pl");
-    lattice.getAnnotationItemManager().setValue(ai_ananas_form, "gender", "m");
+    aim.setValue(ai_ananas_form, "number", "pl");
+    aim.setValue(ai_ananas_form, "gender", "m");
     lattice.addEdge(pre_ananas, post_ananas, ai_ananas_form, form_tag,
             ananas_form_builder.build());
 
@@ -571,24 +559,24 @@ BOOST_AUTO_TEST_CASE( puddle_join ) {
     noirs_form_builder.addEdge(lattice.firstOutEdge(
                 lattice.getVertexForRawCharIndex(7), lexemeMask));
     AnnotationItem ai_noirs_form("adj", StringFrag("noir"));
-    lattice.getAnnotationItemManager().setValue(ai_noirs_form, "number", "pl");
-    lattice.getAnnotationItemManager().setValue(ai_noirs_form, "gender", "m");
+    aim.setValue(ai_noirs_form, "number", "pl");
+    aim.setValue(ai_noirs_form, "gender", "m");
     lattice.addEdge(pre_noirs, post_noirs, ai_noirs_form, form_tag, noirs_form_builder.build());
 
     Lattice::EdgeSequence::Builder np_builder(lattice);
     np_builder.addEdge(lattice.firstOutEdge(lattice.getVertexForRawCharIndex(0), formMask));
     AnnotationItem ai_np("NP");
-    lattice.getAnnotationItemManager().setValue(ai_np, "number", "pl");
-    lattice.getAnnotationItemManager().setValue(ai_np, "gender", "m");
-    lattice.getAnnotationItemManager().setValue(ai_np, "head", "0");
+    aim.setValue(ai_np, "number", "pl");
+    aim.setValue(ai_np, "gender", "m");
+    aim.setValue(ai_np, "head", "0");
     lattice.addEdge(pre_ananas, post_ananas, ai_np, parse_tag, np_builder.build());
 
     Lattice::EdgeSequence::Builder ap_builder(lattice);
     ap_builder.addEdge(lattice.firstOutEdge(lattice.getVertexForRawCharIndex(7), formMask));
     AnnotationItem ai_ap("AP");
-    lattice.getAnnotationItemManager().setValue(ai_ap, "number", "pl");
-    lattice.getAnnotationItemManager().setValue(ai_ap, "gender", "m");
-    lattice.getAnnotationItemManager().setValue(ai_ap, "head", "0");
+    aim.setValue(ai_ap, "number", "pl");
+    aim.setValue(ai_ap, "gender", "m");
+    aim.setValue(ai_ap, "head", "0");
     lattice.addEdge(pre_noirs, post_noirs, ai_ap, parse_tag, ap_builder.build());
 
     //preparing parser
@@ -626,9 +614,7 @@ BOOST_AUTO_TEST_CASE( puddle_join ) {
             6
             );
     std::list< std::pair<std::string, std::string> > av =
-        lattice.getAnnotationItemManager().getValues(
-            lattice.getEdgeAnnotationItem(edge)
-            );
+        aim.getValues(lattice.getEdgeAnnotationItem(edge));
     std::list< std::pair<std::string, std::string> >::iterator avi = av.begin();
     BOOST_CHECK_EQUAL((*avi).first, "number");
     BOOST_CHECK_EQUAL((*avi).second, "pl");
@@ -655,10 +641,7 @@ BOOST_AUTO_TEST_CASE( puddle_join ) {
             lattice.getEdgeLength(edge),
             12
             );
-    av =
-        lattice.getAnnotationItemManager().getValues(
-            lattice.getEdgeAnnotationItem(edge)
-            );
+    av = aim.getValues(lattice.getEdgeAnnotationItem(edge));
     avi = av.begin();
     BOOST_CHECK_EQUAL((*avi).first, "number");
     BOOST_CHECK_EQUAL((*avi).second, "pl");
@@ -685,9 +668,7 @@ BOOST_AUTO_TEST_CASE( puddle_join ) {
             lattice.getEdgeLength(edge),
             5
             );
-    av = lattice.getAnnotationItemManager().getValues(
-            lattice.getEdgeAnnotationItem(edge)
-            );
+    av = aim.getValues(lattice.getEdgeAnnotationItem(edge));
     avi = av.begin();
     BOOST_CHECK_EQUAL((*avi).first, "number");
     BOOST_CHECK_EQUAL((*avi).second, "pl");
@@ -717,9 +698,7 @@ BOOST_AUTO_TEST_CASE( puddle_join ) {
             lattice.getEdgeLength(discardedEdge),
             6
             );
-    av = lattice.getAnnotationItemManager().getValues(
-            discardedItem
-            );
+    av = aim.getValues(discardedItem);
     avi = av.begin();
     BOOST_CHECK_EQUAL((*avi).first, "number");
     BOOST_CHECK_EQUAL((*avi).second, "pl");
@@ -748,9 +727,7 @@ BOOST_AUTO_TEST_CASE( puddle_join ) {
             lattice.getEdgeLength(discardedEdge),
             5
             );
-    av = lattice.getAnnotationItemManager().getValues(
-            discardedItem
-            );
+    av = aim.getValues(discardedItem);
     avi = av.begin();
     BOOST_CHECK_EQUAL((*avi).first, "number");
     BOOST_CHECK_EQUAL((*avi).second, "pl");
@@ -847,8 +824,8 @@ BOOST_AUTO_TEST_CASE( puddle_syntok ) {
     coup_form_builder.addEdge(lattice.firstOutEdge(
                 lattice.getVertexForRawCharIndex(0), lexemeMask));
     AnnotationItem ai_coup_form("subst", StringFrag("coup"));
-    lattice.getAnnotationItemManager().setValue(ai_coup_form, "number", "sg");
-    lattice.getAnnotationItemManager().setValue(ai_coup_form, "gender", "m");
+    aim.setValue(ai_coup_form, "number", "sg");
+    aim.setValue(ai_coup_form, "gender", "m");
     lattice.addEdge(pre_coup, post_coup, ai_coup_form, form_tag, coup_form_builder.build());
 
     Lattice::EdgeSequence::Builder d__lemma_builder(lattice);
@@ -902,24 +879,24 @@ BOOST_AUTO_TEST_CASE( puddle_syntok ) {
             de_form_builder.addEdge(edge);
     }
     AnnotationItem ai_d__form("prep", StringFrag("d'"));
-    lattice.getAnnotationItemManager().setValue(ai_d__form, "number", "xyz");
+    aim.setValue(ai_d__form, "number", "xyz");
     // with no item in AI getTopEdges meets some bizarre behavior of the lattice
     lattice.addEdge(pre_d, post_d, ai_d__form, form_tag, d__form_builder.build());
     AnnotationItem ai_d_form_pl("subst", StringFrag("d"));
-    lattice.getAnnotationItemManager().setValue(ai_d_form_pl, "number", "pl");
-    lattice.getAnnotationItemManager().setValue(ai_d_form_pl, "gender", "m");
+    aim.setValue(ai_d_form_pl, "number", "pl");
+    aim.setValue(ai_d_form_pl, "gender", "m");
     lattice.addEdge(pre_d, post_d, ai_d_form_pl, form_tag, d_form_builder.build());
     AnnotationItem ai_d_form_sg("subst", StringFrag("d"));
-    lattice.getAnnotationItemManager().setValue(ai_d_form_sg, "number", "sg");
-    lattice.getAnnotationItemManager().setValue(ai_d_form_sg, "gender", "m");
+    aim.setValue(ai_d_form_sg, "number", "sg");
+    aim.setValue(ai_d_form_sg, "gender", "m");
     lattice.addEdge(pre_d, post_d, ai_d_form_sg, form_tag, d_form_builder.build());
     AnnotationItem ai_de_form_m("det", StringFrag("de"));
-    lattice.getAnnotationItemManager().setValue(ai_de_form_m, "number", "pl");
-    lattice.getAnnotationItemManager().setValue(ai_de_form_m, "gender", "m");
+    aim.setValue(ai_de_form_m, "number", "pl");
+    aim.setValue(ai_de_form_m, "gender", "m");
     lattice.addEdge(pre_d, post_d, ai_de_form_m, form_tag, de_form_builder.build());
     AnnotationItem ai_de_form_f("det", StringFrag("de"));
-    lattice.getAnnotationItemManager().setValue(ai_de_form_f, "number", "pl");
-    lattice.getAnnotationItemManager().setValue(ai_de_form_f, "gender", "f");
+    aim.setValue(ai_de_form_f, "number", "pl");
+    aim.setValue(ai_de_form_f, "gender", "f");
     lattice.addEdge(pre_d, post_d, ai_de_form_f, form_tag, de_form_builder.build());
 
     Lattice::EdgeSequence::Builder etat_lemma_builder(lattice);
@@ -936,8 +913,8 @@ BOOST_AUTO_TEST_CASE( puddle_syntok ) {
     etat_form_builder.addEdge(lattice.firstOutEdge(
                 lattice.getVertexForRawCharIndex(7), lexemeMask));
     AnnotationItem ai_etat_form("subst", StringFrag("état"));
-    lattice.getAnnotationItemManager().setValue(ai_etat_form, "number", "sg");
-    lattice.getAnnotationItemManager().setValue(ai_etat_form, "gender", "m");
+    aim.setValue(ai_etat_form, "number", "sg");
+    aim.setValue(ai_etat_form, "gender", "m");
     lattice.addEdge(post_d, post_etat, ai_etat_form, form_tag, etat_form_builder.build());
 
     //preparing parser
@@ -1273,9 +1250,7 @@ BOOST_AUTO_TEST_CASE( puddle_syntok ) {
         4
         );
     std::list< std::pair<std::string, std::string> > av
-        = lattice.getAnnotationItemManager().getValues(
-            lattice.getEdgeAnnotationItem(edge)
-            );
+        = aim.getValues(lattice.getEdgeAnnotationItem(edge));
     std::list< std::pair<std::string, std::string> >::iterator avi = av.begin();
     BOOST_CHECK_EQUAL((*avi).first, "number");
     BOOST_CHECK_EQUAL((*avi).second, "sg");
@@ -1303,9 +1278,7 @@ BOOST_AUTO_TEST_CASE( puddle_syntok ) {
         lattice.getEdgeLength(edge),
         12
         );
-    av = lattice.getAnnotationItemManager().getValues(
-        lattice.getEdgeAnnotationItem(edge)
-        );
+    av = aim.getValues(lattice.getEdgeAnnotationItem(edge));
     avi = av.begin();
     BOOST_CHECK_EQUAL((*avi).first, "number");
     BOOST_CHECK_EQUAL((*avi).second, "sg");
@@ -1333,9 +1306,7 @@ BOOST_AUTO_TEST_CASE( puddle_syntok ) {
         lattice.getEdgeLength(edge),
         12
         );
-    av = lattice.getAnnotationItemManager().getValues(
-        lattice.getEdgeAnnotationItem(edge)
-        );
+    av = aim.getValues(lattice.getEdgeAnnotationItem(edge));
     avi = av.begin();
     BOOST_CHECK_EQUAL((*avi).first, "number");
     BOOST_CHECK_EQUAL((*avi).second, "sg");
@@ -1363,9 +1334,7 @@ BOOST_AUTO_TEST_CASE( puddle_syntok ) {
         lattice.getEdgeLength(edge),
         12
         );
-    av = lattice.getAnnotationItemManager().getValues(
-        lattice.getEdgeAnnotationItem(edge)
-        );
+    av = aim.getValues(lattice.getEdgeAnnotationItem(edge));
     avi = av.begin();
     BOOST_CHECK_EQUAL((*avi).first, "number");
     BOOST_CHECK_EQUAL((*avi).second, "sg");
@@ -1393,9 +1362,7 @@ BOOST_AUTO_TEST_CASE( puddle_syntok ) {
         lattice.getEdgeLength(edge),
         2
         );
-    av = lattice.getAnnotationItemManager().getValues(
-        lattice.getEdgeAnnotationItem(edge)
-        );
+    av = aim.getValues(lattice.getEdgeAnnotationItem(edge));
     avi = av.begin();
     BOOST_CHECK_EQUAL((*avi).first, "number");
     BOOST_CHECK_EQUAL((*avi).second, "xyz");
@@ -1419,9 +1386,7 @@ BOOST_AUTO_TEST_CASE( puddle_syntok ) {
         lattice.getEdgeLength(edge),
         2
         );
-    av = lattice.getAnnotationItemManager().getValues(
-        lattice.getEdgeAnnotationItem(edge)
-        );
+    av = aim.getValues(lattice.getEdgeAnnotationItem(edge));
     avi = av.begin();
     BOOST_CHECK_EQUAL((*avi).first, "number");
     BOOST_CHECK_EQUAL((*avi).second, "pl");
@@ -1449,9 +1414,7 @@ BOOST_AUTO_TEST_CASE( puddle_syntok ) {
         lattice.getEdgeLength(edge),
         2
         );
-    av = lattice.getAnnotationItemManager().getValues(
-        lattice.getEdgeAnnotationItem(edge)
-        );
+    av = aim.getValues(lattice.getEdgeAnnotationItem(edge));
     avi = av.begin();
     BOOST_CHECK_EQUAL((*avi).first, "number");
     BOOST_CHECK_EQUAL((*avi).second, "sg");
@@ -1479,9 +1442,7 @@ BOOST_AUTO_TEST_CASE( puddle_syntok ) {
         lattice.getEdgeLength(edge),
         2
         );
-    av = lattice.getAnnotationItemManager().getValues(
-        lattice.getEdgeAnnotationItem(edge)
-        );
+    av = aim.getValues(lattice.getEdgeAnnotationItem(edge));
     avi = av.begin();
     BOOST_CHECK_EQUAL((*avi).first, "number");
     BOOST_CHECK_EQUAL((*avi).second, "pl");
@@ -1509,9 +1470,7 @@ BOOST_AUTO_TEST_CASE( puddle_syntok ) {
         lattice.getEdgeLength(edge),
         2
         );
-    av = lattice.getAnnotationItemManager().getValues(
-        lattice.getEdgeAnnotationItem(edge)
-        );
+    av = aim.getValues(lattice.getEdgeAnnotationItem(edge));
     avi = av.begin();
     BOOST_CHECK_EQUAL((*avi).first, "number");
     BOOST_CHECK_EQUAL((*avi).second, "pl");
@@ -1539,9 +1498,7 @@ BOOST_AUTO_TEST_CASE( puddle_syntok ) {
         lattice.getEdgeLength(edge),
         5
         );
-    av = lattice.getAnnotationItemManager().getValues(
-        lattice.getEdgeAnnotationItem(edge)
-        );
+    av = aim.getValues(lattice.getEdgeAnnotationItem(edge));
     avi = av.begin();
     BOOST_CHECK_EQUAL((*avi).first, "number");
     BOOST_CHECK_EQUAL((*avi).second, "sg");
@@ -1628,8 +1585,8 @@ BOOST_AUTO_TEST_CASE( puddle_transform ) {
     ananas_form_builder.addEdge(lattice.firstOutEdge(
                 lattice.getVertexForRawCharIndex(0), lexemeMask));
     AnnotationItem ai_ananas_form("subst", StringFrag("ananas"));
-    lattice.getAnnotationItemManager().setValue(ai_ananas_form, "number", "pl");
-    lattice.getAnnotationItemManager().setValue(ai_ananas_form, "gender", "m");
+    aim.setValue(ai_ananas_form, "number", "pl");
+    aim.setValue(ai_ananas_form, "gender", "m");
     lattice.addEdge(pre_ananas, post_ananas, ai_ananas_form, form_tag,
             ananas_form_builder.build());
 
@@ -1649,16 +1606,16 @@ BOOST_AUTO_TEST_CASE( puddle_transform ) {
     noirs_form_builder.addEdge(lattice.firstOutEdge(
                 lattice.getVertexForRawCharIndex(7), lexemeMask));
     AnnotationItem ai_noirs_form("adj", StringFrag("noir"));
-    lattice.getAnnotationItemManager().setValue(ai_noirs_form, "number", "pl");
-    lattice.getAnnotationItemManager().setValue(ai_noirs_form, "gender", "m");
+    aim.setValue(ai_noirs_form, "number", "pl");
+    aim.setValue(ai_noirs_form, "gender", "m");
     lattice.addEdge(pre_noirs, post_noirs, ai_noirs_form, form_tag, noirs_form_builder.build());
 
     Lattice::EdgeSequence::Builder np_builder(lattice);
     np_builder.addEdge(lattice.firstOutEdge(lattice.getVertexForRawCharIndex(0), formMask));
     AnnotationItem ai_np("NP");
-    lattice.getAnnotationItemManager().setValue(ai_np, "number", "pl");
-    lattice.getAnnotationItemManager().setValue(ai_np, "gender", "m");
-    lattice.getAnnotationItemManager().setValue(ai_np, "head", "0");
+    aim.setValue(ai_np, "number", "pl");
+    aim.setValue(ai_np, "gender", "m");
+    aim.setValue(ai_np, "head", "0");
     lattice.addEdge(pre_ananas, post_ananas, ai_np, parse_tag, np_builder.build());
 
     //preparing parser
@@ -1696,9 +1653,7 @@ BOOST_AUTO_TEST_CASE( puddle_transform ) {
             6
             );
     std::list< std::pair<std::string, std::string> > av
-        = lattice.getAnnotationItemManager().getValues(
-                lattice.getEdgeAnnotationItem(edge)
-                );
+        = aim.getValues(lattice.getEdgeAnnotationItem(edge));
     std::list< std::pair<std::string, std::string> >::iterator avi = av.begin();
     BOOST_CHECK_EQUAL((*avi).first, "number");
     BOOST_CHECK_EQUAL((*avi).second, "pl");
@@ -1726,9 +1681,7 @@ BOOST_AUTO_TEST_CASE( puddle_transform ) {
             lattice.getEdgeLength(edge),
             6
             );
-    av = lattice.getAnnotationItemManager().getValues(
-            lattice.getEdgeAnnotationItem(edge)
-            );
+    av = aim.getValues(lattice.getEdgeAnnotationItem(edge));
     avi = av.begin();
     BOOST_CHECK_EQUAL((*avi).first, "number");
     BOOST_CHECK_EQUAL((*avi).second, "pl");
@@ -1759,9 +1712,7 @@ BOOST_AUTO_TEST_CASE( puddle_transform ) {
             lattice.getEdgeLength(discardedEdge),
             6
             );
-    av = lattice.getAnnotationItemManager().getValues(
-            discardedItem
-            );
+    av = aim.getValues(discardedItem);
     avi = av.begin();
     BOOST_CHECK_EQUAL((*avi).first, "number");
     BOOST_CHECK_EQUAL((*avi).second, "pl");

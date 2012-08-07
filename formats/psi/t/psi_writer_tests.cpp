@@ -132,7 +132,7 @@ BOOST_AUTO_TEST_CASE( psi_lattice_writer_planes ) {
     LayerTagMask maskToken = lattice.getLayerTagManager().getMask(tagToken);
 
     AnnotationItem aiWord("word");
-    lattice.getAnnotationItemManager().setValue(aiWord, "type", "word");
+    aim.setValue(aiWord, "type", "word");
 
     BOOST_CHECK(!lattice.getLayerTagManager().areInTheSamePlane(tagTranslation, tagToken));
 

@@ -370,15 +370,15 @@ BOOST_AUTO_TEST_CASE( variant_edges ) {
     ananas_lemma_builder.addEdge(
         lattice.firstOutEdge(lattice.getVertexForRawCharIndex(0), tokenMask));
     AnnotationItem ai_ananas_sg("ananas"); // singular masculinie noun variant
-    lattice.getAnnotationItemManager().setValue(ai_ananas_sg, "base", "ananas");
-    lattice.getAnnotationItemManager().setValue(ai_ananas_sg, "morphology", "subst:sg:m");
-    lattice.getAnnotationItemManager().setValue(ai_ananas_sg, "discard", "0");
+    aim.setValue(ai_ananas_sg, "base", "ananas");
+    aim.setValue(ai_ananas_sg, "morphology", "subst:sg:m");
+    aim.setValue(ai_ananas_sg, "discard", "0");
     lattice.addEdge(pre_ananas, post_ananas, ai_ananas_sg, lemma_tag, ananas_lemma_builder.build());
 
     AnnotationItem ai_ananas_pl("ananas"); // plural masculine noun variant
-    lattice.getAnnotationItemManager().setValue(ai_ananas_pl, "base", "ananas");
-    lattice.getAnnotationItemManager().setValue(ai_ananas_pl, "morphology", "subst:pl:m");
-    lattice.getAnnotationItemManager().setValue(ai_ananas_pl, "discard", "0");
+    aim.setValue(ai_ananas_pl, "base", "ananas");
+    aim.setValue(ai_ananas_pl, "morphology", "subst:pl:m");
+    aim.setValue(ai_ananas_pl, "discard", "0");
     lattice.addEdge(pre_ananas, post_ananas, ai_ananas_pl, lemma_tag, ananas_lemma_builder.build());
 
     Lattice::EdgeDescriptor edge;
@@ -390,9 +390,7 @@ BOOST_AUTO_TEST_CASE( variant_edges ) {
         ai_ananas_sg.getCategory()
         );
     std::list< std::pair<std::string, std::string> > av
-        = lattice.getAnnotationItemManager().getValues(
-            lattice.getEdgeAnnotationItem(edge)
-            );
+        = aim.getValues(lattice.getEdgeAnnotationItem(edge));
     std::list< std::pair<std::string, std::string> >::iterator avi = av.begin();
     BOOST_CHECK_EQUAL((*avi).first, "base");
     BOOST_CHECK_EQUAL((*avi).second, "ananas");
@@ -411,9 +409,7 @@ BOOST_AUTO_TEST_CASE( variant_edges ) {
         lattice.getAnnotationCategory(edge),
         ai_ananas_pl.getCategory()
         );
-    av = lattice.getAnnotationItemManager().getValues(
-        lattice.getEdgeAnnotationItem(edge)
-        );
+    av = aim.getValues(lattice.getEdgeAnnotationItem(edge));
     avi = av.begin();
     BOOST_CHECK_EQUAL((*avi).first, "base");
     BOOST_CHECK_EQUAL((*avi).second, "ananas");
