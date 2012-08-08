@@ -72,12 +72,14 @@ Gobio::Gobio(std::string rulesPath) : rulesPath_(rulesPath) { }
 
 void Gobio::parse(Lattice & lattice) {
 
-    Combinator combinator(lattice.getAnnotationItemManager());
+    AnnotationItemManager & aim = lattice.getAnnotationItemManager();
+
+    Combinator combinator(aim);
 
     combinator.add_rules(rulesPath_);
 
     AV_AI_Converter av_ai_converter(
-        lattice,
+        aim,
         combinator.get_symbol_registrar(),
         combinator.get_attribute_registrar(),
         true

@@ -16,7 +16,7 @@ BOOST_AUTO_TEST_CASE( conversion_int_av_to_ai ) {
     AnnotationItemManager aim;
     Lattice lattice(aim);
     registrar<std::string> reg;
-    AV_AI_Converter converter(lattice, reg, reg);
+    AV_AI_Converter converter(aim, reg, reg);
     av_matrix<int, int> avm(0);
     avm.set_attr(1, 2, -1L);
     avm.set_attr(3, 4, -1L);
@@ -38,7 +38,7 @@ BOOST_AUTO_TEST_CASE( conversion_int_ai_to_av ) {
     AnnotationItemManager aim;
     Lattice lattice(aim);
     registrar<std::string> reg;
-    AV_AI_Converter converter(lattice, reg, reg);
+    AV_AI_Converter converter(aim, reg, reg);
     AnnotationItem ai("0");
     aim.setValue(ai, "1", INTEGER_TO_ZVALUE(2));
     aim.setValue(ai, "3", INTEGER_TO_ZVALUE(4));
@@ -60,7 +60,7 @@ BOOST_AUTO_TEST_CASE( conversion_partially_string ) {
     AnnotationItemManager aim;
     Lattice lattice(aim);
     registrar<std::string> reg;
-    AV_AI_Converter converter(lattice, reg, reg);
+    AV_AI_Converter converter(aim, reg, reg);
     AnnotationItem ai("category");
     aim.setValue(ai, "1", "bbb");
     aim.setValue(ai, "3", "ddd");
@@ -78,7 +78,7 @@ BOOST_AUTO_TEST_CASE( conversion_string ) {
     AnnotationItemManager aim;
     Lattice lattice(aim);
     registrar<std::string> reg;
-    AV_AI_Converter converter(lattice, reg, reg);
+    AV_AI_Converter converter(aim, reg, reg);
     AnnotationItem ai("category");
     aim.setValue(ai, "Aa", "bbb");
     aim.setValue(ai, "Cc", "ddd");

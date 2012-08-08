@@ -11,7 +11,6 @@
 #include "annotation_item.hpp"
 #include "annotation_item_manager.hpp"
 #include "av_matrix.hpp"
-#include "lattice.hpp"
 #include "number_master.hpp"
 #include "registrar.tpl"
 #include "zvalue.hpp"
@@ -22,7 +21,7 @@ namespace AV_AI_Converter_specialization {
     template <typename CategoryType>
     const CategoryType toAVMatrix(
         AnnotationItem ai,
-        Lattice & /*lattice*/,
+        AnnotationItemManager & /* aim */,
         registrar<std::string> & /* symbol_reg */,
         registrar<std::string> & /* attribute_reg */,
         bool /* convert_cases */
@@ -33,7 +32,7 @@ namespace AV_AI_Converter_specialization {
     template <>
     inline const av_matrix<int, int> toAVMatrix< av_matrix<int, int> >(
         AnnotationItem ai,
-        Lattice & lattice,
+        AnnotationItemManager & aim,
         registrar<std::string> & symbol_reg,
         registrar<std::string> & attribute_reg,
         bool convert_cases
@@ -43,8 +42,7 @@ namespace AV_AI_Converter_specialization {
         av_matrix<int, int> result(symbol_reg.get_id(category));
         number_master master;
         typedef std::pair<std::string, std::string> StringPair;
-        std::list< StringPair > values
-            = lattice.getAnnotationItemManager().getValues(ai);
+        std::list< StringPair > values = aim.getValues(ai);
         BOOST_FOREACH( StringPair avpair, values ) {
             std::string attr = avpair.first;
             if (convert_cases && !attr.empty()) attr[0] = toupper(attr[0]);
@@ -59,7 +57,7 @@ namespace AV_AI_Converter_specialization {
     template <>
     inline const av_matrix<int, zvalue> toAVMatrix< av_matrix<int, zvalue> >(
         AnnotationItem ai,
-        Lattice & lattice,
+        AnnotationItemManager & aim,
         registrar<std::string> & symbol_reg,
         registrar<std::string> & attribute_reg,
         bool convert_cases
@@ -67,7 +65,6 @@ namespace AV_AI_Converter_specialization {
         std::string category = ai.getCategory();
         if (convert_cases && !category.empty()) category[0] = tolower(category[0]);
         av_matrix<int, zvalue> result(symbol_reg.get_id(category));
-        AnnotationItemManager & aim = lattice.getAnnotationItemManager();
         typedef std::pair<std::string, zvalue> StringZvaluePair;
         std::list< StringZvaluePair > values = aim.getValuesAsZvalues(ai);
         BOOST_FOREACH( StringZvaluePair avpair, values ) {
@@ -81,7 +78,7 @@ namespace AV_AI_Converter_specialization {
     template <>
     inline const av_matrix<std::string, int> toAVMatrix< av_matrix<std::string, int> >(
         AnnotationItem ai,
-        Lattice & lattice,
+        AnnotationItemManager & aim,
         registrar<std::string> & /* symbol_reg */,
         registrar<std::string> & attribute_reg,
         bool convert_cases
@@ -91,8 +88,7 @@ namespace AV_AI_Converter_specialization {
         av_matrix<std::string, int> result(category);
         number_master master;
         typedef std::pair<std::string, std::string> StringPair;
-        std::list< StringPair > values
-            = lattice.getAnnotationItemManager().getValues(ai);
+        std::list< StringPair > values = aim.getValues(ai);
         BOOST_FOREACH( StringPair avpair, values ) {
             std::string attr = avpair.first;
             if (convert_cases && !attr.empty()) attr[0] = toupper(attr[0]);
@@ -107,7 +103,7 @@ namespace AV_AI_Converter_specialization {
     template <>
     inline const av_matrix<std::string, zvalue> toAVMatrix< av_matrix<std::string, zvalue> >(
         AnnotationItem ai,
-        Lattice & lattice,
+        AnnotationItemManager & aim,
         registrar<std::string> & /* symbol_reg */,
         registrar<std::string> & attribute_reg,
         bool convert_cases
@@ -115,7 +111,6 @@ namespace AV_AI_Converter_specialization {
         std::string category = ai.getCategory();
         if (convert_cases && !category.empty()) category[0] = tolower(category[0]);
         av_matrix<std::string, zvalue> result(category);
-        AnnotationItemManager & aim = lattice.getAnnotationItemManager();
         typedef std::pair<std::string, zvalue> StringZvaluePair;
         std::list< StringZvaluePair > values = aim.getValuesAsZvalues(ai);
         BOOST_FOREACH( StringZvaluePair avpair, values ) {
@@ -129,7 +124,7 @@ namespace AV_AI_Converter_specialization {
     template <>
     inline const std::string toAVMatrix< std::string >(
         AnnotationItem ai,
-        Lattice & /* lattice */,
+        AnnotationItemManager & /* aim */,
         registrar<std::string> & /* symbol_reg */,
         registrar<std::string> & /* attribute_reg */,
         bool convert_cases
@@ -155,12 +150,12 @@ public:
      *   while converting from AV to AI.
      */
     AV_AI_Converter(
-        Lattice & lattice,
+        AnnotationItemManager & aim,
         registrar<std::string> & symbol_reg,
         registrar<std::string> & attribute_reg,
         bool convert_cases = false
     ) :
-        lattice_(lattice),
+        aim_(aim),
         symbol_reg_(symbol_reg),
         attribute_reg_(attribute_reg),
         convert_cases_(convert_cases)
@@ -181,7 +176,7 @@ public:
 
 private:
 
-    Lattice & lattice_;
+    AnnotationItemManager & aim_;
     registrar<std::string> & symbol_reg_;
     registrar<std::string> & attribute_reg_;
     bool convert_cases_;
@@ -193,7 +188,7 @@ template <typename CategoryType>
 const CategoryType AV_AI_Converter::toAVMatrix(AnnotationItem ai) {
     return AV_AI_Converter_specialization::toAVMatrix<CategoryType>(
         ai,
-        lattice_,
+        aim_,
         symbol_reg_,
         attribute_reg_,
         convert_cases_

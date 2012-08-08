@@ -22,7 +22,7 @@ const AnnotationItem AV_AI_Converter::toAnnotationItem(av_matrix<int, int> av) {
         int val = av.get_attr(i);
         if (!master.is_false(val)) {
             valSs << val;
-            lattice_.getAnnotationItemManager().setValue(result, attrSs.str(), valSs.str());
+            aim_.setValue(result, attrSs.str(), valSs.str());
             valSs.str("");
         }
         attrSs.str("");
@@ -48,8 +48,8 @@ const AnnotationItem AV_AI_Converter::toAnnotationItem(av_matrix<int, zvalue> av
             attrSs << attribute_reg_.get_obj(i);
         }
         zvalue val = av.get_attr(i);
-        if (!lattice_.getAnnotationItemManager().is_false(val)) {
-            lattice_.getAnnotationItemManager().setValue(result, attrSs.str(), val);
+        if (!aim_.is_false(val)) {
+            aim_.setValue(result, attrSs.str(), val);
         }
         attrSs.str("");
     }
@@ -64,7 +64,7 @@ const AnnotationItem AV_AI_Converter::toAnnotationItem(av_matrix<std::string, in
     for (int i = 0; i < av.nb_attrs(); ++i) {
         attrSs << i;
         valSs << av.get_attr(i);
-        lattice_.getAnnotationItemManager().setValue(result, attrSs.str(), valSs.str());
+        aim_.setValue(result, attrSs.str(), valSs.str());
         attrSs.str("");
         valSs.str("");
     }
@@ -77,7 +77,7 @@ const AnnotationItem AV_AI_Converter::toAnnotationItem(av_matrix<std::string, zv
     AnnotationItem result(av.get_cat());
     for (int i = 0; i < av.nb_attrs(); ++i) {
         attrSs << i;
-        lattice_.getAnnotationItemManager().setValue(result, attrSs.str(), av.get_attr(i));
+        aim_.setValue(result, attrSs.str(), av.get_attr(i));
         attrSs.str("");
     }
     return result;
