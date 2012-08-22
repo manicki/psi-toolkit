@@ -119,8 +119,7 @@ void PipeRunner::setRunnerOptionsDescription_() {
          "Set logging level")
         ("log-file", boost::program_options::value<std::string>(),
          "Filepath to store logs (if not set: standard error)")
-        ("version", "output version information and exit")
-        ;
+        ("version", "output version information and exit");
 }
 
 bool PipeRunner::stopAfterExecutingRunnerOptions_() {
@@ -510,8 +509,7 @@ boost::shared_ptr<ProcessorPromise> PipeRunner::createPromise_(
     AnnotatorFactory* asAnnotatorFactory =
         dynamic_cast<AnnotatorFactory*>(factory);
 
-    return
-        asAnnotatorFactory
+    return asAnnotatorFactory
         ? boost::shared_ptr<ProcessorPromise>(new AnnotatorPromise(asAnnotatorFactory, options))
         : boost::shared_ptr<ProcessorPromise>(new NonAnnotatorPromise(factory, options));
 }
