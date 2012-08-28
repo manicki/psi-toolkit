@@ -22,7 +22,8 @@ public:
         std::set<std::string> filter,
         std::string outputFormat,
         bool tree,
-        bool align
+        bool align,
+        bool showSymbolEdges
     );
 
     ~GVLatticeWriter();
@@ -58,6 +59,7 @@ public:
     std::string getOutputFormat() const { return outputFormat_; }
     bool isTree() const { return tree_; }
     bool isAlign() const { return align_; }
+    bool isShowSymbolEdges() const { return showSymbolEdges_; }
 
 private:
     virtual std::string doInfo();
@@ -87,6 +89,7 @@ private:
     std::string outputFormat_;
     bool tree_;
     bool align_;
+    bool showSymbolEdges_;
 
     GraphvizAdapterInterface * adapter_;
 

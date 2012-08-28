@@ -19,14 +19,16 @@ GVLatticeWriter::GVLatticeWriter(
     std::set<std::string> filter,
     std::string outputFormat,
     bool tree,
-    bool align
+    bool align,
+    bool showSymbolEdges
 ) :
     showTags_(showTags),
     color_(color),
     filter_(filter),
     outputFormat_(outputFormat),
     tree_(tree),
-    align_(align)
+    align_(align),
+    showSymbolEdges_(showSymbolEdges)
 {
     adapter_ = dynamic_cast<GraphvizAdapterInterface*>(
         PluginManager::getInstance().createPluginAdapter("graphviz")
@@ -75,7 +77,8 @@ LatticeWriter<std::ostream>* GVLatticeWriter::Factory::doCreateLatticeWriter(
         filter,
         options["format"].as<std::string>(),
         options.count("tree"),
-        !options.count("no-align")
+        !options.count("no-align"),
+        options.count("show-symbol-edges")
     );
 }
 
@@ -95,6 +98,8 @@ boost::program_options::options_description GVLatticeWriter::Factory::doOptionsH
             "makes all graphical output black on white")
         ("show-tags",
             "prints layer tags")
+        ("show-symbol-edges",
+            "shows symbol edges")
         ("tree",
             "shows dependencies between edges instead of the content of the lattice");
 
