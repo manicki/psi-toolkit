@@ -2,6 +2,13 @@ cmake_minimum_required(VERSION 2.8)
 
 project(psi-toolkit CXX)
 
+if(CMAKE_SIZEOF_VOID_P MATCHES "8")
+   SET(CPU_ARCH "amd64")
+else(CMAKE_SIZEOF_VOID_P MATCHES "8")
+   SET(CPU_ARCH "i386")
+endif(CMAKE_SIZEOF_VOID_P MATCHES "8")
+
+
 SET(MY_TARGETLIB_PREFIX "libpsitoolkit_")
 SET(CMAKE_INSTALL_RPATH "${CMAKE_INSTALL_PREFIX}/lib")
 
@@ -579,7 +586,7 @@ configure_file(${psi-toolkit_SOURCE_DIR}/common/config.hpp.in
 # ====================================================
 
 function(download_artifact FILE)
-  set(_url "http://mrt.wmi.amu.edu.pl:8080/job/psi-toolkit-data/lastSuccessfulBuild/artifact/psi-toolkit-data/${FILE}")
+  set(_url "http://mrt.wmi.amu.edu.pl:8080/job/psi-toolkit-data-${CPU_ARCH}/lastSuccessfulBuild/artifact/psi-toolkit-data/${FILE}")
 
   message(STATUS "Checking ${_url}...")
 
