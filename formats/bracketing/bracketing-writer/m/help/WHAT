@@ -1,0 +1,1 @@
+lemmatize ! bracketing-writer --opening-bracket <edge tags="%T" category="%c" attrs="%A"> --closing-bracket </edge> --av-separator : --av-pairs-separator ;
