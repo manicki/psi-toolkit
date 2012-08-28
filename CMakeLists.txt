@@ -190,7 +190,12 @@ if(USE_JAVA)
     enable_language(Java)
 
     find_package(Java REQUIRED)
-    find_package(JNI REQUIRED)
+    find_package(JNI)
+
+    if(NOT JNI_FOUND)
+       message(STATUS "JNI not found using alternative cmake file")
+       find_package(JNIAlt REQUIRED)
+    endif(NOT JNI_FOUND)
 
     string(REGEX REPLACE "(.*)/libjvm.so" "\\1" LD_LIBPATH ${JAVA_JVM_LIBRARY})
     message(STATUS "You may need to set LD_LIBRARY_PATH=${LD_LIBPATH} to run installed software")
