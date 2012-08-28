@@ -1,1 +1,1 @@
-txt-reader ! srx-segmenter --lang pl ! tp-tokenizer --lang pl ! gv-writer --show-tags --filter token segment --format canon
+txt-reader ! srx-segmenter --lang pl ! tp-tokenizer --lang pl ! gv-writer --show-tags --filter token segment --format canon --no-color
