@@ -220,6 +220,12 @@ void GVLatticeWriter::Worker::doRun() {
             std::list<std::string> tagNames
                 = lattice_.getLayerTagManager().getTagNames(lattice_.getEdgeLayerTags(edge));
 
+            if (
+                tagNames.size() == 1 &&
+                tagNames.front() == "symbol" &&
+                !processor_.isShowSymbolEdges()
+            ) continue;
+
             if (!processor_.areSomeInFilter(tagNames)) continue;
 
             Lattice::VertexDescriptor source = lattice_.getEdgeSource(edge);
