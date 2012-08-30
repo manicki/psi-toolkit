@@ -4,6 +4,7 @@
 #include <algorithm>
 #include <iterator>
 
+#include "bracketing_quoter.hpp"
 #include "string_helpers.hpp"
 
 
@@ -15,6 +16,8 @@ std::string BracketingLatticeWriter::getFormatName() {
 LatticeWriter<std::ostream>* BracketingLatticeWriter::Factory::doCreateLatticeWriter(
     const boost::program_options::variables_map& options
 ) {
+    BracketingQuoter quoter;
+
     std::vector<std::string> showOnlyTags;
     std::vector<std::string> filter;
     std::vector<std::string> showAttributes;
@@ -33,13 +36,13 @@ LatticeWriter<std::ostream>* BracketingLatticeWriter::Factory::doCreateLatticeWr
     }
 
     return new BracketingLatticeWriter(
-        options["opening-bracket"].as<std::string>(),
-        options["closing-bracket"].as<std::string>(),
-        options["tag-separator"].as<std::string>(),
+        quoter.unescape(options["opening-bracket"].as<std::string>()),
+        quoter.unescape(options["closing-bracket"].as<std::string>()),
+        quoter.unescape(options["tag-separator"].as<std::string>()),
         showOnlyTags,
         filter,
-        options["av-pairs-separator"].as<std::string>(),
-        options["av-separator"].as<std::string>(),
+        quoter.unescape(options["av-pairs-separator"].as<std::string>()),
+        quoter.unescape(options["av-separator"].as<std::string>()),
         showAttributes
     );
 }
