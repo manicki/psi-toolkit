@@ -1,6 +1,7 @@
 add_library(formats-bracketing SHARED
     bracket_printer.cpp
     bracketing_lattice_writer.cpp
+    bracketing_quoter.cpp
 )
 
 add_subdirectory(t)
