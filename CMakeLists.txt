@@ -403,23 +403,30 @@ if (USE_DOC_READER)
 endif (USE_DOC_READER)
 
 # ----------------------------------------------------
-# Flex and Bison stuff
+# Flex
 # ----------------------------------------------------
-if(NOT DEFINED FLEX_PREFIX_OUTPUTS)
+if (NOT DEFINED FLEX_PREFIX_OUTPUTS)
     set(FLEX_PREFIX_OUTPUTS FALSE)
-endif(NOT DEFINED FLEX_PREFIX_OUTPUTS)
+endif (NOT DEFINED FLEX_PREFIX_OUTPUTS)
 
-if(NOT DEFINED FLEX_GENERATE_DEFINES)
+if (NOT DEFINED FLEX_GENERATE_DEFINES)
     set(FLEX_GENERATE_DEFINES FALSE)
-endif(NOT DEFINED FLEX_GENERATE_DEFINES)
+endif (NOT DEFINED FLEX_GENERATE_DEFINES)
 
-if(NOT FLEX_EXECUTABLE)
-    message(STATUS "Looking for flex")
+if (NOT FLEX_EXECUTABLE)
     find_program(FLEX_EXECUTABLE flex)
-    if(FLEX_EXECUTABLE)
-        message(STATUS "Looking for flex -- ${FLEX_EXECUTABLE}")
-    endif(FLEX_EXECUTABLE)
-endif(NOT FLEX_EXECUTABLE)
+    if (FLEX_EXECUTABLE)
+        message(STATUS "Found Flex")
+    else (FLEX_EXECUTABLE)
+        if (EXISTS ${psi-toolkit_SOURCE_DIR}/tools/parsers/gobio/translator/lex.grlex.cpp)
+            message(STATUS
+                "Flex not found: file lex.grlex.cpp exists and will be left unchanged")
+        else (EXISTS ${psi-toolkit_SOURCE_DIR}/tools/parsers/gobio/translator/lex.grlex.cpp)
+            message(WARNING
+                "Flex not found: file lex.grlex.cpp is missing and cannot be generated")
+        endif (EXISTS ${psi-toolkit_SOURCE_DIR}/tools/parsers/gobio/translator/lex.grlex.cpp)
+    endif (FLEX_EXECUTABLE)
+endif (NOT FLEX_EXECUTABLE)
 
 add_custom_target(
     flex-grlex ALL
@@ -427,46 +434,61 @@ add_custom_target(
         ${psi-toolkit_SOURCE_DIR}/tools/parsers/gobio/translator/lex.grlex.cpp
 )
 
-add_custom_command(
-    OUTPUT ${psi-toolkit_SOURCE_DIR}/tools/parsers/gobio/translator/lex.grlex.cpp
-    COMMAND ${FLEX_EXECUTABLE}
-        -P grlex
-        -o ${psi-toolkit_SOURCE_DIR}/tools/parsers/gobio/translator/lex.grlex.cpp
-        ${psi-toolkit_SOURCE_DIR}/tools/parsers/gobio/translator/lex.grlex.lpp
-    DEPENDS ${psi-toolkit_SOURCE_DIR}/tools/parsers/gobio/translator/lex.grlex.lpp
-    COMMENT "Generating lex.grlex.cpp"
-)
+if (FLEX_EXECUTABLE)
+    add_custom_command(
+        OUTPUT ${psi-toolkit_SOURCE_DIR}/tools/parsers/gobio/translator/lex.grlex.cpp
+        COMMAND ${FLEX_EXECUTABLE}
+            -P grlex
+            -o ${psi-toolkit_SOURCE_DIR}/tools/parsers/gobio/translator/lex.grlex.cpp
+            ${psi-toolkit_SOURCE_DIR}/tools/parsers/gobio/translator/lex.grlex.lpp
+        DEPENDS ${psi-toolkit_SOURCE_DIR}/tools/parsers/gobio/translator/lex.grlex.lpp
+        COMMENT "Generating lex.grlex.cpp"
+    )
+endif (FLEX_EXECUTABLE)
 
-if(NOT DEFINED BISON_PREFIX_OUTPUTS)
+# ----------------------------------------------------
+# Bison
+# ----------------------------------------------------
+if (NOT DEFINED BISON_PREFIX_OUTPUTS)
     set(BISON_PREFIX_OUTPUTS FALSE)
-endif(NOT DEFINED BISON_PREFIX_OUTPUTS)
+endif (NOT DEFINED BISON_PREFIX_OUTPUTS)
 
-if(NOT DEFINED BISON_GENERATE_DEFINES)
+if (NOT DEFINED BISON_GENERATE_DEFINES)
     set(BISON_GENERATE_DEFINES FALSE)
-endif(NOT DEFINED BISON_GENERATE_DEFINES)
+endif (NOT DEFINED BISON_GENERATE_DEFINES)
 
-if(NOT BISON_EXECUTABLE)
+if (NOT BISON_EXECUTABLE)
     message(STATUS "Looking for bison")
     find_program(BISON_EXECUTABLE bison)
-    if(BISON_EXECUTABLE)
-        message(STATUS "Looking for bison -- ${BISON_EXECUTABLE}")
-    endif(BISON_EXECUTABLE)
-endif(NOT BISON_EXECUTABLE)
+    if (BISON_EXECUTABLE)
+        message(STATUS "Found Bison")
+    else (BISON_EXECUTABLE)
+        if (EXISTS ${psi-toolkit_SOURCE_DIR}/tools/parsers/gobio/translator/grparser.bis.cpp)
+            message(STATUS
+                "Bison not found: file grparser.bis.cpp exists and will be left unchanged")
+        else (EXISTS ${psi-toolkit_SOURCE_DIR}/tools/parsers/gobio/translator/grparser.bis.cpp)
+            message(WARNING
+                "Bison not found: file grparser.bis.cpp is missing and cannot be generated")
+        endif (EXISTS ${psi-toolkit_SOURCE_DIR}/tools/parsers/gobio/translator/grparser.bis.cpp)
+    endif (BISON_EXECUTABLE)
+endif (NOT BISON_EXECUTABLE)
 
 add_custom_target(
     bison-grparser ALL
     DEPENDS ${psi-toolkit_SOURCE_DIR}/tools/parsers/gobio/translator/grparser.bis.cpp
 )
 
-add_custom_command(
-    OUTPUT ${psi-toolkit_SOURCE_DIR}/tools/parsers/gobio/translator/grparser.bis.cpp
-    COMMAND ${BISON_EXECUTABLE}
-        -p grparser
-        -o ${psi-toolkit_SOURCE_DIR}/tools/parsers/gobio/translator/grparser.bis.cpp
-        ${psi-toolkit_SOURCE_DIR}/tools/parsers/gobio/translator/grparser.y
-    DEPENDS ${psi-toolkit_SOURCE_DIR}/tools/parsers/gobio/translator/grparser.y
-    COMMENT "Generating grparser.bis.cpp"
-)
+if (BISON_EXECUTABLE)
+    add_custom_command(
+        OUTPUT ${psi-toolkit_SOURCE_DIR}/tools/parsers/gobio/translator/grparser.bis.cpp
+        COMMAND ${BISON_EXECUTABLE}
+            -p grparser
+            -o ${psi-toolkit_SOURCE_DIR}/tools/parsers/gobio/translator/grparser.bis.cpp
+            ${psi-toolkit_SOURCE_DIR}/tools/parsers/gobio/translator/grparser.y
+        DEPENDS ${psi-toolkit_SOURCE_DIR}/tools/parsers/gobio/translator/grparser.y
+        COMMENT "Generating grparser.bis.cpp"
+    )
+endif (BISON_EXECUTABLE)
 
 
 # ====================================================
