@@ -41,7 +41,7 @@ char * PipeSite::inputText() {
 
 char * PipeSite::pipeText() {
     std::string pipe = getOrSetDefaultData("pipe-text", initialPipe);
-    return stringToChar(pipe);
+    return stringToChar(encodeHTML_(pipe));
 }
 
 char * PipeSite::outputText() {
@@ -159,7 +159,7 @@ std::string PipeSite::generateOutput_(const std::string& rawOutput) {
         output << "No output preview.";
     }
     if (type == "text") {
-        output << "<pre>" << rawOutput << "</pre>";
+        output << "<pre>" << encodeHTML_(rawOutput) << "</pre>";
     }
     if (type == FileRecognizer::UNKNOWN_TYPE) {
         output << "<pre>" << rawOutput << "</pre>";
@@ -167,4 +167,22 @@ std::string PipeSite::generateOutput_(const std::string& rawOutput) {
     }
 
     return output.str();
+}
+
+std::string PipeSite::encodeHTML_(const std::string& data) {
+    std::string buffer;
+    buffer.reserve(data.size());
+
+    for(size_t pos = 0; pos != data.size(); ++pos) {
+        switch(data[pos]) {
+            case '&':  buffer.append("&amp;");      break;
+            case '\"': buffer.append("&quot;");     break;
+            case '\'': buffer.append("&apos;");     break;
+            case '<':  buffer.append("&lt;");       break;
+            case '>':  buffer.append("&gt;");       break;
+            default:   buffer.append(1, data[pos]); break;
+        }
+    }
+
+    return buffer;
 }

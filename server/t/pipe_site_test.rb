@@ -125,6 +125,18 @@ class PipeSiteTest < Test::Unit::TestCase
         assert output.link.href.end_with? 'jpg'
     end
 
+    def test_HTML_entities_escaping
+        text = 'Ala <ma> "kota" i </psa>!'
+
+        set_pipe 'txt-reader ! tokenize --lang pl ! psi-writer'
+        set_input text
+        submit
+
+        output = @browser.div(:id => 'output')
+
+        assert output.text.include? text.gsub(' ', '_')
+    end
+
     private
 
     def set_pipe(txt)

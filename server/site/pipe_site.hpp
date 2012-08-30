@@ -37,4 +37,6 @@ private:
     void createFileFromOutput(const std::string& output);
 
     std::string generateOutput_(const std::string& rawOuput);
+
+    std::string encodeHTML_(const std::string& data);
 };
