@@ -1,0 +1,2 @@
+tokenize --lang pl ! bracketing-writer --filter token --opening-bracket \n<%T_cats="%*{;}{%c}"_sep="\\n"> --closing-bracket </%T>\n
+
