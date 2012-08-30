@@ -1,5 +1,6 @@
 #include <boost/algorithm/string/join.hpp>
 #include <boost/algorithm/string/trim.hpp>
+#include <boost/algorithm/string/replace.hpp>
 
 #include "html_help_formatter.hpp"
 
@@ -88,14 +89,17 @@ void HtmlHelpFormatter::formatPipelineExampleInJSON_(TestBatch batch, std::ostre
 
     std::string description = batch.getDescription();
     boost::algorithm::trim(description);
+    boost::replace_all(description, "\"", "\\\"");
     output << "    \"description\" : \"" << description << "\"," << std::endl;
 
     std::string pipe = batch.getPipeline();
     boost::algorithm::trim(pipe);
+    boost::replace_all(pipe, "\"", "\\\"");
     output << "    \"pipe\" : \"" << pipe << "\"," << std::endl;
 
     std::string text = getFileContent(batch.getTestRuns()[0].getInputFilePath());
     boost::algorithm::trim(text);
+    boost::replace_all(text, "\"", "\\\"");
     output << "    \"text\" : \"" << text << "\"" << std::endl;
 
     output << "  }, " << std::endl;
