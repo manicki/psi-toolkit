@@ -181,5 +181,7 @@ function bindChangeOutputType() {
         newPipeline += '! ' + selectedWriter;
 
         $('input[name=pipe-text]').val(newPipeline);
+
+        $('#toolbox > form').submit();
     });
 }
