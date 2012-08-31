@@ -35,7 +35,7 @@ void HtmlHelpFormatter::formatUsingExamples_(std::vector<TestBatch> batches, std
 
     for (unsigned int i = 0; i < batches.size(); i++) {
        output << "<code class=\"example-pipe\">"
-            << batches[i].getPipeline() << "</code>" << std::endl;
+            << escapeHTML_(batches[i].getPipeline()) << "</code>" << std::endl;
 
        output << "<div class=\"example-desc\">"
             << markdownString2String(batches[i].getDescription()) << "</div>" << std::endl;
@@ -46,11 +46,11 @@ void HtmlHelpFormatter::formatUsingExamples_(std::vector<TestBatch> batches, std
 
             std::string fileContent = getFileContent(inOuts[j].getInputFilePath());
             output << "<div class=\"in\">in:</div>"
-                << "<pre><code>" << fileContent << "</code></pre>" << std::endl;
+                << "<pre><code>" << escapeHTML_(fileContent) << "</code></pre>" << std::endl;
 
             fileContent = getFileContent(inOuts[j].getExpectedOutputFilePath());
             output << "<div class=\"out\">out:</div>"
-                << "<pre><code>" << fileContent << "</code></pre>" << std::endl;
+                << "<pre><code>" << escapeHTML_(fileContent) << "</code></pre>" << std::endl;
             output << "</div>" << std::endl;
         }
     }
@@ -88,19 +88,15 @@ void HtmlHelpFormatter::formatPipelineExampleInJSON_(TestBatch batch, std::ostre
     output << "  {" << std::endl;
 
     std::string description = batch.getDescription();
-    boost::algorithm::trim(description);
-    boost::replace_all(description, "\"", "\\\"");
-    output << "    \"description\" : \"" << description << "\"," << std::endl;
+    output << "    \"description\" : \"" << escapeJSON_(description) << "\"," << std::endl;
 
     std::string pipe = batch.getPipeline();
     boost::algorithm::trim(pipe);
-    boost::replace_all(pipe, "\"", "\\\"");
-    output << "    \"pipe\" : \"" << pipe << "\"," << std::endl;
+    output << "    \"pipe\" : \"" << escapeJSON_(pipe) << "\"," << std::endl;
 
     std::string text = getFileContent(batch.getTestRuns()[0].getInputFilePath());
     boost::algorithm::trim(text);
-    boost::replace_all(text, "\"", "\\\"");
-    output << "    \"text\" : \"" << text << "\"" << std::endl;
+    output << "    \"text\" : \"" << escapeJSON_(text) << "\"" << std::endl;
 
     output << "  }, " << std::endl;
 }
@@ -132,3 +128,30 @@ void HtmlHelpFormatter::doFormatOneAlias(
 }
 
 HtmlHelpFormatter::~HtmlHelpFormatter() { }
+
+std::string HtmlHelpFormatter::escapeHTML_(const std::string& text) {
+    std::string buffer;
+    buffer.reserve(text.size());
+
+    for(size_t pos = 0; pos != text.size(); ++pos) {
+        switch(text[pos]) {
+            case '&':  buffer.append("&amp;");      break;
+            case '\"': buffer.append("&quot;");     break;
+            case '\'': buffer.append("&apos;");     break;
+            case '<':  buffer.append("&lt;");       break;
+            case '>':  buffer.append("&gt;");       break;
+            default:   buffer.append(1, text[pos]); break;
+        }
+    }
+
+    return buffer;
+}
+
+std::string HtmlHelpFormatter::escapeJSON_(std::string& text) {
+    boost::replace_all(text, "\"", "\\\"");
+    boost::replace_all(text, "\n", "\\\n");
+    boost::replace_all(text, "\r", "\\\r");
+    boost::replace_all(text, "\t", "\\\t");
+
+    return text;
+}

@@ -34,6 +34,9 @@ private:
     void doFormatLicence(std::string text, std::ostream& output);
 
     void formatPipelineExampleInJSON_(TestBatch batch, std::ostream& output);
+
+    std::string escapeHTML_(const std::string& text);
+    std::string escapeJSON_(std::string& text);
 };
 
 #endif
