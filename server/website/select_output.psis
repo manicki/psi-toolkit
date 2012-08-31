@@ -1,0 +1,11 @@
+<span id="select-output-type">
+  Change ouptput format type:
+  <select id="output-type-select">
+    <option value="gv-writer">graphic</option>
+    <option value="simple-writer">simple text</option>
+    <option value="bracketing-writer">tagged text</option>
+    <option value="bracketing-writer --opening-bracket \n&lt;edge&nbsp;tags=&quot;%T&quot;&nbsp;category=&quot;%c&quot;&nbsp;attrs=&quot;%A&quot;&gt; --closing-bracket &lt;/edge&gt;\n --av-separator : --av-pairs-separator ;">XML</option>
+    <option value="json-simple-writer">JSON</option>
+    <option value="psi-writer">PSI-Toolkit internal</option>
+  </select>
+</span>

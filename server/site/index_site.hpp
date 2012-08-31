@@ -12,4 +12,5 @@ public:
     char * headerPart();
     char * promotionPart();
     char * footerPart();
+    char * selectOutputPart();
 };

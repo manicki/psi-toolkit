@@ -6,6 +6,7 @@ $(document).ready(function(){
   bindTextBookmarks();
   bindRandomExamples();
   bindChangeOutputSize();
+  bindChangeOutputType();
 
   readPsisOptions();
 
@@ -167,4 +168,18 @@ function isOutputType(type) {
       return $('#output > a > img').length ? true : false;
       break;
   }
-};
+}
+
+function bindChangeOutputType() {
+
+    $('#select-output-type').change(function() {
+        var selectedWriter = $(this).find(':selected').attr('value');
+        var currentPipeline = $('input[name=pipe-text]').val();
+
+        matchWriter = currentPipeline.match('! +[a-z\-]+-writer.*');
+        var newPipeline = currentPipeline.substring(0, matchWriter.index);
+        newPipeline += '! ' + selectedWriter;
+
+        $('input[name=pipe-text]').val(newPipeline);
+    });
+}

@@ -15,6 +15,8 @@ IndexSite::IndexSite(PsiServer& server) : TemplateSite(server) {
         "index_site_promotion_part", boost::bind(&IndexSite::promotionPart, this));
     psiServer_.registerIncludeCode(
         "index_site_footer_part", boost::bind(&IndexSite::footerPart, this));
+    psiServer_.registerIncludeCode(
+        "index_site_select_output_part", boost::bind(&IndexSite::selectOutputPart, this));
 }
 
 char * IndexSite::scriptsPart() {
@@ -36,4 +38,8 @@ char * IndexSite::footerPart() {
     boost::replace_first(footer, "<!--#psis version -->", version);
 
     return stringToChar(footer);
+}
+
+char * IndexSite::selectOutputPart() {
+    return stringToChar(readPsisFile("select_output.psis"));
 }

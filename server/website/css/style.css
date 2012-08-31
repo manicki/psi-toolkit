@@ -181,6 +181,9 @@ input[type="submit"]:hover, #input-file > div:hover, a.button:hover {
   float:right; font-family:monospace; font-weight:bold; line-height:14px; margin-left:6px;
   padding:2px 5px; }
 
+#select-output-type { color:#555; float:right; font-size:13px; margin-right:10px; }
+#select-output-type > select { font-size:12px; }
+
 /* footer */
 
 footer { background-color:#222; border-top:2px solid #999; color:#999; font-size:12px;
@@ -225,6 +228,7 @@ footer li > a:hover { color:#ddd; }
 .bibtex-toggler + pre { display:none; margin:6px 0; }
 
 /* download */
+
 #downloads > h1 { margin-bottom:32px; }
 #downloads section { padding-bottom:32px; }
 .download-ubuntu { background: url('../img/logo-ubuntu.png') no-repeat right top; }
