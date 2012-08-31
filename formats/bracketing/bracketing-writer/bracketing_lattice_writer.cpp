@@ -43,7 +43,8 @@ LatticeWriter<std::ostream>* BracketingLatticeWriter::Factory::doCreateLatticeWr
         filter,
         quoter.unescape(options["av-pairs-separator"].as<std::string>()),
         quoter.unescape(options["av-separator"].as<std::string>()),
-        showAttributes
+        showAttributes,
+        !options.count("skip-symbol-edges")
     );
 }
 
@@ -75,7 +76,9 @@ boost::program_options::options_description BracketingLatticeWriter::Factory::do
             "separates the attribute and its value")
         ("show-attributes",
             boost::program_options::value< std::vector<std::string> >()->multitoken(),
-            "the attributes to be shown");
+            "the attributes to be shown")
+        ("skip-symbol-edges",
+            "skips symbol edges");
 
     return optionsDescription;
 }
@@ -99,7 +102,8 @@ BracketingLatticeWriter::BracketingLatticeWriter(
     std::vector<std::string> filter,
     std::string avPairsSeparator,
     std::string avSeparator,
-    std::vector<std::string> showAttributes
+    std::vector<std::string> showAttributes,
+    bool showSymbolEdges
 ) :
     openingBracket_(openingBracket),
     closingBracket_(closingBracket),
@@ -108,7 +112,8 @@ BracketingLatticeWriter::BracketingLatticeWriter(
     filter_(filter.begin(), filter.end()),
     avPairsSeparator_(avPairsSeparator),
     avSeparator_(avSeparator),
-    showAttributes_(showAttributes.begin(), showAttributes.end())
+    showAttributes_(showAttributes.begin(), showAttributes.end()),
+    showSymbolEdges_(showSymbolEdges)
 { }
 
 

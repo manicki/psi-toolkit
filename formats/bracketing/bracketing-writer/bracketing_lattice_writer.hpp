@@ -35,7 +35,8 @@ public:
         std::vector<std::string> filter,
         std::string avPairsSeparator,
         std::string avSeparator,
-        std::vector<std::string> showAttributes
+        std::vector<std::string> showAttributes,
+        bool showSymbolEdges
     );
 
     std::string getOpeningBracket() const { return openingBracket_; }
@@ -80,6 +81,7 @@ private:
     std::string avPairsSeparator_;
     std::string avSeparator_;
     std::set<std::string> showAttributes_;
+    bool showSymbolEdges_;
 
 };
 
