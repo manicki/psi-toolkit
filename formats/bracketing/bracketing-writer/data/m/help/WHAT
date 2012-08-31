@@ -1,1 +1,1 @@
-lemmatize ! bracketing-writer --opening-bracket \n<edge tags="%T" category="%c" attrs="%A"> --closing-bracket </edge>\n --av-separator : --av-pairs-separator ;
+lemmatize ! bracketing-writer --skip-symbol-edges --opening-bracket \n<edge tags="%T" category="%c" attrs="%A"> --closing-bracket </edge>\n --av-separator : --av-pairs-separator ;
