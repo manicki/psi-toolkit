@@ -1,134 +1,34 @@
 
 <edge tags="!pl,lang-guesser,text" category="TEXT" attrs="">
 <edge tags="frag,txt-reader" category="FRAG" attrs="">
-<edge tags="!pl,form,morfologik,morfologik-tagset" category="adj" attrs="case:acc;degree:pos;gender:f;negation:aff;number:pl">
-<edge tags="!pl,form,morfologik,morfologik-tagset" category="adj" attrs="case:acc;degree:pos;gender:m2;negation:aff;number:pl">
-<edge tags="!pl,form,morfologik,morfologik-tagset" category="adj" attrs="case:acc;degree:pos;gender:m3;negation:aff;number:pl">
-<edge tags="!pl,form,morfologik,morfologik-tagset" category="adj" attrs="case:acc;degree:pos;gender:n;negation:aff;number:pl">
-<edge tags="!pl,form,morfologik,morfologik-tagset" category="adj" attrs="case:acc;degree:pos;gender:n;negation:aff;number:sg">
-<edge tags="!pl,form,morfologik,morfologik-tagset" category="adj" attrs="case:nom;degree:pos;gender:f;negation:aff;number:pl">
-<edge tags="!pl,form,morfologik,morfologik-tagset" category="adj" attrs="case:nom;degree:pos;gender:m2;negation:aff;number:pl">
-<edge tags="!pl,form,morfologik,morfologik-tagset" category="adj" attrs="case:nom;degree:pos;gender:m3;negation:aff;number:pl">
-<edge tags="!pl,form,morfologik,morfologik-tagset" category="adj" attrs="case:nom;degree:pos;gender:n;negation:aff;number:pl">
-<edge tags="!pl,form,morfologik,morfologik-tagset" category="adj" attrs="case:nom;degree:pos;gender:n;negation:aff;number:sg">
-<edge tags="!pl,form,morfologik,morfologik-tagset" category="adj" attrs="case:voc;degree:pos;gender:f;negation:aff;number:pl">
-<edge tags="!pl,form,morfologik,morfologik-tagset" category="adj" attrs="case:voc;degree:pos;gender:m2;negation:aff;number:pl">
-<edge tags="!pl,form,morfologik,morfologik-tagset" category="adj" attrs="case:voc;degree:pos;gender:m3;negation:aff;number:pl">
-<edge tags="!pl,form,morfologik,morfologik-tagset" category="adj" attrs="case:voc;degree:pos;gender:n;negation:aff;number:pl">
-<edge tags="!pl,form,morfologik,morfologik-tagset" category="adj" attrs="case:voc;degree:pos;gender:n;negation:aff;number:sg">
+<edge tags="!pl,form,morfologik,morfologik-tagset" category="verb" attrs="aspect:perf;gender:m1;number:pl;person:ter;tense:praet">
+<edge tags="!pl,lemma,morfologik,morfologik-tagset" category="word" attrs="">
+<edge tags="!pl,lexeme,morfologik,morfologik-tagset" category="verb" attrs="aspect:perf">
+<edge tags="!pl,token" category="T" attrs="">Zanucili</edge>
+</edge>
+</edge>
+</edge>
+
+<edge tags="!pl,token" category="B" attrs=""> </edge>
+
+<edge tags="!pl,form,morfologik,morfologik-tagset" category="adj" attrs="case:acc;degree:pos;gender:f;negation:aff;number:sg">
+<edge tags="!pl,form,morfologik,morfologik-tagset" category="adj" attrs="case:inst;degree:pos;gender:f;negation:aff;number:sg">
 <edge tags="!pl,lemma,morfologik,morfologik-tagset" category="word" attrs="">
 <edge tags="!pl,lexeme,morfologik,morfologik-tagset" category="adj" attrs="">
-<edge tags="!pl,token" category="T" attrs="">
-<edge tags="symbol" category="'B" attrs="">B</edge>
-
-<edge tags="symbol" category="'e" attrs="">e</edge>
-
-<edge tags="symbol" category="'z" attrs="">z</edge>
-
-<edge tags="symbol" category="'b" attrs="">b</edge>
-
-<edge tags="symbol" category="'a" attrs="">a</edge>
-
-<edge tags="symbol" category="'r" attrs="">r</edge>
-
-<edge tags="symbol" category="'w" attrs="">w</edge>
-
-<edge tags="symbol" category="'n" attrs="">n</edge>
-
-<edge tags="symbol" category="'e" attrs="">e</edge>
-</edge>
-</edge>
-</edge>
-</edge>
-</edge>
-</edge>
-</edge>
-</edge>
-</edge>
-</edge>
-</edge>
-</edge>
-</edge>
-</edge>
+<edge tags="!pl,token" category="T" attrs="">rzewną</edge>
 </edge>
 </edge>
 </edge>
 </edge>
 
-<edge tags="!pl,token" category="B" attrs="">
-<edge tags="symbol" category="' " attrs=""> </edge>
-</edge>
+<edge tags="!pl,token" category="B" attrs=""> </edge>
 
-<edge tags="!pl,form,morfologik,morfologik-tagset" category="subst" attrs="case:acc;gender:f;number:pl">
-<edge tags="!pl,form,morfologik,morfologik-tagset" category="subst" attrs="case:nom;gender:f;number:pl">
-<edge tags="!pl,form,morfologik,morfologik-tagset" category="subst" attrs="case:voc;gender:f;number:pl">
+<edge tags="!pl,form,morfologik,morfologik-tagset" category="subst" attrs="case:acc;gender:f;number:sg">
 <edge tags="!pl,lemma,morfologik,morfologik-tagset" category="word" attrs="">
 <edge tags="!pl,lexeme,morfologik,morfologik-tagset" category="subst" attrs="gender:f">
-<edge tags="!pl,token" category="T" attrs="">
-<edge tags="symbol" category="'i" attrs="">i</edge>
-
-<edge tags="symbol" category="'d" attrs="">d</edge>
-
-<edge tags="symbol" category="'e" attrs="">e</edge>
-
-<edge tags="symbol" category="'e" attrs="">e</edge>
+<edge tags="!pl,token" category="T" attrs="">melodię</edge>
 </edge>
 </edge>
-</edge>
-</edge>
-</edge>
-</edge>
-
-<edge tags="!pl,token" category="B" attrs="">
-<edge tags="symbol" category="' " attrs=""> </edge>
-</edge>
-
-<edge tags="!pl,form,morfologik,morfologik-tagset" category="adv" attrs="degree:pos;negation:aff">
-<edge tags="!pl,lemma,morfologik,morfologik-tagset" category="word" attrs="">
-<edge tags="!pl,lexeme,morfologik,morfologik-tagset" category="adv" attrs="">
-<edge tags="!pl,token" category="T" attrs="">
-<edge tags="symbol" category="'w" attrs="">w</edge>
-
-<edge tags="symbol" category="'ś" attrs="">ś</edge>
-
-<edge tags="symbol" category="'c" attrs="">c</edge>
-
-<edge tags="symbol" category="'i" attrs="">i</edge>
-
-<edge tags="symbol" category="'e" attrs="">e</edge>
-
-<edge tags="symbol" category="'k" attrs="">k</edge>
-
-<edge tags="symbol" category="'l" attrs="">l</edge>
-
-<edge tags="symbol" category="'e" attrs="">e</edge>
-</edge>
-</edge>
-</edge>
-</edge>
-
-<edge tags="!pl,token" category="B" attrs="">
-<edge tags="symbol" category="' " attrs=""> </edge>
-</edge>
-
-<edge tags="!pl,form,morfologik,morfologik-tagset" category="verb" attrs="aspect:imperf;number:pl;person:ter;tense:fin">
-<edge tags="!pl,lemma,morfologik,morfologik-tagset" category="word" attrs="">
-<edge tags="!pl,lexeme,morfologik,morfologik-tagset" category="verb" attrs="aspect:imperf">
-<edge tags="!pl,token" category="T" attrs="">
-<edge tags="symbol" category="'ś" attrs="">ś</edge>
-
-<edge tags="symbol" category="'n" attrs="">n</edge>
-
-<edge tags="symbol" category="'i" attrs="">i</edge>
-
-<edge tags="symbol" category="'ą" attrs="">ą</edge>
-</edge>
-</edge>
-</edge>
-</edge>
-
-<edge tags="!pl,token" category="I" attrs="">
-<edge tags="symbol" category="'." attrs="">.</edge>
 </edge>
 </edge>
 </edge>
