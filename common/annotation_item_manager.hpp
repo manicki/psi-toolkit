@@ -82,6 +82,7 @@ private:
     typedef StringBimap::value_type StringBimapItem;
     StringBimap m_;
     zobjects_holder * zObjectsHolder_;
+    zsymboltable * zSymbolTable_;
     zsymbolfactory * zSymbolFactory_;
 
     std::string fail_string_;
