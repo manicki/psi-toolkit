@@ -12,14 +12,13 @@ AnnotationItemManager::AnnotationItemManager() :
     nil_string_("nil")
 {
     zObjectsHolder_ = zvector::generate(EMPTY_ZOBJECTS_HOLDER);
-    zSymbolTable_ = zsymboltable::generate(EMPTY_ZOBJECTS_HOLDER);
+    zSymbolTable_ = zsymboltable::generate(zObjectsHolder_);
     zSymbolFactory_ = new zsymbolfactory(zSymbolTable_);
 }
 
 
 AnnotationItemManager::~AnnotationItemManager() {
     delete zSymbolFactory_;
-    zSymbolTable_->annihilate();
     zobject::freeZObjects(zObjectsHolder_);
     zObjectsHolder_->annihilate();
 }
