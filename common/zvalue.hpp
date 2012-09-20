@@ -1234,7 +1234,7 @@ inline zsymbol::~zsymbol() {
           delete reinterpret_cast<zpair*>(this);
           break;
       case EZSYMBOL:
-          delete reinterpret_cast<zsymbol*>(this);
+          delete [] reinterpret_cast<char*>(this);
           break;
       case EZHASH:
           delete reinterpret_cast<zhash*>(this);
