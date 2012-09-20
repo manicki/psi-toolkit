@@ -757,6 +757,8 @@ if(DOWNLOAD_DATA)
     download_artifact("tools/lexica/bilexicon/data/plen.bin")
 
     if (HAVE_SFST)
+       file(MAKE_DIRECTORY "${psi-toolkit_SOURCE_DIR}/tools/lemmatizers/sfst/data")
+
        download_and_unpack(
            "http://www.let.rug.nl/coltekin/trmorph/trmorph-0.2.1.tar.gz"
            "trmorph-0.2.1/trmorph-0.2.1.a"
