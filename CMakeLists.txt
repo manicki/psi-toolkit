@@ -160,7 +160,7 @@ endif(EXISTS ${CMPH_LIB} AND EXISTS ${CMPH_INCLUDE})
 # ----------------------------------------------------
 # SFST library (for TRmorph)
 # ----------------------------------------------------
-option(USE_SFST "Using SFST" OFF)
+option(USE_SFST "Using SFST" ON)
 message(STATUS "Using SFST ${USE_SFST}")
 
 if (USE_SFST)
