@@ -539,11 +539,13 @@ bool Lattice::isEdgeHidden(Lattice::EdgeDescriptor edge) const {
         && !visibleImplicitOutEdges_[edge.implicitIndex];
 }
 
-std::list<Lattice::Partition> Lattice::getEdgePartitions(Lattice::EdgeDescriptor edge) const {
+const std::list<Lattice::Partition> & Lattice::getEdgePartitions(
+    Lattice::EdgeDescriptor edge
+) const {
     if (edge.isExplicit()) {
         return graph_[edge.descriptor].partitions;
     }
-    return std::list<Lattice::Partition>();
+    return emptyPartitionList_;
 }
 
 Lattice::Score Lattice::getEdgeScore(Lattice::EdgeDescriptor edge) const {

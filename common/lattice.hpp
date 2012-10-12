@@ -509,7 +509,7 @@ public:
      */
     bool isEdgeHidden(EdgeDescriptor edge) const;
 
-    std::list<Partition> getEdgePartitions(EdgeDescriptor edge) const;
+    const std::list<Partition> & getEdgePartitions(EdgeDescriptor edge) const;
     Score getEdgeScore(EdgeDescriptor edge) const;
 
     const std::string& getAllText() const;
@@ -716,6 +716,8 @@ private:
 
     LayerTagCollection symbolTag_;
     LayerTagCollection discardedTag_;
+
+    std::list<Partition> emptyPartitionList_;
 };
 
 
