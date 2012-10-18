@@ -1,2 +1,2 @@
-01 @0   *@1   ∅            parse                             a[]
-02 @1   *@2   ∅            parse                             b[]
+01 @0   *@1   ∅            parse-aux                         a[]
+02 @1   *@2   ∅            parse-aux                         b[]

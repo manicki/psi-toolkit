@@ -1,30 +1,30 @@
 01 0000 01    a            token                 a           a
 02 0001 01    a            token                 a           a
 03 0002 01    n            token                 n           n
-04 0002 01    n            parse                             N[3]
-05 0001 02    an           parse                             N[2-4]
-06 0000 03    aan          parse                             N[1-5]
+04 0002 01    n            parse-aux                         N[3]
+05 0001 02    an           parse-aux                         N[2-4]
+06 0000 03    aan          parse-aux                         N[1-5]
 07 0003 01    v            token                 v           v
-08 0002 02    nv           parse                             W[4-7]
-09 0001 03    anv          parse                             W[5-7]
-10 0000 04    aanv         parse                             W[6-7]
+08 0002 02    nv           parse-aux                         W[4-7]
+09 0001 03    anv          parse-aux                         W[5-7]
+10 0000 04    aanv         parse-aux                         W[6-7]
 11 0004 01    a            token                 a           a
 12 0005 01    n            token                 n           n
-13 0005 01    n            parse                             N[12]
-14 0004 02    an           parse                             N[11-13]
-15 0003 03    van          parse                             V[7-14]
-16 0002 04    nvan         parse                             S[4-15]
-17 0001 05    anvan        parse                             S[5-15]
-18 0000 06    aanvan       parse                             S[6-15]
+13 0005 01    n            parse-aux                         N[12]
+14 0004 02    an           parse-aux                         N[11-13]
+15 0003 03    van          parse-aux                         V[7-14]
+16 0002 04    nvan         parse-aux                         S[4-15]
+17 0001 05    anvan        parse-aux                         S[5-15]
+18 0000 06    aanvan       parse-aux                         S[6-15]
 19 0006 01    r            token                 r           r
 20 0007 01    n            token                 n           n
-21 0007 01    n            parse                             N[20]
+21 0007 01    n            parse-aux                         N[20]
 22 0008 01    v            token                 v           v
-23 0007 02    nv           parse                             W[21-22]
-24 0006 03    rnv          parse                             R[19-23]
-25 0005 04    nrnv         parse                             N[12-24]
-26 0004 05    anrnv        parse                             N[11-25]
-27 0003 06    vanrnv       parse                             V[7-26]
-28 0002 07    nvanrnv      parse                             S[4-27]
-29 0001 08    anvanrnv     parse                             S[5-27]
-30 0000 09    aanvanrnv    parse                             S[6-27]
+23 0007 02    nv           parse-aux                         W[21-22]
+24 0006 03    rnv          parse-aux                         R[19-23]
+25 0005 04    nrnv         parse-aux                         N[12-24]
+26 0004 05    anrnv        parse-aux                         N[11-25]
+27 0003 06    vanrnv       parse-aux                         V[7-26]
+28 0002 07    nvanrnv      parse-aux                         S[4-27]
+29 0001 08    anvanrnv     parse-aux                         S[5-27]
+30 0000 09    aanvanrnv    parse-aux                         S[6-27]
