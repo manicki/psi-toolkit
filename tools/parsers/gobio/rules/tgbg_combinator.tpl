@@ -1128,6 +1128,12 @@ bool tgbg_combinator<T, S, M, X, E>::is_lexical(const rule_type& rule) const
 }
 
 template<class T, class S, class M, class X, class E>
+bool tgbg_combinator<T, S, M, X, E>::is_lexical(int rule_ix) const
+{
+    return rule_ix < 0;
+}
+
+template<class T, class S, class M, class X, class E>
 boost::shared_ptr<tree_specification<T> > tgbg_combinator<T, S, M, X, E>::tree_spec(
     const rule_type& rule, const std::vector<rule_holder>& local_rules)
 {
