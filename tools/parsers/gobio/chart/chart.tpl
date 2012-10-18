@@ -446,6 +446,12 @@ std::vector<typename chart<C,S,V,R,I>::edge_descriptor>& chart<C,S,V,R,I>::parti
 */
 
 template<typename C, typename S, typename V, typename R, template<typename, typename> class I>
+size_t chart<C,S,V,R,I>::partition_links_size(partition_iterator piter)
+{
+    return (*piter).getSequence().size(lattice_);
+}
+
+template<typename C, typename S, typename V, typename R, template<typename, typename> class I>
 Lattice::Partition::Iterator chart<C,S,V,R,I>::partition_links_iterator(partition_iterator piter)
 {
     return Lattice::Partition::Iterator(lattice_, *piter);
