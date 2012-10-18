@@ -45,6 +45,7 @@ std::list<std::list<std::string> > Gobio::Factory::doOptionalLayerTags() {
 
 std::list<std::string> Gobio::Factory::doProvidedLayerTags() {
     std::list<std::string> layerTags;
+    layerTags.push_back("parse-aux");
     layerTags.push_back("parse");
     return layerTags;
 }
