@@ -31,7 +31,7 @@ toolkit allows for processing various languages, including English, French or Ru
       <section>
         <h1>Development</h1>
         <ul>
-          <li><a href="http://github.com">Github</a></li>
+          <li><a href="https://github.com/filipg/psi-toolkit">Github</a></li>
           <li><a href="http://psi-toolkit.wmi.amu.edu.pl:8000">Bug Tracker/Redmine</a></li>
           <!--<li><a href="#">Code documentation</a></li>-->
           <li><a href="http://psi-toolkit.wmi.amu.edu.pl:8080">Jenkins</a></li>
