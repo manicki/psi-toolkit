@@ -158,6 +158,8 @@ input[type="submit"]:hover, #input-file > div:hover, a.button:hover {
 
 .input-radio { display:none; visibility:hidden; }
 
+#output-type { display:none; visibility:hidden; }
+
 /* bookmarks */
 .bookmarks { margin-top:-4px; }
 .bookmarks > a { color:#eee; }
