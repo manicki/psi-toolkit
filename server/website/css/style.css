@@ -230,9 +230,8 @@ footer li > a:hover { color:#ddd; }
 /* download */
 
 #downloads > h1 { margin-bottom:32px; }
-#downloads section { padding-bottom:32px; }
 .download-ubuntu { background: url('../img/logo-ubuntu.png') no-repeat right top; }
 .download-debian { background: url('../img/logo-debian.png') no-repeat right top; }
-#downloads > .download-debian { padding-bottom:65px; }
+#downloads > .download-debian { padding-bottom:35px; }
 .download-mint { background: url('../img/logo-mint.png') no-repeat right top; }
 .download-archlinux { background: url('../img/logo-archlinux.png') no-repeat right top; }
