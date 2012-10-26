@@ -15,7 +15,7 @@ void HtmlHelpFormatter::doFormatOneProcessorHelp(
     std::ostream& output) {
 
     output << "<div class=\"help-item\">"
-        << "<h2><a name=\"" << processorName << "\">" << processorName << "</a></h2>" << std::endl;
+        << "<h2 id=\"" << processorName << "\">" << processorName << "</h2>" << std::endl;
 
     if (description.size() != 0) {
         output << "<div class=\"help-desc\">" << markdownString2String(description)
@@ -122,7 +122,8 @@ void HtmlHelpFormatter::doFormatOneAlias(
 
     unsigned int i = 0;
     BOOST_FOREACH(std::string processorName, processorNames) {
-        output << "<a href=\"#" << processorName << "\">" << processorName << "</a>";
+        output << "<a href=\"/help/documentation.html#" << processorName << "\">"
+               << processorName << "</a>";
         if (++i != processorNames.size()) output << ", ";
     }
     output << "</div>" << std::endl;
