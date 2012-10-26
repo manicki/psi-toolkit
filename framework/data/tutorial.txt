@@ -47,7 +47,7 @@ It says that the whole text starting atposition 0000 and ending at peosition 002
 
 Using the PSI-Pipe package
 -------------------------
-* Download the PSI-Pipe package [from here] (psi-toolkit.wmi.amu.edu.pl???) and unpack it in your Linux system
+* Download the PSI-Pipe package [from here] (/download.html) and unpack it in your Linux system
 * Use the PSI tools in the bash shell using the *psi-pipe*  command
   e.g. 
 
