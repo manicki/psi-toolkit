@@ -5,3 +5,15 @@
 
   <script type="text/javascript" src="/js/jquery-1.7.2.min.js"></script>
   <script type="text/javascript" src="/js/common.js"></script>
+
+  <noscript>
+    <div id="javascript-disabled">
+      <div class="wrapper">
+        <p>
+          Some parts of this website may do not work correctly,
+          because your browser doesn't support JavaScript or you have disabled it.
+          In order to use all features please enable JavaScript in your browser.
+        </p>
+      </div>
+    </div>
+  </noscript>

@@ -171,7 +171,8 @@ input[type="submit"]:hover, #input-file > div:hover, a.button:hover {
 
 #output-top-info { }
 #output-bottom-info { line-height:36px; }
-#output { font-size:14px; margin:24px 0; overflow:auto; text-align:center; width:100%; }
+#output { font-size:14px; margin:24px 0; overflow:auto; text-align:center; width:100%;
+  min-height:250px; }
 #output > pre { display:inline-block; }
 #output > a > img { height:auto; }
 
@@ -237,3 +238,12 @@ footer li > a:hover { color:#ddd; }
 #downloads > .download-debian { padding-bottom:35px; }
 .download-mint { background: url('../img/logo-mint.png') no-repeat right top; }
 .download-archlinux { background: url('../img/logo-archlinux.png') no-repeat right top; }
+
+#javascript-disabled { background:#C75656 repeat scroll 0 0;
+  background-image:-webkit-gradient(linear, left top, left bottom, from(#C75656), to(#a00));
+  background-image:-webkit-linear-gradient(top, #C75656, #a00);
+  background-image:   -moz-linear-gradient(top, #C75656, #a00);
+  background-image:     -o-linear-gradient(top, #C75656, #a00);
+  background-image:        linear-gradient(to bottom, #C75656, #a00);
+}
+#javascript-disabled p { color:#fff; margin:0 90px; padding:10px; text-align:center; }
