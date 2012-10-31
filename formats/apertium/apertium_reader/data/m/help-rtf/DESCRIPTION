@@ -1,0 +1,1 @@
+Reads RTF file with `--format rft` option and writes only text fragments using simple-writer.
