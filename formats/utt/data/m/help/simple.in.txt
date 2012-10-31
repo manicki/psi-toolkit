@@ -1,0 +1,15 @@
+     0000 00 BOS *
+     0000 07 W Piszemy lem:pisać,V
+     0007 01 S _
+     0008 05 W dobre lem:dobry,ADJ
+     0013 01 S _
+     0014 08 W progrumy cor:programy lem:program,N
+     0022 01 P .
+     0023 00 EOS *
+     0023 01 S _
+     0024 00 BOS *
+     0024 11 W Warszawiacy lem:Warszawiak,N
+     0035 01 S _
+     0036 03 W też
+     0039 01 P .
+     0040 00 EOS *
