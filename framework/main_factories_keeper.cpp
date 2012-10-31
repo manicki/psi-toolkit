@@ -85,6 +85,8 @@ MainFactoriesKeeper::MainFactoriesKeeper() {
     keeper_.addAlias("spellchecker", "spell");
     keeper_.addAlias("spellcheck", "spell");
 
+    keeper_.addAlias("guess-input", "guessing-reader");
+
     keeper_.takeProcessorFactory(new TxtLatticeReader::Factory());
     keeper_.takeProcessorFactory(new UTTLatticeReader::Factory());
     keeper_.takeProcessorFactory(new PsiLatticeReader::Factory());
