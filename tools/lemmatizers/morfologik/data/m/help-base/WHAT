@@ -1,0 +1,1 @@
+lemmatize --lang pl ! simple-writer --tag lemma

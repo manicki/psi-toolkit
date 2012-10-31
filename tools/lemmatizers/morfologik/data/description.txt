@@ -1,1 +1,11 @@
-Polish morphological analyzer written in Java.
+Morfologik is a Polish morphological analyzer and lemmatizer.
+It returns morphosyntactic information for each token on three levels:
+
+* _lemma_ - for base forms only,
+* _lexeme_ - grammatical class and main attributes are added for base form,
+* _form_ - all values of grammatical categories appriopriate for determined
+  grammatical class are presented.
+
+Values returned by Morfologik are described on page [Znaczniki Morfologika](http://morfologik.blogspot.com/2007/09/znaczniki-morfologika.html) (in Polish).
+In general, Morfologik's tagset is similar to the tagset of National Corpus of Polish,
+so you can also see <http://nkjp.pl/poliqarp/help/ense2.html> for more details.

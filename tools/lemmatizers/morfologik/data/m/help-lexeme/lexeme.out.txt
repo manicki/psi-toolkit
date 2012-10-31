@@ -1,0 +1,6 @@
+wszędzie+adv
+dobro+subst|dobry+adv|dobrze+adv
+ala+qub|ale+conj
+w+prep|wiek+brev
+dom+subst
+dobrze+adv
