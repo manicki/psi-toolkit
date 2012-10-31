@@ -15,5 +15,5 @@
 {\*\pgdsctbl
 {\pgdsc0\pgdscuse195\pgwsxn11906\pghsxn16838\marglsxn1134\margrsxn1134\margtsxn1134\margbsxn1134\pgdscnxt0 Standard;}}
 {\*\pgdscno0}\paperh16838\paperw11906\margl1134\margr1134\margt1134\margb1134\sectd\sbknone\pgwsxn11906\pghsxn16838\marglsxn1134\margrsxn1134\margtsxn1134\margbsxn1134\ftnbj\ftnstart1\ftnrstcont\ftnnar\aenddoc\aftnrstcont\aftnstart1\aftnnrlc
-\pard\plain \ltrpar\s1\ql\rtlch\afs24\lang1081\ltrch\dbch\af6\langfe2052\hich\fs24\lang1045\loch\fs24\lang1045 {\rtlch \ltrch\loch\f1\fs24\lang1045\i0\b0 Przyk\u322\'3fadowy {\rtlch\ltrch\dbch\hich\b\loch\b wa\u380\'3fny} dokument w formacie {\cf2 RTF}.}
+\pard\plain \ltrpar\s1\ql\rtlch\afs24\lang1081\ltrch\dbch\af6\langfe2052\hich\fs24\lang1045\loch\fs24\lang1045 {\rtlch \ltrch\loch\f1\fs24\lang1045\i0\b0 Przykładowy {\rtlch\ltrch\dbch\hich\b\loch\b ważny} dokument w formacie {\cf2 RTF}.}
 \par }
