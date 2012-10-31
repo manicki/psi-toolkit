@@ -1,1 +1,1 @@
-parse --lang en ! gv-writer --tree
+parse --lang en ! gv-writer --tree --filter parse
