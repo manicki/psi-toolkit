@@ -29,7 +29,13 @@ section { padding:0 0 12px; }
 p, ul, pre { padding:0 0 9px; }
 p { text-align:justify; }
 ul { margin-left:32px; }
-pre { font-family:"Consolas","Monaco","DejaVu Sans Mono",monospace; text-align:left; }
+pre { font-family:"Consolas","Monaco","DejaVu Sans Mono",monospace; text-align:left;
+  white-space: pre-wrap; /* css-3 */
+  white-space: -moz-pre-wrap !important; /* Mozilla, since 1999 */
+  white-space: -pre-wrap; /* Opera 4-6 */
+  white-space: -o-pre-wrap; /* Opera 7 */
+  word-wrap: break-word; /* Internet Explorer 5.5+ */
+}
 code { background-color:#ededed; border-radius:5px; font-family:monospace; font-size:13px;
   padding:1px 6px; text-align:left; }
 pre > code { display:block }
@@ -218,7 +224,9 @@ footer li > a:hover { color:#ddd; }
 .alias-item { margin-left:24px; }
 
 .help-example, .help-opts { margin-left:24px; }
-.in, .out { font-weight:bold; }
+.in-out { margin-bottom:25px; }
+.in-out > pre { padding-left:35px; }
+.in, .out { float:left; font-weight:bold; }
 
 /* about */
 
