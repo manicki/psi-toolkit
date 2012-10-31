@@ -152,6 +152,7 @@ std::string HtmlHelpFormatter::escapeHTML_(const std::string& text) {
 std::string HtmlHelpFormatter::escapeJSON_(std::string& text) {
     boost::replace_all(text, "\\", "\\\\");
     boost::replace_all(text, "\"", "\\\"");
+    boost::replace_all(text, "\n", "\\n");
 
     return text;
 }
