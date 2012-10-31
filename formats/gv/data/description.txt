@@ -1,7 +1,11 @@
-GraphViz Writer presents the lattice as a directed graph, using GraphViz library.
+GV writer presents the results in a simple graphical form.
+For this purpose, it uses GraphViz library - a library for creating graphs (hence GV acronym).
 
-Available formats: `canon`, `dot`, `eps`, `fig`, `gd`(`:cairo`,`:gd`), `gd2`(`:cairo`,`:gd`), `gif`(`:cairo`,`:gd`), `gv`, `jpe`(`:cairo`,`:gd`), `jpeg`(`:cairo`,`:gd`), `jpg`(`:cairo`,`:gd`), `pdf`, `plain`, `plain-ext`, `png`(`:cairo`,`:gd`), `ps`(`:cairo`,`:ps`), `ps2`, `svg`(`:cairo`,`:svg`), `svgz`, `tk`, `vml`, `vmlz`, `wbmp`(`:cairo`,`:gd`), `xdot`
+By default, gv-writer prints a directed graph of lattice edges in SVG format, but many other options and formats are also available.
 
-Detailed description of available formats can be find on <http://www.graphviz.org/content/output-formats>
+The list of available output formats: `canon`, `dot`, `eps`, `fig`, `gd`(`:cairo`,`:gd`), `gd2`(`:cairo`,`:gd`), `gif`(`:cairo`,`:gd`), `gv`, `jpe`(`:cairo`,`:gd`), `jpeg`(`:cairo`,`:gd`), `jpg`(`:cairo`,`:gd`), `pdf`, `plain`, `plain-ext`, `png`(`:cairo`,`:gd`), `ps`(`:cairo`,`:ps`), `ps2`, `svg`(`:cairo`,`:svg`), `svgz`, `tk`, `vml`, `vmlz`, `wbmp`(`:cairo`,`:gd`), `xdot`
 
-If gv-writer is not available, you can use dot-writer instead.
+Detailed description of output formats can be find on <http://www.graphviz.org/content/output-formats>
+
+If gv-writer is not available, you can obtain the graph representation of the lattice in DOT format using dot-writer.
+
