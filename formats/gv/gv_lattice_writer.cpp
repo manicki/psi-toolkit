@@ -89,19 +89,19 @@ boost::program_options::options_description GVLatticeWriter::Factory::doOptionsH
         // ("color",
             // "edges with different tags have different colors")
         ("filter", boost::program_options::value< std::vector<std::string> >()->multitoken(),
-            "filters edges by specified tags")
+            "show only edges tagged with specified tags")
         ("format", boost::program_options::value<std::string>()->default_value("svg"),
-            "output format")
+            "choose output format")
         ("no-align",
-            "allows nodes to be not aligned left to right")
+            "allow nodes to be not aligned left to right")
         ("no-color",
-            "makes all graphical output black on white")
+            "make output monochromatic (black on white)")
         ("show-tags",
-            "prints layer tags")
+            "print edges' layer tags")
         ("show-symbol-edges",
-            "shows symbol edges")
+            "show symbol edges")
         ("tree",
-            "shows dependencies between edges instead of the content of the lattice");
+            "show dependencies between edges instead of the content of the lattice");
 
     return optionsDescription;
 }
