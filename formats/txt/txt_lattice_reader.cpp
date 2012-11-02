@@ -16,9 +16,14 @@ TxtLatticeReader::Factory::~Factory() {
 }
 
 LatticeReader<std::istream>* TxtLatticeReader::Factory::doCreateLatticeReader(
-    const boost::program_options::variables_map&) {
-        // TODO implement program options
-    return new TxtLatticeReader();
+    const boost::program_options::variables_map& options) {
+
+    bool process_whole_text = false;
+
+    if (options.count("whole-text"))
+        process_whole_text = true;
+
+    return new TxtLatticeReader(process_whole_text);
 }
 
 boost::program_options::options_description TxtLatticeReader::Factory::doOptionsHandled() {
@@ -54,9 +59,22 @@ TxtLatticeReader::Worker::Worker(TxtLatticeReader& processor,
 void TxtLatticeReader::Worker::doRun() {
     DEBUG("READING TEXT");
 
-    std::string line;
-    while (getline(inputStream_, line)) {
-        appendParagraphToLattice_(line, textTags_);
-        lattice_.appendString("\n");
+    if (processor_.process_whole_text_) {
+        DEBUG("processing whole text");
+
+        std::string line;
+        std::string wholeText;
+        while (getline(inputStream_, line)) {
+            wholeText += line;
+            wholeText += "\n";
+        }
+
+        appendParagraphToLattice_(wholeText, textTags_);
+    } else {
+        std::string line;
+        while (getline(inputStream_, line)) {
+            appendParagraphToLattice_(line, textTags_);
+            lattice_.appendString("\n");
+        }
     }
 }
