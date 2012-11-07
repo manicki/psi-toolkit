@@ -8,6 +8,7 @@
 
 #include <boost/bind.hpp>
 #include <boost/algorithm/string.hpp>
+#include <boost/algorithm/string/replace.hpp>
 
 PipeSite::PipeSite(PsiServer& server, const std::string & pipe, const std::string & text)
     : TemplateSite(server),
@@ -103,9 +104,9 @@ std::string PipeSite::getInput() {
 
 std::string PipeSite::runPipe(std::string input) {
     std::string pipe = psiServer_.session()->getData("pipe-text");
+    boost::replace_all(pipe, " | ", " ! ");
 
-    if (input.empty())
-        input = initialText;
+    if (input.empty()) input = initialText;
 
     std::stringstream iss(input);
     std::ostringstream oss;
