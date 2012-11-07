@@ -1,0 +1,1 @@
+tp-tokenizer --lang en ! srx-segmenter --lang en ! json-simple-writer --tag token --spec segment
