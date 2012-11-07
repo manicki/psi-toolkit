@@ -18,6 +18,7 @@ public:
 
     void formatOneAlias(std::string aliasName, std::ostream& output);
     void formatAliases(std::ostream& output);
+    void formatAliasesForProcessor(std::string processorName);
 
     void formatHelpIntroduction(std::ostream& output);
     void formatTutorial(std::ostream& output);
@@ -33,6 +34,7 @@ protected:
         std::string processorName,
         std::string description,
         boost::program_options::options_description options,
+        std::list<std::string> aliases,
         std::vector<TestBatch> usingExamples,
         std::ostream& output) =0;
 
@@ -46,6 +48,7 @@ protected:
         std::ostream& output) =0;
 
     std::list<std::string> getProcessorNamesForAlias(std::string alias);
+    std::list<std::string> getAliasesForProcessorName(std::string processorName);
 
     virtual void doFormatHelpIntroduction(std::string text, std::ostream& output) =0;
     virtual void doFormatTutorial(std::string text, std::ostream& output) =0;

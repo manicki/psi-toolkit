@@ -21,6 +21,7 @@ void HelpFormatter::formatOneProcessorHelp(std::string processorName, std::ostre
         processorName,
         getProcessorDescription(processorName),
         getProcessorOptions(processorName),
+        getAliasesForProcessorName(processorName),
         getProcessorUsingExamples(processorName),
         output
     );
@@ -104,6 +105,12 @@ std::list<std::string> HelpFormatter::getProcessorNamesForAlias(std::string alia
 
     processorNames.sort();
     return processorNames;
+}
+
+std::list<std::string> HelpFormatter::getAliasesForProcessorName(std::string processorName) {
+    std::set<std::string> aliases =
+        MainFactoriesKeeper::getInstance().getAllAliases(processorName);
+    return std::list<std::string>(aliases.begin(), aliases.end());
 }
 
 const std::string HelpFormatter::EXAMPLES_HEADER = "Examples";

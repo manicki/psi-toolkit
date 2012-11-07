@@ -167,6 +167,9 @@ std::vector<std::string> MainFactoriesKeeper::getProcessorNames() {
 std::set<std::string> MainFactoriesKeeper::getAliasNames() {
     return keeper_.getAliasNames();
 }
+std::set<std::string> MainFactoriesKeeper::getAllAliases(std::string destination) {
+    return keeper_.getAllAliases(destination);
+}
 
 std::list<ProcessorFactory*> MainFactoriesKeeper::getProcessorFactoriesForName(std::string name) {
     return keeper_.getProcessorFactoriesForName(name);

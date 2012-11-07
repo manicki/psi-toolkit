@@ -16,9 +16,11 @@ private:
         std::string processorName,
         std::string description,
         boost::program_options::options_description options,
+        std::list<std::string> aliases,
         std::vector<TestBatch> usingExamples,
         std::ostream& output);
 
+    void formatAliases_(std::list<std::string> aliases, std::ostream& output);
     void formatUsingExamples_(std::vector<TestBatch> batches, std::ostream& output);
 
     void formatAllowedOptions_(boost::program_options::options_description options,

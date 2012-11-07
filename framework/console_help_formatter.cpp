@@ -6,10 +6,15 @@ void ConsoleHelpFormatter::doFormatOneProcessorHelp(
     std::string processorName,
     std::string description,
     boost::program_options::options_description options,
+    std::list<std::string> aliases,
     std::vector<TestBatch> usingExamples,
     std::ostream& output) {
 
     output << processorName << std::endl << description << std::endl;
+
+    if (!aliases.empty()) {
+        formatAliases_(aliases, output);
+    }
 
     if (!usingExamples.empty())
         output << "To see one of the " << usingExamples.size()
@@ -17,6 +22,14 @@ void ConsoleHelpFormatter::doFormatOneProcessorHelp(
             << std::endl << std::endl;
 
     output << options;
+}
+
+void ConsoleHelpFormatter::formatAliases_(std::list<std::string> aliases, std::ostream& output) {
+    output << "Aliases: ";
+    BOOST_FOREACH(std::string alias, aliases) {
+        output << alias << ", ";
+    }
+    output << std::endl;
 }
 
 void ConsoleHelpFormatter::doFormatOneAlias(

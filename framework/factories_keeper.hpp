@@ -25,6 +25,7 @@ public:
     ProcessorFactory& getProcessorFactory(std::string processorName);
     std::vector<std::string> getProcessorNames();
     std::set<std::string> getAliasNames();
+    std::set<std::string> getAllAliases(std::string destination);
 
     // takes aliases into account
     std::list<ProcessorFactory*> getProcessorFactoriesForName(std::string name);

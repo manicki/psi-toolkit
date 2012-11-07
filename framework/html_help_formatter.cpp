@@ -11,6 +11,7 @@ void HtmlHelpFormatter::doFormatOneProcessorHelp(
     std::string processorName,
     std::string description,
     boost::program_options::options_description options,
+    std::list<std::string> aliases,
     std::vector<TestBatch> usingExamples,
     std::ostream& output) {
 
@@ -22,11 +23,26 @@ void HtmlHelpFormatter::doFormatOneProcessorHelp(
             << "</div>" << std::endl;
     }
 
+    if (!aliases.empty()) {
+        formatAliases_(aliases, output);
+    }
+
     if (!usingExamples.empty()) {
         formatUsingExamples_(usingExamples, output);
     }
 
     formatAllowedOptions_(options, output);
+    output << "</div>" << std::endl;
+}
+
+void HtmlHelpFormatter::formatAliases_(std::list<std::string> aliases, std::ostream& output) {
+    output << "<div class=\"help-alias\">"
+        << "<h3>" << ALIASES_HEADER << "</h3>";
+
+    BOOST_FOREACH(std::string alias, aliases) {
+        output << alias << ", ";
+    }
+
     output << "</div>" << std::endl;
 }
 

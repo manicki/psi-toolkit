@@ -223,7 +223,8 @@ footer li > a:hover { color:#ddd; }
 .help-item > div { margin-bottom:12px; }
 .alias-item { margin-left:24px; }
 
-.help-example, .help-opts { margin-left:24px; }
+.help-example, .help-opts, .help-alias { margin-left:24px; }
+.example-desc { margin-top:6px; }
 .in-out { margin-bottom:25px; }
 .in-out > pre { padding-left:35px; }
 .in, .out { float:left; font-weight:bold; }
