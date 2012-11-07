@@ -1,1 +1,1 @@
-tp-tokenizer --lang en ! json-simple-writer
+tokenize --lang en ! json-simple-writer
