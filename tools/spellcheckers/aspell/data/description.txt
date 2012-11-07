@@ -1,1 +1,4 @@
-Runs aspell spellchecker on the tokenized text.
+Runs aspell spellchecker on the tokenized text. This is a wrapper for the original aspell library.
+Not all options from aspell are ported in PSI-Toolkit (available options are listed below).
+
+More about aspell see: <http://aspell.net/>.
