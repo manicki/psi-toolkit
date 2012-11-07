@@ -1,0 +1,1 @@
+tp-tokenizer --lang en ! aspell --lang en ! simple-writer
