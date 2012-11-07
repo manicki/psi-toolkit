@@ -89,6 +89,14 @@ MainFactoriesKeeper::MainFactoriesKeeper() {
     keeper_.addAlias("guess-lang", "lang-guesser");
     keeper_.addAlias("guess-language", "lang-guesser");
 
+    keeper_.addAlias("read-txt", "txt-reader");
+    keeper_.addAlias("read-text", "txt-reader");
+    keeper_.addAlias("read-pdf", "pdf-reader");
+    keeper_.addAlias("read-html", "apertium-reader");
+
+    keeper_.addAlias("write", "simple-writer");
+    keeper_.addAlias("write-simple", "simple-writer");
+
     keeper_.takeProcessorFactory(new TxtLatticeReader::Factory());
     keeper_.takeProcessorFactory(new UTTLatticeReader::Factory());
     keeper_.takeProcessorFactory(new PsiLatticeReader::Factory());
