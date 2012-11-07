@@ -1,7 +1,7 @@
   <footer>
     <div class="footer-top wrapper">
       <section id="what-is-this">
-      <h1>What is this?</h1>
+      <h1>What is it?</h1>
       <p>
 PSI-Toolkit is a set of tools for natural language processing. Focused on the Polish language, the
 toolkit allows for processing various languages, including English, French or Russian.

@@ -33,7 +33,13 @@ char * IndexSite::promotionPart() {
 
 char * IndexSite::footerPart() {
     std::string footer = readPsisFile("footer.psis");
-    std::string version = get_psi_toolkit_version_string();
+    std::string version = std::string("psi-toolkit v. ")
+        + get_psi_toolkit_last_date_string()
+        + " [<a target=\"_blank\" href=\""
+        + "http://mrt.wmi.amu.edu.pl:8000/projects/psi-toolkit/repository/revisions/"
+        + get_psi_toolkit_last_commit_string() + "\">"
+        + get_psi_toolkit_last_commit_string()
+        + "</a>]";
 
     boost::replace_first(footer, "<!--#psis version -->", version);
 
