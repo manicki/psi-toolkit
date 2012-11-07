@@ -14,6 +14,7 @@ public:
     char * aliases();
     char * tutorial();
     char * licence();
+    char * documentationMenu();
 
     char * pipelineExamples();
 

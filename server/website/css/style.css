@@ -16,7 +16,7 @@ a { color:#004767; text-decoration:none; }
 a:hover { color:#1A6687; text-decoration:underline; }
 
 .clear { clear:both; }
-.wrapper { margin:0px auto; width:970px; }
+.wrapper { margin:0px auto; width:970px; position:relative; }
 
 h1, h2, h3, h4 { font-weight:bold; }
 h1 { color:#000; font-size:18px; margin:9px 0 18px; }
@@ -161,9 +161,7 @@ input[type="submit"]:hover, #input-file > div:hover, a.button:hover {
 .input-options > a { color:#43BFF4; font-size:13px; margin-right:32px;
   text-shadow:-1px -1px #163159; }
 .input-options > a:hover { text-decoration:none; }
-
 .input-radio { display:none; visibility:hidden; }
-
 #output-type { display:none; visibility:hidden; }
 
 /* bookmarks */
@@ -218,6 +216,10 @@ footer li > a:hover { color:#ddd; }
 #author { float:right; margin-top:-12px; }
 
 /* help */
+
+#help-menu {margin-left:780px;  position:absolute; width:190px; }
+#help-menu.sticky-menu { position:fixed; top:12px; }
+#help-list { width:770px; }
 
 .help-item { border-top:1px dotted #ccc; padding-bottom:24px; }
 .help-item > div { margin-bottom:12px; }

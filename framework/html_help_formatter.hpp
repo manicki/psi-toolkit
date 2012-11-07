@@ -9,6 +9,7 @@ public:
     ~HtmlHelpFormatter();
 
     void formatPipelineExamplesInJSON(std::ostream& output);
+    void formatDocumentationMenu(std::ostream& output);
 
 private:
 
