@@ -25,7 +25,8 @@ LatticeWriter<std::ostream>* DotLatticeWriter::Factory::doCreateLatticeWriter(
         options.count("color"),
         filter,
         options.count("tree"),
-        options.count("align")
+        options.count("align"),
+        options.count("show-symbol-edges")
     );
 }
 
@@ -34,15 +35,17 @@ boost::program_options::options_description DotLatticeWriter::Factory::doOptions
 
     optionsDescription.add_options()
         ("align",
-            "forces aligning nodes left to right")
+            "force aligning nodes left to right")
         ("color",
-            "edges with different tags have different colors")
+            "assign different colors to edges with different tags")
         ("filter", boost::program_options::value< std::vector<std::string> >()->multitoken(),
-            "filters edges by specified tags")
+            "filter edges by specified tags")
+        ("show-symbol-edges",
+            "show symbol edges")
         ("show-tags",
-            "prints layer tags")
+            "print edges' layer tags")
         ("tree",
-            "shows dependencies between edges instead of the content of the lattice");
+            "show dependencies between edges instead of the content of the lattice");
 
     return optionsDescription;
 }
@@ -98,6 +101,12 @@ void DotLatticeWriter::Worker::doRun() {
 
         std::list<std::string> tagNames
             = lattice_.getLayerTagManager().getTagNames(lattice_.getEdgeLayerTags(edge));
+
+        if (
+            tagNames.size() == 1 &&
+            tagNames.front() == "symbol" &&
+            !processor_.isShowSymbolEdges()
+        ) continue;
 
         if (!processor_.areSomeInFilter(tagNames)) continue;
 

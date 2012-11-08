@@ -1,0 +1,1 @@
+segment ! tokenize --lang en ! simple-writer --tag symbol --sep / --spec token || segment \n

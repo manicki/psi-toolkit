@@ -25,4 +25,4 @@ When in the tree mode, lattice edges are displayed as tree nodes, and the depend
 Alternative dependencies are marked with consecutive numbers.
 This mode is particularly useful for displaying parse trees.
 
-If gv-writer is not available, you can obtain the graph representation of the lattice in DOT format using dot-writer.
+If gv-writer is not available, you can obtain the graph representation of the lattice in DOT format using [dot-writer](#dot-writer).

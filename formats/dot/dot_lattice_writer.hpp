@@ -33,13 +33,15 @@ public:
         bool color,
         std::set<std::string> filter,
         bool tree,
-        bool align
+        bool align,
+        bool showSymbolEdges
     ) :
         showTags_(showTags),
         color_(color),
         filter_(filter),
         tree_(tree),
-        align_(align)
+        align_(align),
+        showSymbolEdges_(showSymbolEdges)
     { }
 
     bool isShowTags() const { return showTags_; }
@@ -56,6 +58,7 @@ public:
 
     bool isTree() const { return tree_; }
     bool isAlign() const { return align_; }
+    bool isShowSymbolEdges() const { return showSymbolEdges_; }
 
 private:
     virtual std::string doInfo();
@@ -84,6 +87,7 @@ private:
     std::set<std::string> filter_;
     bool tree_;
     bool align_;
+    bool showSymbolEdges_;
 
 };
 

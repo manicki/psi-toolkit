@@ -86,8 +86,6 @@ boost::program_options::options_description GVLatticeWriter::Factory::doOptionsH
     boost::program_options::options_description optionsDescription("Allowed options");
 
     optionsDescription.add_options()
-        // ("color",
-            // "edges with different tags have different colors")
         ("filter", boost::program_options::value< std::vector<std::string> >()->multitoken(),
             "show only edges tagged with specified tags")
         ("format", boost::program_options::value<std::string>()->default_value("svg"),

@@ -43,11 +43,11 @@ boost::program_options::options_description SimpleLatticeWriter::Factory::doOpti
         ("alt-sep", boost::program_options::value<std::string>()->default_value("|"),
             "alternative edges separator")
         ("linear",
-            "skips cross-edges")
+            "skip cross-edges")
         ("no-alts",
-            "skips alternative edges")
+            "skip alternative edges")
         ("with-blank",
-            "does not skip edges with whitespace text")
+            "do not skip edges with whitespace text")
         ("sep", boost::program_options::value<std::string>()->default_value("\n"),
             "basic tag separator")
         ("spec", boost::program_options::value< std::vector<std::string> >()->multitoken(),
