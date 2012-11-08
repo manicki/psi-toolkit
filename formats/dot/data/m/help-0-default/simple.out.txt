@@ -1,0 +1,14 @@
+digraph G {
+rankdir=LR
+0 -> 4 [label="I've T"]
+4 -> 5 [label="_ B"]
+5 -> 9 [label="read T"]
+9 -> 10 [label="_ B"]
+10 -> 13 [label="“ I"]
+13 -> 23 [label="Fahrenheit T"]
+23 -> 24 [label="_ B"]
+24 -> 27 [label="451 X"]
+0 -> 30 [label="I've_read_“Fahrenheit_451” FRAG"]
+0 -> 30 [label="I've_read_“Fahrenheit_451” TEXT"]
+27 -> 30 [label="” I"]
+}

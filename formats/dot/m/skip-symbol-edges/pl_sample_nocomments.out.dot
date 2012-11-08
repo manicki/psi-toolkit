@@ -1,0 +1,20 @@
+digraph G {
+rankdir=LR
+0 -> 3 [label="Ala 'Ala'"]
+0 -> 3 [label="Ala Ala"]
+0 -> 3 [label="Ala rzeczownik"]
+3 -> 4 [label="_ ' '"]
+4 -> 6 [label="ma 'ma'"]
+6 -> 12 [label="&nbsp; ' '"]
+12 -> 15 [label="<b> open"]
+15 -> 18 [label="kta 'kta'"]
+15 -> 18 [label="kta 'kota'"]
+15 -> 18 [label="kta fraza_rzeczownikowa"]
+18 -> 22 [label="</b> close"]
+12 -> 22 [label="<b>kta</b> fraza_rzeczownikowa"]
+4 -> 22 [label="ma&nbsp;<b>kta</b> fraza_czasownikowa"]
+0 -> 22 [label="Ala_ma&nbsp;<b>kta</b> pełna_fraza_czasownikowa"]
+22 -> 23 [label=". '.'"]
+0 -> 23 [label="Ala_ma&nbsp;<b>kta</b>. sentence"]
+0 -> 23 [label="Ala_ma&nbsp;<b>kta</b>. zdanie"]
+}

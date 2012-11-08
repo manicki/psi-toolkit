@@ -28,7 +28,8 @@ BOOST_AUTO_TEST_CASE( dot_lattice_writer_simple ) {
         false, // color
         filter, // filter
         false, // tree
-        false // align
+        false, // align
+        true // show symbol edges
     ));
 
     BOOST_CHECK_EQUAL(writer->getFormatName(), "DOT");
@@ -63,7 +64,8 @@ BOOST_AUTO_TEST_CASE( dot_lattice_writer_advanced ) {
         false, // color
         filter, // filter
         false, // tree
-        false // align
+        false, // align
+        true // show symbol edges
     ));
 
     std::ostringstream osstr;
@@ -95,7 +97,8 @@ BOOST_AUTO_TEST_CASE( dot_lattice_writer_tree ) {
         false, // color
         filter, // filter
         true, // tree
-        false // align
+        false, // align
+        true // show symbol edges
     ));
 
     std::ostringstream osstr;

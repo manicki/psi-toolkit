@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<teiCorpus xmlns:xi="http://www.w3.org/2001/XInclude" xmlns="http://www.tei-c.org/ns/1.0" xmlns:nkjp="http://www.nkjp.pl/ns/1.0">
+ <xi:include href="NKJP_1M_header.xml"/>
+ <TEI>
+  <xi:include href="header.xml"/>
+  <text xml:id="segm_text" xml:lang="pl">
+   <body xml:id="segm_body">
+    <!-- segm_1-p is akapit 6967 with instances (akapit_transzy-s) 13925, 13950 in batches (transza-s) 1393, 1396 resp. -->
+    <p corresp="text.xml#txt_1-div" xml:id="segm_1-p">
+     <s xml:id="segm_1.11-s">
+      <!-- Za -->
+      <seg corresp="text.xml#string-range(txt_1.1-ab,0,2)" xml:id="segm_1.1-seg"/>
+      <!-- swe -->
+      <seg corresp="text.xml#string-range(txt_1.1-ab,3,3)" xml:id="segm_1.2-seg"/>
+      <!-- publikacje -->
+      <seg corresp="text.xml#string-range(txt_1.1-ab,7,10)" xml:id="segm_1.3-seg"/>
+      <!-- naukowe -->
+      <seg corresp="text.xml#string-range(txt_1.1-ab,18,7)" xml:id="segm_1.4-seg"/>
+      <!-- został -->
+      <seg corresp="text.xml#string-range(txt_1.1-ab,26,6)" xml:id="segm_1.5-seg"/>
+      <!-- 7-krotnie -->
+      <seg corresp="text.xml#string-range(txt_1.1-ab,33,9)" xml:id="segm_1.6-seg"/>
+      <!-- wyróżniony -->
+      <seg corresp="text.xml#string-range(txt_1.1-ab,43,10)" xml:id="segm_1.7-seg"/>
+      <!-- nagrodą -->
+      <seg corresp="text.xml#string-range(txt_1.1-ab,54,7)" xml:id="segm_1.8-seg"/>
+      <!-- Rektora -->
+      <seg corresp="text.xml#string-range(txt_1.1-ab,62,7)" xml:id="segm_1.9-seg"/>
+      <!-- UŁ -->
+      <seg corresp="text.xml#string-range(txt_1.1-ab,70,2)" xml:id="segm_1.10-seg"/>
+      <!-- . -->
+      <seg corresp="text.xml#string-range(txt_1.1-ab,72,1)" nkjp:nps="true" xml:id="segm_1.11-seg"/>
+     </s>
+     <s xml:id="segm_1.23-s">
+      <!-- Był -->
+      <seg corresp="text.xml#string-range(txt_1.1-ab,74,3)" xml:id="segm_1.12-seg"/>
+      <!-- doradcą -->
+      <seg corresp="text.xml#string-range(txt_1.1-ab,78,7)" xml:id="segm_1.13-seg"/>
+      <!-- ds -->
+      <seg corresp="text.xml#string-range(txt_1.1-ab,86,2)" xml:id="segm_1.14-seg"/>
+      <!-- . -->
+      <seg corresp="text.xml#string-range(txt_1.1-ab,88,1)" nkjp:nps="true" xml:id="segm_1.15-seg"/>
+      <!-- strategii -->
+      <seg corresp="text.xml#string-range(txt_1.1-ab,90,9)" xml:id="segm_1.16-seg"/>
+      <!-- marketingowych -->
+      <seg corresp="text.xml#string-range(txt_1.1-ab,100,14)" xml:id="segm_1.17-seg"/>
+      <!-- . -->
+      <seg corresp="text.xml#string-range(txt_1.1-ab,115,1)" nkjp:nps="true" xml:id="segm_1.23-seg"/>
+     </s>
+    </p>
+   </body>
+  </text>
+ </TEI>
+</teiCorpus>
