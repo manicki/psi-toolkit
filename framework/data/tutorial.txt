@@ -3,10 +3,10 @@ What is PSI-Toolkit?
 PSI-Toolkit is an open-source set of Natural Language Tools dealing with:
 
 * Text pre-processing
-* sentence splitting 
-* tokenization 
+* sentence splitting
+* tokenization
 * lexical and morhological analysis
-* syntactical parsing 
+* syntactical parsing
 * machine translation
 
 The PSI tools process mainly but not exclusively texts written in Polish.
@@ -21,7 +21,7 @@ Using the PSI web-service
 
     `Piękna gra trwała długo.`
 
-* Specify a command: a (sequence of) PSI-processor(s) to be run, e.g. 
+* Specify a command: a (sequence of) PSI-processor(s) to be run, e.g.
 
     `tokenize --lang pl`
 
@@ -35,11 +35,11 @@ Suppose you need more details to be returned. This may be achieved by using psi-
 
 The first line of the output will be:
 
-    01 0000 07    Piękna       !pl,token             Piękna      T 
+    01 0000 07    Piękna       !pl,token             Piękna      T
 
 The line says that the string `Piękna` starts from position 0000 in the text, ends at position 0007 and corresponds to a Polish token "Piękna".
 
-The penultimate line of the output will be: 
+The penultimate line of the output will be:
 
     10 0000 28    Piękna....\r !pl,lang-guesser,text Piękna_gra_trwała_długo.\r TEXT[9]
 
@@ -49,9 +49,9 @@ Using the PSI-Pipe package
 -------------------------
 * Download the PSI-Pipe package [from here] (/download.html) and unpack it in your Linux system
 * Use the PSI tools in the bash shell using the *psi-pipe*  command
-  e.g. 
+  e.g.
 
-    >echo 'Ala ma kota' | psi_pipe ! txt_reader ! tp-tokenizer --lang pl ! psi-writer
+    >echo 'Ala ma kota' | psi-pipe ! txt-reader ! tp-tokenizer --lang pl ! psi-writer
 
 * You may also use PSI modules in your Java, Python or Perl programs
 
@@ -62,16 +62,16 @@ Using the PSI-shell package
 
 PSI-processors
 -------------------------
-The programs of the PSI-Toolkit are called PSI-processors. 
-There are three types of PSI-processors: 
+The programs of the PSI-Toolkit are called PSI-processors.
+There are three types of PSI-processors:
 
 * readers
-* annotators 
-* writers 
+* annotators
+* writers
 
 PSI-readers
 -------------------------
-Readers process the text,  (input either from keyboard or from a document) in order to initialize the internal data structure, a so-called PSI-lattice. 
+Readers process the text,  (input either from keyboard or from a document) in order to initialize the internal data structure, a so-called PSI-lattice.
 
 If you want to see how a PSI-lattice looks like, immediately after a text is processed by the text reader, try this command:
 
@@ -79,7 +79,7 @@ If you want to see how a PSI-lattice looks like, immediately after a text is pro
 
 The PSI-lattice will be presented as a .png image.
 
-PSI-Toolkit readers process the following file formats: 
+PSI-Toolkit readers process the following file formats:
 
 * plain text
 * HTML
@@ -87,19 +87,19 @@ PSI-Toolkit readers process the following file formats:
 * OpenOffice.org Writer ODT
 * Microsoft Word DOCX, WXML
 * Microsoft Powerpoint PPTX
-* Microsoft Excel XLSX 
+* Microsoft Excel XLSX
 * PDF
 
-The text typed into the edit window in the PSI web-service is processed by a plain text reader, called *txt-reader*. 
+The text typed into the edit window in the PSI web-service is processed by a plain text reader, called *txt-reader*.
 
 PSI-annotators
 -------------------------
-Annotators add new edges (new information) to the PSI-lattice. 
+Annotators add new edges (new information) to the PSI-lattice.
 The current version supports, among others:
 
 * tokenizer,
-* sentence-splitter, 
-* lemmatizer 
+* sentence-splitter,
+* lemmatizer
 * shallow parser
 * bilexicon processor, which returns all the equivalents of all possible translations of input lemmas
 
@@ -119,12 +119,12 @@ read text, tokenize as Polish text, analyse with Morphologic,  parse with a Poli
 
 PSI-Toolkit writers
 -------------------------
-There are two types of PSI writers: 
+There are two types of PSI writers:
 
 * textual writers
 * graphical writers
 
-*Textual writers* return information from the PSI-lattice as a text. *Visual writers* display the graphical representation. 
+*Textual writers* return information from the PSI-lattice as a text. *Visual writers* display the graphical representation.
 
 You may filter the information to be returned in order to simplify the output.
 
@@ -144,13 +144,13 @@ The order of the processes in the pipeline should be logical, e.g. tokenization 
 Default processors
 -------------------------
 You do not have to specify all processors in your pipeline. If you "forget" a processor, the pipeline will be supplemented by the default processor.
-For example, the command 
+For example, the command
 
     tokenize --lang pl
 
 will be intepreted as:
 
-    txt-reader ! tokenize --lang pl ! simple writer 
+    txt-reader ! tokenize --lang pl ! simple writer
 
 Switches
 -------------------------
