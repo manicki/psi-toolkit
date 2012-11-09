@@ -97,6 +97,11 @@ MainFactoriesKeeper::MainFactoriesKeeper() {
     keeper_.addAlias("write", "simple-writer");
     keeper_.addAlias("write-simple", "simple-writer");
 
+    keeper_.addAlias("write-graph", "gv-writer");
+    keeper_.addAlias("write-chart", "gv-writer");
+    keeper_.addAlias("graph", "gv-writer");
+    keeper_.addAlias("draw", "gv-writer");
+
     keeper_.takeProcessorFactory(new TxtLatticeReader::Factory());
     keeper_.takeProcessorFactory(new UTTLatticeReader::Factory());
     keeper_.takeProcessorFactory(new PsiLatticeReader::Factory());
