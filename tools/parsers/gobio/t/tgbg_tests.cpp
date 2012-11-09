@@ -48,7 +48,7 @@
         Combinator::rule_holder \
     > av_parser(aim, ch, converter, local_rules); \
     BOOST_CHECK(av_parser.parse(slurp_file(ROOT_DIR FILE_INPUT))); \
-    boost::scoped_ptr<LatticeWriter<std::ostream> > writer(new PsiLatticeWriter()); \
+    boost::scoped_ptr<LatticeWriter<std::ostream> > writer(new PsiLatticeWriter(false)); \
     Agenda agenda; \
     Parser tgbg_parser(ch, combinator, agenda); \
     tgbg_parser.run(); \
@@ -172,7 +172,9 @@ BOOST_AUTO_TEST_CASE( avinput ) {
 
     BOOST_CHECK(av_parser.parse(slurp_file(ROOT_DIR "tools/parsers/gobio/t/files/av_1.i")));
 
-    boost::scoped_ptr<LatticeWriter<std::ostream> > writer(new PsiLatticeWriter());
+    boost::scoped_ptr<LatticeWriter<std::ostream> > writer(new PsiLatticeWriter(
+        false // with header
+    ));
     std::ostringstream osstr;
     writer->writeLattice(lattice, osstr);
     BOOST_CHECK_EQUAL(

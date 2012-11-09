@@ -29,7 +29,9 @@ BOOST_AUTO_TEST_CASE( psi_lattice_writer_simple ) {
     Lattice lattice(aim);
     lattice_preparators::prepareSimpleLattice(lattice);
 
-    boost::scoped_ptr<LatticeWriter<std::ostream> > writer(new PsiLatticeWriter());
+    boost::scoped_ptr<LatticeWriter<std::ostream> > writer(new PsiLatticeWriter(
+        false // with header
+    ));
 
     std::ostringstream osstr;
     writer->writeLattice(lattice, osstr);
@@ -52,7 +54,9 @@ BOOST_AUTO_TEST_CASE( psi_lattice_writer_advanced ) {
     Lattice lattice(aim);
     lattice_preparators::prepareAdvancedLattice(lattice);
 
-    boost::scoped_ptr<LatticeWriter<std::ostream> > writer(new PsiLatticeWriter());
+    boost::scoped_ptr<LatticeWriter<std::ostream> > writer(new PsiLatticeWriter(
+        false // with header
+    ));
 
     std::ostringstream osstr;
     writer->writeLattice(lattice, osstr);
@@ -74,7 +78,9 @@ BOOST_AUTO_TEST_CASE( psi_lattice_writer_regular ) {
     Lattice lattice(aim);
     lattice_preparators::prepareRegularLattice(lattice);
 
-    boost::scoped_ptr<LatticeWriter<std::ostream> > writer(new PsiLatticeWriter());
+    boost::scoped_ptr<LatticeWriter<std::ostream> > writer(new PsiLatticeWriter(
+        false // with header
+    ));
 
     std::ostringstream osstr;
     writer->writeLattice(lattice, osstr);
@@ -96,7 +102,9 @@ BOOST_AUTO_TEST_CASE( psi_lattice_writer_one_symbol_tokens ) {
     Lattice lattice(aim);
     lattice_preparators::prepareLatticeWithOneSymbolTokens(lattice, "abccdddd");
 
-    boost::scoped_ptr<LatticeWriter<std::ostream> > writer(new PsiLatticeWriter());
+    boost::scoped_ptr<LatticeWriter<std::ostream> > writer(new PsiLatticeWriter(
+        false // with header
+    ));
 
     std::ostringstream osstr;
     writer->writeLattice(lattice, osstr);
@@ -148,7 +156,9 @@ BOOST_AUTO_TEST_CASE( psi_lattice_writer_planes ) {
     slonia_builder.addEdge(lattice.firstOutEdge(pre_slonia, maskToken));
     lattice.addEdge(pre_slonia, post_slonia, aiWord, tagTranslation, slonia_builder.build());
 
-    boost::scoped_ptr<LatticeWriter<std::ostream> > writer(new PsiLatticeWriter());
+    boost::scoped_ptr<LatticeWriter<std::ostream> > writer(new PsiLatticeWriter(
+        false // with header
+    ));
 
     std::ostringstream osstr;
     writer->writeLattice(lattice, osstr);
@@ -173,7 +183,9 @@ BOOST_AUTO_TEST_CASE( psi_lattice_writer_reflexive_simple ) {
 
     std::stringstream sstr;
 
-    boost::scoped_ptr< LatticeWriter<std::ostream> > writer(new PsiLatticeWriter());
+    boost::scoped_ptr< LatticeWriter<std::ostream> > writer(new PsiLatticeWriter(
+        false // with header
+    ));
     boost::scoped_ptr< LatticeReader<std::istream> > reader(new PsiLatticeReader());
 
     lattice_preparators::prepareSimpleLattice(lattice1);
@@ -199,7 +211,9 @@ BOOST_AUTO_TEST_CASE( psi_lattice_writer_reflexive_advanced ) {
 
     std::stringstream sstr;
 
-    boost::scoped_ptr< LatticeWriter<std::ostream> > writer(new PsiLatticeWriter());
+    boost::scoped_ptr< LatticeWriter<std::ostream> > writer(new PsiLatticeWriter(
+        false // with header
+    ));
     boost::scoped_ptr< LatticeReader<std::istream> > reader(new PsiLatticeReader());
 
     lattice_preparators::prepareAdvancedLattice(lattice1);
@@ -225,7 +239,9 @@ BOOST_AUTO_TEST_CASE( psi_lattice_writer_reflexive_regular ) {
 
     std::stringstream sstr;
 
-    boost::scoped_ptr< LatticeWriter<std::ostream> > writer(new PsiLatticeWriter());
+    boost::scoped_ptr< LatticeWriter<std::ostream> > writer(new PsiLatticeWriter(
+        false // with header
+    ));
     boost::scoped_ptr< LatticeReader<std::istream> > reader(new PsiLatticeReader());
 
     lattice_preparators::prepareRegularLattice(lattice1);
@@ -251,7 +267,9 @@ BOOST_AUTO_TEST_CASE( psi_lattice_writer_reflexive_not_covered_text ) {
 
     std::stringstream sstr;
 
-    boost::scoped_ptr< LatticeWriter<std::ostream> > writer(new PsiLatticeWriter());
+    boost::scoped_ptr< LatticeWriter<std::ostream> > writer(new PsiLatticeWriter(
+        false // with header
+    ));
     boost::scoped_ptr< LatticeReader<std::istream> > reader(new PsiLatticeReader());
 
     lattice_preparators::prepareLatticeWithNotCoveredText(lattice1);

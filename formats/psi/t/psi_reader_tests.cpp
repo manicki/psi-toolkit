@@ -21,7 +21,9 @@ BOOST_AUTO_TEST_CASE( psi_lattice_reader_reflexive ) {
 
     reader->readIntoLattice(ROOT_DIR "formats/psi/t/files/pl_sample_nocomments.txt", lattice);
 
-    boost::scoped_ptr<LatticeWriter<std::ostream> > writer(new PsiLatticeWriter());
+    boost::scoped_ptr<LatticeWriter<std::ostream> > writer(new PsiLatticeWriter(
+        false // with header
+    ));
 
     std::ostringstream osstr;
     writer->writeLattice(lattice, osstr);

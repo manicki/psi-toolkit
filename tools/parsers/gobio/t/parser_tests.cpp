@@ -314,7 +314,9 @@ BOOST_AUTO_TEST_CASE( parser_print_lattice ) {
 
     RUN_PARSER_TEST;
 
-    boost::scoped_ptr<LatticeWriter<std::ostream> > writer(new PsiLatticeWriter());
+    boost::scoped_ptr<LatticeWriter<std::ostream> > writer(new PsiLatticeWriter(
+        false // with header
+    ));
 
     std::ostringstream osstr;
     writer->writeLattice(lattice, osstr);
