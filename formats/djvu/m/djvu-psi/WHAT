@@ -1,1 +1,1 @@
-djvu-reader ! psi-writer
+djvu-reader ! psi-writer --no-header

@@ -1,1 +1,1 @@
-pdf-reader ! psi-writer
+pdf-reader ! psi-writer --no-header

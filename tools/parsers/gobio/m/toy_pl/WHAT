@@ -1,1 +1,1 @@
-txt-reader ! morfologik ! gobio --lang pl --rules %ITSDATA%/test/toy_pl.g ! psi-writer
+txt-reader ! morfologik ! gobio --lang pl --rules %ITSDATA%/test/toy_pl.g ! psi-writer --no-header

@@ -1,1 +1,1 @@
-sfst-lemmatizer --lang tr ! psi-writer
+sfst-lemmatizer --lang tr ! psi-writer --no-header

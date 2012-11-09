@@ -1,2 +1,1 @@
-lang-guesser ! tp-tokenize --lang pl ! psi-writer
-
+lang-guesser ! tp-tokenize --lang pl ! psi-writer --no-header

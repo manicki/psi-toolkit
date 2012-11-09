@@ -1,1 +1,1 @@
-psi-reader ! psi-writer
+psi-reader ! psi-writer --no-header
