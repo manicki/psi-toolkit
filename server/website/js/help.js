@@ -3,7 +3,8 @@ $(document).ready(function(){
   var origOffsetY = menu.offset().top;
 
   function onScroll(e) {
-    window.scrollY >= origOffsetY ? menu.addClass('sticky-menu') : menu.removeClass('sticky-menu');
+    window.scrollY + 12 >= origOffsetY ? menu.addClass('sticky-menu')
+                                       : menu.removeClass('sticky-menu');
   }
 
   document.addEventListener('scroll', onScroll);
