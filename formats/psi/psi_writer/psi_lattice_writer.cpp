@@ -22,7 +22,7 @@ boost::program_options::options_description PsiLatticeWriter::Factory::doOptions
 
     optionsDescription.add_options()
         ("no-header",
-            "do not print the header");
+            "do not print the column description");
 
     return optionsDescription;
 }
