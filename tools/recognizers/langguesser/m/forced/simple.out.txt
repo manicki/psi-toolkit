@@ -1,2 +1,3 @@
+## beg. len.  text         tags                  annot.text  annotations
 01 0000 44    Hornjoserbšćina_je_zapadosłowjanska_rěč frag,txt-reader Hornjoserbšćina_je_zapadosłowjanska_rěč FRAG[]
 02 0000 44    Hornjo...rěč !hsb,lang-guesser,text Hornjoserbšćina_je_zapadosłowjanska_rěč TEXT[1]

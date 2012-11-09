@@ -1,3 +1,4 @@
+## beg. len.  text         tags                  annot.text  annotations
 01 0000 07    Piszemy      token                 Piszemy     'Piszemy',lem=pisać,V
 02 0007 01    _            token                 _           '_'
 03 0008 05    dobre        token                 dobre       'dobre',lem=dobry,ADJ

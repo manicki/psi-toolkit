@@ -1,3 +1,4 @@
+## beg. len.  text         tags                  annot.text  annotations
 01 0000 27    Zażółć_gęślą_jaźń. frag,txt-reader Zażółć_gęślą_jaźń. FRAG[]
 02 0000 27    Zażółć...źń. !pl,lang-guesser,text Zażółć_gęślą_jaźń. TEXT[1]
 03 0027 01    \n           ∅                     ∅           ∅

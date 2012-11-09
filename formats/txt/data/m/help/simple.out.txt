@@ -1,3 +1,4 @@
+## beg. len.  text         tags                  annot.text  annotations
 01 0000 26    Lorem_ipsum_dolor_sit_amet frag,txt-reader Lorem_ipsum_dolor_sit_amet FRAG[]
 02 0026 01    \n           ∅                     ∅           ∅
 03 0027 11    consectetur  frag,txt-reader       consectetur FRAG[]

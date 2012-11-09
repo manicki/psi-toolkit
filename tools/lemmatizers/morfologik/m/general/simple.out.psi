@@ -1,3 +1,4 @@
+## beg. len.  text         tags                  annot.text  annotations
 01 0000 07    dużego       !pl,token             dużego      T
 02 0000 07    dużego       !pl,lemma,morfologik,morfologik-tagset duży word[1]
 03 0000 07    dużego       !pl,lexeme,morfologik,morfologik-tagset duży+adj adj[2]

@@ -1,3 +1,4 @@
+## beg. len.  text         tags                  annot.text  annotations
 01 0000 03    mam          !pl,token             mam         T
 02 0000 03    mam          !pl,lemma,morfologik,morfologik-tagset mama word[1]
 03 0000 03    mam          !pl,lexeme,morfologik,morfologik-tagset mama+subst subst,gender=f[2]

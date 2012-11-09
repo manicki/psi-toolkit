@@ -1,3 +1,4 @@
+## beg. len.  text         tags                  annot.text  annotations
 01 0000 03    Ala          !pl,token             Ala         T
 02 0000 03    Ala          !pl,lemma,morfologik,morfologik-tagset Al word[1]
 03 0000 03    Ala          !pl,lexeme,morfologik,morfologik-tagset Al+subst subst,gender=m1[2]

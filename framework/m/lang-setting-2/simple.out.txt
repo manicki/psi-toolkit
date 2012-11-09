@@ -1,3 +1,4 @@
+## beg. len.  text         tags                  annot.text  annotations
 01 0000 06    Widzę        !pl,token             Widzę       T
 02 0006 01    _            !pl,token             _           B
 03 0007 05    prof.        !pl,token             prof.       T
