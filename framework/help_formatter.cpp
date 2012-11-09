@@ -39,22 +39,28 @@ void HelpFormatter::formatOneAlias(std::string aliasName, std::ostream& output) 
     doFormatOneAlias(aliasName, getProcessorNamesForAlias(aliasName), output);
 }
 
-void HelpFormatter::formatHelpIntroduction(std::ostream& output) {
+void HelpFormatter::formatDescription(std::ostream& output) {
     boost::filesystem::path path = getPathToFrameworkDataFile_("description.txt");
 
-    doFormatHelpIntroduction(getFileContent(path), output);
+    doFormatDataFile(getFileContent(path), output);
 }
 
 void HelpFormatter::formatTutorial(std::ostream& output) {
     boost::filesystem::path path = getPathToFrameworkDataFile_("tutorial.txt");
 
-    doFormatTutorial(getFileContent(path), output);
+    doFormatDataFile(getFileContent(path), output);
 }
 
 void HelpFormatter::formatLicence(std::ostream& output) {
     boost::filesystem::path path = getPathToFrameworkDataFile_("licence.txt");
 
-    doFormatLicence(getFileContent(path), output);
+    doFormatDataFile(getFileContent(path), output);
+}
+
+void HelpFormatter::formatAboutPsiFormat(std::ostream& output) {
+    boost::filesystem::path path = getPathToFrameworkDataFile_("psi-format.txt");
+
+    doFormatDataFile(getFileContent(path), output);
 }
 
 HelpFormatter::~HelpFormatter() { }

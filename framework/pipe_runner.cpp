@@ -124,7 +124,7 @@ void PipeRunner::setRunnerOptionsDescription_() {
 
 bool PipeRunner::stopAfterExecutingRunnerOptions_() {
     if (runnerOptions_.count("help")) {
-        ConsoleHelpFormatter().formatHelpIntroduction(std::cout);
+        ConsoleHelpFormatter().formatDescription(std::cout);
         std::cout << runnerOptionsDescription_ << std::endl;
         ConsoleHelpFormatter().formatHelps(std::cout);
         return true;

@@ -9,12 +9,13 @@ class HelpSite : public TemplateSite
 public:
     HelpSite(PsiServer& servers);
 
-    char * introduction();
+    char * description();
     char * processorHelps();
     char * aliases();
     char * tutorial();
     char * licence();
     char * documentationMenu();
+    char * psiFormat();
 
     char * pipelineExamples();
 

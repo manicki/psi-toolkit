@@ -20,9 +20,10 @@ public:
     void formatAliases(std::ostream& output);
     void formatAliasesForProcessor(std::string processorName);
 
-    void formatHelpIntroduction(std::ostream& output);
+    void formatDescription(std::ostream& output);
     void formatTutorial(std::ostream& output);
     void formatLicence(std::ostream& output);
+    void formatAboutPsiFormat(std::ostream& output);
 
     virtual ~HelpFormatter();
 
@@ -50,9 +51,7 @@ protected:
     std::list<std::string> getProcessorNamesForAlias(std::string alias);
     std::list<std::string> getAliasesForProcessorName(std::string processorName);
 
-    virtual void doFormatHelpIntroduction(std::string text, std::ostream& output) =0;
-    virtual void doFormatTutorial(std::string text, std::ostream& output) =0;
-    virtual void doFormatLicence(std::string text, std::ostream& output) =0;
+    virtual void doFormatDataFile(std::string text, std::ostream& output) =0;
 
     boost::filesystem::path getPathToFrameworkDataFile_(const std::string& filename);
     std::string getFileContent(const boost::filesystem::path& path);

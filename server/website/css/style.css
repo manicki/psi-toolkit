@@ -231,6 +231,8 @@ footer li > a:hover { color:#ddd; }
 .in-out > pre { padding-left:35px; }
 .in, .out { float:left; font-weight:bold; }
 
+img.screen { border:1px solid #ddd; display:block; margin:0 auto 30px auto; }
+
 /* about */
 
 #factsheet > table { margin-left:24px; }

@@ -75,15 +75,7 @@ void HtmlHelpFormatter::formatUsingExamples_(std::vector<TestBatch> batches, std
     output << "</div>" << std::endl;
 }
 
-void HtmlHelpFormatter::doFormatHelpIntroduction(std::string text, std::ostream& output) {
-    output << markdownString2String(text) << std::endl;
-}
-
-void HtmlHelpFormatter::doFormatTutorial(std::string text, std::ostream& output) {
-    output << markdownString2String(text) << std::endl;
-}
-
-void HtmlHelpFormatter::doFormatLicence(std::string text, std::ostream& output) {
+void HtmlHelpFormatter::doFormatDataFile(std::string text, std::ostream& output) {
     output << markdownString2String(text) << std::endl;
 }
 

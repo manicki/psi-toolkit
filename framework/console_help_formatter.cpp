@@ -42,15 +42,7 @@ void ConsoleHelpFormatter::doFormatOneAlias(
     output << aliasName << " -> " << boost::algorithm::join(processorNames, ", ") << std::endl;
 }
 
-void ConsoleHelpFormatter::doFormatHelpIntroduction(std::string text, std::ostream& output) {
-    output << text << std::endl;
-}
-
-void ConsoleHelpFormatter::doFormatLicence(std::string text, std::ostream& output) {
-    output << text << std::endl;
-}
-
-void ConsoleHelpFormatter::doFormatTutorial(std::string text, std::ostream& output) {
+void ConsoleHelpFormatter::doFormatDataFile(std::string text, std::ostream& output) {
     output << text << std::endl;
 }
 

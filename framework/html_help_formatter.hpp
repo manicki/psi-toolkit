@@ -32,9 +32,7 @@ private:
         std::list<std::string> processorNames,
         std::ostream& output);
 
-    void doFormatHelpIntroduction(std::string text, std::ostream& output);
-    void doFormatTutorial(std::string text, std::ostream& output);
-    void doFormatLicence(std::string text, std::ostream& output);
+    void doFormatDataFile(std::string text, std::ostream& output);
 
     void formatPipelineExampleInJSON_(TestBatch batch, std::ostream& output);
 
