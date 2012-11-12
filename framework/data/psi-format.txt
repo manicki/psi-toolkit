@@ -1,3 +1,4 @@
+
 PSI format is used for representing lattices.
 It is inspired by [UTT](http://utt.amu.edu.pl) format (but not compatible with it).
 
@@ -32,11 +33,36 @@ If the target is an ordinary vertex, it’s designated by its index.
 Otherwise – if it’s a loose vertex, it’s designated by its number preceded by the `@` sign.
 To denote that it is the edge’s target vertex, and not the length, the vertex’s designation is preceded by the `*` sign.
 
-Here is an example of three edges with different end vertices:
 
+    # An example of three edges with different end vertices:
     01 0001 01    a            token                 a           Edge_fully_anchored_to_the_text
     02 0001 *@0   b            token                 b           Edge_ending_with_a_loose_vertex
     03 @0   *0002 c            token                 c           Edge_beginning_with_a_loose_vertex
+
+The fourth field contains text covered by the edge.
+If this text can be reconstructed from edge’s constituents then it can be elided with dots (`...`).
+When the edge text is an empty string, it is indicated by empty set symbol (`∅`).
+
+The fifth field contains edge’s layer tags separated by commas.
+
+The sixth field, which is optional, contains the edge’s annotation text.
+
+The last field contains other annotations, structured as:
+
+    category<edge_score>,attribute1=value1,attribute2=value2,...[partition1<partition1_score>,partition2<partition2_score>,...]
+
+When edge score (or parition score) is not specified, it means that it is equal zero.
+Partitions are specified as edge numbers separated by hyphens (`-`).
+When partitions are not specified, it means that the edge comprises of symbol edges (one symbol edge for each character).
+When there is an empty partition list (`[]`), it means that the edge comprises of no edges.
+Sometimes only some partition edges are specified (e.g. `[1-2--]` or `[-5-6-7]`).
+It means that the edge comprises of some edges given explicitely and some implicit symbol edges that cover the rest of the edge’s range.
+
+A fragment of lattice text that is not covered by any edge can be specified using “pseudo-edges”.
+Such a pseudo-edge is a line in PSI file with only first four fields filled (ordinal number, the beginning index of the text fragment, the length of the fragment and the text itself), other three being replaced by empty set symbols (`∅`).
+
+    # An example of a text not covered by any edge:
+    01 0000 10    abcdefghij   ∅                     ∅           ∅
 
 The encoding used in PSI format is UTF-8.
 
