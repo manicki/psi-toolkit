@@ -1,1 +1,1 @@
-PSI Reader reads a file in PSI format into the lattice.
+PSI Reader reads a file in [PSI format](psi-format.html) into the lattice.
