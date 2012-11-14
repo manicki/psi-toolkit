@@ -1,7 +1,11 @@
+#ifndef OUTPUT_SAVER_HDR
+#define OUTPUT_SAVER_HDR
+
 #include <string>
 
 #include "guid_generator.hpp"
 #include "file_recognizer.hpp"
+#include "md5.hpp"
 
 class OutputSaver
 {
@@ -26,3 +30,5 @@ private:
     static const std::string DEFAULT_FILE_EXTENSION;
     static const std::string STORAGE_DIR;
 };
+
+#endif
