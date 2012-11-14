@@ -28,40 +28,58 @@
       </p>
       <p>
         The full strength of PSI-Toolkit is offered with command-line version,
-        but most of the features you can test via this web-service.
+        but most of the features you can check via this web-service.
       </p>
       <p>
         What is going on here?
       </p>
       <img class="screen" src="/img/intro-screen-1.png" />
       <p>
-        So all you need to process your data is to specify what you want to do,
-        write input text and run PSI-Toolkit.
+        All you need to process your data is to write the command, set input text and
+        run PSI-Toolkit.
       </p>
 
       <h2>Commands</h2>
       <p>
-        With commands you specify what you want to do (e.g. <code>tokenize</code>
-        and <code>lemmatize</code>) or, more general, what tool (called processor) should be used
-        to process your data (e.g. <code>tokenizer</code> or <code>lemmatizer</code>).
-        Notice, that all data have to be firstly readed to be writed after processing.
-        So there are three types of processors: readers, annotators and writers.
+        With commands you specify what you want to do, for instance, to <code>tokenize</code>
+        or to <code>lemmatize</code>.
+        The full command is a sequence of three types of tools: reader, annotator(s) and writer
+        because it seems to be obvious that data have to be firstly read to be written
+        after processing.
       </p>
       <img class="screen" src="/img/intro-screen-2.png" />
       <p>
-        You do not have to specify all processors in your pipeline.
-        If you "forget" a processor, the pipeline will be supplemented by the default processor.
-        For example [TODO].
+        But, you do not have to specify all tools in your command.
+        PSI-Toolkit tries to guess the best tool to complement your task.
+        It is the reason, why on the first screenshot, there was no reader and writer specified.
+      </p>
+      <p>
+        The last thing: <code>--lang pl</code> is the example of option that can be
+        passed to the given tool. All options are described in
+        <a href="/help/documentation.html">documentation</a>.
       </p>
 
       <h2>Input data</h2>
 
-      [TODO]
+      <p>
+        To specify input data you want to process, you may choose between writing or copying
+        your text, and selection of some file from your disk. Currently supported non-textual
+        formats are <code>.doc</code>, <code>.html</code>, <code>.pdf</code> and others.
+      </p>
+      <p>
+        Remember, that you usually may skip a reader, and PSI-Toolkit select the best one for
+        you.
+      </p>
 
       <h2>Results</h2>
-      <img class="screen" src="/img/intro-screen-3.png" />
 
-      [TODO]
+      <p>
+        Visible results depend on the writer and used options.
+        When you are not familiar with available writers, you may select output format
+        from selection list.
+        And, finally, it is possible in most cases to download a file with the same output.
+      </p>
+      <img class="screen" src="/img/intro-screen-3.png" />
 
       <!--#psis help_site_licence -->
     </section>
