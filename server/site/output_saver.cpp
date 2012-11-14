@@ -43,8 +43,17 @@ std::string OutputSaver::storeOutput(const std::string& content) {
 
 std::string OutputSaver::storeOutput(const std::string& content, const std::string& ext) {
     std::string newGuid = guidGenerator_.getGUID();
-    std::string pathToStore = filePathToStore_(newGuid, ext);
-    std::string pathForHtml = filePathForHtml_(newGuid, ext);
+
+    return storeFile_(content, newGuid, ext);
+}
+
+std::string OutputSaver::storeFile_(
+    const std::string& content,
+    const std::string& fileName,
+    const std::string& ext) {
+
+    std::string pathToStore = filePathToStore_(fileName, ext);
+    std::string pathForHtml = filePathForHtml_(fileName, ext);
 
     INFO("Output saved to file: " << pathToStore);
 
@@ -55,10 +64,24 @@ std::string OutputSaver::storeOutput(const std::string& content, const std::stri
     return pathForHtml;
 }
 
-std::string OutputSaver::filePathToStore_(const std::string& guid, const std::string& ext) {
-    return std::string(websiteRoot_ + STORAGE_DIR + '/' + guid + '.' + ext);
+std::string OutputSaver::filePathToStore_(const std::string& fileName, const std::string& ext) {
+    return std::string(websiteRoot_ + STORAGE_DIR + '/' + fileName + '.' + ext);
 }
 
-std::string OutputSaver::filePathForHtml_(const std::string& guid, const std::string& ext) {
-    return std::string(STORAGE_DIR + '/' + guid + '.' + ext);
+std::string OutputSaver::filePathForHtml_(const std::string& fileName, const std::string& ext) {
+    return std::string(STORAGE_DIR + '/' + fileName + '.' + ext);
+}
+
+std::string OutputSaver::storeFileByMD5(const std::string& content, const std::string& ext) {
+    std::string checksum = md5(content);
+
+    if (!isFileStored_(checksum, ext)) {
+        return storeFile_(content, checksum, ext);
+    }
+
+    return filePathForHtml_(checksum, ext);
+}
+
+bool OutputSaver::isFileStored_(const std::string& fileName, const std::string& ext) {
+    return boost::filesystem::exists(filePathToStore_(fileName, ext));
 }
