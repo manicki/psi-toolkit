@@ -13,7 +13,7 @@
 PipeSite::PipeSite(PsiServer& server, const std::string & pipe, const std::string & text)
     : TemplateSite(server),
     initialText(text.c_str()), initialPipe(pipe.c_str()), initialOutput(""),
-    outputSaver_(std::string(psiServer_.websiteRoot))
+    fileStorage_(std::string(psiServer_.websiteRoot))
 {
     registerIncludesAndActions();
 }
@@ -137,7 +137,7 @@ void PipeSite::clearPreviousFileFromOutput() {
 }
 
 void PipeSite::createFileFromOutput(const std::string& output) {
-    std::string filename = outputSaver_.storeOutput(output);
+    std::string filename = fileStorage_.storeFile(output);
     psiServer_.session()->setData("output-file", filename);
 }
 

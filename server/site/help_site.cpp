@@ -1,9 +1,14 @@
 #include "help_site.hpp"
 #include "logging.hpp"
 
-HelpSite::HelpSite(PsiServer& server) : TemplateSite(server)
+HelpSite::HelpSite(PsiServer& server)
+    : TemplateSite(server),
+    fileStorage_(std::string(psiServer_.websiteRoot))
 {
     htmlHelpFormatter_ = HtmlHelpFormatter();
+
+    //FIXME: naprawić FileRecognizer!
+    //htmlHelpFormatter_.setFileStorage(&fileStorage_);
 
     psiServer_.registerIncludeCode(
         "help_site_description", boost::bind(&HelpSite::description, this));

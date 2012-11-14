@@ -1,5 +1,5 @@
-#ifndef OUTPUT_SAVER_HDR
-#define OUTPUT_SAVER_HDR
+#ifndef FILE_STORAGE_HDR
+#define FILE_STORAGE_HDR
 
 #include <string>
 
@@ -7,15 +7,15 @@
 #include "file_recognizer.hpp"
 #include "md5.hpp"
 
-class OutputSaver
+class FileStorage
 {
 
 public:
 
-    OutputSaver(const std::string& rootPath);
+    FileStorage(const std::string& rootPath);
 
-    std::string storeOutput(const std::string& content);
-    std::string storeOutput(const std::string& content, const std::string& ext);
+    std::string storeFile(const std::string& content);
+    std::string storeFile(const std::string& content, const std::string& ext);
 
     std::string storeFileByMD5(const std::string& content, const std::string& ext);
 

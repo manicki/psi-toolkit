@@ -1,7 +1,7 @@
 #include <string>
 
 #include "template_site.hpp"
-#include "output_saver.hpp"
+#include "file_storage.hpp"
 #include "file_recognizer.hpp"
 
 class PipeSite : public TemplateSite
@@ -30,7 +30,7 @@ private:
     std::string getInput();
     std::string runPipe(std::string);
 
-    OutputSaver outputSaver_;
+    FileStorage fileStorage_;
     FileRecognizer fileRecognizer_;
 
     void clearPreviousFileFromOutput();

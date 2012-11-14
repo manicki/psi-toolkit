@@ -50,10 +50,17 @@ std::string FileRecognizer::recognizeMimeType(const std::string & /*data*/) {
     std::string type = UNKNOWN_TYPE;
 
 #if HAVE_LIBMAGIC
-    std::string magicFileInfo = magic_buffer(magicCookie_, data.c_str(), data.length());
-    type = getMimeType_(magicFileInfo);
+    const char* magic = magic_buffer(magicCookie_, data.c_str(), data.length());
 
-    DEBUG("magic filetype: [" << magicFileInfo << "], file type: [" << type << "]");
+    if (!magic) {
+        ERROR("magic is not defined!");
+    }
+    else {
+        std::string magicFileInfo = magic;
+        type = getMimeType_(magicFileInfo);
+
+        DEBUG("magic filetype: [" << magicFileInfo << "], file type: [" << type << "]");
+    }
 #endif
 
     return type;

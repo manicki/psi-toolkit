@@ -6,12 +6,9 @@ add_library(server SHARED
     site/pipe_site.cpp
     site/help_site.cpp
     site/json_site.cpp
-    site/output_saver.cpp
-    guid_generator.cpp
     session.cpp
     session_manager.cpp
     server_runner.cpp
-    md5.cpp
 )
 
 target_link_libraries(server ${Boost_LIBRARIES} pthread mpfd-parser ${BASE_TARGETS} pcre pcrecpp tools-parsers-puddle test-extractor)

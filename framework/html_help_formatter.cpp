@@ -58,21 +58,59 @@ void HtmlHelpFormatter::formatUsingExamples_(std::vector<TestBatch> batches, std
             << markdownString2String(batches[i].getDescription()) << "</div>" << std::endl;
 
         std::vector<TestRun> inOuts = batches[i].getTestRuns();
+
         for (unsigned int j = 0; j < inOuts.size(); j++) {
             output << "<div class=\"in-out\">" << std::endl;
 
-            std::string fileContent = getFileContent(inOuts[j].getInputFilePath());
-            output << "<div class=\"in\">in:</div>"
-                << "<pre><code>" << escapeHTML_(fileContent) << "</code></pre>" << std::endl;
+            formatExampleInputOutput_(inOuts[j].getInputFilePath(), output, "in");
+            formatExampleInputOutput_(inOuts[j].getExpectedOutputFilePath(), output, "out");
 
-            fileContent = getFileContent(inOuts[j].getExpectedOutputFilePath());
-            output << "<div class=\"out\">out:</div>"
-                << "<pre><code>" << escapeHTML_(fileContent) << "</code></pre>" << std::endl;
             output << "</div>" << std::endl;
         }
     }
 
     output << "</div>" << std::endl;
+}
+
+void HtmlHelpFormatter::formatExampleInputOutput_(
+    boost::filesystem::path filePath,
+    std::ostream& output,
+    std::string divClass) {
+
+    output << "<div class=\"" << divClass << "\">" << divClass << ":</div>" << std::endl;
+    std::string fileContent = getFileContent(filePath);
+
+    //std::string type = fileRecognizer_.recognizeMimeType(fileContent);
+    //std::string ext = fileRecognizer_.recognizeFileExtension(fileContent);
+
+    //FIXME: z jakiegoś powodu jest wyjątek w FileRecognizerze!
+    std::string type = FileRecognizer::UNKNOWN_TYPE;
+    std::string ext = FileRecognizer::UNKNOWN_TYPE;
+
+    if (type == "image" && ext == "svg") {
+        output << fileContent << std::endl;
+        return;
+    }
+    if (type == "text" || type == FileRecognizer::UNKNOWN_TYPE) {
+        output << "<pre><code>" << escapeHTML_(fileContent) << "</code></pre>" << std::endl;
+        return;
+    }
+
+    if (fileStorage_ != NULL) {
+        std::string path = (*fileStorage_).storeFileByMD5(fileContent, ext);
+
+        output << "<a href=\"" << path << "\" target=\"_blank\" >";
+
+        if (type == "image") {
+            output << "<img src=\"" << path << "\" alt=\"image output\" />";
+        } else {
+            output << filePath.string();
+        }
+        output << "</a>" << std::endl;
+    }
+    else {
+        output << "<pre><code>" << escapeHTML_(fileContent) << "</code></pre>" << std::endl;
+    }
 }
 
 void HtmlHelpFormatter::doFormatDataFile(std::string text, std::ostream& output) {
@@ -174,4 +212,12 @@ std::string HtmlHelpFormatter::escapeJSON_(std::string& text) {
     boost::replace_all(text, "\n", "\\n");
 
     return text;
+}
+
+void HtmlHelpFormatter::setFileStorage(FileStorage* fileStorage) {
+    fileStorage_ = fileStorage;
+}
+
+void HtmlHelpFormatter::unsetFileStorage() {
+    fileStorage_ = NULL;
 }
