@@ -229,7 +229,8 @@ footer li > a:hover { color:#ddd; }
 .example-desc { margin-top:6px; }
 .in-out { margin-bottom:25px; }
 .in-out > pre { padding-left:35px; }
-.in, .out { float:left; font-weight:bold; }
+.in-out > a { display:block; }
+.in, .out { float:left; font-weight:bold; margin-right:5px; }
 
 img.screen { border:1px solid #ddd; display:block; margin:0 auto 30px auto; }
 
