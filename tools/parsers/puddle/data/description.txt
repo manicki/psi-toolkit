@@ -1,108 +1,18 @@
-Shallow parser based on the Spejd shallow parser originally developed
-at IPI PAN (http://zil.ipipan.waw.pl/Spejd/). The parser recognizes
-syntactic groups (e.g. NPs) using simple regular-expression-alike
-rules describing the surface features of tokens (usually words)
-comprising the groups. See below for the brief description of the
-puddle rule format. It must be given a lemmatized text (it may be
-ambiguous) and may also serve as a disambiguation tool. In terms of
-psi-toolkit it adds `parse` edges based on `form`, `lexeme` and
-`lemma` edges. It is tagset-independent and must be given a tagset
-description along with the parsing rules set.
+A shallow parser based on the Spejd shallow parser originally developed
+at IPI PAN (http://zil.ipipan.waw.pl/Spejd/). For input, Puddle requires morphologically anotated text as produced, for instance, by the morfologik processor. It may also serve as a disambiguation tool itself or can be used chained with a POS-tagger (e.g. metagger processor).
 
-For Polish it uses by default rules for the morfologik tagset. Another
-rule set and its relevant tagset may be specified with the `--rules`
-and `--tagset` options.
+Examples
+--------
 
-Brief puddle parsing rules format description
+A typical pipeline for parsing a Polish sentence with graphical output:
 
-Rule "sample rule 1"
-Match: [pos~"subst"] [pos~"adj"];
-Eval:  group(NP, 1);
-Matches a token with the part of speech attribute set to `subst` and a
-token with the `adj` part of speech attributes and makes the `parse`
-edge with the `NP` category of them. The head of the group is set to
-the first element of the rule pattern.
-Note: Token in terms of puddle shallow parser is meant as a set of
-`form` edges with the same start vertex. Each edge is meant as a
-single morphosyntactic interpretations of the relevant lexeme.
-Note: Values of allowed values of part of speech (as well as other
-attributes) have to be listed in the tagset description file (see e.g.
-data/pl/tagset.pl.cfg file with the morfologik tagset description for
-Polish).
+`txt-reader ! tokenize ! morfologik ! puddle ! gv-writer --tree`
 
-Rule "sample rule 2"
-Match: [pos~"adj"] [base~"dom"];
-Eval:  delete(pos!~"adj", 1);
-Matches a token with the part of speech attribute `adj` preceding a
-token of lemma `dom` and discards all edges of the first token that
-have the value of the part of speech attribute other than `adj`.
+Remarks
+-------
 
-Rule "sample rule 3"
-Left:  [pos~"num"];
-Match: [pos~"adj"]* [pos~"subst"];
-Eval:  unify(gender case number, 1, 2, 3);
-       group(NP, 3);
-Matches an `subst` token preceded by the `num` token and the 0 or
-more `adj` tokens. If any edges of the first, second and third token
-have values of `gender`, `case` and `number` attributes that these
-tokens have in common, the `NP` parse edge will be added basing on the
-`adj` and `subst` tokens.
-Note: The `num` token is not included in the `NP` group. It is a part
-of the left context of the rule pattern.
-Note: The right context of the rule pattern may be similarly defined
-using the `Right:` statement.
+Note that text needs to be annotated morphologically before passing it to puddle.
 
-Rule "sample rule 4"
-Match: [base~"biały"];
-Eval:  add("subst:m:nom:sg", "biały", 1);
-Matches a token of lemma `biały` and a adds a `form` edge of lemma
-`biały` with annotation item values according to the `subst:m:nom:sg`
-label. The exact mapping of the values given in the morphology label
-are made using the tagset description given to the parser.
+Currently, rules and tagsets are available for Polish only and used by default if not specified otherwise. The Polish parsing rules are for demonstration purposes only and are by no means complete. 
 
-Rule "sample rule 5"
-Match: [orth~"pod"/i] [orth~"warunkiem"/i] [orth~"że"/i];
-Eval:  syntok("conj");
-Matches tokens with edges text respectively `pod`, `warunkiem` and
-`że` and adds a multi-token `form` edge with part of speech set to
-`conj`. The lemma of the result edges is a concatenation of lemmas of
-the comprising edges.
-Note: In the rule above, the parser uses a case-insensitive matching
-of the edge text (the `/i` modifier).
-
-Rule "sample rule 6"
-Match: [type=AP] [type=NP];
-Eval:  attach(NP, 2);
-Matches the `AP` and `NP` groups and adds a new `NP` group using the
-`attach` grouping method. Puddle grouping methods are described below.
-
-Rule "sample rule 7"
-Match: [type=AP] [type=NP];
-Eval:  join(NP, 2);
-Matches the `AP` and `NP` groups and adds a new `NP` group using the
-`join` grouping method. Puddle grouping methods are described below.
-
-Rule "sample rule 8"
-Match: [type=NP];
-Right: [type=VP];
-Eval:  transform(1, S);
-Matches the `NP` group followed by the `VP` group and changes its
-category label to `S`.
-
-Puddle uses three `grouping methods` which work as shown in the
-examples below. In the examples we assume having the following
-syntactic structure: AP(biały) NP(kruk).
-The `group` method (standard grouping method derived from the original
-Spejd parser) creates a more complex structure of the given structure:
-AP(biały) NP(kruk) -> NP(AP(biały) NP(kruk)).
-The `attach` method creates a flatter structure:
-AP(biały) NP(kruk) -> NP(AP(biały) kruk).
-The `join` method create an even flatter structure:
-AP(biały) NP(kruk) -> NP(biały kruk).
-
-Note: White spaces (namely: edges that have been not recognized by a
-tokenizer) are not taken into consideration by the parser.
-Note: The use of `+` (one or more appearance), `*` (zero or more) and
-`?` (zero and one) modifiers is allowed with tokens in rule patterns.
-Note: `parse` edges created by puddle copy the values of annotation
-item values from its head token's `form` edge (edges).
+For other languages, you need to provide custom rules and tag sets that are compatible with the morphological processer employed in before puddle in the processing pipeline. A tutorial on the rule format and tagsets is currently being prepared. See the Polish rule and tag sets for examples.
