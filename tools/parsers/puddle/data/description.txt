@@ -6,7 +6,7 @@ Examples
 
 A typical pipeline for parsing a Polish sentence with graphical output:
 
-`txt-reader ! tokenize ! morfologik ! puddle ! gv-writer --tree`
+`txt-reader ! tokenize --lang pl ! morfologik ! puddle ! gv-writer --tree`
 
 Remarks
 -------
