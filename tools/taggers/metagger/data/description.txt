@@ -1,2 +1,14 @@
-Maximum entropy POS tagger
-[under construction]
+metagger (Maximum Entropy Tagger) is a simplistic part-of-speech tagger that can be easily custom-trained. For the tagger to work, it is necessary to include any morphological analyzer in the pipeline before the tagger is used. By default, a Polish part-of-speech model is used which can be applied to ambiguous output of the morfologik processor (The tag sets are compatible). The tagger output in turn can be passed on to a parser like the puddle shallow parser.
+
+Example
+-------
+
+A typical pipeline for disambiguating potentially ambiguous output of the morfologik morphological analyzer is as follows:
+
+`txt-reader ! tokenize ! morfologik ! metagger`
+
+
+Remarks
+-------
+
+Most options concern custom-trained models and are not neccessary if te default Polish POS-model is used. A detailed description of the training procedure will be provided in a separate tutorial which is currently under construction.  
