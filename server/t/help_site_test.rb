@@ -8,7 +8,7 @@ class HelpSiteTest < Test::Unit::TestCase
 
     def setup
         @browser = Celerity::Browser.new
-        @browser.goto $server_address + '/help/processors.html'
+        @browser.goto $server_address + '/help/documentation.html'
     end
 
     def teardown

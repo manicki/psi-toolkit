@@ -84,6 +84,7 @@ class PipeSiteTest < Test::Unit::TestCase
         assert input_file.value, txt
         assert_equal @browser.div(:id => 'input-file').text_field(:class => 'file').value, file_name
 
+        set_pipe 'tokenize --lang pl'
         submit
 
         # check if pipe output contains all words
@@ -97,6 +98,7 @@ class PipeSiteTest < Test::Unit::TestCase
     end
 
     def test_if_downloading_a_file_with_output_works
+        set_pipe 'tokenize --lang pl'
         set_input 'Marysia ma rysia'
         submit
 
