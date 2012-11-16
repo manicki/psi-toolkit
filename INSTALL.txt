@@ -20,6 +20,7 @@ Optional
 * Antiword (Ubuntu package: antiword) - for doc-reader
 * DjVuLibre library: development files - (Ubuntu package: libdjvulibre-dev) - for djvu-reader
 * Link Grammar library: development files - (Ubuntu package: liblink-grammar4-dev) - for link-parser
+* Bison and Flex tools - (Ubuntu packages: bison flex) - for gobio
 
 
 Ubuntu 11.10

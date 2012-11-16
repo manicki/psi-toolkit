@@ -423,7 +423,8 @@ if (NOT FLEX_EXECUTABLE)
                 "Flex not found: file lex.grlex.cpp exists and will be left unchanged")
         else (EXISTS ${psi-toolkit_SOURCE_DIR}/tools/parsers/gobio/translator/lex.grlex.cpp)
             message(WARNING
-                "Flex not found: file lex.grlex.cpp is missing and cannot be generated")
+                "Flex not found: file lex.grlex.cpp is missing and cannot be generated\n"
+                "You should install the `flex` package")
         endif (EXISTS ${psi-toolkit_SOURCE_DIR}/tools/parsers/gobio/translator/lex.grlex.cpp)
     endif (FLEX_EXECUTABLE)
 endif (NOT FLEX_EXECUTABLE)
@@ -468,7 +469,8 @@ if (NOT BISON_EXECUTABLE)
                 "Bison not found: file grparser.bis.cpp exists and will be left unchanged")
         else (EXISTS ${psi-toolkit_SOURCE_DIR}/tools/parsers/gobio/translator/grparser.bis.cpp)
             message(WARNING
-                "Bison not found: file grparser.bis.cpp is missing and cannot be generated")
+                "Bison not found: file grparser.bis.cpp is missing and cannot be generated\n"
+                "You should install the `bison` package")
         endif (EXISTS ${psi-toolkit_SOURCE_DIR}/tools/parsers/gobio/translator/grparser.bis.cpp)
     endif (BISON_EXECUTABLE)
 endif (NOT BISON_EXECUTABLE)
