@@ -1,3 +1,6 @@
+#ifndef HELP_SITE_HDR
+#define HELP_SITE_HDR
+
 #include "template_site.hpp"
 #include "html_help_formatter.hpp"
 #include "file_storage.hpp"
@@ -27,3 +30,5 @@ private:
     FileStorage fileStorage_;
 
 };
+
+#endif

@@ -1,3 +1,6 @@
+#ifndef PIPE_SITE_HDR
+#define PIPE_SITE_HDR
+
 #include <string>
 
 #include "template_site.hpp"
@@ -40,3 +43,5 @@ private:
 
     std::string encodeHTML_(const std::string& data);
 };
+
+#endif

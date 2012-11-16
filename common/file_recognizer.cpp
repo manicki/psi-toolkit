@@ -53,7 +53,7 @@ std::string FileRecognizer::recognizeMimeType(const std::string & /*data*/) {
     const char* magic = magic_buffer(magicCookie_, data.c_str(), data.length());
 
     if (!magic) {
-        ERROR("magic is not defined!");
+        ERROR("magic is not defined when trying to recognize mime type!");
     }
     else {
         std::string magicFileInfo = magic;
@@ -84,10 +84,17 @@ std::string FileRecognizer::recognizeFileExtension(const std::string & /*data*/)
     std::string extension = UNKNOWN_TYPE;
 
 #if HAVE_LIBMAGIC
-    std::string magicFileInfo = magic_buffer(magicCookie_, data.c_str(), data.length());
-    extension = getFileExtension_(magicFileInfo);
+    const char* magic = magic_buffer(magicCookie_, data.c_str(), data.length());
 
-    DEBUG("magic filetype: [" << magicFileInfo << "], file extension: [" << extension << "]");
+    if (!magic) {
+        ERROR("magic is not defined when trying to get file extension!");
+    }
+    else {
+        std::string magicFileInfo = magic;
+        extension = getFileExtension_(magicFileInfo);
+
+        DEBUG("magic filetype: [" << magicFileInfo << "], file extension: [" << extension << "]");
+    }
 #endif
 
     return extension;

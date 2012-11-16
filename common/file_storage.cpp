@@ -55,7 +55,7 @@ std::string FileStorage::storeFile_(
     std::string pathToStore = filePathToStore_(fileName, ext);
     std::string pathForHtml = filePathForHtml_(fileName, ext);
 
-    INFO("File stored in file: " << pathToStore);
+    INFO("File stored into: " << pathToStore);
 
     std::ofstream outfile(pathToStore.c_str());
     outfile << content;

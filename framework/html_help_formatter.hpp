@@ -14,7 +14,7 @@ public:
     void formatDocumentationMenu(std::ostream& output);
 
     /*
-     * If you pass FileStorage, some example inputs and outputs in untextual format
+     * If you pass FileStorage, some example inputs and outputs in non-textual format
      * (such as .rtf, .doc, .jpg etc.) will be displayed as files to download.
      */
     void setFileStorage(FileStorage* fileStorage);

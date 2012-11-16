@@ -8,7 +8,7 @@ HelpSite::HelpSite(PsiServer& server)
     htmlHelpFormatter_ = HtmlHelpFormatter();
 
     //FIXME: naprawić FileRecognizer!
-    //htmlHelpFormatter_.setFileStorage(&fileStorage_);
+    htmlHelpFormatter_.setFileStorage(&fileStorage_);
 
     psiServer_.registerIncludeCode(
         "help_site_description", boost::bind(&HelpSite::description, this));
