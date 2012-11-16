@@ -1,1 +1,2 @@
-Writes output of a pipe in JSON format. See simple-writer for details <http://psi-toolkit.wmi.amu.edu.pl/documentation.html#simple-writer>.
+Writes output of a pipe in JSON format. See [simple-writer](/help/documentation.html#simple-writer) 
+for details.

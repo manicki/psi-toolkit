@@ -13,11 +13,12 @@ The PSI tools process mainly but not exclusively texts written in Polish.
 
 How to use the PSI tools?
 -------------------------
-You may either use our web-service or download the [PSI Linux packages](http://psi-toolkit.wmi.amu.edu.pl/download.html) and use them locally.
+You may either use our web-service or download the [PSI Linux packages](/download.html) and use them locally.
 
 Using the PSI web-service
 -------------------------
-* Type a text to be processed into the edit window [here](http://psi-toolkit.wmi.amu.edu.pl/pipe.psis?pipe-text=tokenize+--lang+pl&input-text=Piękna+gra+trwała+długo.), e. g.
+* Type a text to be processed into the edit window 
+[here](/pipe.psis?pipe-text=tokenize+--lang+pl&input-text=Piękna+gra+trwała+długo.), e. g.
 
     `Piękna gra trwała długo.`
 
@@ -47,7 +48,7 @@ It says that the whole text starting atposition 0000 and ending at peosition 002
 
 Using the PSI-Pipe package
 -------------------------
-* Download the PSI-Pipe package [from here] (/download.html) and unpack it in your Linux system
+* Download the PSI-Pipe package [from here](/download.html) and unpack it in your Linux system
 * Use the PSI tools in the bash shell using the *psi-pipe*  command
   e.g.
 
