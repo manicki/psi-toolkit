@@ -6,6 +6,18 @@
   <script type="text/javascript" src="/js/jquery-1.7.2.min.js"></script>
   <script type="text/javascript" src="/js/common.js"></script>
 
+  <script>
+    (function() {
+      var cx = '010316732786275959213:om2bp6plxqs';
+      var gcse = document.createElement('script'); 
+      gcse.type = 'text/javascript'; 
+      gcse.async = true;
+      gcse.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') +
+        '//www.google.com/cse/cse.js?cx=' + cx;
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(gcse, s);
+    })();
+  </script>
+
   <noscript>
     <div id="javascript-disabled">
       <div class="wrapper">
