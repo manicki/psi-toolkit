@@ -38,17 +38,17 @@ boost::program_options::options_description JSONLatticeWriter::Factory::doOption
 
     optionsDescription.add_options()
         ("linear",
-            "skips cross-edges")
+            "skip cross-edges")
         ("no-alts",
-            "skips alternative edges")
+            "skip alternative edges")
         ("with-blank",
-            "does not skip edges with whitespace text")
+            "do not skip edges with whitespace text")
         ("tag", boost::program_options::value<std::string>()->default_value("token"),
             "basic tag")
         ("spec", boost::program_options::value< std::vector<std::string> >()->multitoken(),
             "specification of higher-order tags")
         ("with-args",
-         "if set, then returns text with annotation as a hash element");
+         "if set, returns text with annotation as a hash element");
 
     return optionsDescription;
 }

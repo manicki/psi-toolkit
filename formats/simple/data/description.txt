@@ -1,8 +1,8 @@
 Simple Writer prints the content of the lattice in a simple, human-readable way.
 By default, it writes token segments separated by newline symbols, skipping blank segments.
 
-In other words, simple-writer prints contents of lattice edges labeled by layer tag `token`.
-This “basic” layer tag can be changed using the `--tag` option.
+In other words, simple-writer prints contents of lattice edges labeled by the layer tag `token`.
+This “default” layer tag can be changed using the `--tag` option.
 The string that separates printed edges can be specified by the `--sep` option.
 Additional separators for “higher order” edges can be specified with `--spec` option, which should be used in the following manner:
 `--spec layer_tag_1 separator_1 layer_tag_2 separator_2 ... layer_tag_n separator_n`.

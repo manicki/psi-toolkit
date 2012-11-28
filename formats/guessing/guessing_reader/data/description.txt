@@ -1,1 +1,1 @@
-Guessing-reader tries to guess input format so that manual specifying of reader can be omitted.
+Guessing-reader tries to guess input format so that manual specifying of reader could be omitted.

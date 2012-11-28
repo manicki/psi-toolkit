@@ -8,6 +8,8 @@ The main differences:
 - dot-writer has no option for specifying the output format since it cannot generate output in formats other than DOT;
 - for output's clarity, dot-writer produces not aligned monochromatic output; `--align` option forces nodes to be aligned left to right, `--color` option turns on the edge coloring.
 
+<!--
 To produce the graphics from DOT file, you have to have GraphViz software installed on your machine.
 Then use `dot` program.
-For example, to generate SVG graphics form file `input.dot`, try: `dot input.dot -T svg -o output.svg`.
+For example, to generate SVG graphics from file `input.dot`, try: `dot input.dot -T svg -o output.svg`.
+-->

@@ -1,4 +1,4 @@
-NKJP Reader reads texts from Polish National Corpus's XML files into the lattice.
+NKJP Reader reads texts from Polish National Corpus's XML files into the PSI-lattice.
 
 You can find more information about NKJP on the project's website: <http://nkjp.pl>
 
