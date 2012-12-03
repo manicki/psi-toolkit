@@ -20,20 +20,26 @@
 #include "version_information.hpp"
 
 PipeRunner::PipeRunner(const std::string& pipeline)
-    : justInformation_(false), runnerOptionsDescription_("PipeRunner options") {
+    : justInformation_(false),
+    lineByLine_(false),
+    runnerOptionsDescription_("PipeRunner options") {
 
     parseIntoFinalPipeline_<std::istream, std::ostream>(splitPipeline_(pipeline), false);
 }
 
 PipeRunner::PipeRunner(int argc, char* argv[])
-    : justInformation_(false), runnerOptionsDescription_("PipeRunner options") {
+    : justInformation_(false),
+    lineByLine_(false),
+    runnerOptionsDescription_("PipeRunner options") {
 
     std::vector<std::string> args(argv, argv + argc);
     parseIntoFinalPipeline_<std::istream, std::ostream>(args, true);
 }
 
 PipeRunner::PipeRunner(std::vector<std::string> args)
-    : justInformation_(false), runnerOptionsDescription_("PipeRunner options") {
+    : justInformation_(false),
+    lineByLine_(false),
+    runnerOptionsDescription_("PipeRunner options") {
 
     parseIntoFinalPipeline_<std::istream, std::ostream>(args, false);
 }
@@ -56,6 +62,10 @@ void PipeRunner::parseIntoFinalPipeline_(
         justInformation_ = true;
 
         return;
+    }
+
+    if (runnerOptions_.count("line-by-line")) {
+        turnOnLineByLineMode_();
     }
 
     if ( ! parseIntoPipelineSpecification_(
@@ -114,6 +124,7 @@ void PipeRunner::setRunnerOptionsDescription_() {
     runnerOptionsDescription_.add_options()
         ("help", "Produce help message for each processor")
         ("aliases", "Show aliases, i.e. alternative names for processors")
+        ("line-by-line", "Process input line by line")
         ("list-languages", "List languages handled for each processor specified")
         ("log-level", boost::program_options::value<std::string>(),
          "Set logging level")
@@ -474,6 +485,10 @@ PipeRunner::pipelineElement2Promises_(
 
     BOOST_FOREACH(ProcessorFactory* factory, factories) {
 
+        if (factory->getName() == "txt-reader") {
+            turnOnLineByLineMode_();
+        }
+
         boost::program_options::variables_map options;
 
         bool optionsMatched = true;
@@ -696,3 +711,10 @@ SV * PipeRunner::run_for_perl(const std::string & inputString) {
     return newRV_inc((SV *) outputArrayPointer);
 }
 #endif
+
+void PipeRunner::turnOnLineByLineMode_() {
+    if (!lineByLine_) {
+        lineByLine_ = true;
+        INFO("Line-by-line mode is turned ON.");
+    }
+}

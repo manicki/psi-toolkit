@@ -49,6 +49,9 @@ public:
 private:
     PipelineSpecification pipelineSpecification_;
     bool justInformation_;
+    bool lineByLine_;
+
+    void turnOnLineByLineMode_();
 
     template<typename Source, typename Sink>
     void parseIntoFinalPipeline_(std::vector<std::string> args, bool isTheFirstArgProgramName);
