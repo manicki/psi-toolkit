@@ -48,7 +48,23 @@ int PipeRunner::run(std::istream& in, std::ostream& out) {
     if (justInformation_)
         return 0;
 
+    if (lineByLine_) {
+        std::string inputString;
+        int returnCode = 0;
+        while (returnCode == 0 && std::getline(in, inputString)) {
+            returnCode = runLine_<std::ostream>(inputString, out);
+        }
+        return returnCode;
+    }
+
     return run_<std::istream, std::ostream>(in, out);
+}
+
+int PipeRunner::runLine(const std::string & inputString, std::ostream& out) {
+    if (justInformation_)
+        return 0;
+
+    return runLine_<std::ostream>(inputString, out);
 }
 
 const std::string PipeRunner::PIPELINE_SEPARATOR = "!";
@@ -403,6 +419,12 @@ int PipeRunner::run_(Source& in, Sink& out) {
     return 0;
 }
 
+template<typename Sink>
+int PipeRunner::runLine_(const std::string & inputString, Sink& out) {
+    std::istringstream inputStream(inputString, std::istringstream::in);
+    return run_<std::istream, Sink>(inputStream, out);
+}
+
 template<typename Source, typename Sink>
 void PipeRunner::runPipelineNode_(
     FinalPipeline::iterator current,
@@ -485,9 +507,10 @@ PipeRunner::pipelineElement2Promises_(
 
     BOOST_FOREACH(ProcessorFactory* factory, factories) {
 
-        if (factory->getName() == "txt-reader") {
-            turnOnLineByLineMode_();
-        }
+        // TODO
+        // if (factory->getName() == "txt-reader") {
+            // turnOnLineByLineMode_();
+        // }
 
         boost::program_options::variables_map options;
 
@@ -694,10 +717,9 @@ bool PipeRunner::isStandardInputOrOutputFileName(const std::string & path) {
 }
 
 std::string PipeRunner::run(const std::string & inputString) {
-    std::istringstream inputStream (inputString, std::istringstream::in);
     std::ostringstream outputStream;
 
-    run(inputStream, outputStream);
+    runLine(inputString, outputStream);
 
     return outputStream.str();
 }
@@ -706,8 +728,7 @@ std::string PipeRunner::run(const std::string & inputString) {
 SV * PipeRunner::run_for_perl(const std::string & inputString) {
     AV * outputArrayPointer = newAV();
 
-    std::istringstream inputStream (inputString, std::istringstream::in);
-    run_<std::istream, AV *>(inputStream, outputArrayPointer);
+    runLine_<AV *>(inputString, outputArrayPointer);
     return newRV_inc((SV *) outputArrayPointer);
 }
 #endif

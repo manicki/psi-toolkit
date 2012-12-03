@@ -29,6 +29,7 @@ public:
     PipeRunner(std::vector<std::string> args);
 
     int run(std::istream&, std::ostream&);
+    int runLine(const std::string & inputString, std::ostream&);
     int run(const std::string& inputFilePath, const std::string& outputFilePath);
     std::string run(const std::string & inputString);
 
@@ -122,6 +123,9 @@ private:
 
     template<typename Source, typename Sink>
     int run_(Source&, Sink&);
+
+    template<typename Sink>
+    int runLine_(const std::string & inputString, Sink&);
 
     template<typename Source, typename Sink>
     void runPipelineNode_(
