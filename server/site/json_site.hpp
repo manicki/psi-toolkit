@@ -1,3 +1,6 @@
+#ifndef JSON_SITE_HDR
+#define JSON_SITE_HDR
+
 #include <string>
 
 #include "template_site.hpp"
@@ -29,3 +32,5 @@ private:
     static const std::string ERROR_KEY_NAME;
 
 };
+
+#endif

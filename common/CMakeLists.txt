@@ -20,6 +20,8 @@ add_library(common SHARED
     escaping.cpp
     file_fetcher.cpp
     file_recognizer.cpp
+    file_storage.cpp
+    guid_generator.cpp
     its_data.cpp
     language_dependent_annotator_factory.cpp
     lattice.cpp
@@ -32,6 +34,7 @@ add_library(common SHARED
     lang_specific_processor_file_fetcher.cpp
     lemmatizer_output_iterator.cpp
     logging.cpp
+    md5.cpp
     morfologik_tags_parser.cpp
     non_annotator_promise.cpp
     object_cache.cpp

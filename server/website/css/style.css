@@ -226,11 +226,13 @@ footer li > a:hover { color:#ddd; }
 .help-item > div { margin-bottom:12px; }
 .alias-item { margin-left:24px; }
 
-.help-example, .help-opts, .help-alias { margin-left:24px; }
+.help-examples, .help-opts, .help-alias { margin-left:24px; }
 .example-desc { margin-top:6px; }
+.help-example { }
 .in-out { margin-bottom:25px; }
-.in-out > pre { padding-left:35px; }
-.in, .out { float:left; font-weight:bold; }
+.in-out > pre, .in-out > a { padding-left:35px; }
+.in-out > a { display:block; }
+.in, .out { float:left; font-weight:bold; margin-right:5px; }
 
 img.screen { border:1px solid #ddd; display:block; margin:0 auto 30px auto; }
 
