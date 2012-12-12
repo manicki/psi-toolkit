@@ -7,6 +7,7 @@
   <script type="text/javascript" src="/js/shCore.js"></script>
   <script type="text/javascript" src="/js/shBrushPerl.js"></script>
   <script type="text/javascript" src="/js/shBrushPython.js"></script>
+  <script type="text/javascript" src="/js/shBrushRuby.js"></script>
   <link rel="stylesheet" type="text/css" href="/css/shCore.css" />
   <link rel="stylesheet" type="text/css" href="/css/shThemeDefault.css" />
 
@@ -27,8 +28,7 @@
     <h1>Other languages bindings</h1>
 
     <section>
-      <a name="perl">
-    <h2>Perl</h2>
+    <h2 name="perl">Perl</h2>
     Simple tokenization of Polish text:
     <pre class="brush: perl">use PSIToolkit::Simple;
 
@@ -107,6 +107,22 @@ result = psi.run('Pan prof. dr hab. Jan Nowak.')
 # result = 'Pan\nprof.\ndr\nhab.\nJan\nNowak\n.\n'</pre>
     </section>
 
+    <section>
+    <h2>Ruby</h2>
+    <p>
+      By default, there are available bindings for Ruby 1.8.7, but running with 1.9 version
+      is also possible. To use it with given version you have to compile PSI-Toolkit with
+      that version.
+    </p>
+
+    Simple tokenization of Polish text:
+    <pre class="brush: ruby">require 'psitoolkit'
+
+psi = PSIToolkit::PipeRunner.new("tp-tokenizer --lang pl")
+result = psi.run('Pan prof. dr hab. Jan Nowak.')
+
+# result = "Pan\nprof.\ndr\nhab.\nJan\nNowak\n.\n"</pre>
+    </section>
   </div>
 </div> <!-- end of #content -->
 
