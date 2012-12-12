@@ -47,14 +47,16 @@ void HtmlHelpFormatter::formatAliases_(std::list<std::string> aliases, std::ostr
 }
 
 void HtmlHelpFormatter::formatUsingExamples_(std::vector<TestBatch> batches, std::ostream& output) {
-    output << "<div class=\"help-example\">"
+    output << "<div class=\"help-examples\">"
         << "<h3>" << EXAMPLES_HEADER << "</h3>" << std::endl;
 
     for (unsigned int i = 0; i < batches.size(); i++) {
-       output << "<code class=\"example-pipe\">"
+        output << "<div class=\"help-example\">";
+
+        output << "<code class=\"example-pipe\">"
             << escapeHTML_(batches[i].getPipeline()) << "</code>" << std::endl;
 
-       output << "<div class=\"example-desc\">"
+        output << "<div class=\"example-desc\">"
             << markdownString2String(batches[i].getDescription()) << "</div>" << std::endl;
 
         std::vector<TestRun> inOuts = batches[i].getTestRuns();
@@ -67,6 +69,8 @@ void HtmlHelpFormatter::formatUsingExamples_(std::vector<TestBatch> batches, std
 
             output << "</div>" << std::endl;
         }
+
+        output << "</div>";
     }
 
     output << "</div>" << std::endl;
@@ -80,18 +84,15 @@ void HtmlHelpFormatter::formatExampleInputOutput_(
     output << "<div class=\"" << divClass << "\">" << divClass << ":</div>" << std::endl;
     std::string fileContent = getFileContent(filePath);
 
-    //std::string type = fileRecognizer_.recognizeMimeType(fileContent);
-    //std::string ext = fileRecognizer_.recognizeFileExtension(fileContent);
-
-    //FIXME: z jakiegoś powodu jest wyjątek w FileRecognizerze!
-    std::string type = FileRecognizer::UNKNOWN_TYPE;
-    std::string ext = FileRecognizer::UNKNOWN_TYPE;
+    std::string type;
+    std::string ext;
+    fileRecognizer_.recognizeMimeTypeAndFileExtension(fileContent, type, ext);
 
     if (type == "image" && ext == "svg") {
         output << fileContent << std::endl;
         return;
     }
-    if (type == "text" || type == FileRecognizer::UNKNOWN_TYPE) {
+    if ((type == "text" && ext == "txt" ) || type == FileRecognizer::UNKNOWN_TYPE) {
         output << "<pre><code>" << escapeHTML_(fileContent) << "</code></pre>" << std::endl;
         return;
     }
@@ -104,7 +105,7 @@ void HtmlHelpFormatter::formatExampleInputOutput_(
         if (type == "image") {
             output << "<img src=\"" << path << "\" alt=\"image output\" />";
         } else {
-            output << filePath.string();
+            output << path;
         }
         output << "</a>" << std::endl;
     }

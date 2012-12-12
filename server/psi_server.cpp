@@ -21,7 +21,7 @@ PsiServer::PsiServer(
     server_(address, port, psi_request_handler_, boost::lexical_cast<std::size_t>(threads)) { }
 
 std::string& PsiServer::info() {
-    static std::string inf = "PSI SERVER version 0.1\n"
+    static std::string inf = "PSI-Server version 1.1\n"
         "Simple multithreading web server based on Boost Asio server3 and C++ WEBEM\n"
         "Point browser at http://"+ boost::asio::ip::host_name() + ":"
         + boost::lexical_cast<std::string>(port_) + "/\n\n";
