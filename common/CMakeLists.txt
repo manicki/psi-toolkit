@@ -18,6 +18,7 @@ add_library(common SHARED
     cutter.cpp
     cutter_annotator_options.cpp
     escaping.cpp
+    file_extractor.cpp
     file_fetcher.cpp
     file_recognizer.cpp
     file_storage.cpp
@@ -56,7 +57,10 @@ add_library(common SHARED
     ${common-java-files}
 )
 
-target_link_libraries(common pcre pcrecpp)
+target_link_libraries(common pcre pcrecpp fex)
+
+include_directories("${psi-toolkit_SOURCE_DIR}/fex/fex")
+link_directories("${psi-toolkit_BINARY_DIR}/fex/fex")
 
 if(USE_JAVA)
     target_link_libraries(common ${JAVA_JVM_LIBRARY})
