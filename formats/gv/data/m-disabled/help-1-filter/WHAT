@@ -1,0 +1,1 @@
+segment --lang en ! tokenize --lang en ! gv-writer --filter token segment --show-tags

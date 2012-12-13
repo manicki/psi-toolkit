@@ -21,6 +21,7 @@ void HelpFormatter::formatOneProcessorHelp(std::string processorName, std::ostre
         processorName,
         getProcessorDescription(processorName),
         getProcessorOptions(processorName),
+        getAliasesForProcessorName(processorName),
         getProcessorUsingExamples(processorName),
         output
     );
@@ -38,22 +39,28 @@ void HelpFormatter::formatOneAlias(std::string aliasName, std::ostream& output) 
     doFormatOneAlias(aliasName, getProcessorNamesForAlias(aliasName), output);
 }
 
-void HelpFormatter::formatHelpIntroduction(std::ostream& output) {
+void HelpFormatter::formatDescription(std::ostream& output) {
     boost::filesystem::path path = getPathToFrameworkDataFile_("description.txt");
 
-    doFormatHelpIntroduction(getFileContent(path), output);
+    doFormatDataFile(getFileContent(path), output);
 }
 
 void HelpFormatter::formatTutorial(std::ostream& output) {
     boost::filesystem::path path = getPathToFrameworkDataFile_("tutorial.txt");
 
-    doFormatTutorial(getFileContent(path), output);
+    doFormatDataFile(getFileContent(path), output);
 }
 
 void HelpFormatter::formatLicence(std::ostream& output) {
     boost::filesystem::path path = getPathToFrameworkDataFile_("licence.txt");
 
-    doFormatLicence(getFileContent(path), output);
+    doFormatDataFile(getFileContent(path), output);
+}
+
+void HelpFormatter::formatAboutPsiFormat(std::ostream& output) {
+    boost::filesystem::path path = getPathToFrameworkDataFile_("psi-format.txt");
+
+    doFormatDataFile(getFileContent(path), output);
 }
 
 HelpFormatter::~HelpFormatter() { }
@@ -104,6 +111,12 @@ std::list<std::string> HelpFormatter::getProcessorNamesForAlias(std::string alia
 
     processorNames.sort();
     return processorNames;
+}
+
+std::list<std::string> HelpFormatter::getAliasesForProcessorName(std::string processorName) {
+    std::set<std::string> aliases =
+        MainFactoriesKeeper::getInstance().getAllAliases(processorName);
+    return std::list<std::string>(aliases.begin(), aliases.end());
 }
 
 const std::string HelpFormatter::EXAMPLES_HEADER = "Examples";

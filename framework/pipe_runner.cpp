@@ -20,20 +20,26 @@
 #include "version_information.hpp"
 
 PipeRunner::PipeRunner(const std::string& pipeline)
-    : justInformation_(false), runnerOptionsDescription_("PipeRunner options") {
+    : justInformation_(false),
+    lineByLine_(false),
+    runnerOptionsDescription_("PipeRunner options") {
 
     parseIntoFinalPipeline_<std::istream, std::ostream>(splitPipeline_(pipeline), false);
 }
 
 PipeRunner::PipeRunner(int argc, char* argv[])
-    : justInformation_(false), runnerOptionsDescription_("PipeRunner options") {
+    : justInformation_(false),
+    lineByLine_(false),
+    runnerOptionsDescription_("PipeRunner options") {
 
     std::vector<std::string> args(argv, argv + argc);
     parseIntoFinalPipeline_<std::istream, std::ostream>(args, true);
 }
 
 PipeRunner::PipeRunner(std::vector<std::string> args)
-    : justInformation_(false), runnerOptionsDescription_("PipeRunner options") {
+    : justInformation_(false),
+    lineByLine_(false),
+    runnerOptionsDescription_("PipeRunner options") {
 
     parseIntoFinalPipeline_<std::istream, std::ostream>(args, false);
 }
@@ -42,7 +48,23 @@ int PipeRunner::run(std::istream& in, std::ostream& out) {
     if (justInformation_)
         return 0;
 
+    if (lineByLine_) {
+        std::string inputString;
+        int returnCode = 0;
+        while (returnCode == 0 && std::getline(in, inputString)) {
+            returnCode = runLine_<std::ostream>(inputString, out);
+        }
+        return returnCode;
+    }
+
     return run_<std::istream, std::ostream>(in, out);
+}
+
+int PipeRunner::runLine(const std::string & inputString, std::ostream& out) {
+    if (justInformation_)
+        return 0;
+
+    return runLine_<std::ostream>(inputString, out);
 }
 
 const std::string PipeRunner::PIPELINE_SEPARATOR = "!";
@@ -56,6 +78,10 @@ void PipeRunner::parseIntoFinalPipeline_(
         justInformation_ = true;
 
         return;
+    }
+
+    if (runnerOptions_.count("line-by-line")) {
+        turnOnLineByLineMode_();
     }
 
     if ( ! parseIntoPipelineSpecification_(
@@ -114,6 +140,7 @@ void PipeRunner::setRunnerOptionsDescription_() {
     runnerOptionsDescription_.add_options()
         ("help", "Produce help message for each processor")
         ("aliases", "Show aliases, i.e. alternative names for processors")
+        ("line-by-line,l", "Process input line by line")
         ("list-languages", "List languages handled for each processor specified")
         ("log-level", boost::program_options::value<std::string>(),
          "Set logging level")
@@ -124,7 +151,7 @@ void PipeRunner::setRunnerOptionsDescription_() {
 
 bool PipeRunner::stopAfterExecutingRunnerOptions_() {
     if (runnerOptions_.count("help")) {
-        ConsoleHelpFormatter().formatHelpIntroduction(std::cout);
+        ConsoleHelpFormatter().formatDescription(std::cout);
         std::cout << runnerOptionsDescription_ << std::endl;
         ConsoleHelpFormatter().formatHelps(std::cout);
         return true;
@@ -392,6 +419,12 @@ int PipeRunner::run_(Source& in, Sink& out) {
     return 0;
 }
 
+template<typename Sink>
+int PipeRunner::runLine_(const std::string & inputString, Sink& out) {
+    std::istringstream inputStream(inputString, std::istringstream::in);
+    return run_<std::istream, Sink>(inputStream, out);
+}
+
 template<typename Source, typename Sink>
 void PipeRunner::runPipelineNode_(
     FinalPipeline::iterator current,
@@ -473,6 +506,11 @@ PipeRunner::pipelineElement2Promises_(
             elementSpec.processorName);
 
     BOOST_FOREACH(ProcessorFactory* factory, factories) {
+
+        // TODO
+        // if (factory->getName() == "txt-reader") {
+            // turnOnLineByLineMode_();
+        // }
 
         boost::program_options::variables_map options;
 
@@ -679,10 +717,9 @@ bool PipeRunner::isStandardInputOrOutputFileName(const std::string & path) {
 }
 
 std::string PipeRunner::run(const std::string & inputString) {
-    std::istringstream inputStream (inputString, std::istringstream::in);
     std::ostringstream outputStream;
 
-    run(inputStream, outputStream);
+    runLine(inputString, outputStream);
 
     return outputStream.str();
 }
@@ -691,8 +728,14 @@ std::string PipeRunner::run(const std::string & inputString) {
 SV * PipeRunner::run_for_perl(const std::string & inputString) {
     AV * outputArrayPointer = newAV();
 
-    std::istringstream inputStream (inputString, std::istringstream::in);
-    run_<std::istream, AV *>(inputStream, outputArrayPointer);
+    runLine_<AV *>(inputString, outputArrayPointer);
     return newRV_inc((SV *) outputArrayPointer);
 }
 #endif
+
+void PipeRunner::turnOnLineByLineMode_() {
+    if (!lineByLine_) {
+        lineByLine_ = true;
+        INFO("Line-by-line mode is turned ON.");
+    }
+}

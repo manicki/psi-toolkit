@@ -1,7 +1,10 @@
+#ifndef PIPE_SITE_HDR
+#define PIPE_SITE_HDR
+
 #include <string>
 
 #include "template_site.hpp"
-#include "output_saver.hpp"
+#include "file_storage.hpp"
 #include "file_recognizer.hpp"
 
 class PipeSite : public TemplateSite
@@ -30,7 +33,7 @@ private:
     std::string getInput();
     std::string runPipe(std::string);
 
-    OutputSaver outputSaver_;
+    FileStorage fileStorage_;
     FileRecognizer fileRecognizer_;
 
     void clearPreviousFileFromOutput();
@@ -40,3 +43,5 @@ private:
 
     std::string encodeHTML_(const std::string& data);
 };
+
+#endif

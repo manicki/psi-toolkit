@@ -1,0 +1,183 @@
+
+PSI format is used for representing lattices.
+It is inspired by [UTT](http://utt.amu.edu.pl) format (but not compatible with it).
+
+A file in PSI format consists of lines.
+Lines beginning with `#` are treated as comments, empty lines are discarded as well.
+
+    # This is a comment.
+
+Every other line describes one edge of the lattice.
+A line consists of six or seven fields separated by whitespaces:
+
+1. ordinal number,
+2. beginning index in the text,
+3. edge’s length (in characters),
+4. the fragment of the text comprised by the edge,
+5. layer tags (separated by commas),
+6. annotation text (optional),
+7. annotations: category, score, attribute–value pairs, partitions.
+
+The first field contains the edge’s ordinal number, which is used for referencing the edge (e.g. when it is a part of another edge’s partition).
+
+The second field contains the index of the edge’s source vertex.
+It is the number of (Unicode) characters between the beginning of the whole text and the edge’s source vertex.
+Sometimes the lattice contains vertices that are not anchored to the text.
+These vertices are called “loose vertices”.
+If an edge starts with a loose vertices then the second field of its description contains instead the ordinal number of the loose vertex that is its source, preceded by the `@` sign.
+
+The third field contains the length of the edge, expressed as the number of (Unicode) characters between its source and its target vertex.
+When one of the ends of the edge is a loose vertex, the concept of the edge’s length makes no sense.
+In that case, the target vertex is specified instead.
+If the target is an ordinary vertex, it’s designated by its index.
+Otherwise – if it’s a loose vertex, it’s designated by its number preceded by the `@` sign.
+To denote that it is the edge’s target vertex, and not the length, the vertex’s designation is preceded by the `*` sign.
+
+
+    # An example of three edges with different end vertices:
+    01 0001 01    a            token                 a           Edge_fully_anchored_to_the_text
+    02 0001 *@0   b            token                 b           Edge_ending_with_a_loose_vertex
+    03 @0   *0002 c            token                 c           Edge_beginning_with_a_loose_vertex
+
+The fourth field contains text covered by the edge.
+If this text can be reconstructed from edge’s constituents then it can be elided with dots (`...`).
+When the edge text is an empty string, it is indicated by empty set symbol (`∅`).
+
+The fifth field contains edge’s layer tags separated by commas.
+
+The sixth field, which is optional, contains the edge’s annotation text.
+
+The last field contains other annotations, structured as:
+
+    category<edge_score>,attribute1=value1,attribute2=value2,...[partition1<partition1_score>,partition2<partition2_score>,...]
+
+When edge score (or parition score) is not specified, it means that it is equal zero.
+Partitions are specified as edge numbers separated by hyphens (`-`).
+When partitions are not specified, it means that the edge comprises of symbol edges (one symbol edge for each character).
+When there is an empty partition list (`[]`), it means that the edge comprises of no edges.
+Sometimes only some partition edges are specified (e.g. `[1-2--]` or `[-5-6-7]`).
+It means that the edge comprises of some edges given explicitely and some implicit symbol edges that cover the rest of the edge’s range.
+
+A fragment of lattice text that is not covered by any edge can be specified using “pseudo-edges”.
+Such a pseudo-edge is a line in PSI file with only first four fields filled (ordinal number, the beginning index of the text fragment, the length of the fragment and the text itself), other three being replaced by empty set symbols (`∅`).
+
+    # An example of a text not covered by any edge:
+    01 0000 10    abcdefghij   ∅                     ∅           ∅
+
+The encoding used in PSI format is UTF-8.
+
+Here comes the example of the file in PSI format:
+
+    # Sample file in PSI format.
+
+    # This file represents a lattice for the sentence "Ala ma&nbsp;<b>kta</b>"
+    # ("&nbsp;" is an HTML entity for a non-breaking space,
+    # the sentence will be treated as a fragment of an HTML file;
+    # note the spelling mistake in the last word).
+
+    # The first edge is token 'Ala' of type `word`,
+    # it comprises the first 3 letters of the text.
+
+    01 0000 03 Ala         token                'Ala',type=word
+
+    # Actually, this is not the first edge. There are some implicit edges
+    # in the text, i.e. if for an edge no consituents were specified using
+    # square brackets (as is the case for the above edge) then it is
+    # assumed that the edge is composed of N sub-edges of layer tag `symbol`
+    # (N is the length of the edge in characters), the category of each
+    # is 'c where c is the given character (note that one quote is used
+    # for `symbol` edges whereas two quotes for tokens).
+
+    # In other words, if these sub-edges were specified explicitly, the
+    # file would start in the following way:
+    #  01 0000 01 A           symbol               'A
+    #  02 0001 01 l           symbol               'l
+    #  03 0002 01 a           symbol               'a
+    #  04 0000 03 Ala         token                'Ala',type=word[1-2-3]
+    # ("[1-2-3]" means that the edge is composed of edges 1, 2 and 3).
+
+    # Now lemmata for the first token are specified, note that the token is
+    # treated as a consituent of a token ("[1]" at the end of the line).
+    # Constituents are always given before the superedge.
+
+    02 0000 03 Ala         lemma,poleng-tagset  Ala,pos=R:4,morpho=ŻMP[1]
+    03 0000 03 Ala         lemma,poleng-tagset  Al,pos=R:1,morpho=MoDP[1]
+    04 0000 03 Ala         lemma,poleng-tagset  Al,pos=R:1,morpho=MoBP[1]
+
+    # Now edges generated by the parser:
+    05 0000 03 Ala         parse,gobio          rzeczownik,R=4,L=1,P=mian[2]
+    06 0000 03 Ala         parse,gobio          fraza\_rzeczownikowa,R=4,L=1,P=mian[5]
+    # (underscore is escaped)
+
+    # And now the blank. Again a `symbol` edge is implicit here.
+    # The same conventions for special characters is used as in UTT (e.g.
+    # "_" denotes a space).
+    07 0003 01 _           token                '_',type=blank
+
+    08 0004 02 ma          token                'ma',type=word
+    09 0004 02 ma          lemma,poleng-tagset  mieć,pos=C:N,morpho=OP3[8]
+    10 0004 02 ma          lemma,poleng-tagset  mój,pos=ZP,morpho=ŻMP[8]
+    11 0004 02 ma          parse,gobio          czasownik,C=teraźniejszy,R=any,L=1,O=3[9]
+
+    # Here comes the tricky stuff - the entity &nbsp;, now `symbol` edge is
+    # given explicitly:
+    12 0006 06 &nbsp;      symbol               '_
+
+    13 0006 06 &nbsp;      token                '_',type=blank
+    # ("[12]" could be given explicitly at the end of the above line)
+
+    # A special edge representing HTML mark-up,
+    # note that it has no constituents! And no implicit
+    # `symbol` edges are created (`symbol` are used
+    # for characters used used in the text proper).
+    14 0012 03 <b>         markup,html          open[]
+
+    # There is a spelling mistake in the last word of a sentence,
+    # we assume that a spelling corrector was applied, so additional
+    # character 'o' must be somehow represented in the lattice.
+    # It means that there will be a "fork" in the sequence of symbols.
+
+    # Normally it would be implicit, but because of the fork it should
+    # be given explicitly:
+    15 0015 01 k          symbol               'k
+
+    # That's the token with the spelling mistake, "[15-]" means that
+    # edge 15 should be used and then the implicit `symbol` edges follow.
+    16 0015 03 kta        token                'kta',type=word[15-]
+
+    # and now the fork, 'k must be given twice, because edges with the same
+    # beginning and the end are forbidden in PSI lattices.
+    # Most vertices are related to points between characters, there might be
+    # "loose" vertices, their will be denoted with @N, where N is its number.
+    # `*` at the beginning of the third line means that a point (vertex) is
+    # referred to rather than the edge length.
+    17 0015 *@0 k         symbol               'k
+    18 @0   *0016 o       symbol               'o
+    19 0015 03 kta        token,corrector      'kota',type=word[17-18-]
+    20 0015 03 kta        lemma,poleng-tagset  kot,pos=R:2,morpho=MżDP[19]
+    21 0015 03 kta        lemma,poleng-tagset  kot,pos=R:2,morpho=MżBP[19]
+    22 0015 03 kta        parse,gobio          rzeczownik,R=2,L=1,P=dop[20]
+    23 0015 03 kta        parse,gobio          fraza\_rzeczownikowa,R=2,L=1,P=dop[22]
+
+    24 0018 04 </b>       markup,html          close[]
+
+    # phrase with markup:
+    25 0012 10 <b>kta</b> parse,gobio          fraza\_rzeczownikowa,R=2,L=1,P=dop[14-23-24]
+
+    # ... and a larger phrase composed of two subphrases (and a blank in between):
+    26 0004 18 ma...</b>  parse,gobio          fraza\_czasownikowa,C=teraźniejszy,O=3,L=1[11-13-25]
+
+    # ... the fourth field is for humans (except for edges with implicit symbol subedges!!), so
+    # it can be truncated with `...`
+
+    # ... the whole structure
+    # score is written in <...>, zero scores are omitted
+    27 0000 22 Ala...</b>  parse,gobio       pełna\_fraza\_czasownikowa<-0.342>,C=teraźniejszy[6-7-26]
+
+    28 0022 01 .           token             '.',type=punct
+
+    # sentence as given by splitter:
+    29 0000 23 Ala...</b>. splitter          sentence[]
+
+    # and (syntactical) sentence, given by the parser:
+    30 0000 23 Ala...</b>. parse,gobio      zdanie[27-28]

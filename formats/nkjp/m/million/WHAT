@@ -1,1 +1,1 @@
-nkjp-reader ! psi-writer
+nkjp-reader ! psi-writer --no-header

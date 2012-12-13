@@ -1,3 +1,4 @@
+## beg. len.  text         tags                  annot.text  annotations
 01 0000 02    To           !pl,token             To          T
 02 0000 02    To           !pl,lemma,morfologik,morfologik-tagset ten word[1]
 03 0000 02    To           !pl,lexeme,morfologik,morfologik-tagset ten+adj adj[2]

@@ -1,3 +1,6 @@
+#ifndef INDEX_SITE_HDR
+#define INDEX_SITE_HDR
+
 #include <string>
 
 #include "template_site.hpp"
@@ -14,3 +17,5 @@ public:
     char * footerPart();
     char * selectOutputPart();
 };
+
+#endif

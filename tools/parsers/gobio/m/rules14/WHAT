@@ -1,1 +1,1 @@
-psi-reader ! gobio --lang pl --rules %ITSDATA%/test/rules_14.g ! psi-writer
+psi-reader ! gobio --lang pl --rules %ITSDATA%/test/rules_14.g ! psi-writer --no-header

@@ -16,11 +16,20 @@ public:
     FileRecognizer();
     ~FileRecognizer();
 
-    std::string recognizeMimeType(const std::string &);
-    std::string recognizeFileExtension(const std::string &);
+    std::string recognizeMimeType(const std::string &/*data*/);
+    std::string recognizeFileExtension(const std::string &/*data*/);
+
+    void recognizeMimeTypeAndFileExtension(
+        const std::string &/*data*/,
+        std::string &type,
+        std::string &extension);
 
     static const std::string UNKNOWN_TYPE;
+    static const std::string UNKNOWN_EXTENSION;
 private:
+
+    void initializeLibMagic();
+    void closeLibMagic();
 
 #if HAVE_LIBMAGIC
     magic_t magicCookie_;

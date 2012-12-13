@@ -1,1 +1,5 @@
 Text Reader reads a file of plain text into the lattice.
+
+Each line of the source text (without trailing newline character) becomes a single edge in the lattice (of category `FRAG`).
+
+Currently options are not implemented yet.

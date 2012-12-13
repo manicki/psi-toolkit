@@ -1,4 +1,4 @@
-Writes the input text with the language units (e.g. parses) marked
+Tags the input text with the language units (e.g. parses) marked
 with various types of "brackets", e.g. with square brackets with the
 category prepended (`NP[AP[very large] house]` or with XML tags
 (`<np><ap>very large</ap> house</np>`).

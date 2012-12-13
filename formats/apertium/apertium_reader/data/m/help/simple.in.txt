@@ -1,0 +1,7 @@
+<html>
+  <body>
+    <h1>Header</h1>
+    <p>Text in first paragraph.</p>
+    <p>Second paragraph.</p>
+  </body>
+</html>

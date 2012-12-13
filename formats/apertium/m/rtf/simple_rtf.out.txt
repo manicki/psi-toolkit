@@ -1,11 +1,8 @@
 romang
 StarWriter
 Standard;
-d
-Przyk
-\'3fadowy
-wa
-\'3fny
+Przykładowy
+ważny
  dokument w formacie
 RTF
 .

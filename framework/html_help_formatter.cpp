@@ -11,15 +11,20 @@ void HtmlHelpFormatter::doFormatOneProcessorHelp(
     std::string processorName,
     std::string description,
     boost::program_options::options_description options,
+    std::list<std::string> aliases,
     std::vector<TestBatch> usingExamples,
     std::ostream& output) {
 
     output << "<div class=\"help-item\">"
-        << "<h2><a name=\"" << processorName << "\">" << processorName << "</a></h2>" << std::endl;
+        << "<h2 id=\"" << processorName << "\">" << processorName << "</h2>" << std::endl;
 
     if (description.size() != 0) {
         output << "<div class=\"help-desc\">" << markdownString2String(description)
             << "</div>" << std::endl;
+    }
+
+    if (!aliases.empty()) {
+        formatAliases_(aliases, output);
     }
 
     if (!usingExamples.empty()) {
@@ -30,44 +35,86 @@ void HtmlHelpFormatter::doFormatOneProcessorHelp(
     output << "</div>" << std::endl;
 }
 
-void HtmlHelpFormatter::formatUsingExamples_(std::vector<TestBatch> batches, std::ostream& output) {
-    output << "<div class=\"help-example\">"
-        << "<h3>" << EXAMPLES_HEADER << "</h3>" << std::endl;
+void HtmlHelpFormatter::formatAliases_(std::list<std::string> aliases, std::ostream& output) {
+    output << "<div class=\"help-alias\">"
+        << "<h3>" << ALIASES_HEADER << "</h3>";
 
-    for (unsigned int i = 0; i < batches.size(); i++) {
-       output << "<code class=\"example-pipe\">"
-            << escapeHTML_(batches[i].getPipeline()) << "</code>" << std::endl;
-
-       output << "<div class=\"example-desc\">"
-            << markdownString2String(batches[i].getDescription()) << "</div>" << std::endl;
-
-        std::vector<TestRun> inOuts = batches[i].getTestRuns();
-        for (unsigned int j = 0; j < inOuts.size(); j++) {
-            output << "<div class=\"in-out\">" << std::endl;
-
-            std::string fileContent = getFileContent(inOuts[j].getInputFilePath());
-            output << "<div class=\"in\">in:</div>"
-                << "<pre><code>" << escapeHTML_(fileContent) << "</code></pre>" << std::endl;
-
-            fileContent = getFileContent(inOuts[j].getExpectedOutputFilePath());
-            output << "<div class=\"out\">out:</div>"
-                << "<pre><code>" << escapeHTML_(fileContent) << "</code></pre>" << std::endl;
-            output << "</div>" << std::endl;
-        }
+    BOOST_FOREACH(std::string alias, aliases) {
+        output << alias << ", ";
     }
 
     output << "</div>" << std::endl;
 }
 
-void HtmlHelpFormatter::doFormatHelpIntroduction(std::string text, std::ostream& output) {
-    output << markdownString2String(text) << std::endl;
+void HtmlHelpFormatter::formatUsingExamples_(std::vector<TestBatch> batches, std::ostream& output) {
+    output << "<div class=\"help-examples\">"
+        << "<h3>" << EXAMPLES_HEADER << "</h3>" << std::endl;
+
+    for (unsigned int i = 0; i < batches.size(); i++) {
+        output << "<div class=\"help-example\">";
+
+        output << "<code class=\"example-pipe\">"
+            << escapeHTML_(batches[i].getPipeline()) << "</code>" << std::endl;
+
+        output << "<div class=\"example-desc\">"
+            << markdownString2String(batches[i].getDescription()) << "</div>" << std::endl;
+
+        std::vector<TestRun> inOuts = batches[i].getTestRuns();
+
+        for (unsigned int j = 0; j < inOuts.size(); j++) {
+            output << "<div class=\"in-out\">" << std::endl;
+
+            formatExampleInputOutput_(inOuts[j].getInputFilePath(), output, "in");
+            formatExampleInputOutput_(inOuts[j].getExpectedOutputFilePath(), output, "out");
+
+            output << "</div>" << std::endl;
+        }
+
+        output << "</div>";
+    }
+
+    output << "</div>" << std::endl;
 }
 
-void HtmlHelpFormatter::doFormatTutorial(std::string text, std::ostream& output) {
-    output << markdownString2String(text) << std::endl;
+void HtmlHelpFormatter::formatExampleInputOutput_(
+    boost::filesystem::path filePath,
+    std::ostream& output,
+    std::string divClass) {
+
+    output << "<div class=\"" << divClass << "\">" << divClass << ":</div>" << std::endl;
+    std::string fileContent = getFileContent(filePath);
+
+    std::string type;
+    std::string ext;
+    fileRecognizer_.recognizeMimeTypeAndFileExtension(fileContent, type, ext);
+
+    if (type == "image" && ext == "svg") {
+        output << fileContent << std::endl;
+        return;
+    }
+    if ((type == "text" && ext == "txt" ) || type == FileRecognizer::UNKNOWN_TYPE) {
+        output << "<pre><code>" << escapeHTML_(fileContent) << "</code></pre>" << std::endl;
+        return;
+    }
+
+    if (fileStorage_ != NULL) {
+        std::string path = (*fileStorage_).storeFileByMD5(fileContent, ext);
+
+        output << "<a href=\"" << path << "\" target=\"_blank\" >";
+
+        if (type == "image") {
+            output << "<img src=\"" << path << "\" alt=\"image output\" />";
+        } else {
+            output << path;
+        }
+        output << "</a>" << std::endl;
+    }
+    else {
+        output << "<pre><code>" << escapeHTML_(fileContent) << "</code></pre>" << std::endl;
+    }
 }
 
-void HtmlHelpFormatter::doFormatLicence(std::string text, std::ostream& output) {
+void HtmlHelpFormatter::doFormatDataFile(std::string text, std::ostream& output) {
     output << markdownString2String(text) << std::endl;
 }
 
@@ -102,6 +149,17 @@ void HtmlHelpFormatter::formatPipelineExampleInJSON_(TestBatch batch, std::ostre
     output << "  }, " << std::endl;
 }
 
+void HtmlHelpFormatter::formatDocumentationMenu(std::ostream& output) {
+    std::vector<std::string> processors = MainFactoriesKeeper::getInstance().getProcessorNames();
+
+    output << "<ul>" << std::endl;
+    BOOST_FOREACH(std::string processorName, processors) {
+        output << "<li><a href=\"#" << processorName << "\">" << processorName << "</a></li>"
+            << std::endl;
+    };
+    output << "</ul>" << std::endl;
+}
+
 void HtmlHelpFormatter::formatAllowedOptions_(boost::program_options::options_description options,
     std::ostream& output) {
 
@@ -122,7 +180,8 @@ void HtmlHelpFormatter::doFormatOneAlias(
 
     unsigned int i = 0;
     BOOST_FOREACH(std::string processorName, processorNames) {
-        output << "<a href=\"#" << processorName << "\">" << processorName << "</a>";
+        output << "<a href=\"/help/documentation.html#" << processorName << "\">"
+               << processorName << "</a>";
         if (++i != processorNames.size()) output << ", ";
     }
     output << "</div>" << std::endl;
@@ -151,6 +210,15 @@ std::string HtmlHelpFormatter::escapeHTML_(const std::string& text) {
 std::string HtmlHelpFormatter::escapeJSON_(std::string& text) {
     boost::replace_all(text, "\\", "\\\\");
     boost::replace_all(text, "\"", "\\\"");
+    boost::replace_all(text, "\n", "\\n");
 
     return text;
+}
+
+void HtmlHelpFormatter::setFileStorage(FileStorage* fileStorage) {
+    fileStorage_ = fileStorage;
+}
+
+void HtmlHelpFormatter::unsetFileStorage() {
+    fileStorage_ = NULL;
 }

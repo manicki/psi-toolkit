@@ -118,7 +118,8 @@ boost::program_options::options_description Morfologik::optionsHandled() {
 
     desc.add_options()
         ("level", boost::program_options::value<int>()->default_value(3),
-            "set word processing level 0-3")
+            "set word processing level 0-3 (0 - do nothing, 1 - return only base forms, "
+            "2 - add grammatical class and main attributes, 3 - add detailed attributes")
         ("dict", boost::program_options::value<std::string>()
             ->default_value(DICTIONARIES[0]), dictionaryDescription.c_str())
         ("keep-original", "keep original Morfologik's settings i.e. do not break brief forms")

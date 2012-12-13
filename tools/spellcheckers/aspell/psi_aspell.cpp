@@ -28,31 +28,31 @@ void PSIAspell::Factory::doAddLanguageIndependentOptionsHandled(
         ("limit",
          boost::program_options::value<unsigned int>()
          ->default_value(DEFAULT_LIMIT),
-         "Take only limit candidates into account. If set to zero, then take all into account.")
+         "display limited number of correction prompts; if set to zero, display all")
         ("size",
          boost::program_options::value<std::string>(),
-         "The preferred size of the word list. "
-         "This consists of a two char digit code describing the size of "
+         "the preferred size of the word list; "
+         "his consists of a two char digit code describing the size of "
          "the list, with typical values of: 10=tiny, 20=really small, 30=small, "
-         "40=med-small, 50=med, 60=med-large, 70=large, 80=huge, 90=insane."
+         "40=med-small, 50=med, 60=med-large, 70=large, 80=huge, 90=insane"
          )
         ("personal",
          boost::program_options::value<std::string>(),
-         "Personal word list file name (proceed by ./ if you want to use current directory).")
+         "personal word list file name (proceed by ./ if you want to use current directory)")
         ("repl",
          boost::program_options::value<std::string>(),
-         "Replacements list file name (proceed by ./ if you want to use current directory).")
+         "replacements list file name (proceed by ./ if you want to use current directory)")
         ("ignore",
          boost::program_options::value<int>(),
-         "Ignore words with N characters or less.")
+         "ignore words with N characters or less")
         ("keyboard",
          boost::program_options::value<std::string>(),
-         "The base name of the keyboard definition file to use.")
+         "the base name of the keyboard definition file to use")
         ("sug-mode",
          boost::program_options::value<std::string>(),
-         "Suggestion mode = `ultra' | `fast' | `normal' | `slow' | `bad-spellers'.")
+         "suggestion mode = `ultra' | `fast' | `normal' | `slow' | `bad-spellers'.")
         ("ignore-case",
-         "Ignore case when checking words.")
+         "ignore case when checking words")
         ;
 }
 

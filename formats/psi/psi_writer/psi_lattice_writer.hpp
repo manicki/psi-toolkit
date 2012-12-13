@@ -24,6 +24,13 @@ public:
         virtual boost::filesystem::path doGetFile() const;
     };
 
+    PsiLatticeWriter(
+        bool withHeader
+    ) :
+        withHeader_(withHeader)
+    { }
+
+    bool isWithHeader() const { return withHeader_; }
 
 private:
     virtual std::string doInfo();
@@ -46,6 +53,8 @@ private:
 
         return new Worker(*this, outputStream, lattice);
     }
+
+    bool withHeader_;
 
 };
 

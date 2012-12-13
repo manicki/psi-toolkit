@@ -85,6 +85,28 @@ MainFactoriesKeeper::MainFactoriesKeeper() {
     keeper_.addAlias("spellchecker", "spell");
     keeper_.addAlias("spellcheck", "spell");
 
+    keeper_.addAlias("guess-input", "guessing-reader");
+    keeper_.addAlias("guess-lang", "lang-guesser");
+    keeper_.addAlias("guess-language", "lang-guesser");
+
+    keeper_.addAlias("read", "txt-reader");
+    keeper_.addAlias("read-txt", "txt-reader");
+    keeper_.addAlias("read-text", "txt-reader");
+
+    keeper_.addAlias("read-pdf", "pdf-reader");
+
+    keeper_.addAlias("read-html", "apertium-reader");
+
+    keeper_.addAlias("write", "simple-writer");
+    keeper_.addAlias("write-simple", "simple-writer");
+
+    keeper_.addAlias("write-graph", "gv-writer");
+    keeper_.addAlias("write-chart", "gv-writer");
+    keeper_.addAlias("graph", "gv-writer");
+    keeper_.addAlias("draw", "gv-writer");
+
+    keeper_.addAlias("write-simple-json", "json-simple-writer");
+
     keeper_.takeProcessorFactory(new TxtLatticeReader::Factory());
     keeper_.takeProcessorFactory(new UTTLatticeReader::Factory());
     keeper_.takeProcessorFactory(new PsiLatticeReader::Factory());
@@ -162,6 +184,9 @@ std::vector<std::string> MainFactoriesKeeper::getProcessorNames() {
 
 std::set<std::string> MainFactoriesKeeper::getAliasNames() {
     return keeper_.getAliasNames();
+}
+std::set<std::string> MainFactoriesKeeper::getAllAliases(std::string destination) {
+    return keeper_.getAllAliases(destination);
 }
 
 std::list<ProcessorFactory*> MainFactoriesKeeper::getProcessorFactoriesForName(std::string name) {

@@ -10,14 +10,19 @@ std::string PsiLatticeWriter::getFormatName() {
 }
 
 LatticeWriter<std::ostream>* PsiLatticeWriter::Factory::doCreateLatticeWriter(
-    const boost::program_options::variables_map&) {
-    return new PsiLatticeWriter();
+    const boost::program_options::variables_map& options
+) {
+    return new PsiLatticeWriter(
+        !options.count("no-header")
+    );
 }
 
 boost::program_options::options_description PsiLatticeWriter::Factory::doOptionsHandled() {
     boost::program_options::options_description optionsDescription("Allowed options");
 
-    optionsDescription.add_options();
+    optionsDescription.add_options()
+        ("no-header",
+            "do not print the column description");
 
     return optionsDescription;
 }
@@ -56,6 +61,17 @@ void PsiLatticeWriter::Worker::doRun() {
     int ordinal = 0;
 
     int alignments[] = { 2, 7, 13, 26, 48, 60 };
+
+    if (processor_.isWithHeader()) {
+        alignOutput_("##", alignments[0]);
+        alignOutput_(" beg.", alignments[1]);
+        alignOutput_(" len.", alignments[2]);
+        alignOutput_(" text", alignments[3]);
+        alignOutput_(" tags", alignments[4]);
+        alignOutput_(" annot.text", alignments[5]);
+        alignOutput_(" annotations");
+        alignOutputNewline_();
+    }
 
     std::string latticeTextCovered;
 

@@ -1,1 +1,1 @@
-txt-reader ! srx-segmenter --lang en ! link-parser --lang en ! psi-writer
+txt-reader ! srx-segmenter --lang en ! link-parser --lang en ! psi-writer --no-header

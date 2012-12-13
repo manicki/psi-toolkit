@@ -56,7 +56,7 @@ boost::program_options::options_description ApertiumLatticeReader::Factory::doOp
     optionsDescription.add_options()
         ("format", boost::program_options::value<std::string>()
             ->default_value("html"),
-            "type of file to deformatting")
+            "type of file for deformatting")
         ("specification-file", boost::program_options::value<std::string>(),
             "specification file path");
 

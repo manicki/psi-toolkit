@@ -8,6 +8,10 @@
 class TxtLatticeReader : public StreamLatticeReader {
 
 public:
+    TxtLatticeReader(bool process_whole_text=false):
+        process_whole_text_(process_whole_text) {
+    }
+
     virtual std::string getFormatName();
 
     class Factory : public LatticeReaderFactory<std::istream> {
@@ -45,6 +49,8 @@ private:
 
         return new Worker(*this, inputStream, lattice);
     }
+
+    bool process_whole_text_;
 };
 
 #endif

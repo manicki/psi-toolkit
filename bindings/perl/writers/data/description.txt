@@ -1,2 +1,1 @@
-Non text writer, which creates Perl array.
-Used in Perl bindings.
+Creates the Perl array. Used in [Perl bindings](/bindings.html#perl).

@@ -1,1 +1,1 @@
-tp-tokenizer --lang pl ! psi-writer
+tp-tokenizer --lang pl ! psi-writer --no-header

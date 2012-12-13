@@ -1,1 +1,1 @@
-txt-reader ! psi-writer
+txt-reader ! psi-writer --no-header

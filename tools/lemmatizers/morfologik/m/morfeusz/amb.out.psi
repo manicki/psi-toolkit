@@ -1,3 +1,4 @@
+## beg. len.  text         tags                  annot.text  annotations
 01 0000 02    ma           !pl,token             ma          T
 02 0000 02    ma           !pl,lemma,morfologik,morfologik-tagset mieć word[1]
 03 0000 02    ma           !pl,lexeme,morfologik,morfologik-tagset mieć+fin fin[2]

@@ -8,11 +8,12 @@
 
 #include <boost/bind.hpp>
 #include <boost/algorithm/string.hpp>
+#include <boost/algorithm/string/replace.hpp>
 
 PipeSite::PipeSite(PsiServer& server, const std::string & pipe, const std::string & text)
     : TemplateSite(server),
     initialText(text.c_str()), initialPipe(pipe.c_str()), initialOutput(""),
-    outputSaver_(std::string(psiServer_.websiteRoot))
+    fileStorage_(std::string(psiServer_.websiteRoot))
 {
     registerIncludesAndActions();
 }
@@ -65,11 +66,13 @@ char * PipeSite::actionPipe() {
 char * PipeSite::hiddenOptions() {
     std::string fileOnOff = psiServer_.session()->getData("radio-file");
     std::string outputFile = psiServer_.session()->getData("output-file");
+    std::string outputType = psiServer_.session()->getData("output-type");
 
     std::string opts =
         std::string("psisOptions = {") +
         std::string("'isInputFile' : '") + fileOnOff + std::string("', ") +
-        std::string("'fileToDownload' : '") + outputFile + std::string("' ") +
+        std::string("'fileToDownload' : '") + outputFile + std::string("', ") +
+        std::string("'lastOutputType' : '") + outputType + std::string("' ") +
         std::string("};");
 
     psiServer_.session()->clearData("radio-file");
@@ -101,9 +104,9 @@ std::string PipeSite::getInput() {
 
 std::string PipeSite::runPipe(std::string input) {
     std::string pipe = psiServer_.session()->getData("pipe-text");
+    boost::replace_all(pipe, " | ", " ! ");
 
-    if (input.empty())
-        input = initialText;
+    if (input.empty()) input = initialText;
 
     std::stringstream iss(input);
     std::ostringstream oss;
@@ -134,17 +137,19 @@ void PipeSite::clearPreviousFileFromOutput() {
 }
 
 void PipeSite::createFileFromOutput(const std::string& output) {
-    std::string filename = outputSaver_.storeOutput(output);
+    std::string filename = fileStorage_.storeFile(output);
     psiServer_.session()->setData("output-file", filename);
 }
 
 std::string PipeSite::generateOutput_(const std::string& rawOutput) {
     std::ostringstream output;
 
-    std::string type = fileRecognizer_.recognizeMimeType(rawOutput);
+    std::string type;
+    std::string ext;
+    fileRecognizer_.recognizeMimeTypeAndFileExtension(rawOutput, type, ext);
 
     if (type == "image") {
-        if (fileRecognizer_.recognizeFileExtension(rawOutput) == "svg") {
+        if (ext == "svg") {
             output << rawOutput;
         }
         else {

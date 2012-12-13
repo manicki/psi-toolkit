@@ -71,8 +71,8 @@ void ServerRunner::setOptionsDescription_() {
         ;
 }
 
-const std::string ServerRunner::DEFAULT_PIPE = "txt-reader ! tokenize --lang en ! psi-writer";
-const std::string ServerRunner::DEFAULT_TEXT = "PSI-Toolkit is Skynet.";
+const std::string ServerRunner::DEFAULT_PIPE = "parse --lang en ! draw --tree --filter parse";
+const std::string ServerRunner::DEFAULT_TEXT = "My cat bit your dog.";
 
 int ServerRunner::run() {
 

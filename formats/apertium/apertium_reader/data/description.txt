@@ -1,6 +1,16 @@
-Reading text in various formats according to Apertium format handling
-rules specified in XML, see
-<http://wiki.apertium.org/wiki/Format_handling> [under construction]
+Apertium-reader allows you to read text in various markup formats, such as:
+HTML documents, RTF files, Open-Office Writer `odt` or Microsoft Office formats: `xlsx`
+and `pptx`. The default format for apertium-reader is `html`.
 
-Note: XML files with rules come from Apertium platform and they are licensed
+All full-supported file formats are: `html`, `rtf` and `odt`.
+Microsoft Office formats `xlsx` and `pptx` at this moment need to be uncompressed before upload.
+`Docx` format is not yet supported.
+To read text from `doc` files use [doc-reader](/help/documentation.html#doc-reader).
+
+Apertium-reader uses format handling rules specified in XML and based on regular expressions.
+Current rule files comes from [Apertium](http://www.apertium.org) platform.
+It is possible to write new handling for any XML format, see
+<http://wiki.apertium.org/wiki/Format_handling>.
+
+Note about license: XML files with rules come from Apertium platform and they are licensed
 under GNU General Public License.

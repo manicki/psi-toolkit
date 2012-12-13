@@ -10,13 +10,13 @@
 
 /* general */
 
-body { font-family:"Droid Sans",Arial,"Trebuchet MS",Helvetica,serif; font-size:14px;
+body { font-family:Arial,Helvetica,sans-serif; font-size:14px;
   line-height:20px; /* no shorthand 'font' element to avoid the bug in W3C CSS Validator*/ }
 a { color:#004767; text-decoration:none; }
 a:hover { color:#1A6687; text-decoration:underline; }
 
 .clear { clear:both; }
-.wrapper { margin:0px auto; width:970px; }
+.wrapper { margin:0px auto; width:970px; position:relative; }
 
 h1, h2, h3, h4 { font-weight:bold; }
 h1 { color:#000; font-size:18px; margin:9px 0 18px; }
@@ -29,7 +29,13 @@ section { padding:0 0 12px; }
 p, ul, pre { padding:0 0 9px; }
 p { text-align:justify; }
 ul { margin-left:32px; }
-pre { font-family:"Consolas","Monaco","DejaVu Sans Mono",monospace; text-align:left; }
+pre { font-family:"Consolas","Monaco","DejaVu Sans Mono",monospace; text-align:left;
+  white-space: pre-wrap; /* css-3 */
+  white-space: -moz-pre-wrap !important; /* Mozilla, since 1999 */
+  white-space: -pre-wrap; /* Opera 4-6 */
+  white-space: -o-pre-wrap; /* Opera 7 */
+  word-wrap: break-word; /* Internet Explorer 5.5+ */
+}
 code { background-color:#ededed; border-radius:5px; font-family:monospace; font-size:13px;
   padding:1px 6px; text-align:left; }
 pre > code { display:block }
@@ -53,7 +59,7 @@ header { height:63px; width:100%; color:#fefefe; background:#333 repeat scroll 0
   border-bottom: 1px solid #222;
   box-shadow:0 1px 0 rgba(255, 255, 255, 0.5), 0 0 10px rgba(0, 0, 0, 0.5); }
 
-#psi-logo { float:left; font-family:"Impact","Arial Black"; font-weight:bold; }
+#psi-logo { float:left; font-family:"Georgia",serif; font-weight:bold; }
 #psi-logo:hover { text-decoration:none; }
 #psi-logo > h1, #psi-logo > h2 { color:#fff; text-shadow:-2px -2px 0 rgb(32, 32, 32); }
 #psi-logo > h1 { font-size:42px; line-height:48px; margin:0; }
@@ -125,7 +131,8 @@ textarea, input, #input-file > div, .button { border:1px solid #113163; border-r
   height:17px; margin:6px 0; padding:3px 6px; width:695px; }
 textarea { height:17px; resize:none; }
 
-input[type="submit"], #input-file > div, .button { background:#333 repeat scroll 0 0;
+input[type="submit"], #input-file > div, .button, td.gsc-search-button > input.gsc-search-button { 
+  background:#333 repeat scroll 0 0;
   background-image:-webkit-gradient(linear, left top, left bottom, from(#444), to(#222));
   background-image:-webkit-linear-gradient(top, #444, #222);
   background-image:   -moz-linear-gradient(top, #444, #222);
@@ -155,8 +162,8 @@ input[type="submit"]:hover, #input-file > div:hover, a.button:hover {
 .input-options > a { color:#43BFF4; font-size:13px; margin-right:32px;
   text-shadow:-1px -1px #163159; }
 .input-options > a:hover { text-decoration:none; }
-
 .input-radio { display:none; visibility:hidden; }
+#output-type { display:none; visibility:hidden; }
 
 /* bookmarks */
 .bookmarks { margin-top:-4px; }
@@ -169,7 +176,8 @@ input[type="submit"]:hover, #input-file > div:hover, a.button:hover {
 
 #output-top-info { }
 #output-bottom-info { line-height:36px; }
-#output { font-size:14px; margin:24px 0; overflow:auto; text-align:center; width:100%; }
+#output { font-size:14px; margin:24px 0; overflow:auto; text-align:center; width:100%;
+  min-height:250px; }
 #output > pre { display:inline-block; }
 #output > a > img { height:auto; }
 
@@ -210,12 +218,23 @@ footer li > a:hover { color:#ddd; }
 
 /* help */
 
+#help-menu {margin-left:780px;  position:absolute; width:190px; }
+#help-menu.sticky-menu { position:fixed; top:12px; }
+#help-list { width:770px; }
+
 .help-item { border-top:1px dotted #ccc; padding-bottom:24px; }
 .help-item > div { margin-bottom:12px; }
 .alias-item { margin-left:24px; }
 
-.help-example, .help-opts { margin-left:24px; }
-.in, .out { font-weight:bold; }
+.help-examples, .help-opts, .help-alias { margin-left:24px; }
+.example-desc { margin-top:6px; }
+.help-example { }
+.in-out { margin-bottom:25px; }
+.in-out > pre, .in-out > a { padding-left:35px; }
+.in-out > a { display:block; }
+.in, .out { float:left; font-weight:bold; margin-right:5px; }
+
+img.screen { border:1px solid #ddd; display:block; margin:0 auto 30px auto; }
 
 /* about */
 
@@ -230,9 +249,22 @@ footer li > a:hover { color:#ddd; }
 /* download */
 
 #downloads > h1 { margin-bottom:32px; }
-#downloads section { padding-bottom:32px; }
 .download-ubuntu { background: url('../img/logo-ubuntu.png') no-repeat right top; }
 .download-debian { background: url('../img/logo-debian.png') no-repeat right top; }
-#downloads > .download-debian { padding-bottom:65px; }
+#downloads > .download-debian { padding-bottom:35px; }
 .download-mint { background: url('../img/logo-mint.png') no-repeat right top; }
 .download-archlinux { background: url('../img/logo-archlinux.png') no-repeat right top; }
+
+#javascript-disabled { background:#C75656 repeat scroll 0 0;
+  background-image:-webkit-gradient(linear, left top, left bottom, from(#C75656), to(#a00));
+  background-image:-webkit-linear-gradient(top, #C75656, #a00);
+  background-image:   -moz-linear-gradient(top, #C75656, #a00);
+  background-image:     -o-linear-gradient(top, #C75656, #a00);
+  background-image:        linear-gradient(to bottom, #C75656, #a00);
+}
+#javascript-disabled p { color:#fff; margin:0 90px; padding:10px; text-align:center; }
+
+/* search */
+
+input.gsc-input { font-size:14px !important; height:auto !important; }
+input.gsc-search-button { width:auto !important; }

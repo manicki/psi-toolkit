@@ -1,12 +1,17 @@
 #include "help_site.hpp"
 #include "logging.hpp"
 
-HelpSite::HelpSite(PsiServer& server) : TemplateSite(server)
+HelpSite::HelpSite(PsiServer& server)
+    : TemplateSite(server),
+    fileStorage_(std::string(psiServer_.websiteRoot))
 {
     htmlHelpFormatter_ = HtmlHelpFormatter();
 
+    //FIXME: naprawić FileRecognizer!
+    htmlHelpFormatter_.setFileStorage(&fileStorage_);
+
     psiServer_.registerIncludeCode(
-        "help_site_introduction", boost::bind(&HelpSite::introduction, this));
+        "help_site_description", boost::bind(&HelpSite::description, this));
     psiServer_.registerIncludeCode(
         "help_site_processor_helps", boost::bind(&HelpSite::processorHelps, this));
     psiServer_.registerIncludeCode(
@@ -15,14 +20,18 @@ HelpSite::HelpSite(PsiServer& server) : TemplateSite(server)
         "help_site_tutorial", boost::bind(&HelpSite::tutorial, this));
     psiServer_.registerIncludeCode(
         "help_site_licence", boost::bind(&HelpSite::licence, this));
+    psiServer_.registerIncludeCode(
+        "help_site_psi_format", boost::bind(&HelpSite::psiFormat, this));
+    psiServer_.registerIncludeCode(
+        "help_site_documentation_menu", boost::bind(&HelpSite::documentationMenu, this));
 
     psiServer_.registerIncludeCode(
         "help_site_pipeline_examples", boost::bind(&HelpSite::pipelineExamples, this));
 }
 
-char * HelpSite::introduction() {
+char * HelpSite::description() {
     std::ostringstream streamForIntro;
-    htmlHelpFormatter_.formatHelpIntroduction(streamForIntro);
+    htmlHelpFormatter_.formatDescription(streamForIntro);
 
     return stringToChar(streamForIntro.str());
 }
@@ -53,6 +62,20 @@ char * HelpSite::licence() {
     htmlHelpFormatter_.formatLicence(streamForLicence);
 
     return stringToChar(streamForLicence.str());
+}
+
+char * HelpSite::psiFormat() {
+    std::ostringstream streamForPsi;
+    htmlHelpFormatter_.formatAboutPsiFormat(streamForPsi);
+
+    return stringToChar(streamForPsi.str());
+}
+
+char * HelpSite::documentationMenu() {
+    std::ostringstream streamForMenu;
+    htmlHelpFormatter_.formatDocumentationMenu(streamForMenu);
+
+    return stringToChar(streamForMenu.str());
 }
 
 char * HelpSite::pipelineExamples() {

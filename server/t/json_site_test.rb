@@ -18,7 +18,7 @@ class JsonSiteTest < Test::Unit::TestCase
 
     def test_if_json_api_description_exists
         @browser.goto $server_address + 'api.html'
-        assert @browser.div(:id, 'content').text.downcase.include? 'api for json'
+        assert @browser.div(:id, 'content').text.downcase.include? 'api in json'
     end
 
     def test_if_json_page_exists

@@ -66,6 +66,10 @@ std::set<std::string> FactoriesKeeper::getAliasNames() {
     return aliaser_.getAliasNames();
 }
 
+std::set<std::string> FactoriesKeeper::getAllAliases(std::string destination) {
+    return aliaser_.getAllAliases(destination);
+}
+
 std::list<ProcessorFactory*>
 FactoriesKeeper::getProcessorFactoriesForName(std::string name) {
     if (nameToFactoryMap_.count(name)) {

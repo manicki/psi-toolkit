@@ -85,6 +85,8 @@ function readPsisOptions() {
   else {
     $('#output-bottom-info').css('display', 'none');
   }
+
+  if (psisOptions['lastOutputType']) { $('#output-type-select').val(psisOptions['lastOutputType']); }
 }
 
 function bindChangeOutputSize() {
@@ -181,6 +183,7 @@ function bindChangeOutputType() {
         newPipeline += '! ' + selectedWriter;
 
         $('input[name=pipe-text]').val(newPipeline);
+        $('input[name=output-type]').val(selectedWriter);
 
         $('#toolbox > form').submit();
     });

@@ -1,1 +1,6 @@
 UTT Reader reads a file in UTT (UAM Text Tools) format into the lattice.
+
+UTT is a package of language processing tools developed at Adam Mickiewicz University.
+You can find more information about the project at <http://utt.amu.edu.pl>.
+
+The detailed description of the UTT file format can be found at <http://utt.amu.edu.pl/files/utt.html#UTT-file-format>.

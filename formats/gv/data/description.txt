@@ -1,7 +1,28 @@
-GraphViz Writer presents the lattice as a directed graph, using GraphViz library.
+GV writer presents the results in a simple graphical form.
+For this purpose, it uses GraphViz library - a library for creating graphs (hence GV acronym).
 
-Available formats: `canon`, `dot`, `eps`, `fig`, `gd`(`:cairo`,`:gd`), `gd2`(`:cairo`,`:gd`), `gif`(`:cairo`,`:gd`), `gv`, `jpe`(`:cairo`,`:gd`), `jpeg`(`:cairo`,`:gd`), `jpg`(`:cairo`,`:gd`), `pdf`, `plain`, `plain-ext`, `png`(`:cairo`,`:gd`), `ps`(`:cairo`,`:ps`), `ps2`, `svg`(`:cairo`,`:svg`), `svgz`, `tk`, `vml`, `vmlz`, `wbmp`(`:cairo`,`:gd`), `xdot`
+gv-writer shows the content of the lattice as a directed graph.
+The text and various annotations are represented by edges of the graph.
+For clarity, symbol edges are not shown by default.
+To see all edges, use the `--show-symbol-edges` switch.
+The edges of different layer tags are distinguished by different colors.
+To see the tags' names, use the `--show-tags` switch.
+To disable coloring, use the `--no-color` switch.
+The range of displayed edges can be restricted with the `--filter` option, which allows to specify the visible layer tags.
+When this option is used, only edges with specified layer tags are shown.
 
-Detailed description of available formats can be find on <http://www.graphviz.org/content/output-formats>
+gv-writer tries to align lattice vertices left to right.
+This default behavior can be disabled by the `--no-align` switch.
 
-If gv-writer is not available, you can use dot-writer instead.
+The default output format is SVG, but many other formats are also available.
+A different output format can be set by the `--format` option.
+The list of available output formats: `canon`, `dot`, `eps`, `fig`, `gd`(`:cairo`,`:gd`), `gd2`(`:cairo`,`:gd`), `gif`(`:cairo`,`:gd`), `gv`, `jpe`(`:cairo`,`:gd`), `jpeg`(`:cairo`,`:gd`), `jpg`(`:cairo`,`:gd`), `pdf`, `plain`, `plain-ext`, `png`(`:cairo`,`:gd`), `ps`(`:cairo`,`:ps`), `ps2`, `svg`(`:cairo`,`:svg`), `svgz`, `tk`, `vml`, `vmlz`, `wbmp`(`:cairo`,`:gd`), `xdot`.
+Detailed description of output formats can be find on <http://www.graphviz.org/content/output-formats>
+
+gv-writer can be also used in the tree mode, which can be switched on with the `--tree` option.
+Tree mode allows for displaying the dependency tree.
+When in the tree mode, lattice edges are displayed as tree nodes, and the dependencies between lattice edges are depicted as arrows.
+Alternative dependencies are marked with consecutive numbers.
+This mode is particularly useful for displaying parse trees.
+
+If gv-writer is not available, you can obtain the graph representation of the lattice in DOT format using [dot-writer](#dot-writer).

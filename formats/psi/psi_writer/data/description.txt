@@ -1,1 +1,4 @@
-PSI Writer prints the content of the lattice in PSI format.
+PSI Writer prints the content of the lattice in [PSI format](psi-format.html).
+
+By default, first line contains column description (as a comment).
+It can be skipped with `--no-header` option.

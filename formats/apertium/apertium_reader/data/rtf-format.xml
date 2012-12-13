@@ -167,9 +167,9 @@
 
 
 
-    <!-- End of sentence tags: par, row, cell -->
+    <!-- End of sentence tags: par, row, cell, pard -->
     <format-rule type="empty" eos="yes" priority="2">
-      <tag regexp="&quot;\\par&quot;|&quot;\\row&quot;|&quot;\\cell&quot;" />
+      <tag regexp="&quot;\\pard&quot;|&quot;\\par&quot;|&quot;\\row&quot;|&quot;\\cell&quot;" />
     </format-rule>
 
 

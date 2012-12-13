@@ -1,4 +1,4 @@
-Splits texts into tokens (i.e. word-like units) according to special
+Splits texts into tokens (i.e. word-like units) according to SRX
 rules. Each rule specifies a regular expression and a token type that
 will be assigned to a sequence of characters matching the given
 regexp.

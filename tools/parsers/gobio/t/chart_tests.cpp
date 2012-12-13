@@ -397,7 +397,9 @@ BOOST_AUTO_TEST_CASE( chart_partitions ) {
 
     BOOST_CHECK(is_consistent(ch));
 
-    boost::scoped_ptr<LatticeWriter<std::ostream> > writer(new PsiLatticeWriter());
+    boost::scoped_ptr<LatticeWriter<std::ostream> > writer(new PsiLatticeWriter(
+        false // with header
+    ));
     std::ostringstream osstr;
     writer->writeLattice(lattice, osstr);
     std::string line;
