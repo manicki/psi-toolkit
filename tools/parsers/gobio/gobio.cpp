@@ -92,6 +92,10 @@ void Gobio::parse(Lattice & lattice) {
 
     parser.run();
 
+    boost::shared_ptr< longest_left_to_right_chooser<Chart, Combinator> > chr(
+        new longest_left_to_right_chooser<Chart, Combinator>()
+    );
+
 }
 
 double Gobio::doGetQualityScore(

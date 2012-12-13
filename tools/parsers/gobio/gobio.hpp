@@ -12,6 +12,7 @@
 #include "agenda.hpp"
 #include "agenda_parser.tpl"
 #include "annotation_item_manager.hpp"
+#include "chooser.tpl"
 #include "semantics_wrapper.tpl"
 #include "tgbg_combinator.tpl"
 #include "zvalue.hpp"
