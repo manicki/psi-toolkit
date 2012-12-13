@@ -507,7 +507,7 @@ endif(WITH_LOW_MEMORY_COMPILATION)
 # ----------------------------------------------------
 # BASE_TARGETS
 # ----------------------------------------------------
-set(BASE_TARGETS common common-plugins utf8case sundown framework
+set(BASE_TARGETS common common-plugins utf8case sundown fex framework
     formats-apertium formats-bracketing formats-dot formats-guessing formats-nkjp formats-psi
     formats-simple formats-json-simple formats-txt formats-utt
     maxent tools-tokenizers-tp tools-segmenters-srx tools-recognizers-langguesser
@@ -579,7 +579,7 @@ endif(USE_DOC_READER)
 # ----------------------------------------------------
 # Include and link directories
 # ----------------------------------------------------
-set(DIRS common common/plugins maxent formats tools framework server bindings utf8 utf8case sundown)
+set(DIRS common common/plugins maxent formats tools framework server bindings utf8 utf8case sundown fex)
 
 foreach(dir ${DIRS})
     include_directories("${psi-toolkit_SOURCE_DIR}/${dir}")
