@@ -140,7 +140,7 @@ void PipeRunner::setRunnerOptionsDescription_() {
     runnerOptionsDescription_.add_options()
         ("help", "Produce help message for each processor")
         ("aliases", "Show aliases, i.e. alternative names for processors")
-        ("line-by-line", "Process input line by line")
+        ("line-by-line,l", "Process input line by line")
         ("list-languages", "List languages handled for each processor specified")
         ("log-level", boost::program_options::value<std::string>(),
          "Set logging level")
