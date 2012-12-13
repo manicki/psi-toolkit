@@ -11,11 +11,16 @@ class FileExtractor {
 public:
     FileExtractor();
 
-    std::list<std::string> extract(const std::string &archive);
-    std::list<std::string> extract(const std::string &archive, const std::string &file);
-    std::list<std::string> extract(const std::string &archive, std::list<std::string> files);
+    std::list<std::string> extract(
+        const std::string &archive,
+        const std::string &file);
+
+    std::list<std::string> extractAllWithExtension(
+        const std::string &archive,
+        const std::string &extension);
 
 private:
+    void processFile_(fex_t* fex);
 
 };
 
