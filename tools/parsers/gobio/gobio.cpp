@@ -96,6 +96,9 @@ void Gobio::parse(Lattice & lattice) {
         new longest_left_to_right_chooser<Chart, Combinator>()
     );
 
+    std::vector<Combinator::rule_holder> local_rules;
+    std::vector<Edge> choosen_edges = chr->go(ch, combinator, local_rules);
+
 }
 
 double Gobio::doGetQualityScore(
