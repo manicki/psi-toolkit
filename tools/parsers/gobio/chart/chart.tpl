@@ -285,7 +285,8 @@ std::pair<typename chart<C,S,V,R,I>::partition_iterator,
 chart<C,S,V,R,I>::edge_partitions(
     edge_descriptor edge)
 {
-    std::list<Lattice::Partition> partition_vector = lattice_.getEdgePartitions(edge);
+    std::list<Lattice::Partition> & partition_vector
+        = const_cast< std::list<Lattice::Partition> & >(lattice_.getEdgePartitions(edge));
 
     return std::pair<
     partition_iterator,
