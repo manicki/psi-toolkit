@@ -26,14 +26,14 @@ void binary_accommodater<H,K>::accommodate(typename H::edge_descriptor edge)
     pit != pits.second;
     ++pit)
     {
-    if(combinator_.is_lexical(chart_.partition_rule(pit)))
+    if(combinator_.is_lexical(chart_.partition_rule_id(pit)))
         lexical_entry_found = true;
 
     accommodate_partition_(edge, pit);
     }
 
     // jeśli dane pochodzą ze słownika nie wprowadzamy żadnych ograniczeń
-    chart_.sort_variants(edge, (lexical_entry_found ? 0 : limit_));
+    // chart_.sort_variants(edge, (lexical_entry_found ? 0 : limit_));
 
     accommodated_[edge] = true;
 }
@@ -42,10 +42,10 @@ template<class H, class K>
 void binary_accommodater<H,K>::accommodate_partition_(
     typename H::edge_descriptor edge, typename H::partition_iterator pit)
 {
-    if(combinator_.is_lexical(chart_.partition_rule(pit)))
+    if(combinator_.is_lexical(chart_.partition_rule_id(pit)))
     return;
 
-    switch(chart_.partition_links(pit).size())
+    switch(chart_.partition_links_size(pit))
     {
     case 0:
     break;
@@ -65,10 +65,11 @@ template<class H, class K>
 void binary_accommodater<H,K>::accommodate_unary_(
     typename H::edge_descriptor edge, typename H::partition_iterator pit)
 {
-    const std::vector<typename H::edge_descriptor>& plinks = chart_.partition_links(pit);
-
-    accommodate(plinks[0]);
-
+    Lattice::Partition::Iterator pli = chart_.partition_links_iterator(pit);
+    if (pli.hasNext()) {
+        accommodate(pli.next());
+    }
+/*
     std::pair<
     typename H::variant_iterator,
     typename H::variant_iterator> vits
@@ -82,7 +83,7 @@ void binary_accommodater<H,K>::accommodate_unary_(
 
     // jeśli akomodacja nie zależy od składnika wystarczy wziąć najlepszy wariant
     typename H::variant_iterator last_vit
-    = (combinator_.is_variant_independent(chart_.partition_rule(pit), 0)
+    = (combinator_.is_variant_independent(chart_.partition_rule_id(pit), 0)
        ? vits.first+1
        : vits.second);
 
@@ -96,27 +97,31 @@ void binary_accommodater<H,K>::accommodate_unary_(
            super_cat,
            chart_.edge_category(plinks[0]),
            chart_.edge_variant_category(vit),
-           chart_.partition_rule(pit),
+           chart_.partition_rule_id(pit),
            v_cat,
            v_score))
         chart_.add_variant(
         edge,
         pit,
         v_cat,
-        v_score + chart_.variant_score(vit) + chart_.partition_rule(pit).score(),
+        v_score + chart_.variant_score(vit) + chart_.partition_rule_id(pit).score(),
         vit);
     }
+// */
 }
 
 template<class H, class K>
 void binary_accommodater<H,K>::accommodate_binary_(
     typename H::edge_descriptor edge, typename H::partition_iterator pit)
 {
-    const std::vector<typename H::edge_descriptor>& plinks = chart_.partition_links(pit);
-
-    accommodate(plinks[0]);
-    accommodate(plinks[1]);
-
+    Lattice::Partition::Iterator pli = chart_.partition_links_iterator(pit);
+    if (pli.hasNext()) {
+        accommodate(pli.next());
+    }
+    if (pli.hasNext()) {
+        accommodate(pli.next());
+    }
+/*
     std::pair<
     typename H::variant_iterator,
     typename H::variant_iterator> left_vits
@@ -138,11 +143,11 @@ void binary_accommodater<H,K>::accommodate_binary_(
 
     // jeśli akomodacja nie zależy od składnika wystarczy wziąć najlepszy wariant
     typename H::variant_iterator left_last_vit
-    = (combinator_.is_variant_independent(chart_.partition_rule(pit), 0)
+    = (combinator_.is_variant_independent(chart_.partition_rule_id(pit), 0)
        ? left_vits.first+1
        : left_vits.second);
     typename H::variant_iterator right_last_vit
-    = (combinator_.is_variant_independent(chart_.partition_rule(pit), 1)
+    = (combinator_.is_variant_independent(chart_.partition_rule_id(pit), 1)
        ? right_vits.first+1
        : right_vits.second);
 
@@ -160,7 +165,7 @@ void binary_accommodater<H,K>::accommodate_binary_(
            chart_.edge_category(plinks[1]),
            chart_.edge_variant_category(left_vit),
            chart_.edge_variant_category(right_vit),
-           chart_.partition_rule(pit),
+           chart_.partition_rule_id(pit),
            v_cat,
            v_score))
         chart_.add_variant(
@@ -170,10 +175,11 @@ void binary_accommodater<H,K>::accommodate_binary_(
             v_score
             + chart_.variant_score(left_vit)
             + chart_.variant_score(right_vit)
-            + chart_.partition_rule(pit).score(),
+            + chart_.partition_rule_id(pit).score(),
             left_vit,
             right_vit);
     }
+// */
 }
 
 
