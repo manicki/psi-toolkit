@@ -1,12 +1,20 @@
-#include "file_extractor.hpp"
-#include "logging.hpp"
-
-#include <stdio.h>
+#include <boost/filesystem.hpp>
+#include <cstdio>
 #include <fstream>
+
+#include "file_extractor.hpp"
+#include "md5.hpp"
+#include "logging.hpp"
 
 const std::string FileExtractor::PATH_FOR_TEMP_FILES = "/tmp/psi-toolkit";
 
-FileExtractor::FileExtractor() { };
+FileExtractor::FileExtractor() {
+    if (!boost::filesystem::exists(PATH_FOR_TEMP_FILES)) {
+        if (!boost::filesystem::create_directory(PATH_FOR_TEMP_FILES)) {
+            ERROR("temporary directory can not be created!");
+        }
+    }
+};
 
 std::set<std::string> FileExtractor::getFileList(const std::string &archivePath) {
     std::set<std::string> files;
@@ -14,7 +22,7 @@ std::set<std::string> FileExtractor::getFileList(const std::string &archivePath)
     //FIXME: obsluga bledow
 
     fex_t* fex;
-    fex_open(&fex, archivePath.c_str());
+    handleError_( fex_open(&fex, archivePath.c_str()) );
 
     while (!fex_done(fex)) {
         std::string foundFile = fex_name(fex);
@@ -22,7 +30,7 @@ std::set<std::string> FileExtractor::getFileList(const std::string &archivePath)
         files.insert(foundFile);
         DEBUG("found in archive: " << foundFile);
 
-        fex_next(fex);
+        handleError_( fex_next(fex) );
     }
 
     fex_close(fex);
@@ -31,8 +39,8 @@ std::set<std::string> FileExtractor::getFileList(const std::string &archivePath)
     return files;
 }
 
-std::set<std::string> FileExtractor::getFileListFromData(const std::string &archive) {
-    return getFileList(storeToTempFile_(archive));
+std::set<std::string> FileExtractor::getFileListFromData(const std::string &archiveData) {
+    return getFileList(storeToTempFile_(archiveData));
 }
 
 /*
@@ -65,20 +73,35 @@ std::map<std::string, std::stringstream> FileExtractor::extractAllWithExtension(
 }
 */
 
+bool FileExtractor::handleError_(fex_err_t error) {
+    if (error != NULL) {
+        ERROR("exception from fex: " << fex_err_str(error));
+        return false;
+    }
+
+    return true;
+}
+
 std::string FileExtractor::storeToTempFile_(const std::string &archive) {
-    //FIXME: nazwa pliku generowana z MD5
-    std::string tempName = "input1234";
-    std::ofstream tempFile(tempName.c_str());
+    std::string fileName = PATH_FOR_TEMP_FILES + "/" + md5(archive);
+
+    if (boost::filesystem::exists(fileName)) {
+        INFO("temporary file " << fileName << " exists");
+        return fileName;
+    }
+
+    std::ofstream tempFile(fileName.c_str());
 
     if (tempFile) {
+        INFO("creating temporary file " << fileName);
         tempFile << archive;
     }
     else {
-        WARN("temporary file can not be created!");
+        ERROR("temporary file can not be created!");
     }
 
     tempFile.close();
-    return tempName;
+    return fileName;
 }
 
 /*

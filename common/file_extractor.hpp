@@ -13,14 +13,11 @@ public:
     FileExtractor();
 
     std::set<std::string> getFileList(const std::string &archivePath);
-    std::set<std::string> getFileListFromData(const std::string &archive);
+    std::set<std::string> getFileListFromData(const std::string &archiveData);
 
 /*
-    bool isFileIncluded(const std::string &archivePath);
-    bool isFileIncluded(std::istream archive);
-
     std::map<std::string, std::stringstream> extractAll(const std::string &archivePath);
-    std::map<std::string, std::stringstream> extractAll(std::istream archive);
+    std::map<std::string, std::stringstream> extractAll(std::istream archiveData);
 
     std::map<std::string, std::stringstream> extractAllWithExtension(
         const std::string &archivePath,
@@ -32,6 +29,8 @@ public:
 
 private:
     std::string storeToTempFile_(const std::string &archive);
+
+    bool handleError_(fex_err_t error);
 
     //void processFile_(fex_t* fex);
 

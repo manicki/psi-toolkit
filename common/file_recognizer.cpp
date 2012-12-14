@@ -9,9 +9,6 @@
 const std::string FileRecognizer::UNKNOWN_TYPE = "UKNOWN";
 const std::string FileRecognizer::UNKNOWN_EXTENSION = "UNKNOWN";
 
-//const std::vector<std::string> FileRecognizer::FILETYPES_FOR_FORMAT_RECOGNITION =
-//    boost::assign::list_of("txt")("bin")("zip");
-
 std::map<std::string, std::string> FileRecognizer::mimeTypeToFileExtension_ =
     boost::assign::map_list_of
         ("application/octet-stream", "bin") //?
