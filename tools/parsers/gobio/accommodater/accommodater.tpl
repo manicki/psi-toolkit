@@ -12,7 +12,7 @@ binary_accommodater<H,K>::binary_accommodater(H& chart, K& combinator, size_t li
 template<class H, class K>
 void binary_accommodater<H,K>::accommodate(typename H::edge_descriptor edge)
 {
-    if(chart_.edge_accommodated(edge))
+    if (accommodated_[edge])
     return;
 
     std::pair<
@@ -35,7 +35,7 @@ void binary_accommodater<H,K>::accommodate(typename H::edge_descriptor edge)
     // jeśli dane pochodzą ze słownika nie wprowadzamy żadnych ograniczeń
     chart_.sort_variants(edge, (lexical_entry_found ? 0 : limit_));
 
-    chart_.mark_edge_as_accommodated(edge);
+    accommodated_[edge] = true;
 }
 
 template<class H, class K>

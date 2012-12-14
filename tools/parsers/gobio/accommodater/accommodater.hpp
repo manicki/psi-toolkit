@@ -1,6 +1,8 @@
 #ifndef ACCOMMODATER_HDR_HPP
 #define ACCOMMODATER_HDR_HPP
 
+#include <map>
+
 template<class H, class K>
 class binary_accommodater
 {
@@ -25,6 +27,8 @@ private:
     H& chart_;
     K& combinator_;
     size_t limit_;
+
+    std::map<typename H::edge_descriptor, bool> accommodated_;
 };
 
 #endif
