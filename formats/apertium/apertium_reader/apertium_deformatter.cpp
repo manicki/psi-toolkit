@@ -1,9 +1,10 @@
 #include <boost/foreach.hpp>
 
 #include "regexp.hpp"
+#include "apertium_deformatter.hpp"
+//#include "file_extractor.hpp"
 #include "logging.hpp"
 
-#include "apertium_deformatter.hpp"
 
 ApertiumDeformatter::ApertiumDeformatter(const boost::filesystem::path& specFilePath)
     : formatSpecification_(initializeFormatSpecification_(specFilePath)),
@@ -22,6 +23,10 @@ FormatSpecification ApertiumDeformatter::initializeFormatSpecification_(
 
 std::string ApertiumDeformatter::deformat(const std::string& input) {
     initialInputSize_ = 0;
+
+    if (formatSpecification_.getOptions().isCompressed()) {
+        // TODO decompress files
+    }
 
     std::string text = processReplacementRules(input);
     std::vector<DeformatIndex> deformatIndexes = processFormatRules(text);

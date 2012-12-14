@@ -157,11 +157,18 @@ FormatOptions FormatSpecificationReader::parseOptions_() {
     std::string caseSensitive = xmlParsed_->get<std::string>
         ("format.options.case-sensitive.<xmlattr>.value");
 
+    std::string compressed = xmlParsed_->get<std::string>
+        ("format.options.compressed.<xmlattr>.value");
+    std::string compressionRegexp = xmlParsed_->get<std::string>
+        ("format.options.compressed.<xmlattr>.regexp");
+
     DEBUG("found options: " << largeblocksSize << "; " << inputEncoding << "; " << outputEncoding
-        << "; " << escapeChars << "; " << spaceChars << "; " << caseSensitive);
+        << "; " << escapeChars << "; " << spaceChars << "; " << caseSensitive << "; "
+        << compressed << "; " << compressionRegexp);
 
     return FormatOptions(largeblocksSize, inputEncoding, outputEncoding,
-        escapeChars, spaceChars, yesNoToBool_(caseSensitive));
+        escapeChars, spaceChars, yesNoToBool_(caseSensitive), yesNoToBool_(compressed),
+        compressionRegexp);
 }
 
 std::pair<std::vector<FormatRule>, std::vector<ReplacementRule> >

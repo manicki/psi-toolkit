@@ -8,6 +8,7 @@
     <escape-chars regexp='[][^@\\/$]'/>
     <space-chars regexp='[ \n\t\r&lt;&gt;{}]'/>
     <case-sensitive value="no"/>
+    <compressed value="yes" regexp='ppt/slides/slide[0-9]+.xml'/>
   </options>
 
   <rules>

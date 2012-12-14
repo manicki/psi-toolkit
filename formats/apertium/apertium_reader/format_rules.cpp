@@ -9,10 +9,11 @@
 FormatOptions::FormatOptions(int largeblocksSize,
     const std::string& inputEncoding, const std::string& outputEncoding,
     const std::string& escapeChars, const std::string& spaceChars,
-    bool caseSensitive)
+    bool caseSensitive, bool compressed, const std::string& compressionRegexp)
         : largeblocksSize_(largeblocksSize),
         escapeChars_(escapeChars), spaceChars_(spaceChars),
-        caseSensitive_(caseSensitive) {
+        caseSensitive_(caseSensitive), compressed_(compressed),
+        compressionRegexp_(compressionRegexp) {
 
     if (inputEncoding != "UTF-8")
         WARN("input encoding specified in format options is " << inputEncoding);
@@ -22,6 +23,14 @@ FormatOptions::FormatOptions(int largeblocksSize,
 
 bool FormatOptions::isCaseSensitive() {
     return caseSensitive_;
+}
+
+bool FormatOptions::isCompressed() {
+    return compressed_;
+}
+
+std::string FormatOptions::getCompressionRegexp() {
+    return compressionRegexp_;
 }
 
 //FormatRule

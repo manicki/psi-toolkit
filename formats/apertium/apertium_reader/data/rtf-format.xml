@@ -10,6 +10,7 @@
 
     <space-chars regexp='[ \n\t\r$*]'/>
     <case-sensitive value="no"/>
+    <compressed value="no" regexp=''/>
   </options>
 
   <rules>

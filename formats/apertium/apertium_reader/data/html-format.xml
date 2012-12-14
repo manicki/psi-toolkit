@@ -8,6 +8,7 @@
     <escape-chars regexp='[][^@\\/${}]'/>
     <space-chars regexp='[ \n\t\r&lt;&gt;{}]'/>
     <case-sensitive value="no"/>
+    <compressed value="no" regexp=''/>
   </options>
 
   <rules>

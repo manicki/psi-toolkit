@@ -12,9 +12,12 @@ public:
     FormatOptions(int largeblocksSize,
         const std::string& inputEncoding, const std::string& outputEncoding,
         const std::string& escapeChars, const std::string& spaceChars,
-        bool caseSensitive);
+        bool caseSensitive, bool compressed,
+        const std::string& compressionRegexp);
 
     bool isCaseSensitive();
+    bool isCompressed();
+    std::string getCompressionRegexp();
 
 private:
 
@@ -22,6 +25,8 @@ private:
     std::string escapeChars_;
     std::string spaceChars_;
     bool caseSensitive_;
+    bool compressed_;
+    std::string compressionRegexp_;
 };
 
 
