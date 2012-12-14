@@ -1073,7 +1073,7 @@ bool tgbg_combinator<T, S, M, X, E>::could_be_final(const entry_type& entry)
     std::string symbol = symbol_reg_.get_obj(entry.get_cat());
     if (symbol.length() > 0
        && (symbol[0] == '<'
-       || symbol[0] == '\'' && symbol.find(' ') != std::string::npos))
+       || (symbol[0] == '\'' && symbol.find(' ') != std::string::npos)))
     return false;
 
     if (final_hook_expr_)

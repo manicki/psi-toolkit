@@ -20,14 +20,14 @@ void binary_accommodater<H,K>::accommodate(typename H::edge_descriptor edge)
     typename H::partition_iterator> pits
     = chart_.edge_partitions(edge);
 
-    bool lexical_entry_found = false;
+    // bool lexical_entry_found = false;
 
     for(typename H::partition_iterator pit = pits.first;
     pit != pits.second;
     ++pit)
     {
-    if(combinator_.is_lexical(chart_.partition_rule_id(pit)))
-        lexical_entry_found = true;
+    // if(combinator_.is_lexical(chart_.partition_rule_id(pit)))
+        // lexical_entry_found = true;
 
     accommodate_partition_(edge, pit);
     }
@@ -63,7 +63,7 @@ void binary_accommodater<H,K>::accommodate_partition_(
 
 template<class H, class K>
 void binary_accommodater<H,K>::accommodate_unary_(
-    typename H::edge_descriptor edge, typename H::partition_iterator pit)
+    typename H::edge_descriptor /* edge */, typename H::partition_iterator pit)
 {
     Lattice::Partition::Iterator pli = chart_.partition_links_iterator(pit);
     if (pli.hasNext()) {
@@ -112,7 +112,7 @@ void binary_accommodater<H,K>::accommodate_unary_(
 
 template<class H, class K>
 void binary_accommodater<H,K>::accommodate_binary_(
-    typename H::edge_descriptor edge, typename H::partition_iterator pit)
+    typename H::edge_descriptor /* edge */, typename H::partition_iterator pit)
 {
     Lattice::Partition::Iterator pli = chart_.partition_links_iterator(pit);
     if (pli.hasNext()) {

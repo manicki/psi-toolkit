@@ -33,7 +33,7 @@ public:
 
         return
         tlb < tla ||
-        tlb == tla && chart_.edge_score(b) < chart_.edge_score(a);
+        (tlb == tla && chart_.edge_score(b) < chart_.edge_score(a));
     }
 };
 
@@ -45,7 +45,7 @@ void sort_edges(Ch& chart, std::vector<typename Ch::edge_descriptor>& edges)
 
 
 template<class Ch, class K>
-std::vector<typename Ch::edge_descriptor> longest_left_to_right_chooser<Ch,K>::go(Ch& chart,K& combinator,const std::vector<typename longest_left_to_right_chooser<Ch,K>::rule_holder>& local_rules)
+std::vector<typename Ch::edge_descriptor> longest_left_to_right_chooser<Ch,K>::go(Ch& chart,K& combinator,const std::vector<typename longest_left_to_right_chooser<Ch,K>::rule_holder>& /*local_rules*/)
 {
     chart.sort_topologically();
 
@@ -79,8 +79,8 @@ std::vector<typename Ch::edge_descriptor> longest_left_to_right_chooser<Ch,K>::g
     {
         int topo_i = chart.topological_index(chart.edge_target(*ei));
 
-        typename Ch::score_type max_preference;
-        typename Ch::score_type max_score;
+        // typename Ch::score_type max_preference;
+        // typename Ch::score_type max_score;
         typename std::vector<typename Ch::edge_descriptor>::iterator max_e;
         bool candidate_found = false;
 
