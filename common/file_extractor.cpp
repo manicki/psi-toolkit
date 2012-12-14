@@ -8,8 +8,8 @@ const std::string FileExtractor::PATH_FOR_TEMP_FILES = "/tmp/psi-toolkit";
 
 FileExtractor::FileExtractor() { };
 
-std::list<std::string> FileExtractor::getFileList(const std::string &archivePath) {
-    std::list<std::string> files;
+std::set<std::string> FileExtractor::getFileList(const std::string &archivePath) {
+    std::set<std::string> files;
 
     //FIXME: obsluga bledow
 
@@ -17,8 +17,11 @@ std::list<std::string> FileExtractor::getFileList(const std::string &archivePath
     fex_open(&fex, archivePath.c_str());
 
     while (!fex_done(fex)) {
-        files.push_back(fex_name(fex));
-        DEBUG("found in archive: " << files.back());
+        std::string foundFile = fex_name(fex);
+
+        files.insert(foundFile);
+        DEBUG("found in archive: " << foundFile);
+
         fex_next(fex);
     }
 
@@ -28,7 +31,7 @@ std::list<std::string> FileExtractor::getFileList(const std::string &archivePath
     return files;
 }
 
-std::list<std::string> FileExtractor::getFileListFromData(const std::string &archive) {
+std::set<std::string> FileExtractor::getFileListFromData(const std::string &archive) {
     return getFileList(storeToTempFile_(archive));
 }
 

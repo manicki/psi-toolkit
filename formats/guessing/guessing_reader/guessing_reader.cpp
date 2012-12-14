@@ -26,8 +26,8 @@ std::map<std::string, GuessingReader::PointerToReader> GuessingReader::fileTypeT
         ("txt", PointerToReader(new TxtLatticeReader::Factory()))
         ("html", PointerToReader(new ApertiumLatticeReader::Factory()))
         //("docx", PointerToReader(new ApertiumLatticeReader::Factory()))
-        ("xlsx", PointerToReader(new ApertiumLatticeReader::Factory()))
-        ("pptx", PointerToReader(new ApertiumLatticeReader::Factory()))
+        //("xlsx", PointerToReader(new ApertiumLatticeReader::Factory()))
+        //("pptx", PointerToReader(new ApertiumLatticeReader::Factory()))
         ("psi", PointerToReader(new PsiLatticeReader::Factory()))
 #if HAVE_POPPLER
         ("pdf", PointerToReader(new PDFLatticeReader::Factory()))
@@ -42,10 +42,10 @@ std::map<std::string, GuessingReader::PointerToReader> GuessingReader::fileTypeT
 
 std::map<std::string, std::string> GuessingReader::fileTypeToReaderOptionsMap_ =
     boost::assign::map_list_of
-        ("html", "--format html")
+        ("html", "--format html");
         //("docx", "--format docx")
-        ("xlsx", "--format xlsx")
-        ("pptx", "--format pptx");
+        //("xlsx", "--format xlsx")
+        //("pptx", "--format pptx");
 
 std::string GuessingReader::getFormatName() {
     return "Guessing";

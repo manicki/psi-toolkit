@@ -4,6 +4,8 @@
 #include "config.hpp"
 
 #include <string>
+#include <list>
+#include <set>
 #include <map>
 
 #if HAVE_LIBMAGIC
@@ -46,6 +48,10 @@ private:
     bool hasDjvuFormatBeginning_(const std::string& text);
     bool looksLikePsiFormat_(const std::string& text);
     bool looksLikeUTTFormat_(const std::string& text);
+
+    bool looksLikeWord2007Format_(const std::set<std::string> &files);
+    bool looksLikeExcel2007Format_(const std::set<std::string> &files);
+    bool looksLikePowerPoint2007Format_(const std::set<std::string> &files);
 };
 
 #endif

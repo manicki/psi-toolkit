@@ -203,15 +203,33 @@ bool FileRecognizer::looksLikeUTTFormat_(const std::string& text) {
 }
 
 std::string FileRecognizer::recognizeCompressedFileFormat(const std::string &data) {
-    // FIXME
-
     FileExtractor fileExtractor;
-    std::list<std::string> extractedFiles = fileExtractor.getFileListFromData(data);
+    std::set<std::string> extractedFiles = fileExtractor.getFileListFromData(data);
 
-    BOOST_FOREACH(std::string fileName, extractedFiles) {
-        DEBUG("extracted file: " << fileName);
+    if (looksLikeWord2007Format_(extractedFiles)) {
+        return "docx";
+    }
+    if (looksLikeExcel2007Format_(extractedFiles)) {
+        return "xlsx";
+    }
+    if (looksLikePowerPoint2007Format_(extractedFiles)) {
+        return "pptx";
     }
 
-    return "docx";
+    return UNKNOWN_TYPE;
 }
 
+bool FileRecognizer::looksLikeWord2007Format_(const std::set<std::string> &files) {
+    return (files.find("[Content_Types].xml") != files.end() &&
+        files.find("word/document.xml") != files.end());
+}
+
+bool FileRecognizer::looksLikeExcel2007Format_(const std::set<std::string> &files) {
+    return (files.find("[Content_Types].xml") != files.end() &&
+        files.find("xl/worksheets/sheet1.xml") != files.end());
+}
+
+bool FileRecognizer::looksLikePowerPoint2007Format_(const std::set<std::string> &files) {
+    return (files.find("[Content_Types].xml") != files.end() &&
+        files.find("ppt/slides/slide1.xml") != files.end());
+}

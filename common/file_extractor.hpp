@@ -2,8 +2,7 @@
 #define FILE_EXTRACTOR_HDR
 
 #include <string>
-#include <sstream>
-#include <list>
+#include <set>
 #include <map>
 
 #include "fex.h"
@@ -13,8 +12,8 @@ class FileExtractor {
 public:
     FileExtractor();
 
-    std::list<std::string> getFileList(const std::string &archivePath);
-    std::list<std::string> getFileListFromData(const std::string &archive);
+    std::set<std::string> getFileList(const std::string &archivePath);
+    std::set<std::string> getFileListFromData(const std::string &archive);
 
 /*
     bool isFileIncluded(const std::string &archivePath);
