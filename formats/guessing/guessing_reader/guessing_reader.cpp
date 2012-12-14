@@ -25,6 +25,9 @@ std::map<std::string, GuessingReader::PointerToReader> GuessingReader::fileTypeT
     boost::assign::map_list_of
         ("txt", PointerToReader(new TxtLatticeReader::Factory()))
         ("html", PointerToReader(new ApertiumLatticeReader::Factory()))
+        //("docx", PointerToReader(new ApertiumLatticeReader::Factory()))
+        ("xlsx", PointerToReader(new ApertiumLatticeReader::Factory()))
+        ("pptx", PointerToReader(new ApertiumLatticeReader::Factory()))
         ("psi", PointerToReader(new PsiLatticeReader::Factory()))
 #if HAVE_POPPLER
         ("pdf", PointerToReader(new PDFLatticeReader::Factory()))
@@ -39,7 +42,10 @@ std::map<std::string, GuessingReader::PointerToReader> GuessingReader::fileTypeT
 
 std::map<std::string, std::string> GuessingReader::fileTypeToReaderOptionsMap_ =
     boost::assign::map_list_of
-        ("html", "--format html");
+        ("html", "--format html")
+        //("docx", "--format docx")
+        ("xlsx", "--format xlsx")
+        ("pptx", "--format pptx");
 
 std::string GuessingReader::getFormatName() {
     return "Guessing";
@@ -52,12 +58,18 @@ std::string GuessingReader::doInfo() {
 GuessingReader::GuessingReader() : blockSize_(DEFAULT_BLOCK_SIZE) { }
 GuessingReader::GuessingReader(int blockSize) : blockSize_(blockSize) { }
 
+
 std::string GuessingReader::guessFileType(std::istream& input) {
     std::string data = getStartingDataBlockWithoutTouchingIStream_(input);
-
     std::string filetype = fileRecognizer_.recognizeFileExtension(data);
-    if (formatRecognizer_.isHandledFiletype(filetype)) {
-        filetype = formatRecognizer_.recognize(data, filetype);
+
+    if (filetype == "zip") {
+        DEBUG("compressed archive format recognized, checking inside...");
+
+        std::stringstream inputContent;
+        inputContent << input.rdbuf();
+
+        filetype = fileRecognizer_.recognizeCompressedFileFormat(inputContent.str());
     }
 
     return filetype;
@@ -161,6 +173,6 @@ void GuessingReader::Worker::doRun() {
         reader->readIntoLattice(inputStream_, lattice_);
     }
     else {
-        ERROR("The unknown reader for the guessed file type!");
+        ERROR("unknown reader for the guessed file type: " << filetype);
     }
 }

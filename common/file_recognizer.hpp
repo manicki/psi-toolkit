@@ -24,6 +24,8 @@ public:
         std::string &type,
         std::string &extension);
 
+    std::string recognizeCompressedFileFormat(const std::string &/*data*/);
+
     static const std::string UNKNOWN_TYPE;
     static const std::string UNKNOWN_EXTENSION;
 private:
@@ -37,8 +39,13 @@ private:
 
     std::string getMimeType_(const std::string& magicFileInfo);
     std::string getFileExtension_(const std::string& magicFileInfo);
+    std::string recognizeFileFormat_(const std::string &data, const std::string &filetype);
 
     static std::map<std::string, std::string> mimeTypeToFileExtension_;
+
+    bool hasDjvuFormatBeginning_(const std::string& text);
+    bool looksLikePsiFormat_(const std::string& text);
+    bool looksLikeUTTFormat_(const std::string& text);
 };
 
 #endif

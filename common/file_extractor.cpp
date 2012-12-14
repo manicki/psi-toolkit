@@ -2,20 +2,46 @@
 #include "logging.hpp"
 
 #include <stdio.h>
+#include <fstream>
 
-FileExtractor::FileExtractor() {
-};
+const std::string FileExtractor::PATH_FOR_TEMP_FILES = "/tmp/psi-toolkit";
 
-std::list<std::string> FileExtractor::extract(
-    const std::string &archive,
-    const std::string &file) {
+FileExtractor::FileExtractor() { };
 
-    std::list<std::string> fileContents;
-    return fileContents;
-};
+std::list<std::string> FileExtractor::getFileList(const std::string &archivePath) {
+    std::list<std::string> files;
 
-std::list<std::string> FileExtractor::extractAllWithExtension(
-    const std::string &archive,
+    //FIXME: obsluga bledow
+
+    fex_t* fex;
+    fex_open(&fex, archivePath.c_str());
+
+    while (!fex_done(fex)) {
+        files.push_back(fex_name(fex));
+        DEBUG("found in archive: " << files.back());
+        fex_next(fex);
+    }
+
+    fex_close(fex);
+    fex = NULL;
+
+    return files;
+}
+
+std::list<std::string> FileExtractor::getFileListFromData(const std::string &archive) {
+    return getFileList(storeToTempFile_(archive));
+}
+
+/*
+std::map<std::string, std::stringstream> FileExtractor::extractAll(
+    const std::string &archivePath) {
+
+    std::map<std::string, std::stringsteam> files;
+    return files;
+}
+
+std::map<std::string, std::stringstream> FileExtractor::extractAllWithExtension(
+    const std::string &archivePath,
     const std::string &extension) {
 
     fex_t* fex;
@@ -28,10 +54,31 @@ std::list<std::string> FileExtractor::extractAllWithExtension(
         fex_next(fex);
     }
 
-    std::list<std::string> fileContents;
-    return fileContents;
-};
+    fex_close(fex);
+    fex = NULL;
 
+    std::map<std::string, std::stringsteam> files;
+    return files;
+}
+*/
+
+std::string FileExtractor::storeToTempFile_(const std::string &archive) {
+    //FIXME: nazwa pliku generowana z MD5
+    std::string tempName = "input1234";
+    std::ofstream tempFile(tempName.c_str());
+
+    if (tempFile) {
+        tempFile << archive;
+    }
+    else {
+        WARN("temporary file can not be created!");
+    }
+
+    tempFile.close();
+    return tempName;
+}
+
+/*
 void FileExtractor::processFile_(fex_t* fex) {
 	const void* data;
 	int size;
@@ -39,12 +86,11 @@ void FileExtractor::processFile_(fex_t* fex) {
 
 	printf( "Processing %s\n", fex_name( fex ) );
 
-	/* Get pointer to extracted data. Fex will automatically free this later. */
 	fex_data( fex, &data );
 	size = fex_size( fex );
 
-	/* Print first 100 characters */
-	for ( i = 0; i < size && i < 100; ++i )
+	for ( i = 0; i < size; ++i )
 		putchar( ((const char*) data) [i] );
 	putchar( '\n' );
 };
+*/
