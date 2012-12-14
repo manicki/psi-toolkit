@@ -47,6 +47,8 @@ void sort_edges(Ch& chart, std::vector<typename Ch::edge_descriptor>& edges)
 template<class Ch, class K>
 std::vector<typename Ch::edge_descriptor> longest_left_to_right_chooser<Ch,K>::go(Ch& chart,K& combinator,const std::vector<typename longest_left_to_right_chooser<Ch,K>::rule_holder>& local_rules)
 {
+    chart.sort_topologically();
+
     std::vector<typename Ch::edge_descriptor> r;
 
     typename Ch::vertex_iterator v_it = chart.vertices();
