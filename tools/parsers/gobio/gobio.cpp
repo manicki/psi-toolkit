@@ -99,6 +99,22 @@ void Gobio::parse(Lattice & lattice) {
     std::vector<Combinator::rule_holder> local_rules;
     std::vector<Edge> choosen_edges = chr->go(ch, combinator, local_rules);
 
+    LayerTagCollection tagParse
+        = lattice.getLayerTagManager().createTagCollectionFromList(
+            boost::assign::list_of("gobio")("parse")
+        );
+
+
+    BOOST_FOREACH(Edge e, choosen_edges) {
+        lattice.addEdge(
+            lattice.getEdgeSource(e),
+            lattice.getEdgeTarget(e),
+            lattice.getEdgeAnnotationItem(e),
+            tagParse,
+            lattice.getEdgePartitions(e).front().getSequence()
+        );
+    }
+
 }
 
 double Gobio::doGetQualityScore(
