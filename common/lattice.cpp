@@ -599,6 +599,10 @@ const std::string Lattice::getAnnotationText(EdgeDescriptor edge) {
     return getEdgeAnnotationItem(edge).getText();
 }
 
+const StringFrag Lattice::getAnnotationTextAsStringFrag(EdgeDescriptor edge) {
+    return getEdgeAnnotationItem(edge).getTextAsStringFrag();
+}
+
 const std::string Lattice::getAnnotationCategory(EdgeDescriptor edge) {
     return getEdgeAnnotationItem(edge).getCategory();
 }
