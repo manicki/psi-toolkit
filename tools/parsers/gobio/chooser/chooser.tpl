@@ -49,21 +49,19 @@ std::vector<typename Ch::edge_descriptor> longest_left_to_right_chooser<Ch,K>::g
 {
     std::vector<typename Ch::edge_descriptor> r;
 
-    typename Ch::vertex_descriptor v = *(chart.vertices().first);
+    typename Ch::vertex_iterator v_it = chart.vertices();
+    if (v_it.hasNext()) {
+
+    typename Ch::vertex_descriptor v = v_it.next();
 
     while(1)
     {
     std::vector<typename Ch::edge_descriptor> v_edges;
 
-    std::pair<
-        typename Ch::out_edge_iterator,
-        typename Ch::out_edge_iterator> v_edges_its =
-        chart.out_edges(v);
+    typename Ch::out_edge_iterator v_edges_it = chart.out_edges(v);
 
-    for(typename Ch::out_edge_iterator it = v_edges_its.first;
-        it != v_edges_its.second;
-        ++it)
-        v_edges.push_back(*it);
+    while (v_edges_it.hasNext())
+        v_edges.push_back(v_edges_it.next());
 
     if(v_edges.empty())
         break;
@@ -102,6 +100,7 @@ std::vector<typename Ch::edge_descriptor> longest_left_to_right_chooser<Ch,K>::g
         {
             accommodater.accommodate(*ej);
 
+/*
             std::pair<
             typename Ch::variant_iterator,
             typename Ch::variant_iterator> vits
@@ -143,6 +142,7 @@ std::vector<typename Ch::edge_descriptor> longest_left_to_right_chooser<Ch,K>::g
                 }
             }
             }
+// */
         }
         }
 
@@ -175,6 +175,8 @@ std::vector<typename Ch::edge_descriptor> longest_left_to_right_chooser<Ch,K>::g
     assert(v != chart.edge_target(*ei));
 
     v = chart.edge_target(*ei);
+    }
+
     }
 
     return r;
