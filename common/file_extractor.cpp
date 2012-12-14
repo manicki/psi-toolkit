@@ -4,6 +4,7 @@
 
 #include "file_extractor.hpp"
 #include "md5.hpp"
+#include "regexp.hpp"
 #include "logging.hpp"
 
 const std::string FileExtractor::PATH_FOR_TEMP_FILES = "/tmp/psi-toolkit";
@@ -16,10 +17,8 @@ FileExtractor::FileExtractor() {
     }
 };
 
-std::set<std::string> FileExtractor::getFileList(const std::string &archivePath) {
+std::set<std::string> FileExtractor::getFileListByPath(const std::string &archivePath) {
     std::set<std::string> files;
-
-    //FIXME: obsluga bledow
 
     fex_t* fex;
     handleError_( fex_open(&fex, archivePath.c_str()) );
@@ -40,38 +39,43 @@ std::set<std::string> FileExtractor::getFileList(const std::string &archivePath)
 }
 
 std::set<std::string> FileExtractor::getFileListFromData(const std::string &archiveData) {
-    return getFileList(storeToTempFile_(archiveData));
+    return getFileListByPath(storeToTempFile_(archiveData));
 }
 
-/*
-std::map<std::string, std::stringstream> FileExtractor::extractAll(
-    const std::string &archivePath) {
-
-    std::map<std::string, std::stringsteam> files;
-    return files;
-}
-
-std::map<std::string, std::stringstream> FileExtractor::extractAllWithExtension(
+std::map<std::string, std::string> FileExtractor::extractFilesByPath(
     const std::string &archivePath,
-    const std::string &extension) {
+    const std::string &regexp) {
+
+    std::map<std::string, std::string> files;
 
     fex_t* fex;
-    fex_open(&fex, archive.c_str());
+    handleError_( fex_open(&fex, archivePath.c_str()) );
 
     while (!fex_done(fex)) {
-        if (fex_has_extension(fex_name(fex), extension.c_str())) {
-            processFile_(fex);
+        std::string arg;
+
+        if (regexp.empty() || RegExp::FullMatch(fex_name(fex), PerlRegExp(regexp), &arg)) {
+            files.insert(std::pair<std::string, std::string>(
+                fex_name(fex),
+                processFile_(fex)
+            ));
         }
-        fex_next(fex);
+
+        handleError_( fex_next(fex) );
     }
 
     fex_close(fex);
     fex = NULL;
 
-    std::map<std::string, std::stringsteam> files;
     return files;
 }
-*/
+
+std::map<std::string, std::string> FileExtractor::extractFilesFromData(
+    const std::string &archiveData,
+    const std::string &regexp) {
+
+    return extractFilesByPath(storeToTempFile_(archiveData), regexp);
+}
 
 bool FileExtractor::handleError_(fex_err_t error) {
     if (error != NULL) {
@@ -104,19 +108,16 @@ std::string FileExtractor::storeToTempFile_(const std::string &archive) {
     return fileName;
 }
 
-/*
-void FileExtractor::processFile_(fex_t* fex) {
+std::string FileExtractor::processFile_(fex_t* fex) {
 	const void* data;
-	int size;
-	int i;
+    std::string content;
 
-	printf( "Processing %s\n", fex_name( fex ) );
+	handleError_( fex_data(fex, &data) );
+	int size = fex_size(fex);
 
-	fex_data( fex, &data );
-	size = fex_size( fex );
+	for (int i = 0; i < size; ++i) {
+		content += ((const char*) data)[i];
+    }
 
-	for ( i = 0; i < size; ++i )
-		putchar( ((const char*) data) [i] );
-	putchar( '\n' );
+    return content;
 };
-*/
