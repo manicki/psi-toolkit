@@ -44,6 +44,8 @@ private:
         std::vector<DeformatIndex>& indexes);
 
     std::pair<int, int> getMatchedStringIndexes_(PerlStringPiece currentInput, std::string);
+
+    std::string decompressFiles_(const std::string &);
 };
 
 #endif

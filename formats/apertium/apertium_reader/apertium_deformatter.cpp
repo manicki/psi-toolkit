@@ -2,7 +2,8 @@
 
 #include "regexp.hpp"
 #include "apertium_deformatter.hpp"
-//#include "file_extractor.hpp"
+#include "file_recognizer.hpp"
+#include "file_extractor.hpp"
 #include "logging.hpp"
 
 
@@ -24,11 +25,8 @@ FormatSpecification ApertiumDeformatter::initializeFormatSpecification_(
 std::string ApertiumDeformatter::deformat(const std::string& input) {
     initialInputSize_ = 0;
 
-    if (formatSpecification_.getOptions().isCompressed()) {
-        // TODO decompress files
-    }
-
-    std::string text = processReplacementRules(input);
+    std::string text = processReplacementRules(
+        (formatSpecification_.getOptions().isCompressed()) ? decompressFiles_(input) : input);
     std::vector<DeformatIndex> deformatIndexes = processFormatRules(text);
     std::string output = clearFromDeformatData_(text, deformatIndexes);
 
@@ -122,4 +120,27 @@ std::pair<int, int> ApertiumDeformatter::getMatchedStringIndexes_(
 
     return std::pair<int, int>(initialInputSize_ - currentInput.size() - matchedString.size(),
         initialInputSize_ - currentInput.size());
+}
+
+std::string ApertiumDeformatter::decompressFiles_(const std::string &compressed) {
+    DEBUG("apertium-reader file decompression...");
+
+    FileRecognizer fileRecognizer;
+    std::string filetype = fileRecognizer.recognizeCompressedFileFormat(compressed);
+
+    typedef std::map<std::string, std::string> string_to_string_map;
+
+    FileExtractor fileExtractor;
+    string_to_string_map files = fileExtractor.extractFilesFromData(
+        compressed,
+        formatSpecification_.getOptions().getCompressionRegexp());
+
+    std::string decompressed;
+
+    BOOST_FOREACH(const string_to_string_map::value_type& fileAndContent, files) {
+        decompressed += fileAndContent.second;
+        DEBUG("apertium-reader decompresses file: " << fileAndContent.first);
+    }
+
+    return decompressed;
 }

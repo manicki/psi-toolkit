@@ -7,5 +7,7 @@ add_library(formats-apertium SHARED
 
 add_subdirectory(t)
 
+include_directories("${psi-toolkit_SOURCE_DIR}/fex/fex")
+
 install(TARGETS formats-apertium DESTINATION lib/)
 install(DIRECTORY apertium_reader/data/ DESTINATION ${PSITOOLKIT_INSTALL_DATA_DIR}/apertium-lattice-reader)
