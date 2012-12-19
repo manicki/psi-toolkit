@@ -8,6 +8,7 @@
 #include "logging.hpp"
 
 const std::string FileExtractor::PATH_FOR_TEMP_FILES = "/tmp/psi-toolkit";
+const std::string FileExtractor::TEMP_FILE_EXTENSION = ".zip";
 
 FileExtractor::FileExtractor() {
     if (!boost::filesystem::exists(PATH_FOR_TEMP_FILES)) {
@@ -79,26 +80,25 @@ std::map<std::string, std::string> FileExtractor::extractFilesFromData(
 
 bool FileExtractor::handleError_(fex_err_t error) {
     if (error != NULL) {
-        ERROR("exception from fex: " << fex_err_str(error));
-        return false;
+        throw FileExtractionException(fex_err_str(error));
     }
 
     return true;
 }
 
 std::string FileExtractor::storeToTempFile_(const std::string &archive) {
-    std::string fileName = PATH_FOR_TEMP_FILES + "/" + md5(archive);
+    std::string fileName = PATH_FOR_TEMP_FILES + "/" + md5(archive) + TEMP_FILE_EXTENSION;
 
     if (boost::filesystem::exists(fileName)) {
         INFO("temporary file " << fileName << " exists");
         return fileName;
     }
 
-    std::ofstream tempFile(fileName.c_str());
+    std::ofstream tempFile(fileName.c_str(), std::ios::out | std::ios::binary);
 
     if (tempFile) {
         INFO("creating temporary file " << fileName);
-        tempFile << archive;
+        tempFile << archive.c_str();
     }
     else {
         ERROR("temporary file can not be created!");
