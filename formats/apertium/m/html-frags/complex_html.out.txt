@@ -8,6 +8,7 @@ English name:
 Publicly available tools for automatic processing of Polish language
 Project type:
 A national
+
                         Ministry of Science and Higher Education
  research grant (number N N516 480540)
 Duration:
@@ -16,12 +17,16 @@ Principal investigator:
 Krzysztof Jassem
 Institution:
 Information Systems Laboratory
-,                        Faculty of Mathematics and Computer Science,
+,
+                        Faculty of Mathematics and Computer Science,
 Adam Mickiewicz University
 Project description
+
             The aim of the project is to develop a tool chain (called
 psi-toolkit
-)            for automatic processing of Polish (and - to lesser extent - other languages: English, German,            French, Spanish and Russian) with the focus on machine translation. The tool chain will include:
+)
+            for automatic processing of Polish (and - to lesser extent - other languages: English, German,
+            French, Spanish and Russian) with the focus on machine translation. The tool chain will include:
 segmentation/tokenization/lemmatization,
 shallow parsing,
 deep parsing,

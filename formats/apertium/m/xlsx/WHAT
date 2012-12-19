@@ -1,1 +1,1 @@
-apertium-reader --format xlsx ! simple-writer --tag frag
+apertium-reader --format xlsx --unzip-data false ! simple-writer --tag frag

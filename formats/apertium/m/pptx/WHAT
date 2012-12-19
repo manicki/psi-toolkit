@@ -1,1 +1,1 @@
-apertium-reader --format pptx ! simple-writer --tag frag
+apertium-reader --format pptx --unzip-data false ! simple-writer --tag frag

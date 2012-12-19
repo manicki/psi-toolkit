@@ -1,16 +1,26 @@
 <html>
+
 <head>
+
     <title>
 </title>
+
     <script type="javascript">var str = "example script";</script>
+
 </head>
+
 <body>
+
     <h1>
 </h1>
+
     <p>
  <strong>
 </strong>
 </p>
+
     <!-- The example html comment -->
+
 </body>
+
 </html>
