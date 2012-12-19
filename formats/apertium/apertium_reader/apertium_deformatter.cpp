@@ -35,11 +35,7 @@ std::string ApertiumDeformatter::deformat(const std::string& input) {
 }
 
 std::vector<DeformatIndex> ApertiumDeformatter::processFormatRules(const std::string& input) {
-    DEBUG("is compressed format: " << formatSpecification_.getOptions().isCompressed());
-
-    PerlStringPiece currentInput(
-        (unzipData_ && formatSpecification_.getOptions().isCompressed()) ?
-            decompressFiles_(input) : input);
+    PerlStringPiece currentInput(input);
     initialInputSize_ = currentInput.size();
 
     std::vector<std::string> regexps = formatSpecification_.formatRulesRegexp();
@@ -87,12 +83,14 @@ std::vector<DeformatIndex> ApertiumDeformatter::processFormatRules(const std::st
         }
     }
 
-
     return deformatIndexes;
 }
 
 std::string ApertiumDeformatter::processReplacementRules(const std::string& input) {
-    std::string text = input;
+    DEBUG("is compressed format " << formatSpecification_.getOptions().isCompressed());
+
+    std::string text = (unzipData_ && formatSpecification_.getOptions().isCompressed()) ?
+        decompressFiles_(input) : input;
 
     std::map<std::string, std::string>::iterator it;
     std::map<std::string, std::string> rules = formatSpecification_.replacementRulesRegexp();
@@ -128,7 +126,7 @@ std::pair<int, int> ApertiumDeformatter::getMatchedStringIndexes_(
 }
 
 std::string ApertiumDeformatter::decompressFiles_(const std::string &compressed) {
-    DEBUG("apertium-reader file decompression...");
+    DEBUG("decompressing file...");
 
     FileRecognizer fileRecognizer;
     std::string filetype = fileRecognizer.recognizeCompressedFileFormat(compressed);

@@ -190,13 +190,11 @@ bool FileRecognizer::hasDjvuFormatBeginning_(const std::string& data) {
 }
 
 bool FileRecognizer::looksLikePsiFormat_(const std::string& text) {
-    std::string arg;
-    return RegExp::FullMatch(text, PerlRegExp("(01 0000 [0-9*][0-9@])(.|\n|\r)*"), &arg);
+    return RegExp::FullMatch(text, PerlRegExp("(01 0000 [0-9*][0-9@])(.|\n|\r)*"));
 }
 
 bool FileRecognizer::looksLikeUTTFormat_(const std::string& text) {
-    std::string arg;
-    return RegExp::FullMatch(text, PerlRegExp("(0000 00 [A-Z])(.|\n|\r)*"), &arg);
+    return RegExp::FullMatch(text, PerlRegExp("(0000 00 [A-Z])(.|\n|\r)*"));
 }
 
 std::string FileRecognizer::recognizeCompressedFileFormat(const std::string &data) {

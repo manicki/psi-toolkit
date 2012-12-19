@@ -1,6 +1,7 @@
 #include <boost/filesystem.hpp>
 #include <cstdio>
 #include <fstream>
+#include <cstring>
 
 #include "file_extractor.hpp"
 #include "md5.hpp"
@@ -8,7 +9,6 @@
 #include "logging.hpp"
 
 const std::string FileExtractor::PATH_FOR_TEMP_FILES = "/tmp/psi-toolkit";
-const std::string FileExtractor::TEMP_FILE_EXTENSION = ".zip";
 
 FileExtractor::FileExtractor() {
     if (!boost::filesystem::exists(PATH_FOR_TEMP_FILES)) {
@@ -53,9 +53,8 @@ std::map<std::string, std::string> FileExtractor::extractFilesByPath(
     handleError_( fex_open(&fex, archivePath.c_str()) );
 
     while (!fex_done(fex)) {
-        std::string arg;
-
-        if (regexp.empty() || RegExp::FullMatch(fex_name(fex), PerlRegExp(regexp), &arg)) {
+        if (regexp.empty() || RegExp::FullMatch(fex_name(fex), PerlRegExp(regexp))) {
+            DEBUG("extracting file " << fex_name(fex));
             files.insert(std::pair<std::string, std::string>(
                 fex_name(fex),
                 processFile_(fex)
@@ -87,7 +86,7 @@ bool FileExtractor::handleError_(fex_err_t error) {
 }
 
 std::string FileExtractor::storeToTempFile_(const std::string &archive) {
-    std::string fileName = PATH_FOR_TEMP_FILES + "/" + md5(archive) + TEMP_FILE_EXTENSION;
+    std::string fileName = PATH_FOR_TEMP_FILES + "/" + md5(archive);
 
     if (boost::filesystem::exists(fileName)) {
         INFO("temporary file " << fileName << " exists");
@@ -98,7 +97,7 @@ std::string FileExtractor::storeToTempFile_(const std::string &archive) {
 
     if (tempFile) {
         INFO("creating temporary file " << fileName);
-        tempFile << archive.c_str();
+        tempFile.write(archive.c_str(), archive.size());
     }
     else {
         ERROR("temporary file can not be created!");

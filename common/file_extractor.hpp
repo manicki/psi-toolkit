@@ -46,7 +46,6 @@ private:
     std::string processFile_(fex_t* fex);
 
     static const std::string PATH_FOR_TEMP_FILES;
-    static const std::string TEMP_FILE_EXTENSION;
 
 };
 

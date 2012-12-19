@@ -8,7 +8,7 @@
     <escape-chars regexp='[][^@\\/${}]'/>
     <space-chars regexp='[ \n\t\r&lt;&gt;]'/>
     <case-sensitive value="no"/>
-    <compressed value="yes" regexp='xl/worksheets/sheet[0-9]+.xml'/>
+    <compressed value="yes" regexp='xl/sharedStrings\.xml'/>
   </options>
 
   <rules>

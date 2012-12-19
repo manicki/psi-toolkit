@@ -97,10 +97,20 @@ void ApertiumLatticeReader::Worker::doRun() {
     std::string input;
     std::string line;
 
+    bool firstLine = true;
+
     while (std::getline(inputStream_, line)) {
         if (boost::algorithm::trim_copy(line).empty()) {
             continue;
         }
+
+        if (firstLine) {
+            firstLine = false;
+        }
+        else {
+            input += '\n';
+        }
+
         input += line;
     }
 
