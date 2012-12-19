@@ -7,9 +7,11 @@
 #include "logging.hpp"
 
 
-ApertiumDeformatter::ApertiumDeformatter(const boost::filesystem::path& specFilePath)
+ApertiumDeformatter::ApertiumDeformatter(
+    const boost::filesystem::path& specFilePath,
+    bool unzipData)
     : formatSpecification_(initializeFormatSpecification_(specFilePath)),
-    initialInputSize_(0) {
+    initialInputSize_(0), unzipData_(unzipData) {
 
     perlRegexpOptions_.set_utf8(true);
     perlRegexpOptions_.set_caseless(!formatSpecification_.getOptions().isCaseSensitive());
@@ -25,8 +27,7 @@ FormatSpecification ApertiumDeformatter::initializeFormatSpecification_(
 std::string ApertiumDeformatter::deformat(const std::string& input) {
     initialInputSize_ = 0;
 
-    std::string text = processReplacementRules(
-        (formatSpecification_.getOptions().isCompressed()) ? decompressFiles_(input) : input);
+    std::string text = processReplacementRules(input);
     std::vector<DeformatIndex> deformatIndexes = processFormatRules(text);
     std::string output = clearFromDeformatData_(text, deformatIndexes);
 
@@ -34,7 +35,11 @@ std::string ApertiumDeformatter::deformat(const std::string& input) {
 }
 
 std::vector<DeformatIndex> ApertiumDeformatter::processFormatRules(const std::string& input) {
-    PerlStringPiece currentInput(input);
+    DEBUG("is compressed format: " << formatSpecification_.getOptions().isCompressed());
+
+    PerlStringPiece currentInput(
+        (unzipData_ && formatSpecification_.getOptions().isCompressed()) ?
+            decompressFiles_(input) : input);
     initialInputSize_ = currentInput.size();
 
     std::vector<std::string> regexps = formatSpecification_.formatRulesRegexp();
@@ -143,4 +148,8 @@ std::string ApertiumDeformatter::decompressFiles_(const std::string &compressed)
     }
 
     return decompressed;
+}
+
+void ApertiumDeformatter::setUnzipData(bool onOff) {
+    unzipData_ = onOff;
 }

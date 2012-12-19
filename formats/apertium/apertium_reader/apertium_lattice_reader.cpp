@@ -25,8 +25,10 @@ std::vector<DeformatIndex> ApertiumLatticeReader::processFormatRules(const std::
 const std::string ApertiumLatticeReader::Factory::DEFAULT_SPEC_FILES_DIR = "%ITSDATA%/";
 const std::string ApertiumLatticeReader::Factory::DEFAULT_SPEC_FILE_ENDING = "-format.xml";
 
-ApertiumLatticeReader::ApertiumLatticeReader(const boost::filesystem::path& specificationFile)
-    : apertiumDeformatter_(specificationFile) { }
+ApertiumLatticeReader::ApertiumLatticeReader(
+    const boost::filesystem::path& specificationFile,
+    bool unzipData)
+    : apertiumDeformatter_(specificationFile, unzipData) { }
 
 ApertiumLatticeReader::Factory::~Factory() { }
 
@@ -47,7 +49,13 @@ LatticeReader<std::istream>* ApertiumLatticeReader::Factory::doCreateLatticeRead
     ProcessorFileFetcher fileFetcher(__FILE__);
     boost::filesystem::path specificationFile = fileFetcher.getOneFile(specFilePath);
 
-    return new ApertiumLatticeReader(specificationFile);
+    bool unzipData;
+
+    if (options.count("unzip-data")) {
+        unzipData = options["unzip-data"].as<bool>();
+    }
+
+    return new ApertiumLatticeReader(specificationFile, unzipData);
 }
 
 boost::program_options::options_description ApertiumLatticeReader::Factory::doOptionsHandled() {
@@ -58,7 +66,10 @@ boost::program_options::options_description ApertiumLatticeReader::Factory::doOp
             ->default_value("html"),
             "type of file for deformatting")
         ("specification-file", boost::program_options::value<std::string>(),
-            "specification file path");
+            "specification file path")
+        ("unzip-data", boost::program_options::value<bool>()
+            ->default_value(true),
+            "unzip compressed file formats like .pptx or .xlsx");
 
     return optionsDescription;
 }

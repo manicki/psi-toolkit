@@ -13,7 +13,7 @@
 class ApertiumLatticeReader : public StreamLatticeReader {
 public:
 
-    ApertiumLatticeReader(const boost::filesystem::path&);
+    ApertiumLatticeReader(const boost::filesystem::path&, bool unzipData);
 
     std::string getFormatName();
 

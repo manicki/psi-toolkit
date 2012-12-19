@@ -25,11 +25,13 @@ struct DeformatIndex {
 class ApertiumDeformatter {
 public:
 
-    ApertiumDeformatter(const boost::filesystem::path& specFilePath);
+    ApertiumDeformatter(const boost::filesystem::path& specFilePath, bool unzipData);
 
     std::string processReplacementRules(const std::string& input);
     std::vector<DeformatIndex> processFormatRules(const std::string& input);
     std::string deformat(const std::string& input);
+
+    void setUnzipData(bool);
 
 private:
 
@@ -45,6 +47,7 @@ private:
 
     std::pair<int, int> getMatchedStringIndexes_(PerlStringPiece currentInput, std::string);
 
+    bool unzipData_;
     std::string decompressFiles_(const std::string &);
 };
 
