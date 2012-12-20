@@ -1,1 +1,0 @@
-apertium-reader --format odt ! simple-writer --tag frag
