@@ -15,8 +15,10 @@ set(tools_DIRS
     parsers/link
     parsers/puddle
     parsers/gobio
+    parsers/gobio/accommodater
     parsers/gobio/avmatrix
     parsers/gobio/chart
+    parsers/gobio/chooser
     parsers/gobio/helpers
     parsers/gobio/parser
     parsers/gobio/registrar

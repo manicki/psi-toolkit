@@ -19,7 +19,7 @@ add_library(tools-parsers-gobio SHARED
 set_source_files_properties(${psi-toolkit_SOURCE_DIR}/tools/parsers/gobio/translator/lex.grlex.cpp GENERATED)
 set_source_files_properties(${psi-toolkit_SOURCE_DIR}/tools/parsers/gobio/translator/grparser.bis.cpp GENERATED)
 
-set(gobio_SUBDIRS avmatrix chart helpers parser registrar rules translator transporter trees CACHE PATH "Gobio subdirectories" FORCE)
+set(gobio_SUBDIRS accommodater avmatrix chart chooser helpers parser registrar rules translator transporter trees CACHE PATH "Gobio subdirectories" FORCE)
 
 foreach(subdir ${gobio_SUBDIRS})
     include_directories("${psi-toolkit_SOURCE_DIR}/tools/parsers/gobio/${subdir}")

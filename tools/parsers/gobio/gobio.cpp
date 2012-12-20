@@ -45,6 +45,7 @@ std::list<std::list<std::string> > Gobio::Factory::doOptionalLayerTags() {
 
 std::list<std::string> Gobio::Factory::doProvidedLayerTags() {
     std::list<std::string> layerTags;
+    layerTags.push_back("gobio");
     layerTags.push_back("parse");
     return layerTags;
 }
@@ -90,6 +91,29 @@ void Gobio::parse(Lattice & lattice) {
     Parser parser(ch, combinator, agenda);
 
     parser.run();
+
+    boost::shared_ptr< longest_left_to_right_chooser<Chart, Combinator> > chr(
+        new longest_left_to_right_chooser<Chart, Combinator>()
+    );
+
+    std::vector<Combinator::rule_holder> local_rules;
+    std::vector<Edge> choosen_edges = chr->go(ch, combinator, local_rules);
+
+    LayerTagCollection tagParse
+        = lattice.getLayerTagManager().createTagCollectionFromList(
+            boost::assign::list_of("gobio")("parse")
+        );
+
+
+    BOOST_FOREACH(Edge e, choosen_edges) {
+        lattice.addEdge(
+            lattice.getEdgeSource(e),
+            lattice.getEdgeTarget(e),
+            lattice.getEdgeAnnotationItem(e),
+            tagParse,
+            lattice.getEdgePartitions(e).front().getSequence()
+        );
+    }
 
 }
 
