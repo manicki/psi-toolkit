@@ -1,4 +1,4 @@
-01 @0   *@1   ∅            parse-aux                         b,Len=1,C=5,Beg=1,D=11[]
-02 @1   *@2   ∅            parse-aux                         c,Len=1,A=65536,End=1[]
-03 @1   *@2   ∅            parse-aux                         v,Len=1,Z=10[]
-04 @2   *@3   ∅            parse-aux                         d,Len=1[]
+01 @0   *@1   ∅            gobio                             b,Len=1,C=5,Beg=1,D=11[]
+02 @1   *@2   ∅            gobio                             c,Len=1,A=65536,End=1[]
+03 @1   *@2   ∅            gobio                             v,Len=1,Z=10[]
+04 @2   *@3   ∅            gobio                             d,Len=1[]
