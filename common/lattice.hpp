@@ -520,6 +520,7 @@ public:
     std::string getPartitionText(const Partition& partition);
 
     const std::string getAnnotationText(EdgeDescriptor edge);
+    const StringFrag getAnnotationTextAsStringFrag(EdgeDescriptor edge);
     const std::string getAnnotationCategory(EdgeDescriptor edge);
 
     void runCutter(Cutter& cutter, LayerTagMask mask, LayerTagMask superMask);

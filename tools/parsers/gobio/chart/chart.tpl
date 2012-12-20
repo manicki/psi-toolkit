@@ -14,14 +14,14 @@ chart<C,S,V,R,I>::chart(
 ) :
     lattice_(lattice),
     av_ai_converter_(av_ai_converter),
-    gobioTag_(lattice.getLayerTagManager().createSingletonTagCollection("parse")),
+    gobioTag_(lattice.getLayerTagManager().createSingletonTagCollection("gobio")),
     tagMask_(lattice.getLayerTagManager().anyTag())
 {
     std::vector<LayerTagCollection> altTags;
     altTags.push_back(lattice.getLayerTagManager().createSingletonTagCollection("form"));
     altTags.push_back(lattice.getLayerTagManager().createSingletonTagCollection("lemma"));
     altTags.push_back(lattice.getLayerTagManager().createSingletonTagCollection("lexeme"));
-    altTags.push_back(lattice.getLayerTagManager().createSingletonTagCollection("parse"));
+    altTags.push_back(lattice.getLayerTagManager().createSingletonTagCollection("gobio"));
     altTags.push_back(lattice.getLayerTagManager().createSingletonTagCollection("token"));
     setTagMask(lattice.getLayerTagManager().getAlternativeMask(altTags));
 }
@@ -285,7 +285,8 @@ std::pair<typename chart<C,S,V,R,I>::partition_iterator,
 chart<C,S,V,R,I>::edge_partitions(
     edge_descriptor edge)
 {
-    std::list<Lattice::Partition> partition_vector = lattice_.getEdgePartitions(edge);
+    std::list<Lattice::Partition> & partition_vector
+        = const_cast< std::list<Lattice::Partition> & >(lattice_.getEdgePartitions(edge));
 
     return std::pair<
     partition_iterator,
@@ -444,6 +445,12 @@ std::vector<typename chart<C,S,V,R,I>::edge_descriptor>& chart<C,S,V,R,I>::parti
     return (*piter).links;
 }
 */
+
+template<typename C, typename S, typename V, typename R, template<typename, typename> class I>
+size_t chart<C,S,V,R,I>::partition_links_size(partition_iterator piter)
+{
+    return (*piter).getSequence().size(lattice_);
+}
 
 template<typename C, typename S, typename V, typename R, template<typename, typename> class I>
 Lattice::Partition::Iterator chart<C,S,V,R,I>::partition_links_iterator(partition_iterator piter)

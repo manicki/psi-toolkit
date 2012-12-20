@@ -264,6 +264,7 @@ public:
     bool could_be_final(const entry_type& entry);
     bool could_be_final_variant(const entry_type& entry, const variant_type& variant);
     bool is_lexical(const rule_type& rule) const;
+    bool is_lexical(int rule_ix) const;
     boost::shared_ptr<tree_specification<atom_type> > tree_spec(
     const rule_type& rule, const std::vector<rule_holder>& local_rules);
     E equivalent(
