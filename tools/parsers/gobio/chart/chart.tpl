@@ -14,14 +14,14 @@ chart<C,S,V,R,I>::chart(
 ) :
     lattice_(lattice),
     av_ai_converter_(av_ai_converter),
-    gobioTag_(lattice.getLayerTagManager().createSingletonTagCollection("parse-aux")),
+    gobioTag_(lattice.getLayerTagManager().createSingletonTagCollection("gobio")),
     tagMask_(lattice.getLayerTagManager().anyTag())
 {
     std::vector<LayerTagCollection> altTags;
     altTags.push_back(lattice.getLayerTagManager().createSingletonTagCollection("form"));
     altTags.push_back(lattice.getLayerTagManager().createSingletonTagCollection("lemma"));
     altTags.push_back(lattice.getLayerTagManager().createSingletonTagCollection("lexeme"));
-    altTags.push_back(lattice.getLayerTagManager().createSingletonTagCollection("parse-aux"));
+    altTags.push_back(lattice.getLayerTagManager().createSingletonTagCollection("gobio"));
     altTags.push_back(lattice.getLayerTagManager().createSingletonTagCollection("token"));
     setTagMask(lattice.getLayerTagManager().getAlternativeMask(altTags));
 }
