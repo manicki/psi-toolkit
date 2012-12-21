@@ -6,6 +6,11 @@
 
 #include "blargg_common.h"
 
+
+// Definition of undefined constants because of compiler warnings (romang).
+#define BLARGG_UTF8_PATHS false
+
+
 // BLARGG_CPU_CISC: Defined if CPU has very few general-purpose registers (< 16)
 #if defined (__i386__) || defined (__x86_64__) || defined (_M_IX86) || defined (_M_X64)
 	#define BLARGG_CPU_X86 1

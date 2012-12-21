@@ -9,6 +9,16 @@
 #include <assert.h>
 #include <limits.h>
 
+
+// Definition of undefined constants because of compiler warnings (romang).
+#define BLARGG_LEGACY false
+#define BLARGG_LITTLE_ENDIAN false
+#define BLARGG_BIG_ENDIAN false
+#define BLARGG_NONPORTABLE false
+#define FEX_ENABLE_RAR false
+#define BLARGG_UTF8_PATHS false
+
+
 typedef const char* blargg_err_t; // 0 on success, otherwise error string
 
 // Success; no error
