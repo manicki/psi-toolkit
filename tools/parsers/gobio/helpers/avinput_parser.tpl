@@ -91,8 +91,6 @@ void avinput_parser<C,R,T,M,H,Q,L>::walk_node_(
 
     av_matrix<C, T> entry( converter_.symbol_reader(symbol) );
 
-    int start_assignment_ix = 1;
-
     T category = master_.false_value();
 
     iter_t sub_i;
@@ -101,6 +99,8 @@ void avinput_parser<C,R,T,M,H,Q,L>::walk_node_(
 
     if (i->children.size() > 0)
     {
+    int start_assignment_ix = 1;
+
     if ((signed int)i->children.size() > start_assignment_ix
        &&
        (i->children.begin()+start_assignment_ix)->value.id()

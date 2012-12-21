@@ -9,7 +9,7 @@
 #include <string>
 
 template<class T, class Ch, class K>
-boost::shared_ptr<tree_branch<T,Ch,typename K::equivalent_type> > extract_tree_branch(
+boost::shared_ptr< tree_branch< T, Ch, typename K::equivalent_type > > extract_tree_branch(
     Ch& chart,
     typename Ch::edge_descriptor edge,
     K& combinator,
