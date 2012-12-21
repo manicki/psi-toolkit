@@ -17,35 +17,35 @@ Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA */
 
 void blargg_vector_::init()
 {
-	begin_ = NULL;
-	size_  = 0;
+    begin_ = NULL;
+    size_  = 0;
 }
 
 void blargg_vector_::clear()
 {
-	void* p = begin_;
-	begin_  = NULL;
-	size_   = 0;
-	free( p );
+    void* p = begin_;
+    begin_  = NULL;
+    size_   = 0;
+    free( p );
 }
 
 blargg_err_t blargg_vector_::resize_( size_t n, size_t elem_size )
 {
-	if ( n != size_ )
-	{
-		if ( n == 0 )
-		{
-			// Simpler to handle explicitly. Realloc will handle a size of 0,
-			// but then we have to avoid raising an error for a NULL return.
-			clear();
-		}
-		else
-		{
-			void* p = realloc( begin_, n * elem_size );
-			CHECK_ALLOC( p );
-			begin_ = p;
-			size_  = n;
-		}
-	}
-	return blargg_ok;
+    if ( n != size_ )
+    {
+        if ( n == 0 )
+        {
+            // Simpler to handle explicitly. Realloc will handle a size of 0,
+            // but then we have to avoid raising an error for a NULL return.
+            clear();
+        }
+        else
+        {
+            void* p = realloc( begin_, n * elem_size );
+            CHECK_ALLOC( p );
+            begin_ = p;
+            size_  = n;
+        }
+    }
+    return blargg_ok;
 }

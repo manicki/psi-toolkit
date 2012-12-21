@@ -34,80 +34,80 @@ blargg_err_def_t blargg_err_file_corrupt = BLARGG_ERR_FILE_CORRUPT;
 
 const char* blargg_err_str( blargg_err_t err )
 {
-	if ( !err )
-		return "";
-	
-	if ( *err == BLARGG_ERR_TYPE("")[0] )
-		return err + 1;
-	
-	return err;
+    if ( !err )
+        return "";
+
+    if ( *err == BLARGG_ERR_TYPE("")[0] )
+        return err + 1;
+
+    return err;
 }
 
 bool blargg_is_err_type( blargg_err_t err, const char type [] )
 {
-	if ( err )
-	{
-		// True if first strlen(type) characters of err match type
-		char const* p = err;
-		while ( *type && *type == *p )
-		{
-			type++;
-			p++;
-		}
-		
-		if ( !*type )
-			return true;
-	}
-	
-	return false;
+    if ( err )
+    {
+        // True if first strlen(type) characters of err match type
+        char const* p = err;
+        while ( *type && *type == *p )
+        {
+            type++;
+            p++;
+        }
+
+        if ( !*type )
+            return true;
+    }
+
+    return false;
 }
 
 const char* blargg_err_details( blargg_err_t err )
 {
-	const char* p = err;
-	if ( !p )
-	{
-		p = "";
-	}
-	else if ( *p == BLARGG_ERR_TYPE("")[0] )
-	{
-		while ( *p && *p != ';' )
-			p++;
-		
-		// Skip ; and space after it
-		if ( *p )
-		{
-			p++;
-		
-			check( *p == ' ' );
-			if ( *p )
-				p++;
-		}
-	}
-	return p;
+    const char* p = err;
+    if ( !p )
+    {
+        p = "";
+    }
+    else if ( *p == BLARGG_ERR_TYPE("")[0] )
+    {
+        while ( *p && *p != ';' )
+            p++;
+
+        // Skip ; and space after it
+        if ( *p )
+        {
+            p++;
+
+            check( *p == ' ' );
+            if ( *p )
+                p++;
+        }
+    }
+    return p;
 }
 
 int blargg_err_to_code( blargg_err_t err, blargg_err_to_code_t const codes [] )
 {
-	if ( !err )
-		return 0;
-	
-	while ( codes->str && !blargg_is_err_type( err, codes->str ) )
-		codes++;
-	
-	return codes->code;
+    if ( !err )
+        return 0;
+
+    while ( codes->str && !blargg_is_err_type( err, codes->str ) )
+        codes++;
+
+    return codes->code;
 }
 
 blargg_err_t blargg_code_to_err( int code, blargg_err_to_code_t const codes [] )
 {
-	if ( !code )
-		return blargg_ok;
-	
-	while ( codes->str && codes->code != code )
-		codes++;
-	
-	if ( !codes->str )
-		return blargg_err_generic;
-	
-	return codes->str;
+    if ( !code )
+        return blargg_ok;
+
+    while ( codes->str && codes->code != code )
+        codes++;
+
+    if ( !codes->str )
+        return blargg_err_generic;
+
+    return codes->str;
 }

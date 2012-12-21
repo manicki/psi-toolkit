@@ -19,36 +19,36 @@ Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA */
 
 static File_Extractor* new_binary()
 {
-	return BLARGG_NEW Binary_Extractor;
+    return BLARGG_NEW Binary_Extractor;
 }
 
 fex_type_t_ const fex_bin_type [1] = {{
-	"",
-	&new_binary,
-	"file",
-	NULL
+    "",
+    &new_binary,
+    "file",
+    NULL
 }};
 
 Binary_Extractor::Binary_Extractor() :
-	File_Extractor( fex_bin_type )
+    File_Extractor( fex_bin_type )
 { }
 
 Binary_Extractor::~Binary_Extractor()
 {
-	close();
+    close();
 }
 
 blargg_err_t Binary_Extractor::open_path_v()
 {
-	set_name( arc_path() );
-	return blargg_ok;
+    set_name( arc_path() );
+    return blargg_ok;
 }
 
 blargg_err_t Binary_Extractor::open_v()
 {
-	set_name( arc_path() );
-	set_info( arc().remain(), 0, 0 );
-	return blargg_ok;
+    set_name( arc_path() );
+    set_info( arc().remain(), 0, 0 );
+    return blargg_ok;
 }
 
 void Binary_Extractor::close_v()
@@ -56,22 +56,22 @@ void Binary_Extractor::close_v()
 
 blargg_err_t Binary_Extractor::next_v()
 {
-	return blargg_ok;
+    return blargg_ok;
 }
 
 blargg_err_t Binary_Extractor::rewind_v()
 {
-	return open_path_v();
+    return open_path_v();
 }
 
 blargg_err_t Binary_Extractor::stat_v()
 {
-	RETURN_ERR( open_arc_file() );
-	RETURN_ERR( arc().seek( 0 ) );
-	return open_v();
+    RETURN_ERR( open_arc_file() );
+    RETURN_ERR( arc().seek( 0 ) );
+    return open_v();
 }
 
 blargg_err_t Binary_Extractor::extract_v( void* p, int n )
 {
-	return arc().read( p, n );
+    return arc().read( p, n );
 }

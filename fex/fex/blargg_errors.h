@@ -5,7 +5,7 @@
 #define BLARGG_ERRORS_H
 
 #ifndef BLARGG_COMMON_H
-	#include "blargg_common.h"
+    #include "blargg_common.h"
 #endif
 
 typedef const char blargg_err_def_t [];
@@ -42,8 +42,8 @@ const char* blargg_err_details( blargg_err_t err );
 // Converts error string to integer code using mapping table. Calls blargg_is_err_type()
 // for each str and returns code on first match. Returns 0 if err == NULL.
 struct blargg_err_to_code_t {
-	const char* str;
-	int code;
+    const char* str;
+    int code;
 };
 int blargg_err_to_code( blargg_err_t err, blargg_err_to_code_t const [] );
 

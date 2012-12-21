@@ -10,25 +10,25 @@
 
 class Gzip_Extractor : public File_Extractor {
 public:
-	Gzip_Extractor();
-	virtual ~Gzip_Extractor();
+    Gzip_Extractor();
+    virtual ~Gzip_Extractor();
 
 protected:
-	virtual blargg_err_t open_path_v();
-	virtual blargg_err_t open_v();
-	virtual void         close_v();
-	
-	virtual blargg_err_t next_v();
-	virtual blargg_err_t rewind_v();
+    virtual blargg_err_t open_path_v();
+    virtual blargg_err_t open_v();
+    virtual void         close_v();
 
-	virtual blargg_err_t stat_v();
-	virtual blargg_err_t extract_v( void*, int );
-	
+    virtual blargg_err_t next_v();
+    virtual blargg_err_t rewind_v();
+
+    virtual blargg_err_t stat_v();
+    virtual blargg_err_t extract_v( void*, int );
+
 private:
-	Gzip_Reader gr;
-	blargg_vector<char> name;
-	
-	void set_info_();
+    Gzip_Reader gr;
+    blargg_vector<char> name;
+
+    void set_info_();
 };
 
 #endif

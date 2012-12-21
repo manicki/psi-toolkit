@@ -25,211 +25,211 @@ Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA */
 
 BLARGG_EXPORT const fex_type_t* fex_type_list( void )
 {
-	static fex_type_t const fex_type_list_ [] =
-	{
-		#ifdef FEX_TYPE_LIST
-			FEX_TYPE_LIST
-		#else
-			// Modify blargg_config.h to change type list, NOT this file
-			fex_7z_type,
-			fex_gz_type,
-			#if FEX_ENABLE_RAR
-				fex_rar_type,
-			#endif
-			fex_zip_type,
-		#endif
-		fex_bin_type,
-		NULL
-	};
-	
-	return fex_type_list_;
+    static fex_type_t const fex_type_list_ [] =
+    {
+        #ifdef FEX_TYPE_LIST
+            FEX_TYPE_LIST
+        #else
+            // Modify blargg_config.h to change type list, NOT this file
+            fex_7z_type,
+            fex_gz_type,
+            #if FEX_ENABLE_RAR
+                fex_rar_type,
+            #endif
+            fex_zip_type,
+        #endif
+        fex_bin_type,
+        NULL
+    };
+
+    return fex_type_list_;
 }
 
 BLARGG_EXPORT fex_err_t fex_init( void )
 {
-	static bool inited;
-	if ( !inited )
-	{
-		for ( fex_type_t const* t = fex_type_list(); *t != NULL; ++t )
-		{
-			if ( (*t)->init )
-				RETURN_ERR( (*t)->init() );
-		}
-		inited = true;
-	}
-	return blargg_ok;
+    static bool inited;
+    if ( !inited )
+    {
+        for ( fex_type_t const* t = fex_type_list(); *t != NULL; ++t )
+        {
+            if ( (*t)->init )
+                RETURN_ERR( (*t)->init() );
+        }
+        inited = true;
+    }
+    return blargg_ok;
 }
 
 BLARGG_EXPORT const char* fex_identify_header( void const* header )
 {
-	unsigned four = get_be32( header );
-	switch ( four )
-	{
-	case 0x52457E5E:
-	case 0x52617221: return ".rar";
+    unsigned four = get_be32( header );
+    switch ( four )
+    {
+    case 0x52457E5E:
+    case 0x52617221: return ".rar";
 
-	case 0x377ABCAF: return ".7z";
+    case 0x377ABCAF: return ".7z";
 
-	case 0x504B0304:
-	case 0x504B0506: return ".zip";
+    case 0x504B0304:
+    case 0x504B0506: return ".zip";
 
-	case 0x53495421: return ".sit";
-	case 0x41724301: return ".arc";
-	case 0x4D534346: return ".cab";
-	case 0x5A4F4F20: return ".zoo";
-	}
+    case 0x53495421: return ".sit";
+    case 0x41724301: return ".arc";
+    case 0x4D534346: return ".cab";
+    case 0x5A4F4F20: return ".zoo";
+    }
 
-	unsigned three = four >> 8;
-	switch ( three )
-	{
-	case 0x425A68: return ".bz2";
-	}
+    unsigned three = four >> 8;
+    switch ( three )
+    {
+    case 0x425A68: return ".bz2";
+    }
 
-	unsigned two = four >> 16;
-	switch ( two )
-	{
-	case 0x1F8B: return ".gz";
-	case 0x60EA: return ".arj";
-	}
-	
-	unsigned skip_first_two = four & 0xFFFF;
-	if ( skip_first_two == 0x2D6C )
-		return ".lha";
-	
-	return "";
+    unsigned two = four >> 16;
+    switch ( two )
+    {
+    case 0x1F8B: return ".gz";
+    case 0x60EA: return ".arj";
+    }
+
+    unsigned skip_first_two = four & 0xFFFF;
+    if ( skip_first_two == 0x2D6C )
+        return ".lha";
+
+    return "";
 }
 
 static int fex_has_extension_( const char str [], const char suffix [], size_t str_len )
 {
-	size_t suffix_len = strlen( suffix );
-	if ( str_len >= suffix_len )
-	{
-		str += str_len - suffix_len;
-		while ( *str && tolower( (unsigned char) *str ) == *suffix )
-		{
-			str++;
-			suffix++;
-		}
-	}
-	return *suffix == 0;
+    size_t suffix_len = strlen( suffix );
+    if ( str_len >= suffix_len )
+    {
+        str += str_len - suffix_len;
+        while ( *str && tolower( (unsigned char) *str ) == *suffix )
+        {
+            str++;
+            suffix++;
+        }
+    }
+    return *suffix == 0;
 }
 
 BLARGG_EXPORT int fex_has_extension( const char str [], const char suffix [] )
 {
-	return fex_has_extension_( str, suffix, strlen( str ) );
+    return fex_has_extension_( str, suffix, strlen( str ) );
 }
 
 static int is_archive_extension( const char str [] )
 {
-	static const char exts [] [6] = {
-		".7z",
-		".arc",
-		".arj",
-		".bz2",
-		".cab",
-		".dmg",
-		".gz",
-		".lha",
-		".lz",
-		".lzh",
-		".lzma",
-		".lzo",
-		".lzx",
-		".pea",
-		".rar",
-		".sit",
-		".sitx",
-		".tgz",
-		".tlz",
-		".z",
-		".zip",
-		".zoo",
-		""
-	};
-	
-	size_t str_len = strlen( str );
-	const char (*ext) [6] = exts;
-	for ( ; **ext; ext++ )
-	{
-		if ( fex_has_extension_( str, *ext, str_len ) )
-			return 1;
-	}
-	return 0;
+    static const char exts [] [6] = {
+        ".7z",
+        ".arc",
+        ".arj",
+        ".bz2",
+        ".cab",
+        ".dmg",
+        ".gz",
+        ".lha",
+        ".lz",
+        ".lzh",
+        ".lzma",
+        ".lzo",
+        ".lzx",
+        ".pea",
+        ".rar",
+        ".sit",
+        ".sitx",
+        ".tgz",
+        ".tlz",
+        ".z",
+        ".zip",
+        ".zoo",
+        ""
+    };
+
+    size_t str_len = strlen( str );
+    const char (*ext) [6] = exts;
+    for ( ; **ext; ext++ )
+    {
+        if ( fex_has_extension_( str, *ext, str_len ) )
+            return 1;
+    }
+    return 0;
 }
 
 BLARGG_EXPORT fex_type_t fex_identify_extension( const char str [] )
 {
-	size_t str_len = strlen( str );
-	for ( fex_type_t const* types = fex_type_list(); *types; types++ )
-	{
-		if ( fex_has_extension_( str, (*types)->extension, str_len ) )
-		{
-			// Avoid treating known archive type as binary
-			if ( *(*types)->extension || !is_archive_extension( str ) )
-				return *types;
-		}
-	}
-	return NULL;
+    size_t str_len = strlen( str );
+    for ( fex_type_t const* types = fex_type_list(); *types; types++ )
+    {
+        if ( fex_has_extension_( str, (*types)->extension, str_len ) )
+        {
+            // Avoid treating known archive type as binary
+            if ( *(*types)->extension || !is_archive_extension( str ) )
+                return *types;
+        }
+    }
+    return NULL;
 }
 
 BLARGG_EXPORT fex_err_t fex_identify_file( fex_type_t* type_out, const char path [] )
 {
-	*type_out = NULL;
-	
-	fex_type_t type = fex_identify_extension( path );
-	
-	// Unsupported extension?
-	if ( !type )
-		return blargg_ok; // reject
-	
-	// Unknown/no extension?
-	if ( !*(type->extension) )
-	{
-		// Examine header
-		FEX_FILE_READER in;
-		RETURN_ERR( in.open( path ) );
-		if ( in.remain() >= fex_identify_header_size )
-		{
-			char h [fex_identify_header_size];
-			RETURN_ERR( in.read( h, sizeof h ) );
-			
-			type = fex_identify_extension( fex_identify_header( h ) );
-		}
-	}
-	
-	*type_out = type;
-	return blargg_ok;
+    *type_out = NULL;
+
+    fex_type_t type = fex_identify_extension( path );
+
+    // Unsupported extension?
+    if ( !type )
+        return blargg_ok; // reject
+
+    // Unknown/no extension?
+    if ( !*(type->extension) )
+    {
+        // Examine header
+        FEX_FILE_READER in;
+        RETURN_ERR( in.open( path ) );
+        if ( in.remain() >= fex_identify_header_size )
+        {
+            char h [fex_identify_header_size];
+            RETURN_ERR( in.read( h, sizeof h ) );
+
+            type = fex_identify_extension( fex_identify_header( h ) );
+        }
+    }
+
+    *type_out = type;
+    return blargg_ok;
 }
 
 BLARGG_EXPORT fex_err_t fex_open_type( fex_t** fe_out, const char path [], fex_type_t type )
 {
-	*fe_out = NULL;
-	
-	if ( !type )
-		return blargg_err_file_type;
+    *fe_out = NULL;
 
-	fex_t* fe = type->new_fex();
-	CHECK_ALLOC( fe );
+    if ( !type )
+        return blargg_err_file_type;
 
-	fex_err_t err = fe->open( path );
-	if ( err )
-	{
-		delete fe;
-		return err;
-	}
-	
-	*fe_out = fe;
-	return blargg_ok;
+    fex_t* fe = type->new_fex();
+    CHECK_ALLOC( fe );
+
+    fex_err_t err = fe->open( path );
+    if ( err )
+    {
+        delete fe;
+        return err;
+    }
+
+    *fe_out = fe;
+    return blargg_ok;
 }
 
 BLARGG_EXPORT fex_err_t fex_open( fex_t** fe_out, const char path [] )
 {
-	*fe_out = NULL;
-	
-	fex_type_t type;
-	RETURN_ERR( fex_identify_file( &type, path ) );
-	
-	return fex_open_type( fe_out, path, type );
+    *fe_out = NULL;
+
+    fex_type_t type;
+    RETURN_ERR( fex_identify_file( &type, path ) );
+
+    return fex_open_type( fe_out, path, type );
 }
 
 
@@ -238,12 +238,12 @@ BLARGG_EXPORT fex_err_t fex_open( fex_t** fe_out, const char path [] )
 #if BLARGG_UTF8_PATHS
 char* fex_wide_to_path( const wchar_t* wide )
 {
-	return blargg_to_utf8( wide );
+    return blargg_to_utf8( wide );
 }
 
 void fex_free_path( char* path )
 {
-	free( path );
+    free( path );
 }
 #endif
 
@@ -253,45 +253,45 @@ void fex_free_path( char* path )
 #define ENTRY( name ) { blargg_err_##name, fex_err_##name }
 static blargg_err_to_code_t const fex_codes [] =
 {
-	ENTRY( generic ),
-	ENTRY( memory ),
-	ENTRY( caller ),
-	ENTRY( internal ),
-	ENTRY( limitation ),
-	
-	ENTRY( file_missing ),
-	ENTRY( file_read ),
-	ENTRY( file_io ),
-	ENTRY( file_eof ),
-	
-	ENTRY( file_type ),
-	ENTRY( file_feature ),
-	ENTRY( file_corrupt ),
-	
-	{ 0, -1 }
+    ENTRY( generic ),
+    ENTRY( memory ),
+    ENTRY( caller ),
+    ENTRY( internal ),
+    ENTRY( limitation ),
+
+    ENTRY( file_missing ),
+    ENTRY( file_read ),
+    ENTRY( file_io ),
+    ENTRY( file_eof ),
+
+    ENTRY( file_type ),
+    ENTRY( file_feature ),
+    ENTRY( file_corrupt ),
+
+    { 0, -1 }
 };
 #undef ENTRY
 
 static int err_code( fex_err_t err )
 {
-	return blargg_err_to_code( err, fex_codes );
+    return blargg_err_to_code( err, fex_codes );
 }
 
 BLARGG_EXPORT int fex_err_code( fex_err_t err )
 {
-	int code = err_code( err );
-	return (code >= 0 ? code : fex_err_generic);
+    int code = err_code( err );
+    return (code >= 0 ? code : fex_err_generic);
 }
 
 BLARGG_EXPORT fex_err_t fex_code_to_err( int code )
 {
-	return blargg_code_to_err( code, fex_codes );
+    return blargg_code_to_err( code, fex_codes );
 }
 
 BLARGG_EXPORT const char* fex_err_details( fex_err_t err )
 {
-	// If we don't have error code assigned, return entire string
-	return (err_code( err ) >= 0 ? blargg_err_details( err ) : blargg_err_str( err ));
+    // If we don't have error code assigned, return entire string
+    return (err_code( err ) >= 0 ? blargg_err_details( err ) : blargg_err_str( err ));
 }
 
 
@@ -299,8 +299,8 @@ BLARGG_EXPORT const char* fex_err_details( fex_err_t err )
 
 BLARGG_EXPORT fex_err_t fex_read( fex_t* fe, void* out, int count )
 {
-	RETURN_ERR( fe->stat() );
-	return fe->reader().read( out, count );
+    RETURN_ERR( fe->stat() );
+    return fe->reader().read( out, count );
 }
 
 BLARGG_EXPORT void        fex_close           ( fex_t* fe )                         { delete fe; }

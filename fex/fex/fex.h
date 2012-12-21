@@ -7,7 +7,7 @@
 #include <stddef.h>
 
 #ifdef __cplusplus
-	extern "C" {
+    extern "C" {
 #endif
 
 
@@ -20,7 +20,7 @@ typedef struct fex_t fex_t;
 /** Pointer to error, or NULL if function was successful. See error functions
 below. */
 #ifndef fex_err_t /* (#ifndef allows better testing of library) */
-	typedef const char* fex_err_t;
+    typedef const char* fex_err_t;
 #endif
 
 
@@ -173,21 +173,21 @@ fex_err_generic if err isn't a fex_err_t returned by library. */
 int fex_err_code( fex_err_t err );
 
 enum {
-	fex_ok               =    0,/**< Successful call. Guaranteed to be zero. */
-	fex_err_generic      = 0x01,/**< Error of unspecified type */
-	fex_err_memory       = 0x02,/**< Out of memory */
-	fex_err_caller       = 0x03,/**< Caller called function with bad args */
-	fex_err_internal     = 0x04,/**< Internal problem, bug, etc. */
-	fex_err_limitation   = 0x05,/**< Exceeded program limit */
-	
-	fex_err_file_missing = 0x20,/**< File not found at specified path */
-	fex_err_file_read    = 0x21,/**< Couldn't open file for reading */
-	fex_err_file_io      = 0x23,/**< Read/write error */
-	fex_err_file_eof     = 0x25,/**< Tried to read past end of file */
-	
-	fex_err_file_type    = 0x30,/**< File is of wrong type */
-	fex_err_file_feature = 0x32,/**< File requires unsupported feature */
-	fex_err_file_corrupt = 0x33 /**< File is corrupt */
+    fex_ok               =    0,/**< Successful call. Guaranteed to be zero. */
+    fex_err_generic      = 0x01,/**< Error of unspecified type */
+    fex_err_memory       = 0x02,/**< Out of memory */
+    fex_err_caller       = 0x03,/**< Caller called function with bad args */
+    fex_err_internal     = 0x04,/**< Internal problem, bug, etc. */
+    fex_err_limitation   = 0x05,/**< Exceeded program limit */
+
+    fex_err_file_missing = 0x20,/**< File not found at specified path */
+    fex_err_file_read    = 0x21,/**< Couldn't open file for reading */
+    fex_err_file_io      = 0x23,/**< Read/write error */
+    fex_err_file_eof     = 0x25,/**< Tried to read past end of file */
+
+    fex_err_file_type    = 0x30,/**< File is of wrong type */
+    fex_err_file_feature = 0x32,/**< File requires unsupported feature */
+    fex_err_file_corrupt = 0x33 /**< File is corrupt */
 };
 
 /** fex_err_t corresponding to numeric code. Note that this might not recover
@@ -200,7 +200,7 @@ fex_err_t fex_code_to_err( int code );
 typedef fex_t File_Extractor;
 
 #ifdef __cplusplus
-	}
+    }
 #endif
 
 #endif

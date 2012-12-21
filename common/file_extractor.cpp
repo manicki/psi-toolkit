@@ -108,14 +108,14 @@ std::string FileExtractor::storeToTempFile_(const std::string &archive) {
 }
 
 std::string FileExtractor::processFile_(fex_t* fex) {
-	const void* data;
+    const void* data;
     std::string content;
 
-	handleError_( fex_data(fex, &data) );
-	int size = fex_size(fex);
+    handleError_( fex_data(fex, &data) );
+    int size = fex_size(fex);
 
-	for (int i = 0; i < size; ++i) {
-		content += ((const char*) data)[i];
+    for (int i = 0; i < size; ++i) {
+        content += ((const char*) data)[i];
     }
 
     return content;
