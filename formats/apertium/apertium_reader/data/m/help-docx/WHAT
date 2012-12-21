@@ -1,0 +1,1 @@
+apertium-reader --format docx ! simple-writer --tag frag
