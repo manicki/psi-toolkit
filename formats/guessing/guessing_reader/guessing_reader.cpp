@@ -25,9 +25,9 @@ std::map<std::string, GuessingReader::PointerToReader> GuessingReader::fileTypeT
     boost::assign::map_list_of
         ("txt", PointerToReader(new TxtLatticeReader::Factory()))
         ("html", PointerToReader(new ApertiumLatticeReader::Factory()))
-        //("docx", PointerToReader(new ApertiumLatticeReader::Factory()))
-        //("xlsx", PointerToReader(new ApertiumLatticeReader::Factory()))
-        //("pptx", PointerToReader(new ApertiumLatticeReader::Factory()))
+        ("docx", PointerToReader(new ApertiumLatticeReader::Factory()))
+        ("xlsx", PointerToReader(new ApertiumLatticeReader::Factory()))
+        ("pptx", PointerToReader(new ApertiumLatticeReader::Factory()))
         ("psi", PointerToReader(new PsiLatticeReader::Factory()))
 #if HAVE_POPPLER
         ("pdf", PointerToReader(new PDFLatticeReader::Factory()))
@@ -42,10 +42,10 @@ std::map<std::string, GuessingReader::PointerToReader> GuessingReader::fileTypeT
 
 std::map<std::string, std::string> GuessingReader::fileTypeToReaderOptionsMap_ =
     boost::assign::map_list_of
-        ("html", "--format html");
-        //("docx", "--format docx")
-        //("xlsx", "--format xlsx")
-        //("pptx", "--format pptx");
+        ("html", "--format html")
+        ("docx", "--format docx")
+        ("xlsx", "--format xlsx")
+        ("pptx", "--format pptx");
 
 std::string GuessingReader::getFormatName() {
     return "Guessing";
@@ -66,13 +66,28 @@ std::string GuessingReader::guessFileType(std::istream& input) {
     if (filetype == "zip") {
         DEBUG("compressed archive format recognized, checking inside...");
 
-        std::stringstream inputContent;
-        inputContent << input.rdbuf();
-
-        filetype = fileRecognizer_.recognizeCompressedFileFormat(inputContent.str());
+        filetype = fileRecognizer_.recognizeCompressedFileFormat(
+            getDataWithoutTouchingIStream_(input));
     }
 
     return filetype;
+}
+
+std::string GuessingReader::getDataWithoutTouchingIStream_(std::istream& stream) {
+    std::stringstream data;
+    data << stream.rdbuf();
+
+    std::string stringData = data.str();
+    int dataSize = stringData.size();
+    const char* rawData = stringData.c_str();
+
+    stream.clear();
+
+    for (int i = dataSize; i > 0; i--) {
+        stream.putback(rawData[i - 1]);
+    }
+
+    return stringData;
 }
 
 std::string GuessingReader::getStartingDataBlockWithoutTouchingIStream_(std::istream& stream) {

@@ -144,6 +144,10 @@ void ApertiumLatticeReader::Worker::doRun() {
 }
 
 void ApertiumLatticeReader::Worker::appendFragmentToLattice_(std::string fragment) {
+    if (fragment.empty()) {
+        return;
+    }
+
     Lattice::VertexDescriptor prevEnd = lattice_.getLastVertex();
     lattice_.appendStringWithSymbols(fragment);
     Lattice::VertexDescriptor nowEnd = lattice_.getLastVertex();
@@ -153,6 +157,10 @@ void ApertiumLatticeReader::Worker::appendFragmentToLattice_(std::string fragmen
 
 void ApertiumLatticeReader::Worker::appendTagToLattice_(
     std::string tag, std::string type, bool eos) {
+
+    if (tag.empty()) {
+        return;
+    }
 
     Lattice::VertexDescriptor prevEnd = lattice_.getLastVertex();
     lattice_.appendStringWithSymbols(tag);
