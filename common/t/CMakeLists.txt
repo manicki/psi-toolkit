@@ -10,6 +10,7 @@ add_library(common-tests
     segment_glob_tests.cpp
     annotation_item_tests.cpp
     ant_like_path_glob_tests.cpp
+    file_extractor_tests.cpp
     file_fetcher_tests.cpp
     file_recognizer_tests.cpp
     lattice_iter_writer_tests.cpp
