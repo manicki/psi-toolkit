@@ -1,5 +1,6 @@
 #include <boost/assign.hpp>
 #include <boost/foreach.hpp>
+#include <boost/algorithm/string/predicate.hpp>
 
 #include "file_recognizer.hpp"
 #include "file_extractor.hpp"
@@ -178,6 +179,7 @@ void FileRecognizer::recognizeMimeTypeAndFileExtension(const std::string & /*dat
         std::string magicFileInfo = magic;
         type = getMimeType_(magicFileInfo);
         extension = getFileExtension_(magicFileInfo);
+        extension = recognizeFileFormat_(data, extension);
     }
 
     closeLibMagic();
@@ -190,11 +192,21 @@ bool FileRecognizer::hasDjvuFormatBeginning_(const std::string& data) {
 }
 
 bool FileRecognizer::looksLikePsiFormat_(const std::string& text) {
-    return RegExp::FullMatch(text, PerlRegExp("(01 0000 [0-9*][0-9@])(.|\n|\r)*"));
+    std::stringstream textStream(text);
+    std::string line;
+
+    while (std::getline(textStream, line)) {
+        if (line.empty() || boost::starts_with(line, "#")) {
+            continue;
+        }
+        return RegExp::FullMatch(text, RegExp("(01 0000 [0-9*][0-9@])(.|\n|\r)*"));
+    }
+
+    return false;
 }
 
 bool FileRecognizer::looksLikeUTTFormat_(const std::string& text) {
-    return RegExp::FullMatch(text, PerlRegExp("(0000 00 [A-Z])(.|\n|\r)*"));
+    return RegExp::FullMatch(text, RegExp("(0000 00 [A-Z])(.|\n|\r)*"));
 }
 
 std::string FileRecognizer::recognizeCompressedFileFormat(const std::string &data) {
