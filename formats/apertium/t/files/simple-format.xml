@@ -8,6 +8,7 @@
     <escape-chars regexp='escape-chars'/>
     <space-chars regexp='space-chars'/>
     <case-sensitive value="no"/>
+    <compressed value="no" regexp=""/>
   </options>
 
   <rules>
