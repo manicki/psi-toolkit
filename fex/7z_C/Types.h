@@ -7,7 +7,7 @@
 #include <stddef.h>
 
 #ifdef __cplusplus
-	extern "C" {
+    extern "C" {
 #endif
 
 #define SZ_OK 0
@@ -200,7 +200,7 @@ typedef struct
 #define IAlloc_Free(p, a) (p)->Free((p), a)
 
 #ifdef __cplusplus
-	}
+    }
 #endif
 
 #endif

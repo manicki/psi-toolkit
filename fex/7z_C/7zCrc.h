@@ -11,7 +11,7 @@ Public domain */
 #include "Types.h"
 
 #ifdef __cplusplus
-	extern "C" {
+    extern "C" {
 #endif
 
 extern UInt32 g_CrcTable[];
@@ -26,7 +26,7 @@ UInt32 MY_FAST_CALL CrcUpdate(UInt32 crc, const void *data, size_t size);
 UInt32 MY_FAST_CALL CrcCalc(const void *data, size_t size);
 
 #ifdef __cplusplus
-	}
+    }
 #endif
 
 #endif

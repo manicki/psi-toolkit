@@ -19,7 +19,7 @@ used. */
 class Data_Reader {
 public:
 
-    // Reads min(*n,remain()) bytes and sets *n to this number, thus trying to read more
+    // Reads min(*n, remain()) bytes and sets *n to this number, thus trying to read more
     // tham remain() bytes doesn't result in error, just *n being set to remain().
     blargg_err_t read_avail( void* p, int* n );
     blargg_err_t read_avail( void* p, long* n );

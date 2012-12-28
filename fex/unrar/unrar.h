@@ -8,13 +8,13 @@
 #include <limits.h>
 
 #if !defined (UNRAR_NO_LONG_LONG) && defined (LLONG_MAX)
-	typedef long long unrar_long_long;
+    typedef long long unrar_long_long;
 #else
-	typedef long unrar_long_long;
+    typedef long unrar_long_long;
 #endif
 
 #ifdef __cplusplus
-	extern "C" {
+    extern "C" {
 #endif
 
 
@@ -22,7 +22,7 @@
 where noted, once an operation returns an error, that archive should not be
 used any further, other than with unrar_close(). */
 #ifndef unrar_err_t /* (#ifndef allows better testing of library) */
-	typedef int unrar_err_t;
+    typedef int unrar_err_t;
 #endif
 
 /** First parameter of most functions is unrar_t*, or const unrar_t* if nothing
@@ -51,12 +51,12 @@ file at offset pos and set *count to avail, where avail is the lesser of *count
 and file_size-pos. Put read bytes into *out and return unrar_ok. If fewer than
 avail bytes could be read successfully, return a non-zero error code. */
 typedef unrar_err_t (*unrar_read_func)( void* user_data,
-		void* out, int* count, unrar_pos_t pos );
+        void* out, int* count, unrar_pos_t pos );
 
 /** Same as unrar_open(), except data is read using supplied function rather
 than from file. */
 unrar_err_t unrar_open_custom( unrar_t** unrar_out,
-		unrar_read_func, void* user_data );
+        unrar_read_func, void* user_data );
 
 /** Closes archive and frees memory. OK to pass NULL. */
 void unrar_close( unrar_t* );
@@ -88,13 +88,13 @@ unrar_err_t unrar_seek( unrar_t*, unrar_pos_t );
 /** Information about current file */
 typedef struct unrar_info_t
 {
-	unrar_pos_t     size;       /**< Uncompressed size */
-	const char*     name;       /**< Name, in Unicode if is_unicode is true */
-	const wchar_t*  name_w;     /**< Name in Unicode, "" if unavailable */
-	unrar_bool      is_unicode; /**< True if name is Unicode (UTF-8) */
-	unsigned int    dos_date;   /**< Date in DOS-style format, 0 if unavailable */
-	unsigned int    crc;        /**< Checksum; algorithm depends on archive */
-	unrar_bool      is_crc32;   /**< True if crc is CRC-32 */
+    unrar_pos_t     size;       /**< Uncompressed size */
+    const char*     name;       /**< Name, in Unicode if is_unicode is true */
+    const wchar_t*  name_w;     /**< Name in Unicode, "" if unavailable */
+    unrar_bool      is_unicode; /**< True if name is Unicode (UTF-8) */
+    unsigned int    dos_date;   /**< Date in DOS-style format, 0 if unavailable */
+    unsigned int    crc;        /**< Checksum; algorithm depends on archive */
+    unrar_bool      is_crc32;   /**< True if crc is CRC-32 */
 } unrar_info_t;
 
 /** Information about current file. Pointer is valid until unrar_next(),
@@ -125,13 +125,13 @@ that passed to unrar_extract_custom(). Callback must do the following: Write
 count bytes from *in to wherever extracted data goes and return unrar_ok. If
 data cannot be written successfully, return a non-zero error code. */
 typedef unrar_err_t (*unrar_write_func)( void* user_data,
-		const void* in, int count );
+        const void* in, int count );
 
 /**  Extracts current file and writes data using supplied function. Any error
 it returns will be returned by this function, and archive will still be
 usable. */
 unrar_err_t unrar_extract_custom( unrar_t*,
-		unrar_write_func, void* user_data );
+        unrar_write_func, void* user_data );
 
 
 /******** Errors ********/
@@ -141,24 +141,24 @@ pointer to a C string; never returns NULL. Returns "" for unrar_ok. */
 const char* unrar_err_str( unrar_err_t );
 
 enum {
-	unrar_ok            =  0,/**< No error; success. Guaranteed to be zero. */
-	unrar_err_memory    =  1,/**< Out of memory */
-	unrar_err_open      =  2,/**< Couldn't open file (not found/permissions) */
-	unrar_err_not_arc   =  3,/**< Not a RAR archive */
-	unrar_err_corrupt   =  4,/**< Archive is corrupt */
-	unrar_err_io        =  5,/**< Read failed */
-	unrar_err_arc_eof   =  6,/**< At end of archive; no more files */ 
-	unrar_err_encrypted =  7,/**< Encryption not supported */
-	unrar_err_segmented =  8,/**< Segmentation not supported */
-	unrar_err_huge      =  9,/**< Huge (2GB+) archives not supported */
-	unrar_err_old_algo  = 10,/**< Compressed with unsupported old algorithm */
-	unrar_err_new_algo  = 11,/**< Compressed with unsupported new algorithm */
-	unrar_next_err      = 100/**< Errors range from 0 to unrar_next_err-1 */
+    unrar_ok            =  0, /**< No error; success. Guaranteed to be zero. */
+    unrar_err_memory    =  1, /**< Out of memory */
+    unrar_err_open      =  2, /**< Couldn't open file (not found/permissions) */
+    unrar_err_not_arc   =  3, /**< Not a RAR archive */
+    unrar_err_corrupt   =  4, /**< Archive is corrupt */
+    unrar_err_io        =  5, /**< Read failed */
+    unrar_err_arc_eof   =  6, /**< At end of archive; no more files */
+    unrar_err_encrypted =  7, /**< Encryption not supported */
+    unrar_err_segmented =  8, /**< Segmentation not supported */
+    unrar_err_huge      =  9, /**< Huge (2GB+) archives not supported */
+    unrar_err_old_algo  = 10, /**< Compressed with unsupported old algorithm */
+    unrar_err_new_algo  = 11, /**< Compressed with unsupported new algorithm */
+    unrar_next_err      = 100/**< Errors range from 0 to unrar_next_err-1 */
 };
 
 
 #ifdef __cplusplus
-	}
+    }
 #endif
 
 #endif

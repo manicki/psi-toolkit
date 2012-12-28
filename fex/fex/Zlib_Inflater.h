@@ -11,7 +11,7 @@
 class Zlib_Inflater {
 public:
 
-    // Reads at most min(*count,bytes_until_eof()) bytes into *out and set *count
+    // Reads at most min(*count, bytes_until_eof()) bytes into *out and set *count
     // to that number, or returns error if that many can't be read.
     typedef blargg_err_t (*callback_t)( void* user_data, void* out, int* count );
 

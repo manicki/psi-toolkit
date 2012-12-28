@@ -42,9 +42,9 @@ SRes SzAr_Extract(
     *blockIndex = folderIndex;
     IAlloc_Free(allocMain, *outBuffer);
     *outBuffer = 0;
-    
+
     RINOK(LookInStream_SeekTo(inStream, startOffset));
-    
+
     if (res == SZ_OK)
     {
       *outBufferSize = unpackSize;

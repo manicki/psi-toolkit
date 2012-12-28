@@ -113,9 +113,9 @@ Zip_Extractor::Zip_Extractor() :
     Zip_Extractor::clear_file_v();
 
     // If these fail, structures had extra padding inserted by compiler
-    assert( offsetof (header_t,filename)   == header_size );
-    assert( offsetof (entry_t,filename)    == entry_size );
-    assert( offsetof (end_entry_t,comment) == end_entry_size );
+    assert( offsetof (header_t, filename)   == header_size );
+    assert( offsetof (entry_t, filename)    == entry_size );
+    assert( offsetof (end_entry_t, comment) == end_entry_size );
 }
 
 Zip_Extractor::~Zip_Extractor()
@@ -296,7 +296,7 @@ void Zip_Extractor::clear_file_v()
 
 blargg_err_t Zip_Extractor::inflater_read( void* data, void* out, int* count )
 {
-    Zip_Extractor& self = *STATIC_CAST(Zip_Extractor*,data);
+    Zip_Extractor& self = *STATIC_CAST(Zip_Extractor*, data);
 
     if ( *count > self.raw_remain )
         *count = self.raw_remain;

@@ -85,7 +85,7 @@ extern "C"
     {
         // TODO: 64-bit file support
 
-        Rar_Extractor::read_callback_t* h = STATIC_CAST(Rar_Extractor::read_callback_t*,data);
+        Rar_Extractor::read_callback_t* h = STATIC_CAST(Rar_Extractor::read_callback_t*, data);
         if ( h->pos != pos )
         {
             blargg_err_t err = h->in->seek( pos );

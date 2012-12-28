@@ -107,7 +107,7 @@ std::string FileRecognizer::recognizeFileExtension(const std::string & /*data*/)
     else {
         std::string magicFileInfo = magic;
         extension = getFileExtension_(magicFileInfo);
-        extension = recognizeFileFormat_(data.c_str(), extension);
+        extension = recognizeFileFormat_(data, extension);
 
         DEBUG("magic filetype: [" << magicFileInfo << "], file extension: [" << extension << "]");
     }

@@ -37,7 +37,7 @@ int const blargg_ok = 0;
     #define BLARGG_MUTABLE
 #endif
 
-/* BLARGG_4CHAR('a','b','c','d') = 'abcd' (four character integer constant).
+/* BLARGG_4CHAR('a', 'b', 'c', 'd') = 'abcd' (four character integer constant).
 I don't just use 'abcd' because that's implementation-dependent. */
 #define BLARGG_4CHAR( a, b, c, d ) \
     ((a&0xFF)*0x1000000 + (b&0xFF)*0x10000 + (c&0xFF)*0x100 + (d&0xFF))
@@ -78,8 +78,8 @@ arithmetic on smaller types. */
 #endif
 
 // In case compiler doesn't support these properly. Used rarely.
-#define STATIC_CAST(T,expr) static_cast<T> (expr)
-#define CONST_CAST( T,expr) const_cast<T> (expr)
+#define STATIC_CAST(T, expr) static_cast<T> (expr)
+#define CONST_CAST( T, expr) const_cast<T> (expr)
 
 // User configuration can override the above macros if necessary
 #include "blargg_config.h"

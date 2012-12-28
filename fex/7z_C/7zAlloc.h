@@ -7,7 +7,7 @@
 #include <stddef.h>
 
 #ifdef __cplusplus
-	extern "C" {
+    extern "C" {
 #endif
 
 void *SzAlloc(void *p, size_t size);
@@ -17,7 +17,7 @@ void *SzAllocTemp(void *p, size_t size);
 void SzFreeTemp(void *p, void *address);
 
 #ifdef __cplusplus
-	}
+    }
 #endif
 
 #endif

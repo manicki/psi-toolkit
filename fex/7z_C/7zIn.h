@@ -8,13 +8,13 @@
 #include "7zItem.h"
 
 #ifdef __cplusplus
-	extern "C" {
+    extern "C" {
 #endif
 
 typedef struct
 {
   CSzAr db;
-  
+
   UInt64 startPosAfterHeader;
   UInt64 dataPos;
 
@@ -41,9 +41,9 @@ SZ_ERROR_FAIL
 */
 
 SRes SzArEx_Open(CSzArEx *p, ILookInStream *inStream, ISzAlloc *allocMain, ISzAlloc *allocTemp);
- 
+
 #ifdef __cplusplus
-	}
+    }
 #endif
 
 #endif

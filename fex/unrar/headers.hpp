@@ -34,112 +34,112 @@
 #define  LONG_BLOCK         0x8000
 
 enum HEADER_TYPE {
-	MARK_HEAD=0x72,MAIN_HEAD=0x73,FILE_HEAD=0x74,COMM_HEAD=0x75,AV_HEAD=0x76,
-	SUB_HEAD=0x77,PROTECT_HEAD=0x78,SIGN_HEAD=0x79,NEWSUB_HEAD=0x7a,
-	ENDARC_HEAD=0x7b
+    MARK_HEAD=0x72, MAIN_HEAD=0x73, FILE_HEAD=0x74, COMM_HEAD=0x75, AV_HEAD=0x76,
+    SUB_HEAD=0x77, PROTECT_HEAD=0x78, SIGN_HEAD=0x79, NEWSUB_HEAD=0x7a,
+    ENDARC_HEAD=0x7b
 };
 
 enum HOST_SYSTEM {
-	HOST_MSDOS=0,HOST_OS2=1,HOST_WIN32=2,HOST_UNIX=3,HOST_MACOS=4,
-	HOST_BEOS=5,HOST_MAX
+    HOST_MSDOS=0, HOST_OS2=1, HOST_WIN32=2, HOST_UNIX=3, HOST_MACOS=4,
+    HOST_BEOS=5, HOST_MAX
 };
 
 struct OldMainHeader
 {
-	byte Mark[4];
-	ushort HeadSize;
-	byte Flags;
+    byte Mark[4];
+    ushort HeadSize;
+    byte Flags;
 };
 
 
 struct OldFileHeader
 {
-	uint PackSize;
-	uint UnpSize;
-	ushort FileCRC;
-	ushort HeadSize;
-	uint FileTime;
-	byte FileAttr;
-	byte Flags;
-	byte UnpVer;
-	byte NameSize;
-	byte Method;
+    uint PackSize;
+    uint UnpSize;
+    ushort FileCRC;
+    ushort HeadSize;
+    uint FileTime;
+    byte FileAttr;
+    byte Flags;
+    byte UnpVer;
+    byte NameSize;
+    byte Method;
 };
 
 
 struct MarkHeader
 {
-	byte Mark[7];
+    byte Mark[7];
 };
 
 
 struct BaseBlock
 {
-	ushort HeadCRC;
-	HEADER_TYPE HeadType;//byte
-	ushort Flags;
-	ushort HeadSize;
+    ushort HeadCRC;
+    HEADER_TYPE HeadType;//byte
+    ushort Flags;
+    ushort HeadSize;
 };
 
 struct BlockHeader:BaseBlock
 {
-	union {
-		uint DataSize;
-		uint PackSize;
-	};
+    union {
+        uint DataSize;
+        uint PackSize;
+    };
 };
 
 
 struct MainHeader:BaseBlock
 {
-	ushort HighPosAV;
-	uint PosAV;
+    ushort HighPosAV;
+    uint PosAV;
 };
 
 #define SALT_SIZE     8
 
 struct FileHeader:BlockHeader
 {
-	uint UnpSize;
-	byte HostOS;
-	uint FileCRC;
-	uint FileTime;
-	byte UnpVer;
-	byte Method;
-	ushort NameSize;
-	union {
-		uint FileAttr;
-		uint SubFlags;
-	};
+    uint UnpSize;
+    byte HostOS;
+    uint FileCRC;
+    uint FileTime;
+    byte UnpVer;
+    byte Method;
+    ushort NameSize;
+    union {
+        uint FileAttr;
+        uint SubFlags;
+    };
 /* optional */
-	uint HighPackSize;
-	uint HighUnpSize;
+    uint HighPackSize;
+    uint HighUnpSize;
 /* names */
-	char FileName[NM*4]; // *4 to avoid using lots of stack in arcread
-	wchar FileNameW[NM];
+    char FileName[NM*4]; // *4 to avoid using lots of stack in arcread
+    wchar FileNameW[NM];
 /* optional */
-	byte Salt[SALT_SIZE];
+    byte Salt[SALT_SIZE];
 
-	RarTime mtime;
+    RarTime mtime;
 /* dummy */
-	Int64 FullPackSize;
-	Int64 FullUnpSize;
+    Int64 FullPackSize;
+    Int64 FullUnpSize;
 };
 
 // SubBlockHeader and its successors were used in RAR 2.x format.
 // RAR 3.x uses FileHeader with NEWSUB_HEAD HeadType for subblocks.
 struct SubBlockHeader:BlockHeader
 {
-	ushort SubType;
-	byte Level;
+    ushort SubType;
+    byte Level;
 };
 
 struct ProtectHeader:BlockHeader
 {
-	byte Version;
-	ushort RecSectors;
-	uint TotalBlocks;
-	byte Mark[8];
+    byte Version;
+    ushort RecSectors;
+    uint TotalBlocks;
+    byte Mark[8];
 };
 
 #endif

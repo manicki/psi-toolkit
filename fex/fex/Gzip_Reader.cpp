@@ -27,7 +27,7 @@ Gzip_Reader::~Gzip_Reader()
 
 static blargg_err_t gzip_reader_read( void* file, void* out, int* count )
 {
-    return STATIC_CAST(File_Reader*,file)->read_avail( out, count );
+    return STATIC_CAST(File_Reader*, file)->read_avail( out, count );
 }
 
 blargg_err_t Gzip_Reader::calc_size()

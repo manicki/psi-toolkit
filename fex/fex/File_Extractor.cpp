@@ -327,7 +327,7 @@ blargg_err_t File_Extractor::extract_v( void* out, int count )
 {
     void const* p;
     RETURN_ERR( data( &p ) );
-    memcpy( out, STATIC_CAST(char const*,p) + (size() - remain()), count );
+    memcpy( out, STATIC_CAST(char const*, p) + (size() - remain()), count );
 
     return blargg_ok;
 }

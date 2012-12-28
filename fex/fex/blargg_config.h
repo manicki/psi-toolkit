@@ -20,9 +20,9 @@
 // Support only the listed archive types. Remove any you don't need.
 /*
 #define FEX_TYPE_LIST \
-    fex_7z_type,\
-    fex_gz_type,\
-    fex_rar_type,\
+    fex_7z_type, \
+    fex_gz_type, \
+    fex_rar_type, \
     fex_zip_type,
 */
 

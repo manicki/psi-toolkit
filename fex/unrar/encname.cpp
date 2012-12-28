@@ -11,10 +11,10 @@ EncodeFileName::EncodeFileName()
 
 
 
-void EncodeFileName::Decode(char *Name,byte *EncName,int EncSize,wchar *NameW,
+void EncodeFileName::Decode(char *Name, byte *EncName, int EncSize, wchar *NameW,
                             int MaxDecSize)
 {
-  int EncPos=0,DecPos=0;
+  int EncPos=0, DecPos=0;
   byte HighByte=EncName[EncPos++];
   while (EncPos<EncSize && DecPos<MaxDecSize)
   {
@@ -23,7 +23,7 @@ void EncodeFileName::Decode(char *Name,byte *EncName,int EncSize,wchar *NameW,
       Flags=EncName[EncPos++];
       FlagBits=8;
     }
-    switch(Flags>>6)
+    switch (Flags>>6)
     {
       case 0:
         NameW[DecPos++]=EncName[EncPos++];
@@ -41,11 +41,11 @@ void EncodeFileName::Decode(char *Name,byte *EncName,int EncSize,wchar *NameW,
           if (Length & 0x80)
           {
             byte Correction=EncName[EncPos++];
-            for (Length=(Length&0x7f)+2;Length>0 && DecPos<MaxDecSize;Length--,DecPos++)
+            for (Length=(Length&0x7f)+2;Length>0 && DecPos<MaxDecSize;Length--, DecPos++)
               NameW[DecPos]=((Name[DecPos]+Correction)&0xff)+(HighByte<<8);
           }
           else
-            for (Length+=2;Length>0 && DecPos<MaxDecSize;Length--,DecPos++)
+            for (Length+=2;Length>0 && DecPos<MaxDecSize;Length--, DecPos++)
               NameW[DecPos]=Name[DecPos];
         }
         break;

@@ -45,8 +45,8 @@ extern "C"
     static SRes zip7_read_( void* vstream, void* out, size_t* size )
     {
         assert( out && size );
-        ISeekInStream* stream = STATIC_CAST(ISeekInStream*,vstream);
-        Zip7_Extractor_Impl* impl = STATIC_CAST(Zip7_Extractor_Impl*,stream);
+        ISeekInStream* stream = STATIC_CAST(ISeekInStream*, vstream);
+        Zip7_Extractor_Impl* impl = STATIC_CAST(Zip7_Extractor_Impl*, stream);
 
         long lsize = *size;
         blargg_err_t err = impl->in->read_avail( out, &lsize );
@@ -63,8 +63,8 @@ extern "C"
 
     static SRes zip7_seek_( void* vstream, Int64* pos, ESzSeek mode )
     {
-        ISeekInStream* stream = STATIC_CAST(ISeekInStream*,vstream);
-        Zip7_Extractor_Impl* impl = STATIC_CAST(Zip7_Extractor_Impl*,stream);
+        ISeekInStream* stream = STATIC_CAST(ISeekInStream*, vstream);
+        Zip7_Extractor_Impl* impl = STATIC_CAST(Zip7_Extractor_Impl*, stream);
 
         assert( mode != SZ_SEEK_CUR ); // never used
 

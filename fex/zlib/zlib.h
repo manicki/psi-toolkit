@@ -972,7 +972,7 @@ ZEXTERN uLong ZEXPORT zlibCompileFlags OF((void));
     One-time table building (smaller code, but not thread-safe if true):
      12: BUILDFIXED -- build static block decoding tables when needed
      13: DYNAMIC_CRC_TABLE -- build CRC calculation tables when needed
-     14,15: 0 (reserved)
+     14, 15: 0 (reserved)
 
     Library content (indicates missing functionality):
      16: NO_GZCOMPRESS -- gz* functions cannot compress (to avoid linking
@@ -984,7 +984,7 @@ ZEXTERN uLong ZEXPORT zlibCompileFlags OF((void));
     Operation variations (changes in library functionality):
      20: PKZIP_BUG_WORKAROUND -- slightly more permissive inflate
      21: FASTEST -- deflate algorithm with only one, lowest compression level
-     22,23: 0 (reserved)
+     22, 23: 0 (reserved)
 
     The sprintf variant used by gzprintf (zero is best):
      24: 0 = vs*, 1 = s* -- 1 means limited to 20 arguments after the format
@@ -1333,7 +1333,7 @@ ZEXTERN int ZEXPORT inflateBackInit_ OF((z_streamp strm, int windowBits,
 #define inflateInit(strm) \
         inflateInit_((strm),                ZLIB_VERSION, sizeof(z_stream))
 #define deflateInit2(strm, level, method, windowBits, memLevel, strategy) \
-        deflateInit2_((strm),(level),(method),(windowBits),(memLevel),\
+        deflateInit2_((strm), (level), (method), (windowBits), (memLevel), \
                       (strategy),           ZLIB_VERSION, sizeof(z_stream))
 #define inflateInit2(strm, windowBits) \
         inflateInit2_((strm), (windowBits), ZLIB_VERSION, sizeof(z_stream))
