@@ -5,6 +5,8 @@
 #include "file_storage.hpp"
 #include "file_recognizer.hpp"
 
+#include <set>
+
 class HtmlHelpFormatter : public HelpFormatter {
 
 public:
@@ -55,6 +57,8 @@ private:
 
     std::string escapeHTML_(const std::string& text);
     std::string escapeJSON_(std::string& text);
+
+    static std::set<std::string> extensionsForRandomExamples_;
 };
 
 #endif

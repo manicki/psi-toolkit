@@ -48,7 +48,7 @@ function switchBookmark(from, to) {
 function bindRandomExamples() {
   var pipeInput = $('#toolbox-pipe input');
   var textInput = $('#toolbox-text textarea');
-  var examples = pipelineExamples == 'undefined' ? [] : pipelineExamples;
+  var examples = (pipelineExamples == 'undefined') ? [] : pipelineExamples;
 
   pipeInput.attr('rel', 'tipsy');
   $('#toolbox-pipe input').tipsy({

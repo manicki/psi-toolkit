@@ -7,6 +7,9 @@
 
 #include "sundown/cpp/stringwrapper.hpp"
 
+std::set<std::string> HtmlHelpFormatter::extensionsForRandomExamples_ =
+    boost::assign::list_of("txt")("html")("xml");
+
 void HtmlHelpFormatter::doFormatOneProcessorHelp(
     std::string processorName,
     std::string description,
@@ -133,6 +136,15 @@ void HtmlHelpFormatter::formatPipelineExamplesInJSON(std::ostream& output) {
 }
 
 void HtmlHelpFormatter::formatPipelineExampleInJSON_(TestBatch batch, std::ostream& output) {
+    std::string text = getFileContent(batch.getTestRuns()[0].getInputFilePath());
+    std::string extension = fileRecognizer_.recognizeFileExtension(text);
+
+    if (extensionsForRandomExamples_.find(extension) == extensionsForRandomExamples_.end()) {
+        INFO("random example \"" << batch.getDescription()
+            << "\" is skipping because of input file extension");
+        return;
+    }
+
     output << "  {" << std::endl;
 
     std::string description = batch.getDescription();
@@ -142,7 +154,6 @@ void HtmlHelpFormatter::formatPipelineExampleInJSON_(TestBatch batch, std::ostre
     boost::algorithm::trim(pipe);
     output << "    \"pipe\" : \"" << escapeJSON_(pipe) << "\"," << std::endl;
 
-    std::string text = getFileContent(batch.getTestRuns()[0].getInputFilePath());
     boost::algorithm::trim(text);
     output << "    \"text\" : \"" << escapeJSON_(text) << "\"" << std::endl;
 
