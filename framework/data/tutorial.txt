@@ -1,8 +1,11 @@
+Notice: this tutorial has been created for an early version of PSI-Toolkit and some information
+may be out of date.
+
 What is PSI-Toolkit?
 -------------------------
 PSI-Toolkit is an open-source set of Natural Language Tools dealing with:
 
-* Text pre-processing
+* text pre-processing
 * sentence splitting
 * tokenization
 * lexical and morhological analysis
@@ -13,18 +16,19 @@ The PSI tools process mainly but not exclusively texts written in Polish.
 
 How to use the PSI tools?
 -------------------------
-You may either use our web-service or download the [PSI Linux packages](/download.html) and use them locally.
+You may either use our web-service or download the [PSI Linux packages](/download.html) and use
+them locally.
 
 Using the PSI web-service
 -------------------------
-* Type a text to be processed into the edit window 
+* Type a text to be processed into the edit window
 [here](/pipe.psis?pipe-text=tokenize+--lang+pl&input-text=Piękna+gra+trwała+długo.), e. g.
 
     `Piękna gra trwała długo.`
 
 * Specify a command: a (sequence of) PSI-processor(s) to be run, e.g.
 
-    `tokenize --lang pl`
+    `tokenizer --lang pl`
 
 * Read the result in the window at the bottom of the page.
 
@@ -32,33 +36,34 @@ Each token is displayed in a separate line.
 
 Suppose you need more details to be returned. This may be achieved by using psi-writer:
 
-    tokenize --lang pl ! psi-writer
+    tokenizer --lang pl ! psi-writer
 
 The first line of the output will be:
 
     01 0000 07    Piękna       !pl,token             Piękna      T
 
-The line says that the string `Piękna` starts from position 0000 in the text, ends at position 0007 and corresponds to a Polish token "Piękna".
+The line says that the string `Piękna` starts from position 0000 in the text, ends at position
+0007 and corresponds to a Polish token "Piękna".
 
 The penultimate line of the output will be:
 
     10 0000 28    Piękna....\r !pl,lang-guesser,text Piękna_gra_trwała_długo.\r TEXT[9]
 
-It says that the whole text starting atposition 0000 and ending at peosition 0028 was recognized by the `lang-guesser` as belonging to the Polish language.
+It says that the whole text starting at position 0000 and ending at position 0028 was recognized
+by the `lang-guesser` as belonging to the Polish language.
 
 Using the PSI-Pipe package
 -------------------------
-* Download the PSI-Pipe package [from here](/download.html) and unpack it in your Linux system
-* Use the PSI tools in the bash shell using the *psi-pipe*  command
-  e.g.
+* Download the [PSI-Toolkit package](/download.html) and unpack it in your Linux system
+* Use the PSI tools in the bash shell using the *psi-pipe* command e.g.
 
-    >echo 'Ala ma kota' | psi-pipe ! txt-reader ! tp-tokenizer --lang pl ! psi-writer
+    `>echo 'Ala ma kota' | psi-pipe ! txt-reader ! tokenizer --lang pl ! psi-writer`
 
-* You may also use PSI modules in your Java, Python or Perl programs
+* You may also use PSI modules in your Perl, Python or Ruby programs
 
 Using the PSI-shell package
 -------------------------
-* Download the PSI-Server package
+* Download the same [PSI-Toolkit package](/download.html)
 * You may now include the PSI-toolkit web-service in your own portal.
 
 PSI-processors
@@ -72,9 +77,11 @@ There are three types of PSI-processors:
 
 PSI-readers
 -------------------------
-Readers process the text,  (input either from keyboard or from a document) in order to initialize the internal data structure, a so-called PSI-lattice.
+Readers process the text (input either from keyboard or from a document) in order to initialize
+the internal data structure, a so-called PSI-lattice.
 
-If you want to see how a PSI-lattice looks like, immediately after a text is processed by the text reader, try this command:
+If you want to see how a PSI-lattice looks like, immediately after a text is processed by the
+text reader, try this command:
 
     txt-reader ! gv-writer --format png
 
@@ -86,12 +93,13 @@ PSI-Toolkit readers process the following file formats:
 * HTML
 * RTF
 * OpenOffice.org Writer ODT
-* Microsoft Word DOCX, WXML
-* Microsoft Powerpoint PPTX
+* Microsoft Word DOC, DOCX, WXML
+* Microsoft PowerPoint PPTX
 * Microsoft Excel XLSX
 * PDF
 
-The text typed into the edit window in the PSI web-service is processed by a plain text reader, called *txt-reader*.
+The text typed into the edit window in the PSI web-service is processed by a plain text reader,
+called *txt-reader*.
 
 PSI-annotators
 -------------------------
@@ -131,7 +139,7 @@ You may filter the information to be returned in order to simplify the output.
 
 Here are some examples of using PSI writers:
 
-    txt-reader ! tokenizer  --lang en ! simple-writer
+    txt-reader ! tokenizer --lang en ! simple-writer
 
 PSI pipeline
 -------------------------
@@ -147,11 +155,11 @@ Default processors
 You do not have to specify all processors in your pipeline. If you "forget" a processor, the pipeline will be supplemented by the default processor.
 For example, the command
 
-    tokenize --lang pl
+    tokenizer --lang pl
 
 will be intepreted as:
 
-    txt-reader ! tokenize --lang pl ! simple writer
+    txt-reader ! tokenizer --lang pl ! simple writer
 
 Switches
 -------------------------
