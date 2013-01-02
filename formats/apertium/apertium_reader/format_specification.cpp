@@ -157,10 +157,12 @@ FormatOptions FormatSpecificationReader::parseOptions_() {
     std::string caseSensitive = xmlParsed_->get<std::string>
         ("format.options.case-sensitive.<xmlattr>.value");
 
-    std::string compressed = xmlParsed_->get<std::string>
-        ("format.options.compressed.<xmlattr>.value");
-    std::string compressionRegexp = xmlParsed_->get<std::string>
-        ("format.options.compressed.<xmlattr>.regexp");
+    // NOTE: here default-value way of getting data was used,
+    // maybe it should be used for the previous statements as well??
+    std::string compressed = xmlParsed_->get
+        ("format.options.compressed.<xmlattr>.value", std::string());
+    std::string compressionRegexp = xmlParsed_->get
+        ("format.options.compressed.<xmlattr>.regexp", std::string());
 
     DEBUG("found options: " << largeblocksSize << "; " << inputEncoding << "; " << outputEncoding
         << "; " << escapeChars << "; " << spaceChars << "; " << caseSensitive << "; "
