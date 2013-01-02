@@ -29,6 +29,7 @@ std::map<std::string, std::string> FileRecognizer::mimeTypeToFileExtension_ =
         ("model/vrml",               "wrl")
         ("text/html",                "html")
         ("text/plain",               "txt")
+        ("text/x-tex",               "tex")
         ("text/rtf",                 "rtf");
 
 FileRecognizer::FileRecognizer() { }
