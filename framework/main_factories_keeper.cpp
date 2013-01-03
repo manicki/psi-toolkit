@@ -92,6 +92,7 @@ MainFactoriesKeeper::MainFactoriesKeeper() {
     keeper_.addAlias("read", "txt-reader");
     keeper_.addAlias("read-txt", "txt-reader");
     keeper_.addAlias("read-text", "txt-reader");
+    keeper_.addAlias("text-reader", "txt-reader");
 
     keeper_.addAlias("read-pdf", "pdf-reader");
 
