@@ -99,6 +99,9 @@ void HtmlHelpFormatter::formatExampleInputOutput_(
         output << "<pre><code>" << escapeHTML_(fileContent) << "</code></pre>" << std::endl;
         return;
     }
+    if (type == "application" && ext == "zip") {
+        ext = fileRecognizer_.recognizeCompressedFileFormat(fileContent);
+    }
 
     if (fileStorage_ != NULL) {
         std::string path = (*fileStorage_).storeFileByMD5(fileContent, ext);

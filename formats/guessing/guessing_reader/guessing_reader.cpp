@@ -75,23 +75,6 @@ std::string GuessingReader::guessFileType(std::istream& input) {
     return filetype;
 }
 
-std::string GuessingReader::getDataWithoutTouchingIStream_(std::istream& stream) {
-    std::stringstream data;
-    data << stream.rdbuf();
-
-    std::string stringData = data.str();
-    int dataSize = stringData.size();
-    const char* rawData = stringData.c_str();
-
-    stream.clear();
-
-    for (int i = dataSize; i > 0; i--) {
-        stream.putback(rawData[i - 1]);
-    }
-
-    return stringData;
-}
-
 std::string GuessingReader::getStartingDataBlockWithoutTouchingIStream_(std::istream& stream) {
     char buffer[blockSize_];
     stream.read(buffer, blockSize_);
@@ -108,6 +91,23 @@ std::string GuessingReader::getStartingDataBlockWithoutTouchingIStream_(std::ist
     }
 
     return std::string(buffer, lastReadable);
+}
+
+std::string GuessingReader::getDataWithoutTouchingIStream_(std::istream& stream) {
+    std::stringstream data;
+    data << stream.rdbuf();
+
+    std::string stringData = data.str();
+    int dataSize = stringData.size();
+    const char* rawData = stringData.c_str();
+
+    stream.clear();
+
+    for (int i = dataSize; i > 0; i--) {
+        stream.putback(rawData[i - 1]);
+    }
+
+    return stringData;
 }
 
 LatticeReader<std::istream>* GuessingReader::getLatticeReader(std::string type) {
