@@ -40,32 +40,40 @@ size_t BatchRunner::getNextTest_() {
 void BatchRunner::runTest_(size_t testIx) {
     const TestRun& testRun(testRuns_[testIx]);
 
-    boost::filesystem::ifstream inputStream(testRun.getInputFilePath());
-
-    std::ostringstream oss;
-    pipeRunner_.run(inputStream, oss);
-
-    std::string got = oss.str();
-
-    std::string expected = slurpFile_(testRun.getExpectedOutputFilePath());
-
-    if (got == expected) {
-        std::cout << "... OK" << std::endl;
+    if (testBatch_.isExampleOnly()) {
+        std::cout << "... IS ONLY AN EXAMPLE (so won't be checked)" << std::endl;
         reporter_.report(
             testBatch_.getDirectory().string(),
             testRun.getInputFilePath().string(),
             true);
-    }
-    else {
-        std::cout << "... FAILED (unexpected output)" << std::endl;
+    } else {
+        boost::filesystem::ifstream inputStream(testRun.getInputFilePath());
 
-        reporter_.report(
-            testBatch_.getDirectory().string(),
-            testRun.getInputFilePath().string(),
-            false);
+        std::ostringstream oss;
+        pipeRunner_.run(inputStream, oss);
 
-        boost::filesystem::ofstream outputStream(testRun.getExpectedOutputFilePath());
-        outputStream << got;
+        std::string got = oss.str();
+
+        std::string expected = slurpFile_(testRun.getExpectedOutputFilePath());
+
+        if (got == expected) {
+            std::cout << "... OK" << std::endl;
+            reporter_.report(
+                testBatch_.getDirectory().string(),
+                testRun.getInputFilePath().string(),
+                true);
+        }
+        else {
+            std::cout << "... FAILED (unexpected output)" << std::endl;
+
+            reporter_.report(
+                testBatch_.getDirectory().string(),
+                testRun.getInputFilePath().string(),
+                false);
+
+            boost::filesystem::ofstream outputStream(testRun.getExpectedOutputFilePath());
+            outputStream << got;
+        }
     }
 }
 

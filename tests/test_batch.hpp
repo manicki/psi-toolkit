@@ -32,12 +32,15 @@ private:
     std::string pipeline_;
     std::string description_;
     std::vector<TestRun> testRuns_;
+    bool exampleOnly_;
 public:
     TestBatch(const boost::filesystem::path& mDirectory,
               const std::string& pipeline,
-              const std::string& description)
+              const std::string& description,
+              bool exampleOnly = false)
         : mDirectory_(mDirectory),
-        description_(description) {
+        description_(description),
+        exampleOnly_(exampleOnly) {
         pipeline_ = processPipeline_(pipeline);
     }
 
@@ -66,6 +69,10 @@ public:
 
     std::vector<TestRun> getTestRuns() const {
         return testRuns_;
+    }
+
+    bool isExampleOnly() const {
+        return exampleOnly_;
     }
 
 private:
