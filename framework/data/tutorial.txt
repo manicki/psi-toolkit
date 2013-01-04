@@ -42,14 +42,16 @@ The first line of the output will be:
 
     01 0000 07    Piękna       !pl,token             Piękna      T
 
-The line says that the string `Piękna` starts from position 0000 in the text, ends at position
-0007 and corresponds to a Polish token "Piękna".
+The line says that the string `Piękna` starts from position 0000 in the text,
+has a length of 7 characters (thus it ends at position 0007)
+and corresponds to a Polish token "Piękna".
 
 The penultimate line of the output will be:
 
     10 0000 28    Piękna....\r !pl,lang-guesser,text Piękna_gra_trwała_długo.\r TEXT[9]
 
-It says that the whole text starting at position 0000 and ending at position 0028 was recognized
+It says that the whole text starting at position 0000 and having a length of 28 characters
+(thus ending at position 0028) was recognized
 by the `lang-guesser` as belonging to the Polish language.
 
 Using the PSI-Pipe package
