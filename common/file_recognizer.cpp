@@ -12,7 +12,8 @@ const std::string FileRecognizer::UNKNOWN_EXTENSION = "UNKNOWN";
 
 std::map<std::string, std::string> FileRecognizer::mimeTypeToFileExtension_ =
     boost::assign::map_list_of
-        ("application/vnd.ms-office", "doc") //?
+        ("application/vnd.ms-office", "doc")
+        ("application/msword",        "doc")
         ("application/octet-stream",  "bin") //?
         ("application/pdf",           "pdf")
         ("application/postscript",    "eps")
