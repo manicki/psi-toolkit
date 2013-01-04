@@ -94,9 +94,23 @@ MainFactoriesKeeper::MainFactoriesKeeper() {
     keeper_.addAlias("read-text", "txt-reader");
     keeper_.addAlias("text-reader", "txt-reader");
 
+    keeper_.addAlias("read-djvu", "djvu-reader");
+
+    keeper_.addAlias("read-doc", "doc-reader");
+
     keeper_.addAlias("read-pdf", "pdf-reader");
 
     keeper_.addAlias("read-html", "apertium-reader");
+
+    keeper_.addAlias("read-nkjp", "nkjp-reader");
+
+    keeper_.addAlias("read-utt", "utt-reader");
+
+    keeper_.addAlias("read-psi", "psi-reader");
+    keeper_.addAlias("read-lattice", "psi-reader");
+
+    keeper_.addAlias("write-psi", "psi-writer");
+    keeper_.addAlias("write-lattice", "psi-writer");
 
     keeper_.addAlias("write", "simple-writer");
     keeper_.addAlias("write-simple", "simple-writer");
@@ -105,6 +119,8 @@ MainFactoriesKeeper::MainFactoriesKeeper() {
     keeper_.addAlias("write-chart", "gv-writer");
     keeper_.addAlias("graph", "gv-writer");
     keeper_.addAlias("draw", "gv-writer");
+
+    keeper_.addAlias("write-dot", "dot-writer");
 
     keeper_.addAlias("write-simple-json", "json-simple-writer");
 
