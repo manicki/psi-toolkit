@@ -108,7 +108,7 @@ void HtmlHelpFormatter::formatExampleInputOutput_(
 
         output << "<a href=\"" << path << "\" target=\"_blank\" >";
 
-        if (type == "image") {
+        if (type == "image" && ext != "djvu") {
             output << "<img src=\"" << path << "\" alt=\"image output\" />";
         } else {
             output << path;
