@@ -48,6 +48,13 @@
    ...
 }
 {
+   graphviz leak pango shape full
+   Memcheck:Leak
+   ...
+   fun:pango_shape_full
+   ...
+}
+{
    graphviz leak g_object newv
    Memcheck:Leak
    ...
