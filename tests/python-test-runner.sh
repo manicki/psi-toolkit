@@ -11,7 +11,11 @@ echo 'Start testing Python bindings.'
 echo ''
 
 NOSETESTS=nosetests
-which nosetests2 && NOSETESTS=nosetests2
+if ! which $NOSETESTS
+then
+    echo "trying nosetests3..."
+    which nosetests3 && NOSETESTS=nosetests3
+fi
 
 cd $PRJ_DIR
 $NOSETESTS --with-xunit $PYTHON_BINDINGS_DIR/Test/test.py
