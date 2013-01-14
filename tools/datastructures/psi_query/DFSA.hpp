@@ -17,6 +17,15 @@ namespace psi {
         typedef typename NDFSA<ArcT>::symbol_type symbol_type;
         typedef typename NDFSA<ArcT>::arc_iterator_type arc_iterator_type;
 
+/*******************************************************************************
+## Constructor
+
+  DFSA();
+
+Basic constructor. Creates a deterministic finite-state automaton and an
+underlying non-deterministic finite-state automaton.
+
+*******************************************************************************/
         DFSA() : NDFSA<ArcT>::NDFSA() {};
 
         DFSA<ArcT>& operator=(const NDFSA<ArcT> &ndfsa) {
@@ -24,6 +33,14 @@ namespace psi {
             return *this;
         }
 
+/*******************************************************************************
+## Deterministic inclusion function
+
+    template <typename InputIterator> bool in(InputIterator, InputIterator);
+
+Checks whether given sequence of labels belongs to the language of the automaton.
+    
+*******************************************************************************/
         template <typename InputIterator>
         bool in(InputIterator it, InputIterator end) {
             state_type current_state = 0;
@@ -38,6 +55,12 @@ namespace psi {
             return this->isEndState(current_state);
         }
 
+/*******************************************************************************
+## Deterministic delta transtion function
+
+    state_type delta(state_type p, symbol_type a) const;
+    
+*******************************************************************************/
         state_type delta(state_type p, symbol_type a) const {
             if (NDFSA<ArcT>::m_states.size() < (size_t)p)
                 return state_type(-1);

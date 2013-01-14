@@ -17,7 +17,7 @@ functions. Any finite state automaton implementation can be used if the
 `ArcWeighted` template is used as the arc type (default template parameter).
 
 The automaton should be acyclic and minimal. Otherwise behaviour is
-undefined and can (will!) lead to errors.
+undefined and can (and will!) lead to errors.
 
 ## Synopsis
 
