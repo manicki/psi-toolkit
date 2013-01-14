@@ -1,0 +1,1 @@
+Reads DOCX file with `--format docx` option and writes only text fragments.
