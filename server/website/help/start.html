@@ -23,38 +23,38 @@
       <p>
         PSI-Toolkit is a set of linguistic tools for processing texts written in various
         formats and various languages.
-        The largest number of tools has been designed for Polish, but also tools for
-        English, French, German or Russian are available.
+        The majority of tools has been designed for Polish, but also available are tools for
+        English, French, German and Russian.
       </p>
       <p>
-        The full strength of PSI-Toolkit is offered with command-line version,
-        but most of the features you can check via this web-service.
+        The full range of PSI-Toolkit functions is offered with the command-line version,
+        but you can test most of the features via this web-service.
       </p>
       <p>
         What is going on here?
       </p>
       <img class="screen" src="/img/intro-screen-1.png" />
       <p>
-        All you need to process your data is to write the command, set input text and
+        All you need to process your data is to set the command, type the input text and
         run PSI-Toolkit.
       </p>
 
       <h2>Commands</h2>
       <p>
-        With commands you specify what you want to do, for instance, to <code>tokenize</code>
+        Commands let you specify what you want to do, for instance, to <code>tokenize</code>
         or to <code>lemmatize</code>.
-        The full command is a sequence of three types of tools: reader, annotator(s) and writer
-        because it seems to be obvious that data have to be firstly read to be written
-        after processing.
+        The full command usually is a sequence of three tasks: read, annotate
+        and write because data have to be firstly read, then processed (annotated) and finnaly
+        displayed.
       </p>
       <img class="screen" src="/img/intro-screen-2.png" />
       <p>
-        But, you do not have to specify all tools in your command.
+        Note that, you do not have to specify all tasks in your command.
         PSI-Toolkit tries to guess the best tool to complement your task.
-        It is the reason, why on the first screenshot, there was no reader and writer specified.
+        This is why on the first screenshot, neither a reader nor a writer were specified.
       </p>
       <p>
-        The last thing: <code>--lang pl</code> is the example of option that can be
+        The last thing: <code>--lang pl</code> is an example of an option that can be
         passed to the given tool. All options are described in
         <a href="/help/documentation.html">documentation</a>.
       </p>
@@ -62,23 +62,24 @@
       <h2>Input data</h2>
 
       <p>
-        To specify input data you want to process, you may choose between writing or copying
-        your text, and selection of some file from your disk. Currently supported non-textual
-        formats are <code>.doc</code>, <code>.docx</code>, <code>.html</code>, <code>.pdf</code>
-        and others.
+        To specify input data you want to process, you may choose between typing your text,
+        and selecting a file from your disk.
+        In the latter case PSI-Toolkit supports such formats as:
+        <code>.txt</code>, <code>.doc</code>, <code>.docx</code>, <code>.html</code>,
+        <code>.pdf</code> and others.
       </p>
       <p>
-        Remember, that you usually may skip a reader, and PSI-Toolkit select the best one for
-        you.
+        You may skip a reader and PSI-Toolkit select the best one for you.
       </p>
 
       <h2>Results</h2>
 
       <p>
-        Visible results depend on the writer and used options.
-        When you are not familiar with available writers, you may select output format
-        from selection list.
-        And, finally, it is possible in most cases to download a file with the same output.
+        If you are not familiar with available writers, you may select output format
+        from the selection list.
+        The results may be displayed in various ways depending on the type of writer
+        and options you choose.
+        Finally, in most cases it is possible to download results in a file.
       </p>
       <img class="screen" src="/img/intro-screen-3.png" />
 
