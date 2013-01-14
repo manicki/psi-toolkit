@@ -178,7 +178,7 @@ function bindChangeOutputType() {
         var selectedWriter = $(this).find(':selected').attr('value');
         var currentPipeline = $('input[name=pipe-text]').val();
 
-        matchWriter = currentPipeline.match('! +[a-z\-]+-writer.*');
+        matchWriter = currentPipeline.match('! +([a-z\-]+-writer|write[a-z\-]*|draw|graph).*');
         var newPipeline = currentPipeline.substring(0, matchWriter.index);
         newPipeline += '! ' + selectedWriter;
 
