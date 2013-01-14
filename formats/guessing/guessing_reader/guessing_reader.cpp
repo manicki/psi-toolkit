@@ -48,7 +48,7 @@ std::map<std::string, std::string> GuessingReader::fileTypeToReaderOptionsMap_ =
         ("rtf", "--format rtf")
         ("docx", "--format docx")
         ("xlsx", "--format xlsx")
-        ("pptx", "--format pptx")
+        ("pptx", "--format pptx");
         //("tex", "--format latex");
 
 std::string GuessingReader::getFormatName() {
