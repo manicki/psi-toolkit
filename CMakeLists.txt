@@ -511,7 +511,7 @@ set(BASE_TARGETS common common-plugins utf8case sundown fex framework
     formats-apertium formats-bracketing formats-dot formats-guessing formats-nkjp formats-psi
     formats-simple formats-json-simple formats-txt formats-utt
     maxent tools-tokenizers-tp tools-segmenters-srx tools-recognizers-langguesser
-    tools-parsers-gobio tools-parsers-puddle tools-taggers-metagger)
+    tools-parsers-gobio tools-parsers-puddle tools-taggers-metagger tools-translators-bonsai)
 
 # ----------------------------------------------------
 # TESTS_TARGETS

@@ -70,6 +70,8 @@
 #include "link_parser.hpp"
 #endif
 
+#include "bonsai.hpp"
+
 
 MainFactoriesKeeper::MainFactoriesKeeper() {
     keeper_.addTagBasedIzeAliases("token", "token");
@@ -190,6 +192,7 @@ MainFactoriesKeeper::MainFactoriesKeeper() {
     keeper_.takeProcessorFactory(new LinkParser::Factory());
 #endif
 
+    keeper_.takeProcessorFactory(new Bonsai::Factory());
 }
 
 ProcessorFactory& MainFactoriesKeeper::getProcessorFactory(std::string processorName) {
