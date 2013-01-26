@@ -7,24 +7,6 @@ namespace poleng
 namespace bonsai
 {
 
-/*
-    Translator::Factory::Factory(RuleLoaderPtr rl_, LmContainerPtr lm_, int k_)
-    {
-        this->rl = rl_;
-        this->lm = lm_;
-        this->k = k_;
-    }
-
-    Translator* Translator::Factory::getObject(void)
-    {
-        Translator* translator = new Translator(this->rl, this->lm, this->k);
-        return translator;
-    }
-*/
-
-//Translator::Translator(RuleLoaderPtr rl_, LmContainerPtr lm_, /*SymInflectorPtr inf_,*/ int k_=20)
-//    : rl(rl_), lm(lm_), /*inf(inf_),*/ k(k_), verbosity(0), pedantry(false), n(1), sentence_no(0), total_time(0) {}
-
 Translator::Translator(RuleLoaderPtr rl_, LmContainerPtr lm_, int k_=20)
     : rl(rl_), lm(lm_), k(k_), verbosity(0), pedantry(false), n(1), sentence_no(0), total_time(0) {}
 
@@ -42,65 +24,61 @@ TranslationQueuePtr Translator::translate(ParseGraphPtr& pg) {
     EdgeTransformationsPtr et = rl->get_edge_transformations(pg);
     Symbol top = add_top_symbol(pg, et);
     
-//    if( inf != false ) {
-//	inf->set_parse_graph( pg );
-//    }
-//    
     if(verbosity >= 1)
 	std::cerr << "Starting translation ..." << std::endl;
     
     TranslationQueuePtr translations = translate_recursive(top, et);
     
-    if(translations->size() > 0) {
-        if(n == 1) {
-            TranslationPtr best = *(translations->begin());
-            std::cout << best->str() << std::endl;
-            
-            if(verbosity == 1) {
-                std::cerr << "Best: " << best->nice() << std::endl;
-            }
-            if(verbosity >= 2) {
-                std::cerr << best->back_track(0);
-		AlignmentPtr a = best->reconstruct_alignment();
-		
-		std::cerr << std::endl;
-		std::cerr << "Inferred word alignment: ";
-		for(Alignment::iterator it = a->begin(); it != a->end(); it++) {
-		    std::cerr << it->first << "-" << it->second;
-		    
-		    Alignment::iterator tit = it;
-		    tit++;
-		    if(tit != a->end()) {
-			std::cerr << " ";
-		    }
-		}
-		std::cerr << std::endl;
-	    }
-        }
-        if(n > 1) {
-            int c = 0;
-            for(TranslationQueue::iterator it = translations->begin(); it != translations->end() and c < n; it++, c++) {
-                TranslationPtr act = *it;
-                
-		if(mert)
-		    std::cout << act->mert(sentence_no) << std::endl;
-                else 
-		    std::cout << act->str() << std::endl;
-		    
-                if(verbosity == 1 and c == 0) {
-                    std::cerr << c+1 << "-best: " << act->nice() << std::endl;
-                }
-                if(verbosity >= 2 and not mert) {
-                    std::cerr << act->back_track(0);
-                }
-            }
-        }
-    }
-    else {
-	std::cerr << "No translation found" << std::endl;
-	std::cout << "ERROR" << std::endl;
-    }
- 
+//    if(translations->size() > 0) {
+//        if(n == 1) {
+//            TranslationPtr best = *(translations->begin());
+//            //std::cout << best->str() << std::endl;
+//            
+//            if(verbosity == 1) {
+//                std::cerr << "Best: " << best->nice() << std::endl;
+//            }
+//            if(verbosity >= 2) {
+//                std::cerr << best->back_track(0);
+//		AlignmentPtr a = best->reconstruct_alignment();
+//		
+//		std::cerr << std::endl;
+//		std::cerr << "Inferred word alignment: ";
+//		for(Alignment::iterator it = a->begin(); it != a->end(); it++) {
+//		    std::cerr << it->first << "-" << it->second;
+//		    
+//		    Alignment::iterator tit = it;
+//		    tit++;
+//		    if(tit != a->end()) {
+//			std::cerr << " ";
+//		    }
+//		}
+//		std::cerr << std::endl;
+//	    }
+//        }
+//        if(n > 1) {
+//            int c = 0;
+//            for(TranslationQueue::iterator it = translations->begin(); it != translations->end() and c < n; it++, c++) {
+//                TranslationPtr act = *it;
+//                
+//		if(mert)
+//		    std::cout << act->mert(sentence_no) << std::endl;
+//                else 
+//		    std::cout << act->str() << std::endl;
+//		    
+//                if(verbosity == 1 and c == 0) {
+//                    std::cerr << c+1 << "-best: " << act->nice() << std::endl;
+//                }
+//                if(verbosity >= 2 and not mert) {
+//                    std::cerr << act->back_track(0);
+//                }
+//            }
+//        }
+//    }
+//    else {
+//	std::cerr << "No translation found" << std::endl;
+//	std::cout << "ERROR" << std::endl;
+//    }
+// 
     
     boost::posix_time::ptime pt_end = boost::posix_time::microsec_clock::local_time();
     boost::posix_time::time_duration delta = pt_end - pt_start;

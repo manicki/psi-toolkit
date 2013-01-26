@@ -10,12 +10,12 @@
 #include <boost/archive/binary_iarchive.hpp>
 #include <boost/archive/binary_oarchive.hpp>
 #include <boost/serialization/vector.hpp>
-#include <boost/regex.hpp>
-#include <boost/algorithm/string/regex.hpp>
+#include <boost/algorithm/string.hpp>
 #include <boost/lexical_cast.hpp>
 #include <boost/date_time/posix_time/posix_time.hpp>
 
-#include "../common/TransferTypes.hpp"
+#include "regexp.hpp"
+#include "TransferTypes.hpp"
 
 namespace poleng
 {

@@ -6,12 +6,14 @@
 #include "language_dependent_annotator_factory.hpp"
 #include "lang_specific_processor_file_fetcher.hpp"
 #include <boost/program_options.hpp>
-#include "regexp.hpp"
 #include <fstream>
 
 #include <string>
 #include <vector>
 #include <map>
+#include <sstream>
+
+#include "Translator.hpp"
 
 class Bonsai : public Annotator {
     public:
@@ -31,8 +33,8 @@ class Bonsai : public Annotator {
 
         };
 
-        Bonsai(const std::string& langCode);
-        void tag(Lattice &lattice);
+        Bonsai(poleng::bonsai::TranslatorPtr translator, const std::string& langCode);
+        void translate(Lattice &lattice);
 
     private:
         class Worker : public LatticeWorker {
@@ -45,6 +47,7 @@ class Bonsai : public Annotator {
         virtual LatticeWorker* doCreateLatticeWorker(Lattice& lattice);
         virtual std::string doInfo();
 
+        poleng::bonsai::TranslatorPtr translator_;
         std::string langCode_;
 };
 

@@ -9,8 +9,8 @@
 #include <fcntl.h>
 #include <vector>
 #include <map>
+#include <list>
 
-#include <boost/regex.hpp>
 #include <boost/lexical_cast.hpp>
 
 #include "SimpleDAG.hpp"

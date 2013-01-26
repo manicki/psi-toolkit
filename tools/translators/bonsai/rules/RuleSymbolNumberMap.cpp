@@ -11,13 +11,13 @@ using namespace rules;
 RuleSymbol::RuleSymbol() : full_symbol(std::string()), index(-1) {}
 
 RuleSymbol::RuleSymbol(std::string symbol_) : full_symbol(symbol_), index(-1) {
-    boost::split_regex(labels, full_symbol, boost::regex("\\|\\|\\|(?!\\|)"));
+    boost::algorithm::split(labels, full_symbol, boost::is_any_of("|"));
     
-    boost::cmatch what;
-    boost::regex re("<[^<>]+>\\[(\\d+)\\]");
+    RegExp re("<[^<>]+>\\[(\\d+)\\]");
     if(labels.size() > 0) {
-        if(boost::regex_match(labels[0].c_str(), what, re))
-            index = boost::lexical_cast<int>(what[1]);
+        int tempIndex;
+        if(RegExp::PartialMatch(labels[0], re, &tempIndex))
+            index = tempIndex;
     }
 }
 
@@ -28,11 +28,11 @@ RuleSymbol::RuleSymbol(std::vector<std::string> labels_) : full_symbol(std::stri
           full_symbol.append("|||");
     }
     
-    boost::cmatch what;
-    boost::regex re("<[^<>]+>\\[(\\d+)\\]");
+    RegExp re("<[^<>]+>\\[(\\d+)\\]");
     if(labels.size() > 0) {
-        if(boost::regex_match(labels[0].c_str(), what, re))
-            index = boost::lexical_cast<int>(what[1]);
+        int tempIndex;
+        if(RegExp::PartialMatch(labels[0], re, &tempIndex))
+            index = tempIndex;
     }
 }
 

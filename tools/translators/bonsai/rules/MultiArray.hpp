@@ -7,8 +7,6 @@
 #include <map>
 #include <fstream>
 
-#include <boost/regex.hpp>
-
 #include <boost/archive/binary_iarchive.hpp>
 #include <boost/archive/binary_oarchive.hpp>
 #include <boost/serialization/vector.hpp>
@@ -124,15 +122,13 @@ class SerialMultiArray : public MultiArray {
 	int c = 1;
 	while(getline(in,line)) {
 	    std::vector<int> input;      
-	    boost::regex re("(\\d+)");
-	    boost::sregex_token_iterator it(line.begin(), line.end(), re, 1);
-	    boost::sregex_token_iterator end;
-	
-	    while(it != end)
-	      input.push_back(boost::lexical_cast<int>(*it++));
+	    
+	    std::stringstream lineSteam(line);
+	    while(int i << lineStream)
+	      input.push_back(i);
 	
 	    insert(input[0],input[1]);
-	    if(c % 100000 == 0)
+	    if(c % 1000000 == 0)
 		std::cerr << c << " pairs read" << std::endl;
 	    c++;
 	}
@@ -229,12 +225,9 @@ class MappedMultiArray : public MultiArray {
 	int c = 1;
 	while(getline(in,line)) {
 	    std::vector<int> input;      
-	    boost::regex re("(\\d+)");
-	    boost::sregex_token_iterator it(line.begin(), line.end(), re, 1);
-	    boost::sregex_token_iterator end;
-	
-	    while(it != end)
-	      input.push_back(boost::lexical_cast<int>(*it++));
+	    std::stringstream lineSteam(line);
+	    while(int i << lineStream)
+	      input.push_back(i);
 	
 	    insert(input[0],input[1]);
 	    if(c % 100000 == 0)

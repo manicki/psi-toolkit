@@ -6,76 +6,6 @@ namespace poleng
 namespace bonsai
 {
 
-//RuleSet::RuleSet(std::string path, int max_length_, int max_nt_, int rule_set_index_, LmContainerPtr lmc_/*SymInflectorPtr inf_*/) 
-// : max_length(max_length_), max_nt(max_nt_), rule_set_index(rule_set_index_), lmc(lmc_), /*inf(inf_)*/ max_trans_hyper(20), max_hyper_sym(20), eps(-1), verbosity(0), cost_length(5) {
-//   namespace po = boost::program_options;
-//   po::options_description desc("rule options");
-//   desc.add_options()
-//       ("source.target.map", po::value<std::string>()->default_value("plfr.map"), "")
-//       ("source.rules.index", po::value<std::string>()->default_value("plfr.src.idx"), "")
-//       ("source.rules.symbols", po::value<std::string>()->default_value("plfr.src.symbols"), "")
-//       ("source.rules.mode", po::value<int>()->default_value(0), "")
-//       ("target.rules.index", po::value<std::string>()->default_value("plfr.trg.idx"), "")
-//       ("target.rules.symbols", po::value<std::string>()->default_value("plfr.trg.symbols"), "")
-//       ("target.rules.costs", po::value<int>()->default_value(5), "")
-//       ("target.rules.mode", po::value<int>()->default_value(0), "")
-//   ;
-//
-//   boost::program_options::variables_map vm;
-//   std::ifstream config((path + "/transfer.ini").c_str());
-//   boost::program_options::store(boost::program_options::parse_config_file(config, desc), vm);
-//   boost::program_options::notify(vm);
-//       
-//   if(vm.count("source.target.map") == 0) {
-//       std::cerr << "Error: No rule map file given." << std::endl;        
-//       exit(1);
-//   }
-//   std::string mapfile = path + "/" + vm["source.target.map"].as<std::string>();
-//   
-//   if(vm.count("source.rules.index") == 0) {
-//       std::cerr << "Error: No source rule index file given." << std::endl;        
-//       exit(1);
-//   }
-//   std::string sindex = path + "/" + vm["source.rules.index"].as<std::string>();
-//   
-//   
-//   if(vm.count("source.rules.symbols") == 0) {
-//       std::cerr << "Error: No source rule symbols file given." << std::endl;        
-//       exit(1);
-//   }
-//   std::string ssymbols = path + "/" + vm["source.rules.symbols"].as<std::string>();
-//   
-//   if(vm.count("target.rules.index") == 0) {
-//       std::cerr << "Error: No target rule index file given." << std::endl;        
-//       exit(1);
-//   }
-//   std::string tindex = path + "/" + vm["target.rules.index"].as<std::string>();
-//           
-//   if(vm.count("target.rules.symbols") == 0) {
-//       std::cerr << "Error: No target rule symbols file given." << std::endl;        
-//       exit(1);
-//   }
-//   std::string tsymbols = path + "/" + vm["target.rules.symbols"].as<std::string>();
-//   
-//   cost_length = vm["target.rules.costs"].as<int>();
-//   if(cost_length != tm_weights.size()) {
-//      std::cerr << "Warning. Translation model weight vector and rule parameter weight vector have different lengths.";
-//   }
-//   
-//   int smode = vm["source.rules.mode"].as<int>();
-//   int tmode = vm["target.rules.mode"].as<int>();
-//   
-//   src_trg_map.open(mapfile);    
-//    
-//   src_fsa.open(sindex, smode);
-//   src_sym_map.open(ssymbols);
-//   
-//   trg_huf.open(tindex);
-//   trg_sym_map.open(tsymbols);
-//     
-//   build_intersector();
-//}
-
 RuleSet::RuleSet(std::string path, int max_length_, int max_nt_, int rule_set_index_, LmContainerPtr lmc_) 
  : max_length(max_length_), max_nt(max_nt_), rule_set_index(rule_set_index_), lmc(lmc_), max_trans_hyper(20), max_hyper_sym(20), eps(-1), verbosity(0), cost_length(5) {
    namespace po = boost::program_options;
@@ -154,8 +84,6 @@ EdgeTransformationsPtr RuleSet::get_edge_transformations(ParseGraphPtr &pg) {
     boost::posix_time::ptime pt_start1 = boost::posix_time::microsec_clock::local_time();
     
     rules::SimpleDAG src_lang_dag = parse_to_dag(pg, src_sym_unmap);
-//    if( inf != false )
-//	inf->set_parse_graph( pg );
  
     boost::posix_time::ptime pt_start2 = boost::posix_time::microsec_clock::local_time();
     boost::posix_time::time_duration delta1 = pt_start2 - pt_start1;
@@ -184,15 +112,7 @@ EdgeTransformationsPtr RuleSet::get_edge_transformations(ParseGraphPtr &pg) {
 	int trg_bytepos2 = src_trg_map.at(it->get<1>());
 
 	int trg_length   = trg_bytepos2-trg_bytepos1;
-	
-	std::cerr << pos << " : ";
-	BOOST_FOREACH ( int i, src_word ) {
-	  std::cerr << i << " (" << src_sym_map.get_label_by_number(i) << ") ";
-	}
-	std::cerr << std::endl;
-	
-        std::cerr << trg_bytepos1 << " - " << trg_bytepos2 << std::endl;
-        
+	        
 	if(trg_bytepos1 >= 0 and trg_length >= 0) {
 	    rules::WordTriples trg_wordtriples = trg_huf.get_wordtriples(trg_bytepos1, trg_length);
 	    
@@ -214,12 +134,7 @@ EdgeTransformationsPtr RuleSet::get_edge_transformations(ParseGraphPtr &pg) {
 		    // Generate translation options here !
 		    
 		    TransformationSetPtr tsp( new TransformationSet() );
-		//    if( inf != false ) {
-		//	tsp = generate_options( tp );		        
-		//    }
-		//    else {
-			tsp->insert( tp );
-		    //}
+		    tsp->insert( tp );
 		    
 		    BOOST_FOREACH( TransformationPtr t, *tsp ) {
 			if(he->get_transformations()->size() < max_trans_hyper) {
@@ -254,74 +169,13 @@ EdgeTransformationsPtr RuleSet::get_edge_transformations(ParseGraphPtr &pg) {
       
     boost::posix_time::ptime pt_all_end = boost::posix_time::microsec_clock::local_time();
     boost::posix_time::time_duration delta_all = pt_all_end - pt_start1;
-    //boost::posix_time::time_duration delta_proc = pt_all_end - pt_start5;
     
     if(verbosity > 0) {
-	//std::cerr << "Post loading processing took " << delta_proc.total_milliseconds() << " ms." << std::endl;
 	std::cerr << "All transformations loaded in " << delta_all.total_milliseconds() << " ms." << std::endl;
     }
 
     return et;
 }
-
-//TransformationSetPtr RuleSet::generate_options( TransformationPtr &t ) {
-//    TransformationSetPtr tsp( new TransformationSet() );
-//    
-//    //std::cerr << t->str() << std::endl;
-//    
-//    std::vector< std::vector<SymbolProb> > grid;
-//    
-//    int max = 1;
-//    BOOST_FOREACH( Symbol s, *t->targets() ) {
-//	if( s.is_nt() ) {
-//	    std::vector<SymbolProb> v;
-//	    v.push_back( SymbolProb( s, 0 ) );
-//	    grid.push_back( v );
-//	}
-//	else {
-//	    grid.push_back( inf->inflectAll( s, t->get_alignment() ) );
-//	    max *= grid.back().size();
-//	}
-//    }
-//    
-//    for(int n = 0; n < max; n++) {
-//	int m = n;
-//	SListPtr new_targets( new SList() );
-//	
-//	double inflector_cost = 0;
-//	BOOST_FOREACH( std::vector<SymbolProb> symbols, grid ) {
-//	    int k = symbols.size();
-//	    int i = m % k;
-//	    
-//	    new_targets->push_back( symbols[i].first );
-//	    inflector_cost += symbols[i].second;
-//	    
-//	    m = ( m - i ) / k;
-//	}
-//	
-//	double new_cost = t->get_cost() + inf->get_weight() * inflector_cost;
-//	Floats new_unweighted = t->get_unweighted();
-//	new_unweighted.push_back( inflector_cost );
-//	
-//	TransformationPtr ti( new Transformation( t->lhs(), t->sources(), new_targets, new_cost, new_unweighted, lmc ) );
-//	ti->add_alignment( t->get_alignment() );
-//	
-//	//std::cerr << "\t" << ti->str() << std::endl;
-//	tsp->insert( ti );
-//    }
-//    
-//    if( tsp->size() == 0 ) {
-//	Floats new_unweighted = t->get_unweighted();
-//	new_unweighted.push_back( 0 );
-//
-//	TransformationPtr ti( new Transformation( t->lhs(), t->sources(), t->targets(), t->get_cost(), new_unweighted, lmc ) );
-//	ti->add_alignment( t->get_alignment() );
-//      
-//	tsp->insert( ti );
-//    }
-//    
-//    return tsp;
-//}
 
 TransformationPtr RuleSet::word_to_transformation(Symbol &lhs, SListPtr &srcSymbols, rules::Word &word, rules::Word &probs, rules::Word &align) {
    SListPtr trgSymbols ( new SList() );
@@ -382,60 +236,8 @@ TransformationPtr RuleSet::word_to_transformation(Symbol &lhs, SListPtr &srcSymb
    TransformationPtr t( new Transformation(lhs, srcSymbols, trgSymbols, cost, costs, lmc) );
    t->add_alignment(a);
    
-   //std::cerr << t->str() << std::endl;
    return t;
 }
-
-//
-//TransformationPtr RuleSet::word_to_transformation2(Symbol &lhs, SListPtr &srcSymbols, rules::Word &w) {
-//   SListPtr trgSymbols ( new SList() );
-//   Floats costs;
-//
-//   int non_terminals = 0;
-//    
-//   for(int i = 0; i < w.size() - cost_length; i++) {
-//	rules::RuleSymbol rsym = trg_sym_map.get_symbol_by_number( w[i] );
-//	if(rsym.src_index() != -1) {
-//	    int i = srcSymbols->nt_index( rsym.src_index() );
-//	    if(i != -1) {
-//        	trgSymbols->push_back(srcSymbols->at(i));
-//        	non_terminals++;
-//	    }
-//	    else {
-//        	trgSymbols->push_back(Symbol(rsym.get_labels(), Range(-1,-1)));
-//	    }
-//	}
-//        else {
-//            trgSymbols->push_back(Symbol(rsym.get_labels(), Range(-1,-1)));
-//        }
-//    }
-//     
-//   double cost = 0;
-//   int i, j;
-//   for(i = w.size() - cost_length, j = 0; j < tm_weights.size(); i++, j++) { // only tm_weight.size() costs are used 
-//       if(i < w.size())
-//	  costs.push_back(boost::lexical_cast<float>( trg_sym_map.get_symbol_by_number(w[i]).label() ));
-//       else
-//	  costs.push_back(0);
-//	  
-//       cost += (tm_weights[j] * costs[j]);
-//   }
-//   costs.push_back(trgSymbols->size() - non_terminals); // transformation length in terminal symbols
-//   cost += ( word_penalty_weight * costs.back() );
-//   
-//   Floats rs_vector;
-//   rs_vector.resize(rs_weights.size(), 0);
-//   rs_vector[rule_set_index] = 1;
-//   
-//   for(int i = 0; i < rs_vector.size(); i++) {
-//      costs.push_back(rs_vector[i]);
-//      cost += rs_weights[i] * rs_vector[i];
-//   }
-//   
-//   TransformationPtr t( new Transformation(lhs, srcSymbols, trgSymbols, cost, costs, lmc) );
-//   //std::cerr << t->str() << std::endl;
-//   return t;
-//}
 
 std::vector<std::pair<Symbol, SListPtr> > RuleSet::word_to_slist(rules::Word &w, Unmapper &unmap) {    
     std::vector<std::pair<Symbol, SListPtr> > sl;
@@ -605,7 +407,6 @@ rules::SimpleDAG RuleSet::subparse_to_dag(Symbol &lhs, int depth, ParseGraphPtr 
 			SymbolSet t;
 			unmap[a] = t;
 		    }
-		    //std::cerr << "inserting " << a << " - " << sym.str() << std::endl;
 		    unmap[a].insert(sym);
 		    
 		    if(sym.is_nt()) { 
@@ -621,7 +422,6 @@ rules::SimpleDAG RuleSet::subparse_to_dag(Symbol &lhs, int depth, ParseGraphPtr 
 }
 
 void RuleSet::build_intersector() {
-//    std::cerr << "n: " << max_length << " - k: " << max_nt << std::endl;
 
     int n = max_length; int k = max_nt;
     int m, h; std::vector<int> a; 
