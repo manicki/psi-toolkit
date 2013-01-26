@@ -62,7 +62,7 @@ class Translator {
     
     RuleLoaderPtr rl;
     LmContainerPtr lm;
-    SymInflectorPtr inf;
+    //SymInflectorPtr inf;
     
   public:
     std::map<Symbol, TranslationQueuePtr, SymbolSorterMap> node_translation_memory;
@@ -98,7 +98,7 @@ class Translator {
             int k;
       };
 */
-    Translator(RuleLoaderPtr, LmContainerPtr, SymInflectorPtr, int);
+    //Translator(RuleLoaderPtr, LmContainerPtr, /*SymInflectorPtr,*/ int);
     Translator(RuleLoaderPtr, LmContainerPtr, int);
     
     TranslationQueuePtr translate(ParseGraphPtr&);

@@ -22,8 +22,8 @@ namespace bonsai
     }
 */
 
-Translator::Translator(RuleLoaderPtr rl_, LmContainerPtr lm_, SymInflectorPtr inf_, int k_=20)
-    : rl(rl_), lm(lm_), inf(inf_), k(k_), verbosity(0), pedantry(false), n(1), sentence_no(0), total_time(0) {}
+//Translator::Translator(RuleLoaderPtr rl_, LmContainerPtr lm_, /*SymInflectorPtr inf_,*/ int k_=20)
+//    : rl(rl_), lm(lm_), /*inf(inf_),*/ k(k_), verbosity(0), pedantry(false), n(1), sentence_no(0), total_time(0) {}
 
 Translator::Translator(RuleLoaderPtr rl_, LmContainerPtr lm_, int k_=20)
     : rl(rl_), lm(lm_), k(k_), verbosity(0), pedantry(false), n(1), sentence_no(0), total_time(0) {}
@@ -42,10 +42,10 @@ TranslationQueuePtr Translator::translate(ParseGraphPtr& pg) {
     EdgeTransformationsPtr et = rl->get_edge_transformations(pg);
     Symbol top = add_top_symbol(pg, et);
     
-    if( inf != false ) {
-	inf->set_parse_graph( pg );
-    }
-    
+//    if( inf != false ) {
+//	inf->set_parse_graph( pg );
+//    }
+//    
     if(verbosity >= 1)
 	std::cerr << "Starting translation ..." << std::endl;
     
@@ -149,7 +149,7 @@ TranslationQueuePtr Translator::merge(HyperEdgeSetPtr& hs, EdgeTransformationsPt
 	    r.push_back(tq->begin());
 	    tn[(*h_it)->nts()->at(i)] = *(r[i]);
 	}
-	TranslationPtr translation( new Translation(t, tn, lm, inf, top) );
+	TranslationPtr translation( new Translation(t, tn, lm, /*inf,*/ top) );
 
 // @todo: poprawic to na cos madrzejszego np. kilka symboli <TOP> po maksymalnie n dzieci lub drzewo hierarchiczne
 // Lepiej zeby to dzialalo za pomoca jakiejs opcji, a nie ifdefa.
@@ -189,7 +189,7 @@ TranslationQueuePtr Translator::merge(HyperEdgeSetPtr& hs, EdgeTransformationsPt
 			    tn[L->nts()->at(j)] = *(r_prim[j]) ;
 		    }
 		    if(tn.size() == L->nts()->size()) {
-			TranslationPtr translation( new Translation(t, tn, lm, inf, top) );
+			TranslationPtr translation( new Translation(t, tn, lm, /*inf,*/ top) );
 			cands.insert(CandidatePtr( new Candidate(translation, L, r0_prim, r_prim) ));
 		    }
 		}

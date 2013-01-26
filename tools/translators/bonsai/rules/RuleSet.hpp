@@ -20,7 +20,7 @@
 #include "SortedArray.hpp"
 
 #include "LmContainer.hpp"
-#include "SymInflector.hpp"
+//#include "SymInflector.hpp"
 
 namespace poleng
 {
@@ -31,7 +31,7 @@ namespace bonsai
 class RuleSet {
   public:
     RuleSet(std::string, int, int, int, LmContainerPtr);
-    RuleSet(std::string, int, int, int, LmContainerPtr, SymInflectorPtr);
+    //RuleSet(std::string, int, int, int, LmContainerPtr, SymInflectorPtr);
     EdgeTransformationsPtr get_edge_transformations(ParseGraphPtr&);
     void set_verbosity(int);    
     void set_max_transformations_per_hyperedge(int);    
@@ -67,7 +67,7 @@ class RuleSet {
     rules::CharSortedArray src_trg_map;
     
     LmContainerPtr lmc;
-    SymInflectorPtr inf;
+    //SymInflectorPtr inf;
     
     unsigned int rule_set_index;
     

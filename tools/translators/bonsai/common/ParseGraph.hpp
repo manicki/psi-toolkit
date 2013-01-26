@@ -4,7 +4,6 @@
 #include <stack>
 #include <vector>
 #include <sstream>
-//#include <boost/graph/adjacency_list.hpp>
 #include <boost/graph/adj_list_serialize.hpp>
 #include <boost/graph/graphviz.hpp>
 #include <boost/shared_ptr.hpp>
@@ -13,7 +12,6 @@
 #include "sorted_adjacency_list.hpp"
 #include "TransitionInfo.hpp"
 #include "TransferTypes.hpp"
-#include "IcuConverter.hpp"
 
 #include <boost/archive/text_oarchive.hpp>
 #include <boost/archive/text_iarchive.hpp>
@@ -23,8 +21,6 @@
 #include <boost/serialization/collections_save_imp.hpp>
 
 #include <fstream>
-
-//#include <gvc.h>
 
 namespace poleng
 {

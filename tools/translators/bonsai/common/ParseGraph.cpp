@@ -147,37 +147,26 @@ std::string ParseGraph::write_string() {
 }
 
 void ParseGraph::normalize() {
-    TransitionMap map = boost::get(boost::edge_bundle, g);
-    for(std::pair<EdgeIt,EdgeIt> eit = boost::edges(g); eit.first != eit.second; eit.first++) {
-        Edge e = *eit.first;
-        if(map[e].isLexical()) {
-            std::string label = map[e].getLabel();
-            std::string base  = map[e].getPosInfo().at(0).get<0>();
-                                   
-	    UnicodeString label_u = icuConverter::fromUtf(label);
-	    label_u.toLower();
-	    std::string label_low = icuConverter::toUtf(label_u);
-
-	    UnicodeString base_u = icuConverter::fromUtf(base);
-	    base_u.toLower();
-	    std::string base_low = icuConverter::toUtf(base_u);
-	    
-	    if(label != label_low && base == base_low) {
-		map[e].setLabel(label_low);
-	    }	    
-	    
-	    /*		                            
-            if( label.size() > 1 && base.size() > 1 && label[0] != base[0] && label[1] == base[1] ) {
-                label[0] = base[0];
-	        map[e].setLabel(label);
-            }
-            else if( label.size() == 1 && base.size() == 1 && label != base && base != "0" ) {
-                label[0] = base[0];
-	        map[e].setLabel(label);
-            }
-	    */
-        }
-    }
+//    TransitionMap map = boost::get(boost::edge_bundle, g);
+//    for(std::pair<EdgeIt,EdgeIt> eit = boost::edges(g); eit.first != eit.second; eit.first++) {
+//        Edge e = *eit.first;
+//        if(map[e].isLexical()) {
+//            std::string label = map[e].getLabel();
+//            std::string base  = map[e].getPosInfo().at(0).get<0>();
+//                                   
+//	    UnicodeString label_u = icuConverter::fromUtf(label);
+//	    label_u.toLower();
+//	    std::string label_low = icuConverter::toUtf(label_u);
+//
+//	    UnicodeString base_u = icuConverter::fromUtf(base);
+//	    base_u.toLower();
+//	    std::string base_low = icuConverter::toUtf(base_u);
+//	    
+//	    if(label != label_low && base == base_low) {
+//		map[e].setLabel(label_low);
+//	    }	    
+//        }
+//    }
 }
 
 /*

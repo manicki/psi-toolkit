@@ -4,7 +4,7 @@
 #include "Transformation.hpp"
 #include "RuleSet.hpp"
 #include "LmContainer.hpp"
-#include "SymInflector.hpp"
+//#include "SymInflector.hpp"
 
 namespace poleng
 {
@@ -41,7 +41,7 @@ class RuleLoader {
     RuleLoader(int, int, LmContainerPtr);
     
     void add_rule_set(std::string);
-    void add_rule_set( std::string, SymInflectorPtr );
+    //void add_rule_set( std::string, SymInflectorPtr );
     void add_rule_set( RuleSetPtr );
     EdgeTransformationsPtr get_edge_transformations(ParseGraphPtr&);
 

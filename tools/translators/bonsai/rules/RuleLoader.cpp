@@ -21,10 +21,10 @@ void RuleLoader::add_rule_set(std::string path) {
    rs.push_back(rp);
 }
 
-void RuleLoader::add_rule_set( std::string path, SymInflectorPtr inf_ ) {
-   RuleSetPtr rp(new RuleSet(path, max_length, max_nt, rs.size(), lmc, inf_) );
-   rs.push_back(rp);
-}
+//void RuleLoader::add_rule_set( std::string path, SymInflectorPtr inf_ ) {
+//   RuleSetPtr rp(new RuleSet(path, max_length, max_nt, rs.size(), lmc, inf_) );
+//   rs.push_back(rp);
+//}
 
 void RuleLoader::add_rule_set( RuleSetPtr rp ) {
    rs.push_back(rp);

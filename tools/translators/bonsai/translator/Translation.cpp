@@ -1,4 +1,5 @@
 #include "Translation.hpp"
+#include <boost/foreach.hpp>
 
 namespace poleng
 {
@@ -6,8 +7,8 @@ namespace poleng
 namespace bonsai
 {
 
-Translation::Translation(TransformationPtr pt_, TranslationNodes ndtr_, LmContainerPtr lmc_, SymInflectorPtr inf_, bool top_) :
-  parent_transformation(pt_), node_translations(ndtr_), lmc(lmc_), inf(inf_), top(top_), translation( new SList() ), cost(0), lm_heuristic(0) {
+Translation::Translation(TransformationPtr pt_, TranslationNodes ndtr_, LmContainerPtr lmc_, /*SymInflectorPtr inf_,*/ bool top_) :
+  parent_transformation(pt_), node_translations(ndtr_), lmc(lmc_), /*inf(inf_),*/ top(top_), translation( new SList() ), cost(0), lm_heuristic(0) {
     
     cost = parent_transformation->get_cost();
     
@@ -174,20 +175,20 @@ double Translation::get_lm_heuristic() {
 void Translation::substitute(TransformationPtr &t, TranslationNodes &tn) {
     
     if(tn.size() == 0) {
-	if( inf != false ) {
-	    int i = 1;
-	    BOOST_FOREACH( Symbol s, *t->targets() ) {
-		AlignmentPtr a( new Alignment() );	    
-		BOOST_FOREACH( AlignmentPoint ap, *t->get_alignment() )
-		    if( ap.second == i )
-		      a->insert( AlignmentPoint( t->lhs().start() + ap.first, ap.second ) );
-		
-		SymbolProb si = inf->inflect( s, a );
-		translation->push_back( si.first );
-		i++;
-	    }
-	}
-	else
+	//if( inf != false ) {
+	//    int i = 1;
+	//    BOOST_FOREACH( Symbol s, *t->targets() ) {
+	//	AlignmentPtr a( new Alignment() );	    
+	//	BOOST_FOREACH( AlignmentPoint ap, *t->get_alignment() )
+	//	    if( ap.second == i )
+	//	      a->insert( AlignmentPoint( t->lhs().start() + ap.first, ap.second ) );
+	//	
+	//	SymbolProb si = inf->inflect( s, a );
+	//	translation->push_back( si.first );
+	//	i++;
+	//    }
+	//}
+	//else
 	    translation = t->targets();
 	    	
 	Floats lm_costs;
@@ -241,22 +242,22 @@ void Translation::substitute(TransformationPtr &t, TranslationNodes &tn) {
                 }
             }
             else {
-    		if( inf != false ) {
-		    Symbol s = *it;
-
-		    AlignmentPtr a( new Alignment() );
-		    BOOST_FOREACH( AlignmentPoint ap, *t->get_alignment() ) {
-		      if( ap.second == j )
-			a->insert( AlignmentPoint( t->lhs().start() + ap.first, ap.second ) );
-		    }
-		    SymbolProb si = inf->inflect( s, a );    
-		    translation->push_back( si.first );
-		    ngram->push_back( si.first );
-		}
-		else {
+//    		if( inf != false ) {
+//		    Symbol s = *it;
+//
+//		    AlignmentPtr a( new Alignment() );
+//		    BOOST_FOREACH( AlignmentPoint ap, *t->get_alignment() ) {
+//		      if( ap.second == j )
+//			a->insert( AlignmentPoint( t->lhs().start() + ap.first, ap.second ) );
+//		    }
+//		    SymbolProb si = inf->inflect( s, a );    
+//		    translation->push_back( si.first );
+//		    ngram->push_back( si.first );
+//		}
+//		else {
 		    translation->push_back( *it );
 		    ngram->push_back( *it );
-		}
+		//}
                 i++;
             }
 	    j++;

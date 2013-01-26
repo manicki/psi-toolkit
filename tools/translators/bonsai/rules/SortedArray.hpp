@@ -59,7 +59,10 @@ namespace rules {
         ValT get_base() const { return base; }
         
         ValT at(ValT val) {
+            std::cerr << "S: val=" << val << std::endl; 
             TailT i = (TailT)(val-index);
+            std::cerr << "S: i=" << i << std::endl;
+            std::cerr << "S: size=" << size() << std::endl;
             if(i < size()) {
                 return ValT(((ValT)tail[i+1])+base);
             }

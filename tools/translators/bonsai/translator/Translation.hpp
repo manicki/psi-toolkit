@@ -11,7 +11,7 @@
 #include "TransferTypes.hpp"
 #include "Transformation.hpp"
 #include "LmContainer.hpp"
-#include "SymInflector.hpp"
+//#include "SymInflector.hpp"
 
 namespace poleng
 {
@@ -38,7 +38,7 @@ class Translation {
     static bool pedantry;
   
     LmContainerPtr lmc;
-    SymInflectorPtr inf;
+    //SymInflectorPtr inf;
     double lm_heuristic;
     
     static Floats tm_weights;
@@ -47,7 +47,7 @@ class Translation {
     static double word_penalty_weight;
         
   public:
-    Translation(TransformationPtr, TranslationNodes, LmContainerPtr, SymInflectorPtr, bool);
+    Translation(TransformationPtr, TranslationNodes, LmContainerPtr, /*SymInflectorPtr,*/ bool);
     double get_cost();
     double get_lm_heuristic();
     Floats& get_unweighted();
