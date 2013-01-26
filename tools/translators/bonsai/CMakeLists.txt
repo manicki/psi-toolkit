@@ -2,6 +2,7 @@ add_definitions(-Wno-sign-compare -Wno-reorder -Wno-unused-parameter -Wno-write-
 
 add_library(tools-translators-bonsai SHARED
     bonsai.cpp
+    translator/Translator.hpp
     irstlm/mfstream.cpp
     irstlm/lmmacro.cpp
     irstlm/htable.cpp
@@ -39,7 +40,3 @@ endforeach(subdir)
 target_link_libraries(tools-translators-bonsai ${Boost_LIBRARIES} z common)
 
 install(TARGETS tools-translators-bonsai DESTINATION lib/)
-
-#add_executable(bonsaibin bonsaibin.cpp)
-#target_link_libraries(bonsaibin ${Boost_LIBRARIES} tools-translators-bonsai)
-#install(TARGETS bonsaibin DESTINATION bin/)

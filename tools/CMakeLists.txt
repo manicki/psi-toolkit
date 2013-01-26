@@ -34,6 +34,10 @@ set(tools_DIRS
     taggers/metagger
     spellcheckers/aspell
     translators/bonsai
+    translators/bonsai/irstlm
+    translators/bonsai/common
+    translators/bonsai/rules
+    translators/bonsai/translator
     CACHE PATH "Tools' paths to use in include_ and link_directories" FORCE
 )
 
