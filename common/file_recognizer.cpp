@@ -1,3 +1,5 @@
+#include <sstream>
+
 #include <boost/assign.hpp>
 #include <boost/foreach.hpp>
 #include <boost/algorithm/string/predicate.hpp>
