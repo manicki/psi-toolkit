@@ -1,10 +1,12 @@
 #ifndef RULELOADER_HPP__
 #define RULELOADER_HPP__
 
+#include "lattice.hpp"
+#include "lattice_wrapper.hpp"
+
 #include "Transformation.hpp"
 #include "RuleSet.hpp"
 #include "LmContainer.hpp"
-//#include "SymInflector.hpp"
 
 namespace poleng
 {
@@ -34,16 +36,22 @@ class RuleLoader {
     
     void merge_edge_transformations(EdgeTransformationsPtr&, EdgeTransformationsPtr&, int);
     void merge_hyper_edge(HyperEdgePtr &, HyperEdgePtr);
-    void fill_empty(ParseGraphPtr&, EdgeTransformationsPtr&);
+    void fill_empty(Lattice&,
+                    Lattice::VertexDescriptor,
+                    Lattice::VertexDescriptor,
+                    std::string,
+                    EdgeTransformationsPtr&);
 
   public:
     RuleLoader(std::string, int, int, LmContainerPtr);
     RuleLoader(int, int, LmContainerPtr);
     
     void add_rule_set(std::string);
-    //void add_rule_set( std::string, SymInflectorPtr );
     void add_rule_set( RuleSetPtr );
-    EdgeTransformationsPtr get_edge_transformations(ParseGraphPtr&);
+    EdgeTransformationsPtr get_edge_transformations(Lattice&,
+                                                    Lattice::VertexDescriptor,
+                                                    Lattice::VertexDescriptor,
+                                                    std::string);
 
     void set_verbosity(int);    
     void set_max_transformations_per_hyperedge(int);    

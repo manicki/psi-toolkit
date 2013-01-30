@@ -19,30 +19,30 @@ RuleLoader::RuleLoader(int max_length_, int max_nt_, LmContainerPtr lmc_)
 void RuleLoader::add_rule_set(std::string path) {
    RuleSetPtr rp(new RuleSet(path, max_length, max_nt, rs.size(), lmc) );
    rs.push_back(rp);
+   rp->set_verbosity(verbosity);
 }
-
-//void RuleLoader::add_rule_set( std::string path, SymInflectorPtr inf_ ) {
-//   RuleSetPtr rp(new RuleSet(path, max_length, max_nt, rs.size(), lmc, inf_) );
-//   rs.push_back(rp);
-//}
 
 void RuleLoader::add_rule_set( RuleSetPtr rp ) {
    rs.push_back(rp);
+   rp->set_verbosity(verbosity);
 }
 
-EdgeTransformationsPtr RuleLoader::get_edge_transformations(ParseGraphPtr& pg) {
+EdgeTransformationsPtr RuleLoader::get_edge_transformations(Lattice& lattice,
+							    Lattice::VertexDescriptor start,
+							    Lattice::VertexDescriptor end,
+							    std::string langCode) {
    if(rs.size() == 1) {
-      EdgeTransformationsPtr local = rs[0]->get_edge_transformations(pg);
-      fill_empty(pg, local);
+      EdgeTransformationsPtr local = rs[0]->get_edge_transformations(lattice, start, end, langCode);
+      fill_empty(lattice, start, end, langCode, local);
       return local;
    }
    else if(rs.size() > 1) {
       EdgeTransformationsPtr merged( new EdgeTransformations() );
       for(int i=0; i < rs.size(); i++) {
-         EdgeTransformationsPtr local = rs[i]->get_edge_transformations(pg);
-         merge_edge_transformations(merged, local, i);
+	  EdgeTransformationsPtr local = rs[i]->get_edge_transformations(lattice, start, end, langCode);
+	  merge_edge_transformations(merged, local, i);
       }
-      fill_empty(pg, merged);
+      fill_empty(lattice, start, end, langCode, merged);
       return merged;
    }
    else {
@@ -50,24 +50,54 @@ EdgeTransformationsPtr RuleLoader::get_edge_transformations(ParseGraphPtr& pg) {
    }
 }
 
-void RuleLoader::fill_empty(ParseGraphPtr &pg, EdgeTransformationsPtr &et) {
-    ParseGraph::Graph* g = pg->getBoostGraph();
-    ParseGraph::TransitionMap map = boost::get(boost::edge_bundle, *g);
+void RuleLoader::fill_empty(Lattice& lattice,
+			    Lattice::VertexDescriptor start,
+			    Lattice::VertexDescriptor end,
+			    std::string langCode,
+			    EdgeTransformationsPtr &et) {
+  
+    Lattice::EdgeSequence treeSymbols = getTreeSymbols(lattice, start, end, langCode);
+    std::map<int, int> charTokenMap = getCharWordTokenMap(lattice, start, end, langCode);
     
-    std::pair<ParseGraph::EdgeIt, ParseGraph::EdgeIt> p = boost::edges(*g);
-    
-    while(p.first != p.second) {
-	ParseGraph::Edge e = *p.first;
-        if(!map[e].isLexical()) {
-            Symbol sym( Label(map[e].getSymbol()), Range( map[e].getStart(), map[e].getEnd() ), !map[e].isLexical() );
+    Lattice::EdgeSequence::Iterator treeSymbolsIt(lattice, treeSymbols);
+    while(treeSymbolsIt.hasNext()) {
+	Lattice::EdgeDescriptor edge = treeSymbolsIt.next();
+	if(isNonTerminal(edge, lattice)) {
+	    std::string label = "<" + lattice.getAnnotationCategory(edge) + ">";
+	    int start = charTokenMap[lattice.getEdgeBeginIndex(edge)];
+	    int end = charTokenMap[lattice.getEdgeEndIndex(edge)];
+	    
+            Symbol sym(label, Range(start, end), true);
             if(et->count(sym) == 0) {
                 (*et)[sym] = HyperEdgeSetPtr( new HyperEdgeSet() );
                 if(verbosity > 0)
                     std::cerr << "No rules for " << sym.str() << std::endl;
                 
-                SListPtr target_list = pg->shallow_subpath(sym);
-                if(verbosity > 0)
-                    std::cerr << "Adding: " << target_list->str() << std::endl;
+		SListPtr target_list(new SList());
+		Lattice::EdgeSequence targetSequence = getChildSymbols(edge, lattice, langCode);
+                Lattice::EdgeSequence::Iterator targetSequenceIt(lattice, targetSequence);
+		while(targetSequenceIt.hasNext()) {
+		    Lattice::EdgeDescriptor subEdge = targetSequenceIt.next();
+		    
+		    bool subNonTerminal = isNonTerminal(subEdge, lattice);
+		    
+		    std::string subLabel;
+		    if(subNonTerminal) {
+			subLabel = "<" + lattice.getAnnotationCategory(subEdge) + ">";
+		    }
+		    else {
+			subLabel = lattice.getAnnotationText(subEdge);
+		    }
+		    
+		    int subStart = charTokenMap[lattice.getEdgeBeginIndex(subEdge)];
+		    int subEnd = charTokenMap[lattice.getEdgeEndIndex(subEdge)]; 
+		    
+		    Symbol subSym(subLabel, Range(subStart, subEnd), subNonTerminal);
+		    target_list->push_back(subSym);
+		}
+                
+		if(verbosity > 0)
+                    std::cerr << "Adding: " << sym.str() << " --> " << target_list->str() << std::endl;
                 
                 HyperEdgePtr he( new HyperEdge(target_list) );
                 
@@ -100,9 +130,8 @@ void RuleLoader::fill_empty(ParseGraphPtr &pg, EdgeTransformationsPtr &et) {
 		
                 he->add(tp);
                 (*et)[sym]->insert(he);
-            }
+            }            
         }
-	p.first++;
     }
 }
 
@@ -162,7 +191,8 @@ void RuleLoader::merge_hyper_edge(HyperEdgePtr &result, HyperEdgePtr next) {
 
 
 void RuleLoader::set_verbosity(int val) {
-   for(std::vector<RuleSetPtr>::iterator it = rs.begin(); it != rs.end(); it++)
+    verbosity = val;
+    for(std::vector<RuleSetPtr>::iterator it = rs.begin(); it != rs.end(); it++)
       (*it)->set_verbosity(val);
 }
 

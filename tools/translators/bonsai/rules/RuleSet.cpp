@@ -1,4 +1,5 @@
 #include "RuleSet.hpp"
+#include <cstdio>
 
 namespace poleng
 {
@@ -64,26 +65,32 @@ RuleSet::RuleSet(std::string path, int max_length_, int max_nt_, int rule_set_in
    
    int smode = vm["source.rules.mode"].as<int>();
    int tmode = vm["target.rules.mode"].as<int>();
-   
-   std::ifstream mapstream(std::string(mapfile + ".txt").c_str());
-   src_trg_map.read_text_data(mapstream);    
     
    src_fsa.open(sindex, smode);
-   src_sym_map.open(ssymbols);
+   
+    if(verbosity > 1)
+      std::cerr << "Loading symbols" << std::endl;
+   
+   src_sym_map.load(ssymbols);
+   trg_sym_map.load(tsymbols);
+   
+    if(verbosity > 1)
+      std::cerr << "Loading huffed" << std::endl;
    
    trg_huf.open(tindex);
-   trg_sym_map.open(tsymbols);
-   
    
    build_intersector();
 }
 
-EdgeTransformationsPtr RuleSet::get_edge_transformations(ParseGraphPtr &pg) {
+EdgeTransformationsPtr RuleSet::get_edge_transformations(Lattice &lattice,
+							 Lattice::VertexDescriptor start,
+							 Lattice::VertexDescriptor end,
+							 std::string langCode) {
     Unmapper src_sym_unmap;
     
     boost::posix_time::ptime pt_start1 = boost::posix_time::microsec_clock::local_time();
     
-    rules::SimpleDAG src_lang_dag = parse_to_dag(pg, src_sym_unmap);
+    rules::SimpleDAG src_lang_dag = parse_to_dag(lattice, start, end, langCode, src_sym_unmap);
  
     boost::posix_time::ptime pt_start2 = boost::posix_time::microsec_clock::local_time();
     boost::posix_time::time_duration delta1 = pt_start2 - pt_start1;
@@ -92,31 +99,30 @@ EdgeTransformationsPtr RuleSet::get_edge_transformations(ParseGraphPtr &pg) {
 	std::cerr << "DAG created in " << delta1.total_milliseconds() << " ms." << std::endl;
 
     rules::WordList src_lang_wordlist = src_fsa.multihash(src_lang_dag);
-    
+   
     boost::posix_time::ptime pt_start3 = boost::posix_time::microsec_clock::local_time();
     boost::posix_time::time_duration delta2 = pt_start3 - pt_start2;
 
     if(verbosity > 0)
 	std::cerr << "DAG intersected with rules in " << delta2.total_milliseconds() << " ms." << std::endl;
-
-    EdgeTransformationsPtr et( new EdgeTransformations );    
+    
+    if(verbosity > 0) 
+	std::cerr << "Rules found: " << src_lang_wordlist.size() << std::endl;
+    
+    EdgeTransformationsPtr et( new EdgeTransformations() );    
     typedef std::vector<std::pair<Symbol, SListPtr> > SymbolSListPairs;
     
     rules::WordIndexSorter wi_sorter;
     std::sort(src_lang_wordlist.begin(), src_lang_wordlist.end(), wi_sorter);
     for(rules::WordList::iterator it = src_lang_wordlist.begin(); it != src_lang_wordlist.end(); it++) {
-	rules::Word src_word = it->get<0>();
-	int pos = it->get<1>();
 	
-	int trg_bytepos1 = src_trg_map.at(it->get<1>()-1);
-	int trg_bytepos2 = src_trg_map.at(it->get<1>());
-
-	int trg_length   = trg_bytepos2-trg_bytepos1;
-	        
-	if(trg_bytepos1 >= 0 and trg_length >= 0) {
-	    rules::WordTriples trg_wordtriples = trg_huf.get_wordtriples(trg_bytepos1, trg_length);
-	    
+	rules::Word src_word = it->get<0>();
+	size_t pos = it->get<1>()-1;        
+	
+	if(pos >= 0) {
+	    rules::WordTriples trg_wordtriples = trg_huf.get_wordtriples(pos);
 	    SymbolSListPairs sls = word_to_slist(src_word, src_sym_unmap);
+	    
 	    for(SymbolSListPairs::iterator slit = sls.begin(); slit != sls.end(); slit++) {    
 		if(et->count(slit->first) == 0)
 		    (*et)[slit->first] = HyperEdgeSetPtr( new HyperEdgeSet() );
@@ -129,9 +135,10 @@ EdgeTransformationsPtr RuleSet::get_edge_transformations(ParseGraphPtr &pg) {
 		    rules::Word trg_probs = wit->get<1>();
 		    rules::Word trg_align = wit->get<2>();
 		      
-		    // @todo: finish function word_to_transformation
 		    TransformationPtr tp = word_to_transformation(slit->first, slit->second, trg_word, trg_probs, trg_align);
-		    // Generate translation options here !
+		    
+		    if(verbosity > 1)
+			std::cerr << tp->str() << std::endl;
 		    
 		    TransformationSetPtr tsp( new TransformationSet() );
 		    tsp->insert( tp );
@@ -162,7 +169,7 @@ EdgeTransformationsPtr RuleSet::get_edge_transformations(ParseGraphPtr &pg) {
 	
 	}
 	else {
-	    std::cerr << it->get<1>()-1 << " - " << trg_bytepos1 << std::endl;
+	    std::cerr << it->get<1>()-1 << std::endl;
 	}
         
     }
@@ -180,23 +187,23 @@ EdgeTransformationsPtr RuleSet::get_edge_transformations(ParseGraphPtr &pg) {
 TransformationPtr RuleSet::word_to_transformation(Symbol &lhs, SListPtr &srcSymbols, rules::Word &word, rules::Word &probs, rules::Word &align) {
    SListPtr trgSymbols ( new SList() );
    Floats costs;
-
+   
    int non_terminals = 0;
-    
    for(int i = 0; i < word.size(); i++) {
-	rules::RuleSymbol rsym = trg_sym_map.get_symbol_by_number( word[i] );
-	if(rsym.src_index() != -1) {
-	    int i = srcSymbols->nt_index( rsym.src_index() );
+	std::string trgSymbol = trg_sym_map[word[i]];
+	int srcIndex;
+	if(std::sscanf(trgSymbol.c_str(), "<X>[%d]", &srcIndex)) {
+	    int i = srcSymbols->nt_index( srcIndex );
 	    if(i != -1) {
         	trgSymbols->push_back(srcSymbols->at(i));
         	non_terminals++;
 	    }
 	    else {
-        	trgSymbols->push_back(Symbol(rsym.get_labels(), Range(-1,-1)));
+        	trgSymbols->push_back(Symbol(trgSymbol, Range(-1,-1)));
 	    }
 	}
         else {
-            trgSymbols->push_back(Symbol(rsym.get_labels(), Range(-1,-1)));
+            trgSymbols->push_back(Symbol(trgSymbol, Range(-1,-1)));
         }
     }
      
@@ -205,7 +212,7 @@ TransformationPtr RuleSet::word_to_transformation(Symbol &lhs, SListPtr &srcSymb
    for(i = 0, j = 0; j < tm_weights.size(); i++, j++) { // only tm_weight.size() costs are used 
        if(i < probs.size()) {                                                                                                 
             try {                                                                                                             
-                costs.push_back(boost::lexical_cast<float>( trg_sym_map.get_symbol_by_number(probs[i]).label() ));            
+                costs.push_back(boost::lexical_cast<float>( trg_sym_map[probs[i]] ));            
             }                                                                                                                 
             catch(...) {                                                                                                      
         	costs.push_back(0);                                                                                           
@@ -287,25 +294,98 @@ std::vector<std::pair<Symbol, SListPtr> > RuleSet::word_to_slist(rules::Word &w,
     return sl;
 }
 
-rules::SimpleDAG RuleSet::parse_to_dag(ParseGraphPtr &pg, Unmapper &unmap) {
+rules::SimpleDAG RuleSet::parse_to_dag(Lattice &lattice,
+				       Lattice::VertexDescriptor start,
+				       Lattice::VertexDescriptor end,
+				       std::string langCode,
+				       Unmapper &unmap) {
     rules::SimpleDAG ndag;
-    ParseGraph::Graph* g = pg->getBoostGraph();
-    ParseGraph::TransitionMap map = boost::get(boost::edge_bundle, *g);
-    std::pair<ParseGraph::EdgeIt, ParseGraph::EdgeIt> p = boost::edges(*g);
     
-    
-    while(p.first != p.second) {
-	ParseGraph::Edge e = *p.first;
-	if(map[e].isLexical() == false) {
-	    Symbol sym( Label(map[e].getSymbol()), Range( map[e].getStart(), map[e].getEnd() ), !map[e].isLexical() );
-	    rules::SimpleDAG tdag = subparse_to_dag(sym, map[e].getDepth(), pg, unmap);
-    
+    Lattice::EdgeSequence treeSymbols = getTreeSymbols(lattice, start, end, langCode);
+    std::map<int, int> charTokenMap = getCharWordTokenMap(lattice, start, end, langCode);
+      
+    Lattice::EdgeSequence::Iterator treeSymbolsIt(lattice, treeSymbols);  
+    while(treeSymbolsIt.hasNext()) {
+	Lattice::EdgeDescriptor symbol = treeSymbolsIt.next();
+	if(isNonTerminal(symbol, lattice)) {
+	    rules::SimpleDAG tdag = subparse_to_dag(symbol, lattice, langCode, charTokenMap, unmap);
 	    ndag.nd_union(tdag);
 	}
-	p.first++;
     }
-   
     ndag = prune_by_intersector(ndag);
+    return ndag;
+}
+
+rules::SimpleDAG RuleSet::subparse_to_dag(Lattice::EdgeDescriptor lhs,
+					  Lattice &lattice,
+					  std::string langCode,
+					  std::map<int, int>& charTokenMap,
+					  Unmapper &unmap)
+{    
+    rules::SimpleDAG ndag;
+    
+    std::map<int, rules::State> mapper;
+    
+    std::string lhsCategory = lattice.getAnnotationCategory(lhs);
+    std::string lhsLabel = "<" + lhsCategory + ">";
+  
+    rules::Symbol symbol = src_sym_map.find(lhsLabel) + 1;    
+    
+    int lhsStart = charTokenMap[lattice.getEdgeBeginIndex(lhs)];
+    int lhsEnd   = charTokenMap[lattice.getEdgeEndIndex(lhs)];
+    
+    if(unmap.count(symbol) == 0) {
+        SymbolSet t;
+        unmap[symbol] = t;
+    }
+    unmap[symbol].insert(Symbol(lhsLabel, Range(lhsStart, lhsEnd), true));
+    nts.insert(symbol);
+    
+    rules::State q0 = ndag.new_state(true);
+    rules::State q1 = ndag.new_state(false);
+    rules::State qEnd = ndag.new_state(false);
+    ndag.set_end_state(qEnd);
+      
+    ndag.new_arc(q0, q1, symbol, 0);
+    
+    mapper[lhsStart] = q1;
+    mapper[lhsEnd] = qEnd;
+    
+    Lattice::EdgeSequence subTree = getSubTreeSymbols(lhs, lattice, langCode);
+    Lattice::EdgeSequence::Iterator subTreeIt(lattice, subTree);
+    while(subTreeIt.hasNext()) {
+	Lattice::EdgeDescriptor edge = subTreeIt.next();    
+	bool isNT = isNonTerminal(edge, lattice);
+	
+	std::string edgeLabel;
+	if(isNT)
+	    edgeLabel = "<" + lattice.getAnnotationCategory(edge) + ">";
+	else
+	    edgeLabel = lattice.getEdgeText(edge);
+      
+	rules::Symbol symbol = src_sym_map.find(edgeLabel) + 1;    
+	
+	int edgeStart = charTokenMap[lattice.getEdgeBeginIndex(edge)];
+	int edgeEnd   = charTokenMap[lattice.getEdgeEndIndex(edge)];
+	
+	if(unmap.count(symbol) == 0) {
+	    SymbolSet t;
+	    unmap[symbol] = t;
+	}
+	unmap[symbol].insert(Symbol(edgeLabel, Range(edgeStart, edgeEnd), isNT));
+	
+	if(isNT)
+	    nts.insert(symbol);
+	
+	if(!mapper.count(edgeStart))
+	    mapper[edgeStart] = ndag.new_state(false);
+    
+	if(!mapper.count(edgeEnd))
+	    mapper[edgeEnd] = ndag.new_state(false);
+	  
+	ndag.new_arc(mapper[edgeStart], mapper[edgeEnd], symbol, 0);
+    }
+    
     return ndag;
 }
 
@@ -352,73 +432,6 @@ rules::SimpleDAG RuleSet::prune_by_intersector(rules::SimpleDAG &d) {
     }
     ndag.minimize();
     return ndag;	
-}
-
-rules::SimpleDAG RuleSet::subparse_to_dag(Symbol &lhs, int depth, ParseGraphPtr &pg, Unmapper &unmap) {
-    rules::SimpleDAG ndag;
-
-    ParseGraph::Graph* g = pg->getBoostGraph();
-    rules::Symbol symbol = src_sym_map.get_number_by_string(lhs.label());
-    
-    if(unmap.count(symbol) == 0) {
-        SymbolSet t;
-        unmap[symbol] = t;
-    }
-    //std::cerr << "inserting " << symbol << " - " << lhs.str() << std::endl;
-    unmap[symbol].insert(lhs);
-    
-    if(lhs.is_nt()) 
-	nts.insert(symbol);
-    
-    std::map<int,rules::State> mapper;
-    
-    int q0 = ndag.new_state(true);
-    int q1 = ndag.new_state(false);
-    ndag.new_arc(q0, q1, symbol, 0);
-    
-    mapper[lhs.start()] = q1;
-    
-    ParseGraph::TransitionMap map = boost::get(boost::edge_bundle, *g);
-    std::pair<ParseGraph::EdgeIt, ParseGraph::EdgeIt> p = boost::edges(*g);
-    
-    while(p.first != p.second) {
-	ParseGraph::Edge e = *p.first;
-	Symbol sym( Label(map[e].getSymbol()), Range( map[e].getStart(), map[e].getEnd() ), !map[e].isLexical() );
-	
-	if(lhs.start() <= sym.start() and lhs.end() >= sym.end()) {
-	    if(lhs.start() < sym.start() or lhs.end() > sym.end() or depth > map[e].getDepth()) {
-		if(mapper.count(sym.start()) == 0) {
-		    rules::State t = ndag.new_state(false);
-		    mapper[sym.start()] = t;
-		}
-		rules::State ns = mapper[sym.start()];
-		
-		if(mapper.count(sym.end()) == 0) {
-		    rules::State t = ndag.new_state(false);
-		    mapper[sym.end()] = t;
-		    if(lhs.end() == sym.end())
-			ndag.set_end_state(t);
-		}
-		rules::State nt = mapper[sym.end()];
-		
-		rules::Symbol a = src_sym_map.get_number_by_string(sym.label());
-		if(a != -1) {
-		    if(unmap.count(a) == 0) {
-			SymbolSet t;
-			unmap[a] = t;
-		    }
-		    unmap[a].insert(sym);
-		    
-		    if(sym.is_nt()) { 
-			nts.insert(a);
-		    }
-		    ndag.new_arc(ns,nt,a,0);
-		}
-	    }
-	}
-	p.first++;
-    }
-    return ndag;
 }
 
 void RuleSet::build_intersector() {

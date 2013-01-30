@@ -8,14 +8,14 @@
 
 #include <boost/date_time/posix_time/posix_time.hpp>
 
+#include "lattice.hpp"
+
 #include "TransferTypes.hpp"
 #include "Transformation.hpp"
 #include "RuleLoader.hpp"
 
 #include "Translation.hpp"
 #include "LmContainer.hpp"
-
-// #include "../../t5/t5_factory.h"
 
 namespace poleng
 {
@@ -58,11 +58,14 @@ class Translator {
     
     TranslationQueuePtr& translate_recursive(Symbol&, EdgeTransformationsPtr&);
     TranslationQueuePtr merge(HyperEdgeSetPtr&, EdgeTransformationsPtr&, bool);
-    Symbol add_top_symbol(ParseGraphPtr&, EdgeTransformationsPtr&);
+    Symbol add_top_symbol(Lattice&,
+			  Lattice::VertexDescriptor,
+			  Lattice::VertexDescriptor,
+			  std::string,
+			  EdgeTransformationsPtr&);
     
     RuleLoaderPtr rl;
     LmContainerPtr lm;
-    //SymInflectorPtr inf;
     
   public:
     std::map<Symbol, TranslationQueuePtr, SymbolSorterMap> node_translation_memory;
@@ -84,24 +87,12 @@ class Translator {
     static double word_penalty_weight;
             
   public:
-/*
-      class Factory: virtual public poleng::t5::FactoryOn<Translator>
-      {
-          public:
-              Factory(RuleLoaderPtr rl_, LmContainerPtr lm_, int k_);
-
-              virtual Translator* getObject(void);
-
-          private:
-            RuleLoaderPtr rl;
-            LmContainerPtr lm;
-            int k;
-      };
-*/
-    //Translator(RuleLoaderPtr, LmContainerPtr, /*SymInflectorPtr,*/ int);
     Translator(RuleLoaderPtr, LmContainerPtr, int);
     
-    TranslationQueuePtr translate(ParseGraphPtr&);
+    TranslationQueuePtr translate(Lattice&,
+				  Lattice::VertexDescriptor,
+				  Lattice::VertexDescriptor,
+				  std::string);
     
     void set_sentence_no(int sno) { sentence_no = sno; }
     void set_nbest(int);

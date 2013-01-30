@@ -9,18 +9,19 @@
 #include <boost/date_time/posix_time/posix_time.hpp>
 #include <boost/program_options.hpp>
 
+#include "lattice.hpp"
+#include "lattice_wrapper.hpp"
+
 #include "TransferTypes.hpp"
-#include "ParseGraph.hpp"
 #include "Transformation.hpp"
 
 #include "CompressedDAG.hpp"
 #include "SimpleDAG.hpp"
-#include "RuleSymbolNumberMap.hpp"
 #include "HuffedWords.hpp"
-#include "SortedArray.hpp"
+#include "MonotonicVector.hpp"
+#include "StringVector.hpp"
 
 #include "LmContainer.hpp"
-//#include "SymInflector.hpp"
 
 namespace poleng
 {
@@ -31,8 +32,10 @@ namespace bonsai
 class RuleSet {
   public:
     RuleSet(std::string, int, int, int, LmContainerPtr);
-    //RuleSet(std::string, int, int, int, LmContainerPtr, SymInflectorPtr);
-    EdgeTransformationsPtr get_edge_transformations(ParseGraphPtr&);
+    EdgeTransformationsPtr get_edge_transformations(Lattice&,
+                                                    Lattice::VertexDescriptor,
+                                                    Lattice::VertexDescriptor,
+                                                    std::string);
     void set_verbosity(int);    
     void set_max_transformations_per_hyperedge(int);    
     void set_max_hyperedges_per_nonterminal(int);    
@@ -48,8 +51,16 @@ class RuleSet {
     typedef std::set<Symbol, SymbolSorterMap> SymbolSet;
     typedef std::map<rules::Symbol, SymbolSet> Unmapper;
     
-    rules::SimpleDAG parse_to_dag(ParseGraphPtr&, Unmapper&);
-    rules::SimpleDAG subparse_to_dag(Symbol&, int, ParseGraphPtr&, Unmapper&);
+    rules::SimpleDAG parse_to_dag(Lattice&,
+                                  Lattice::VertexDescriptor,
+                                  Lattice::VertexDescriptor,
+                                  std::string,
+                                  Unmapper&);
+    rules::SimpleDAG subparse_to_dag(Lattice::EdgeDescriptor,
+                                     Lattice&,
+                                     std::string,
+                                     std::map<int, int>&,
+                                     Unmapper&);
     
     void build_intersector();
     rules::SimpleDAG prune_by_intersector(rules::SimpleDAG&);
@@ -62,12 +73,11 @@ class RuleSet {
     
     rules::CompressedDAG src_fsa;
     rules::HuffedWords trg_huf;
-    rules::RuleSymbolNumberMap src_sym_map;
-    rules::RuleSymbolNumberMap trg_sym_map;    
-    rules::CharSortedArray src_trg_map;
+    StringVector<> src_sym_map;
+    StringVector<> trg_sym_map;    
+    //MonotonicVector<> src_trg_map;
     
     LmContainerPtr lmc;
-    //SymInflectorPtr inf;
     
     unsigned int rule_set_index;
     

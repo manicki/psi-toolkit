@@ -49,40 +49,40 @@ void CompressedDAG::open(std::string prefix, int mode_) {
     da_start = an = asize / sizeof(Arc);
     
     if(mode == 0) {
-        std::cerr << "Reading " << sn << " states to memory ... ";
+        //std::cerr << "Reading " << sn << " states to memory ... ";
         states = read_states(0, sn);
-        std::cerr << "finished" << std::endl;
+        //std::cerr << "finished" << std::endl;
         
-        std::cerr << "Reading " << an << " arcs to memory ... ";
+        //std::cerr << "Reading " << an << " arcs to memory ... ";
         arcs = read_arcs(0, an);
-	std::cerr << "finished" << std::endl;
+	//std::cerr << "finished" << std::endl;
     }
     else if(mode == 2) {
-        std::cerr << "Reading " << sn << " states to memory ... ";
+        //std::cerr << "Reading " << sn << " states to memory ... ";
         states = read_states(0, sn);
-        std::cerr << "finished" << std::endl;
+        //std::cerr << "finished" << std::endl;
         
-        std::cerr << "Mapping " << an << " arcs into memory ... ";
+        //std::cerr << "Mapping " << an << " arcs into memory ... ";
         arcs = map_arcs(0, an);
-        std::cerr << "finished" << std::endl;        
+        //std::cerr << "finished" << std::endl;        
     }
     else if(mode == 1){
-        std::cerr << "Mapping " << sn << " states into memory ... ";
+        //std::cerr << "Mapping " << sn << " states into memory ... ";
         states = map_states(0, sn);
-        std::cerr << "finished" << std::endl;        
+        //std::cerr << "finished" << std::endl;        
         
-        std::cerr << "Reading " << an << " arcs to memory ... ";
+        //std::cerr << "Reading " << an << " arcs to memory ... ";
         arcs = read_arcs(0, an);
-        std::cerr << "finished" << std::endl;
+        //std::cerr << "finished" << std::endl;
     }
     else if(mode == 3){
-        std::cerr << "Mapping " << sn << " states into memory ... ";
+        //std::cerr << "Mapping " << sn << " states into memory ... ";
         states = map_states(0, sn);
-        std::cerr << "finished" << std::endl;        
+        //std::cerr << "finished" << std::endl;        
         
-        std::cerr << "Mapping " << an << " arcs into memory ... ";
+        //std::cerr << "Mapping " << an << " arcs into memory ... ";
         arcs = map_arcs(0, an);
-        std::cerr << "finished" << std::endl;        
+        //std::cerr << "finished" << std::endl;        
     }
     else if(mode == 4) {
 	states = read_states(0, sn);
@@ -94,7 +94,7 @@ void CompressedDAG::open(std::string prefix, int mode_) {
 	da_start = arc_no(states[i]);
 	arcs = read_arcs(0, da_start);
 	
-	std::cerr << "Read " << ((ssize + (da_start * sizeof(Arc)))/(1024*1024))  << " M from " << ((ssize + asize)/(1024*1024)) << " M to memory..." << std::endl;	
+	//std::cerr << "Read " << ((ssize + (da_start * sizeof(Arc)))/(1024*1024))  << " M from " << ((ssize + asize)/(1024*1024)) << " M to memory..." << std::endl;	
     }    
 }
 
