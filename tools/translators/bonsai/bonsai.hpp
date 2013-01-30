@@ -13,6 +13,7 @@
 #include <map>
 #include <sstream>
 
+#include "TransferTypes.hpp"
 #include "Translator.hpp"
 
 class Bonsai : public Annotator {

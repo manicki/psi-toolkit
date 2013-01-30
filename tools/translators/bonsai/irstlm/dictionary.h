@@ -114,7 +114,7 @@ class dictionary{
 
   inline void genoovcode(){
     int c=encode(OOV());
-    std::cerr << "OOV code is "<< c << std::endl;
+    //std::cerr << "OOV code is "<< c << std::endl;
     oovcode(c);
   }
   
