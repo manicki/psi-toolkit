@@ -60,7 +60,7 @@ double LanguageModel::get_front_cost(SListPtr &in, int level) {
           std::string surface = in->at(i).label(level);
           if(lc)
 		std::transform(surface.begin(), surface.end(), surface.begin(), ::tolower);
-          if(i > 0);
+          if(i > 0)
                ss << " ";
           ss << surface;
      }
@@ -200,21 +200,21 @@ int LmContainer::size() {
 
 double LmContainer::get_front_cost(SListPtr &input) {
     double w = 0;
-    for(int i=0; i<lms.size(); i++) 
+    for(size_t i=0; i<lms.size(); i++) 
 	w += lm_weights[i] * lms[i]->get_front_cost(input, i);
     return w;
 }
 
 double LmContainer::get_terminal_cost(SListPtr &input) {
     double w = 0;
-    for(int i=0; i<lms.size(); i++) 
+    for(size_t i=0; i<lms.size(); i++) 
 	w += lm_weights[i] * lms[i]->get_terminal_cost(input, i);
     return w;
 }
 
 std::string LmContainer::get_plain_cost(SListPtr &input) {
     std::stringstream ss;
-    for(int i=0; i<lms.size(); i++) 
+    for(size_t i=0; i<lms.size(); i++) 
 	ss << lms[i]->get_plain_cost(input, i) << " ";
     return ss.str();
 }
@@ -222,7 +222,7 @@ std::string LmContainer::get_plain_cost(SListPtr &input) {
 double LmContainer::get_cost(SListPtr &input, Floats &unweighted) {
     double w = 0;
     unweighted.resize(lms.size());
-    for(int i=0; i<lms.size(); i++) {
+    for(size_t i=0; i<lms.size(); i++) {
 	unweighted[i] = lms[i]->get_cost(input, i);
 	w += lm_weights[i] * unweighted[i];
     }
@@ -232,7 +232,7 @@ double LmContainer::get_cost(SListPtr &input, Floats &unweighted) {
 double LmContainer::get_cost(SListPtr &input, Floats &unweighted, LinkPoints &lp) {
     double w = 0;
     unweighted.resize(lms.size());
-    for(int i=0; i<lms.size(); i++) {
+    for(size_t i=0; i<lms.size(); i++) {
 	unweighted[i] = lms[i]->get_cost(input, lp, i);
 	w += lm_weights[i] * unweighted[i];
     }
@@ -240,7 +240,7 @@ double LmContainer::get_cost(SListPtr &input, Floats &unweighted, LinkPoints &lp
 }
 
 void LmContainer::clear_memory() {
-    for(int i=0; i<lms.size(); i++)
+    for(size_t i=0; i<lms.size(); i++)
 	lms[i]->clear_memory();
 }
 

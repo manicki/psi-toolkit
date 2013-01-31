@@ -22,17 +22,24 @@ using namespace rules;
 
 // ########### Konstruktory ############
 
-CompressedDAG::CompressedDAG() : sn(0), an(0), d_sn(0), da_start(0), da_length(0), states(NULL), arcs(NULL), sf(NULL), af(NULL), mode(0) {}
+CompressedDAG::CompressedDAG()
+  : sf(NULL), af(NULL), mode(0), states(NULL), arcs(NULL),
+    sn(0), an(0), d_sn(0), da_start(0), da_length(0)
+{ }
 
-CompressedDAG::CompressedDAG(unsigned int sn_, unsigned int an_) : sn(sn_), an(an_), d_sn(0), da_start(0), da_length(0), sf(NULL), af(NULL), mode(0)  {
-    assert(sn < std::numeric_limits<int>::max());  // maksmalnie 2^31 stanów, dla bezpieczeństwa
-    assert(an < std::numeric_limits<int>::max());  // mozna zindeksować maksymalnie 2^31 przejść,
+CompressedDAG::CompressedDAG(unsigned int sn_, unsigned int an_)
+  : sf(NULL), af(NULL), mode(0),
+    sn(sn_), an(an_), d_sn(0), da_start(0), da_length(0)
+      {
+    assert((int)sn < std::numeric_limits<int>::max());  // maksmalnie 2^31 stanów, dla bezpieczeństwa
+    assert((int)an < std::numeric_limits<int>::max());  // mozna zindeksować maksymalnie 2^31 przejść,
                                                    // ostatni bit jest zarezerwowany dla stanów końcowych
     states = new Position[sn];
     arcs = new Arc[an];
 }
 
-CompressedDAG::CompressedDAG(std::string prefix, int mode_ = 0) : mode(mode_), d_sn(0), da_start(0), da_length(0) {
+CompressedDAG::CompressedDAG(std::string prefix, int mode_ = 0)
+  : mode(mode_), d_sn(0), da_start(0), da_length(0) {
     open(prefix, mode);
 }
 
@@ -104,7 +111,7 @@ bool CompressedDAG::in(Word &w) { // sprawdza czy dany wyraz (ciąg liczb) jest 
     assert(sn > 0);
     
     State current_state = 0;
-    for(int i = 0; i < w.size(); i++) {
+    for(size_t i = 0; i < w.size(); i++) {
         State next_state = delta(current_state, w[i]);    
         if(next_state != -1) {
             current_state = next_state;
@@ -120,7 +127,7 @@ bool CompressedDAG::prefix(Word &w) {
     assert(sn > 0);
     
     State current_state = 0;
-    for(int i = 0; i < w.size(); i++) {
+    for(size_t i = 0; i < w.size(); i++) {
         State next_state = delta(current_state, w[i]);    
         if(next_state != -1) {
             current_state = next_state;
@@ -137,7 +144,7 @@ int CompressedDAG::hash(Word &w) {
     
     int index = 0;
     State current_state = 0;
-    for(int i = 0; i < w.size(); i++) {
+    for(size_t i = 0; i < w.size(); i++) {
         Arc* arc = find(current_state, w[i]);
         if(arc != arcs+an) {
             index += arc->w;
@@ -218,7 +225,7 @@ inline ArcIt CompressedDAG::find_num(State i, int count) {
 }
 
 Range CompressedDAG::row(State i) {  // pewnie gdzieś tutaj w tle musi się odbyć dynamiczne ładowanie/mapowanie
-    if(i+1 < sn) {
+    if(i+1 < (int)sn) {
 	Position s = arc_no(states[i]);
 	Position e = arc_no(states[i+1]);
 	
@@ -233,7 +240,7 @@ Range CompressedDAG::row(State i) {  // pewnie gdzieś tutaj w tle musi się odb
 	    return Range(arcs + s, arcs + e);
 	}
     }
-    else if(i+1 == sn) {
+    else if(i+1 == (int)sn) {
 	Position s = arc_no(states[i]);
         if(s > da_start) {
 	    unmap_arcs();

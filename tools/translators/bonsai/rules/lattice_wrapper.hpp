@@ -8,33 +8,27 @@ bool isNonTerminal(Lattice::EdgeDescriptor edge, Lattice& lattice);
 Lattice::EdgeSequence getWordTokenSequence(
     Lattice&,
     Lattice::VertexDescriptor,
-    Lattice::VertexDescriptor,
-    std::string);
+    Lattice::VertexDescriptor);
 
 Lattice::EdgeSequence getTopParseSequence(
     Lattice &lattice,
     Lattice::VertexDescriptor start,
-    Lattice::VertexDescriptor end,
-    std::string langCode);
+    Lattice::VertexDescriptor end);
 
 std::map<int, int> getCharWordTokenMap(
     Lattice &lattice,
     Lattice::VertexDescriptor start,
-    Lattice::VertexDescriptor end,
-    std::string langCode);
+    Lattice::VertexDescriptor end);
 
 Lattice::EdgeSequence getSubTreeSymbols(Lattice::EdgeDescriptor node,
-                                        Lattice& lattice,
-                                        std::string langCode);
+                                        Lattice& lattice);
 
 Lattice::EdgeSequence getChildSymbols(Lattice::EdgeDescriptor node,
-                                      Lattice& lattice,
-                                      std::string langCode);
+                                      Lattice& lattice);
 
 Lattice::EdgeSequence getTreeSymbols(
     Lattice &lattice,
     Lattice::VertexDescriptor start,
-    Lattice::VertexDescriptor end,
-    std::string langCode);
+    Lattice::VertexDescriptor end);
 
 #endif

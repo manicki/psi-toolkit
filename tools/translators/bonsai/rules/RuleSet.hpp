@@ -34,8 +34,7 @@ class RuleSet {
     RuleSet(std::string, int, int, int, LmContainerPtr);
     EdgeTransformationsPtr get_edge_transformations(Lattice&,
                                                     Lattice::VertexDescriptor,
-                                                    Lattice::VertexDescriptor,
-                                                    std::string);
+                                                    Lattice::VertexDescriptor);
     void set_verbosity(int);    
     void set_max_transformations_per_hyperedge(int);    
     void set_max_hyperedges_per_nonterminal(int);    
@@ -54,17 +53,15 @@ class RuleSet {
     rules::SimpleDAG parse_to_dag(Lattice&,
                                   Lattice::VertexDescriptor,
                                   Lattice::VertexDescriptor,
-                                  std::string,
                                   Unmapper&);
     rules::SimpleDAG subparse_to_dag(Lattice::EdgeDescriptor,
                                      Lattice&,
-                                     std::string,
                                      std::map<int, int>&,
                                      Unmapper&);
     
     void build_intersector();
     rules::SimpleDAG prune_by_intersector(rules::SimpleDAG&);
-    rules::SimpleDAG partial(int, std::vector<int>&);
+    rules::SimpleDAG partial(size_t, std::vector<int>&);
     bool nextksb(std::vector<int>&, int &, int &, int, int);
     
     std::vector<std::pair<Symbol, SListPtr> > word_to_slist(rules::Word&, Unmapper&);
@@ -75,25 +72,25 @@ class RuleSet {
     rules::HuffedWords trg_huf;
     StringVector<> src_sym_map;
     StringVector<> trg_sym_map;    
-    //MonotonicVector<> src_trg_map;
     
-    LmContainerPtr lmc;
+    rules::SimpleDAG intersector;
+    
+    size_t max_length;          // maximal length of source language rule part (default 7)
+    size_t max_nt;              // maximal number of non-terminal symbols (default 4)
     
     unsigned int rule_set_index;
     
-    rules::SimpleDAG intersector;
-    int max_length;          // maximal length of source language rule part (default 7)
-    int max_nt;              // maximal number of non-terminal symbols (default 4)
+    LmContainerPtr lmc;
     
-    int max_trans_hyper;     // maximal number of transformations per hyper edge (default 20)
-    int max_hyper_sym;       // maximal number of hyper edges per non-terminal symbol (default 20)
+    size_t max_trans_hyper;     // maximal number of transformations per hyper edge (default 20)
+    size_t max_hyper_sym;       // maximal number of hyper edges per non-terminal symbol (default 20)
     double eps;              // allowed neglog distance of transformation to best transformation (default -1 = infinity)
                              // (allowed_cost <= best_cost + eps) 
     
     std::set<rules::Symbol> nts;  // set of non-terminal symbols (for easier recognition)
 
-    int verbosity;
-    int cost_length;
+    size_t verbosity;
+    size_t cost_length;
     
     static Floats tm_weights;
     static Floats lm_weights;

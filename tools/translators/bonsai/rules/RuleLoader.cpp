@@ -29,20 +29,19 @@ void RuleLoader::add_rule_set( RuleSetPtr rp ) {
 
 EdgeTransformationsPtr RuleLoader::get_edge_transformations(Lattice& lattice,
 							    Lattice::VertexDescriptor start,
-							    Lattice::VertexDescriptor end,
-							    std::string langCode) {
+							    Lattice::VertexDescriptor end) {
    if(rs.size() == 1) {
-      EdgeTransformationsPtr local = rs[0]->get_edge_transformations(lattice, start, end, langCode);
-      fill_empty(lattice, start, end, langCode, local);
+      EdgeTransformationsPtr local = rs[0]->get_edge_transformations(lattice, start, end);
+      fill_empty(lattice, start, end, local);
       return local;
    }
    else if(rs.size() > 1) {
       EdgeTransformationsPtr merged( new EdgeTransformations() );
-      for(int i=0; i < rs.size(); i++) {
-	  EdgeTransformationsPtr local = rs[i]->get_edge_transformations(lattice, start, end, langCode);
-	  merge_edge_transformations(merged, local, i);
+      for(size_t i = 0; i < rs.size(); i++) {
+	  EdgeTransformationsPtr local = rs[i]->get_edge_transformations(lattice, start, end);
+	  merge_edge_transformations(merged, local);
       }
-      fill_empty(lattice, start, end, langCode, merged);
+      fill_empty(lattice, start, end, merged);
       return merged;
    }
    else {
@@ -53,11 +52,10 @@ EdgeTransformationsPtr RuleLoader::get_edge_transformations(Lattice& lattice,
 void RuleLoader::fill_empty(Lattice& lattice,
 			    Lattice::VertexDescriptor start,
 			    Lattice::VertexDescriptor end,
-			    std::string langCode,
 			    EdgeTransformationsPtr &et) {
   
-    Lattice::EdgeSequence treeSymbols = getTreeSymbols(lattice, start, end, langCode);
-    std::map<int, int> charTokenMap = getCharWordTokenMap(lattice, start, end, langCode);
+    Lattice::EdgeSequence treeSymbols = getTreeSymbols(lattice, start, end);
+    std::map<int, int> charTokenMap = getCharWordTokenMap(lattice, start, end);
     
     Lattice::EdgeSequence::Iterator treeSymbolsIt(lattice, treeSymbols);
     while(treeSymbolsIt.hasNext()) {
@@ -74,7 +72,7 @@ void RuleLoader::fill_empty(Lattice& lattice,
                     std::cerr << "No rules for " << sym.str() << std::endl;
                 
 		SListPtr target_list(new SList());
-		Lattice::EdgeSequence targetSequence = getChildSymbols(edge, lattice, langCode);
+		Lattice::EdgeSequence targetSequence = getChildSymbols(edge, lattice);
                 Lattice::EdgeSequence::Iterator targetSequenceIt(lattice, targetSequence);
 		while(targetSequenceIt.hasNext()) {
 		    Lattice::EdgeDescriptor subEdge = targetSequenceIt.next();
@@ -104,7 +102,7 @@ void RuleLoader::fill_empty(Lattice& lattice,
                 Floats costs;
                 costs.resize(tm_weights.size(), 10);
 		double cost;
-                for(int i=0; i < tm_weights.size(); i++) 
+                for(size_t i = 0; i < tm_weights.size(); i++) 
                     cost += tm_weights[i]*costs[i];
 		    
 		costs.push_back(0);                              // number of terminal words; not necessary to add word penalty to cost
@@ -112,7 +110,7 @@ void RuleLoader::fill_empty(Lattice& lattice,
 		Floats rs_vector;
 		rs_vector.resize(rs_weights.size(), 1);
 		
-		for(int i = 0; i < rs_vector.size(); i++) {
+		for(size_t i = 0; i < rs_vector.size(); i++) {
 		   costs.push_back(rs_vector[i]);
 		   cost += rs_weights[i] * rs_vector[i];
 		}
@@ -124,7 +122,7 @@ void RuleLoader::fill_empty(Lattice& lattice,
 		TransformationPtr tp( new Transformation(sym, target_list, target_list, cost, costs, lmc) );
 		
 		AlignmentPtr ap( new Alignment() );
-		for(int i = 1; i <= target_list->size(); i++)
+		for(size_t i = 1; i <= target_list->size(); i++)
 		    ap->insert(AlignmentPoint(i,i));
 		tp->add_alignment(ap);
 		
@@ -135,7 +133,7 @@ void RuleLoader::fill_empty(Lattice& lattice,
     }
 }
 
-void RuleLoader::merge_edge_transformations(EdgeTransformationsPtr& result, EdgeTransformationsPtr& next, int index) {
+void RuleLoader::merge_edge_transformations(EdgeTransformationsPtr& result, EdgeTransformationsPtr& next) {
    for(EdgeTransformations::iterator sym_it = next->begin(); sym_it != next->end(); sym_it++) {
       Symbol sym = sym_it->first;
       //std::cerr << "Merging from second rules set: " << sym.str() << std::endl;

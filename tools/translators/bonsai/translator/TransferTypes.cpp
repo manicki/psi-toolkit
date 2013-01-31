@@ -23,7 +23,7 @@ Label Symbol::label() const {
 	return Label("ign");
 };
     
-Label Symbol::label(int i) const {
+Label Symbol::label(size_t i) const {
     if(labels.size() > i)
 	return labels[i];
     else
@@ -109,7 +109,7 @@ std::string SList::surface(int i) {
     return sstr.str();
 }
 
-int SList::nt_index(int i) {
+int SList::nt_index(size_t i) {
     if(i < nt.size())
 	return nt[i];
     else 

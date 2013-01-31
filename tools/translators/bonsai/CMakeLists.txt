@@ -1,4 +1,5 @@
-add_definitions(-Wno-sign-compare -Wno-reorder -Wno-unused-parameter -Wno-write-strings)
+# Ignoring warnings from irstlm
+add_definitions(-Wno-unused-but-set-variable -Wno-sign-compare -Wno-write-strings -Wno-unused-parameter -Wno-undef -Wno-parentheses)
 
 include_directories("${psi-toolkit_SOURCE_DIR}/tools/parsers/puddle")
 link_directories("${psi-toolkit_BINARY_DIR}/tools/parsers/puddle")

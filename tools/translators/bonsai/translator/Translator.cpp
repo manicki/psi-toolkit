@@ -8,18 +8,18 @@ namespace bonsai
 {
 
 Translator::Translator(RuleLoaderPtr rl_, LmContainerPtr lm_, int k_=20)
-    : rl(rl_), lm(lm_), k(k_), verbosity(0), pedantry(false), n(1), sentence_no(0), total_time(0) {}
+    : rl(rl_), lm(lm_), k(k_), verbosity(0), pedantry(false), n(1),
+      sentence_no(0), total_time(0) {}
 
 TranslationQueuePtr Translator::translate(Lattice& lattice,
 					  Lattice::VertexDescriptor start,
-					  Lattice::VertexDescriptor end,
-					  std::string langCode) {
+					  Lattice::VertexDescriptor end) {
     boost::posix_time::ptime pt_start = boost::posix_time::microsec_clock::local_time();
     
     node_translation_memory.clear();
 
-    EdgeTransformationsPtr et = rl->get_edge_transformations(lattice, start, end, langCode);
-    Symbol top = add_top_symbol(lattice, start, end, langCode, et);
+    EdgeTransformationsPtr et = rl->get_edge_transformations(lattice, start, end);
+    Symbol top = add_top_symbol(lattice, start, end, et);
     
     if(verbosity >= 1)
 	std::cerr << "Starting translation ..." << std::endl;
@@ -70,13 +70,13 @@ TranslationQueuePtr Translator::merge(HyperEdgeSetPtr& hs, EdgeTransformationsPt
 	
 	TransformationPtr t = *r0;
 	TranslationNodes tn;
-	for(int i = 0; i < (*h_it)->nts()->size(); i++) {
+	for(size_t i = 0; i < (*h_it)->nts()->size(); i++) {
 	    Symbol nt = (*h_it)->nts()->at(i);
 	    TranslationQueuePtr tq = translate_recursive(nt, et);
 	    r.push_back(tq->begin());
 	    tn[(*h_it)->nts()->at(i)] = *(r[i]);
 	}
-	TranslationPtr translation( new Translation(t, tn, lm, /*inf,*/ top) );
+	TranslationPtr translation( new Translation(t, tn, lm, top) );
 
 // @todo: poprawic to na cos madrzejszego np. kilka symboli <TOP> po maksymalnie n dzieci lub drzewo hierarchiczne
 // Lepiej zeby to dzialalo za pomoca jakiejs opcji, a nie ifdefa.
@@ -97,7 +97,7 @@ TranslationQueuePtr Translator::merge(HyperEdgeSetPtr& hs, EdgeTransformationsPt
     
     while(k_best_translations->size() < k) {
 	if(L != false) {
-	    for(int i = 0; i <= r.size(); i++) {
+	    for(size_t i = 0; i <= r.size(); i++) {
 		TransIt r0_prim = r0;
 		TransCoordinate r_prim = r;
 		if(i < r.size()) {
@@ -110,7 +110,7 @@ TranslationQueuePtr Translator::merge(HyperEdgeSetPtr& hs, EdgeTransformationsPt
 		if(r0_prim != L->get_transformations()->end()) {
 		    TransformationPtr t = *r0_prim;
 		    TranslationNodes tn;
-		    for(int j = 0; j < L->nts()->size(); j++) {
+		    for(size_t j = 0; j < L->nts()->size(); j++) {
 			TranslationQueuePtr tq = translate_recursive(L->nts()->at(j), et);
 			if(r_prim[j] != tq->end())
 			    tn[L->nts()->at(j)] = *(r_prim[j]) ;
@@ -151,13 +151,12 @@ TranslationQueuePtr Translator::merge(HyperEdgeSetPtr& hs, EdgeTransformationsPt
 Symbol Translator::add_top_symbol(Lattice& lattice,
 				  Lattice::VertexDescriptor start,
 				  Lattice::VertexDescriptor end,
-				  std::string langCode,
 				  EdgeTransformationsPtr& et) {
     
     SListPtr source(new SList());
     
-    std::map<int, int> charTokenMap = getCharWordTokenMap(lattice, start, end, langCode);
-    Lattice::EdgeSequence topParseSeq = getTopParseSequence(lattice, start, end, langCode);
+    std::map<int, int> charTokenMap = getCharWordTokenMap(lattice, start, end);
+    Lattice::EdgeSequence topParseSeq = getTopParseSequence(lattice, start, end);
     Lattice::EdgeSequence::Iterator topParseSeqIt(lattice, topParseSeq);
     while(topParseSeqIt.hasNext()) {
 	Lattice::EdgeDescriptor topEdge = topParseSeqIt.next();    

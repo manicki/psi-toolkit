@@ -29,16 +29,18 @@ class Translation {
     
     TransformationPtr parent_transformation;
     TranslationNodes  node_translations;
+ 
+    LmContainerPtr lmc;
+    
+    bool top;
+  
     SListPtr translation;
     Floats unweighted_costs;
     double cost;
-    bool top;
-  
+    
     static int verbosity;
     static bool pedantry;
   
-    LmContainerPtr lmc;
-    //SymInflectorPtr inf;
     double lm_heuristic;
     
     static Floats tm_weights;

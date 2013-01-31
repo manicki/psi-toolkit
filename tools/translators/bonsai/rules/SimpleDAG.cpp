@@ -18,7 +18,7 @@ SimpleDAG::SimpleDAG() {}
 
 bool SimpleDAG::in(Word &w) { // sprawdza czy dany wyraz (ciąg liczb) jest elementem języka automatu   
     State current_state = 0;
-    for(int i = 0; i < w.size(); i++) {
+    for(size_t i = 0; i < w.size(); i++) {
         State next_state = delta(current_state, w[i]);    
         if(next_state != -1) {
             current_state = next_state;
@@ -33,7 +33,7 @@ bool SimpleDAG::in(Word &w) { // sprawdza czy dany wyraz (ciąg liczb) jest elem
 int SimpleDAG::hash(Word &w) {   
     int index = 0;
     State current_state = 0;
-    for(int i = 0; i < w.size(); i++) {
+    for(size_t i = 0; i < w.size(); i++) {
         ArcIt arc = find(current_state, w[i]);
         if(arc != NULL) {
             index += arc->w;
@@ -86,7 +86,7 @@ void SimpleDAG::wordlist_rec(State q, StateLanguage &sl, std::set<State> &visite
 
 bool SimpleDAG::prefix(Word &w) {    
     State current_state = 0;
-    for(int i = 0; i < w.size(); i++) {
+    for(size_t i = 0; i < w.size(); i++) {
         State next_state = delta(current_state, w[i]);    
         if(next_state != -1) {
             current_state = next_state;
@@ -100,7 +100,7 @@ bool SimpleDAG::prefix(Word &w) {
 
 State SimpleDAG::common_prefix(Word &w, int &l) {    
     State current_state = 0;
-    for(int i = 0; i < w.size(); i++) {
+    for(size_t i = 0; i < w.size(); i++) {
         State next_state = delta(current_state, w[i]);    
         if(next_state != -1) {
             current_state = next_state;
@@ -140,7 +140,7 @@ inline ArcIt SimpleDAG::find(State i, Symbol j) {
 }
 
 Range SimpleDAG::row(State i) {  
-    if(i < states.size()) {    
+    if((size_t)i < states.size()) {    
         return Range(&(*(states[i]->begin())), &(*(states[i]->end()))); 
     }
     else 
@@ -210,7 +210,7 @@ void SimpleDAG::print() {
     //std::cerr << starts.size() << " - " << states.size() << std::endl;
     
     //std::cout << "Size: " << states.size() << std::endl;
-    for(int i = 0; i < states.size(); i++) {
+    for(size_t i = 0; i < states.size(); i++) {
         Range r = row(i);
         for(ArcIt it = r.first; it != r.second; it++) {
             std::cout << i << "\t" << it->q << "\t" << it->a << std::endl;
@@ -222,7 +222,7 @@ void SimpleDAG::print() {
 }
 
 void SimpleDAG::print_with_weights() {
-    for(int i = 0; i < states.size(); i++) {
+    for(size_t i = 0; i < states.size(); i++) {
         Range r = row(i);
         for(ArcIt it = r.first; it != r.second; it++) {
             std::cout << i << "\t" << it->q << "\t" << it->a << "\t" << it->w << std::endl;
@@ -238,7 +238,7 @@ void SimpleDAG::reverse() {
     SimpleDAG ndag;
     std::map<State, State> mapper;
     
-    for(int i=0; i < states.size(); i++) {
+    for(size_t i=0; i < states.size(); i++) {
         State s = ndag.new_state();
         if(is_end_state(i)) {
             ndag.starts[s] = 1;
@@ -247,7 +247,7 @@ void SimpleDAG::reverse() {
             ndag.set_end_state(s);
         }
     }
-    for(int i = 0; i < ndag.states.size(); i++) {
+    for(size_t i = 0; i < ndag.states.size(); i++) {
         Range r = row(i);
         for(ArcIt ait = r.first; ait != r.second; ait++) {
             ndag.new_arc(ait->q, i, ait->a, ait->w);
@@ -285,7 +285,7 @@ void SimpleDAG::determinize() {
         ArcSet narcs;
         State s = ns.find_first();
         
-        while(s != BSet::npos) {
+        while((size_t)s != BSet::npos) {
             Range arcs = row(s);
             for(ArcIt ait = arcs.first; ait != arcs.second; ait++) {
                 if(narcs.count(ait->a) == 0) {
@@ -319,7 +319,7 @@ void SimpleDAG::determinize() {
         }
         
         State s = it->first.find_first(); 
-        while(s != BSet::npos) {
+        while((size_t)s != BSet::npos) {
             if(is_end_state(s)) {
                 ndag.set_end_state(ndag_s);
             }
@@ -363,7 +363,7 @@ void SimpleDAG::nd_union(SimpleDAG &sdu) {
     State act;
     
     std::map<State, State> mapper;
-    for(int i=0; i<sdu.states.size(); i++) {
+    for(size_t i=0; i<sdu.states.size(); i++) {
         if(mapper.count(i) == 0) {
             State n;
             
