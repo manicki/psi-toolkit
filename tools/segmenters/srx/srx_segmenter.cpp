@@ -355,7 +355,7 @@ private:
         while (ruleApplication.startingPosition < text.length()
                && (ruleApplication.breakingPosition == std::string::npos
                    || ruleApplication.breakingPosition < minBreakPoint)) {
-            PerlStringPiece currentText(text.data() + ruleApplication.startingPosition);
+            PerlStringPiece currentText(text.data() + ruleApplication.startingPosition, text.length() - ruleApplication.startingPosition);
             int originalLength = currentText.size();
             PerlStringPiece fragFound;
 
