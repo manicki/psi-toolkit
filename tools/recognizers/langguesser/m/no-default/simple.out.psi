@@ -1,0 +1,8 @@
+## beg. len.  text         tags                  annot.text  annotations
+01 0000 15    спасибо!     frag,txt-reader       спасибо!    FRAG[]
+02 0000 15    спасибо!     !ru,lang-guesser,text спасибо!    TEXT[1]
+03 0015 01    \n           ∅                     ∅           ∅
+04 0016 10    źdźbło.      frag,txt-reader       źdźbło.     FRAG[]
+05 0016 10    źdźbło.      !pl,lang-guesser,text źdźbło.     TEXT[4]
+06 0026 01    \n           ∅                     ∅           ∅
+07 0027 07    aba_aba      frag,txt-reader       aba_aba     FRAG[]

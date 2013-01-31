@@ -148,7 +148,7 @@ const std::string TpTokenizer::Factory::DEFAULT_RULE_FILE_SPEC
 = "%ITSDATA%/%LANG%/%LANG%.rgx";
 
 const std::string TpTokenizer::Factory::DEFAULT_RULE_FILE_MAPPING
-= "common=%ITSDATA%/xx/xx.rgx;abbrev_%LANG%=%ITSDATA%/%LANG%/abbrev.rgx";
+= "common=%ITSDATA%/common.rgx;abbrev_%LANG%=%ITSDATA%/%LANG%/abbrev.rgx";
 
 const size_t TpTokenizer::Factory::DEFAULT_HARD_LIMIT = 1000;
 const size_t TpTokenizer::Factory::DEFAULT_SOFT_LIMIT = 950;

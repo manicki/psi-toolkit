@@ -21,6 +21,8 @@
 #define LOWER_LETTER(i) ( ((i) > 90 || (i) < 65) ? (i) : ((i) + 32) )
 
 std::string LangGuesser::UNKNOWN_LANGUAGE = "unknown";
+std::string LangGuesser::DEFAULT_DEFAULT_LANGUAGE = "xx";
+std::string LangGuesser::NONE_LANGUAGE = "none";
 
 std::map<std::string, std::string> LangGuesser::LANGUAGES =
     boost::assign::map_list_of
@@ -34,9 +36,12 @@ LangGuesser::LangGuesser() {
 }
 
 LangGuesser::LangGuesser(const boost::program_options::variables_map& options)
-    : forceMode_(false) {
+    : forceMode_(false), defaultLanguage_(DEFAULT_DEFAULT_LANGUAGE) {
 
     forceMode_ = options.count("force") ? true : false;
+
+    if (options.count("default-language"))
+        defaultLanguage_ = options["default-language"].as<std::string>();
 
     if (options.count("only-langs")) {
         std::vector<std::string> langsWanted =
@@ -95,17 +100,21 @@ std::string LangGuesser::guessLanguage(std::string text) {
     std::string guessedLanguage = (text.length() < MIN_TEXT_LENGTH_FOR_BIGRAM_METHOD) ?
         guessLanguageByLetters(text) : guessLanguageByBigramModel(text);
 
-    if ((guessedLanguage == "unknown") && forceMode_) {
+    if ((guessedLanguage == UNKNOWN_LANGUAGE) && forceMode_) {
         if (languages_.size() == 1) {
             guessedLanguage = languages_.front().name;
         }
         else {
             if (text.length() < MIN_TEXT_LENGTH_FOR_BIGRAM_METHOD) {
                 guessedLanguage = guessLanguageByBigramModel(text);
-                if (guessedLanguage == "unknown") guessedLanguage = languages_.front().name;
+                if (guessedLanguage == UNKNOWN_LANGUAGE)
+                    guessedLanguage = languages_.front().name;
             }
         }
     }
+
+    if (guessedLanguage == UNKNOWN_LANGUAGE && defaultLanguage_ != NONE_LANGUAGE)
+        guessedLanguage = defaultLanguage_;
 
     return guessedLanguage;
 }
@@ -256,9 +265,13 @@ boost::program_options::options_description LangGuesser::Factory::doOptionsHandl
     boost::program_options::options_description optionsDescription("Allowed options");
 
     optionsDescription.add_options()
+        ("default-language", boost::program_options::value<std::string>()
+         ->default_value(DEFAULT_DEFAULT_LANGUAGE),
+         "Language code to be used for unrecognized strings, use 'none' to turn off putting a default language code")
+        ("force", "All frags must be marked as text in some language")
         ("only-langs", boost::program_options::value<std::vector<std::string> >()->multitoken(),
-            "Guesses language only from the given list of languages")
-        ("force", "All frags must be marked as text in some language");
+         "Guesses language only from the given list of languages");
+
 
     return optionsDescription;
 }
@@ -297,7 +310,8 @@ bool LangGuesser::Worker::guessLanguage_() {
         std::string guessedLanguage = processor_.guessLanguage(text);
         INFO("Guessed language for text [" << text << "] is " << guessedLanguage);
 
-        if (guessedLanguage != "unknown") markLanguage_(guessedLanguage, edge);
+        if (guessedLanguage != UNKNOWN_LANGUAGE)
+            markLanguage_(guessedLanguage, edge);
     }
 
     return false;

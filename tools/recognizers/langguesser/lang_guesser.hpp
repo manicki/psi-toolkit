@@ -69,6 +69,8 @@ private:
 
     static const unsigned int MIN_TEXT_LENGTH_FOR_BIGRAM_METHOD = 24;
     static std::string UNKNOWN_LANGUAGE;
+    static std::string DEFAULT_DEFAULT_LANGUAGE;
+    static std::string NONE_LANGUAGE;
     static std::map<std::string, std::string> LANGUAGES;
 
     struct Language {
@@ -82,6 +84,7 @@ private:
 
     std::list<Language> languages_;
     bool forceMode_;
+    std::string defaultLanguage_;
     std::string forcedLanguage_;
 
     void initLanguages();

@@ -16,3 +16,6 @@
 15 0293 01    \n           ∅                     ∅           ∅
 16 0294 02    Ю            frag,txt-reader       Ю           FRAG[]
 17 0294 02    Ю            !ru,lang-guesser,text Ю           TEXT[16]
+18 0296 01    \n           ∅                     ∅           ∅
+19 0297 07    aba_aba      frag,txt-reader       aba_aba     FRAG[]
+20 0297 07    aba_aba      !xx,lang-guesser,text aba_aba     TEXT[19]

@@ -56,15 +56,16 @@ void AutoCompleter::complete_(ProcessorPromiseAlternativeSequence& sequence) {
                         return;
 
                     sequence.insert(iter, langAlt);
+
                     if (firstTime) {
                         firstTime = false;
                         restartPosition = iter;
                         --restartPosition;
                     }
-
-                    iter = sequence.erase(iter);
-                    --iter;
                 }
+
+                iter = sequence.erase(iter);
+                --iter;
 
                 break;
             } else if ((*iter)->size() > 1) {
@@ -365,6 +366,8 @@ ProcessorPromiseAlternative AutoCompleter::filtreByLanguage_(
         new std::list<ProcessorPromiseSharedPtr>());
 
     BOOST_FOREACH(ProcessorPromiseSharedPtr promise, *alt) {
+        DEBUG("  considering " << promise->getName());
+
         boost::optional<ProcessorPromiseSharedPtr> returnedPromise
             = canHandleLanguage_(promise, langCode);
 

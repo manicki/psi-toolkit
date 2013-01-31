@@ -1,0 +1,4 @@
+
+@rule abbrev1/T := <<ABBEND
+etc
+ABBEND
