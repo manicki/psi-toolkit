@@ -44,7 +44,7 @@ class Symbol {
     Symbol() : range(Range(-1,-1)), nt(false) {}
     
     Label label() const;
-    Label label(int i) const;
+    Label label(size_t i) const;
     Labels labelList() const;
     
     SymbolIndex start() const;
@@ -87,7 +87,7 @@ class SList : public std::vector<Symbol> {
     void pop_back();
     std::string str();
     std::string surface(int);
-    int nt_index(int i);
+    int nt_index(size_t i);
     int nt_size();
     
   private:

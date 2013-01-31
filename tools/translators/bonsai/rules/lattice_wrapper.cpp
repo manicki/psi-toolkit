@@ -16,12 +16,12 @@ bool isNonTerminal(Lattice::EdgeDescriptor edge, Lattice& lattice)
 Lattice::EdgeSequence getWordTokenSequence(
     Lattice &lattice,
     Lattice::VertexDescriptor start,
-    Lattice::VertexDescriptor end,
-    std::string langCode)
+    Lattice::VertexDescriptor end)
 {
     Lattice::EdgeSequence::Builder seqBuilder(lattice);
     
-    LayerTagMask tokenMask = lattice.getLayerTagManager().getMask(__TOKEN_TAG__);
+    LayerTagMask tokenMask
+      = lattice.getLayerTagManager().getMask(__TOKEN_TAG__);
     Lattice::EdgeSequence tokens = lattice.getPath(start, tokenMask);
     Lattice::EdgeSequence::Iterator tokensIt
       = Lattice::EdgeSequence::Iterator(lattice, tokens);
@@ -40,15 +40,14 @@ Lattice::EdgeSequence getWordTokenSequence(
 Lattice::EdgeSequence getTopParseSequence(
     Lattice &lattice,
     Lattice::VertexDescriptor start,
-    Lattice::VertexDescriptor end,
-    std::string langCode)
+    Lattice::VertexDescriptor end)
 {
     Lattice::EdgeSequence::Builder seqBuilder(lattice);
     
     LayerTagMask mask = lattice.getLayerTagManager().getAlternativeMask(
-        lattice.getLayerTagManager().createSingletonTagCollectionWithLangCode(__PARSE_TAG__, langCode),
-        lattice.getLayerTagManager().createSingletonTagCollectionWithLangCode(__POS_TAG__, langCode),
-	lattice.getLayerTagManager().createSingletonTagCollectionWithLangCode(__TOKEN_TAG__, langCode)
+        lattice.getLayerTagManager().createSingletonTagCollection(__PARSE_TAG__),
+        lattice.getLayerTagManager().createSingletonTagCollection(__POS_TAG__),
+	lattice.getLayerTagManager().createSingletonTagCollection(__TOKEN_TAG__)
     );
     
     Lattice::EdgeSequence topParseSeq = lattice.getPath(start, mask);
@@ -68,13 +67,13 @@ Lattice::EdgeSequence getTopParseSequence(
 std::map<int, int> getCharWordTokenMap(
     Lattice &lattice,
     Lattice::VertexDescriptor start,
-    Lattice::VertexDescriptor end,
-    std::string langCode)
+    Lattice::VertexDescriptor end)
 {
     int tokenNo = 0;
     std::map<int, int> charTokenMap;
     
-    LayerTagMask tokenMask = lattice.getLayerTagManager().getMask(__TOKEN_TAG__);
+    LayerTagMask tokenMask
+      = lattice.getLayerTagManager().getMask(__TOKEN_TAG__);
     Lattice::EdgeSequence tokens = lattice.getPath(start, tokenMask);
     Lattice::EdgeSequence::Iterator tokensIt(lattice, tokens);
     
@@ -93,8 +92,7 @@ std::map<int, int> getCharWordTokenMap(
 
 
 Lattice::EdgeSequence getSubTreeSymbols(Lattice::EdgeDescriptor node,
-                                        Lattice& lattice,
-                                        std::string langCode)
+                                        Lattice& lattice)
 {
     Lattice::EdgeSequence::Builder seqBuilder(lattice);
         
@@ -135,7 +133,6 @@ Lattice::EdgeSequence getSubTreeSymbols(Lattice::EdgeDescriptor node,
 
 void getChildSymbolsRec(Lattice::EdgeDescriptor node,
                         Lattice& lattice,
-                        std::string langCode,
 			Lattice::EdgeSequence::Builder& seqBuilder)
 {
     LayerTagCollection edgeTags = lattice.getEdgeLayerTags(node);
@@ -154,36 +151,34 @@ void getChildSymbolsRec(Lattice::EdgeDescriptor node,
 		seqBuilder.addEdge(subNode);
 	    }
 	    else {
-		getChildSymbolsRec(subNode, lattice, langCode, seqBuilder); 	
+		getChildSymbolsRec(subNode, lattice, seqBuilder); 	
 	    }
 	}
     }
 }
 
 Lattice::EdgeSequence getChildSymbols(Lattice::EdgeDescriptor node,
-                                        Lattice& lattice,
-                                        std::string langCode)
+                                        Lattice& lattice)
 {
     Lattice::EdgeSequence::Builder seqBuilder(lattice);
-    getChildSymbolsRec(node, lattice, langCode, seqBuilder);
+    getChildSymbolsRec(node, lattice, seqBuilder);
     return seqBuilder.build();
 }
 
 Lattice::EdgeSequence getTreeSymbols(
     Lattice &lattice,
     Lattice::VertexDescriptor start,
-    Lattice::VertexDescriptor end,
-    std::string langCode)
+    Lattice::VertexDescriptor end)
 {
     Lattice::EdgeSequence::Builder seqBuilder(lattice);
     
-    Lattice::EdgeSequence topSymbols = getTopParseSequence(lattice, start, end, langCode);
+    Lattice::EdgeSequence topSymbols = getTopParseSequence(lattice, start, end);
     Lattice::EdgeSequence::Iterator topSymbolsIt(lattice, topSymbols);
     
     while(topSymbolsIt.hasNext()) {
         Lattice::EdgeDescriptor topEdge = topSymbolsIt.next();
         seqBuilder.addEdge(topEdge);
-        Lattice::EdgeSequence subSymbols = getSubTreeSymbols(topEdge, lattice, langCode);
+        Lattice::EdgeSequence subSymbols = getSubTreeSymbols(topEdge, lattice);
         Lattice::EdgeSequence::Iterator subSymbolsIt(lattice, subSymbols);
         while(subSymbolsIt.hasNext()) {
             Lattice::EdgeDescriptor subEdge = subSymbolsIt.next();

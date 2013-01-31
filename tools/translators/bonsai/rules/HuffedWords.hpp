@@ -1,5 +1,5 @@
-#ifndef HUFFEDWORDS_HPP__
-#define HUFFEDWORDS_HPP__
+#ifndef HUFFEDWORDS_HDR
+#define HUFFEDWORDS_HDR_
 
 #include <vector>
 #include <string>
@@ -29,7 +29,6 @@ namespace rules {
         HuffedWords();
         
         void open(std::string); // read the huffman tree and keep it in memory (optionally: read first n entries into memory)
-        WordList get_words(unsigned int);
         WordTriples get_wordtriples(unsigned int);
     };
     

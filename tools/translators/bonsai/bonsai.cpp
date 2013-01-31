@@ -111,7 +111,7 @@ Annotator* Bonsai::Factory::doCreateAnnotator(
     poleng::bonsai::Translator::set_word_penalty_weight(word_penalty_weight);
     
     poleng::bonsai::LmContainerPtr lmc ( new poleng::bonsai::LmContainer() );
-    for(int i = 0; i < lm_files.size(); i++) {
+    for(size_t i = 0; i < lm_files.size(); i++) {
         poleng::bonsai::LanguageModelPtr lm( new poleng::bonsai::LanguageModel(lm_files[i]) );
 	if(i == 0) lm->set_lc(true);
 	
@@ -125,7 +125,7 @@ Annotator* Bonsai::Factory::doCreateAnnotator(
     rl->set_max_hyperedges_per_nonterminal(options["max_hyper"].as<int>());    
     rl->set_max_transformation_factor(options["eps"].as<double>());
     
-    for(int i = 0; i < rs_files.size(); i++) {
+    for(size_t i = 0; i < rs_files.size(); i++) {
 	poleng::bonsai::RuleSetPtr rs( new poleng::bonsai::RuleSet( rs_files[i], 7, 4, i, lmc ) );
 	rl->add_rule_set( rs );
     }
@@ -232,7 +232,7 @@ void Bonsai::translate(Lattice &lattice) {
 	
 	std::cerr << "test: " << start << " " << end << std::endl;
 	
-        poleng::bonsai::TranslationQueuePtr tq = translator_->translate(lattice, start, end, langCode_);
+        poleng::bonsai::TranslationQueuePtr tq = translator_->translate(lattice, start, end);
 	poleng::bonsai::TranslationPtr best = *(tq->begin());
         
         AnnotationItem ai("TRANS", StringFrag(best->str()));
@@ -248,7 +248,7 @@ void Bonsai::translate(Lattice &lattice) {
         Lattice::VertexDescriptor start = lattice.getEdgeSource(segment);
         Lattice::VertexDescriptor end   = lattice.getEdgeTarget(segment);
         
-	poleng::bonsai::TranslationQueuePtr tq = translator_->translate(lattice, start, end, langCode_);
+	poleng::bonsai::TranslationQueuePtr tq = translator_->translate(lattice, start, end);
         poleng::bonsai::TranslationPtr best = *(tq->begin());
         
         AnnotationItem ai("TRANS", StringFrag(best->str()));

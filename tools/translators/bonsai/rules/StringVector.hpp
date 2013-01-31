@@ -128,6 +128,7 @@ class StringVector
     typedef StringIterator string_iterator;
     
     StringVector();
+    virtual ~StringVector() {}
     
     void swap(StringVector<ValueT, PosT, Allocator> &c)
     {

@@ -8,7 +8,9 @@ namespace bonsai
 {
 
 RuleSet::RuleSet(std::string path, int max_length_, int max_nt_, int rule_set_index_, LmContainerPtr lmc_) 
- : max_length(max_length_), max_nt(max_nt_), rule_set_index(rule_set_index_), lmc(lmc_), max_trans_hyper(20), max_hyper_sym(20), eps(-1), verbosity(0), cost_length(5) {
+ : max_length(max_length_), max_nt(max_nt_), rule_set_index(rule_set_index_),
+   lmc(lmc_), max_trans_hyper(20), max_hyper_sym(20), eps(-1), verbosity(0),
+   cost_length(5) {
    namespace po = boost::program_options;
    po::options_description desc("rule options");
    desc.add_options()
@@ -19,7 +21,7 @@ RuleSet::RuleSet(std::string path, int max_length_, int max_nt_, int rule_set_in
        ("target.rules.index", po::value<std::string>()->default_value("plfr.trg.idx"), "")
        ("target.rules.symbols", po::value<std::string>()->default_value("plfr.trg.symbols"), "")
        ("target.rules.costs", po::value<int>()->default_value(5), "")
-       ("target.rules.mode", po::value<int>()->default_value(0), "")
+   //    ("target.rules.mode", po::value<int>()->default_value(0), "")
    ;
 
    boost::program_options::variables_map vm;
@@ -64,7 +66,7 @@ RuleSet::RuleSet(std::string path, int max_length_, int max_nt_, int rule_set_in
    }
    
    int smode = vm["source.rules.mode"].as<int>();
-   int tmode = vm["target.rules.mode"].as<int>();
+   //int tmode = vm["target.rules.mode"].as<int>();
     
    src_fsa.open(sindex, smode);
    
@@ -84,13 +86,12 @@ RuleSet::RuleSet(std::string path, int max_length_, int max_nt_, int rule_set_in
 
 EdgeTransformationsPtr RuleSet::get_edge_transformations(Lattice &lattice,
 							 Lattice::VertexDescriptor start,
-							 Lattice::VertexDescriptor end,
-							 std::string langCode) {
+							 Lattice::VertexDescriptor end) {
     Unmapper src_sym_unmap;
     
     boost::posix_time::ptime pt_start1 = boost::posix_time::microsec_clock::local_time();
     
-    rules::SimpleDAG src_lang_dag = parse_to_dag(lattice, start, end, langCode, src_sym_unmap);
+    rules::SimpleDAG src_lang_dag = parse_to_dag(lattice, start, end, src_sym_unmap);
  
     boost::posix_time::ptime pt_start2 = boost::posix_time::microsec_clock::local_time();
     boost::posix_time::time_duration delta1 = pt_start2 - pt_start1;
@@ -117,7 +118,7 @@ EdgeTransformationsPtr RuleSet::get_edge_transformations(Lattice &lattice,
     for(rules::WordList::iterator it = src_lang_wordlist.begin(); it != src_lang_wordlist.end(); it++) {
 	
 	rules::Word src_word = it->get<0>();
-	size_t pos = it->get<1>()-1;        
+	int pos = it->get<1>()-1;        
 	
 	if(pos >= 0) {
 	    rules::WordTriples trg_wordtriples = trg_huf.get_wordtriples(pos);
@@ -189,7 +190,7 @@ TransformationPtr RuleSet::word_to_transformation(Symbol &lhs, SListPtr &srcSymb
    Floats costs;
    
    int non_terminals = 0;
-   for(int i = 0; i < word.size(); i++) {
+   for(size_t i = 0; i < word.size(); i++) {
 	std::string trgSymbol = trg_sym_map[word[i]];
 	int srcIndex;
 	if(std::sscanf(trgSymbol.c_str(), "<X>[%d]", &srcIndex)) {
@@ -208,7 +209,7 @@ TransformationPtr RuleSet::word_to_transformation(Symbol &lhs, SListPtr &srcSymb
     }
      
    double cost = 0;
-   int i, j;
+   size_t i, j;
    for(i = 0, j = 0; j < tm_weights.size(); i++, j++) { // only tm_weight.size() costs are used 
        if(i < probs.size()) {                                                                                                 
             try {                                                                                                             
@@ -230,13 +231,13 @@ TransformationPtr RuleSet::word_to_transformation(Symbol &lhs, SListPtr &srcSymb
    rs_vector.resize(rs_weights.size(), 0);
    rs_vector[rule_set_index] = 1;
    
-   for(int i = 0; i < rs_vector.size(); i++) {
+   for(size_t i = 0; i < rs_vector.size(); i++) {
       costs.push_back(rs_vector[i]);
       cost += rs_weights[i] * rs_vector[i];
    }
    
    AlignmentPtr a( new Alignment );
-   for(int i = 0; i < align.size(); i+=2) {
+   for(size_t i = 0; i < align.size(); i+=2) {
 	a->insert(AlignmentPoint(align[i], align[i+1]));
    }
    
@@ -276,12 +277,12 @@ std::vector<std::pair<Symbol, SListPtr> > RuleSet::word_to_slist(rules::Word &w,
             
             path->push_back(sym);
             
-            if(path->size() == w.size()-1 and act == w.size()-1 and sym.end() == lhs.end()) {
+            if(path->size() == w.size()-1 and act == (int)w.size()-1 and sym.end() == lhs.end()) {
 		sl.push_back(std::make_pair(lhs, path));
 		break;
             }
             
-	    if( path->size() <= w.size() and act < w.size()-1) {
+	    if( path->size() <= w.size() and act < (int)w.size()-1) {
 		act++;
                 for(SymbolSet::iterator it = unmap[w[act]].begin(); it != unmap[w[act]].end(); it++) {
 		    Symbol t = *it;
@@ -297,18 +298,17 @@ std::vector<std::pair<Symbol, SListPtr> > RuleSet::word_to_slist(rules::Word &w,
 rules::SimpleDAG RuleSet::parse_to_dag(Lattice &lattice,
 				       Lattice::VertexDescriptor start,
 				       Lattice::VertexDescriptor end,
-				       std::string langCode,
 				       Unmapper &unmap) {
     rules::SimpleDAG ndag;
     
-    Lattice::EdgeSequence treeSymbols = getTreeSymbols(lattice, start, end, langCode);
-    std::map<int, int> charTokenMap = getCharWordTokenMap(lattice, start, end, langCode);
+    Lattice::EdgeSequence treeSymbols = getTreeSymbols(lattice, start, end);
+    std::map<int, int> charTokenMap = getCharWordTokenMap(lattice, start, end);
       
     Lattice::EdgeSequence::Iterator treeSymbolsIt(lattice, treeSymbols);  
     while(treeSymbolsIt.hasNext()) {
 	Lattice::EdgeDescriptor symbol = treeSymbolsIt.next();
 	if(isNonTerminal(symbol, lattice)) {
-	    rules::SimpleDAG tdag = subparse_to_dag(symbol, lattice, langCode, charTokenMap, unmap);
+	    rules::SimpleDAG tdag = subparse_to_dag(symbol, lattice, charTokenMap, unmap);
 	    ndag.nd_union(tdag);
 	}
     }
@@ -318,7 +318,6 @@ rules::SimpleDAG RuleSet::parse_to_dag(Lattice &lattice,
 
 rules::SimpleDAG RuleSet::subparse_to_dag(Lattice::EdgeDescriptor lhs,
 					  Lattice &lattice,
-					  std::string langCode,
 					  std::map<int, int>& charTokenMap,
 					  Unmapper &unmap)
 {    
@@ -351,7 +350,7 @@ rules::SimpleDAG RuleSet::subparse_to_dag(Lattice::EdgeDescriptor lhs,
     mapper[lhsStart] = q1;
     mapper[lhsEnd] = qEnd;
     
-    Lattice::EdgeSequence subTree = getSubTreeSymbols(lhs, lattice, langCode);
+    Lattice::EdgeSequence subTree = getSubTreeSymbols(lhs, lattice);
     Lattice::EdgeSequence::Iterator subTreeIt(lattice, subTree);
     while(subTreeIt.hasNext()) {
 	Lattice::EdgeDescriptor edge = subTreeIt.next();    
@@ -458,19 +457,19 @@ void RuleSet::build_intersector() {
 	       
 }
 
-rules::SimpleDAG RuleSet::partial(int n, std::vector<int> &a) {
+rules::SimpleDAG RuleSet::partial(size_t n, std::vector<int> &a) {
     rules::SimpleDAG ndag;
     rules::State q00 = ndag.new_state(true);
     rules::State q0 = ndag.new_state(false);
     ndag.new_arc(q00,q0,1,0);
     
     rules::State q = q0;
-    for(int i = 0, j = 0; i < 7; i++) {
+    for(size_t i = 0, j = 0; i < n; i++) {
 	rules::State p = ndag.new_state(false);
 	ndag.set_end_state(p);
 	
 	ndag.new_arc(q, p, 0, 0);
-	if(j < a.size() and a[j] == i+1) {
+	if(j < a.size() and (size_t)a[j] == i+1) {
 	    ndag.new_arc(q, p, 1, 0);
 	    j++;
 	}
@@ -480,14 +479,14 @@ rules::SimpleDAG RuleSet::partial(int n, std::vector<int> &a) {
     return ndag;
 }
 
-bool RuleSet::nextksb(std::vector<int> &a, int &h, int &m,  int k, int n) {
+bool RuleSet::nextksb(std::vector<int> &a, int &h, int &m, int k, int n) {
     
     if(k == 0)
 	return false;
 	 
     bool first = false;
     
-    if(a.size() != k) {
+    if(a.size() != (size_t)k) {
 	a.clear();
 	a.resize(k,0);
 	first = true;

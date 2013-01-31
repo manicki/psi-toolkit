@@ -46,10 +46,10 @@ class Transformation {
     SListPtr srcSymbols;
     SListPtr trgSymbols;
     
-    LmContainerPtr lmc;
-    
-    Floats unweighted_costs;
     double cost;
+    Floats unweighted_costs;
+    
+    LmContainerPtr lmc;
     double lm_heuristic;
     
     static int verbosity;

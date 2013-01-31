@@ -46,46 +46,6 @@ WordTriples HuffedWords::get_wordtriples(unsigned int hash_no) {
     return wordtriples;    
 }
 
-
-WordList HuffedWords::get_words(unsigned int hash_no) {
-    WordList words;
-    //huffed_stream.seekg(hash_no);
-    //
-    //unsigned int inlength = length; 
-    //unsigned char* inbuffer = new unsigned char[inlength];
-    //
-    //unsigned char* outbuffer = NULL;
-    //unsigned int outlength = 0;
-    //
-    //huffed_stream.read((char*)inbuffer, inlength);
-    //h.decode_string(inbuffer, inlength, outbuffer, outlength);
-    //        
-    //int i = 0;
-    //while(i < outlength) {
-    //    Word w;
-    //    
-    //    unsigned char symbols = (unsigned char)outbuffer[i];
-    //    i++;
-    //    
-    //    int j = 0;
-    //    while(j < symbols) {
-    //        unsigned int s = 0;
-    //        memcpy(&s, outbuffer + i, step);
-    //        
-    //        i += step;
-    //        j++;
-    //        
-    //        w.push_back(s);
-    //    }
-    //    words.push_back(WordIndex(w, hash_no));
-    //}
-    //
-    //delete [] inbuffer;
-    //free(outbuffer);
-    
-    return words;
-}
-
 }
 
 }

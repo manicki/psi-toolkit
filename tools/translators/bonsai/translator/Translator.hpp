@@ -30,8 +30,8 @@ class Translator {
     
     class Candidate {
       private:
-	HyperEdgePtr h;
 	TranslationPtr t;
+	HyperEdgePtr h;
 	TransIt r0;
 	TransCoordinate r;
 
@@ -61,7 +61,6 @@ class Translator {
     Symbol add_top_symbol(Lattice&,
 			  Lattice::VertexDescriptor,
 			  Lattice::VertexDescriptor,
-			  std::string,
 			  EdgeTransformationsPtr&);
     
     RuleLoaderPtr rl;
@@ -71,15 +70,17 @@ class Translator {
     std::map<Symbol, TranslationQueuePtr, SymbolSorterMap> node_translation_memory;
   private:
     
-    int k;
-    int n;
+    size_t k;
     
-    int verbosity;
     bool mert;
+    
+    size_t verbosity;
     bool pedantry;
     
-    int total_time;
-    int sentence_no;
+    size_t n;
+    
+    size_t sentence_no;
+    size_t total_time;
     
     static Floats tm_weights;
     static Floats lm_weights;
@@ -91,8 +92,7 @@ class Translator {
     
     TranslationQueuePtr translate(Lattice&,
 				  Lattice::VertexDescriptor,
-				  Lattice::VertexDescriptor,
-				  std::string);
+				  Lattice::VertexDescriptor);
     
     void set_sentence_no(int sno) { sentence_no = sno; }
     void set_nbest(int);

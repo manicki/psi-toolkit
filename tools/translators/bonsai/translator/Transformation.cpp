@@ -56,7 +56,7 @@ std::string Transformation::str() {
     
     if(pedantry) {
 	ss << "\t(" ;
-	for(int i = 0; i < unweighted_costs.size(); i++) {
+	for(size_t i = 0; i < unweighted_costs.size(); i++) {
 	    ss << unweighted_costs[i];
 	    if(i < unweighted_costs.size()-1)
 		ss << ",";
