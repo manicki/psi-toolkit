@@ -55,6 +55,7 @@ protected:
     }
 private:
     bool loadLibrary_() {
+        DEBUG("Opening " << getLibraryName().c_str());
         libraryHandle_ = dlopen(getLibraryName().c_str(), RTLD_NOW);
         if (!libraryHandle_) {
             DEBUG("Could not load library: " << getLibraryName()
