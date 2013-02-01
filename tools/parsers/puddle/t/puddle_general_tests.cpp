@@ -528,7 +528,7 @@ BOOST_AUTO_TEST_CASE( load_rules_pl ) {
     BOOST_CHECK_EQUAL(tagset->size(), (size_t) 21);
     poleng::bonsai::puddle::RulesPtr rules =
         rule_loader.readFromFile(rulesFilename);
-    BOOST_CHECK_EQUAL(rules->size(), (size_t) 274);
+    BOOST_CHECK_EQUAL(rules->size(), (size_t) 275);
     boost::scoped_ptr<poleng::bonsai::puddle::Puddle> puddle(
             new poleng::bonsai::puddle::Puddle(tagset, rules, "pl")
             );
