@@ -26,9 +26,9 @@ h4 { color:#004767; font-size:14px; }
 
 section { padding:0 0 12px; }
 
-p, ul, pre { padding:0 0 9px; }
+p, ul, ol, pre { padding:0 0 9px; }
 p { text-align:justify; }
-ul { margin-left:32px; }
+ul, ol { margin-left:32px; }
 pre { font-family:"Consolas","Monaco","DejaVu Sans Mono",monospace; text-align:left;
   white-space: pre-wrap; /* css-3 */
   white-space: -moz-pre-wrap !important; /* Mozilla, since 1999 */
@@ -131,7 +131,7 @@ textarea, input, #input-file > div, .button { border:1px solid #113163; border-r
   height:17px; margin:6px 0; padding:3px 6px; width:695px; }
 textarea { height:17px; resize:none; }
 
-input[type="submit"], #input-file > div, .button, td.gsc-search-button > input.gsc-search-button { 
+input[type="submit"], #input-file > div, .button, td.gsc-search-button > input.gsc-search-button {
   background:#333 repeat scroll 0 0;
   background-image:-webkit-gradient(linear, left top, left bottom, from(#444), to(#222));
   background-image:-webkit-linear-gradient(top, #444, #222);
@@ -191,6 +191,8 @@ input[type="submit"]:hover, #input-file > div:hover, a.button:hover {
 
 #select-output-type { color:#555; float:right; font-size:13px; margin-right:10px; }
 #select-output-type > select { font-size:12px; }
+
+svg { width:100%; }
 
 /* footer */
 

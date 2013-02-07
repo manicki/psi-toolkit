@@ -91,10 +91,10 @@ void HtmlHelpFormatter::formatExampleInputOutput_(
     std::string ext;
     fileRecognizer_.recognizeMimeTypeAndFileExtension(fileContent, type, ext);
 
-    if (type == "image" && ext == "svg") {
-        output << fileContent << std::endl;
-        return;
-    }
+//    if (type == "image" && ext == "svg") {
+//        output << fileContent << std::endl;
+//        return;
+//    }
     if ((type == "text" && ext == "txt" ) || type == FileRecognizer::UNKNOWN_TYPE) {
         output << "<pre><code>" << escapeHTML_(fileContent) << "</code></pre>" << std::endl;
         return;
@@ -108,7 +108,10 @@ void HtmlHelpFormatter::formatExampleInputOutput_(
 
         output << "<a href=\"" << path << "\" target=\"_blank\" >";
 
-        if (type == "image" && ext != "djvu") {
+        if (type == "image" && ext == "svg") {
+            output << fileContent << std::endl;
+        }
+        else if (type == "image" && ext != "djvu") {
             output << "<img src=\"" << path << "\" alt=\"image output\" />";
         } else {
             output << path;

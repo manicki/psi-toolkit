@@ -1,15 +1,7 @@
 A shallow parser based on the Spejd shallow parser originally developed
 at IPI PAN (http://zil.ipipan.waw.pl/Spejd/). For input, Puddle requires morphologically anotated text as produced, for instance, by the morfologik processor. It may also serve as a disambiguation tool itself or can be used chained with a POS-tagger (e.g. metagger processor).
 
-Examples
---------
-
-A typical pipeline for parsing a Polish sentence with graphical output:
-
-`txt-reader ! tokenize --lang pl ! morfologik ! puddle ! gv-writer --tree`
-
-Remarks
--------
+### Remarks ###
 
 Note that text needs to be annotated morphologically before passing it to puddle.
 
