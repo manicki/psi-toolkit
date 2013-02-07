@@ -22,24 +22,27 @@ public:
     char * hiddenOptions();
 private:
 
-    void registerIncludesAndActions();
+    void registerIncludesAndActions_();
 
-    const std::string initialText;
-    const std::string initialPipe;
-    std::string initialOutput;
+    const std::string initialText_;
+    const std::string initialPipe_;
+    std::string initialOutput_;
 
-    std::string getOrSetDefaultData(const char* name, std::string initialValue);
+    std::string getOrSetDefaultData_(const char* name, std::string initialValue);
 
-    std::string getInput();
-    std::string runPipe(std::string);
+    std::string getInput_();
+    bool inputFromFile_;
+    std::string runPipe_(std::string);
 
     FileStorage fileStorage_;
     FileRecognizer fileRecognizer_;
 
-    void clearPreviousFileFromOutput();
-    void createFileFromOutput(const std::string& output);
-
+    void clearPreviousFileFromOutput_();
+    void createFileFromOutput_(const std::string& output);
     std::string generateOutput_(const std::string& rawOuput);
+
+    static const std::string GUESSING_READER;
+    void tryToAddGuessingReader_(std::string& pipe);
 
     std::string encodeHTML_(const std::string& data);
 };

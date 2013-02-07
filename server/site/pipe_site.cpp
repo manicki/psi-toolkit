@@ -2,23 +2,28 @@
 #include "pipe_runner.hpp"
 #include "logging.hpp"
 #include "session_manager.hpp"
+#include "main_factories_keeper.hpp"
 
 #include <iostream>
 #include <sstream>
 
 #include <boost/bind.hpp>
+#include <boost/foreach.hpp>
 #include <boost/algorithm/string.hpp>
 #include <boost/algorithm/string/replace.hpp>
+#include <boost/algorithm/string/predicate.hpp>
+
+const std::string PipeSite::GUESSING_READER = "guessing-reader";
 
 PipeSite::PipeSite(PsiServer& server, const std::string & pipe, const std::string & text)
     : TemplateSite(server),
-    initialText(text.c_str()), initialPipe(pipe.c_str()), initialOutput(""),
+    initialText_(text.c_str()), initialPipe_(pipe.c_str()), initialOutput_(""),
     fileStorage_(std::string(psiServer_.websiteRoot))
 {
-    registerIncludesAndActions();
+    registerIncludesAndActions_();
 }
 
-void PipeSite::registerIncludesAndActions() {
+void PipeSite::registerIncludesAndActions_() {
     psiServer_.registerIncludeCode(
         "pipe_site_input_text", boost::bind(&PipeSite::inputText, this));
 
@@ -36,28 +41,28 @@ void PipeSite::registerIncludesAndActions() {
 }
 
 char * PipeSite::inputText() {
-    std::string input = getOrSetDefaultData("input-text", initialText);
+    std::string input = getOrSetDefaultData_("input-text", initialText_);
     return stringToChar(input);
 }
 
 char * PipeSite::pipeText() {
-    std::string pipe = getOrSetDefaultData("pipe-text", initialPipe);
+    std::string pipe = getOrSetDefaultData_("pipe-text", initialPipe_);
     return stringToChar(encodeHTML_(pipe));
 }
 
 char * PipeSite::outputText() {
-    if (initialOutput.empty()) {
-        initialOutput = runPipe(initialText);
+    if (initialOutput_.empty()) {
+        initialOutput_ = runPipe_(initialText_);
     }
 
-    std::string output = getOrSetDefaultData("output-text", initialOutput);
+    std::string output = getOrSetDefaultData_("output-text", initialOutput_);
     return stringToChar(generateOutput_(output));
 }
 
 char * PipeSite::actionPipe() {
-    std::string input = getInput();
+    std::string input = getInput_();
 
-    std::string output = runPipe(input);
+    std::string output = runPipe_(input);
     psiServer_.session()->setData("output-text", output);
 
     return stringToChar(std::string("/psitoolkit.html"));
@@ -80,33 +85,41 @@ char * PipeSite::hiddenOptions() {
     return stringToChar(opts);
 }
 
-std::string PipeSite::getOrSetDefaultData(const char* name, std::string initialValue) {
+std::string PipeSite::getOrSetDefaultData_(const char* name, std::string initialValue) {
     if (!psiServer_.session()->isData(name)) {
         psiServer_.session()->setData(name, initialValue);
     }
     return psiServer_.session()->getData(name);
 }
 
-std::string PipeSite::getInput() {
+std::string PipeSite::getInput_() {
     std::string input = psiServer_.session()->getData("input-text");
     std::string isFile = psiServer_.session()->getData("radio-file");
 
     if (isFile == "on") {
         input = psiServer_.session()->getData("input-file");
+        inputFromFile_ = true;
+    }
+    else {
+        inputFromFile_ = false;
     }
 
     if (input.empty()) {
-        input = initialText;
+        input = initialText_;
     }
 
     return input;
 }
 
-std::string PipeSite::runPipe(std::string input) {
+std::string PipeSite::runPipe_(std::string input) {
     std::string pipe = psiServer_.session()->getData("pipe-text");
-    boost::replace_all(pipe, " | ", " ! ");
 
-    if (input.empty()) input = initialText;
+    boost::replace_all(pipe, " | ", " ! ");
+    if (inputFromFile_ == true) {
+        tryToAddGuessingReader_(pipe);
+    }
+
+    if (input.empty()) input = initialText_;
 
     std::stringstream iss(input);
     std::ostringstream oss;
@@ -114,7 +127,7 @@ std::string PipeSite::runPipe(std::string input) {
     INFO("Constructing pipe [" << pipe << "]...");
     INFO("Input: " << input);
 
-    clearPreviousFileFromOutput();
+    clearPreviousFileFromOutput_();
 
     try {
         PipeRunner p(pipe);
@@ -122,7 +135,7 @@ std::string PipeSite::runPipe(std::string input) {
         p.run(iss, oss);
         INFO("... OK");
 
-        createFileFromOutput(oss.str());
+        createFileFromOutput_(oss.str());
     }
     catch (std::exception& e) {
         oss << "There are some problems: " << e.what() << std::endl
@@ -132,13 +145,32 @@ std::string PipeSite::runPipe(std::string input) {
     return oss.str();
 }
 
-void PipeSite::clearPreviousFileFromOutput() {
+void PipeSite::clearPreviousFileFromOutput_() {
     psiServer_.session()->clearData("output-file");
 }
 
-void PipeSite::createFileFromOutput(const std::string& output) {
+void PipeSite::createFileFromOutput_(const std::string& output) {
     std::string filename = fileStorage_.storeFile(output);
     psiServer_.session()->setData("output-file", filename);
+}
+
+void PipeSite::tryToAddGuessingReader_(std::string& pipe) {
+    unsigned found = pipe.find("read");
+    if (found != std::string::npos) {
+        return;
+    }
+
+    std::set<std::string> aliases =
+        MainFactoriesKeeper::getInstance().getAllAliases(GUESSING_READER);
+
+    BOOST_FOREACH(std::string alias, aliases) {
+        if (boost::starts_with(pipe, alias)) {
+            return;
+        }
+    }
+
+    DEBUG("add guessing-reader to pipeline");
+    pipe = GUESSING_READER + " ! " + pipe;
 }
 
 std::string PipeSite::generateOutput_(const std::string& rawOutput) {
