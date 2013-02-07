@@ -33,6 +33,15 @@ public:
 
     void setUnzipData(bool);
 
+    class ApertiumException : public std::exception {
+    public:
+        ApertiumException(const std::string& msg) : msg_(msg) { }
+        virtual ~ApertiumException() throw() { }
+        virtual const char* what() const throw() { return msg_.c_str(); }
+    private:
+        std::string msg_;
+    };
+
 private:
 
     FormatSpecification formatSpecification_;

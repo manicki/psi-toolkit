@@ -109,7 +109,8 @@ void PipeRunner::parseIntoFinalPipeline_(
         = autoCompleter.complete();
 
     if (!returnedSeq)
-        throw Exception("cannot be resolved");
+        throw Exception("pipe-line cannot be resolved - try to specify the language "
+                        "of one of the processors with `--lang` option");
     else
         finalPipeline_ = *returnedSeq;
 

@@ -55,6 +55,7 @@ std::vector<DeformatIndex> ApertiumDeformatter::processFormatRules(const std::st
     }
 
     std::vector<DeformatIndex> deformatIndexes;
+    unsigned int rulesCounter = 0;
 
     while (PerlRegExp::FindAndConsumeN(&currentInput, res[0], args[0], levels[0])) {
         unsigned int lvl = 0;
@@ -79,8 +80,14 @@ std::vector<DeformatIndex> ApertiumDeformatter::processFormatRules(const std::st
                 ));
 
                 DEBUG("rule " << ruleNr << " found " << matches[lvl][i]);
+                rulesCounter++;
             }
         }
+    }
+
+    if (rulesCounter == 0) {
+       throw ApertiumException("no rule applied to input data - try to specify input file "
+                               "format directly with `--format` option");
     }
 
     return deformatIndexes;
