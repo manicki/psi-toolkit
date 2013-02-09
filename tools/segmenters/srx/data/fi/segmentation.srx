@@ -1,0 +1,79 @@
+<?xml version="1.0"?>
+<!-- <!DOCTYPE srx PUBLIC "-//SRX//DTD SRX//EN" "srx.dtd"> -->
+<!-- @todo: expand -->
+<srx version="1.0">
+
+	<header segmentsubflows="yes">
+		<formathandle type="start" include="no"/>
+		<formathandle type="end" include="yes"/>
+		<formathandle type="isolated" include="yes"/>
+	</header>
+
+	<body>
+		<languagerules>
+
+			<languagerule languagerulename="fi">
+
+			        <!-- Zbyt dlugi segment -->
+				<rule break="yes">
+					<beforebreak>(?:.|\n){600}</beforebreak>
+					<afterbreak>\s</afterbreak>
+				</rule>
+
+				<!-- Wypunktowanie -->
+				<rule break="no">
+					<beforebreak>^\s*[0-9]+\.</beforebreak>
+					<afterbreak>\s</afterbreak>
+				</rule>
+
+				<rule break="no">
+					<beforebreak>^\s*\p{Ll}\.</beforebreak>
+					<afterbreak>\s</afterbreak>
+				</rule>
+
+				<!-- Inicjały -->
+				<rule break="no">
+					<beforebreak>\b\p{Lu}\.</beforebreak>
+					<afterbreak>\s</afterbreak>
+				</rule>
+
+                			<!-- ABBREVS -->
+               	 	<rule break="no">
+                        <beforebreak>\b(?:jne|mm|ym)\.</beforebreak>
+					<afterbreak>\s</afterbreak>
+                </rule>
+
+				<rule break="yes">
+					<beforebreak>[\.\?!]+</beforebreak>
+					<afterbreak>\s+([\-–]\s*)?\p{Lu}</afterbreak>
+				</rule>
+
+                                <!-- przypisy -->
+                                <rule break="yes">
+					<beforebreak>\.(?:\[[0-9]+\])+</beforebreak>
+					<afterbreak> </afterbreak>
+				</rule>
+
+
+				<rule break="yes">
+					<beforebreak></beforebreak>
+					<afterbreak>\n</afterbreak>
+				</rule>
+
+			</languagerule>
+
+
+
+		</languagerules>
+
+		<maprules>
+			<maprule maprulename="Default">
+				<languagemap languagepattern="(?:FI|fi|Finnish|FINNISH).*" languagerulename="fi"/>
+			</maprule>
+		</maprules>
+
+	</body>
+
+</srx>
+
+

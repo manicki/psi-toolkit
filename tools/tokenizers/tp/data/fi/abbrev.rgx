@@ -1,0 +1,7 @@
+#@todo: expand
+
+@rule abbrev1/T := <<ABBEND
+jne
+mm
+ym
+ABBEND
