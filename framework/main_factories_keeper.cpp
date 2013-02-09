@@ -47,6 +47,10 @@
 #include "sfst_lemmatizer.hpp"
 #endif
 
+#if HAVE_HFST
+#include "hfst_lemmatizer.hpp"
+#endif
+
 #if HAVE_CMPH
 #include "one_edge_at_a_time_annotator.hpp"
 #include "bilexicon.hpp"
@@ -178,6 +182,10 @@ MainFactoriesKeeper::MainFactoriesKeeper() {
 
 #if HAVE_SFST
     keeper_.takeProcessorFactory(new LemmatizerAnnotator<SfstLemmatizer>::Factory());
+#endif
+
+#if HAVE_HFST
+    keeper_.takeProcessorFactory(new LemmatizerAnnotator<HfstLemmatizer>::Factory());
 #endif
 
     keeper_.takeProcessorFactory(new poleng::bonsai::puddle::Puddle::Factory());

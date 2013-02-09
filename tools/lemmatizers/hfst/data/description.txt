@@ -1,0 +1,6 @@
+Lemmatizer using HFST morphological transducers (http://hfst.sourceforge.net/).
+It returns morphosyntactic information on tokens including base form,
+word class (part-of-speech tag) and other morphosyntactic attributes.
+
+Tagsets used in descriptions returned by HFST lemmatizer differ for
+each language.

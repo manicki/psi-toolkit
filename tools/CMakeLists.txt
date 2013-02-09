@@ -46,3 +46,13 @@ set(tools_DIRS
     ${tools_DIRS}
     lemmatizers/sfst CACHE PATH "Tools' paths to use in include_ and link_directories" FORCE)
 endif(HAVE_SFST)
+
+if(HAVE_HFST)
+set(tools_DIRS
+    ${tools_DIRS}
+    lemmatizers/hfst
+    lemmatizers/hfst/parsers
+    lemmatizers/hfst/plugin
+    lemmatizers/hfst/stemmers
+    CACHE PATH "Tools' paths to use in include_ and link_directories" FORCE)
+endif(HAVE_HFST)

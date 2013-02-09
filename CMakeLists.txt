@@ -189,6 +189,30 @@ if (USE_SFST)
 endif (USE_SFST)
 
 # ----------------------------------------------------
+# HFST library
+# ----------------------------------------------------
+option(USE_HFST "Using HFST" OFF)
+message(STATUS "Using HFST ${USE_HFST}")
+
+if (USE_HFST)
+   find_path(HFST_LIB libhfst.so /usr/local/lib)
+   find_path(HFST_LIB libhfst.so /usr/lib)
+   find_path(HFST_INCLUDE HfstTransducer.h /usr/include/hfst)
+   find_path(HFST_INCLUDE HfstTransducer.h /usr/local/include/hfst)
+
+   if(EXISTS ${HFST_LIB} AND EXISTS ${HFST_INCLUDE})
+      message(STATUS "Found HFST")
+      include_directories(${HFST_INCLUDE})
+      link_directories(${HFST_LIB})
+      link_directories("${psi-toolkit_BINARY_DIR}/tools/lemmatizers/hfst/plugin")
+      set(HAVE_HFST 1)
+   else()
+      message(WARNING "HFST not found")
+      set(HAVE_HFST 0)
+   endif(EXISTS ${HFST_LIB} AND EXISTS ${HFST_INCLUDE})
+endif (USE_HFST)
+
+# ----------------------------------------------------
 # Java components
 # ----------------------------------------------------
 option(USE_JAVA "Using Java components" OFF)
@@ -547,6 +571,11 @@ if(HAVE_SFST)
     set(TESTS_TARGETS ${TESTS_TARGETS} tools-lemmatizers-sfst-tests)
 endif(HAVE_SFST)
 
+if(HAVE_HFST)
+    set(BASE_TARGETS ${BASE_TARGETS} tools-lemmatizers-hfst)
+    set(TESTS_TARGETS ${TESTS_TARGETS} tools-lemmatizers-hfst-tests)
+endif(HAVE_HFST)
+
 if(HAVE_CMPH)
     set(BASE_TARGETS ${BASE_TARGETS} tools-datastructures-lexica)
     set(TESTS_TARGETS ${TESTS_TARGETS} tools-datastructures-lexica-tests)
@@ -774,6 +803,45 @@ if(DOWNLOAD_DATA)
            "trmorph-0.2.1/trmorph-0.2.1.a"
            "0d8a94791fce28f862e2890406e81727"
            "tools/lemmatizers/sfst/data/tr.a")
+    endif()
+
+    if (HAVE_HFST)
+       download_and_unpack(
+           "http://downloads.sourceforge.net/project/hfst/morphological-transducers/hfst-german-installable.tar.gz"
+           "hfst-german-installable/de-analysis.hfst.ol"
+           "70015d8ae4b3715b0c6ca934bbd5e80a"
+           "tools/lemmatizers/hfst/data/de.hfst.ol")
+
+       download_and_unpack(
+           "http://downloads.sourceforge.net/project/hfst/morphological-transducers/hfst-english-installable.tar.gz"
+           "hfst-english-installable/en-analysis.hfst.ol"
+           "e8170e542279ec29fc94d059cc5ff947"
+           "tools/lemmatizers/hfst/data/en.hfst.ol")
+
+       download_and_unpack(
+           "http://downloads.sourceforge.net/project/hfst/morphological-transducers/hfst-omorfi-installable.tar.gz"
+           "hfst-omorfi-installable/fi-analysis.hfst.ol"
+           "435fc50497997f91d327f0f133e970ef"
+           "tools/lemmatizers/hfst/data/fi.hfst.ol")
+
+       download_and_unpack(
+           "http://downloads.sourceforge.net/project/hfst/morphological-transducers/hfst-french-installable.tar.gz"
+           "hfst-french-installable/fr-analysis.hfst.ol"
+           "f6e9512dac698db5b3dab60906184969"
+           "tools/lemmatizers/hfst/data/fr.hfst.ol")
+
+       download_and_unpack(
+           "http://downloads.sourceforge.net/project/hfst/morphological-transducers/hfst-italian-installable.tar.gz"
+           "hfst-italian-installable/it-analysis.hfst.ol"
+           "c279e8b484da5e9abce5e575f9685d00"
+           "tools/lemmatizers/hfst/data/it.hfst.ol")
+
+       download_and_unpack(
+           "http://downloads.sourceforge.net/project/hfst/morphological-transducers/hfst-swedish-installable.tar.gz"
+           "hfst-swedish-installable/sv-analysis.hfst.ol"
+           "1e75f21b671f97607cf4c8516e3ec156"
+           "tools/lemmatizers/hfst/data/se.hfst.ol")
+
     endif()
 
 endif(DOWNLOAD_DATA)
