@@ -189,6 +189,30 @@ if (USE_SFST)
 endif (USE_SFST)
 
 # ----------------------------------------------------
+# HFST library
+# ----------------------------------------------------
+option(USE_HFST "Using HFST" OFF)
+message(STATUS "Using HFST ${USE_HFST}")
+
+if (USE_HFST)
+   find_path(HFST_LIB libhfst.so /usr/local/lib)
+   find_path(HFST_LIB libhfst.so /usr/lib)
+   find_path(HFST_INCLUDE HfstTransducer.h /usr/include/hfst)
+   find_path(HFST_INCLUDE HfstTransducer.h /usr/local/include/hfst)
+
+   if(EXISTS ${HFST_LIB} AND EXISTS ${HFST_INCLUDE})
+      message(STATUS "Found HFST")
+      include_directories(${HFST_INCLUDE})
+      link_directories(${HFST_LIB})
+      link_directories("${psi-toolkit_BINARY_DIR}/tools/lemmatizers/hfst/plugin")
+      set(HAVE_HFST 1)
+   else()
+      message(WARNING "HFST not found")
+      set(HAVE_HFST 0)
+   endif(EXISTS ${HFST_LIB} AND EXISTS ${HFST_INCLUDE})
+endif (USE_HFST)
+
+# ----------------------------------------------------
 # Java components
 # ----------------------------------------------------
 option(USE_JAVA "Using Java components" OFF)
@@ -546,6 +570,11 @@ if(HAVE_SFST)
     set(BASE_TARGETS ${BASE_TARGETS} tools-lemmatizers-sfst)
     set(TESTS_TARGETS ${TESTS_TARGETS} tools-lemmatizers-sfst-tests)
 endif(HAVE_SFST)
+
+if(HAVE_HFST)
+    set(BASE_TARGETS ${BASE_TARGETS} tools-lemmatizers-hfst)
+    set(TESTS_TARGETS ${TESTS_TARGETS} tools-lemmatizers-hfst-tests)
+endif(HAVE_HFST)
 
 if(HAVE_CMPH)
     set(BASE_TARGETS ${BASE_TARGETS} tools-datastructures-lexica)

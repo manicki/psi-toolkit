@@ -34,6 +34,10 @@ if (HAVE_SFST)
     target_link_libraries(framework sfst)
 endif(HAVE_SFST)
 
+if (HAVE_HFST)
+    target_link_libraries(framework hfst)
+endif(HAVE_HFST)
+
 foreach(dir ${formats_SUBDIRS})
     include_directories("${psi-toolkit_SOURCE_DIR}/formats/${dir}")
     link_directories("${psi-toolkit_BINARY_DIR}/formats/${dir}")
@@ -63,6 +67,10 @@ endif(USE_JAVA)
 if(HAVE_SFST)
     target_link_libraries(psi-pipe tools-lemmatizers-sfst)
 endif(HAVE_SFST)
+
+if(HAVE_HFST)
+    target_link_libraries(psi-pipe tools-lemmatizers-hfst)
+endif(HAVE_HFST)
 
 if(USE_POSTGRESQL)
     target_link_libraries(psi-pipe lex-db)

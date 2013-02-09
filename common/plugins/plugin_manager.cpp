@@ -14,6 +14,10 @@
 #include "sfst_plugin.hpp"
 #endif
 
+#if HAVE_HFST
+#include "hfst_plugin.hpp"
+#endif
+
 #if HAVE_DJVULIBRE
 #include "djvu_plugin.hpp"
 #endif
@@ -39,6 +43,9 @@ PluginManager::PluginManager() {
 #endif
 #if HAVE_SFST
     registerPlugin_(new SfstPlugin());
+#endif
+#if HAVE_HFST
+    registerPlugin_(new HfstPlugin());
 #endif
 #if HAVE_DJVULIBRE
     registerPlugin_(new DjVuPlugin());
