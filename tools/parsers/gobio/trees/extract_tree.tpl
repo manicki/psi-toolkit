@@ -12,7 +12,7 @@
 
 #if PRINTRULES
 
-#define _T5_WITH_EXTSCORES
+#define _T5_WITH_EXTSCORES 0
 #define PRINTSYMBOL(EDGE) "[" << chart.edge_category(EDGE).catprint() << ":" << combinator.get_symbol_registrar().get_obj(chart.edge_category(EDGE).get_cat()) << "]"
 
 #include "md5.hpp"
