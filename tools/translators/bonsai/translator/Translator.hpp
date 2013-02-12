@@ -61,6 +61,8 @@ class Translator {
     Symbol add_top_symbol(Lattice&,
 			  Lattice::VertexDescriptor,
 			  Lattice::VertexDescriptor,
+			  std::string,
+			  std::map<Symbol, Lattice::EdgeDescriptor, SymbolSorterMap2>&,
 			  EdgeTransformationsPtr&);
     
     RuleLoaderPtr rl;
@@ -88,12 +90,13 @@ class Translator {
     static double word_penalty_weight;
             
   public:
-    Translator(RuleLoaderPtr, LmContainerPtr, int);
+    Translator(RuleLoaderPtr, LmContainerPtr, int, int);
     
-    TranslationQueuePtr translate(Lattice&,
-				  Lattice::VertexDescriptor,
-				  Lattice::VertexDescriptor);
-    
+    void translate(Lattice&,
+		   Lattice::VertexDescriptor,
+		   Lattice::VertexDescriptor,
+		   std::string);
+
     void set_sentence_no(int sno) { sentence_no = sno; }
     void set_nbest(int);
     void set_verbosity(int);
