@@ -155,7 +155,7 @@ void PipeSite::createFileFromOutput_(const std::string& output) {
 }
 
 void PipeSite::tryToAddGuessingReader_(std::string& pipe) {
-    unsigned found = pipe.find("read");
+    unsigned int found = pipe.find("read");
     if (found != std::string::npos) {
         return;
     }
