@@ -27,8 +27,13 @@ const std::string ApertiumLatticeReader::Factory::DEFAULT_SPEC_FILE_ENDING = "-f
 
 ApertiumLatticeReader::ApertiumLatticeReader(
     const boost::filesystem::path& specificationFile,
-    bool unzipData)
-    : apertiumDeformatter_(specificationFile, unzipData) { }
+    bool unzipData,
+    bool keepTags)
+    : apertiumDeformatter_(specificationFile, unzipData), keepTags_(keepTags) { }
+
+bool ApertiumLatticeReader::isKeepTags() {
+    return keepTags_;
+}
 
 ApertiumLatticeReader::Factory::~Factory() { }
 
@@ -50,26 +55,30 @@ LatticeReader<std::istream>* ApertiumLatticeReader::Factory::doCreateLatticeRead
     boost::filesystem::path specificationFile = fileFetcher.getOneFile(specFilePath);
 
     bool unzipData;
-
     if (options.count("unzip-data")) {
         unzipData = options["unzip-data"].as<bool>();
     }
 
-    return new ApertiumLatticeReader(specificationFile, unzipData);
+    bool keepTags;
+    if (options.count("keep-tags")) {
+        keepTags = options["keep-tags"].as<bool>();
+    }
+
+    return new ApertiumLatticeReader(specificationFile, unzipData, keepTags);
 }
 
 boost::program_options::options_description ApertiumLatticeReader::Factory::doOptionsHandled() {
     boost::program_options::options_description optionsDescription("Allowed options");
 
     optionsDescription.add_options()
-        ("format", boost::program_options::value<std::string>()
-            ->default_value("html"),
+        ("format", boost::program_options::value<std::string>()->default_value("html"),
             "type of file for deformatting")
         ("specification-file", boost::program_options::value<std::string>(),
             "specification file path")
-        ("unzip-data", boost::program_options::value<bool>()
-            ->default_value(true),
-            "unzip compressed file formats like .pptx or .xlsx");
+        ("unzip-data", boost::program_options::value<bool>()->default_value(true),
+            "unzip compressed file formats like .pptx or .xlsx")
+        ("keep-tags", boost::program_options::value<bool>()->default_value(false),
+            "keep formatting tags");
 
     return optionsDescription;
 }
@@ -127,7 +136,10 @@ void ApertiumLatticeReader::Worker::doRun() {
 
         for (unsigned int i = 0; i < indexes.size(); i++) {
             text = input.substr(indexes[i].begin, indexes[i].length());
-            appendTagToLattice_(text, indexes[i].type, indexes[i].eos);
+
+            if (processor_.isKeepTags()) {
+                appendTagToLattice_(text, indexes[i].type, indexes[i].eos);
+            }
 
             int length = (i == indexes.size() - 1) ? input.length() : indexes[i+1].begin;
             length -= indexes[i].end;

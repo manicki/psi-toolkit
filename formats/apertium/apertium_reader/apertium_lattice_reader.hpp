@@ -13,7 +13,7 @@
 class ApertiumLatticeReader : public StreamLatticeReader {
 public:
 
-    ApertiumLatticeReader(const boost::filesystem::path&, bool unzipData);
+    ApertiumLatticeReader(const boost::filesystem::path&, bool unzipData, bool keepTags);
 
     std::string getFormatName();
 
@@ -36,6 +36,8 @@ public:
         static const std::string DEFAULT_SPEC_FILES_DIR;
         static const std::string DEFAULT_SPEC_FILE_ENDING;
     };
+
+    bool isKeepTags();
 
 private:
 
@@ -66,6 +68,8 @@ private:
 
     ApertiumDeformatter apertiumDeformatter_;
     boost::filesystem::path specificationFile_;
+
+    bool keepTags_;
 
 };
 
