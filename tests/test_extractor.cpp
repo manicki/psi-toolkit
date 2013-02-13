@@ -86,7 +86,7 @@ void TestExtractor::addTestBatch_(const boost::filesystem::path& directory) {
     boost::filesystem::path requiresFileName = directory / TEST_REQUIRES_FILE_NAME;
     if (boost::filesystem::is_regular_file(requiresFileName)
         && !checkRequirements_(requiresFileName)) {
-        WARN("SKIPPING as some requirements were not met");
+        INFO("SKIPPING as some requirements were not met");
         return;
     }
 
@@ -155,7 +155,7 @@ void TestExtractor::checkFileMap_(std::map<std::string, boost::filesystem::path>
                                const boost::filesystem::path& path,
                                const std::string& key,
                                const std::string& infoString) {
-    WARN("checking " << path.string() << " as " << infoString);
+    INFO("checking " << path.string() << " as " << infoString);
 
     if (filemap.count(key))
         WARN("cannot use " << path.string() << " test " << infoString << " file "
@@ -196,7 +196,7 @@ bool TestExtractor::checkRequirements_(boost::filesystem::path requiresFileName)
         std::getline(requiresStream, line);
 
         if (!line.empty()) {
-            WARN("checking requirement: `" << line << "`");
+            DEBUG("checking requirement: `" << line << "`");
 
             try {
                 keeper.getProcessorFactoriesForName(line).empty();
