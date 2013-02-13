@@ -86,12 +86,13 @@ RuleSet::RuleSet(std::string path, int max_length_, int max_nt_, int rule_set_in
 
 EdgeTransformationsPtr RuleSet::get_edge_transformations(Lattice &lattice,
 							 Lattice::VertexDescriptor start,
-							 Lattice::VertexDescriptor end) {
+							 Lattice::VertexDescriptor end,
+							 std::map<Symbol, Lattice::EdgeDescriptor, SymbolSorterMap2>& symbolEdgeMap) {
     Unmapper src_sym_unmap;
     
     boost::posix_time::ptime pt_start1 = boost::posix_time::microsec_clock::local_time();
     
-    rules::SimpleDAG src_lang_dag = parse_to_dag(lattice, start, end, src_sym_unmap);
+    rules::SimpleDAG src_lang_dag = parse_to_dag(lattice, start, end, symbolEdgeMap, src_sym_unmap);
  
     boost::posix_time::ptime pt_start2 = boost::posix_time::microsec_clock::local_time();
     boost::posix_time::time_duration delta1 = pt_start2 - pt_start1;
@@ -298,6 +299,7 @@ std::vector<std::pair<Symbol, SListPtr> > RuleSet::word_to_slist(rules::Word &w,
 rules::SimpleDAG RuleSet::parse_to_dag(Lattice &lattice,
 				       Lattice::VertexDescriptor start,
 				       Lattice::VertexDescriptor end,
+				       std::map<Symbol, Lattice::EdgeDescriptor, SymbolSorterMap2>& symbolEdgeMap,
 				       Unmapper &unmap) {
     rules::SimpleDAG ndag;
     
@@ -308,7 +310,7 @@ rules::SimpleDAG RuleSet::parse_to_dag(Lattice &lattice,
     while(treeSymbolsIt.hasNext()) {
 	Lattice::EdgeDescriptor symbol = treeSymbolsIt.next();
 	if(isNonTerminal(symbol, lattice)) {
-	    rules::SimpleDAG tdag = subparse_to_dag(symbol, lattice, charTokenMap, unmap);
+	    rules::SimpleDAG tdag = subparse_to_dag(symbol, lattice, symbolEdgeMap, charTokenMap, unmap);
 	    ndag.nd_union(tdag);
 	}
     }
@@ -318,6 +320,7 @@ rules::SimpleDAG RuleSet::parse_to_dag(Lattice &lattice,
 
 rules::SimpleDAG RuleSet::subparse_to_dag(Lattice::EdgeDescriptor lhs,
 					  Lattice &lattice,
+					  std::map<Symbol, Lattice::EdgeDescriptor, SymbolSorterMap2>& symbolEdgeMap,
 					  std::map<int, int>& charTokenMap,
 					  Unmapper &unmap)
 {    
@@ -337,7 +340,13 @@ rules::SimpleDAG RuleSet::subparse_to_dag(Lattice::EdgeDescriptor lhs,
         SymbolSet t;
         unmap[symbol] = t;
     }
-    unmap[symbol].insert(Symbol(lhsLabel, Range(lhsStart, lhsEnd), true));
+    
+    Symbol lhsSymbol(lhsLabel, Range(lhsStart, lhsEnd), true);
+    unmap[symbol].insert(lhsSymbol);
+    
+    if(!symbolEdgeMap.count(lhsSymbol))
+	symbolEdgeMap[lhsSymbol] = lhs;
+    
     nts.insert(symbol);
     
     rules::State q0 = ndag.new_state(true);
@@ -371,7 +380,11 @@ rules::SimpleDAG RuleSet::subparse_to_dag(Lattice::EdgeDescriptor lhs,
 	    SymbolSet t;
 	    unmap[symbol] = t;
 	}
-	unmap[symbol].insert(Symbol(edgeLabel, Range(edgeStart, edgeEnd), isNT));
+	Symbol edgeSymbol(edgeLabel, Range(edgeStart, edgeEnd), isNT);
+	unmap[symbol].insert(edgeSymbol);
+    
+	if(!symbolEdgeMap.count(edgeSymbol))
+	    symbolEdgeMap[edgeSymbol] = edge;
 	
 	if(isNT)
 	    nts.insert(symbol);

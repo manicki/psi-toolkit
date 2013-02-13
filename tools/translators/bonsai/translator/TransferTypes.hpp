@@ -73,6 +73,17 @@ struct SymbolSorterMap {
     }
 };
 
+struct SymbolSorterMap2 {
+    bool operator()(const Symbol &sym1, const Symbol &sym2) const {
+        if(sym1.str() != sym2.str())
+	    return sym1.str() < sym2.str();
+	else if(sym1.start() != sym2.start())
+	    return sym1.start() < sym2.start();
+	else
+	    return sym1.end() < sym2.end();  
+    }
+};
+
 //bool operator!=(Symbol& s1, Symbol& s2) {
 //    return s1.str() != s2.str();
 //}

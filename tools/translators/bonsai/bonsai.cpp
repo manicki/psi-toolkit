@@ -134,6 +134,7 @@ Annotator* Bonsai::Factory::doCreateAnnotator(
 	new poleng::bonsai::Translator(
 	    rl,
 	    lmc,
+	    options["nbest"].as<int>(),
 	    options["stacksize"].as<int>()
 	)
     );
@@ -226,37 +227,20 @@ void Bonsai::translate(Lattice &lattice) {
     Lattice::EdgesSortedBySourceIterator segmentIt =
         lattice.edgesSortedBySource(segmentMask);
 	
-    if (!segmentIt.hasNext()) {
+    if (!segmentIt.hasNext())
+    {
         Lattice::VertexDescriptor start = lattice.getFirstVertex();
         Lattice::VertexDescriptor end   = lattice.getLastVertex();
 	
-	std::cerr << "test: " << start << " " << end << std::endl;
-	
-        poleng::bonsai::TranslationQueuePtr tq = translator_->translate(lattice, start, end);
-	poleng::bonsai::TranslationPtr best = *(tq->begin());
-        
-        AnnotationItem ai("TRANS", StringFrag(best->str()));
-        LayerTagCollection tags
-            = lattice.getLayerTagManager().createSingletonTagCollectionWithLangCode(
-                "trans", langCode_);
-        
-        lattice.addEdge(start, end, ai, tags);
+        translator_->translate(lattice, start, end, langCode_);
     }
-    while (segmentIt.hasNext()) {
-
+    while (segmentIt.hasNext())
+    {
         Lattice::EdgeDescriptor segment = segmentIt.next();
         Lattice::VertexDescriptor start = lattice.getEdgeSource(segment);
         Lattice::VertexDescriptor end   = lattice.getEdgeTarget(segment);
         
-	poleng::bonsai::TranslationQueuePtr tq = translator_->translate(lattice, start, end);
-        poleng::bonsai::TranslationPtr best = *(tq->begin());
-        
-        AnnotationItem ai("TRANS", StringFrag(best->str()));
-        LayerTagCollection tags
-            = lattice.getLayerTagManager().createSingletonTagCollectionWithLangCode(
-                "trans", langCode_);
-        
-        lattice.addEdge(start, end, ai, tags);
+	translator_->translate(lattice, start, end, langCode_);
    }
 }
 

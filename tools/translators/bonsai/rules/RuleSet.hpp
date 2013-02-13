@@ -34,7 +34,8 @@ class RuleSet {
     RuleSet(std::string, int, int, int, LmContainerPtr);
     EdgeTransformationsPtr get_edge_transformations(Lattice&,
                                                     Lattice::VertexDescriptor,
-                                                    Lattice::VertexDescriptor);
+                                                    Lattice::VertexDescriptor,
+                                                    std::map<Symbol, Lattice::EdgeDescriptor, SymbolSorterMap2>&);
     void set_verbosity(int);    
     void set_max_transformations_per_hyperedge(int);    
     void set_max_hyperedges_per_nonterminal(int);    
@@ -53,9 +54,11 @@ class RuleSet {
     rules::SimpleDAG parse_to_dag(Lattice&,
                                   Lattice::VertexDescriptor,
                                   Lattice::VertexDescriptor,
+                                  std::map<Symbol, Lattice::EdgeDescriptor, SymbolSorterMap2>&,
                                   Unmapper&);
     rules::SimpleDAG subparse_to_dag(Lattice::EdgeDescriptor,
                                      Lattice&,
+                                     std::map<Symbol, Lattice::EdgeDescriptor, SymbolSorterMap2>&,
                                      std::map<int, int>&,
                                      Unmapper&);
     

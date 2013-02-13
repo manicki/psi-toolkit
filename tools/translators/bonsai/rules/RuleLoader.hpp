@@ -49,7 +49,8 @@ class RuleLoader {
     void add_rule_set( RuleSetPtr );
     EdgeTransformationsPtr get_edge_transformations(Lattice&,
                                                     Lattice::VertexDescriptor,
-                                                    Lattice::VertexDescriptor);
+                                                    Lattice::VertexDescriptor,
+						    std::map<Symbol, Lattice::EdgeDescriptor, SymbolSorterMap2>&);
 
     void set_verbosity(int);    
     void set_max_transformations_per_hyperedge(int);    

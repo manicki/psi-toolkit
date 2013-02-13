@@ -11,7 +11,8 @@
 #include "TransferTypes.hpp"
 #include "Transformation.hpp"
 #include "LmContainer.hpp"
-//#include "SymInflector.hpp"
+
+#include "lattice.hpp"
 
 namespace poleng
 {
@@ -25,12 +26,17 @@ typedef std::map<Symbol, TranslationPtr, SymbolSorterMap> TranslationNodes;
 
 class Translation {
   private:
+    
     void substitute(TransformationPtr&, TranslationNodes&);
+    
+    int my_id;
+    static int id;
     
     TransformationPtr parent_transformation;
     TranslationNodes  node_translations;
  
     LmContainerPtr lmc;
+    
     
     bool top;
   
@@ -49,7 +55,8 @@ class Translation {
     static double word_penalty_weight;
         
   public:
-    Translation(TransformationPtr, TranslationNodes, LmContainerPtr, /*SymInflectorPtr,*/ bool);
+    Translation(TransformationPtr, TranslationNodes, LmContainerPtr, bool);
+    int get_id();
     double get_cost();
     double get_lm_heuristic();
     Floats& get_unweighted();
@@ -59,6 +66,7 @@ class Translation {
     std::string mert(int i);
     std::string back_track(int);
     std::string dump_to_perl();
+    Lattice::EdgeDescriptor annotateLattice(Lattice&, std::map<Symbol, Lattice::EdgeDescriptor, SymbolSorterMap2>&, std::map<int, Lattice::EdgeDescriptor>&);
 
     AlignmentPtr reconstruct_alignment(); 
     void reconstruct_alignment_rec(AlignmentPtr&, int&);

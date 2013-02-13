@@ -29,16 +29,17 @@ void RuleLoader::add_rule_set( RuleSetPtr rp ) {
 
 EdgeTransformationsPtr RuleLoader::get_edge_transformations(Lattice& lattice,
 							    Lattice::VertexDescriptor start,
-							    Lattice::VertexDescriptor end) {
+							    Lattice::VertexDescriptor end,
+							    std::map<Symbol, Lattice::EdgeDescriptor, SymbolSorterMap2>& symbolEdgeMap) {
    if(rs.size() == 1) {
-      EdgeTransformationsPtr local = rs[0]->get_edge_transformations(lattice, start, end);
+      EdgeTransformationsPtr local = rs[0]->get_edge_transformations(lattice, start, end, symbolEdgeMap);
       fill_empty(lattice, start, end, local);
       return local;
    }
    else if(rs.size() > 1) {
       EdgeTransformationsPtr merged( new EdgeTransformations() );
       for(size_t i = 0; i < rs.size(); i++) {
-	  EdgeTransformationsPtr local = rs[i]->get_edge_transformations(lattice, start, end);
+	  EdgeTransformationsPtr local = rs[i]->get_edge_transformations(lattice, start, end, symbolEdgeMap);
 	  merge_edge_transformations(merged, local);
       }
       fill_empty(lattice, start, end, merged);

@@ -8,7 +8,7 @@ namespace bonsai
 {
 
 Translation::Translation(TransformationPtr pt_, TranslationNodes ndtr_, LmContainerPtr lmc_, bool top_) :
-  parent_transformation(pt_), node_translations(ndtr_), lmc(lmc_), top(top_), translation( new SList() ), cost(0), lm_heuristic(0) {
+  my_id(id++), parent_transformation(pt_), node_translations(ndtr_), lmc(lmc_), top(top_), translation( new SList() ), cost(0), lm_heuristic(0) {
     
     cost = parent_transformation->get_cost();
     
@@ -32,6 +32,10 @@ Translation::Translation(TransformationPtr pt_, TranslationNodes ndtr_, LmContai
     
     substitute(parent_transformation, node_translations);
     lm_heuristic = lmc->get_front_cost(translation);
+}
+
+int Translation::get_id() {
+  return my_id;
 }
 
 double Translation::get_cost() {
@@ -108,6 +112,45 @@ std::string Translation::back_track(int depth = 0) {
 	}
     }
     return ss.str();
+}
+
+Lattice::EdgeDescriptor Translation::annotateLattice(Lattice& lattice, std::map<Symbol, Lattice::EdgeDescriptor, SymbolSorterMap2>& symbolEdgeMap, std::map<int, Lattice::EdgeDescriptor>& idEdgeMap)
+{
+    if(idEdgeMap.count(my_id))
+	return idEdgeMap[my_id];
+
+
+    Lattice::EdgeSequence::Builder partitionBuilder(lattice);
+    
+    Symbol lhs = parent_transformation->lhs();
+    std::string text = this->str();
+    Lattice::EdgeDescriptor lhsEdge = symbolEdgeMap[lhs];
+	
+    partitionBuilder.addEdge(lhsEdge);
+    
+    std::vector<Lattice::EdgeDescriptor> partition;
+    for(SList::iterator it = parent_transformation->targets()->begin(); it != parent_transformation->targets()->end(); it++) {
+	if(it->is_nt()) {
+	    TranslationPtr tp = node_translations[*it];
+	    Lattice::EdgeDescriptor edge = tp->annotateLattice(lattice, symbolEdgeMap, idEdgeMap);
+	    	
+	    partitionBuilder.addEdge(edge);  
+	}
+    }
+    
+    int start = lattice.getEdgeBeginIndex(lhsEdge);
+    int end   = lattice.getEdgeEndIndex(lhsEdge);
+    
+    AnnotationItem ai("TRANS[" + lhs.label() +"]", StringFrag(text));
+    std::vector<std::string> tagVector;
+    if(top)
+	tagVector.push_back("trans");
+    else
+	tagVector.push_back("transfrag");
+    tagVector.push_back("bonsai");
+    LayerTagCollection tags = lattice.getLayerTagManager().createTagCollection(tagVector);
+    idEdgeMap[my_id] = lattice.addEdge(start, end, ai, tags, partitionBuilder.build(), this->get_cost());
+    return idEdgeMap[my_id];
 }
 
 std::string Translation::dump_to_perl() {
@@ -265,6 +308,7 @@ void Translation::substitute(TransformationPtr &t, TranslationNodes &tn) {
     
 }
 
+int Translation::id = 0;
 int Translation::verbosity = 0;
 bool Translation::pedantry = false;
 
