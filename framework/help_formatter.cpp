@@ -27,6 +27,31 @@ void HelpFormatter::formatOneProcessorHelp(std::string processorName, std::ostre
     );
 }
 
+bool HelpFormatter::formatProcessorHelpsByName(std::string aliasOrProcessorName,
+                                               std::ostream& output) {
+
+    std::vector<std::string> processors = MainFactoriesKeeper::getInstance().getProcessorNames();
+    bool isProcessor = (std::find(processors.begin(), processors.end(), aliasOrProcessorName)
+                            != processors.end());
+
+    if (isProcessor) {
+        formatOneProcessorHelp(aliasOrProcessorName, output);
+        return true;
+    }
+
+    std::set<std::string> aliases = MainFactoriesKeeper::getInstance().getAliasNames();
+    bool isAlias = aliases.count(aliasOrProcessorName);
+
+    if (isAlias) {
+        BOOST_FOREACH(std::string name, getAliasesForProcessorName(aliasOrProcessorName)) {
+            formatOneProcessorHelp(name, output);
+        }
+        return true;
+    }
+
+    return false;
+}
+
 void HelpFormatter::formatAliases(std::ostream& output) {
     std::set<std::string> aliases = MainFactoriesKeeper::getInstance().getAliasNames();
 

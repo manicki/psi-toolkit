@@ -110,7 +110,7 @@ void PipeRunner::parseIntoFinalPipeline_(
 
     if (!returnedSeq)
         throw Exception("pipe-line cannot be resolved - try to specify the language "
-                        "of one of the processors with `--lang` option");
+                        "of one of the processors with `--lang` option.");
     else
         finalPipeline_ = *returnedSeq;
 
@@ -139,7 +139,8 @@ void PipeRunner::parseRunnerProgramOptions_(std::vector<std::string> &args) {
 
 void PipeRunner::setRunnerOptionsDescription_() {
     runnerOptionsDescription_.add_options()
-        ("help", "Produce help message for each processor")
+        ("help", boost::program_options::value<std::string>()->implicit_value("info"),
+         "Produce help message for each processor")
         ("aliases", "Show aliases, i.e. alternative names for processors")
         ("line-by-line,l", "Process input line by line")
         ("list-languages", "List languages handled for each processor specified")
@@ -152,9 +153,18 @@ void PipeRunner::setRunnerOptionsDescription_() {
 
 bool PipeRunner::stopAfterExecutingRunnerOptions_() {
     if (runnerOptions_.count("help")) {
-        ConsoleHelpFormatter().formatDescription(std::cout);
-        std::cout << runnerOptionsDescription_ << std::endl;
-        ConsoleHelpFormatter().formatHelps(std::cout);
+        std::string helpArg = runnerOptions_["help"].as<std::string>();
+
+        if (!ConsoleHelpFormatter().formatProcessorHelpsByName(helpArg, std::cout)
+            || helpArg == "info") {
+
+            ConsoleHelpFormatter().formatDescription(std::cout);
+            std::cout << runnerOptionsDescription_
+                      << std::endl
+                      << "To get detailed information about individual processor "
+                         "use `--help name` option."
+                      << std::endl;
+        }
         return true;
     }
 

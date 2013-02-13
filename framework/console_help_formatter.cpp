@@ -10,10 +10,13 @@ void ConsoleHelpFormatter::doFormatOneProcessorHelp(
     std::vector<TestBatch> usingExamples,
     std::ostream& output) {
 
-    output << processorName << std::endl << description << std::endl;
+    output << "### " << processorName << " ###" << std::endl
+           << std::endl
+           << description << std::endl;
 
     if (!aliases.empty()) {
         formatAliases_(aliases, output);
+        output << std::endl;
     }
 
     if (!usingExamples.empty())

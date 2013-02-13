@@ -15,9 +15,10 @@ public:
 
     void formatHelps(std::ostream& output);
     void formatOneProcessorHelp(std::string processorName, std::ostream& output);
+    bool formatProcessorHelpsByName(std::string aliasOrProcessorName, std::ostream& output);
 
-    void formatOneAlias(std::string aliasName, std::ostream& output);
     void formatAliases(std::ostream& output);
+    void formatOneAlias(std::string aliasName, std::ostream& output);
     void formatAliasesForProcessor(std::string processorName);
 
     void formatDescription(std::ostream& output);
