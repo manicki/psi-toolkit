@@ -53,12 +53,11 @@ void PsiRequestHandler::handle_request(
     }
     sesMng->setCurrentSession(session->getId());
 
-    DEBUG("Request headers: ");
+    INFO("Request headers: ");
     for (unsigned int i = 0; i < req_modified.headers.size(); i++) {
-        DEBUG(i << ": " << (std::string)req_modified.headers[i].name << " => "
+        INFO(i << ": " << (std::string)req_modified.headers[i].name << " => "
             << (std::string)req_modified.headers[i].value);
     }
-    DEBUG("--------------");
 
     //handle request
     psi_server_->checkForAction(req_modified);
@@ -73,12 +72,11 @@ void PsiRequestHandler::handle_request(
         rep.headers.push_back(createCookieHeader(session->getId()));
     }
 
-    DEBUG("Answer headers: ");
+    INFO("Answer headers: ");
     for (unsigned int i = 0; i < rep.headers.size(); i++) {
-        DEBUG((unsigned long)i << ": " << (std::string)rep.headers[i].name << " => "
+        INFO((unsigned long)i << ": " << (std::string)rep.headers[i].name << " => "
             << (std::string)rep.headers[i].value);
     }
-    DEBUG("--------------");
 }
 
 std::string PsiRequestHandler::getContentType(const std::string & uri) {
