@@ -18,7 +18,7 @@ std::list<std::pair<RegExp, std::string> > Morfologik::BREAK_FORMS_RULES = boost
     ;
 
 Morfologik::Morfologik(const boost::program_options::variables_map& options)
-    : level_(3), dictionary_("MORFOLOGIK"), annotationManager_(NULL) {
+    : level_(3), dictionary_("MORFOLOGIK"), annotationManager_(NULL), foundLemma_(false) {
 
     if (options.count("level") > 0) setLevel(options["level"].as<int>());
     if (options.count("dict") > 0) setDictionary(options["dict"].as<std::string>());
@@ -94,9 +94,8 @@ void Morfologik::setDictionary(const std::string& dict) {
 void Morfologik::lemmatize(const std::string & word, AnnotationItemManager & manager,
     LemmatizerOutputIterator & iterator) {
 
+    foundLemma_ = false;
     annotationManager_ = &manager;
-
-    normalizeWord_(word, iterator);
 
     switch (level_) {
         case 0:
@@ -110,6 +109,9 @@ void Morfologik::lemmatize(const std::string & word, AnnotationItemManager & man
         default:
             stemsOnFormLevel_(word, iterator);
     }
+
+    if (foundLemma_)
+        normalizeWord_(word, iterator);
 }
 
 boost::program_options::options_description Morfologik::optionsHandled() {
@@ -151,6 +153,7 @@ void Morfologik::stemsOnLemmaLevel_(const std::string & word,
     for (i = stems.begin(); i != stems.end(); ++i) {
         std::string stem = *i;
         outputIterator.addLemma(stem);
+        foundLemma_ = true;
     }
 }
 
@@ -167,6 +170,7 @@ void Morfologik::stemsOnLexemeLevel_(const std::string & word,
 
     for (lem = lemmas.begin(); lem != lemmas.end(); ++lem) {
         outputIterator.addLemma(*lem);
+        foundLemma_ = true;
 
         std::vector<std::string> lexemeTags = getLexemeTagsFromStems_(stems, *lem);
         std::vector<std::string>::iterator lxt;
@@ -241,6 +245,7 @@ void Morfologik::stemsOnFormLevel_(const std::string & word,
 
     for (lem = lemmas.begin(); lem != lemmas.end(); ++lem) {
         outputIterator.addLemma(*lem);
+        foundLemma_ = true;
 
         std::multimap<std::string, std::vector<std::string> >::iterator lex;
 
