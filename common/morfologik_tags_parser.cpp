@@ -31,7 +31,6 @@ std::map<std::string, std::string> MorfologikTagsParser::PREDEFINED_TAGS =
         ("subst", "pos")
         ("verb", "pos")
         ("conj", "pos")
-        ("comp", "pos")
         ("qub", "pos")
         ("burk", "pos")     //bound word
         ("interj", "pos")   //interjection
@@ -51,7 +50,7 @@ std::map<std::string, std::string> MorfologikTagsParser::PREDEFINED_TAGS =
         ("loc", "case")
         ("voc", "case")
         ("pos", "degree")
-        ("com", "degree")
+        ("comp", "degree")
         ("sup", "degree")
         ("m", "gender")
         ("m1", "gender")
