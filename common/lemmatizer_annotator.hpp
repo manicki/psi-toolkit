@@ -171,7 +171,7 @@ public:
                 Lattice::EdgeSequence::Builder seqBuilder(lattice_);
                 seqBuilder.addEdge(lastCorrection_);
 
-                AnnotationItem item("word", normalization);
+                AnnotationItem item("term", normalization);
 
                 lastNormalization_ = lastLemma_ = lastLexeme_ =
                     lattice_.addEdge(
@@ -288,9 +288,8 @@ public:
                 outputIterator);
 
             if (simpleWillBeTouchedWhenTailConverted(lowerCaseConverter, w)) {
-                w = simpleTailConvert(lowerCaseConverter, w);
                 lemmatizer.lemmatize(
-                    w,
+                    simpleTailConvert(lowerCaseConverter, w),
                     lattice_.getAnnotationItemManager(),
                     outputIterator);
             }

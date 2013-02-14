@@ -93,6 +93,7 @@ private:
 
     AnnotationItemManager * annotationManager_;
 
+    void normalizeWord_(const std::string &, LemmatizerOutputIterator &);
     void stemsOnLemmaLevel_(const std::string &, LemmatizerOutputIterator &);
     void stemsOnLexemeLevel_(const std::string &, LemmatizerOutputIterator &);
     void stemsOnFormLevel_(const std::string &, LemmatizerOutputIterator &);

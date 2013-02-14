@@ -96,6 +96,8 @@ void Morfologik::lemmatize(const std::string & word, AnnotationItemManager & man
 
     annotationManager_ = &manager;
 
+    normalizeWord_(word, iterator);
+
     switch (level_) {
         case 0:
             break;
@@ -119,7 +121,7 @@ boost::program_options::options_description Morfologik::optionsHandled() {
     desc.add_options()
         ("level", boost::program_options::value<int>()->default_value(3),
             "set word processing level 0-3 (0 - do nothing, 1 - return only base forms, "
-            "2 - add grammatical class and main attributes, 3 - add detailed attributes")
+            "2 - add grammatical class and main attributes, 3 - add detailed attributes)")
         ("dict", boost::program_options::value<std::string>()
             ->default_value(DICTIONARIES[0]), dictionaryDescription.c_str())
         ("keep-original", "keep original Morfologik's settings i.e. do not break brief forms")
@@ -128,8 +130,13 @@ boost::program_options::options_description Morfologik::optionsHandled() {
     return desc;
 }
 
+void Morfologik::normalizeWord_(const std::string & word,
+                               LemmatizerOutputIterator& outputIterator) {
+    outputIterator.addNormalization(word);
+}
+
 void Morfologik::stemsOnLemmaLevel_(const std::string & word,
-    LemmatizerOutputIterator & outputIterator) {
+                                    LemmatizerOutputIterator & outputIterator) {
 
     std::vector<std::string> stems = simpleStem(word);
     std::vector<std::string>::iterator i;
@@ -148,7 +155,7 @@ void Morfologik::stemsOnLemmaLevel_(const std::string & word,
 }
 
 void Morfologik::stemsOnLexemeLevel_(const std::string & word,
-    LemmatizerOutputIterator & outputIterator) {
+                                     LemmatizerOutputIterator & outputIterator) {
 
     std::multimap<std::string, std::vector<std::string> > stems = stem(word);
 
@@ -185,7 +192,8 @@ std::set<std::string> Morfologik::getLemmasFromStems_(
 }
 
 std::vector<std::string> Morfologik::getLexemeTagsFromStems_(
-    std::multimap<std::string, std::vector<std::string> > & stems, const std::string & lemma) {
+    std::multimap<std::string, std::vector<std::string> > & stems,
+    const std::string & lemma) {
 
     std::vector<std::string> tags;
     std::vector<std::string>::iterator t;
