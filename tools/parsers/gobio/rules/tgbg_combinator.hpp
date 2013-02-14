@@ -27,7 +27,7 @@
 // #include "serialize_expression.hpp"
 #include "tree_specification.hpp"
 
-#ifdef _T5_WITH_EXTSCORES
+#if _T5_WITH_EXTSCORES
 #include "rule_score_reader.hpp"
 #endif
 
@@ -87,7 +87,7 @@ public:
     void add_rules(std::istream& rules_stream);
     void add_rules(const std::string& filename);
 
-#ifdef _T5_WITH_EXTSCORES
+#if _T5_WITH_EXTSCORES
     void read_extscores(rule_score_reader<S>* rs_reader);
 #endif
 
@@ -128,7 +128,7 @@ public:
     bool is_indexed;
     bool is_prehooked;
 
-#ifdef _T5_WITH_EXTSCORES
+#if _T5_WITH_EXTSCORES
     bool is_extscore;
     S extscore;
 #endif
@@ -144,7 +144,7 @@ public:
         is_an_origin(false),
         is_indexed(false),
         is_prehooked(false)
-#ifdef _T5_WITH_EXTSCORES
+#if _T5_WITH_EXTSCORES
         ,
         is_extscore(false),
         extscore(0)
@@ -164,7 +164,7 @@ public:
         is_an_origin(false),
         is_indexed(false),
         is_prehooked(false)
-#ifdef _T5_WITH_EXTSCORES
+#if _T5_WITH_EXTSCORES
         ,
         is_extscore(false),
         extscore(0)
@@ -193,7 +193,7 @@ public:
         is_an_origin(false),
         is_indexed(false),
         is_prehooked(false)
-#ifdef _T5_WITH_EXTSCORES
+#if _T5_WITH_EXTSCORES
         ,
         is_extscore(false),
         extscore(0)
@@ -203,6 +203,15 @@ public:
     }
 
     ~rule_holder() { }
+
+    std::string str(registrar<T> symbol_reg) {
+        std::stringstream sstr;
+        sstr << symbol_reg.get_obj(lhs_symbol) << " ->";
+        for (size_t i = 0; i < rhs_symbols.size(); ++i) {
+            sstr << " " << symbol_reg.get_obj(rhs_symbols[i]);
+        }
+        return sstr.str();
+    }
 
     friend class boost::serialization::access;
     template<class Archive>
@@ -397,7 +406,7 @@ public:
     // ^^^ METODY POTRZEBNE DO ASTAR ^^^
 
 
-#ifdef _T5_WITH_EXTSCORES
+#if _T5_WITH_EXTSCORES
     class incompatible_extscores : public std::runtime_error {
     public:
         incompatible_extscores() : std::runtime_error("incompatible external scores") { }
@@ -604,7 +613,7 @@ private:
     template<class Archive>
     void load(Archive & ar, const unsigned int version);
 
-#ifdef _T5_WITH_EXTSCORES
+#if _T5_WITH_EXTSCORES
     void apply_extscores_(
         typename std::vector<rule_holder>::iterator it,
         typename rule_score_reader<S>::rule_scores_t& rst);
