@@ -271,7 +271,7 @@
 271 0185 01   3            !pl,form,nkjp-reader  3           ign[270]
 272 0185 01   3            !pl,lemma,nkjp-reader 3           word[268]
 273 0185 01   3            !pl,lexeme,nkjp-reader 3+num      num[272]
-274 0185 01   3            !pl,form,nkjp-reader  3           num,case=acc,gender=m1,number=pl,unknown=rec[273]
+274 0185 01   3            !pl,form,nkjp-reader  3           num,case=acc,gender=m1,number=pl,accommodability=rec[273]
 275 0186 01   _            !pl,nkjp-reader,token _           B
 276 0187 09   doktorów     !pl,nkjp-reader,token doktorów    T
 277 0187 09   doktorów     !pl,lemma,nkjp-reader doktor      word[276]
@@ -335,7 +335,7 @@
 335 0231 02   88           !pl,form,nkjp-reader  88          ign[334]
 336 0231 02   88           !pl,lemma,nkjp-reader 88          word[332]
 337 0231 02   88           !pl,lexeme,nkjp-reader 88+num     num[336]
-338 0231 02   88           !pl,form,nkjp-reader  88          num,case=acc,gender=m1,number=pl,unknown=rec[337]
+338 0231 02   88           !pl,form,nkjp-reader  88          num,case=acc,gender=m1,number=pl,accommodability=rec[337]
 339 0233 01   _            !pl,nkjp-reader,token _           B
 340 0234 10   magistrów    !pl,nkjp-reader,token magistrów   T
 341 0234 10   magistrów    !pl,lemma,nkjp-reader magister    word[340]

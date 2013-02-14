@@ -99,9 +99,9 @@ std::map<std::string, std::string> MorfologikTagsParser::PREDEFINED_TAGS =
         ("nwok", "vocalicity")
         ("agl", "agglutination")
         ("nagl", "agglutination")
-        ("_", "unknown")
-        ("congr", "unknown")
-        ("rec", "unknown");
+        ("congr", "accommodability")
+        ("rec", "accommodability")
+        ("_", "unknown");
 
 std::vector<std::string> MorfologikTagsParser::TAGS_ALLOWED_AS_POS =
     boost::assign::list_of
