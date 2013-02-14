@@ -68,7 +68,7 @@ std::map<std::string, std::string> MorfologikTagsParser::PREDEFINED_TAGS =
         ("sec", "person")
         ("ter", "person")
         ("depr", "depreciativity")
-        ("winien", "winien")
+        ("winien", "winien-like")
         ("aff", "negation")
         ("neg", "negation")
         ("perf", "aspect")
