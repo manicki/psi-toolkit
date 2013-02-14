@@ -44,20 +44,37 @@ Ubuntu 10.04 might use Boost 1.40, but Boost >=1.42 is needed:
 (Some of the above steps might turn out to be unnecessary, it depends
 on whether it is a server or regular version).
 
-Installation procedure
-======================
+Compilation procedure
+=====================
 
-Linux
------
+(On Linux.)
 
-cd psi-toolkit
-mkdir -p build
-cd build
-cmake -DUSE_JAVA=OFF .. # <- note dots here
-# or cmake -DUSE_JAVA=ON if morfologik is needed
-# if problem with JAVA PATH occurs try forcing dirs by: cmake -DUSE_JAVA=ON -DJAVA_INCLUDE_PATH2=/usr/lib/jvm/java-7-openjdk-amd64/include/linux/ -DJAVA_INCLUDE_PATH=/usr/lib/jvm/java-7-openjdk-amd64/include/ .. (remember to use correct java folder in command)
-make
+   cd psi-toolkit
+   mkdir -p build
+   cd build
+   cmake -DUSE_JAVA=OFF .. # <- note dots here
+   # or cmake -DUSE_JAVA=ON if morfologik is needed
+   # if problem with JAVA PATH occurs try forcing dirs by: cmake -DUSE_JAVA=ON -DJAVA_INCLUDE_PATH2=/usr/lib/jvm/java-7-openjdk-amd64/include/linux/ -DJAVA_INCLUDE_PATH=/usr/lib/jvm/java-7-openjdk-amd64/include/ .. (remember to use correct java folder in command)
+   make
 
 running:
 e.g. simple tokenisation:
-framework/psi-pipe tp-tokenizer --lang pl
+
+    framework/psi-pipe tp-tokenizer --lang pl
+
+
+Installation procedure
+======================
+
+    cd psi-toolkit
+    mkdir -p build
+    cd build
+    cmake -DCMAKE_INSTALL_PREFIX=/usr/local -DUSE_JAVA=ON -DIS_INSTALLABLE=ON CMAKE_BUILD_TYPE=Release ..
+    make
+
+And as root:
+
+    make install
+
+In general, however, it is better to use pre-packaged PSI-Toolkit, see:
+http://psi-toolkit.wmi.amu.edu.pl/download.html
