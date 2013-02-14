@@ -19,7 +19,7 @@
 #include "tgbg_combinator.hpp"
 #include "tree_specification.tpl"
 
-#if _T5_WITH_EXTSCORES
+#if GOBIO_WITH_EXTSCORES
 #include "gen_ruledumper.tpl"
 #endif
 
@@ -119,7 +119,7 @@ void tgbg_combinator<T, S, M, X, E>::add_rules(const std::string& filename)
 }
 
 
-#if _T5_WITH_EXTSCORES
+#if GOBIO_WITH_EXTSCORES
 template<class T, class S, class M, class X, class E>
 void tgbg_combinator<T, S, M, X, E>::read_extscores(rule_score_reader<S>* rs_reader)
 {
@@ -1055,7 +1055,7 @@ std::vector<typename tgbg_combinator<T, S, M, X, E>::rule_type>
            master_,
            semantics_machine_))
             {
-#if _T5_WITH_EXTSCORES
+#if GOBIO_WITH_EXTSCORES
                 try_using_extscore_(rules_[rule_ix], frame);
 #endif
         r.push_back(rule_type(rule_ix, frame.chosen_tree_ix, frame.score, new_entry));
@@ -1400,7 +1400,7 @@ std::vector<typename tgbg_combinator<T, S, M, X, E>::rule_type>
                master_,
                semantics_machine_))
                 {
-#if _T5_WITH_EXTSCORES
+#if GOBIO_WITH_EXTSCORES
                     try_using_extscore_(rules_[rule_ix], frame);
 #endif
             r.push_back(rule_type(rule_ix, frame.chosen_tree_ix, frame.score, new_entry));
