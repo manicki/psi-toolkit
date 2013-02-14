@@ -15,12 +15,15 @@
       <p>
         Using PSI-Toolkit within popular programming languages is as simple as possible. Let's have a look at this Perl code:
       </p>
+<!--
       <pre class="brush: perl; gutter: false;">
 my $psi = PSIToolkit::Simple::PipeRunner->new
   ("tokenize --lang en ! perl-simple-writer");
 $runner->run_for_perl('PSI-Toolkit is Skynet.');
 #returns: ['PSI-Toolkit', 'is', 'Skynet', '.'];
       </pre>
+-->
+<div class="syntaxhighlighter nogutter  perl" id="highlighter_689460"><table cellspacing="0" cellpadding="0" border="0"><tbody><tr><td class="code"><div class="container"><div class="line number1 index0 alt2"><code class="perl keyword">my</code> <code class="perl variable">$psi</code> <code class="perl plain">= PSIToolkit::Simple::PipeRunner-&gt;new</code></div><div class="line number2 index1 alt1"><code class="perl spaces">&nbsp;&nbsp;</code><code class="perl plain">(</code><code class="perl string">"tokenize --lang en ! perl-simple-writer"</code><code class="perl plain">);</code></div><div class="line number3 index2 alt2"><code class="perl variable">$runner</code><code class="perl plain">-&gt;run_for_perl(</code><code class="perl string">'PSI-Toolkit is Skynet.'</code><code class="perl plain">);</code></div><div class="line number4 index3 alt1"><code class="perl comments">#returns: ['PSI-Toolkit', 'is', 'Skynet', '.'];</code></div></div></td></tr></tbody></table></div>
       <p>It's simple, isn't it?</p>
       </section>
 

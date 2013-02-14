@@ -10,8 +10,8 @@
 
 /* general */
 
-body { font-family:Arial,Helvetica,sans-serif; font-size:14px;
-  line-height:20px; /* no shorthand 'font' element to avoid the bug in W3C CSS Validator*/ }
+body { font-family:Arial,Helvetica,sans-serif; font-size:13px; min-width:990px;
+  line-height:19px; /* no shorthand 'font' element to avoid the bug in W3C CSS Validator*/ }
 a { color:#004767; text-decoration:none; }
 a:hover { color:#1A6687; text-decoration:underline; }
 
@@ -50,25 +50,24 @@ footer { bottom:0; height:272px; position:absolute; width:100%; } /* 300 - 2*24 
 
 /* header */
 
-header { height:63px; width:100%; color:#fefefe; background:#333 repeat scroll 0 0;
-  background-image:-webkit-gradient(linear, left top, left bottom, from(#444), to(#222));
-  background-image:-webkit-linear-gradient(top, #444, #222);
-  background-image:   -moz-linear-gradient(#444, #222);
-  background-image:     -o-linear-gradient(top, #444, #222);
-  background-image:        linear-gradient(to bottom, #444, #222);
-  border-bottom: 1px solid #222;
-  box-shadow:0 1px 0 rgba(255, 255, 255, 0.5), 0 0 10px rgba(0, 0, 0, 0.5); }
+header { height:63px; width:100%; color:#fefefe; background:#444 repeat scroll 0 0;
+  background-image:-webkit-gradient(linear, left top, left bottom, from(#353535), to(#454545));
+  background-image:-webkit-linear-gradient(top, #353535, #454545);
+  background-image:   -moz-linear-gradient(#353535, #454545);
+  background-image:     -o-linear-gradient(top, #353535, #454545);
+  background-image:        linear-gradient(to bottom, #353535, #454545);
+  border-bottom: 1px solid #353535;
+  box-shadow:0 1px 0 rgba(255, 255, 255, 0.5), 0 0 10px rgba(0, 0, 0, 0.35); }
 
 #psi-logo { float:left; font-family:"Georgia",serif; font-weight:bold; }
 #psi-logo:hover { text-decoration:none; }
-#psi-logo > h1, #psi-logo > h2 { color:#fff; text-shadow:-2px -2px 0 rgb(32, 32, 32); }
+#psi-logo > h1, #psi-logo > h2 { color:#fff; text-shadow:-2px -2px 0 rgb(34, 34, 34); }
 #psi-logo > h1 { font-size:42px; line-height:48px; margin:0; }
 #psi-logo > h2 { font-size:18px; margin:-8px 0 0 36px; }
 
 #menu { float:right; list-style:none; margin-top:9px; }
-#menu > li { border-right:1px solid #000; float:left; }
+#menu > li { float:left; }
 #menu > li:last-child { border-right:none; }
-#menu > li + li { border-left:1px solid #444; }
 #menu > li > a { color:#f8f8f8; line-height:46px; margin:0 12px; padding:6px;
   text-shadow:-1px -1px #333; vertical-align:middle; }
 #menu > li:last-child > a { margin-right:0px; }
@@ -82,29 +81,35 @@ header { height:63px; width:100%; color:#fefefe; background:#333 repeat scroll 0
 #promotion h2 > a:hover { text-decoration:none; }
 #promotion p { padding:3px 0; }
 
-#promotion pre { font-size:.77em; line-height:10px; margin-left:6px; }
+#promotion pre { font-size:.8em; line-height:11px; margin-left:6px; }
 #promotion .syntaxhighlighter { font-size:.77em !important; line-height:11px !important;
-  margin:6px 0 3px 9px !important; overflow:hidden !important; }
+  margin:3px 0 3px 15px !important; overflow:hidden !important; }
 
 #download-button { background-color:#333;
   background-image:url('../img/download-package.png'),
-    -webkit-gradient(linear, left top, left bottom, from(#004766), to(#222));
+    -webkit-gradient(linear, left top, left bottom, from(#454545), to(#252525));
   background-image:url('../img/download-package.png'),
-    -webkit-linear-gradient(top, #004766, #222);
-  background-image:url('../img/download-package.png'), -moz-linear-gradient(#004766, #222);
-  background-image:url('../img/download-package.png'), -o-linear-gradient(top, #004766, #222);
-  background-image:url('../img/download-package.png'), linear-gradient(to bottom, #004766, #222);
+    -webkit-linear-gradient(top, #454545, #252525);
+  background-image:url('../img/download-package.png'),
+    -moz-linear-gradient(#454545, #252525);
+  background-image:url('../img/download-package.png'),
+    -o-linear-gradient(top, #454545, #252525);
+  background-image:url('../img/download-package.png'),
+    linear-gradient(to bottom, #454545, #252525);
   background-repeat:no-repeat; background-position:center right;
   float:right; height: 32px; line-height: 32px; margin-top:18px; padding: 3px 70px 3px 18px;
   vertical-align: middle; width: 130px; }
 #download-button:hover { background-color:#444;
   background-image:url('../img/download-package.png'),
-    -webkit-gradient(linear, left top, left bottom, from(#1a6687), to(#333));
+    -webkit-gradient(linear, left top, left bottom, from(#555), to(#333));
   background-image:url('../img/download-package.png'),
-    -webkit-linear-gradient(top, #1a6687, #33);
-  background-image:url('../img/download-package.png'), -moz-linear-gradient(#1a6687, #333);
-  background-image:url('../img/download-package.png'), -o-linear-gradient(top, #1a6687, #333);
-  background-image:url('../img/download-package.png'), linear-gradient(to bottom, #1a6687, #333);
+    -webkit-linear-gradient(top, #555, #333);
+  background-image:url('../img/download-package.png'),
+    -moz-linear-gradient(#555, #333);
+  background-image:url('../img/download-package.png'),
+    -o-linear-gradient(top, #555, #333);
+  background-image:url('../img/download-package.png'),
+    linear-gradient(to bottom, #555, #333);
  }
 
 /* toolbox */
@@ -115,8 +120,7 @@ header { height:63px; width:100%; color:#fefefe; background:#333 repeat scroll 0
   background-image:   -moz-linear-gradient(top, #1A6687, #004766);
   background-image:     -o-linear-gradient(top, #1A6687, #004766);
   background-image:        linear-gradient(to bottom, #1A6687, #004766);
-  border-bottom:1px solid #000; border-top:1px solid #444;
-  box-shadow:0 1px 0 rgba(255, 255, 255, 0.5), 0 0 10px rgba(0, 0, 0, 0.5); clear:both;
+  box-shadow:0 1px 0 rgba(255, 255, 255, 0.5), 0 0 10px rgba(0, 0, 0, 0.35); clear:both;
   font-size:13px; }
 #toolbox-pipe, #toolbox-text { padding:6px 0; }
 #toolbox-pipe { border-bottom:1px solid #004766; }
@@ -125,20 +129,20 @@ header { height:63px; width:100%; color:#fefefe; background:#333 repeat scroll 0
 .toolbox-left { width:820px; margin-right:12px; }
 .toolbox-right { float:right; width:150px; }
 
-label { color:#eee; display:block; text-shadow:-1px -1px #163159; }
-textarea, input, #input-file > div, .button { border:1px solid #113163; border-radius:5px;
+label { color:#eee; display:block; }
+textarea, input, #input-file > div, .button { border:1px solid #333; border-radius:5px;
   box-shadow: inset 2px 2px 3px #999; font:14px "Droid Sans",Arial,"Trebuchet MS",Helvetica,serif;
   height:17px; margin:6px 0; padding:3px 6px; width:695px; }
 textarea { height:17px; resize:none; }
 
 input[type="submit"], #input-file > div, .button, td.gsc-search-button > input.gsc-search-button {
   background:#333 repeat scroll 0 0;
-  background-image:-webkit-gradient(linear, left top, left bottom, from(#444), to(#222));
-  background-image:-webkit-linear-gradient(top, #444, #222);
-  background-image:   -moz-linear-gradient(top, #444, #222);
-  background-image:     -o-linear-gradient(top, #444, #222);
-  background-image:        linear-gradient(to bottom, #444, #222);
-  box-shadow:none; color:#ccc; cursor:pointer; height:25px; text-shadow:-1px -1px #000;
+  background-image:-webkit-gradient(linear, left top, left bottom, from(#454545), to(#333));
+  background-image:-webkit-linear-gradient(top, #454545, #333);
+  background-image:   -moz-linear-gradient(top, #454545, #333);
+  background-image:     -o-linear-gradient(top, #454545, #333);
+  background-image:        linear-gradient(to bottom, #454545, #333);
+  box-shadow:none; color:#ccc; cursor:pointer; height:25px; text-shadow:-1px -1px #222;
   width:auto; }
 input[type="submit"]:hover, #input-file > div:hover, a.button:hover {
   background:#444 repeat scroll 0 0;
@@ -159,8 +163,7 @@ input[type="submit"]:hover, #input-file > div:hover, a.button:hover {
 #input-file > div > input { margin-top:-6px; top:-15px; }
 
 .input-options { line-height:10px; margin-top:-2px; text-align:right; width:100%; }
-.input-options > a { color:#43BFF4; font-size:13px; margin-right:32px;
-  text-shadow:-1px -1px #163159; }
+.input-options > a { color:#43BFF4; font-size:13px; margin-right:32px; }
 .input-options > a:hover { text-decoration:none; }
 .input-radio { display:none; visibility:hidden; }
 #output-type { display:none; visibility:hidden; }
@@ -196,27 +199,26 @@ svg { width:100%; }
 
 /* footer */
 
-footer { background-color:#222; border-top:2px solid #999; color:#999; font-size:12px;
+footer { background-color:#353535; border-top:2px solid #d1d1d1; color:#c1c1c1; font-size:12px;
   padding:24px 0; }
-.footer-top { border-bottom:1px solid #000; padding-bottom:16px; }
-.footer-bottom { border-top:1px solid #333; padding-top:16px; }
+.footer-top { border-bottom:1px solid #222; padding-bottom:16px; }
+.footer-bottom { border-top:1px solid #454545; padding-top:16px; }
 
-footer a, footer a:visited { color:#ddd; }
+footer a, footer a:visited { color:#d1d1d1; }
 
 footer section { float:left; }
 footer section + section { padding-left:48px; }
 #what-is-this { width:315px; }
 #what-is-this > p { text-align:left; }
-footer h1 { color:#eaeaea; font-weight:bold; margin:6px 0; text-shadow:-1px -1px #000; }
+footer h1 { color:#fff; font-weight:bold; margin:6px 0; text-shadow:-1px -1px #222; }
 footer ul { list-style:none; margin-left:6px; }
-footer li > a, footer li > a:visited { color:#bbb; text-shadow:-1px -1px #000; }
-footer li > a:hover { color:#ddd; }
+footer li > a, footer li > a:visited { color:#c1c1c1; }
+footer li > a:hover { color:#fff; text-decoration:none; }
 
-#version { color:#eaeaea; padding-top:12px; }
+#version { color:#eee; padding-top:12px; }
 
-.footer-bottom { color:#666; font-size:11px; }
-.footer-bottom a, .footer-bottom a:visited { color:#999; }
-#author { float:right; margin-top:-12px; }
+.footer-bottom { color:#888; font-size:11px; }
+#author { float:right; margin-top:-14px; }
 
 /* help */
 
