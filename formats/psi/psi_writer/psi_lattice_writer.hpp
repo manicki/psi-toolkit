@@ -25,7 +25,7 @@ public:
     };
 
     PsiLatticeWriter(
-        bool withHeader
+        bool withHeader = true
     ) :
         withHeader_(withHeader)
     { }
