@@ -101,6 +101,16 @@ public:
         return getMask(createTagCollection(tagNames));
     }
 
+    // alternative non-ambiguous form to make it simple to use Boost.Assign
+    LayerTagMask getMaskFromList(std::list<std::string> tagNames) {
+        return getMask(tagNames);
+    }
+
+    // alternative non-ambiguous form to make it simple to use Boost.Assign
+    LayerTagMask getMaskFromVector(std::vector<std::string> tagNames) {
+        return getMask(tagNames);
+    }
+
     LayerTagMask getMaskWithLangCode(
         const std::string& tagName, const std::string& langCode) {
 
