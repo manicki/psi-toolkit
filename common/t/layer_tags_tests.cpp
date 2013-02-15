@@ -80,6 +80,11 @@ BOOST_AUTO_TEST_CASE( tags_masks ) {
     listBar.push_back("bar");
     LayerTagCollection tagBar = layer_tag_manager.createSingletonTagCollection("bar");
 
+    LayerTagCollection tagFooBar = layer_tag_manager.createTagCollectionFromList(
+        boost::assign::list_of
+        (std::string("foo"))
+        (std::string("bar")));
+
     LayerTagMask maskFoo = layer_tag_manager.getMask(tagFoo);
     LayerTagMask maskFooList = layer_tag_manager.getMask(listFoo);
     LayerTagMask maskBar = layer_tag_manager.getMask(tagBar);
@@ -88,13 +93,28 @@ BOOST_AUTO_TEST_CASE( tags_masks ) {
         (std::string("foo"))
         (std::string("bar"));
     LayerTagMask maskFooBar = layer_tag_manager.getMask(maskFooBarAsStrings);
+    LayerTagMask maskFooBarList = layer_tag_manager.getMaskFromList(
+        boost::assign::list_of
+        (std::string("foo"))
+        (std::string("bar")));
     LayerTagMask maskAny = layer_tag_manager.anyTag();
 
     BOOST_CHECK(maskFoo.isSome());
+    BOOST_CHECK(maskFooList.isSome());
     BOOST_CHECK(maskBar.isSome());
     BOOST_CHECK(matches(tagFoo, maskFoo));
+    BOOST_CHECK(matches(tagFoo, maskFooList));
     BOOST_CHECK(matches(tagFoo, maskAny));
     BOOST_CHECK(!matches(tagBar, maskFoo));
+    BOOST_CHECK(!matches(tagBar, maskFooList));
+    BOOST_CHECK(!matches(tagBar, maskFooBar));
+    BOOST_CHECK(!matches(tagBar, maskFooBarList));
+    BOOST_CHECK(!matches(tagFoo, maskFooBar));
+    BOOST_CHECK(!matches(tagFoo, maskFooBarList));
+    BOOST_CHECK(matches(tagFooBar, maskFoo));
+    BOOST_CHECK(matches(tagFooBar, maskBar));
+    BOOST_CHECK(matches(tagFooBar, maskFooBar));
+    BOOST_CHECK(matches(tagFooBar, maskFooBarList));
 }
 
 BOOST_AUTO_TEST_CASE( planes ) {
