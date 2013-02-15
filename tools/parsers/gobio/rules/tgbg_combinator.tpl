@@ -19,7 +19,7 @@
 #include "tgbg_combinator.hpp"
 #include "tree_specification.tpl"
 
-#ifdef _T5_WITH_EXTSCORES
+#if GOBIO_WITH_EXTSCORES
 #include "gen_ruledumper.tpl"
 #endif
 
@@ -119,7 +119,7 @@ void tgbg_combinator<T, S, M, X, E>::add_rules(const std::string& filename)
 }
 
 
-#ifdef _T5_WITH_EXTSCORES
+#if GOBIO_WITH_EXTSCORES
 template<class T, class S, class M, class X, class E>
 void tgbg_combinator<T, S, M, X, E>::read_extscores(rule_score_reader<S>* rs_reader)
 {
@@ -1055,7 +1055,7 @@ std::vector<typename tgbg_combinator<T, S, M, X, E>::rule_type>
            master_,
            semantics_machine_))
             {
-#ifdef _T5_WITH_EXTSCORES
+#if GOBIO_WITH_EXTSCORES
                 try_using_extscore_(rules_[rule_ix], frame);
 #endif
         r.push_back(rule_type(rule_ix, frame.chosen_tree_ix, frame.score, new_entry));
@@ -1400,7 +1400,7 @@ std::vector<typename tgbg_combinator<T, S, M, X, E>::rule_type>
                master_,
                semantics_machine_))
                 {
-#ifdef _T5_WITH_EXTSCORES
+#if GOBIO_WITH_EXTSCORES
                     try_using_extscore_(rules_[rule_ix], frame);
 #endif
             r.push_back(rule_type(rule_ix, frame.chosen_tree_ix, frame.score, new_entry));
@@ -1457,16 +1457,16 @@ bool tgbg_combinator<T, S, M, X, E>::check_rules()
 
     if (find_loops(*h.compiled_expr))
     {
-        std::cerr << "loop in expression:" << std::endl;
+        std::cerr << "loop in expression (" << i+1 << " of " << rules_.size() << "):" << std::endl;
         disassemble_expression(
         *h.compiled_expr, attribute_reg_, extra_attribute_reg_, master_, std::cerr);
 
         return false;
     }
 
-    if (find_loops(*h.compiled_expr))
+    if(find_extras(*h.compiled_expr))
     {
-        std::cerr << "extra ref in expression:" << std::endl;
+        std::cerr << "extra ref in expression (" << i+1 << " of " << rules_.size() << "):" << std::endl;
         disassemble_expression(
         *h.compiled_expr, attribute_reg_, extra_attribute_reg_, master_, std::cerr);
 
@@ -1475,7 +1475,7 @@ bool tgbg_combinator<T, S, M, X, E>::check_rules()
 
     if (find_badindexes(*h.compiled_expr, h.rhs_symbols.size()))
     {
-        std::cerr << "bad index in expression:" << std::endl;
+        std::cerr << "bad index in expression (" << i+1 << " of " << rules_.size() << "):" << std::endl;
         disassemble_expression(
         *h.compiled_expr, attribute_reg_, extra_attribute_reg_, master_, std::cerr);
 
@@ -1487,16 +1487,16 @@ bool tgbg_combinator<T, S, M, X, E>::check_rules()
     {
         if (find_loops(*h.compiled_extra_expr))
         {
-        std::cerr << "loop in expression:" << std::endl;
+        std::cerr << "loop in expression (" << i+1 << " of " << rules_.size() << "):" << std::endl;
         disassemble_expression(
             *h.compiled_extra_expr, attribute_reg_, extra_attribute_reg_, master_, std::cerr);
 
         return false;
         }
 
-        if (find_loops(*h.compiled_extra_expr))
+        if(find_extras(*h.compiled_extra_expr))
         {
-        std::cerr << "extra ref in expression:" << std::endl;
+        std::cerr << "extra ref in expression (" << i+1 << " of " << rules_.size() << "):" << std::endl;
         disassemble_expression(
             *h.compiled_extra_expr, attribute_reg_, extra_attribute_reg_, master_, std::cerr);
 
@@ -1505,7 +1505,7 @@ bool tgbg_combinator<T, S, M, X, E>::check_rules()
 
         if (find_badindexes(*h.compiled_expr, h.rhs_symbols.size()))
         {
-        std::cerr << "bad index in expression:" << std::endl;
+        std::cerr << "bad index in expression (" << i+1 << " of " << rules_.size() << "):" << std::endl;
         disassemble_expression(
             *h.compiled_extra_expr,
             attribute_reg_, extra_attribute_reg_, master_, std::cerr);
@@ -1961,6 +1961,7 @@ void tgbg_combinator<T, S, M, X, E>::linearize_rule_(int rule_ix)
     v.back().starred_ix = rules_[rule_ix].starred_ix;
     v.back().tree_specs = rules_[rule_ix].tree_specs;
 
+    rules_.pop_back(); // usuwamy stara nieliniowa regule, na jej miejsce wstawimy nowe liniowe
     v = linearize_seq_(v, g_rule->right_symbols);
 
     for (typename std::vector<rule_holder>::const_iterator

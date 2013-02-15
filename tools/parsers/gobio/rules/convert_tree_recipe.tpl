@@ -67,7 +67,7 @@ boost::shared_ptr<tree_specification<T> > convert_tree_recipe(
         T sub_label =
         (((*it)->label && (*it)->label->length() > 0)
          ? master.from_string(*((*it)->label))
-         : ((sub_spec->root()->is_hook(starred_ix)
+         : (((sub_spec->root() && sub_spec->root()->is_hook(starred_ix))
              ||
              // jesli mamy do czynienia z instrukcja typu A[B[...]]
              // B traktujemy domyslnie jako glowe A

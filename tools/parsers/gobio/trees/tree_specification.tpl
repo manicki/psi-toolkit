@@ -282,26 +282,33 @@ boost::shared_ptr<tree_specification<T> > tree_specification<T>::clone() const
     cloned_spec->right_subspecs_.reserve(right_subspecs_.size());
     cloned_spec->inserts_.reserve(inserts_.size());
 
-    for (size_t i = 0; i < left_subspecs_.size(); ++i)
+    for(size_t i = 0; i < left_subspecs_.size(); ++i) {
+        if (left_subspecs_[i].spec->root_) {
     cloned_spec->left_subspecs_.push_back(
         typename tree_specification<T>::spec_link(
         left_subspecs_[i].spec->clone(),
         left_subspecs_[i].label));
+        }
+    }
 
-    for (size_t j = 0; j < right_subspecs_.size(); ++j)
+    for(size_t j = 0; j < right_subspecs_.size(); ++j) {
+        if (right_subspecs_[j].spec->root_) {
     cloned_spec->right_subspecs_.push_back(
         typename tree_specification<T>::spec_link(
         right_subspecs_[j].spec->clone(),
         right_subspecs_[j].label));
+        }
+    }
 
-    for (size_t k = 0; k < inserts_.size(); ++k)
-    {
+    for(size_t k = 0; k < inserts_.size(); ++k) {
+        if (inserts_[k].spec->root_) {
     cloned_spec->inserts_.push_back(
         typename tree_specification<T>::insert(
         inserts_[k].spec->clone(),
         inserts_[k].label));
 
     cloned_spec->inserts_.back().path = inserts_[k].path;
+        }
     }
 
     return cloned_spec;
