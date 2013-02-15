@@ -10,7 +10,7 @@
 std::string SfstLemmatizer::tagSeparator = ":";
 
 SfstLemmatizer::SfstLemmatizer(const boost::program_options::variables_map& options)
-    : annotationManager(NULL), level(3)
+    : annotationManager(NULL), level(3), foundLemma_(false)
 {
     std::string lang = options["lang"].as<std::string>();
     setLanguage(lang);
@@ -105,10 +105,11 @@ bool SfstLemmatizer::checkRequirements(
 
 }
 
-void SfstLemmatizer::lemmatize(
+bool SfstLemmatizer::lemmatize(
     const std::string & word,
     AnnotationItemManager & manager, LemmatizerOutputIterator & iterator) {
 
+    foundLemma_ = false;
     annotationManager = &manager;
 
     switch (level) {
@@ -123,6 +124,8 @@ void SfstLemmatizer::lemmatize(
     default:
         stemsOnFormLevel(word, iterator);
     }
+
+    return foundLemma_;
 }
 
 void SfstLemmatizer::stemsOnLemmaLevel(
@@ -134,6 +137,7 @@ void SfstLemmatizer::stemsOnLemmaLevel(
     for (std::vector<std::string>::iterator i = stems.begin(); i != stems.end(); ++i) {
         std::string stem = *(i);
         outputIterator.addLemma(stem);
+        foundLemma_ = true;
     }
 }
 //partialy...
@@ -148,6 +152,7 @@ void SfstLemmatizer::stemsOnLexemeLevel(
 
     for (lem = lemmas.begin(); lem != lemmas.end(); ++lem) {
         outputIterator.addLemma(*lem);
+        foundLemma_ = true;
 
         std::set<std::string> lexemeTags =
             getLexemeTagsFromStems(stems, *lem);
@@ -241,6 +246,7 @@ void SfstLemmatizer::stemsOnFormLevel(
 
     for (lem = lemmas.begin(); lem != lemmas.end(); ++lem) {
         outputIterator.addLemma(*lem);
+        foundLemma_ = true;
 
         std::set<std::string> lexemeTags =
             getLexemeTagsFromStems(stems, *lem);

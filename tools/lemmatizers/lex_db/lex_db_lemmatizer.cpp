@@ -11,9 +11,11 @@ LexDbLemmatizer::LexDbLemmatizer(const boost::program_options::variables_map& op
     connection_.set_client_encoding("UTF8");
 }
 
-void LexDbLemmatizer::lemmatize(const std::string& token,
+bool LexDbLemmatizer::lemmatize(const std::string& token,
                                AnnotationItemManager& annotationItemManager,
                                LemmatizerOutputIterator& outputIterator) {
+    bool foundLemma = false;
+
     pqxx::work transaction(connection_);
 
     pqxx::result tuples =
@@ -42,6 +44,7 @@ void LexDbLemmatizer::lemmatize(const std::string& token,
         if (tuple[CANON_INDEX].c_str() != currentLemma) {
             currentLemma = tuple[CANON_INDEX].c_str();
             outputIterator.addLemma(currentLemma);
+            foundLemma = true;
         }
 
         if (tuple[NAME_INDEX].c_str() != currentLexeme) {
@@ -61,6 +64,7 @@ void LexDbLemmatizer::lemmatize(const std::string& token,
             annotationItemManager.setValue(lexeme, "flags", flags);
 
             outputIterator.addLexeme(lexeme);
+            foundLemma = true;
         }
 
         {
@@ -80,8 +84,11 @@ void LexDbLemmatizer::lemmatize(const std::string& token,
             annotationItemManager.setValue(form, "morpho", tuple[MORPHOLOGY_INDEX].c_str());
 
             outputIterator.addForm(form);
+            foundLemma = true;
         }
     }
+
+    return foundLemma;
 }
 
 boost::program_options::options_description LexDbLemmatizer::optionsHandled() {

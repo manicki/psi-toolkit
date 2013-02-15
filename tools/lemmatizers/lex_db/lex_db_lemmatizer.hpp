@@ -17,7 +17,7 @@ class LexDbLemmatizer {
 public:
     LexDbLemmatizer(const boost::program_options::variables_map& options);
 
-    void lemmatize(const std::string& token,
+    bool lemmatize(const std::string& token,
                    AnnotationItemManager& annotationItemManager,
                    LemmatizerOutputIterator& outputIterator);
 

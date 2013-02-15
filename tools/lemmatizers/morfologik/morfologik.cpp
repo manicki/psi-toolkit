@@ -91,7 +91,7 @@ void Morfologik::setDictionary(const std::string& dict) {
     }
 }
 
-void Morfologik::lemmatize(const std::string & word, AnnotationItemManager & manager,
+bool Morfologik::lemmatize(const std::string & word, AnnotationItemManager & manager,
     LemmatizerOutputIterator & iterator) {
 
     foundLemma_ = false;
@@ -110,8 +110,7 @@ void Morfologik::lemmatize(const std::string & word, AnnotationItemManager & man
             stemsOnFormLevel_(word, iterator);
     }
 
-    if (foundLemma_)
-        normalizeWord_(word, iterator);
+    return foundLemma_;
 }
 
 boost::program_options::options_description Morfologik::optionsHandled() {

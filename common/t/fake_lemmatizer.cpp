@@ -3,7 +3,7 @@
 FakeLemmatizer::FakeLemmatizer(const boost::program_options::variables_map&) {
 }
 
-void FakeLemmatizer::lemmatize(const std::string& token,
+bool FakeLemmatizer::lemmatize(const std::string& token,
                                AnnotationItemManager& annotationItemManager,
                                LemmatizerOutputIterator& outputIterator) {
     if (token == "prowokacjami") {
@@ -16,7 +16,11 @@ void FakeLemmatizer::lemmatize(const std::string& token,
         AnnotationItem form = lexeme;
         annotationItemManager.setValue(form, "morpho", "ŻNM");
         outputIterator.addForm(form);
+
+        return true;
     }
+
+    return false;
 }
 
 boost::program_options::options_description FakeLemmatizer::optionsHandled() {

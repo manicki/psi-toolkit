@@ -82,7 +82,7 @@ public:
         const boost::program_options::variables_map& options,
         std::ostream & message);
 
-    void lemmatize(
+    bool lemmatize(
         const std::string & word,
         AnnotationItemManager & manager,
         LemmatizerOutputIterator & iterator);
@@ -134,6 +134,8 @@ private:
     std::string language;
     std::string automaton;
     bool rawRoots;
+
+    bool foundLemma_;
 
     void stemsOnLemmaLevel(const std::string &, LemmatizerOutputIterator &);
     void stemsOnLexemeLevel(const std::string &, LemmatizerOutputIterator &);

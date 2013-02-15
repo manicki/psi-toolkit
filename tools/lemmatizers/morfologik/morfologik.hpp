@@ -38,7 +38,7 @@ public:
         const boost::program_options::variables_map& options,
         std::ostream & message);
 
-    void lemmatize(const std::string & word, AnnotationItemManager & manager,
+    bool lemmatize(const std::string & word, AnnotationItemManager & manager,
         LemmatizerOutputIterator & iterator);
 
     static boost::program_options::options_description optionsHandled();

@@ -282,23 +282,24 @@ public:
 
             std::string w = word;
 
-            lemmatizer.lemmatize(
-                w,
-                lattice_.getAnnotationItemManager(),
-                outputIterator);
+            if (lemmatizer.lemmatize(w, lattice_.getAnnotationItemManager(), outputIterator)) {
+                outputIterator.addNormalization(w);
+            }
 
             if (simpleWillBeTouchedWhenTailConverted(lowerCaseConverter, w)) {
-                lemmatizer.lemmatize(
-                    simpleTailConvert(lowerCaseConverter, w),
-                    lattice_.getAnnotationItemManager(),
-                    outputIterator);
+                w = simpleTailConvert(lowerCaseConverter, w);
+
+                if (lemmatizer.lemmatize(w, lattice_.getAnnotationItemManager(), outputIterator)) {
+                    outputIterator.addNormalization(w);
+                }
             }
 
             if (simpleWillBeTouchedWhenHeadConverted(lowerCaseConverter, w)) {
-                lemmatizer.lemmatize(
-                    simpleHeadConvert(lowerCaseConverter, w),
-                    lattice_.getAnnotationItemManager(),
-                    outputIterator);
+                w = simpleHeadConvert(lowerCaseConverter, w);
+
+                if (lemmatizer.lemmatize(w, lattice_.getAnnotationItemManager(), outputIterator)) {
+                    outputIterator.addNormalization(w);
+                }
             }
         }
 
