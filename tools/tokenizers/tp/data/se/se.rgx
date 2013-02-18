@@ -1,0 +1,7 @@
+#@todo: expand
+
+@def MULTI \@rule multiDot/X := (?:[a-zöäå]\.){3,}(?!\p{L}) | ([A-ZÖÄÅ]\.){2,}
+
+@def ABBREV \@include "abbrev_se"
+
+@include "common"

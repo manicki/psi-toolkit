@@ -1,0 +1,7 @@
+#@todo: expand
+
+@rule abbrev1/T := <<ABBEND
+ca
+etc
+t\.ex
+ABBEND
