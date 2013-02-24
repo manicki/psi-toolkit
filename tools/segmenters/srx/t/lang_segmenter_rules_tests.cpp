@@ -22,6 +22,16 @@ BOOST_AUTO_TEST_CASE( finnish_segmenter_rules ) {
             expectedSegments);
 }
 
+BOOST_AUTO_TEST_CASE( swedish_segmenter_rules ) {
+    std::list<std::string> expectedSegments = boost::assign::list_of
+        ("Det här tåget förtsätter till Vandaforsen.")
+        (" I Polen bor ca. 38 miljoner människor.")
+        (" I Stockholm kan man t.ex. äta köttbullar.");
+    test_segmenter("se",
+            "Det här tåget förtsätter till Vandaforsen. I Polen bor ca. 38 miljoner människor. I Stockholm kan man t.ex. äta köttbullar.",
+            expectedSegments);
+}
+
 void initTestLattice_(Lattice &lattice, const std::string &text,
         const std::string &lang) {
     lattice.appendStringWithSymbols(text);
