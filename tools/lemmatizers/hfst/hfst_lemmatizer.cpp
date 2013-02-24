@@ -120,6 +120,8 @@ HfstTagsParser* HfstLemmatizer::initializeHfstTagsParser(const boost::program_op
         return dynamic_cast<HfstTagsParser*>(new HfstItalianTagsParser(options));
     if (language_ == "se")
         return dynamic_cast<HfstTagsParser*>(new HfstSwedishTagsParser(options));
+    if (language_ == "tr")
+        return dynamic_cast<HfstTagsParser*>(new HfstTurkishTagsParser(options));
     return NULL;
 }
 
@@ -136,6 +138,8 @@ HfstStemmer* HfstLemmatizer::initializeHfstStemmer(const boost::program_options:
         return dynamic_cast<HfstStemmer*>(new HfstItalianStemmer(options));
     if (language_ == "se")
         return dynamic_cast<HfstStemmer*>(new HfstSwedishStemmer(options));
+    if (language_ == "tr")
+        return dynamic_cast<HfstStemmer*>(new HfstTurkishStemmer(options));
     return NULL;
 }
 

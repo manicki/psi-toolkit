@@ -842,6 +842,11 @@ if(DOWNLOAD_DATA)
            "1e75f21b671f97607cf4c8516e3ec156"
            "tools/lemmatizers/hfst/data/se.hfst.ol")
 
+       download_and_unpack(
+           "http://downloads.sourceforge.net/project/hfst/morphological-transducers/hfst-turkish-installable.tar.gz"
+           "hfst-turkish-installable/tr-analysis.hfst.ol"
+           "cd285376c4817c9d37c1ff57cb62a31a"
+           "tools/lemmatizers/hfst/data/tr.hfst.ol")
     endif()
 
 endif(DOWNLOAD_DATA)

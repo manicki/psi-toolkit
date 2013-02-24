@@ -10,6 +10,7 @@
 #include "hfst_german_tags_parser.hpp"
 #include "hfst_italian_tags_parser.hpp"
 #include "hfst_swedish_tags_parser.hpp"
+#include "hfst_turkish_tags_parser.hpp"
 
 BOOST_AUTO_TEST_SUITE( hfst_nonfinnish_tags_parser )
 
@@ -312,6 +313,46 @@ BOOST_AUTO_TEST_CASE ( swedish_tags_parser ) {
         ("<aktiv>");
     testTagsParser(parser, tagsVaraImp, expectedLexemeAttribsVaraImp,
             expectedFormAttribsVaraImp);
+    delete parser;
+}
+
+BOOST_AUTO_TEST_CASE ( turkish_tags_parser ) {
+    boost::program_options::variables_map noOptions;
+    HfstTagsParser* parser = dynamic_cast<HfstTurkishTagsParser*>(new HfstTurkishTagsParser(noOptions));
+    HfstTags expectedLexemeAttribsBilgisayarlarin =
+        boost::assign::list_of<std::map<std::string, std::string> >
+            (boost::assign::map_list_of
+             ("pos", "n"));
+    HfstTags expectedFormAttribsBilgisayarlarin =
+        boost::assign::list_of<std::map<std::string, std::string> >
+            (boost::assign::map_list_of
+             ("case", "gen")
+             ("number", "pl")
+             ("pos", "n"));
+    HfstRawTags tagsBilgisayarlarin = boost::assign::list_of
+        ("<n>")
+        ("<pl>")
+        ("<gen>");
+    testTagsParser(parser, tagsBilgisayarlarin, expectedLexemeAttribsBilgisayarlarin,
+            expectedFormAttribsBilgisayarlarin);
+    HfstTags expectedLexemeAttribsYemiyorsun =
+        boost::assign::list_of<std::map<std::string, std::string> >
+            (boost::assign::map_list_of
+             ("pos", "v"));
+    HfstTags expectedFormAttribsYemiyorsun =
+        boost::assign::list_of<std::map<std::string, std::string> >
+            (boost::assign::map_list_of
+             ("pos", "v")
+             ("neg", "neg")
+             ("person", "2s")
+             ("tense", "t_cont"));
+    HfstRawTags tagsYemiyorsun = boost::assign::list_of
+        ("<v>")
+        ("<neg>")
+        ("<t_cont>")
+        ("<2s>");
+    testTagsParser(parser, tagsYemiyorsun, expectedLexemeAttribsYemiyorsun,
+            expectedFormAttribsYemiyorsun);
     delete parser;
 }
 

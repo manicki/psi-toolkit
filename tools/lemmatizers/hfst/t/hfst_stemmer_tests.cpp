@@ -12,6 +12,7 @@
 #include "hfst_german_stemmer.hpp"
 #include "hfst_italian_stemmer.hpp"
 #include "hfst_swedish_stemmer.hpp"
+#include "hfst_turkish_stemmer.hpp"
 
 BOOST_AUTO_TEST_SUITE( hfst_stemmer )
 
@@ -375,6 +376,45 @@ BOOST_AUTO_TEST_CASE ( swedish_stemmer ) {
              ("<obest>")
              ("<nom>"));
     testStemmer(stemmer, hfstAdapter, "vara", expectedVara);
+    delete stemmer;
+    delete hfstAdapter;
+}
+
+BOOST_AUTO_TEST_CASE ( turkish_stemmer ) {
+    HfstAdapterInterface* hfstAdapter = dynamic_cast<HfstAdapterInterface*>(
+            PluginManager::getInstance().createPluginAdapter("hfst"));
+    hfstAdapter->initHfst(ROOT_DIR "tools/lemmatizers/hfst/data/tr.hfst.ol");
+    boost::program_options::variables_map noOptions;
+    HfstStemmer* stemmer = dynamic_cast<HfstTurkishStemmer*>(new HfstTurkishStemmer(noOptions));
+    HfstStems expectedBilgisayarlarin = 
+        boost::assign::map_list_of<std::string, std::vector<std::string> >
+            ("bilgisayar", boost::assign::list_of
+             ("<n>")
+             ("<pl>")
+             ("<p2s>")
+             ("<3s>"))
+            ("bilgisayar", boost::assign::list_of
+             ("<n>")
+             ("<pl>")
+             ("<p2s>"))
+            ("bilgisayar", boost::assign::list_of
+             ("<n>")
+             ("<pl>")
+             ("<gen>")
+             ("<3s>"))
+            ("bilgisayar", boost::assign::list_of
+             ("<n>")
+             ("<pl>")
+             ("<gen>"));
+    testStemmer(stemmer, hfstAdapter, "bilgisayarların", expectedBilgisayarlarin);
+    HfstStems expectedYemiyorsun = 
+        boost::assign::map_list_of<std::string, std::vector<std::string> >
+            ("ye", boost::assign::list_of
+             ("<v>")
+             ("<neg>")
+             ("<t_cont>")
+             ("<2s>"));
+    testStemmer(stemmer, hfstAdapter, "yemiyorsun", expectedYemiyorsun);
     delete stemmer;
     delete hfstAdapter;
 }

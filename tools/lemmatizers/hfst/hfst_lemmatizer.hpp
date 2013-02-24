@@ -21,6 +21,7 @@
 #include "hfst_german_tags_parser.hpp"
 #include "hfst_italian_tags_parser.hpp"
 #include "hfst_swedish_tags_parser.hpp"
+#include "hfst_turkish_tags_parser.hpp"
 
 #include "hfst_english_stemmer.hpp"
 #include "hfst_finnish_stemmer.hpp"
@@ -28,6 +29,7 @@
 #include "hfst_german_stemmer.hpp"
 #include "hfst_italian_stemmer.hpp"
 #include "hfst_swedish_stemmer.hpp"
+#include "hfst_turkish_stemmer.hpp"
 
 #include <map>
 #include <vector>

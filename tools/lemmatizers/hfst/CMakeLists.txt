@@ -14,12 +14,14 @@ add_library(tools-lemmatizers-hfst SHARED
     parsers/hfst_german_tags_parser.cpp
     parsers/hfst_italian_tags_parser.cpp
     parsers/hfst_swedish_tags_parser.cpp
+    parsers/hfst_turkish_tags_parser.cpp
     stemmers/hfst_english_stemmer.cpp
     stemmers/hfst_finnish_stemmer.cpp
     stemmers/hfst_french_stemmer.cpp
     stemmers/hfst_german_stemmer.cpp
     stemmers/hfst_italian_stemmer.cpp
     stemmers/hfst_swedish_stemmer.cpp
+    stemmers/hfst_turkish_stemmer.cpp
 )
 
 target_link_libraries(
