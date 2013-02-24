@@ -39,7 +39,7 @@
 
                 			<!-- ABBREVS -->
                	 	<rule break="no">
-                        <beforebreak>\b(?:jne|mm|ym)\.</beforebreak>
+                        <beforebreak>\b(?:esim|huom|eKr|jKr|jne|mrd|puh|pvm|tms|vrt|yms|em|ks|ml|mm|nk|ns|ts|ym|s|v)\.</beforebreak>
 					<afterbreak>\s</afterbreak>
                 </rule>
 

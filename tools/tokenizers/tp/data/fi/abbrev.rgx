@@ -1,7 +1,25 @@
 #@todo: expand
 
 @rule abbrev1/T := <<ABBEND
+esim
+huom
+eKr
+jKr
 jne
+mrd
+puh
+pvm
+tms
+vrt
+yms
+em
+ks
+ml
 mm
+nk
+ns
+ts
 ym
+s
+v
 ABBEND
