@@ -3,6 +3,7 @@ include_directories("${PARENT_DIR}")
 
 add_library(tools-tokenizers-tp-tests
         tp_basic_tokenizer_rule_set_tests.cpp
+        lang_tokenizer_rules_tests.cpp
 )
 
 target_link_libraries(tools-tokenizers-tp-tests
