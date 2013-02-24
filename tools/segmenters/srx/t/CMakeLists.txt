@@ -4,6 +4,7 @@ include_directories("${PARENT_DIR}")
 
 add_library(tools-segmenters-srx-tests
         srx_rules_tests.cpp
+        lang_segmenter_rules_tests.cpp
 )
 
 target_link_libraries(tools-segmenters-srx-tests
