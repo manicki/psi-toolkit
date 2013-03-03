@@ -840,7 +840,7 @@ if(DOWNLOAD_DATA)
            "http://downloads.sourceforge.net/project/hfst/morphological-transducers/hfst-swedish-installable.tar.gz"
            "hfst-swedish-installable/sv-analysis.hfst.ol"
            "1e75f21b671f97607cf4c8516e3ec156"
-           "tools/lemmatizers/hfst/data/se.hfst.ol")
+           "tools/lemmatizers/hfst/data/sv.hfst.ol")
 
        download_and_unpack(
            "http://downloads.sourceforge.net/project/hfst/morphological-transducers/hfst-turkish-installable.tar.gz"

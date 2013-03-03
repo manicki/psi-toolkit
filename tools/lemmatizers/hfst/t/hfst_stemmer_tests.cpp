@@ -16,8 +16,8 @@
 
 BOOST_AUTO_TEST_SUITE( hfst_stemmer )
 
-void testStemmer(HfstStemmer* stemmer, HfstAdapterInterface* hfstAdapter, 
-        const std::string &word, 
+void testStemmer(HfstStemmer* stemmer, HfstAdapterInterface* hfstAdapter,
+        const std::string &word,
         HfstStems expected);
 
 BOOST_AUTO_TEST_CASE ( finnish_stemmer_default ) {
@@ -26,7 +26,7 @@ BOOST_AUTO_TEST_CASE ( finnish_stemmer_default ) {
     hfstAdapter->initHfst(ROOT_DIR "tools/lemmatizers/hfst/data/fi.hfst.ol");
     boost::program_options::variables_map noOptions;
     HfstStemmer* stemmer = dynamic_cast<HfstFinnishStemmer*>(new HfstFinnishStemmer(noOptions));
-    HfstStems expectedLampimampi = 
+    HfstStems expectedLampimampi =
         boost::assign::map_list_of<std::string, std::vector<std::string> >
             ("lämmin", boost::assign::list_of
              ("@U.NEED.NOMINAL@")
@@ -43,7 +43,7 @@ BOOST_AUTO_TEST_CASE ( finnish_stemmer_default ) {
              ("@D.LONGxANALYSIS@")
              ("@D.LOWERCASED@"));
     testStemmer(stemmer, hfstAdapter, "lämpimämpi", expectedLampimampi);
-    HfstStems expectedLahde = 
+    HfstStems expectedLahde =
         boost::assign::map_list_of<std::string, std::vector<std::string> >
             ("lähde", boost::assign::list_of
              ("@U.NEED.NOMINAL@")
@@ -83,7 +83,7 @@ BOOST_AUTO_TEST_CASE ( finnish_stemmer_default ) {
              ("@D.LOWERCASED@")
              ("[KTN=60]"));
     testStemmer(stemmer, hfstAdapter, "lähde", expectedLahde);
-    HfstStems expectedYliopisto = 
+    HfstStems expectedYliopisto =
         boost::assign::map_list_of<std::string, std::vector<std::string> >
             ("yliopisto", boost::assign::list_of
              ("@U.NEED.NOMINAL@")
@@ -121,7 +121,7 @@ BOOST_AUTO_TEST_CASE ( finnish_stemmer_include_compounds ) {
     boost::program_options::notify(testOptions);
     optionsFile.close();
     HfstStemmer* stemmer = dynamic_cast<HfstFinnishStemmer*>(new HfstFinnishStemmer(testOptions));
-    HfstStems expectedYliopisto = 
+    HfstStems expectedYliopisto =
         boost::assign::map_list_of<std::string, std::vector<std::string> >
             ("yliopisto", boost::assign::list_of
              ("@U.NEED.NOMINAL@")
@@ -163,7 +163,7 @@ BOOST_AUTO_TEST_CASE ( english_stemmer_default ) {
     hfstAdapter->initHfst(ROOT_DIR "tools/lemmatizers/hfst/data/en.hfst.ol");
     boost::program_options::variables_map noOptions;
     HfstStemmer* stemmer = dynamic_cast<HfstEnglishStemmer*>(new HfstEnglishStemmer(noOptions));
-    HfstStems expectedGreen = 
+    HfstStems expectedGreen =
         boost::assign::map_list_of<std::string, std::vector<std::string> >
             ("green", boost::assign::list_of
              ("V")
@@ -176,7 +176,7 @@ BOOST_AUTO_TEST_CASE ( english_stemmer_default ) {
              ("ADJ")
              ("ADJ"));
     testStemmer(stemmer, hfstAdapter, "green", expectedGreen);
-    HfstStems expectedGreener = 
+    HfstStems expectedGreener =
         boost::assign::map_list_of<std::string, std::vector<std::string> >
             ("green", boost::assign::list_of
              ("ADJ")
@@ -206,7 +206,7 @@ BOOST_AUTO_TEST_CASE ( english_stemmer_include_derivatives ) {
     boost::program_options::notify(testOptions);
     optionsFile.close();
     HfstStemmer* stemmer = dynamic_cast<HfstEnglishStemmer*>(new HfstEnglishStemmer(testOptions));
-    HfstStems expectedGreener = 
+    HfstStems expectedGreener =
         boost::assign::map_list_of<std::string, std::vector<std::string> >
             ("ER", boost::assign::list_of
              ("V/N")
@@ -228,7 +228,7 @@ BOOST_AUTO_TEST_CASE ( german_stemmer ) {
     hfstAdapter->initHfst(ROOT_DIR "tools/lemmatizers/hfst/data/de.hfst.ol");
     boost::program_options::variables_map noOptions;
     HfstStemmer* stemmer = dynamic_cast<HfstGermanStemmer*>(new HfstGermanStemmer(noOptions));
-    HfstStems expectedGemuse = 
+    HfstStems expectedGemuse =
         boost::assign::map_list_of<std::string, std::vector<std::string> >
             ("Gemüse", boost::assign::list_of
              ("<+NN>")
@@ -246,7 +246,7 @@ BOOST_AUTO_TEST_CASE ( german_stemmer ) {
              ("<Akk>")
              ("<Sg>"));
     testStemmer(stemmer, hfstAdapter, "Gemüse", expectedGemuse);
-    HfstStems expectedKontaktsmann = 
+    HfstStems expectedKontaktsmann =
         boost::assign::map_list_of<std::string, std::vector<std::string> >
             ("Kontakt", boost::assign::list_of
              ("<NN>"))
@@ -280,14 +280,14 @@ BOOST_AUTO_TEST_CASE ( french_stemmer ) {
     hfstAdapter->initHfst(ROOT_DIR "tools/lemmatizers/hfst/data/fr.hfst.ol");
     boost::program_options::variables_map noOptions;
     HfstStemmer* stemmer = dynamic_cast<HfstFrenchStemmer*>(new HfstFrenchStemmer(noOptions));
-    HfstStems expectedChat = 
+    HfstStems expectedChat =
         boost::assign::map_list_of<std::string, std::vector<std::string> >
             ("chat", boost::assign::list_of
              ("+commonNoun")
              ("+masculine")
              ("+singular"));
     testStemmer(stemmer, hfstAdapter, "chat", expectedChat);
-    HfstStems expectedBlanc = 
+    HfstStems expectedBlanc =
         boost::assign::map_list_of<std::string, std::vector<std::string> >
             ("blanc", boost::assign::list_of
              ("+commonNoun")
@@ -308,14 +308,14 @@ BOOST_AUTO_TEST_CASE ( italian_stemmer ) {
     hfstAdapter->initHfst(ROOT_DIR "tools/lemmatizers/hfst/data/it.hfst.ol");
     boost::program_options::variables_map noOptions;
     HfstStemmer* stemmer = dynamic_cast<HfstItalianStemmer*>(new HfstItalianStemmer(noOptions));
-    HfstStems expectedGatta = 
+    HfstStems expectedGatta =
         boost::assign::map_list_of<std::string, std::vector<std::string> >
             ("gatta", boost::assign::list_of
              ("NOUN")
              ("-F")
              ("s"));
     testStemmer(stemmer, hfstAdapter, "gatta", expectedGatta);
-    HfstStems expectedBianca = 
+    HfstStems expectedBianca =
         boost::assign::map_list_of<std::string, std::vector<std::string> >
             ("bianca", boost::assign::list_of
              ("NOUN")
@@ -334,10 +334,10 @@ BOOST_AUTO_TEST_CASE ( italian_stemmer ) {
 BOOST_AUTO_TEST_CASE ( swedish_stemmer ) {
     HfstAdapterInterface* hfstAdapter = dynamic_cast<HfstAdapterInterface*>(
             PluginManager::getInstance().createPluginAdapter("hfst"));
-    hfstAdapter->initHfst(ROOT_DIR "tools/lemmatizers/hfst/data/se.hfst.ol");
+    hfstAdapter->initHfst(ROOT_DIR "tools/lemmatizers/hfst/data/sv.hfst.ol");
     boost::program_options::variables_map noOptions;
     HfstStemmer* stemmer = dynamic_cast<HfstSwedishStemmer*>(new HfstSwedishStemmer(noOptions));
-    HfstStems expectedKvinnorna = 
+    HfstStems expectedKvinnorna =
         boost::assign::map_list_of<std::string, std::vector<std::string> >
             ("kvinna", boost::assign::list_of
              ("<substantiv>")
@@ -346,14 +346,14 @@ BOOST_AUTO_TEST_CASE ( swedish_stemmer ) {
              ("<best>")
              ("<nom>"));
     testStemmer(stemmer, hfstAdapter, "kvinnorna", expectedKvinnorna);
-    HfstStems expectedDopas = 
+    HfstStems expectedDopas =
         boost::assign::map_list_of<std::string, std::vector<std::string> >
             ("döpa", boost::assign::list_of
              ("<verb>")
              ("<infinitiv>")
              ("<passiv>"));
     testStemmer(stemmer, hfstAdapter, "döpas", expectedDopas);
-    HfstStems expectedVara = 
+    HfstStems expectedVara =
         boost::assign::map_list_of<std::string, std::vector<std::string> >
             ("vara", boost::assign::list_of
              ("<verb>")
@@ -386,7 +386,7 @@ BOOST_AUTO_TEST_CASE ( turkish_stemmer ) {
     hfstAdapter->initHfst(ROOT_DIR "tools/lemmatizers/hfst/data/tr.hfst.ol");
     boost::program_options::variables_map noOptions;
     HfstStemmer* stemmer = dynamic_cast<HfstTurkishStemmer*>(new HfstTurkishStemmer(noOptions));
-    HfstStems expectedBilgisayarlarin = 
+    HfstStems expectedBilgisayarlarin =
         boost::assign::map_list_of<std::string, std::vector<std::string> >
             ("bilgisayar", boost::assign::list_of
              ("<n>")
@@ -407,7 +407,7 @@ BOOST_AUTO_TEST_CASE ( turkish_stemmer ) {
              ("<pl>")
              ("<gen>"));
     testStemmer(stemmer, hfstAdapter, "bilgisayarların", expectedBilgisayarlarin);
-    HfstStems expectedYemiyorsun = 
+    HfstStems expectedYemiyorsun =
         boost::assign::map_list_of<std::string, std::vector<std::string> >
             ("ye", boost::assign::list_of
              ("<v>")
@@ -420,8 +420,8 @@ BOOST_AUTO_TEST_CASE ( turkish_stemmer ) {
 }
 
 
-void testStemmer(HfstStemmer* stemmer, HfstAdapterInterface* hfstAdapter, 
-        const std::string &word, 
+void testStemmer(HfstStemmer* stemmer, HfstAdapterInterface* hfstAdapter,
+        const std::string &word,
         HfstStems expected) {
     HfstStems result =
         stemmer->stem(word, *hfstAdapter);
@@ -430,7 +430,7 @@ void testStemmer(HfstStemmer* stemmer, HfstAdapterInterface* hfstAdapter,
     HfstStems::iterator expectedIt = expected.begin();
     while (resultIt != result.end() && expectedIt != expected.end()) {
         BOOST_CHECK_EQUAL(resultIt->first, expectedIt->first);
-        BOOST_CHECK_EQUAL_COLLECTIONS(resultIt->second.begin(), resultIt->second.end(), 
+        BOOST_CHECK_EQUAL_COLLECTIONS(resultIt->second.begin(), resultIt->second.end(),
                 expectedIt->second.begin(), expectedIt->second.end());
         ++ resultIt;
         ++ expectedIt;

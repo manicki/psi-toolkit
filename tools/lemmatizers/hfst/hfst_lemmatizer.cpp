@@ -61,7 +61,7 @@ std::list<std::string> HfstLemmatizer::languagesHandled(
         == AnnotatorFactory::JUST_ONE_LANGUAGE)
         return boost::assign::list_of(options["lang"].as<std::string>());
 
-    return boost::assign::list_of("de")("en")("fi")("fr")("it")("se");
+    return boost::assign::list_of("de")("en")("fi")("fr")("it")("sv");
 }
 
 bool HfstLemmatizer::checkRequirements(
@@ -118,7 +118,7 @@ HfstTagsParser* HfstLemmatizer::initializeHfstTagsParser(const boost::program_op
         return dynamic_cast<HfstTagsParser*>(new HfstFrenchTagsParser(options));
     if (language_ == "it")
         return dynamic_cast<HfstTagsParser*>(new HfstItalianTagsParser(options));
-    if (language_ == "se")
+    if (language_ == "sv")
         return dynamic_cast<HfstTagsParser*>(new HfstSwedishTagsParser(options));
     if (language_ == "tr")
         return dynamic_cast<HfstTagsParser*>(new HfstTurkishTagsParser(options));
@@ -136,7 +136,7 @@ HfstStemmer* HfstLemmatizer::initializeHfstStemmer(const boost::program_options:
         return dynamic_cast<HfstStemmer*>(new HfstFrenchStemmer(options));
     if (language_ == "it")
         return dynamic_cast<HfstStemmer*>(new HfstItalianStemmer(options));
-    if (language_ == "se")
+    if (language_ == "sv")
         return dynamic_cast<HfstStemmer*>(new HfstSwedishStemmer(options));
     if (language_ == "tr")
         return dynamic_cast<HfstStemmer*>(new HfstTurkishStemmer(options));
@@ -210,7 +210,7 @@ bool HfstLemmatizer::stemsOnLemmaLevel_(const std::string &word,
     bool addedLemma = false;
     std::set<std::string> lemmas = getLemmasFromStems(stems);
 
-    for (std::set<std::string>::iterator lem = lemmas.begin(); 
+    for (std::set<std::string>::iterator lem = lemmas.begin();
             lem != lemmas.end(); ++lem) {
         outputIterator.addLemma(*lem);
         addedLemma = true;
@@ -225,14 +225,14 @@ bool HfstLemmatizer::stemsOnLexemeLevel_(const std::string &word,
     bool addedLemma = false;
     std::set<std::string> lemmas = getLemmasFromStems(stems);
 
-    for (std::set<std::string>::iterator lem = lemmas.begin(); 
+    for (std::set<std::string>::iterator lem = lemmas.begin();
             lem != lemmas.end(); ++lem) {
         outputIterator.addLemma(*lem);
         addedLemma = true;
 
         HfstTags lexemeTags = getLexemeTagsFromStems(stems, *lem);
 
-        for (HfstTags::iterator lxt = lexemeTags.begin(); 
+        for (HfstTags::iterator lxt = lexemeTags.begin();
                 lxt != lexemeTags.end(); ++lxt) {
             AnnotationItem lexItem = createLexemeAnnotation(*lem, *lxt);
             outputIterator.addLexeme(lexItem);
@@ -248,14 +248,14 @@ bool HfstLemmatizer::stemsOnFormLevel_(const std::string &word,
     bool addedLemma = false;
     std::set<std::string> lemmas = getLemmasFromStems(stems);
 
-    for (std::set<std::string>::iterator lem = lemmas.begin(); 
+    for (std::set<std::string>::iterator lem = lemmas.begin();
             lem != lemmas.end(); ++lem) {
         outputIterator.addLemma(*lem);
         addedLemma = true;
 
         HfstTags lexemeTags = getLexemeTagsFromStems(stems, *lem);
 
-        for (HfstTags::iterator lxt = lexemeTags.begin(); 
+        for (HfstTags::iterator lxt = lexemeTags.begin();
                 lxt != lexemeTags.end(); ++lxt) {
 
             AnnotationItem lexItem = createLexemeAnnotation(*lem, *lxt);
@@ -263,7 +263,7 @@ bool HfstLemmatizer::stemsOnFormLevel_(const std::string &word,
 
             HfstTags formTags = getFormTagsFromLexeme(stems, *lem, *lxt);
 
-            for (HfstTags::iterator frms = formTags.begin(); 
+            for (HfstTags::iterator frms = formTags.begin();
                     frms != formTags.end(); ++frms) {
 
                 AnnotationItem frmItm = createFormAnnotation(lexItem, *lem, *frms);
@@ -286,14 +286,14 @@ std::set<std::string> HfstLemmatizer::getLemmasFromStems(
     return lemmas;
 }
 
-HfstTags HfstLemmatizer::getLexemeTagsFromStems(HfstStems & stems, 
+HfstTags HfstLemmatizer::getLexemeTagsFromStems(HfstStems & stems,
     const std::string & lemma) {
     HfstTags tags;
 
     for (HfstStems::iterator s = stems.begin(); s != stems.end(); ++s) {
         if (s->first == lemma) {
             HfstRawTags tagStrings = s->second;
-            HfstTags lexemeAttributes = 
+            HfstTags lexemeAttributes =
                 hfstTagsParser_->getLexemeAttributes(tagStrings);
             tags.insert(tags.end(), lexemeAttributes.begin(), lexemeAttributes.end());
         }
@@ -314,9 +314,9 @@ HfstTags HfstLemmatizer::getFormTagsFromLexeme(HfstStems & stems,
     for (HfstStems::iterator s = stems.begin(); s != stems.end(); ++s) {
         if (s->first == lemma) {
             HfstRawTags tagStrings = s->second;
-            HfstTags formAttributes = 
+            HfstTags formAttributes =
                 hfstTagsParser_->getFormAttributes(tagStrings);
-            for (HfstTags::iterator formAttribIt = formAttributes.begin(); 
+            for (HfstTags::iterator formAttribIt = formAttributes.begin();
                 formAttribIt != formAttributes.end(); ++ formAttribIt) {
                 if (attributesMatch(*formAttribIt, lexemeAttributes)) {
                     tags.push_back(*formAttribIt);
@@ -351,7 +351,7 @@ AnnotationItem HfstLemmatizer::createLexemeAnnotation(
 
     AnnotationItem lexeme(partOfSpeech, StringFrag(wordId));
 
-    for (std::map<std::string, std::string>::iterator atr = 
+    for (std::map<std::string, std::string>::iterator atr =
             attributes.begin(); atr != attributes.end(); ++atr) {
         annotationManager_->setValue(lexeme, atr->first, atr->second);
     }
@@ -365,7 +365,7 @@ AnnotationItem HfstLemmatizer::createFormAnnotation(AnnotationItem & lexemeItem,
         AnnotationItem formItem(lexemeItem, word);
         attributes.erase("pos");
 
-        for (std::map<std::string, std::string>::iterator atr = 
+        for (std::map<std::string, std::string>::iterator atr =
                 attributes.begin(); atr != attributes.end(); ++atr) {
             annotationManager_->setValue(formItem, atr->first, atr->second);
         }
