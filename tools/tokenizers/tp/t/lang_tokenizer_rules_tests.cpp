@@ -46,7 +46,7 @@ BOOST_AUTO_TEST_CASE( swedish_tokenizer_rules ) {
         ("miljoner")
         ("människor")
         (".");
-    test_tokenizer("se", "I Polen bor ca. 38 miljoner människor.", expectedTokens1);
+    test_tokenizer("sv", "I Polen bor ca. 38 miljoner människor.", expectedTokens1);
     std::list<std::string> expectedTokens2 = boost::assign::list_of
         ("I")
         ("Stockholm")
@@ -56,7 +56,7 @@ BOOST_AUTO_TEST_CASE( swedish_tokenizer_rules ) {
         ("äta")
         ("köttbullar")
         (".");
-    test_tokenizer("se", "I Stockholm kan man t.ex. äta köttbullar.", expectedTokens2);
+    test_tokenizer("sv", "I Stockholm kan man t.ex. äta köttbullar.", expectedTokens2);
 }
 
 void initTestLattice_(Lattice &lattice, const std::string &text,

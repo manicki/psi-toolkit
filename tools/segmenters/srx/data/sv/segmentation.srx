@@ -12,7 +12,7 @@
 	<body>
 		<languagerules>
 
-			<languagerule languagerulename="se">
+			<languagerule languagerulename="sv">
 
 			        <!-- Zbyt dlugi segment -->
 				<rule break="yes">
@@ -68,12 +68,10 @@
 
 		<maprules>
 			<maprule maprulename="Default">
-				<languagemap languagepattern="(?:SE|se|Swedish|SWEDISH).*" languagerulename="se"/>
+				<languagemap languagepattern="(?:SV|sv|Swedish|SWEDISH).*" languagerulename="sv"/>
 			</maprule>
 		</maprules>
 
 	</body>
 
 </srx>
-
-

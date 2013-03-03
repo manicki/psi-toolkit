@@ -27,7 +27,7 @@ BOOST_AUTO_TEST_CASE( swedish_segmenter_rules ) {
         ("Det här tåget förtsätter till Vandaforsen.")
         (" I Polen bor ca. 38 miljoner människor.")
         (" I Stockholm kan man t.ex. äta köttbullar.");
-    test_segmenter("se",
+    test_segmenter("sv",
             "Det här tåget förtsätter till Vandaforsen. I Polen bor ca. 38 miljoner människor. I Stockholm kan man t.ex. äta köttbullar.",
             expectedSegments);
 }
