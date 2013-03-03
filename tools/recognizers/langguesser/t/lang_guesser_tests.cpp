@@ -14,11 +14,16 @@ BOOST_AUTO_TEST_CASE( long_text ) {
         "milesischen Prinzip einen numerischen Wert von 700";
     std::string ru = "23-я буква греческого алфавита. В системе греческой алфавитной записи "
         "чисел имеет числовое значение 700";
+    std::string fi = "Se on kreikkalaisten aakkosten 23. kirjain ja sen numeerinen arvo oli 700.";
+    std::string sv = "Den är den tjugotredje bokstaven i det grekiska alfabetet."
+        "I det joniska talbeteckningssystemet hade den värdet 700.";
 
     BOOST_CHECK_EQUAL(langGuesser.guessLanguage(pl), "pl");
     BOOST_CHECK_EQUAL(langGuesser.guessLanguage(en), "en");
     BOOST_CHECK_EQUAL(langGuesser.guessLanguage(de), "de");
     BOOST_CHECK_EQUAL(langGuesser.guessLanguage(ru), "ru");
+    BOOST_CHECK_EQUAL(langGuesser.guessLanguage(fi), "fi");
+    BOOST_CHECK_EQUAL(langGuesser.guessLanguage(sv), "sv");
 
 }
 
